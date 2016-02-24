@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features;
 
-import gnu.trove.map.hash.TLongDoubleHashMap;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,7 +10,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import boofcv.struct.feature.SurfFeature;
+import boofcv.struct.feature.BrightFeature;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
@@ -21,6 +19,7 @@ import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.descriptor.SURFFeatures;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import gnu.trove.map.hash.TLongDoubleHashMap;
 
 @Deprecated
 public class SURF extends AbstractFeatureModule {
@@ -37,8 +36,8 @@ public class SURF extends AbstractFeatureModule {
 	public void processShot(FrameContainer shot) {
 		LOGGER.entry();
 		if (!phandler.check("SELECT * FROM features.SURF WHERE shotid = " + shot.getId() + " LIMIT 1")) {
-			List<SurfFeature> surfs = SURFFeatures.getSURF(shot.getMostRepresentativeFrame().getImage());
-			for(SurfFeature sf : surfs){
+			List<BrightFeature> surfs = SURFFeatures.getSURF(shot.getMostRepresentativeFrame().getImage());
+			for(BrightFeature sf : surfs){
 				FloatVector fv = new FloatVectorImpl(sf.value);
 				addToDB(shot.getId(), fv);
 			}
@@ -59,9 +58,9 @@ public class SURF extends AbstractFeatureModule {
 	
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		List<SurfFeature> surfs = SURFFeatures.getSURF(qc.getMostRepresentativeFrame().getImage(), 5);
+		List<BrightFeature> surfs = SURFFeatures.getSURF(qc.getMostRepresentativeFrame().getImage(), 5);
 		TLongDoubleHashMap map = new TLongDoubleHashMap();
-		for(SurfFeature sf : surfs){
+		for(BrightFeature sf : surfs){
 			FloatVector fv = new FloatVectorImpl(sf.value);
 			List<LongDoublePair> list = getSimilar(fv);
 			for(LongDoublePair pair : list){

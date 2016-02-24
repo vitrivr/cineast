@@ -1,9 +1,5 @@
 package ch.unibas.cs.dbis.cineast.api;
 
-import gnu.trove.map.hash.TLongDoubleHashMap;
-import gnu.trove.set.hash.TIntHashSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -32,6 +28,9 @@ import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
 import ch.unibas.cs.dbis.cineast.core.db.VideoLookup;
 import ch.unibas.cs.dbis.cineast.core.util.ContinousRetrievalLogic;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import gnu.trove.map.hash.TLongDoubleHashMap;
+import gnu.trove.set.hash.TIntHashSet;
+import gnu.trove.set.hash.TLongHashSet;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,

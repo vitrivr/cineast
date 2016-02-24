@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features.exporter;
 
-import georegression.struct.point.Point2D_F32;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -17,6 +15,7 @@ import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
+import georegression.struct.point.Point2D_F32;
 
 public class MotionFrameExporter implements Extractor {
 

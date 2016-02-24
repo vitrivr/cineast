@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
-import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;

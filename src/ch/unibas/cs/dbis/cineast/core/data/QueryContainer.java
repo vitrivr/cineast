@@ -1,12 +1,11 @@
 package ch.unibas.cs.dbis.cineast.core.data;
 
-import georegression.struct.point.Point2D_F32;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
+import georegression.struct.point.Point2D_F32;
 
 public class QueryContainer implements FrameContainer {
 

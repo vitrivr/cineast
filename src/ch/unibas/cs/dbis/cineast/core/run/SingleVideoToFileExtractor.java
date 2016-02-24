@@ -52,7 +52,6 @@ import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogram3;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogram4;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogram5;
 import ch.unibas.cs.dbis.cineast.core.features.SubtitleFulltextSearch;
-import ch.unibas.cs.dbis.cineast.core.features.exporter.MotionHistoryImageExporter;
 import ch.unibas.cs.dbis.cineast.core.features.exporter.ShotThumbNails;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.ExtractorInitializer;

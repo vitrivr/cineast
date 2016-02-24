@@ -1,13 +1,12 @@
 package ch.unibas.cs.dbis.cineast.core.features.retriever;
 
-import gnu.trove.map.hash.TLongObjectHashMap;
-
 import java.util.HashMap;
 import java.util.List;
 
 import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
+import gnu.trove.map.hash.TLongObjectHashMap;
 
 public class CachedRetriever implements Retriever {
 

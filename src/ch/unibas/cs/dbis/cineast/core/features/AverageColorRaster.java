@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.color.ColorConverter;
 import ch.unibas.cs.dbis.cineast.core.color.FuzzyColorHistogramQuantizer;
-import ch.unibas.cs.dbis.cineast.core.color.ReadableLabContainer;
 import ch.unibas.cs.dbis.cineast.core.color.FuzzyColorHistogramQuantizer.Color;
+import ch.unibas.cs.dbis.cineast.core.color.ReadableLabContainer;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.FeatureString;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVector;

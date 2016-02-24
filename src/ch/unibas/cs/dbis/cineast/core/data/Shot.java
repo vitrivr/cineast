@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.data;
 
-import georegression.struct.point.Point2D_F32;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,6 +11,7 @@ import ch.unibas.cs.dbis.cineast.core.descriptor.AvgImg;
 import ch.unibas.cs.dbis.cineast.core.descriptor.MedianImg;
 import ch.unibas.cs.dbis.cineast.core.descriptor.MostRepresentative;
 import ch.unibas.cs.dbis.cineast.core.descriptor.PathList;
+import georegression.struct.point.Point2D_F32;
 
 public class Shot implements FrameContainer{
 

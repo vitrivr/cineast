@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.util;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +8,7 @@ import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
 import ch.unibas.cs.dbis.cineast.core.runtime.ContinousQueryDispatcher;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 public class ContinousRetrievalLogic {
 

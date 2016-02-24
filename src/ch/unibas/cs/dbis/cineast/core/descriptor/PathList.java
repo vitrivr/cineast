@@ -1,8 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.descriptor;
 
-import georegression.struct.point.Point2D_F32;
-import gnu.trove.map.hash.TLongObjectHashMap;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,11 +9,13 @@ import boofcv.abst.feature.tracker.PointTrack;
 import boofcv.abst.feature.tracker.PointTracker;
 import boofcv.alg.filter.derivative.GImageDerivativeOps;
 import boofcv.alg.tracker.klt.PkltConfig;
-import boofcv.core.image.ConvertBufferedImage;
 import boofcv.factory.feature.tracker.FactoryPointTracker;
+import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.ImageUInt8;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
+import georegression.struct.point.Point2D_F32;
+import gnu.trove.map.hash.TLongObjectHashMap;
 
 public class PathList {
 

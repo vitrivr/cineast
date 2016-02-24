@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features.abstracts;
 
-import georegression.struct.point.Point2D_F32;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,6 +17,7 @@ import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
+import georegression.struct.point.Point2D_F32;
 
 public abstract class MotionHistogramCalculator implements Retriever {
 

@@ -10,18 +10,18 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
 import boofcv.alg.feature.detect.edge.CannyEdge;
 import boofcv.alg.feature.detect.edge.EdgeContour;
-import boofcv.core.image.ConvertBufferedImage;
 import boofcv.factory.feature.detect.edge.FactoryEdgeDetectors;
+import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.ImageSInt16;
 import boofcv.struct.image.ImageUInt8;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
-
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 public class EdgeList {
 

@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LimitedQueue;
-import ch.unibas.cs.dbis.cineast.core.data.Shot;
 import ch.unibas.cs.dbis.cineast.core.data.providers.ShotProvider;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.ExtractorInitializer;

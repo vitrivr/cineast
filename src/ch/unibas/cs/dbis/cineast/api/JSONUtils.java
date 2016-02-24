@@ -1,10 +1,5 @@
 package ch.unibas.cs.dbis.cineast.api;
 
-import georegression.struct.point.Point2D_F32;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
-import gnu.trove.set.hash.TIntHashSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -33,6 +28,10 @@ import ch.unibas.cs.dbis.cineast.core.data.QuerySubTitleItem;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import georegression.struct.point.Point2D_F32;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
+import gnu.trove.set.hash.TIntHashSet;
+import gnu.trove.set.hash.TLongHashSet;
 
 public class JSONUtils {
 
@@ -57,23 +56,28 @@ public class JSONUtils {
 	}
 	
 	public static QueryContainer queryContainerFromJSON(JsonObject jobj){
-		BufferedImage img = WebUtils.dataURLtoBufferedImage(jobj.get("img").asString());
+		BufferedImage img = jobj.get("img") == null ? null : WebUtils.dataURLtoBufferedImage(jobj.get("img").asString());
 		QueryContainer qc = new QueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
-		JsonArray subs = jobj.get("subelements").asArray();
-		for(JsonValue jv : subs){
-			qc.getSubtitleItems().add(new QuerySubTitleItem(jv.asString()));
-		}
-		JsonArray motion = jobj.get("motion").asArray();
-		for(JsonValue motionPath : motion){
-			LinkedList<Point2D_F32> pathList = new LinkedList<Point2D_F32>();
-			for(JsonValue point : motionPath.asArray()){
-				JsonArray pa = point.asArray();
-				pathList.add(new Point2D_F32(pa.get(0).asFloat(), pa.get(1).asFloat()));
+		if(jobj.get("subelements") != null){
+			JsonArray subs = jobj.get("subelements").asArray();
+			for(JsonValue jv : subs){
+				qc.getSubtitleItems().add(new QuerySubTitleItem(jv.asString()));
 			}
-			qc.getPaths().add(pathList);
 		}
-		qc.setRelativeStart(jobj.get("start").asFloat());
-		qc.setRelativeEnd(jobj.get("end").asFloat());
+		if(jobj.get("motion") != null){
+			JsonArray motion = jobj.get("motion").asArray();
+			for(JsonValue motionPath : motion){
+				LinkedList<Point2D_F32> pathList = new LinkedList<Point2D_F32>();
+				for(JsonValue point : motionPath.asArray()){
+					JsonArray pa = point.asArray();
+					pathList.add(new Point2D_F32(pa.get(0).asFloat(), pa.get(1).asFloat()));
+				}
+				qc.addPath(pathList);
+			}
+		}
+				
+		qc.setRelativeStart(jobj.get("start") == null ? 0 : jobj.get("start").asFloat());
+		qc.setRelativeEnd(jobj.get("end") == null ? 0 : jobj.get("end").asFloat());
 		
 		return qc;
 	}

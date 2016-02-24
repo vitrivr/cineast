@@ -1,13 +1,12 @@
 package ch.unibas.cs.dbis.cineast.core.util;
 
-import gnu.trove.iterator.TLongDoubleIterator;
-import gnu.trove.map.hash.TLongDoubleHashMap;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
+import gnu.trove.iterator.TLongDoubleIterator;
+import gnu.trove.map.hash.TLongDoubleHashMap;
 
 public class MaxPool {
 

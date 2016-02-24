@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features;
 
-import georegression.struct.point.Point2D_I32;
-
 import java.sql.ResultSet;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +17,7 @@ import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 import ch.unibas.cs.dbis.cineast.core.descriptor.EdgeList;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
+import georegression.struct.point.Point2D_I32;
 
 public class DominantEdgeGrid8 extends AbstractFeatureModule {
 

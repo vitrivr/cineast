@@ -11,13 +11,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import net.coobird.thumbnailator.Thumbnails;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import net.coobird.thumbnailator.Thumbnails;
 
 public class CachedMultiImage implements MultiImage {
 	

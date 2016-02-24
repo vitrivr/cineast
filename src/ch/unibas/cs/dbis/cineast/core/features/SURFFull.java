@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features;
 
-import gnu.trove.map.hash.TLongDoubleHashMap;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,7 +9,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import boofcv.struct.feature.SurfFeature;
+import boofcv.struct.feature.BrightFeature;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
@@ -21,9 +19,10 @@ import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.descriptor.SURFFeatures;
 import ch.unibas.cs.dbis.cineast.core.util.KMeansPP;
+import ch.unibas.cs.dbis.cineast.core.util.KMeansPP.KMenasResult;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
-import ch.unibas.cs.dbis.cineast.core.util.KMeansPP.KMenasResult;
+import gnu.trove.map.hash.TLongDoubleHashMap;
 
 public class SURFFull extends SURF {
 
@@ -42,8 +41,8 @@ public class SURFFull extends SURF {
 		if (!phandler.check("SELECT * FROM features.SURFFull WHERE shotid = " + shot.getId() + " LIMIT 1")) {
 			List<FloatVector> allsurfs = new LinkedList<FloatVector>();
 			for(Frame f : shot.getFrames()){
-				List<SurfFeature> surfs = SURFFeatures.getSURF(f.getImage());
-				for(SurfFeature sf : surfs){
+				List<BrightFeature> surfs = SURFFeatures.getSURF(f.getImage());
+				for(BrightFeature sf : surfs){
 					allsurfs.add(new FloatVectorImpl(sf.value));
 				}
 			}

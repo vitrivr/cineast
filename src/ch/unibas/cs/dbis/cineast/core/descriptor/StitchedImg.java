@@ -1,8 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.descriptor;
 
-import georegression.struct.homo.Homography2D_F64;
-import georegression.struct.point.Point2D_F64;
-
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -11,14 +8,16 @@ import boofcv.abst.feature.tracker.PointTracker;
 import boofcv.abst.sfm.d2.ImageMotion2D;
 import boofcv.abst.sfm.d2.MsToGrayMotion2D;
 import boofcv.alg.sfm.d2.StitchingFromMotion2D;
-import boofcv.core.image.ConvertBufferedImage;
 import boofcv.factory.feature.tracker.FactoryPointTracker;
 import boofcv.factory.sfm.FactoryMotion2D;
+import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.ImageFloat32;
 import boofcv.struct.image.MultiSpectral;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImageFactory;
+import georegression.struct.homography.Homography2D_F64;
+import georegression.struct.point.Point2D_F64;
 
 public class StitchedImg {
 
