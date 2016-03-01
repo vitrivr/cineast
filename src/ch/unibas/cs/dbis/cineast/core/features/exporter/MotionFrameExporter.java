@@ -13,13 +13,14 @@ import javax.imageio.ImageIO;
 
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 import georegression.struct.point.Point2D_F32;
 
 public class MotionFrameExporter implements Extractor {
 
-	private static File folder = new File("debug2");
+private static File folder = new File("debug2");
 	
 	@Override
 	public void init(PersistencyWriter<?> phandler) {
@@ -31,12 +32,12 @@ public class MotionFrameExporter implements Extractor {
 
 	@Override
 	public void processShot(FrameContainer shot) {
-		List<LinkedList<Point2D_F32>> paths = shot.getPaths();
+		List<Pair<Integer,LinkedList<Point2D_F32>>> paths = shot.getPaths();
 		for(Frame f : shot.getFrames()){
 			File file = new File(folder, String.format("%06d",f.getId()) + ".jpg");
 			BufferedImage bimg = f.getImage().getBufferedImage();
-			for(LinkedList<Point2D_F32> path : paths){
-				draw(bimg, path);
+			for(Pair<Integer, LinkedList<Point2D_F32>> pair : paths){
+				draw(bimg, pair.second);
 			}
 			try {
 				ImageIO.write(bimg, "jpg", file);

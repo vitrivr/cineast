@@ -2,7 +2,6 @@ package ch.unibas.cs.dbis.cineast.core.features;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
@@ -15,7 +14,6 @@ import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.SubDivMotionHistogram;
 import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
-import georegression.struct.point.Point2D_F32;
 
 public class MotionHistogram extends SubDivMotionHistogram {
 
@@ -32,9 +30,8 @@ public class MotionHistogram extends SubDivMotionHistogram {
 	@Override
 	public void processShot(FrameContainer shot) {
 		if(!phandler.check("SELECT * FROM features.MotionHistogram WHERE shotid = " + shot.getId())){
-			List<LinkedList<Point2D_F32>> paths = shot.getPaths();
 			
-			Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, paths);
+			Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, shot.getPaths());
 			
 			double sum = pair.first.get(0);
 			FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
@@ -56,7 +53,7 @@ public class MotionHistogram extends SubDivMotionHistogram {
 
 		FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
 		
-		ResultSet rset = this.selector.select("SELECT * FROM features.MotionHistogram USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', ) ORDER USING DISTANCE LIMIT " + limit);
+		ResultSet rset = this.selector.select("SELECT * FROM features.MotionHistogram USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
 	}
 
@@ -68,10 +65,7 @@ public class MotionHistogram extends SubDivMotionHistogram {
 
 		FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
 		
-		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MotionHistogram, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', ) ORDER USING DISTANCE LIMIT " + limit);
+		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MotionHistogram, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
 	}
-
-	
-
 }

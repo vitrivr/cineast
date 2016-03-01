@@ -14,16 +14,18 @@ import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.ImageUInt8;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
+import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import georegression.struct.point.Point2D_F32;
+import gnu.trove.map.hash.TLongIntHashMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 
 public class PathList {
 
-	private PathList(){}
+private PathList(){}
 	
-	public static List<LinkedList<Point2D_F32>> getPaths(List<Frame> frames){
+	public static ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> getPaths(List<Frame> frames){
 		if(frames.size() < 2){
-			return new LinkedList<LinkedList<Point2D_F32>>();
+			return new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>(1);
 		}
 		
 		MultiImage img = frames.get(0).getImage();
@@ -35,10 +37,11 @@ public class PathList {
 		PointTracker<ImageUInt8> tracker = FactoryPointTracker.klt(config, new ConfigGeneralDetector(numberOfPointsToTrack, 3, 1), ImageUInt8.class, GImageDerivativeOps.getDerivativeType(ImageUInt8.class));
 		
 		TLongObjectHashMap<LinkedList<Point2D_F32>> paths = new TLongObjectHashMap<LinkedList<Point2D_F32>>();
+		TLongIntHashMap trackStartFrames = new TLongIntHashMap();
 		ArrayList<PointTrack> tracks = new ArrayList<PointTrack>(numberOfPointsToTrack);
-		
+		ImageUInt8 gray = null;
 		for(Frame f : frames){
-			ImageUInt8 gray = ConvertBufferedImage.convertFrom(f.getImage().getBufferedImage(), (ImageUInt8) null);
+			gray = ConvertBufferedImage.convertFrom(f.getImage().getBufferedImage(), gray);
 			
 			tracker.process(gray);
 			tracks.clear();
@@ -48,6 +51,9 @@ public class PathList {
 			}
 			
 			for(PointTrack p : tracks){
+				if(!trackStartFrames.containsKey(p.featureId)){
+					trackStartFrames.put(p.featureId, f.getId());
+				}
 				LinkedList<Point2D_F32> path = paths.get(p.featureId);
 				if(path == null){
 					path = new LinkedList<Point2D_F32>();
@@ -58,9 +64,9 @@ public class PathList {
 		}
 		
 		long[] keys = paths.keys();
-		ArrayList<LinkedList<Point2D_F32>> pathList = new ArrayList<LinkedList<Point2D_F32>>(keys.length);
+		ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> pathList = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>(keys.length);
 		for(long key : keys){
-			pathList.add(paths.get(key));
+			pathList.add(new Pair<>(trackStartFrames.get(key), paths.get(key)));
 		}
 		
 		return pathList;

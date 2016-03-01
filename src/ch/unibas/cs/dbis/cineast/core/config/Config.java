@@ -147,4 +147,14 @@ public class Config {
 		return 1024;
 	}
 	
+	public static int getAPIPort(){
+		String port = properties.getProperty("apiPort", "" + 12345);
+		try{
+			return Integer.parseInt(port);
+		}catch(Exception e){
+			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
+		}
+		return 12345;
+	}
+	
 }

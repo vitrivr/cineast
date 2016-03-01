@@ -8,8 +8,9 @@ import ch.unibas.cs.dbis.cineast.core.data.providers.MedianImgProvider;
 import ch.unibas.cs.dbis.cineast.core.data.providers.MostRepresentativeFrameProvider;
 import ch.unibas.cs.dbis.cineast.core.data.providers.PathProvider;
 import ch.unibas.cs.dbis.cineast.core.data.providers.SubtitleItemProvider;
+import ch.unibas.cs.dbis.cineast.core.data.providers.TagProvider;
 
-public interface FrameContainer extends AvgImgProvider, DurationProvider, MedianImgProvider, MostRepresentativeFrameProvider, SubtitleItemProvider, PathProvider{
+public interface FrameContainer extends AvgImgProvider, DurationProvider, MedianImgProvider, MostRepresentativeFrameProvider, SubtitleItemProvider, PathProvider, TagProvider{
 
 	List<Frame> getFrames();
 	

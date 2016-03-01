@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
@@ -20,13 +21,14 @@ import com.google.common.base.Joiner;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
+import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import gnu.trove.iterator.TLongIterator;
 import gnu.trove.set.hash.TLongHashSet;
 
 public final class DBResultCache {
 
-	private DBResultCache(){}
+private DBResultCache(){}
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static DateFormat df = new SimpleDateFormat("SSS-ss-mm-HH-dd-MM-yyyy-");
@@ -98,6 +100,7 @@ public final class DBResultCache {
 	private static long getIdByCacheName(String name){
 		try {
 			PreparedStatement statement = dbConnection.prepareStatement("SELECT id FROM cineast.resultcachenames WHERE name = ?");
+			statement.setString(1, name);
 			ResultSet rset = statement.executeQuery();
 			if(rset.next()){
 				return rset.getLong(1);
@@ -198,6 +201,56 @@ public final class DBResultCache {
 		
 		return name;
 		
+	}
+
+	
+	/**
+	 * creates special result caches such as those generated from video ids.
+	 * @param resultCacheName
+	 */
+	public static void createIfNecessary(String resultCacheName) {
+		if(resultCacheName == null){
+			return;
+		}
+		resultCacheName = resultCacheName.toLowerCase();
+		if(!resultCacheName.startsWith("v")){
+			return;
+		}
+		resultCacheName = resultCacheName.substring(1);
+		String[] idsStrings = resultCacheName.split("-");
+		int[] ids = new int[idsStrings.length];
+		for(int i = 0; i < idsStrings.length; ++i){
+			try{
+				ids[i] = Integer.parseInt(idsStrings[i]);
+			}catch(NumberFormatException e){
+				//ignore?!
+			}
+		}
+		Arrays.sort(ids);
+		StringBuilder builder = new StringBuilder();
+		builder.append('v');
+		for(int i = 0; i < ids.length - 1; ++i){
+			builder.append(ids[i]);
+			builder.append('-');
+		}
+		builder.append(ids[ids.length - 1]);
+		String newResultCacheName = builder.toString();
+		if(getIdByCacheName(newResultCacheName) > -1L){
+			return;
+		}
+		
+		long resultCacheId = insertNewSetToDB(newResultCacheName);
+		ShotLookup sl = new ShotLookup();
+		for(int videoId : ids){
+			List<ShotDescriptor> shots = sl.lookUpVideo(videoId);
+			long[] shotIds = new long[shots.size()];
+			int i = 0;
+			for(ShotDescriptor s : shots){
+				shotIds[i++] = s.getShotId();
+			}
+			addResultElementsToDB(resultCacheId, shotIds);
+		}
+		sl.close();
 	}
 	
 }

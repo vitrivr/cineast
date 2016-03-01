@@ -15,7 +15,7 @@ import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 public class DBSelector {
 
-	private static final Logger LOGGER = LogManager.getLogger();
+private static final Logger LOGGER = LogManager.getLogger();
 	
 	Connection connection;
 	
@@ -47,6 +47,15 @@ public class DBSelector {
 			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
 		} catch (Exception e){
 			LOGGER.error(LogHelper.getStackTrace(e));
+		}
+		return null;
+	}
+	
+	public PreparedStatement createPreparedStatement(String query){
+		try {
+			return connection.prepareStatement(query);
+		} catch (SQLException e) {
+			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
 		}
 		return null;
 	}

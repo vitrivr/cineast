@@ -1,5 +1,6 @@
 package ch.unibas.cs.dbis.cineast.core.data;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class Shot implements FrameContainer{
 	private LinkedList<SubtitleItem> subItems = new LinkedList<>();
 	private MultiImage avgImg = null, medianImg = null;
 	private Frame mostRepresentative = null;
-	private List<LinkedList<Point2D_F32>> paths = null;
+	private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = null;
+	private ArrayList<String> tags = new ArrayList<>(1);
 	private final long movieId;
 	private final int movieFrameCount;
 	private long shotId;
@@ -74,7 +76,7 @@ public class Shot implements FrameContainer{
 	}
 	
 	private Object getPathsLock = new Object();
-	public List<LinkedList<Point2D_F32>> getPaths() {
+	public List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths() {
 		synchronized (getPathsLock) {
 			if(this.paths == null){
 				this.paths = PathList.getPaths(frames);
@@ -164,6 +166,9 @@ public class Shot implements FrameContainer{
 		return (getEnd() / (float)this.movieFrameCount);
 	}
 	
-	
+	@Override
+	public List<String> getTags() {
+		return this.tags;
+	}
 	
 }

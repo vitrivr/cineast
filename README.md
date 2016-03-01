@@ -3,6 +3,8 @@ Cineast is a multi-feature sketch-based content video retrieval engine. It is ca
 Cineast is written in Java and uses [ADAM](https://github.com/dbisUnibas/ADAM) as a storage backend.
 
 ## building Cineast
+Cineast can be built using [Gradle](http://gradle.org/).
+
 Cineast has the following dependencies:
 
 * [BoofCV](https://github.com/lessthanoptimal/BoofCV)
@@ -13,4 +15,3 @@ Cineast has the following dependencies:
 * [Guava](https://github.com/google/guava)
 * [Log4j2](http://logging.apache.org/log4j/2.x/)
 
-Build scripts coming soon...

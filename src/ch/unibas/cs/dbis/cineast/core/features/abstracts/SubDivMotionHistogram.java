@@ -7,7 +7,7 @@ import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 
 public abstract class SubDivMotionHistogram extends MotionHistogramCalculator implements Extractor {
 
-	protected PersistencyWriter phandler;
+protected PersistencyWriter phandler;
 	
 	protected SubDivMotionHistogram(String tableName, String colName, double maxDist){
 		super(tableName, colName, (float)maxDist);

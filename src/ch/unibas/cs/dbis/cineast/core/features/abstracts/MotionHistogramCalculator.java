@@ -48,12 +48,13 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	}
 
 	protected Pair<List<Double>, ArrayList<ArrayList<Float>>> getSubDivHist(
-			int subdiv, List<LinkedList<Point2D_F32>> paths) {
+			int subdiv, List<Pair<Integer, LinkedList<Point2D_F32>>> list) {
 
 		double[] sums = new double[subdiv * subdiv];
 		float[][] hists = new float[subdiv * subdiv][8];
 
-		for (LinkedList<Point2D_F32> path : paths) {
+		for (Pair<Integer, LinkedList<Point2D_F32>> pair : list) {
+			LinkedList<Point2D_F32> path = pair.second;
 			if (path.size() > 1) {
 				Iterator<Point2D_F32> iter = path.iterator();
 				Point2D_F32 last = iter.next();

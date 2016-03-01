@@ -2,7 +2,6 @@ package ch.unibas.cs.dbis.cineast.core.features;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
@@ -13,7 +12,6 @@ import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.SubDivMotionHistogram;
 import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
-import georegression.struct.point.Point2D_F32;
 
 public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
 
@@ -24,9 +22,8 @@ public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
 	@Override
 	public void processShot(FrameContainer shot) {
 		if(!phandler.check("SELECT * FROM features.SubDivMotionHistogram2 WHERE shotid = " + shot.getId())){
-			List<LinkedList<Point2D_F32>> paths = shot.getPaths();
 			
-			Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, paths);
+			Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, shot.getPaths());
 			
 			FloatVector sum = new FloatVectorImpl(pair.first);
 			ArrayList<Float> tmp = new ArrayList<Float>(2 * 2 * 8);
@@ -76,7 +73,4 @@ public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.SubDivMotionHistogram2, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hists) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
 	}
-
-
-
 }

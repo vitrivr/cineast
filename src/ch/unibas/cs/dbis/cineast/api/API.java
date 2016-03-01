@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import ch.unibas.cs.dbis.cineast.core.features.AverageColor;
 import ch.unibas.cs.dbis.cineast.core.features.AverageColorARP44;
@@ -69,7 +70,6 @@ public class API {
 		}
 	};
 
-	private static int port = 12345;
 	private static Logger LOGGER = LogManager.getLogger();
 	
 	private static boolean running = true;
@@ -105,7 +105,7 @@ public class API {
 		cli.start();
 		
 		try {
-			ServerSocket ssocket = new ServerSocket(port);
+			ServerSocket ssocket = new ServerSocket(Config.getAPIPort());
 			/*
 			 * Wait for a connection, Open a new Thread for each connection.
 			 */
