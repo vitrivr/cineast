@@ -1,0 +1,3 @@
+[submodule "adampro-grpc"]
+	path = adampro-grpc
+	url = https://github.com/dbisUnibas/ADAMpro-Protobuf.git
