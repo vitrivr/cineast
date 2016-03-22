@@ -112,7 +112,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	}
 
 	protected ArrayList<LongDoublePair> manageResultSet(ResultSet rset){
-		ArrayList<LongDoublePair> result = new ArrayList<>(Config.resultsPerModule());
+		ArrayList<LongDoublePair> result = new ArrayList<>(Config.getRetrieverConfig().getMaxResultsPerModule());
 		if(rset != null){
 			try {
 				while(rset.next()){
@@ -131,7 +131,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -162,7 +162,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 
 		StringBuilder sb = new StringBuilder();
 		

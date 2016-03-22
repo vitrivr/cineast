@@ -83,14 +83,14 @@ public class ChromaGrid8 extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		Pair<FloatVector, float[]> p = buildChromaGrid(qc);
-		ResultSet rset = this.selector.select("SELECT * FROM features.ChromaGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + Config.resultsPerModule());
+		ResultSet rset = this.selector.select("SELECT * FROM features.ChromaGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + Config.getRetrieverConfig().getMaxResultsPerModule());
 		return manageResultSet(rset);
 	}
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		Pair<FloatVector, float[]> p = buildChromaGrid(qc);
-		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.ChromaGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + Config.resultsPerModule());
+		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.ChromaGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + Config.getRetrieverConfig().getMaxResultsPerModule());
 		return manageResultSet(rset);
 	}
 

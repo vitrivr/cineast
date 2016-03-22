@@ -51,7 +51,7 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		Pair<FloatVector, float[]> p = partition(qc.getMedianImg());
 		FloatVector query = p.first;
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("SELECT * FROM features.MedianColorGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
@@ -61,7 +61,7 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		Pair<FloatVector, float[]> p = partition(qc.getMedianImg());
 		FloatVector query = p.first;
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MedianColorGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);

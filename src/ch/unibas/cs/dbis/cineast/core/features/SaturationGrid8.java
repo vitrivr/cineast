@@ -80,7 +80,7 @@ public class SaturationGrid8 extends AbstractFeatureModule {
 	
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		Pair<FloatVector, float[]> p = computeGrid(qc);
 		
@@ -91,7 +91,7 @@ public class SaturationGrid8 extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		Pair<FloatVector, float[]> p = computeGrid(qc);
 		

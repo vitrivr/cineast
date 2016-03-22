@@ -176,7 +176,7 @@ public class JSONAPIThread extends Thread {
 
 					Collections.sort(list, LongDoublePair.COMPARATOR);
 
-					int MAX_RESULTS = Config.maxResults();
+					int MAX_RESULTS = Config.getRetrieverConfig().getMaxResults();
 
 					if (list.size() > MAX_RESULTS) {
 						list = list.subList(0, MAX_RESULTS);

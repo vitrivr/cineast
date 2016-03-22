@@ -23,7 +23,7 @@ public class MotionSum extends MotionHistogramCalculator {
 	
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, qc.getPaths());
 
@@ -35,7 +35,7 @@ public class MotionSum extends MotionHistogramCalculator {
 
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("WITH q AS (SELECT sum FROM features.motionhistogram WHERE shotid = " + shotId + ") SELECT pow(q.sum - motionhistogram.sum, 2) as dist, shotid FROM features.motionhistogram, q  ORDER BY dist ASC LIMIT " + limit);
 		return manageResultSet(rset);
@@ -43,7 +43,7 @@ public class MotionSum extends MotionHistogramCalculator {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, qc.getPaths());
 
@@ -55,7 +55,7 @@ public class MotionSum extends MotionHistogramCalculator {
 	
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + ", q AS (SELECT sum FROM features.motionhistogram WHERE shotid = " + shotId + ") SELECT pow(q.sum - motionhistogram.sum, 2) as dist, shotid FROM features.motionhistogram, q, c WHERE shotid = c.filter ORDER BY dist ASC LIMIT " + limit);
 		return manageResultSet(rset);

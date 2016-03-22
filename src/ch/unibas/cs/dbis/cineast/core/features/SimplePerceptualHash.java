@@ -31,14 +31,14 @@ public class SimplePerceptualHash extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		ResultSet rset = this.selector.select("SELECT 0 as dist, shotId FROM features.SimplePerceptualHash, q WHERE SimplePerceptualHash.hash = " + hash(qc.getMostRepresentativeFrame().getImage()) + " LIMIT " + limit);
 		return manageResultSet(rset);
 	}
 
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("WITH q AS (SELECT hash FROM features.SimplePerceptualHash WHERE shotid = " + shotId + ") SELECT 0 as dist, shotId FROM features.SimplePerceptualHash, q WHERE SimplePerceptualHash.hash = q.hash LIMIT " + limit);
 		return manageResultSet(rset);
@@ -46,14 +46,14 @@ public class SimplePerceptualHash extends AbstractFeatureModule {
 	
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT 0 as dist, shotId FROM features.SimplePerceptualHash, q, c WHERE shotid = c.filter AND SimplePerceptualHash.hash = " + hash(qc.getMostRepresentativeFrame().getImage()) + " LIMIT " + limit);
 		return manageResultSet(rset);
 	}
 	
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + ", q AS (SELECT hash FROM features.SimplePerceptualHash WHERE shotid = " + shotId + ") SELECT 0 as dist, shotId FROM features.SimplePerceptualHash, q, c WHERE shotid = c.filter AND SimplePerceptualHash.hash = q.hash LIMIT " + limit);
 		return manageResultSet(rset);

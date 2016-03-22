@@ -62,7 +62,7 @@ public class EHD extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		FloatVector query = new FloatVectorImpl(process(qc.getMostRepresentativeFrame().getImage(), new float[80]));
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("SELECT * FROM features.EHD USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
@@ -71,7 +71,7 @@ public class EHD extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		FloatVector query = new FloatVectorImpl(process(qc.getMostRepresentativeFrame().getImage(), new float[80]));
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.EHD, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);

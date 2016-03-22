@@ -69,7 +69,7 @@ public class STMP7EH extends EHD {
 	
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId) { //TODO limiting call goes to EHD
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("WITH q AS (SELECT hist FROM features.STMP7EH WHERE shotid = " + shotId + ") SELECT shotid FROM features.STMP7EH, q USING DISTANCE MINKOWSKI(2)(q.hist, STMP7EH.hist) ORDER USING DISTANCE LIMIT " + limit);
 		ArrayList<LongDoublePair> result = new ArrayList<>(limit);

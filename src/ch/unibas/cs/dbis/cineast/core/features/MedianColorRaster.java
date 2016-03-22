@@ -92,7 +92,7 @@ public class MedianColorRaster extends AverageColorRaster {
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		Pair<FloatVector, float[]> pair = computeGrid(qc);
 		
-		int limit = Config.resultsPerModule() * 5;
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
 
 		ResultSet rset = this.selector.select("SELECT * FROM features.MedianColorRaster USING DISTANCE MINKOWSKI(2)(\'" + pair.first.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		ArrayList<LongDoublePair> result = new ArrayList<>(limit);
@@ -118,7 +118,7 @@ public class MedianColorRaster extends AverageColorRaster {
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		Pair<FloatVector, float[]> pair = computeGrid(qc);
 		
-		int limit = Config.resultsPerModule() * 5;
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
 
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MedianColorRaster, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(\'" + pair.first.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		ArrayList<LongDoublePair> result = new ArrayList<>(limit);
@@ -140,7 +140,7 @@ public class MedianColorRaster extends AverageColorRaster {
 	}
 
 	public List<LongDoublePair> getSimilar(long shotId) {
-		int limit = Config.resultsPerModule() * 5;
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
 		
 		ResultSet rset = this.selector.select("WITH q AS (SELECT hist, raster FROM features.MedianColorRaster WHERE shotid = " + shotId + ") SELECT shotid, MedianColorRaster.raster, q.raster as queryraster FROM features.MedianColorRaster, q USING DISTANCE MINKOWSKI(2)(q.hist, MedianColorRaster.hist) ORDER USING DISTANCE LIMIT " + limit);
 		ArrayList<LongDoublePair> result = new ArrayList<>(limit);
@@ -164,7 +164,7 @@ public class MedianColorRaster extends AverageColorRaster {
 	}
 	
 	public List<LongDoublePair> getSimilar(long shotId, String resultCacheName) {
-		int limit = Config.resultsPerModule() * 5;
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " , q AS (SELECT hist, raster FROM features.MedianColorRaster WHERE shotid = " + shotId + ") SELECT shotid, MedianColorRaster.raster, q.raster as queryraster FROM features.MedianColorRaster, q , c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(q.hist, MedianColorRaster.hist) ORDER USING DISTANCE LIMIT " + limit);
 		ArrayList<LongDoublePair> result = new ArrayList<>(limit);

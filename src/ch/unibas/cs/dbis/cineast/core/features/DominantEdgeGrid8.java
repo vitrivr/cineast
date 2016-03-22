@@ -41,7 +41,7 @@ public class DominantEdgeGrid8 extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		short[][][] edgeHist = new short[8][8][4];
 		buildEdgeHist(edgeHist, qc.getMostRepresentativeFrame().getImage());
 		short[] dominant = getDominants(edgeHist);
@@ -53,7 +53,7 @@ public class DominantEdgeGrid8 extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		short[][][] edgeHist = new short[8][8][4];
 		buildEdgeHist(edgeHist, qc.getMostRepresentativeFrame().getImage());
 		short[] dominant = getDominants(edgeHist);

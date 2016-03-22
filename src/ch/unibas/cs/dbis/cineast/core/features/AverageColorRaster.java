@@ -121,7 +121,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		FloatVector query = buildQueryVector(qc);
 		
-		int limit = Config.resultsPerModule() * 5;
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
 
 		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColorRaster USING DISTANCE MINKOWSKI(2)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
@@ -132,7 +132,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		FloatVector query = buildQueryVector(qc);
 		
-		int limit = Config.resultsPerModule() * 5;
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
 
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.AverageColorRaster, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
@@ -240,7 +240,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId) {
-		int limit = Config.resultsPerModule() * 5;
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
 		
 		ResultSet rset = this.selector.select("WITH q AS (SELECT hist, raster FROM features.AverageColorRaster WHERE shotid = " + shotId + ") SELECT shotid, AverageColorRaster.raster, q.raster as queryraster FROM features.AverageColorRaster, q USING DISTANCE MINKOWSKI(2)(q.hist, AverageColorRaster.hist) ORDER USING DISTANCE LIMIT " + limit);
 		ArrayList<LongDoublePair> result = new ArrayList<>(limit);

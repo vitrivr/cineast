@@ -33,9 +33,9 @@ public class QueryDispatcher implements Callable<List<LongDoublePair>> {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private static final int TASK_QUEUE_SIZE = 10;
-	private static final int THREAD_COUNT = Config.numbetOfPoolThreads();
-	private static final int MAX_RESULTS = Config.maxResults();
+	private static final int TASK_QUEUE_SIZE = Config.getRetrieverConfig().getTaskQueueSize();
+	private static final int THREAD_COUNT = Config.getRetrieverConfig().getThreadPoolSize();
+	private static final int MAX_RESULTS = Config.getRetrieverConfig().getMaxResults();
 	
 	private HashMap<Retriever, Double> retrieverWeights;
 	private QueryContainer query = null;
@@ -215,14 +215,7 @@ public class QueryDispatcher implements Callable<List<LongDoublePair>> {
 			_return.add(new LongDoublePair(e.getKey(), e.getValue()));
 		}
 		
-		Collections.sort(_return, new Comparator<LongDoublePair>(){
-
-			@Override
-			public int compare(LongDoublePair o1, LongDoublePair o2) {
-				return Double.compare(o2.value, o1.value);
-			}
-			
-		});
+		Collections.sort(_return, LongDoublePair.COMPARATOR);
 		
 		 features = this.retrieverWeights.keySet();
 		for(Retriever r : features){

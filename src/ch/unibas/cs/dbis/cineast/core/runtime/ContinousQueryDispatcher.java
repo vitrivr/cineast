@@ -2,7 +2,6 @@ package ch.unibas.cs.dbis.cineast.core.runtime;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,17 +30,10 @@ public class ContinousQueryDispatcher {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private static final int TASK_QUEUE_SIZE = 10;
-	private static final int THREAD_COUNT = Config.numbetOfPoolThreads();
-	private static final int MAX_RESULTS = Config.maxResults();
-	private static final Comparator<LongDoublePair> COMPARATOR = new Comparator<LongDoublePair>(){
-
-		@Override
-		public int compare(LongDoublePair o1, LongDoublePair o2) {
-			return Double.compare(o2.value, o1.value);
-		}
-		
-	};
+	private static final int TASK_QUEUE_SIZE = Config.getRetrieverConfig().getTaskQueueSize();
+	private static final int THREAD_COUNT = Config.getRetrieverConfig().getThreadPoolSize();
+	private static final int MAX_RESULTS = Config.getRetrieverConfig().getMaxResults();
+	
 	
 	private static ExecutorService executor = null;
 	private static LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(TASK_QUEUE_SIZE);
@@ -143,7 +135,7 @@ public class ContinousQueryDispatcher {
 			_return.add(new LongDoublePair(key, result.get(key)));
 		}
 		
-		Collections.sort(_return, COMPARATOR);
+		Collections.sort(_return, LongDoublePair.COMPARATOR);
 		
 		Set<Retriever> features = retrievers.keySet();
 		for(Retriever r : features){

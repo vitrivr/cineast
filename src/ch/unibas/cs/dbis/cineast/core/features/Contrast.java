@@ -67,7 +67,7 @@ public class Contrast extends AbstractFeatureModule {
 		if(Float.isInfinite(contrast) || Float.isNaN(contrast)){
 			contrast = 0;
 		}
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("SELECT ABS(lmin - " + lmin + ") + ABS(lmax - " + lmax + ") + ABS(((lmax - lmin) / (lmax + lmin)) - " + contrast + ") * 512 AS dist, shotId FROM features.Contrast ORDER BY dist ASC LIMIT " + limit);
 		return manageResultSet(rset);
@@ -75,7 +75,7 @@ public class Contrast extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("WITH q AS (SELECT lmin, lmax, ((lmax - lmin) / (lmax + lmin)) AS contrast FROM features.Contrast WHERE shotid = 12345) SELECT ABS(Contrast.lmin - q.lmin) + ABS(Contrast.lmax - q.lmax) + ABS(((Contrast.lmax - Contrast.lmin) / (Contrast.lmax + Contrast.lmin)) - q.contrast) * 512 AS dist, shotId FROM features.Contrast, q ORDER BY dist ASC LIMIT " + limit);
 		return manageResultSet(rset);

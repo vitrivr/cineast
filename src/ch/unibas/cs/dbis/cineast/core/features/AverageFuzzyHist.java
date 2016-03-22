@@ -24,7 +24,7 @@ public class AverageFuzzyHist extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(qc.getAvgImg().getBufferedImage());
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("SELECT * FROM features.AverageFuzzyHist USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
@@ -33,7 +33,7 @@ public class AverageFuzzyHist extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(qc.getAvgImg().getBufferedImage());
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.AverageFuzzyHist, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);

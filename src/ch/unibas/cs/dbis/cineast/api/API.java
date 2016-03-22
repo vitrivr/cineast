@@ -50,7 +50,6 @@ import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionSum4;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionSum5;
 import ch.unibas.cs.dbis.cineast.core.features.SubtitleFulltextSearch;
 import ch.unibas.cs.dbis.cineast.core.features.SubtitleWordSearch;
-import ch.unibas.cs.dbis.cineast.core.features.ThumbnailDNN;
 import ch.unibas.cs.dbis.cineast.core.features.exporter.QueryImageExporter;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.RetrieverInitializer;
@@ -210,10 +209,6 @@ public class API {
 			_return.put(new SubDivMotionSum3(),			1.0);
 			_return.put(new SubDivMotionSum4(),			1.0);
 			_return.put(new SubDivMotionSum5(),			1.0);
-			return _return;
-		}
-		case "dnn":{
-			_return.put(new ThumbnailDNN(), 			1.0);
 			return _return;
 		}
 		

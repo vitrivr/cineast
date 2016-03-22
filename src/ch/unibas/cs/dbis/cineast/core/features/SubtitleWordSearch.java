@@ -30,7 +30,7 @@ public class SubtitleWordSearch implements Retriever {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		StringBuffer buf = new StringBuffer();
 		ArrayList<LongDoublePair> result;
 		
@@ -120,7 +120,7 @@ public class SubtitleWordSearch implements Retriever {
 
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		ResultSet rset = this.selector.select("select text from features.fulltext where shotid = " + shotId);
 		if(rset != null){
 			try{

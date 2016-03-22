@@ -24,7 +24,7 @@ public class MedianFuzzyHist extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(qc.getMedianImg().getBufferedImage());
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("SELECT * FROM features.MedianFuzzyHist USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
@@ -34,7 +34,7 @@ public class MedianFuzzyHist extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(qc.getMedianImg().getBufferedImage());
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MedianFuzzyHist, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);

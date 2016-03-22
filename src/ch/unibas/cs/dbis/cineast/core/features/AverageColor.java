@@ -46,7 +46,7 @@ public class AverageColor extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		ReadableLabContainer query = getAvg(qc.getAvgImg());
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColor USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', color) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
@@ -55,7 +55,7 @@ public class AverageColor extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		ReadableLabContainer query = getAvg(qc.getAvgImg());
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.AverageColor, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', color) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);

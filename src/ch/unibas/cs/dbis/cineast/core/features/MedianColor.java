@@ -77,7 +77,7 @@ public class MedianColor extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		LabContainer query = getMedian(qc.getMedianImg());
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("SELECT * FROM features.MedianColor USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', color) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
@@ -86,7 +86,7 @@ public class MedianColor extends AbstractFeatureModule {
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		LabContainer query = getMedian(qc.getMedianImg());
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MedianColor, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', color) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);

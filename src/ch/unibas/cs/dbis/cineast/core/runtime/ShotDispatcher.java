@@ -22,13 +22,13 @@ import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 public class ShotDispatcher implements Runnable {
 
-	private static final int TASK_QUEUE_SIZE = 10;
-	private static final int THREAD_COUNT = Config.numbetOfPoolThreads();
+	private static final int TASK_QUEUE_SIZE = Config.getExtractorConfig().getTaskQueueSize();
+	private static final int THREAD_COUNT = Config.getExtractorConfig().getThreadPoolSize();
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private ArrayList<Extractor> extractors;
-	private LinkedBlockingQueue<FrameContainer> shotQueue = new LinkedBlockingQueue<FrameContainer>(Config.shotQueueSize());
+	private LinkedBlockingQueue<FrameContainer> shotQueue = new LinkedBlockingQueue<FrameContainer>(Config.getExtractorConfig().getShotQueueSize());
 	private ExecutorService executor;
 	private ShotProviderThread providerThread;
 	private ExtractorInitializer initializer;

@@ -47,7 +47,7 @@ public class MotionHistogram extends SubDivMotionHistogram {
 	
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {		
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, qc.getPaths());
 
@@ -59,7 +59,7 @@ public class MotionHistogram extends SubDivMotionHistogram {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, qc.getPaths());
 

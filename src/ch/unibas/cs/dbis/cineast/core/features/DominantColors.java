@@ -89,7 +89,7 @@ public class DominantColors extends AbstractFeatureModule {
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		LabContainer[] query = getDominantColor(qc.getMostRepresentativeFrame().getImage());
 
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		FloatVectorImpl fvi = new FloatVectorImpl();
 		for(LabContainer lab : query){
@@ -106,7 +106,7 @@ public class DominantColors extends AbstractFeatureModule {
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		LabContainer[] query = getDominantColor(qc.getMostRepresentativeFrame().getImage());
 
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		FloatVectorImpl fvi = new FloatVectorImpl();
 		for(LabContainer lab : query){

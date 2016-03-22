@@ -107,7 +107,7 @@ public class EdgeImg {
 	}
 	
 	//private static HashMap<Thread, CannyEdge<ImageUInt8, ImageSInt16>> cannies = new HashMap<Thread, CannyEdge<ImageUInt8,ImageSInt16>>();
-	private static LoadingCache<Thread, CannyEdge<ImageUInt8, ImageSInt16>> cannies = CacheBuilder.newBuilder().maximumSize(Config.numbetOfPoolThreads() * 2)
+	private static LoadingCache<Thread, CannyEdge<ImageUInt8, ImageSInt16>> cannies = CacheBuilder.newBuilder().maximumSize(Config.getExtractorConfig().getThreadPoolSize() * 2)
 			.expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<Thread, CannyEdge<ImageUInt8, ImageSInt16>>(){
 
 				@Override

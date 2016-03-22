@@ -60,7 +60,7 @@ public class SaturationAndChroma extends AbstractFeatureModule {
 		saturation /= colors.length;
 		chroma /= colors.length;
 		
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("SELECT ABS(chroma - " + chroma + ") + ABS(saturation - " + saturation + ") * 100 as dist, shotId FROM features.SaturationAndChroma ORDER BY dist ASC LIMIT " + limit);
 		return manageResultSet(rset);
@@ -68,7 +68,7 @@ public class SaturationAndChroma extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(long shotId) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("WITH q AS (SELECT saturation, chroma FROM features.SaturationAndChroma WHERE shotid = " + shotId + ") SELECT ABS(SaturationAndChroma.chroma - q.chroma) + ABS(SaturationAndChroma.saturation - q.saturation) * 100 as dist, shotId FROM features.SaturationAndChroma, q ORDER BY dist ASC LIMIT " + limit);
 		return manageResultSet(rset);

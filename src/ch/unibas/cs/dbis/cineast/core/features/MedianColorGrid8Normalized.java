@@ -31,7 +31,7 @@ public class MedianColorGrid8Normalized extends MedianColorGrid8 {
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		Pair<FloatVector, float[]> p = partition(ImageHistogramEqualizer.getEqualized(qc.getMedianImg()));
 		FloatVector query = p.first;
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("SELECT * FROM features.MedianColorGrid8Normalized USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);

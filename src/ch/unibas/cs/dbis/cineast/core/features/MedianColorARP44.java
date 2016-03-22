@@ -28,7 +28,7 @@ public class MedianColorARP44 extends AbstractFeatureModule {
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
 		Pair<FloatVector, float[]> p = ARPartioner.partitionImage(qc.getMedianImg(), 4, 4);
 		FloatVector query = p.first;
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select("SELECT * FROM features.MedianColorARP44 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', arp) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
@@ -38,7 +38,7 @@ public class MedianColorARP44 extends AbstractFeatureModule {
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
 		Pair<FloatVector, float[]> p = ARPartioner.partitionImage(qc.getMedianImg(), 4, 4);
 		FloatVector query = p.first;
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MedianColorARP44, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', arp) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);

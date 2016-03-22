@@ -20,7 +20,7 @@ public class SubDivMotionSum5 extends MotionHistogramCalculator {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(5, qc.getPaths());
 
@@ -32,7 +32,7 @@ public class SubDivMotionSum5 extends MotionHistogramCalculator {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(5, qc.getPaths());
 

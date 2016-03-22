@@ -38,7 +38,7 @@ public class EdgeGrid16 extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
 		
@@ -48,7 +48,7 @@ public class EdgeGrid16 extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		
 		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
 		

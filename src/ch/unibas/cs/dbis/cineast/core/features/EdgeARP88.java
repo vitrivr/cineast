@@ -38,7 +38,7 @@ public class EdgeARP88 extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
 		
 		ResultSet rset = this.selector.select("SELECT * FROM features.EdgeARP88 USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', arp) ORDER USING DISTANCE LIMIT " + limit);
@@ -47,7 +47,7 @@ public class EdgeARP88 extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
 		
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.EdgeARP88, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', arp) ORDER USING DISTANCE LIMIT " + limit);

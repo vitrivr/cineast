@@ -82,7 +82,7 @@ public class HueValueVarianceGrid8 extends AbstractFeatureModule {
 	
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		Pair<FloatVector, float[]> p = computeGrid(qc);
 
 		ResultSet rset = this.selector.select("SELECT * FROM features.HueValueVarianceGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
@@ -91,7 +91,7 @@ public class HueValueVarianceGrid8 extends AbstractFeatureModule {
 
 	@Override
 	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.resultsPerModule();
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
 		Pair<FloatVector, float[]> p = computeGrid(qc);
 
 		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.HueValueVarianceGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);

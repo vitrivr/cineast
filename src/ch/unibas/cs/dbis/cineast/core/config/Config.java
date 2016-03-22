@@ -22,10 +22,25 @@ public class Config {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private static ImageMemoryConfig imageMemoryConfig;
+	private static ExtractorConfig extractorConfig;
+	private static RetrieverConfig retrieverConfig;
 	
 	static{ //for compatibility to properties file until it is replaced by JSON config.
+		
+		try{
+			FileInputStream fin = new FileInputStream("cineast.properties");
+			properties.load(fin);
+			fin.close();
+			LOGGER.info("prpoerties loaded");
+		}catch(FileNotFoundException e){
+			LOGGER.warn("properties file not found");
+		} catch (IOException e) {
+			LOGGER.warn("could not read properties file");
+		}
+		
+		
 		String property;
-		int softLimit = 3096, hardLimit = 2048;
+		int softLimit = ImageMemoryConfig.DEFAULT_SOFT_LIMIT, hardLimit = ImageMemoryConfig.DEFAULT_HARD_LIMIT;
 		File cacheLocation = new File(".");
 		property = properties.getProperty("softImageMemoryLimit", "" + softLimit);
 		try{
@@ -49,23 +64,50 @@ public class Config {
 		
 		imageMemoryConfig = new ImageMemoryConfig(softLimit, hardLimit, Policy.AUTOMATIC, cacheLocation);
 		
+		
+		int poolthreads = ExtractorConfig.DEFAULT_THREAD_POOL_SIZE;
+		property = properties.getProperty("numbetOfPoolThreads", "" + poolthreads);
+		try{
+			poolthreads = Integer.parseInt(property);
+		}catch(Exception e){
+			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
+		}
+		
+		int shotQueueSize = ExtractorConfig.DEFAULT_SHOT_QUEUE_SIZE;
+		property = properties.getProperty("shotQueueSize", "" + shotQueueSize);
+		try{
+			shotQueueSize = Integer.parseInt(property);
+		}catch(Exception e){
+			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
+		}
+		
+		extractorConfig = new ExtractorConfig(shotQueueSize, poolthreads, ExtractorConfig.DEFAULT_TASK_QUEUE_SIZE);
+		
+		
+		int resultsPerModule = RetrieverConfig.DEFAULT_RESULTS_PER_MODULE, maxResults = RetrieverConfig.DEFAULT_MAX_RESULTS;
+		
+		property = properties.getProperty("resultsPerModule", "" + resultsPerModule);
+		try{
+			resultsPerModule = Integer.parseInt(property);
+		}catch(Exception e){
+			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
+		}
+		
+		property = properties.getProperty("maxResults", "" + maxResults);
+		try{
+			maxResults = Integer.parseInt(property);
+		}catch(Exception e){
+			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
+		}
+		
+		retrieverConfig = new RetrieverConfig(poolthreads, RetrieverConfig.DEFAULT_TASK_QUEUE_SIZE, maxResults, resultsPerModule);
+		
 	}
 	
 	
 	public static final UUID UNIQUE_ID = UUID.randomUUID();
 	
-	static{
-		try{
-			FileInputStream fin = new FileInputStream("cineast.properties");
-			properties.load(fin);
-			fin.close();
-			LOGGER.info("prpoerties loaded");
-		}catch(FileNotFoundException e){
-			LOGGER.warn("properties file not found");
-		} catch (IOException e) {
-			LOGGER.warn("could not read properties file");
-		}
-	}
+	
 	
 	public static String getDBLocation(){
 		return properties.getProperty("database", "127.0.0.1:5434/cineast");
@@ -78,48 +120,7 @@ public class Config {
 	public static String getDBPassword(){
 		return properties.getProperty("pass", "ilikemovies");
 	}
-	
-	public static int numbetOfPoolThreads(){
-		String threads = properties.getProperty("numbetOfPoolThreads", "6");
-		try{
-			return Integer.parseInt(threads);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		return 6;
-	}
-	
-	public static int resultsPerModule(){
-		String threads = properties.getProperty("resultsPerModule", "40");
-		try{
-			return Integer.parseInt(threads);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		return 40;
-	}
-	
-	public static int maxResults(){
-		String threads = properties.getProperty("maxResults", "50");
-		try{
-			return Integer.parseInt(threads);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		return 50;
-	}
-	
 
-	public static int shotQueueSize() {
-		String threads = properties.getProperty("shotQueueSize", "5");
-		try{
-			return Integer.parseInt(threads);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		return 5;
-	}
-	
 	public static int maxFrameWidth(){
 		String threads = properties.getProperty("maxFrameWidth", "" + Integer.MAX_VALUE);
 		try{
@@ -159,4 +160,11 @@ public class Config {
 		return imageMemoryConfig;
 	}
 	
+	public static ExtractorConfig getExtractorConfig(){
+		return extractorConfig;
+	}
+	
+	public static RetrieverConfig getRetrieverConfig(){
+		return retrieverConfig;
+	}
 }

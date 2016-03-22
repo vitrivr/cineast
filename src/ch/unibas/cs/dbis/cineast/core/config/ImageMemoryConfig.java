@@ -12,10 +12,10 @@ public final class ImageMemoryConfig {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static final Policy DEFAULT_POLICY = Policy.AUTOMATIC;
-	private static final int DEFAULT_SOFT_LIMIT = 3096;
-	private static final int DEFAULT_HARD_LIMIT = 2048;
-	private static final File DEFAULT_CACHE_LOCATION = new File(".");
+	public static final Policy DEFAULT_POLICY = Policy.AUTOMATIC;
+	public static final int DEFAULT_SOFT_LIMIT = 3096;
+	public static final int DEFAULT_HARD_LIMIT = 2048;
+	public static final File DEFAULT_CACHE_LOCATION = new File(".");
 	
 	public static enum Policy{
 		FORCE_DISK_CACHE, //cache to disk even if newInMemoryMultiImage is requested
