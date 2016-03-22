@@ -5,11 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ch.unibas.cs.dbis.cineast.core.data.InMemoryMultiImage;
+import ch.unibas.cs.dbis.cineast.core.config.ImageMemoryConfig.Policy;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 
@@ -20,10 +21,38 @@ public class Config {
 	private static Properties properties = new Properties();
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	/**
-	 * An id to distinguish multiple instances with a high probability
-	 */
-	public static final int UNIQUE_ID = (int)Math.round(Math.random() * 10000000);
+	private static ImageMemoryConfig imageMemoryConfig;
+	
+	static{ //for compatibility to properties file until it is replaced by JSON config.
+		String property;
+		int softLimit = 3096, hardLimit = 2048;
+		File cacheLocation = new File(".");
+		property = properties.getProperty("softImageMemoryLimit", "" + softLimit);
+		try{
+			softLimit = Integer.parseInt(property);
+		}catch(Exception e){
+			//ignore
+		}
+		
+		property = properties.getProperty("hardImageMemoryLimit", "" + hardLimit);
+		try{
+			hardLimit = Integer.parseInt(property);
+		}catch(Exception e){
+			//ignore
+		}
+		
+		String path = properties.getProperty("frameCacheFolder", ".");
+		File folder = new File(path);
+		if((folder.exists() && folder.isDirectory()) || folder.mkdirs()){
+			cacheLocation = folder;
+		}
+		
+		imageMemoryConfig = new ImageMemoryConfig(softLimit, hardLimit, Policy.AUTOMATIC, cacheLocation);
+		
+	}
+	
+	
+	public static final UUID UNIQUE_ID = UUID.randomUUID();
 	
 	static{
 		try{
@@ -80,16 +109,6 @@ public class Config {
 		return 50;
 	}
 	
-	public static File frameCacheFolder(){
-		String path = properties.getProperty("frameCacheFolder", ".");
-		File folder = new File(path);
-		if((folder.exists() && folder.isDirectory()) || folder.mkdirs()){
-			return folder;
-		}else{
-			LOGGER.error("frame cache path {} does not exist, using default: .", folder.getAbsolutePath());
-			return new File(".");
-		}
-	}
 
 	public static int shotQueueSize() {
 		String threads = properties.getProperty("shotQueueSize", "5");
@@ -120,32 +139,7 @@ public class Config {
 		}
 		return Integer.MAX_VALUE;
 	}
-	/**
-	 * amount of memory to keep free when allocating {@link InMemoryMultiImage}s in MB
-	 * @return
-	 */
-	public static int getSoftImageMemoryLimit(){
-		String threads = properties.getProperty("softImageMemoryLimit", "" + (1024 * 3));
-		try{
-			return Integer.parseInt(threads);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		return 1024 * 3;
-	}
-	/**
-	 * amount of memory to keep free when allocating {@link InMemoryMultiImage}s in MB
-	 * @return
-	 */
-	public static int getHardImageMemoryLimit(){
-		String threads = properties.getProperty("hardImageMemoryLimit", "" + 1024);
-		try{
-			return Integer.parseInt(threads);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		return 1024;
-	}
+	
 	
 	public static int getAPIPort(){
 		String port = properties.getProperty("apiPort", "" + 12345);
@@ -155,6 +149,14 @@ public class Config {
 			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
 		}
 		return 12345;
+	}
+	
+	/**
+	 * Returns the {@link ImageMemoryConfig} as specified in the config file. If nothing is specified in the configuration file, the default values are returned, see {@link ImageMemoryConfig#ImageMemoryConfig()}
+	 * @return
+	 */
+	public static ImageMemoryConfig getImageMemoryConfig(){
+		return imageMemoryConfig;
 	}
 	
 }
