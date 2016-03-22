@@ -27,7 +27,6 @@ import ch.unibas.cs.dbis.cineast.core.features.AverageColorRaster;
 import ch.unibas.cs.dbis.cineast.core.features.AverageFuzzyHist;
 import ch.unibas.cs.dbis.cineast.core.features.CLD;
 import ch.unibas.cs.dbis.cineast.core.features.ChromaGrid8;
-import ch.unibas.cs.dbis.cineast.core.features.Contrast;
 import ch.unibas.cs.dbis.cineast.core.features.DominantColors;
 import ch.unibas.cs.dbis.cineast.core.features.DominantEdgeGrid16;
 import ch.unibas.cs.dbis.cineast.core.features.DominantEdgeGrid8;
@@ -43,7 +42,6 @@ import ch.unibas.cs.dbis.cineast.core.features.MedianColorGrid8;
 import ch.unibas.cs.dbis.cineast.core.features.MedianColorRaster;
 import ch.unibas.cs.dbis.cineast.core.features.MedianFuzzyHist;
 import ch.unibas.cs.dbis.cineast.core.features.MotionHistogram;
-import ch.unibas.cs.dbis.cineast.core.features.SaturationAndChroma;
 import ch.unibas.cs.dbis.cineast.core.features.SaturationGrid8;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivAverageFuzzyColor;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivMedianFuzzyColor;
@@ -194,10 +192,8 @@ public class SingleVideoToFileExtractor {
 	private static ArrayList<Extractor> getExtractors(){
 		ArrayList<Extractor> featureList = new ArrayList<>();
 		featureList.add(new AverageColor());
-		featureList.add(new Contrast());
 		featureList.add(new DominantColors());
 		featureList.add(new MedianColor());
-		featureList.add(new SaturationAndChroma());
 		featureList.add(new AverageFuzzyHist());
 		featureList.add(new MedianFuzzyHist());
 		featureList.add(new AverageColorARP44());
