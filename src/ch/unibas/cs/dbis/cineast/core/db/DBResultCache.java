@@ -63,15 +63,15 @@ private DBResultCache(){}
 	private static Connection connectToDB(){
 		Properties props = new Properties();
 
-		props.setProperty("user", Config.getDBUser());
-		props.setProperty("password", Config.getDBPassword());
+		props.setProperty("user", Config.getDatabaseConfig().getUser());
+		props.setProperty("password", Config.getDatabaseConfig().getPassword());
 		props.setProperty("tcpKeepAlive", "true");
 		props.setProperty("socketTimeout", "60");
 
 		Connection connection = null;
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:postgresql://" + Config.getDBLocation(), props);
+			connection = DriverManager.getConnection("jdbc:postgresql://" + Config.getDatabaseConfig().getLocation(), props);
 		} catch (SQLException e) {
 			LOGGER.fatal(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
 		}

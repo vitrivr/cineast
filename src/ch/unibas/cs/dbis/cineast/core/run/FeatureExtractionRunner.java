@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
+import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
 import ch.unibas.cs.dbis.cineast.core.db.ADAMTuple;
 import ch.unibas.cs.dbis.cineast.core.db.ADAMWriter;
 import ch.unibas.cs.dbis.cineast.core.db.ReturningADAMTuple;
@@ -77,7 +78,9 @@ public class FeatureExtractionRunner {
 	
 	public void extract(String fileName){
 		
-		ADAMWriter writer = new ADAMWriter(Config.getDBLocation(), Config.getDBUser(), Config.getDBPassword(), "id"){
+		DatabaseConfig dbconfig = Config.getDatabaseConfig();
+		
+		ADAMWriter writer = new ADAMWriter(dbconfig.getLocation(), dbconfig.getUser(), dbconfig.getPassword(), "id"){
 
 			@Override
 			public int getParameterCount() {
@@ -104,7 +107,7 @@ public class FeatureExtractionRunner {
 		
 		if(writer.check("select * from cineast.videos where name = \'" + ADAMTuple.escape(fileName) + "\'")){
 			System.err.println(fileName + " allready in database");
-			ShotLookup lookup = new ShotLookup(Config.getDBLocation(), Config.getDBUser(), Config.getDBPassword());
+			ShotLookup lookup = new ShotLookup();
 			id = lookup.lookUpVideoid(ADAMTuple.escape(fileName));
 			knownShots = lookup.lookUpVideo(id);
 			lookup.close();
@@ -116,7 +119,7 @@ public class FeatureExtractionRunner {
 		}
 		
 		
-		ShotSegmenter segmenter = new ShotSegmenter(vd, id, new ADAMWriter(Config.getDBLocation(), Config.getDBUser(), Config.getDBPassword(), "id") {
+		ShotSegmenter segmenter = new ShotSegmenter(vd, id, new ADAMWriter(dbconfig.getLocation(), dbconfig.getUser(), dbconfig.getPassword(), "id") {
 			
 			@Override
 			public String[] getParameterNames() {
@@ -167,7 +170,7 @@ public class FeatureExtractionRunner {
 			
 			@Override
 			public void initialize(Extractor e) {
-				e.init(new ADAMWriter(Config.getDBLocation(), Config.getDBUser(), Config.getDBPassword()){
+				e.init(new ADAMWriter(){
 
 					@Override
 					public int getParameterCount() {
@@ -221,7 +224,9 @@ public class FeatureExtractionRunner {
 
 		String path = folderName + "/" + videoFiles[0];
 
-		ADAMWriter writer = new ADAMWriter(Config.getDBLocation(), Config.getDBUser(), Config.getDBPassword(), "id") {
+		DatabaseConfig dbconfig = Config.getDatabaseConfig();
+		
+		ADAMWriter writer = new ADAMWriter(dbconfig.getLocation(), dbconfig.getUser(), dbconfig.getPassword(), "id") {
 
 			@Override
 			public int getParameterCount() {
@@ -247,7 +252,7 @@ public class FeatureExtractionRunner {
 
 		if (writer.check("select * from cineast.videos where name = \'" + ADAMTuple.escape(folderName) + "\'")) {
 			System.err.println(folderName + " allready in database");
-			ShotLookup lookup = new ShotLookup(Config.getDBLocation(), Config.getDBUser(), Config.getDBPassword());
+			ShotLookup lookup = new ShotLookup();
 			id = lookup.lookUpVideoid(ADAMTuple.escape(folderName));
 			knownShots = lookup.lookUpVideo(id);
 			lookup.close();
@@ -260,7 +265,7 @@ public class FeatureExtractionRunner {
 		}
 
 		ShotSegmenter segmenter = new ShotSegmenter(vd, id,
-				new ADAMWriter(Config.getDBLocation(), Config.getDBUser(), Config.getDBPassword(), "id") {
+				new ADAMWriter(dbconfig.getLocation(), dbconfig.getUser(), dbconfig.getPassword(), "id") {
 
 					@Override
 					public String[] getParameterNames() {
@@ -335,7 +340,7 @@ public class FeatureExtractionRunner {
 
 			@Override
 			public void initialize(Extractor e) {
-				e.init(new ADAMWriter(Config.getDBLocation(), Config.getDBUser(), Config.getDBPassword()) {
+				e.init(new ADAMWriter() {
 
 					@Override
 					public int getParameterCount() {

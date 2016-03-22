@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 public abstract class ADAMWriter implements PersistencyWriter<AbstractADAMTuple> {
@@ -19,6 +20,12 @@ public abstract class ADAMWriter implements PersistencyWriter<AbstractADAMTuple>
 	Connection connection;
 	String name;
 	String returning;
+	
+	public ADAMWriter(){
+		this(Config.getDatabaseConfig().getLocation(),
+				Config.getDatabaseConfig().getUser(),
+				Config.getDatabaseConfig().getPassword());
+	}
 	
 	public ADAMWriter(String database, String username, String password){
 		this(database, username, password, null);

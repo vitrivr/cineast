@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
+import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 public class ShotLookup {
@@ -22,7 +23,11 @@ public class ShotLookup {
 	private Connection connection;
 	
 	public ShotLookup(){
-		this(Config.getDBLocation(), Config.getDBUser(), Config.getDBPassword());
+		this(Config.getDatabaseConfig());
+	}
+	
+	public ShotLookup(DatabaseConfig config){
+		this(config.getLocation(), config.getUser(), config.getPassword());
 	}
 	
 	public ShotLookup(String database, String username, String password){

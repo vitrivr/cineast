@@ -21,11 +21,12 @@ public class Config {
 	private static Properties properties = new Properties();
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private static ImageMemoryConfig imageMemoryConfig;
+	private static APIConfig apiConfig;
+	private static DatabaseConfig databaseConfig;
 	private static DecoderConfig decoderConfig;
 	private static ExtractorConfig extractorConfig;
+	private static ImageMemoryConfig imageMemoryConfig;
 	private static RetrieverConfig retrieverConfig;
-	private static APIConfig apiConfig;
 	
 	static{ //for compatibility to properties file until it is replaced by JSON config.
 		
@@ -134,34 +135,17 @@ public class Config {
 		
 		apiConfig = new APIConfig(port, APIConfig.DEFAULT_ALLOW_EXTRACTION, APIConfig.DEFAULT_ENABLE_CLI);
 		
+		databaseConfig = new DatabaseConfig(
+				properties.getProperty("database", DatabaseConfig.DEFAULT_LOCATION),
+				properties.getProperty("user", DatabaseConfig.DEFAULT_USER),
+				properties.getProperty("pass", DatabaseConfig.DEFAULT_PASSWORD)
+				);
+		
 	}
 	
 	
 	public static final UUID UNIQUE_ID = UUID.randomUUID();
 	
-	
-	
-	public static String getDBLocation(){
-		return properties.getProperty("database", "127.0.0.1:5434/cineast");
-	}
-	
-	public static String getDBUser(){
-		return properties.getProperty("user", "cineast");
-	}
-	
-	public static String getDBPassword(){
-		return properties.getProperty("pass", "ilikemovies");
-	}
-
-	/*public static int getAPIPort(){
-		String port = properties.getProperty("apiPort", "" + 12345);
-		try{
-			return Integer.parseInt(port);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		return 12345;
-	}*/
 	
 	/**
 	 * Returns the {@link ImageMemoryConfig} as specified in the config file. If nothing is specified in the configuration file, the default values are returned, see {@link ImageMemoryConfig#ImageMemoryConfig()}
@@ -185,5 +169,9 @@ public class Config {
 	
 	public static APIConfig getApiConfig(){
 		return apiConfig;
+	}
+	
+	public static DatabaseConfig getDatabaseConfig(){
+		return databaseConfig;
 	}
 }

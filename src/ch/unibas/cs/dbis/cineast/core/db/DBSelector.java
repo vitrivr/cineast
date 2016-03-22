@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
+import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 public class DBSelector {
@@ -20,7 +21,11 @@ private static final Logger LOGGER = LogManager.getLogger();
 	Connection connection;
 	
 	public DBSelector(){
-		this(Config.getDBLocation(), Config.getDBUser(), Config.getDBPassword());
+		this(Config.getDatabaseConfig());
+	}
+	
+	public DBSelector(DatabaseConfig config){
+		this(config.getLocation(), config.getUser(), config.getPassword());
 	}
 	
 	public DBSelector(String database, String username, String password){
