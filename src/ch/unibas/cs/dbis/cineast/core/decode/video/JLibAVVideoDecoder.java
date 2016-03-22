@@ -68,8 +68,8 @@ public class JLibAVVideoDecoder implements VideoDecoder {
 		 this.originalWidth = codecContext.getWidth();
 	     this.originalHeight = codecContext.getHeight();
 	     
-	     if(this.originalWidth > Config.maxFrameWidth() || this.originalHeight > Config.maxFrameHeight()){
-	    	 float scaleDown = Math.min((float)Config.maxFrameWidth() / (float)this.originalWidth, (float)Config.maxFrameHeight() / (float)this.originalHeight);
+	     if(this.originalWidth > Config.getDecoderConfig().getMaxFrameWidth() || this.originalHeight > Config.getDecoderConfig().getMaxFrameHeight()){
+	    	 float scaleDown = Math.min((float)Config.getDecoderConfig().getMaxFrameWidth() / (float)this.originalWidth, (float)Config.getDecoderConfig().getMaxFrameHeight() / (float)this.originalHeight);
 	    	 this.width = Math.round(this.originalWidth * scaleDown);
 	    	 this.height = Math.round(this.originalHeight * scaleDown);
 	    	 LOGGER.debug("scaling input video down by a factor of {} from {}x{} to {}x{}", scaleDown, this.originalWidth, this.originalHeight, this.width, this.height);

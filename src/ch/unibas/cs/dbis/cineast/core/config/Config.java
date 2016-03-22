@@ -22,6 +22,7 @@ public class Config {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private static ImageMemoryConfig imageMemoryConfig;
+	private static DecoderConfig decoderConfig;
 	private static ExtractorConfig extractorConfig;
 	private static RetrieverConfig retrieverConfig;
 	
@@ -102,6 +103,25 @@ public class Config {
 		
 		retrieverConfig = new RetrieverConfig(poolthreads, RetrieverConfig.DEFAULT_TASK_QUEUE_SIZE, maxResults, resultsPerModule);
 		
+		
+		int maxFrameWidth = DecoderConfig.DEFAULT_MAX_FRAME_WIDTH, maxFrameHeight = DecoderConfig.DEFAULT_MAX_FRAME_HEIGHT;
+		
+		property = properties.getProperty("maxFrameWidth", "" + maxFrameWidth);
+		try{
+			maxFrameWidth = Integer.parseInt(property);
+		}catch(Exception e){
+			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
+		}
+		
+		String threads = properties.getProperty("maxFrameHeight", "" + maxFrameHeight);
+		try{
+			maxFrameHeight = Integer.parseInt(threads);
+		}catch(Exception e){
+			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
+		}
+		
+		decoderConfig = new DecoderConfig(maxFrameWidth, maxFrameHeight);
+		
 	}
 	
 	
@@ -120,7 +140,7 @@ public class Config {
 	public static String getDBPassword(){
 		return properties.getProperty("pass", "ilikemovies");
 	}
-
+/*
 	public static int maxFrameWidth(){
 		String threads = properties.getProperty("maxFrameWidth", "" + Integer.MAX_VALUE);
 		try{
@@ -140,7 +160,7 @@ public class Config {
 		}
 		return Integer.MAX_VALUE;
 	}
-	
+*/
 	
 	public static int getAPIPort(){
 		String port = properties.getProperty("apiPort", "" + 12345);
@@ -166,5 +186,9 @@ public class Config {
 	
 	public static RetrieverConfig getRetrieverConfig(){
 		return retrieverConfig;
+	}
+	
+	public static DecoderConfig getDecoderConfig(){
+		return decoderConfig;
 	}
 }
