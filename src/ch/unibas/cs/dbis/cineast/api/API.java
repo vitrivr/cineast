@@ -136,11 +136,15 @@ public class API {
 	public static void main(String[] args) {
 		// TODO parse settings
 
-		APICLIThread cli = new APICLIThread();
-		cli.start();
+		
+		if(Config.getApiConfig().getEnableCli()){
+			APICLIThread cli = new APICLIThread();
+			cli.start();
+		}
+		
 		
 		try {
-			ServerSocket ssocket = new ServerSocket(Config.getAPIPort());
+			ServerSocket ssocket = new ServerSocket(Config.getApiConfig().getJsonApiPort());
 			/*
 			 * Wait for a connection, Open a new Thread for each connection.
 			 */

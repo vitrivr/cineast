@@ -25,6 +25,7 @@ public class Config {
 	private static DecoderConfig decoderConfig;
 	private static ExtractorConfig extractorConfig;
 	private static RetrieverConfig retrieverConfig;
+	private static APIConfig apiConfig;
 	
 	static{ //for compatibility to properties file until it is replaced by JSON config.
 		
@@ -113,14 +114,25 @@ public class Config {
 			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
 		}
 		
-		String threads = properties.getProperty("maxFrameHeight", "" + maxFrameHeight);
+		property = properties.getProperty("maxFrameHeight", "" + maxFrameHeight);
 		try{
-			maxFrameHeight = Integer.parseInt(threads);
+			maxFrameHeight = Integer.parseInt(property);
 		}catch(Exception e){
 			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
 		}
 		
 		decoderConfig = new DecoderConfig(maxFrameWidth, maxFrameHeight);
+		
+		int port = APIConfig.DEFAULT_JSON_API_PORT;
+		
+		property = properties.getProperty("apiPort", "" + port);
+		try{
+			port = Integer.parseInt(property);
+		}catch(Exception e){
+			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
+		}
+		
+		apiConfig = new APIConfig(port, APIConfig.DEFAULT_ALLOW_EXTRACTION, APIConfig.DEFAULT_ENABLE_CLI);
 		
 	}
 	
@@ -140,29 +152,8 @@ public class Config {
 	public static String getDBPassword(){
 		return properties.getProperty("pass", "ilikemovies");
 	}
-/*
-	public static int maxFrameWidth(){
-		String threads = properties.getProperty("maxFrameWidth", "" + Integer.MAX_VALUE);
-		try{
-			return Integer.parseInt(threads);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		return Integer.MAX_VALUE;
-	}
-	
-	public static int maxFrameHeight(){
-		String threads = properties.getProperty("maxFrameHeight", "" + Integer.MAX_VALUE);
-		try{
-			return Integer.parseInt(threads);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		return Integer.MAX_VALUE;
-	}
-*/
-	
-	public static int getAPIPort(){
+
+	/*public static int getAPIPort(){
 		String port = properties.getProperty("apiPort", "" + 12345);
 		try{
 			return Integer.parseInt(port);
@@ -170,7 +161,7 @@ public class Config {
 			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
 		}
 		return 12345;
-	}
+	}*/
 	
 	/**
 	 * Returns the {@link ImageMemoryConfig} as specified in the config file. If nothing is specified in the configuration file, the default values are returned, see {@link ImageMemoryConfig#ImageMemoryConfig()}
@@ -190,5 +181,9 @@ public class Config {
 	
 	public static DecoderConfig getDecoderConfig(){
 		return decoderConfig;
+	}
+	
+	public static APIConfig getApiConfig(){
+		return apiConfig;
 	}
 }
