@@ -10,7 +10,7 @@ repositories {
 compileJava.options.encoding = 'UTF-8'
 
 dependencies {
-    compile group: 'org.boofcv', name: 'all', version: '0.21'
+    compile group: 'org.boofcv', name: 'all', version: '0.22'
 	compile group: 'org.jcodec', name: 'jcodec-javase', version: '0.1.9'
 	compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.6'
 	compile group: 'com.google.code.jlibav', name: 'jlibav', version: '0.2.1'
@@ -44,3 +44,11 @@ jar {
 	
 	archiveName = 'cineast.jar'
 }
+
+task copyConfigs(type: Copy){
+	from "cineast.properties"
+	into "$buildDir/libs/"
+	outputs.upToDateWhen { false }
+	}
+	
+task deploy(dependsOn: [build, jar, copyConfigs])
