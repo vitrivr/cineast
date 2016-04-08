@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.ImageUInt8;
+import boofcv.struct.image.GrayU8;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
@@ -78,11 +78,11 @@ public class EHD extends AbstractFeatureModule {
 	}
 
 	protected static float[] process(MultiImage img, float[] hist){
-		ImageUInt8 gray = ConvertBufferedImage.convertFrom(img.getBufferedImage(), (ImageUInt8) null);
+		GrayU8 gray = ConvertBufferedImage.convertFrom(img.getBufferedImage(), (GrayU8) null);
 		int width = img.getWidth(), height = img.getHeight();
 		for(int x = 0; x < 4; ++x){
 			for(int y = 0; y < 4; ++y){
-				ImageUInt8 subImage = gray.subimage(width * x / 4, height * y / 4,width * (x + 1) / 4, height * (y + 1) / 4, null);
+				GrayU8 subImage = gray.subimage(width * x / 4, height * y / 4,width * (x + 1) / 4, height * (y + 1) / 4, null);
 				int count = 0;
 				int[] tmp = new int[5];
 				for(int xx = 0; xx < subImage.getWidth() - 1; xx += 2){

@@ -11,7 +11,7 @@ import boofcv.alg.filter.derivative.GImageDerivativeOps;
 import boofcv.alg.tracker.klt.PkltConfig;
 import boofcv.factory.feature.tracker.FactoryPointTracker;
 import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.ImageUInt8;
+import boofcv.struct.image.GrayU8;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
@@ -34,12 +34,12 @@ private PathList(){}
 		PkltConfig config = new PkltConfig();
 		config.templateRadius = 3;
 		config.pyramidScaling = new int[] { 1, 2, 4, 8 };
-		PointTracker<ImageUInt8> tracker = FactoryPointTracker.klt(config, new ConfigGeneralDetector(numberOfPointsToTrack, 3, 1), ImageUInt8.class, GImageDerivativeOps.getDerivativeType(ImageUInt8.class));
+		PointTracker<GrayU8> tracker = FactoryPointTracker.klt(config, new ConfigGeneralDetector(numberOfPointsToTrack, 3, 1), GrayU8.class, GImageDerivativeOps.getDerivativeType(GrayU8.class));
 		
 		TLongObjectHashMap<LinkedList<Point2D_F32>> paths = new TLongObjectHashMap<LinkedList<Point2D_F32>>();
 		TLongIntHashMap trackStartFrames = new TLongIntHashMap();
 		ArrayList<PointTrack> tracks = new ArrayList<PointTrack>(numberOfPointsToTrack);
-		ImageUInt8 gray = null;
+		GrayU8 gray = null;
 		for(Frame f : frames){
 			gray = ConvertBufferedImage.convertFrom(f.getImage().getBufferedImage(), gray);
 			

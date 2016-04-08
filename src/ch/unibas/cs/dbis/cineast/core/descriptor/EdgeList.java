@@ -18,8 +18,8 @@ import boofcv.alg.feature.detect.edge.CannyEdge;
 import boofcv.alg.feature.detect.edge.EdgeContour;
 import boofcv.factory.feature.detect.edge.FactoryEdgeDetectors;
 import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.ImageSInt16;
-import boofcv.struct.image.ImageUInt8;
+import boofcv.struct.image.GrayS16;
+import boofcv.struct.image.GrayU8;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 
@@ -38,28 +38,28 @@ public class EdgeList {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, img.getWidth(), img.getHeight());
 		g.drawImage(img.getBufferedImage(), 0, 0, null);
-		ImageUInt8 gray = ConvertBufferedImage.convertFrom(withBackground, (ImageUInt8) null);
-		CannyEdge<ImageUInt8, ImageSInt16> canny = getCanny();
+		GrayU8 gray = ConvertBufferedImage.convertFrom(withBackground, (GrayU8) null);
+		CannyEdge<GrayU8, GrayS16> canny = getCanny();
 		canny.process(gray, THRESHOLD_LOW, THRESHOLD_HIGH, null);
 		List<EdgeContour> _return = canny.getContours();
 		LOGGER.exit();
 		return _return;
 	}
 	
-	private static LoadingCache<Thread, CannyEdge<ImageUInt8, ImageSInt16>> cannies = CacheBuilder
+	private static LoadingCache<Thread, CannyEdge<GrayU8, GrayS16>> cannies = CacheBuilder
 			.newBuilder()
 			.maximumSize(Config.getExtractorConfig().getThreadPoolSize() * 2)
 			.expireAfterAccess(10, TimeUnit.MINUTES)
-			.build(new CacheLoader<Thread, CannyEdge<ImageUInt8, ImageSInt16>>() {
+			.build(new CacheLoader<Thread, CannyEdge<GrayU8, GrayS16>>() {
 
 				@Override
-				public CannyEdge<ImageUInt8, ImageSInt16> load(Thread arg0) {
+				public CannyEdge<GrayU8, GrayS16> load(Thread arg0) {
 					return FactoryEdgeDetectors.canny(2, true, true,
-							ImageUInt8.class, ImageSInt16.class);
+							GrayU8.class, GrayS16.class);
 				}
 			});
 
-	private static synchronized CannyEdge<ImageUInt8, ImageSInt16> getCanny() {
+	private static synchronized CannyEdge<GrayU8, GrayS16> getCanny() {
 		Thread current = Thread.currentThread();
 		try {
 			return cannies.get(current);

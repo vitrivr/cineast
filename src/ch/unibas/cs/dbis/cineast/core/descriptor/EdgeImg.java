@@ -19,8 +19,8 @@ import boofcv.alg.feature.detect.edge.CannyEdge;
 import boofcv.factory.feature.detect.edge.FactoryEdgeDetectors;
 import boofcv.gui.binary.VisualizeBinaryData;
 import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.ImageSInt16;
-import boofcv.struct.image.ImageUInt8;
+import boofcv.struct.image.GrayS16;
+import boofcv.struct.image.GrayU8;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImageFactory;
@@ -39,8 +39,8 @@ public class EdgeImg {
 	public static MultiImage getEdgeImg(MultiImage img) {
 		LOGGER.entry();
 
-		ImageUInt8 gray = ConvertBufferedImage.convertFrom(img.getBufferedImage(), (ImageUInt8) null);
-		if(!isSolidBlack(gray)){
+		GrayU8 gray = ConvertBufferedImage.convertFrom(img.getBufferedImage(), (GrayU8) null);
+		if(!isSolid(gray)){
 			getCanny().process(gray, THRESHOLD_LOW, THRESHOLD_HIGH, gray);
 		}
 
@@ -56,9 +56,9 @@ public class EdgeImg {
 			out = new boolean[img.getWidth() * img.getHeight()];
 		}
 
-		ImageUInt8 gray = ConvertBufferedImage.convertFrom(img.getBufferedImage(), (ImageUInt8) null);
+		GrayU8 gray = ConvertBufferedImage.convertFrom(img.getBufferedImage(), (GrayU8) null);
 
-		if(!isSolidBlack(gray)){
+		if(!isSolid(gray)){
 			getCanny().process(gray, THRESHOLD_LOW, THRESHOLD_HIGH, gray);
 			
 		}
@@ -85,8 +85,8 @@ public class EdgeImg {
 		g.fillRect(0, 0, img.getWidth(), img.getHeight());
 		g.drawImage(img.getBufferedImage(), 0, 0, null);
 		
-		ImageUInt8 gray = ConvertBufferedImage.convertFrom(withBackground, (ImageUInt8) null);
-		if(!isSolidBlack(gray)){
+		GrayU8 gray = ConvertBufferedImage.convertFrom(withBackground, (GrayU8) null);
+		if(!isSolid(gray)){
 			getCanny().process(gray, THRESHOLD_LOW, THRESHOLD_HIGH, gray);
 		}
 
@@ -97,9 +97,10 @@ public class EdgeImg {
 		return out;
 	}
 	
-	public static boolean isSolidBlack(ImageUInt8 img){
+	public static boolean isSolid(GrayU8 img){
+		byte first = img.data[0];
 		for(byte b : img.data){
-			if(b != 0){
+			if(b != first){
 				return false;
 			}
 		}
@@ -107,14 +108,14 @@ public class EdgeImg {
 	}
 	
 	//private static HashMap<Thread, CannyEdge<ImageUInt8, ImageSInt16>> cannies = new HashMap<Thread, CannyEdge<ImageUInt8,ImageSInt16>>();
-	private static LoadingCache<Thread, CannyEdge<ImageUInt8, ImageSInt16>> cannies = CacheBuilder.newBuilder().maximumSize(Config.getExtractorConfig().getThreadPoolSize() * 2)
-			.expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<Thread, CannyEdge<ImageUInt8, ImageSInt16>>(){
+	private static LoadingCache<Thread, CannyEdge<GrayU8, GrayS16>> cannies = CacheBuilder.newBuilder().maximumSize(Config.getExtractorConfig().getThreadPoolSize() * 2)
+			.expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<Thread, CannyEdge<GrayU8, GrayS16>>(){
 
 				@Override
-				public CannyEdge<ImageUInt8, ImageSInt16> load(Thread arg0){
-					return FactoryEdgeDetectors.canny(2, false, true, ImageUInt8.class, ImageSInt16.class);
+				public CannyEdge<GrayU8, GrayS16> load(Thread arg0){
+					return FactoryEdgeDetectors.canny(2, false, true, GrayU8.class, GrayS16.class);
 				}});
-	private static synchronized CannyEdge<ImageUInt8, ImageSInt16> getCanny(){
+	private static synchronized CannyEdge<GrayU8, GrayS16> getCanny(){
 		Thread current = Thread.currentThread();
 		try {
 			return cannies.get(current);
