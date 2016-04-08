@@ -94,10 +94,10 @@ public class ReflectionHelper {
 			throw new IllegalArgumentException("Either 'name' or 'class' needs to be specified in json");
 		}
 		Class<T> targetClass = null;
-		String classPath = "";
+		String classPath = null;
 		if(json.get("name") != null){
-			classPath = expectedPackage + "." + json.get("name").asString();
 			try{
+				classPath = expectedPackage + "." + json.get("name").asString();
 				Class<?> c =  Class.forName(classPath);
 				if(!expectedSuperClass.isAssignableFrom(c)){
 					throw new InstantiationException(classPath + " is not a sub-class of " + expectedSuperClass.getName());
@@ -105,11 +105,17 @@ public class ReflectionHelper {
 				targetClass = (Class<T>) c;
 			}catch(ClassNotFoundException e){
 				//can be ignored at this point
+			}catch(UnsupportedOperationException notAString){
+				LOGGER.warn("'name' was not a string during class instanciation in instanciateFromJson");
 			}
 		}
 		
 		if(targetClass == null && json.get("class") != null){
-			classPath = json.get("class").asString();
+			try{
+				classPath = json.get("class").asString();
+			}catch(UnsupportedOperationException notAString){
+				LOGGER.warn("'class' was not a string during class instanciation in instanciateFromJson");
+			}
 			try{
 				Class<?> c =  Class.forName(classPath);
 				if(!expectedSuperClass.isAssignableFrom(c)){
@@ -122,14 +128,18 @@ public class ReflectionHelper {
 		}
 		
 		if(targetClass == null){
-			throw new ClassNotFoundException("Class " + classPath + " was not found");
+			throw new ClassNotFoundException("Class '" + classPath + "' was not found");
 		}
 		
 		T instance = null;
 		if(json.get("config") == null){
 			instance = instanciate(targetClass);
 		}else{
-			instance = instanciate(targetClass, json.get("config").asObject());
+			try{
+				instance = instanciate(targetClass, json.get("config").asObject());
+			}catch(UnsupportedOperationException notAnObject){
+				LOGGER.warn("'config' was not an object during class instanciation in instanciateFromJson");
+			}
 		}
 		
 		if(instance == null){
