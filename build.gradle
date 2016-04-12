@@ -1,7 +1,22 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "gradle.plugin.com.google.protobuf:protobuf-gradle-plugin:0.7.6"
+  }
+}
+
 apply plugin: 'java'
+apply plugin: 'com.google.protobuf'
 
 repositories {
    mavenCentral()
+   maven {
+       url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
    flatDir {
        dirs 'lib'
    }
@@ -19,6 +34,7 @@ dependencies {
 	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'
 	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'
 	compile group: 'commons-codec', name: 'commons-codec', version: '1.8'
+	compile 'com.google.protobuf:protobuf-java:3.0.0-beta-2'
 	compile name: 'postgresql'
 }
 
@@ -26,9 +42,13 @@ sourceSets {
     main {
         java {
             srcDir 'src'
+            srcDir 'generated/main/java'
         }
 		resources {
 			srcDir 'config'
+		}
+		proto {
+			srcDir 'adampro-grpc/src/main/protobuf'
 		}
     }
 }
@@ -43,6 +63,10 @@ jar {
 	}
 	
 	archiveName = 'cineast.jar'
+}
+
+protobuf {
+	generatedFilesBaseDir = "$projectDir/generated/"
 }
 
 task copyConfigs(type: Copy){
