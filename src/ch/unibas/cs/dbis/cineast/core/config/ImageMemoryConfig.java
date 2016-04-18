@@ -99,81 +99,88 @@ public final class ImageMemoryConfig {
 	}
 	
 	/**
+ 	 * expects a json object of the follwing form:
+	 * <pre>
 	 * {
 	 * 	"cachePolicy" : "AUTOMATIC",
 	 * 	"softMemoryLimit" : 3096,
 	 * 	"hardMemoryLimit" : 2048,
 	 * 	"cacheLocation" : "."
 	 * }
-	 * @param config
-	 * @return
+	 * </pre>
+	 * 
+	 * @throws NullPointerException in case the provided JsonObject is null
+	 * @throws IllegalArgumentException in case one the specified parameters has the wrong format or the specified path is invalid
+	 * 
 	 */
-	public static final ImageMemoryConfig parseJson(JsonObject config){		
-		if(config == null){
-			LOGGER.warn("JsonObject was null in ImageMemoryConfig.parseJson, using default settings");
-			return new ImageMemoryConfig();
+	public static final ImageMemoryConfig parseJson(JsonObject obj){		
+		if(obj == null){
+			throw new NullPointerException("JsonObject was null");
 		}
 		
-		int softMemoryLimit = DEFAULT_SOFT_LIMIT, hardMemoryLimit = DEFAULT_HARD_LIMIT;
 		Policy cachePolicy = DEFAULT_POLICY;
-		File cacheLocation = DEFAULT_CACHE_LOCATION;
-		
-		if(config.get("cachePolicy") != null){
+		if(obj.get("cachePolicy") != null){
 			String policy = "";
 			try{
-				policy = config.get("cachePolicy").asString();
+				policy = obj.get("cachePolicy").asString();
 				cachePolicy = Policy.valueOf(policy);
 			}catch(UnsupportedOperationException notAString){
-				LOGGER.error("could not parse cache.cachePolicy, entry is not a string");
+				throw new IllegalArgumentException("'cachePolicy' was not a string in image memory config");
 			}catch(IllegalArgumentException notAPolicy){
-				LOGGER.error("could not parse cache.cachePolicy, {} is not a valid policy", policy);
+				throw new IllegalArgumentException(policy + " is not a valid 'cachePolicy' in image memory config");
 			}
 		}
 		
-		if(config.get("softMemoryLimit") != null){
+		int softMemoryLimit = DEFAULT_SOFT_LIMIT;
+		if(obj.get("softMemoryLimit") != null){
 			try{
-				int limit = config.get("softMemoryLimit").asInt();
-				if(limit < 0){
-					LOGGER.error("could not parse 'cache.softMemoryLimit', entry cannot be negaitve");
-				}else{
-					softMemoryLimit = limit;
-				}
-			}catch(UnsupportedOperationException notANumber){
-				LOGGER.error("could not parse 'cache.softMemoryLimit', entry is not a number");
+				softMemoryLimit = obj.get("softMemoryLimit").asInt();
+			}catch(UnsupportedOperationException e){
+				throw new IllegalArgumentException("'softMemoryLimit' was not an integer in image memory configuration");
+			}
+			
+			if(softMemoryLimit <= 0){
+				throw new IllegalArgumentException("'softMemoryLimit' must be > 0");
 			}
 		}
+
 		
-		if(config.get("hardMemoryLimit") != null){
+		int hardMemoryLimit = DEFAULT_HARD_LIMIT;
+		if(obj.get("hardMemoryLimit") != null){
 			try{
-				int limit = config.get("hardMemoryLimit").asInt();
-				if(limit < 0){
-					LOGGER.error("could not parse 'cache.hardMemoryLimit', entry cannot be negaitve");
-				}else{
-					hardMemoryLimit = limit;
-				}
-			}catch(UnsupportedOperationException notANumber){
-				LOGGER.error("could not parse 'cache.hardMemoryLimit', entry is not a number");
+				hardMemoryLimit = obj.get("hardMemoryLimit").asInt();
+			}catch(UnsupportedOperationException e){
+				throw new IllegalArgumentException("'hardMemoryLimit' was not an integer in image memory configuration");
+			}
+			
+			if(hardMemoryLimit <= 0){
+				throw new IllegalArgumentException("'hardMemoryLimit' must be > 0");
+			}
+			
+			if(hardMemoryLimit < softMemoryLimit){
+				throw new IllegalArgumentException("'hardMemoryLimit' cannot be smaller than 'softMemoryLimit' in image memory configuration");
 			}
 		}
 		
-		if(config.get("cacheLocation") != null){
+		File cacheLocation = DEFAULT_CACHE_LOCATION;
+		if(obj.get("cacheLocation") != null){
 			String location = "";
 			try{
-				location = config.get("cacheLocation").asString();
-				File folder = new File(location);
-				if(!folder.exists()){
-					LOGGER.warn("Error while parsing 'cache.cacheLocation': folder {} does not exist, ignoring 'cacheLocation'", folder.getAbsolutePath());
-				}else if(!folder.isDirectory()){
-					LOGGER.warn("Error while parsing 'cache.cacheLocation': {} is not a directory, ignoring 'cacheLocation'", folder.getAbsolutePath());
-				}else if(!folder.canRead()){
-					LOGGER.warn("Error while parsing 'cache.cacheLocation': {} is not readable, ignoring 'cacheLocation'", folder.getAbsolutePath());
-				}else{
-					cacheLocation = folder;
+				location = obj.get("cacheLocation").asString();
+				cacheLocation = new File(location);
+				if(!cacheLocation.exists()){
+					throw new IllegalArgumentException("'cacheLocation' does not exist in image memory config: " + cacheLocation.getAbsolutePath());
+				}
+				if(!cacheLocation.isDirectory()){
+					throw new IllegalArgumentException("'cacheLocation' is not a directory in image memory config: " + cacheLocation.getAbsolutePath());
+				}
+				if(!cacheLocation.canRead()){
+					throw new IllegalArgumentException("'cacheLocation' is not readable in image memory config: " + cacheLocation.getAbsolutePath());
 				}
 			}catch(UnsupportedOperationException nameNotAString){
-				LOGGER.warn("Could not parse job config entry 'cache.cacheLocation': entry is not a valid string, ignoring 'cacheLocation'");
+				throw new IllegalArgumentException("'cacheLocation' was not a string in image memory config");
 			}catch(SecurityException canNotRead){
-				LOGGER.warn("Error while parsing 'cache.cacheLocation': security settings do not permitt access, ignoring 'cacheLocation'");
+				throw new IllegalArgumentException("security settings do not permitt access to 'cacheLocation' specified in image memory config");
 			}
 			
 		}
