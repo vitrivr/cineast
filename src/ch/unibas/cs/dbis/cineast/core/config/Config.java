@@ -1,145 +1,104 @@
 package ch.unibas.cs.dbis.cineast.core.config;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Properties;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ch.unibas.cs.dbis.cineast.core.config.ImageCacheConfig.Policy;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 public class Config {
 
 	private Config(){}
 	
-	private static Properties properties = new Properties();
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private static APIConfig apiConfig;
-	private static DatabaseConfig databaseConfig;
-	private static DecoderConfig decoderConfig;
-	private static ExtractorConfig extractorConfig;
-	private static ImageCacheConfig imageMemoryConfig;
-	private static RetrieverConfig retrieverConfig;
+	private static APIConfig apiConfig = new APIConfig();
+	private static DatabaseConfig databaseConfig = new DatabaseConfig();
+	private static DecoderConfig decoderConfig = new DecoderConfig();
+	private static ExtractorConfig extractorConfig = new ExtractorConfig();
+	private static ImageCacheConfig imageCacheConfig = new ImageCacheConfig();
+	private static RetrieverConfig retrieverConfig = new RetrieverConfig();
 	
-	static{ //for compatibility to properties file until it is replaced by JSON config.
+	static{
 		
 		try{
-			FileInputStream fin = new FileInputStream("cineast.properties");
-			properties.load(fin);
+			FileInputStream fin = new FileInputStream("cineast.json");
+			parse(fin);
 			fin.close();
-			LOGGER.info("prpoerties loaded");
+			LOGGER.info("config loaded");
 		}catch(FileNotFoundException e){
-			LOGGER.warn("properties file not found");
+			LOGGER.warn("config file not found");
 		} catch (IOException e) {
-			LOGGER.warn("could not read properties file");
+			LOGGER.warn("could not read config file");
 		}
 		
 		
-		String property;
-		int softLimit = ImageCacheConfig.DEFAULT_SOFT_LIMIT, hardLimit = ImageCacheConfig.DEFAULT_HARD_LIMIT;
-		File cacheLocation = new File(".");
-		property = properties.getProperty("softImageMemoryLimit", "" + softLimit);
+	}
+	
+	private static void parse(InputStream in) throws IOException{
+		JsonObject obj = null;
 		try{
-			softLimit = Integer.parseInt(property);
-		}catch(Exception e){
-			//ignore
+			obj = JsonValue.readFrom(new InputStreamReader(in)).asObject();
+		}catch(UnsupportedOperationException e){
+			LOGGER.error("config file is not valid json");
+			return;
 		}
 		
-		property = properties.getProperty("hardImageMemoryLimit", "" + hardLimit);
-		try{
-			hardLimit = Integer.parseInt(property);
-		}catch(Exception e){
-			//ignore
+		for(String name : obj.names()){
+			switch(name){
+			case "database":{
+				try{
+					databaseConfig = DatabaseConfig.parse(obj.get("database").asObject());
+				}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
+					LOGGER.warn("could not parse 'database' config: {}", e.getMessage());
+				}
+				break;
+			}
+			case "retriever":{
+				try{
+					retrieverConfig = RetrieverConfig.parse(obj.get("retriever").asObject());
+				}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
+					LOGGER.warn("could not parse 'retriever' config: {}", e.getMessage());
+				}
+				break;
+			}
+			case "decoder":{
+				try{
+					decoderConfig = DecoderConfig.parse(obj.get("decoder").asObject());
+				}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
+					LOGGER.warn("could not parse 'decoder' config: {}", e.getMessage());
+				}
+				break;
+			}
+			case "imagecache":{
+				try{
+					imageCacheConfig = ImageCacheConfig.parse(obj.get("imagecache").asObject());
+				}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
+					LOGGER.warn("could not parse 'imagecache' config: {}", e.getMessage());
+				}
+				break;
+			}
+			case "api":{
+				try{
+					apiConfig = APIConfig.parse(obj.get("api").asObject());
+				}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
+					LOGGER.warn("could not parse 'api' config: {}", e.getMessage());
+				}
+				break;
+			}
+			default: {
+				LOGGER.info("unrecognized parameter in config: {}, ignoring");
+			}
+			}
 		}
-		
-		String path = properties.getProperty("frameCacheFolder", ".");
-		File folder = new File(path);
-		if((folder.exists() && folder.isDirectory()) || folder.mkdirs()){
-			cacheLocation = folder;
-		}
-		
-		imageMemoryConfig = new ImageCacheConfig(softLimit, hardLimit, Policy.AUTOMATIC, cacheLocation);
-		
-		
-		int poolthreads = ExtractorConfig.DEFAULT_THREAD_POOL_SIZE;
-		property = properties.getProperty("numbetOfPoolThreads", "" + poolthreads);
-		try{
-			poolthreads = Integer.parseInt(property);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		
-		int shotQueueSize = ExtractorConfig.DEFAULT_SHOT_QUEUE_SIZE;
-		property = properties.getProperty("shotQueueSize", "" + shotQueueSize);
-		try{
-			shotQueueSize = Integer.parseInt(property);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		
-		extractorConfig = new ExtractorConfig(shotQueueSize, poolthreads, ExtractorConfig.DEFAULT_TASK_QUEUE_SIZE);
-		
-		
-		int resultsPerModule = RetrieverConfig.DEFAULT_RESULTS_PER_MODULE, maxResults = RetrieverConfig.DEFAULT_MAX_RESULTS;
-		
-		property = properties.getProperty("resultsPerModule", "" + resultsPerModule);
-		try{
-			resultsPerModule = Integer.parseInt(property);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		
-		property = properties.getProperty("maxResults", "" + maxResults);
-		try{
-			maxResults = Integer.parseInt(property);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		
-		retrieverConfig = new RetrieverConfig(poolthreads, RetrieverConfig.DEFAULT_TASK_QUEUE_SIZE, maxResults, resultsPerModule);
-		
-		
-		int maxFrameWidth = DecoderConfig.DEFAULT_MAX_FRAME_WIDTH, maxFrameHeight = DecoderConfig.DEFAULT_MAX_FRAME_HEIGHT;
-		
-		property = properties.getProperty("maxFrameWidth", "" + maxFrameWidth);
-		try{
-			maxFrameWidth = Integer.parseInt(property);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		
-		property = properties.getProperty("maxFrameHeight", "" + maxFrameHeight);
-		try{
-			maxFrameHeight = Integer.parseInt(property);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		
-		decoderConfig = new DecoderConfig(maxFrameWidth, maxFrameHeight);
-		
-		int port = APIConfig.DEFAULT_JSON_API_PORT;
-		
-		property = properties.getProperty("apiPort", "" + port);
-		try{
-			port = Integer.parseInt(property);
-		}catch(Exception e){
-			LOGGER.warn("error while parsing properties: {}", LogHelper.getStackTrace(e));
-		}
-		
-		apiConfig = new APIConfig(port, APIConfig.DEFAULT_ALLOW_EXTRACTION, APIConfig.DEFAULT_ENABLE_CLI);
-		
-		databaseConfig = new DatabaseConfig(
-				properties.getProperty("database", DatabaseConfig.DEFAULT_LOCATION),
-				properties.getProperty("user", DatabaseConfig.DEFAULT_USER),
-				properties.getProperty("pass", DatabaseConfig.DEFAULT_PASSWORD)
-				);
 		
 	}
 	
@@ -152,7 +111,7 @@ public class Config {
 	 * @return
 	 */
 	public static ImageCacheConfig getImageMemoryConfig(){
-		return imageMemoryConfig;
+		return imageCacheConfig;
 	}
 	
 	public static ExtractorConfig getExtractorConfig(){

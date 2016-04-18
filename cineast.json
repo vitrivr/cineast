@@ -1,0 +1,29 @@
+{
+	"database": {
+		"location": "127.0.0.1:5432/cineast",
+		"user": "pg_user",
+		"password": "pg_password"
+	},
+	
+	"retriever": {
+		"threadPoolSize": 2,
+		"maxResults": 100,
+		"resultsPerModule": 50
+	},
+	
+	"decoder": {
+		"maxFrameWidth": 640,
+		"maxFrameHeight": 480
+	},
+	
+	"imagecache": {
+		"softMemoryLimit": 2048,
+		"hardMemoryLimit": 1024
+	},
+	
+	"api": {
+		"jsonApiPort": 12345,
+		"enableCLI": true
+	}
+
+}
