@@ -10,7 +10,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ch.unibas.cs.dbis.cineast.core.config.ImageMemoryConfig.Policy;
+import ch.unibas.cs.dbis.cineast.core.config.ImageCacheConfig.Policy;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 
@@ -25,7 +25,7 @@ public class Config {
 	private static DatabaseConfig databaseConfig;
 	private static DecoderConfig decoderConfig;
 	private static ExtractorConfig extractorConfig;
-	private static ImageMemoryConfig imageMemoryConfig;
+	private static ImageCacheConfig imageMemoryConfig;
 	private static RetrieverConfig retrieverConfig;
 	
 	static{ //for compatibility to properties file until it is replaced by JSON config.
@@ -43,7 +43,7 @@ public class Config {
 		
 		
 		String property;
-		int softLimit = ImageMemoryConfig.DEFAULT_SOFT_LIMIT, hardLimit = ImageMemoryConfig.DEFAULT_HARD_LIMIT;
+		int softLimit = ImageCacheConfig.DEFAULT_SOFT_LIMIT, hardLimit = ImageCacheConfig.DEFAULT_HARD_LIMIT;
 		File cacheLocation = new File(".");
 		property = properties.getProperty("softImageMemoryLimit", "" + softLimit);
 		try{
@@ -65,7 +65,7 @@ public class Config {
 			cacheLocation = folder;
 		}
 		
-		imageMemoryConfig = new ImageMemoryConfig(softLimit, hardLimit, Policy.AUTOMATIC, cacheLocation);
+		imageMemoryConfig = new ImageCacheConfig(softLimit, hardLimit, Policy.AUTOMATIC, cacheLocation);
 		
 		
 		int poolthreads = ExtractorConfig.DEFAULT_THREAD_POOL_SIZE;
@@ -148,10 +148,10 @@ public class Config {
 	
 	
 	/**
-	 * Returns the {@link ImageMemoryConfig} as specified in the config file. If nothing is specified in the configuration file, the default values are returned, see {@link ImageMemoryConfig#ImageMemoryConfig()}
+	 * Returns the {@link ImageCacheConfig} as specified in the config file. If nothing is specified in the configuration file, the default values are returned, see {@link ImageCacheConfig#ImageMemoryConfig()}
 	 * @return
 	 */
-	public static ImageMemoryConfig getImageMemoryConfig(){
+	public static ImageCacheConfig getImageMemoryConfig(){
 		return imageMemoryConfig;
 	}
 	

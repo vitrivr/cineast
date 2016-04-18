@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.eclipsesource.json.JsonObject;
 
 
-public final class ImageMemoryConfig {
+public final class ImageCacheConfig {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -39,7 +39,7 @@ public final class ImageMemoryConfig {
 	 * @throws NullPointerException in case the cachePolicy or cacheLocation is null
 	 * @throws SecurityException in case access to cacheLocation is not permitted
 	 */
-	public ImageMemoryConfig(int softMemoryLimit, int hardMemoryLimit, Policy cachePolicy, File cacheLocation){
+	public ImageCacheConfig(int softMemoryLimit, int hardMemoryLimit, Policy cachePolicy, File cacheLocation){
 		if(softMemoryLimit < 0){
 			throw new IllegalArgumentException("Memorylimit must me positive");
 		}
@@ -66,7 +66,7 @@ public final class ImageMemoryConfig {
 	/**
 	 * Creates an ImageMemoryConfig object with the default configuration. This is equivalent to ImageMemoryConfig(3096, 2048, Policy.AUTOMATIC);
 	 */
-	public ImageMemoryConfig(){
+	public ImageCacheConfig(){
 		this(DEFAULT_SOFT_LIMIT, DEFAULT_HARD_LIMIT, DEFAULT_POLICY, DEFAULT_CACHE_LOCATION);
 	}
 	
@@ -113,7 +113,7 @@ public final class ImageMemoryConfig {
 	 * @throws IllegalArgumentException in case one the specified parameters has the wrong format or the specified path is invalid
 	 * 
 	 */
-	public static final ImageMemoryConfig parseJson(JsonObject obj){		
+	public static final ImageCacheConfig parseJson(JsonObject obj){		
 		if(obj == null){
 			throw new NullPointerException("JsonObject was null");
 		}
@@ -185,7 +185,7 @@ public final class ImageMemoryConfig {
 			
 		}
 		
-		return new ImageMemoryConfig(softMemoryLimit, hardMemoryLimit, cachePolicy, cacheLocation);
+		return new ImageCacheConfig(softMemoryLimit, hardMemoryLimit, cachePolicy, cacheLocation);
 	}
 	
 	@Override

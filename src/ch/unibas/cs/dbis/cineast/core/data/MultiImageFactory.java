@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.config.ImageMemoryConfig.Policy;
+import ch.unibas.cs.dbis.cineast.core.config.ImageCacheConfig.Policy;
 
 public class MultiImageFactory {
 
