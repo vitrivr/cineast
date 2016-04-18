@@ -113,7 +113,7 @@ public final class ImageCacheConfig {
 	 * @throws IllegalArgumentException in case one the specified parameters has the wrong format or the specified path is invalid
 	 * 
 	 */
-	public static final ImageCacheConfig parseJson(JsonObject obj){		
+	public static final ImageCacheConfig parse(JsonObject obj){		
 		if(obj == null){
 			throw new NullPointerException("JsonObject was null");
 		}
@@ -157,8 +157,8 @@ public final class ImageCacheConfig {
 				throw new IllegalArgumentException("'hardMemoryLimit' must be > 0");
 			}
 			
-			if(hardMemoryLimit < softMemoryLimit){
-				throw new IllegalArgumentException("'hardMemoryLimit' cannot be smaller than 'softMemoryLimit' in image memory configuration");
+			if(hardMemoryLimit > softMemoryLimit){
+				throw new IllegalArgumentException("'hardMemoryLimit' cannot be larger than 'softMemoryLimit' in image memory configuration");
 			}
 		}
 		
