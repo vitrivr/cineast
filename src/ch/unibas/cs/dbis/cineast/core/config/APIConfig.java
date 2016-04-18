@@ -52,7 +52,7 @@ public final class APIConfig {
 	 */
 	public static APIConfig parse(JsonObject obj) throws NullPointerException, IllegalArgumentException{
 		if(obj == null){
-			throw new NullPointerException("JsinObject was null");
+			throw new NullPointerException("JsonObject was null");
 		}
 		
 		int jsonApiPort = DEFAULT_JSON_API_PORT;
