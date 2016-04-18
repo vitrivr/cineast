@@ -17,3 +17,5 @@ bin
 .classpath
 .settings/
 /generated/
+
+.idea
