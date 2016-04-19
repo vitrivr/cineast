@@ -5,28 +5,35 @@ import com.eclipsesource.json.JsonObject;
 public final class APIConfig {
 
 	private final int jsonApiPort;
+	private final boolean enableJson;
 	private final boolean allowExtraction;
 	private final boolean enableCLI;
 	
 	public static final int DEFAULT_JSON_API_PORT = 12345;
 	public static final boolean DEFAULT_ALLOW_EXTRACTION = false;
 	public static final boolean DEFAULT_ENABLE_CLI = true;
+	public static final boolean DEFAULT_ENABLE_JSON = true;
 	
-	public APIConfig(int jsonApiPort, boolean allowExtraction, boolean enableCLI){
+	public APIConfig(int jsonApiPort, boolean enableJson, boolean allowExtraction, boolean enableCLI){
 		if(jsonApiPort < 1){
 			throw new IllegalArgumentException("jsonApiPort bust be > 0");
 		}
 		this.jsonApiPort = jsonApiPort;
+		this.enableJson = enableJson;
 		this.allowExtraction = allowExtraction;
 		this.enableCLI = enableCLI;
 	}
 	
 	public APIConfig(){
-		this(DEFAULT_JSON_API_PORT, DEFAULT_ALLOW_EXTRACTION, DEFAULT_ENABLE_CLI);
+		this(DEFAULT_JSON_API_PORT, DEFAULT_ENABLE_JSON, DEFAULT_ALLOW_EXTRACTION, DEFAULT_ENABLE_CLI);
 	}
 	
 	public int getJsonApiPort(){
 		return this.jsonApiPort;
+	}
+	
+	public boolean getEnableJsonAPI(){
+		return this.enableJson;
 	}
 	
 	public boolean getAllowExtraction(){
@@ -43,6 +50,7 @@ public final class APIConfig {
 	 * <pre>
 	 * {
 	 * 	"jsonApiPort" : (int)
+	 * 	"enableJson" : (boolean)
 	 * 	"allowExtraction" : (boolean)
 	 * 	"enableCLI" : (boolean)
 	 * }
@@ -68,6 +76,15 @@ public final class APIConfig {
 			}
 		}
 		
+		boolean enableJson = DEFAULT_ALLOW_EXTRACTION;
+		if(obj.get("enableJson") != null){
+			try{
+				enableJson = obj.get("enableJson").asBoolean();
+			}catch(UnsupportedOperationException e){
+				throw new IllegalArgumentException("'enableJson' was not a boolean in API configuration");
+			}
+		}
+		
 		boolean allowExtraction = DEFAULT_ALLOW_EXTRACTION;
 		if(obj.get("allowExtraction") != null){
 			try{
@@ -86,7 +103,7 @@ public final class APIConfig {
 			}
 		}
 		
-		return new APIConfig(jsonApiPort, allowExtraction, enableCLI);
+		return new APIConfig(jsonApiPort, enableJson, allowExtraction, enableCLI);
 		
 	}
 	

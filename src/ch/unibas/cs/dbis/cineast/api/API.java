@@ -134,7 +134,7 @@ public class API {
 	}
 	
 	public static void main(String[] args) {
-		// TODO parse settings
+		// TODO parse command line arguments
 
 		
 		if(Config.getApiConfig().getEnableCli()){
@@ -142,21 +142,22 @@ public class API {
 			cli.start();
 		}
 		
-		
-		try {
-			ServerSocket ssocket = new ServerSocket(Config.getApiConfig().getJsonApiPort());
-			/*
-			 * Wait for a connection, Open a new Thread for each connection.
-			 */
-			while (running) {
-				JSONAPIThread thread = new JSONAPIThread(ssocket.accept());
-				thread.start();
+		if(Config.getApiConfig().getEnableJsonAPI()){
+			try {
+				ServerSocket ssocket = new ServerSocket(Config.getApiConfig().getJsonApiPort());
+				/*
+				 * Wait for a connection, Open a new Thread for each connection.
+				 */
+				while (running) {
+					JSONAPIThread thread = new JSONAPIThread(ssocket.accept());
+					thread.start();
+				}
+				ssocket.close();
+			} catch (IOException e) {
+				LOGGER.fatal(LogHelper.getStackTrace(e));
 			}
-			ssocket.close();
-		} catch (IOException e) {
-			LOGGER.fatal(LogHelper.getStackTrace(e));
+			LOGGER.info("Exiting...");
 		}
-		LOGGER.info("Exiting...");
 	}
 
 	public static RetrieverInitializer getInitializer() {
