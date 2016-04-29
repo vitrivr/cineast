@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
+import ch.unibas.cs.dbis.cineast.core.data.Shot;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 public class ShotLookup {
@@ -109,51 +110,54 @@ public class ShotLookup {
 
 	public static class ShotDescriptor{
 		
-		private long shotId;
-		private int videoId = -1, width = -1, height = -1, framecount = -1, shotNumber = -1, startFrame = -1, endFrame = -1;
+		private String shotId, videoId;
+		private int  width = -1, height = -1, framecount = -1, shotNumber = -1, startFrame = -1, endFrame = -1;
 		private float seconds = -1f, fps = 0;
 		private String name = null, path = null;
 		
-		ShotDescriptor(ResultSet rset, long shotId){
-			this.shotId = shotId;
-			if(rset != null){
-				try {
-					rset.next();
-					this.videoId	= rset.getInt(1);
-					this.name	= rset.getString(2);
-					this.path	= rset.getString(3);
-					this.width	= rset.getInt(4);
-					this.height	= rset.getInt(5);
-					this.framecount	= rset.getInt(6);
-					this.seconds = rset.getFloat(7);
-					this.shotNumber = rset.getInt(9);
-					this.startFrame = rset.getInt(11);
-					this.endFrame = rset.getInt(12);
-					this.fps = framecount / seconds;
-					if(Float.isNaN(fps) || Float.isInfinite(fps)){
-						this.fps = 0;
-					}
-				} catch (SQLException e) {
-					LOGGER.warn(LogHelper.SQL_MARKER, "Error for ShotID {}", shotId);
-					LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-				}
-			}
-		}
+//		ShotDescriptor(String shotId){
+//			this.shotId = shotId;
+//			if(rset != null){
+//				try {
+//					rset.next();
+//					
+//					
+//					
+////					this.videoId	= rset.getInt(1);
+//					this.name	= rset.getString(2);
+//					this.path	= rset.getString(3);
+//					this.width	= rset.getInt(4);
+//					this.height	= rset.getInt(5);
+//					this.framecount	= rset.getInt(6);
+//					this.seconds = rset.getFloat(7);
+//					this.shotNumber = rset.getInt(9);
+//					this.startFrame = rset.getInt(11);
+//					this.endFrame = rset.getInt(12);
+//					this.fps = framecount / seconds;
+//					if(Float.isNaN(fps) || Float.isInfinite(fps)){
+//						this.fps = 0;
+//					}
+//				} catch (SQLException e) {
+//					LOGGER.warn(LogHelper.SQL_MARKER, "Error for ShotID {}", shotId);
+//					LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
+//				}
+//			}
+//		}
 		
-		public ShotDescriptor(long videoId, int shotNumber, int startFrame, int endFrame) {
-			this.videoId = (int) videoId;
-			this.shotId = (videoId << 16) | ((long)shotNumber);
+		public ShotDescriptor(String videoId, int shotNumber, int startFrame, int endFrame) {
+			this.videoId = videoId;
+			this.shotId = Shot.generateShotID(videoId, shotNumber);
 			this.startFrame = startFrame;
 			this.endFrame = endFrame;
 			this.framecount = endFrame - startFrame + 1;
 			this.shotNumber = shotNumber;
 		}
 
-		public long getShotId() {
+		public String getShotId() {
 			return shotId;
 		}
 
-		public int getVideoId() {
+		public String getVideoId() {
 			return videoId;
 		}
 

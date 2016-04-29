@@ -1,6 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -8,13 +7,12 @@ import org.apache.logging.log4j.Logger;
 
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayU8;
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
 /**
@@ -41,9 +39,9 @@ public class EHD extends AbstractFeatureModule {
 	
 
 	@Override
-	public void processShot(FrameContainer shot) {
+	public void processShot(SegmentContainer shot) {
 		LOGGER.entry();
-		if (!phandler.check("SELECT * FROM features.EHD WHERE shotid = " + shot.getId())) {
+		if (!phandler.idExists(shot.getId())) {
 			List<Frame> frames = shot.getFrames();
 			float[] hist = new float[80];
 			for(Frame f : frames){
@@ -54,28 +52,28 @@ public class EHD extends AbstractFeatureModule {
 			for(int i = 0; i < 80; ++i){
 				hist[i] /= count;
 			}
-			addToDB(shot.getId(), new FloatVectorImpl(hist));
+			persist(shot.getId(), new FloatVectorImpl(hist));
 		}
 		LOGGER.exit();
 	}
 
-	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		FloatVector query = new FloatVectorImpl(process(qc.getMostRepresentativeFrame().getImage(), new float[80]));
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-		
-		ResultSet rset = this.selector.select("SELECT * FROM features.EHD USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-		return manageResultSet(rset);
-	}
-	
-	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		FloatVector query = new FloatVectorImpl(process(qc.getMostRepresentativeFrame().getImage(), new float[80]));
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-		
-		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.EHD, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-		return manageResultSet(rset);
-	}
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
+//		FloatVector query = new FloatVectorImpl(process(qc.getMostRepresentativeFrame().getImage(), new float[80]));
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
+//		
+//		ResultSet rset = this.selector.select("SELECT * FROM features.EHD USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
+//		return manageResultSet(rset);
+//	}
+//	
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
+//		FloatVector query = new FloatVectorImpl(process(qc.getMostRepresentativeFrame().getImage(), new float[80]));
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
+//		
+//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.EHD, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
+//		return manageResultSet(rset);
+//	}
 
 	protected static float[] process(MultiImage img, float[] hist){
 		GrayU8 gray = ConvertBufferedImage.convertFrom(img.getBufferedImage(), (GrayU8) null);
@@ -129,6 +127,18 @@ public class EHD extends AbstractFeatureModule {
 		}
 		
 		return -1;
+	}
+
+	@Override
+	public List<LongDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<LongDoublePair> getSimilar(long shotId, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

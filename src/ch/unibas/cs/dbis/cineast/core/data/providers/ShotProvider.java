@@ -1,9 +1,9 @@
 package ch.unibas.cs.dbis.cineast.core.data.providers;
 
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 
 public interface ShotProvider {
 
-	public FrameContainer getNextShot(); //TODO rename
+	public SegmentContainer getNextShot(); //TODO rename
 	
 }

@@ -1,6 +1,6 @@
 package ch.unibas.cs.dbis.cineast.core.features.abstracts;
 
-import ch.unibas.cs.dbis.cineast.core.data.FeatureString;
+import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
@@ -10,7 +10,7 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
 protected PersistencyWriter phandler;
 	
 	protected SubDivMotionHistogram(String tableName, String colName, double maxDist){
-		super(tableName, colName, (float)maxDist);
+		super(tableName, (float)maxDist);
 	}
 
 	@Override
@@ -20,9 +20,9 @@ protected PersistencyWriter phandler;
 
 	}
 	
-	protected void addToDB(long shotId, FeatureString fs1, FeatureString fs2) {
-		PersistentTuple tuple = this.phandler.makeTuple(shotId, fs1, fs2);
-		this.phandler.write(tuple);
+	protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {
+		PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2); //FIXME currently only one vector is supported
+		this.phandler.persist(tuple);
 	}
 	
 	@Override

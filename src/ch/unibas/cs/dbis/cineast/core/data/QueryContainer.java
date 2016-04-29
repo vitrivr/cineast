@@ -7,7 +7,7 @@ import java.util.List;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
 import georegression.struct.point.Point2D_F32;
 
-public class QueryContainer implements FrameContainer {
+public class QueryContainer implements SegmentContainer {
 
 	private MultiImage img;
 	private Frame frame;
@@ -87,13 +87,13 @@ public class QueryContainer implements FrameContainer {
 	}
 
 	@Override
-	public long getId() {
-		return 0;
+	public String getId() {
+		return "";
 	}
 
 	@Override
-	public long getSuperId() {
-		return 0;
+	public String getSuperId() {
+		return "";
 	}
 	
 	public void addPath(LinkedList<Point2D_F32> path){

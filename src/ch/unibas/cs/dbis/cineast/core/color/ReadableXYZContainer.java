@@ -1,5 +1,8 @@
 package ch.unibas.cs.dbis.cineast.core.color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReadableXYZContainer extends AbstractColorContainer<ReadableXYZContainer> implements Cloneable{
 
 	protected float x, y, z;
@@ -29,7 +32,6 @@ public class ReadableXYZContainer extends AbstractColorContainer<ReadableXYZCont
 		}
 	}
 	
-	@Override
 	public String toFeatureString() {
 		return "<" + x + ", " + y + ", " + z + ">";
 	}
@@ -47,7 +49,26 @@ public class ReadableXYZContainer extends AbstractColorContainer<ReadableXYZCont
 	}
 
 	@Override
-	public float[] toFloatArray() {
+	public float[] toArray(float[] arr) {
+		if(arr != null && arr.length == 3){
+			arr[0] = x;
+			arr[1] = y;
+			arr[2] = z;
+			return arr;
+		}
 		return new float[]{x, y, z};
+	}
+	
+	@Override
+	public List<Float> toList(List<Float> list) {
+		if(list != null){
+			list.clear();
+		}else{
+			list = new ArrayList<>(3);
+		}
+		list.add(x);
+		list.add(y);
+		list.add(z);
+		return list;
 	}
 }

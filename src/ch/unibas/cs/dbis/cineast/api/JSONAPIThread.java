@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -125,7 +126,7 @@ public class JSONAPIThread extends Thread {
 				JsonArray parr = queryObject.get("positive").asArray();
 				JsonArray narr = queryObject.get("negative").asArray();
 				TLongHashSet shotids = new TLongHashSet();
-				TIntHashSet videoids = new TIntHashSet();
+				HashSet<String> videoids = new HashSet<>();
 				List<LongDoublePair> result;
 				TLongDoubleHashMap map;
 
@@ -201,7 +202,7 @@ public class JSONAPIThread extends Thread {
 			case "multiSketch": {
 				JsonArray queryArray = clientJSON.get("query").asArray();
 				TLongHashSet shotids = new TLongHashSet();
-				TIntHashSet videoids = new TIntHashSet();
+				HashSet<String> videoids = new HashSet<>();
 
 				String resultCacheName = clientJSON.get("resultname") == null ? null : clientJSON.get("resultname").asString();
 				if(resultCacheName != null && resultCacheName.equalsIgnoreCase("null")){

@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
@@ -35,7 +35,7 @@ public class QueryImageExporter implements Retriever {
 	}
 
 	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc) {
+	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
 		BufferedImage bimg = qc.getMostRepresentativeFrame().getImage().getBufferedImage();
 		try {
 			ImageIO.write(bimg, "PNG", new File(folder, this.df.format(Calendar.getInstance().getTime()) + ".png"));
@@ -60,7 +60,7 @@ public class QueryImageExporter implements Retriever {
 	}
 
 	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
+	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
 		return this.getSimilar(qc);
 	}
 

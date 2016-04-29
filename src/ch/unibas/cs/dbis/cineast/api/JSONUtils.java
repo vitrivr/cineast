@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +27,6 @@ import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import georegression.struct.point.Point2D_F32;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import gnu.trove.set.hash.TIntHashSet;
 import gnu.trove.set.hash.TLongHashSet;
 
 public class JSONUtils {
@@ -161,29 +161,6 @@ public class JSONUtils {
 		printer.println(',');
 	}
 	
-	@Deprecated
-	public static TLongHashSet printShots(PrintStream printer, List<LongDoublePair> resultlist, TLongHashSet shotids) {
-		JsonObject resultobj = new JsonObject();
-		ShotLookup sl = new ShotLookup();
-		for(int i = 0; i<resultlist.size();i++){
-			
-			long shotid = resultlist.get(i).key;
-			if(shotids.contains(shotid)){
-				continue;
-			}
-			shotids.add(shotid);
-			ShotLookup.ShotDescriptor descriptor = sl.lookUpShot(shotid);
-			
-			resultobj = JSONEncoder.encodeShot(resultlist.get(i).key, descriptor.getVideoId(), descriptor.getStartFrame(), descriptor.getEndFrame());
-			
-			printer.print(resultobj.toString());
-			printer.println(',');
-			
-		}
-		sl.close();
-		return shotids;
-	}
-	
 	public static TLongHashSet printShotsBatched(PrintStream printer, List<LongDoublePair> resultlist, TLongHashSet shotids) {
 		ArrayList<ShotDescriptor> sdList = new ArrayList<>(resultlist.size());
 		ShotLookup sl = new ShotLookup();
@@ -205,29 +182,7 @@ public class JSONUtils {
 		return shotids;
 	}
 	
-	@Deprecated
-	public static TIntHashSet printVideos(PrintStream printer, List<LongDoublePair> resultlist, TIntHashSet videoids) {
-		JsonObject resultobj = new JsonObject();
-		ShotLookup sl = new ShotLookup();
-		for(int i = 0; i<resultlist.size();i++){
-			long shotid = resultlist.get(i).key;
-			ShotLookup.ShotDescriptor descriptor = sl.lookUpShot(shotid);
-			
-			if(videoids.contains(descriptor.getVideoId())){
-				continue;
-			}
-			videoids.add(descriptor.getVideoId());
-			
-			resultobj = JSONEncoder.encodeVideo(descriptor);
-			
-			printer.print(resultobj.toString());
-			printer.println(',');
-		}
-		sl.close();
-		return videoids;
-	}
-	
-	public static TIntHashSet printVideosBatched(PrintStream printer, List<LongDoublePair> resultlist, TIntHashSet videoids) {//TODO batch
+	public static HashSet<String> printVideosBatched(PrintStream printer, List<LongDoublePair> resultlist, HashSet<String> videoids) {
 		ShotLookup sl = new ShotLookup();
 		ArrayList<ShotDescriptor> sdList = new ArrayList<>(resultlist.size());
 		for(int i = 0; i < resultlist.size(); ++i){

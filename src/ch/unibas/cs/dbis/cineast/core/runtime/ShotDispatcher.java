@@ -12,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LimitedQueue;
 import ch.unibas.cs.dbis.cineast.core.data.providers.ShotProvider;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
@@ -28,7 +28,7 @@ public class ShotDispatcher implements Runnable {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private ArrayList<Extractor> extractors;
-	private LinkedBlockingQueue<FrameContainer> shotQueue = new LinkedBlockingQueue<FrameContainer>(Config.getExtractorConfig().getShotQueueSize());
+	private LinkedBlockingQueue<SegmentContainer> shotQueue = new LinkedBlockingQueue<SegmentContainer>(Config.getExtractorConfig().getShotQueueSize());
 	private ExecutorService executor;
 	private ShotProviderThread providerThread;
 	private ExtractorInitializer initializer;
@@ -72,7 +72,7 @@ public class ShotDispatcher implements Runnable {
 		whileLoop:
 		while(this.providerThread.isAlive() || !this.shotQueue.isEmpty()){
 			try {
-				FrameContainer s = this.shotQueue.poll(1, TimeUnit.MINUTES);
+				SegmentContainer s = this.shotQueue.poll(1, TimeUnit.MINUTES);
 				if(s != null){
 					LOGGER.info("start dispatching shot " + s.getId());
 					for(Extractor f : extractors){

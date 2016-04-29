@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,18 +11,17 @@ import ch.unibas.cs.dbis.cineast.core.color.ColorConverter;
 import ch.unibas.cs.dbis.cineast.core.color.FuzzyColorHistogramQuantizer;
 import ch.unibas.cs.dbis.cineast.core.color.FuzzyColorHistogramQuantizer.Color;
 import ch.unibas.cs.dbis.cineast.core.color.ReadableLabContainer;
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.FeatureString;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
+import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import ch.unibas.cs.dbis.cineast.core.util.ColorUtils;
 import ch.unibas.cs.dbis.cineast.core.util.GridPartitioner;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 public class AverageColorRaster extends AbstractFeatureModule {
 
@@ -82,9 +79,9 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	
 
 	@Override
-	public void processShot(FrameContainer shot) {
+	public void processShot(SegmentContainer shot) {
 		LOGGER.entry();
-		if (!phandler.check("SELECT * FROM features.AverageColorRaster WHERE shotid = " + shot.getId())) {
+		if (!phandler.idExists(shot.getId())) {
 			MultiImage avg = shot.getAvgImg();
 			int[] colors = avg.getColors();
 			ArrayList<Integer> ints = new ArrayList<>(colors.length);
@@ -104,41 +101,41 @@ public class AverageColorRaster extends AbstractFeatureModule {
 				hist[(int)raster[i]]++;
 			}
 			
-			addToDB(shot.getId(), new FloatVectorImpl(hist), new FloatVectorImpl(raster));
+			persist(shot.getId(), new FloatVectorImpl(hist), new FloatVectorImpl(raster));
 			
 		}
 		LOGGER.exit();
 	}
 	
-	protected void addToDB(long shotId, FeatureString fs1, FeatureString fs2) {
-		PersistentTuple tuple = this.phandler.makeTuple(shotId, fs1, fs2);
-		this.phandler.write(tuple);
+	protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {//FIXME currently only one vector is supported
+		PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2);
+		this.phandler.persist(tuple);
 	}
 
 	
 	
-	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		FloatVector query = buildQueryVector(qc);
-		
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
+//		FloatVector query = buildQueryVector(qc);
+//		
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
+//
+//		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColorRaster USING DISTANCE MINKOWSKI(2)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
+//		return manageResultSet(rset);
+//
+//	}
+//
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
+//		FloatVector query = buildQueryVector(qc);
+//		
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
+//
+//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.AverageColorRaster, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
+//		return manageResultSet(rset);
+//	}
 
-		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColorRaster USING DISTANCE MINKOWSKI(2)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-		return manageResultSet(rset);
-
-	}
-
-	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		FloatVector query = buildQueryVector(qc);
-		
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
-
-		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.AverageColorRaster, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-		return manageResultSet(rset);
-	}
-
-	private FloatVector buildQueryVector(FrameContainer qc) {
+	private FloatVector buildQueryVector(SegmentContainer qc) {
 		MultiImage avg = qc.getAvgImg();
 		int[] colors = avg.getColors();
 		ArrayList<Integer> ints = new ArrayList<>(colors.length);
@@ -238,30 +235,30 @@ public class AverageColorRaster extends AbstractFeatureModule {
 		return 0;
 	}
 
-	@Override
-	public List<LongDoublePair> getSimilar(long shotId) {
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
-		
-		ResultSet rset = this.selector.select("WITH q AS (SELECT hist, raster FROM features.AverageColorRaster WHERE shotid = " + shotId + ") SELECT shotid, AverageColorRaster.raster, q.raster as queryraster FROM features.AverageColorRaster, q USING DISTANCE MINKOWSKI(2)(q.hist, AverageColorRaster.hist) ORDER USING DISTANCE LIMIT " + limit);
-		ArrayList<LongDoublePair> result = new ArrayList<>(limit);
-		if(rset != null){
-			try {
-				while(rset.next()){
-					long id = rset.getLong(2);
-					String rasterFromDB = rset.getString(3);
-					float[] raster = stringToFloatArray(rasterFromDB);
-					
-					rasterFromDB = rset.getString(4);
-					float[] queryraster = stringToFloatArray(rasterFromDB);
-					
-					result.add(new LongDoublePair(id, register(queryraster, raster)));
-				}
-			} catch (SQLException e) {
-				LOGGER.fatal(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-			}
-		}
-		return result;
-	}
+//	@Override
+//	public List<LongDoublePair> getSimilar(long shotId) {
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
+//		
+//		ResultSet rset = this.selector.select("WITH q AS (SELECT hist, raster FROM features.AverageColorRaster WHERE shotid = " + shotId + ") SELECT shotid, AverageColorRaster.raster, q.raster as queryraster FROM features.AverageColorRaster, q USING DISTANCE MINKOWSKI(2)(q.hist, AverageColorRaster.hist) ORDER USING DISTANCE LIMIT " + limit);
+//		ArrayList<LongDoublePair> result = new ArrayList<>(limit);
+//		if(rset != null){
+//			try {
+//				while(rset.next()){
+//					long id = rset.getLong(2);
+//					String rasterFromDB = rset.getString(3);
+//					float[] raster = stringToFloatArray(rasterFromDB);
+//					
+//					rasterFromDB = rset.getString(4);
+//					float[] queryraster = stringToFloatArray(rasterFromDB);
+//					
+//					result.add(new LongDoublePair(id, register(queryraster, raster)));
+//				}
+//			} catch (SQLException e) {
+//				LOGGER.fatal(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
+//			}
+//		}
+//		return result;
+//	}
 	
 	protected float[] stringToFloatArray(String feature){
 		String[] rasterString = feature.split(",");
@@ -270,6 +267,18 @@ public class AverageColorRaster extends AbstractFeatureModule {
 			raster[i] = Float.parseFloat(rasterString[i].replace('<', ' ').replace('>', ' ').trim());
 		}
 		return raster;
+	}
+
+	@Override
+	public List<LongDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<LongDoublePair> getSimilar(long shotId, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

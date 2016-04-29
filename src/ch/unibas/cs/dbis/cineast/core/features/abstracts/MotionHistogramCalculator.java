@@ -23,15 +23,13 @@ public abstract class MotionHistogramCalculator implements Retriever {
 
 	protected DBSelector selector;
 	private final float maxDist;
-	private final String colName;
 	protected final String tableName;
 	private static Logger LOGGER = LogManager.getLogger();
 
 
-	protected MotionHistogramCalculator(String tableName, String colName, float maxDist){
+	protected MotionHistogramCalculator(String tableName, float maxDist){
 		this.maxDist = maxDist;
 		this.tableName = tableName;
-		this.colName = colName;
 	}
 	
 	@Override
@@ -129,82 +127,6 @@ public abstract class MotionHistogramCalculator implements Retriever {
 		return result;
 	}
 	
-	@Override
-	public List<LongDoublePair> getSimilar(long shotId) {
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("WITH q AS (SELECT ");
-		sb.append(colName);
-		sb.append(" FROM ");
-		sb.append(this.tableName);
-		sb.append(" WHERE shotid = ");
-		sb.append(shotId);
-		sb.append(") SELECT shotid FROM ");
-		sb.append(this.tableName);
-		sb.append(", q USING DISTANCE MINKOWSKI(2)");
-		sb.append("(q.");
-		sb.append(colName);
-		sb.append(", ");
-		sb.append(this.tableName);
-		sb.append('.');
-		sb.append(colName);
-		sb.append(") ORDER USING DISTANCE LIMIT ");
-		sb.append(limit);
-		
-		ResultSet rset = this.selector.select(sb.toString());
-		return manageResultSet(rset);
-
-	}
 	
 	
-	
-	@Override
-	public List<LongDoublePair> getSimilar(long shotId, String resultCacheName) {
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("WITH q AS (SELECT ");
-		sb.append(colName);
-		sb.append(" FROM ");
-		sb.append(tableName);
-		sb.append(" WHERE shotid = ");
-		sb.append(shotId);
-		sb.append("), c AS (SELECT shotid AS filter FROM cineast.resultcacheelements, cineast.resultcachenames");
-		sb.append(" WHERE resultcacheelements.chacheid = resultcachenames.id AND resultcachenames.name = '");
-		sb.append(resultCacheName);
-		sb.append("') SELECT shotid FROM ");
-		sb.append(tableName);
-		sb.append(", q, c");
-		sb.append(" WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)");
-		sb.append("(q.");
-		sb.append(colName);
-		sb.append(", ");
-		sb.append(tableName);
-		sb.append('.');
-		sb.append(colName);
-		sb.append(") ORDER USING DISTANCE LIMIT ");
-		sb.append(limit);
-		
-		ResultSet rset = this.selector.select(sb.toString());
-		return manageResultSet(rset);
-	}
-	
-	protected String getResultCacheLimitSQL(String resultCacheName){
-		StringBuilder sb = new StringBuilder();
-		sb.append("WITH c AS (SELECT shotid AS filter FROM cineast.resultcacheelements, cineast.resultcachenames WHERE ");
-		sb.append("resultcacheelements.chacheid = resultcachenames.id AND resultcachenames.name = '");
-		sb.append(resultCacheName);
-		sb.append("')");
-		return sb.toString();
-	}
-	
-	@Override
-	public float getConfidenceWeight() {
-		// TODO 
-		return 1f;
-	}
-
 }

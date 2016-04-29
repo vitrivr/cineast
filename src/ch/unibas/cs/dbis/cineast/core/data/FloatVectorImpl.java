@@ -3,12 +3,21 @@ package ch.unibas.cs.dbis.cineast.core.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import gnu.trove.list.array.TFloatArrayList;
+
 public class FloatVectorImpl implements FloatVector {
 
-	private ArrayList<Float> list;
+	private TFloatArrayList list;
 	
-	public FloatVectorImpl(ArrayList<Float> list){
+	public FloatVectorImpl(TFloatArrayList list){
 		this.list = list;
+	}
+	
+	public FloatVectorImpl(Iterable<Float> iterable){
+		this();
+		for(float f : iterable){
+			this.list.add(f);
+		}
 	}
 	
 	public FloatVectorImpl(float[] array){
@@ -19,7 +28,7 @@ public class FloatVectorImpl implements FloatVector {
 	}
 	
 	public FloatVectorImpl(){
-		this(new ArrayList<Float>());
+		this(new TFloatArrayList());
 	}
 	
 	public FloatVectorImpl(List<Double> list) {
@@ -62,7 +71,6 @@ public class FloatVectorImpl implements FloatVector {
 		this.list.add(element);
 	}
 
-	@Override
 	public String toFeatureString() {
 		StringBuffer buf = new StringBuffer();
 		buf.append('<');
@@ -93,12 +101,30 @@ public class FloatVectorImpl implements FloatVector {
 	}
 
 	@Override
-	public float[] toFloatArray() {
-		float[] _return = new float[this.list.size()];
+	public float[] toArray(float[] arr) {
+		float[] _return;
+		if(arr != null && arr.length == this.list.size()){
+			_return = arr;
+		}else{
+			 _return = new float[this.list.size()];
+		}
 		for(int i = 0; i < _return.length; ++i){
 			_return[i] = this.list.get(i);
 		}
 		return _return;
+	}
+
+	@Override
+	public List<Float> toList(List<Float> list) {
+		if(list == null){
+			list = new ArrayList<>(this.list.size());
+		}else{
+			list.clear();
+		}
+		for(int i = 0; i < this.list.size(); ++i){
+			list.add(this.list.get(i));
+		}
+		return list;
 	}
 
 }

@@ -9,10 +9,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 import ch.unibas.cs.dbis.cineast.core.data.StatElement;
@@ -30,9 +31,9 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
 	
 	
 	@Override
-	public void processShot(FrameContainer shot) {
+	public void processShot(SegmentContainer shot) {
 		LOGGER.entry();
-		if (!phandler.check("SELECT * FROM features.EdgeGrid16Full WHERE shotid = " + shot.getId())) {
+		if (!phandler.idExists(shot.getId())) {
 			StatElement[] stats = new StatElement[256];
 			for(int i = 0; i < 256; ++i){
 				stats[i] = new StatElement();
@@ -55,30 +56,30 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
 			for(int i = 0; i < 64; ++i){
 				result[i] = stats[i].getAvg();
 			}
-			addToDB(shot.getId(), new FloatVectorImpl(result));
+			persist(shot.getId(), new FloatVectorImpl(result));
 		}
 		LOGGER.exit();
 	}
 
-	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-		
-		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
-		
-		ResultSet rset = this.selector.select("SELECT * FROM features.EdgeGrid16Full USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-		return manageResultSet(rset);
-	}
-
-	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-		
-		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
-		
-		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.EdgeGrid16Full, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-		return manageResultSet(rset);
-	}
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
+//		
+//		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
+//		
+//		ResultSet rset = this.selector.select("SELECT * FROM features.EdgeGrid16Full USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
+//		return manageResultSet(rset);
+//	}
+//
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
+//		
+//		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
+//		
+//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.EdgeGrid16Full, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
+//		return manageResultSet(rset);
+//	}
 
 
 	private static FloatVector getEdges(MultiImage img){
@@ -101,6 +102,20 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
 		}
 		
 		return new FloatVectorImpl(f);
+	}
+
+
+	@Override
+	public List<LongDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<LongDoublePair> getSimilar(long shotId, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

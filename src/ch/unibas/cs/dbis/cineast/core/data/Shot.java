@@ -14,7 +14,7 @@ import ch.unibas.cs.dbis.cineast.core.descriptor.MostRepresentative;
 import ch.unibas.cs.dbis.cineast.core.descriptor.PathList;
 import georegression.struct.point.Point2D_F32;
 
-public class Shot implements FrameContainer{
+public class Shot implements SegmentContainer{
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
@@ -24,11 +24,11 @@ public class Shot implements FrameContainer{
 	private Frame mostRepresentative = null;
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = null;
 	private ArrayList<String> tags = new ArrayList<>(1);
-	private final long movieId;
+	private final String movieId;
 	private final int movieFrameCount;
-	private long shotId;
+	private String shotId;
 	
-	public Shot(long movieId, int movieFrameCount){
+	public Shot(String movieId, int movieFrameCount){
 		this.movieId = movieId;
 		this.movieFrameCount = movieFrameCount;
 	}
@@ -133,15 +133,15 @@ public class Shot implements FrameContainer{
 		return this.frames.getLast().getId();
 	}
 	
-	public void setShotId(long id){
+	public void setShotId(String id){
 		this.shotId = id;
 	}
 	
-	public long getId(){
+	public String getId(){
 		return this.shotId;
 	}
 	
-	public long getSuperId(){
+	public String getSuperId(){
 		return this.movieId;
 	}
 	
@@ -169,6 +169,27 @@ public class Shot implements FrameContainer{
 	@Override
 	public List<String> getTags() {
 		return this.tags;
+	}
+	
+	/**
+	 * generates a shot id of the form v_(videoid)_(shot sequence numer)
+	 * @param videoId the globally unique id of the video
+	 * @param shotNumber the number of the shot within the video
+	 * @throws IllegalArgumentException if shot sequence number is negative
+	 * @throws NullPointerException if videoid is null
+	 */
+	public static final String generateShotID(String videoId, long shotNumber) throws IllegalArgumentException, NullPointerException{
+		if(shotNumber < 0){
+			throw new IllegalArgumentException("shotnumber must be non-negative");
+		}
+		if(videoId == null){
+			throw new NullPointerException("video id cannot be null");
+		}
+		StringBuilder builder = new StringBuilder("v_");
+		builder.append(videoId);
+		builder.append('_');
+		builder.append(shotNumber);
+		return builder.toString();
 	}
 	
 }

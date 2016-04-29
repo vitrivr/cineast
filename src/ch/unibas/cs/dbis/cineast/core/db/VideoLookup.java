@@ -16,7 +16,7 @@ public class VideoLookup extends AbstractLookup{
 		super(database, username, password);
 	}
 	
-	public VideoDescriptor lookUpVideo(long videoId){
+	public VideoDescriptor lookUpVideo(String videoId){
 		ResultSet set = null;
 		try {
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM cineast.videos WHERE cineast.videos.id = " + videoId);
@@ -31,12 +31,12 @@ public class VideoLookup extends AbstractLookup{
 	
 public static class VideoDescriptor{
 		
-		private long videoId; 
+		private String videoId; 
 		private int width, height, framecount;
 		private float seconds, fps;
 		private String name = null, path = null;
 		
-		VideoDescriptor(ResultSet rset, long videoId){
+		VideoDescriptor(ResultSet rset, String videoId){
 			this.videoId = videoId;
 			if(rset != null){
 				try {
@@ -58,7 +58,7 @@ public static class VideoDescriptor{
 			}
 		}
 
-		public long getVideoId() {
+		public String getVideoId() {
 			return videoId;
 		}
 

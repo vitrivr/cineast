@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ch.unibas.cs.dbis.cineast.core.db.CSVWriter;
+import ch.unibas.cs.dbis.cineast.core.db.ProtobufFileWriter;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.cc.CCSubTitle;
@@ -64,7 +64,7 @@ public class SingleVideoToFileExtractor {
 
 		@Override
 		public void initialize(Extractor e) {
-			e.init(new CSVWriter());
+			e.init(new ProtobufFileWriter());
 		}
 		
 	};
@@ -74,19 +74,12 @@ public class SingleVideoToFileExtractor {
 			printUseage();
 		}
 		
-		final long videoId;
-		long id = 0;
-		try{
-			id = Long.parseLong(args[2]);
-		}catch(Exception e){
-			printUseage();
-		}
-		videoId = id;
+		final String videoId = args[2];
 		
 		File inputFolder = new File(args[0]);
 		File outputFolder = new File(args[1] + "/" + videoId);
 		
-		CSVWriter.setFolder(outputFolder);
+		ProtobufFileWriter.setFolder(outputFolder);
 		
 		String[] videoFiles = inputFolder.list(new VideoFileNameFilter());
 		
@@ -103,7 +96,7 @@ public class SingleVideoToFileExtractor {
 		
 		List<ShotDescriptor> knownShots = readKnownShots(inputFolder, videoId);
 		
-		ShotSegmenter segmenter = new ShotSegmenter(vd, videoId, new CSVWriter(), knownShots);
+		ShotSegmenter segmenter = new ShotSegmenter(vd, videoId, new ProtobufFileWriter(), knownShots);
 		
 		
 		File[] subtitleFiles = inputFolder.listFiles(new FileFilter() {
@@ -141,7 +134,7 @@ public class SingleVideoToFileExtractor {
 		LOGGER.info("finished extraction for video {} in {}", videoId, formatTime(System.currentTimeMillis() - startTime));
 	}
 	
-	private static List<ShotDescriptor> readKnownShots(File inputFolder, long videoId) {
+	private static List<ShotDescriptor> readKnownShots(File inputFolder, String videoId) {
 		File input = new File(inputFolder, "shotEndFrames.csv");
 		if(!(input.exists() && input.isFile() && input.canRead())){
 			return null;
@@ -184,7 +177,7 @@ public class SingleVideoToFileExtractor {
 		System.out.println("               such as .srt subtitles");
 		System.out.println("output folder: folder to which the extracted feature data should be written.");
 		System.out.println("               a subfolder will be created according to the video id");
-		System.out.println("video id:      a non-negative globally unique integer used to refer to the video.");
+		System.out.println("video id:      a globally unique identifyer used to refer to the video.");
 		System.out.println();
 		System.exit(-1);
 	}

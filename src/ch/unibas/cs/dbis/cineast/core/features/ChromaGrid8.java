@@ -1,6 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -11,14 +10,14 @@ import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.color.ColorConverter;
 import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
-import ch.unibas.cs.dbis.cineast.core.config.Config;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StatElement;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import ch.unibas.cs.dbis.cineast.core.util.GridPartitioner;
@@ -31,7 +30,7 @@ public class ChromaGrid8 extends AbstractFeatureModule {
 		super("features.ChromaGrid8", "grid", 86609f / 4f);
 	}
 	
-	private Pair<FloatVector, float[]> buildChromaGrid(FrameContainer qc){
+	private Pair<FloatVector, float[]> buildChromaGrid(SegmentContainer qc){
 		ArrayList<StatElement> stats = new ArrayList<StatElement>(64);
 		for(int i = 0; i < 64; ++i){
 			stats.add(new StatElement());
@@ -80,24 +79,24 @@ public class ChromaGrid8 extends AbstractFeatureModule {
 		return new Pair<>(query, weights);
 	}
 	
-	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		Pair<FloatVector, float[]> p = buildChromaGrid(qc);
-		ResultSet rset = this.selector.select("SELECT * FROM features.ChromaGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + Config.getRetrieverConfig().getMaxResultsPerModule());
-		return manageResultSet(rset);
-	}
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
+//		Pair<FloatVector, float[]> p = buildChromaGrid(qc);
+//		ResultSet rset = this.selector.select("SELECT * FROM features.ChromaGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + Config.getRetrieverConfig().getMaxResultsPerModule());
+//		return manageResultSet(rset);
+//	}
+//
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
+//		Pair<FloatVector, float[]> p = buildChromaGrid(qc);
+//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.ChromaGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + Config.getRetrieverConfig().getMaxResultsPerModule());
+//		return manageResultSet(rset);
+//	}
 
 	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		Pair<FloatVector, float[]> p = buildChromaGrid(qc);
-		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.ChromaGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + Config.getRetrieverConfig().getMaxResultsPerModule());
-		return manageResultSet(rset);
-	}
-
-	@Override
-	public void processShot(FrameContainer shot) {
+	public void processShot(SegmentContainer shot) {
 		LOGGER.entry();
-		if (!phandler.check("SELECT * FROM features.ChromaGrid8 WHERE shotid = " + shot.getId())) {
+		if (!phandler.idExists(shot.getId())) {
 			ArrayList<StatElement> stats = new ArrayList<StatElement>(64);
 			for(int i = 0; i < 64; ++i){
 				stats.add(new StatElement());
@@ -134,9 +133,21 @@ public class ChromaGrid8 extends AbstractFeatureModule {
 				result[2 * i + 1] = stats.get(i).getVariance();
 			}
 			
-			addToDB(shot.getId(), new FloatVectorImpl(result));
+			persist(shot.getId(), new FloatVectorImpl(result));
 			
 		}
 		LOGGER.exit();
+	}
+
+	@Override
+	public List<LongDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<LongDoublePair> getSimilar(long shotId, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

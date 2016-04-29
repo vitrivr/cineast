@@ -26,7 +26,7 @@ public class EntityCreator {
 		
 		Builder builder = FieldDefinitionMessage.newBuilder();
 		
-		fields.add(builder.setName("id").setFieldtype(FieldType.LONG).setPk(true).setIndexed(true).build());
+		fields.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(true).setIndexed(true).build());
 		fields.add(builder.setName("type").setFieldtype(FieldType.INT).setPk(false).setIndexed(true).build());
 		fields.add(builder.setName("name").setFieldtype(FieldType.STRING).setPk(false).setIndexed(false).build());
 		fields.add(builder.setName("path").setFieldtype(FieldType.STRING).setPk(false).setIndexed(false).build());

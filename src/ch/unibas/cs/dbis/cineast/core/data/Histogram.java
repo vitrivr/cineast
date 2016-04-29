@@ -1,13 +1,15 @@
 package ch.unibas.cs.dbis.cineast.core.data;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
-public abstract class Histogram implements FeatureString{
+import gnu.trove.map.hash.TObjectIntHashMap;
+
+public abstract class Histogram implements ReadableFloatVector{
 
 	protected double[] bins;
-	protected HashMap<String, Integer> binNames = new HashMap<>();
-	
+	protected TObjectIntHashMap<String> binNames = new TObjectIntHashMap<>();	
 	protected Histogram(int numberOfBins){
 		this.bins = new double[numberOfBins];
 	}
@@ -23,10 +25,6 @@ public abstract class Histogram implements FeatureString{
 			}
 		}
 		return this;
-	}
-	
-	public int getNumberOfBins(){
-		return this.bins.length;
 	}
 	
 	public double getBin(String name){
@@ -57,7 +55,7 @@ public abstract class Histogram implements FeatureString{
 	
 	public abstract boolean areCompatible(Histogram hist);
 
-	@Override
+	
 	public String toFeatureString() {
 		StringBuffer buf = new StringBuffer();
 		buf.append('<');
@@ -69,5 +67,56 @@ public abstract class Histogram implements FeatureString{
 		}
 		buf.append('>');
 		return buf.toString();
+	}
+
+	@Override
+	public double getDistance(ReadableFloatVector other) {
+		int len = Math.min(this.getElementCount(), other.getElementCount());
+		double d = 0d, e = 0d;
+		for(int i = 0; i < len; ++i){
+			e = getElement(i) - other.getElement(i);
+			d += e * e;
+		}
+		return Math.sqrt(d);
+	}
+
+	@Override
+	public int getElementCount() {
+		return this.bins.length;
+	}
+
+	@Override
+	public float getElement(int num) {
+		if(num >= 0 && num < this.bins.length){
+			return (float) this.bins[num];
+		}
+		throw new IndexOutOfBoundsException(num + " is not a valid bin index for a histogram with " + this.bins.length + " bins");
+	}
+
+	@Override
+	public float[] toArray(float[] arr) {
+		float[] _return;
+		if(arr != null && arr.length == this.bins.length){
+			_return = arr;
+		}else{
+			 _return = new float[this.bins.length];
+		}
+		for(int i = 0; i < _return.length; ++i){
+			_return[i] = (float) this.bins[i];
+		}
+		return _return;
+	}
+
+	@Override
+	public List<Float> toList(List<Float> list) {
+		if(list == null){
+			list = new ArrayList<>(this.bins.length);
+		}else{
+			list.clear();
+		}
+		for(int i = 0; i < this.bins.length; ++i){
+			list.add((float) this.bins[i]);
+		}
+		return list;
 	}
 }

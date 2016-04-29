@@ -23,7 +23,7 @@ public class ShotSegmenter implements ShotProvider{
 	private static final int MAX_SHOT_LENGTH = 720;
 
 	private VideoDecoder vdecoder;
-	private final long movieId;
+	private final String movieId;
 	private LinkedList<Frame> frameQueue = new LinkedList<>();
 	private LinkedList<DoublePair<Frame>> preShotQueue = new LinkedList<>();
 	private ArrayList<SubTitle> subtitles = new ArrayList<SubTitle>();
@@ -31,10 +31,11 @@ public class ShotSegmenter implements ShotProvider{
 	private PersistencyWriter pwriter;
 	private List<ShotDescriptor> knownShotBoundaries;
 	
-	public ShotSegmenter(VideoDecoder vdecoder, long movieId, @SuppressWarnings("rawtypes") PersistencyWriter pwriter, List<ShotDescriptor> knownShotBoundaries){
+	public ShotSegmenter(VideoDecoder vdecoder, String movieId, @SuppressWarnings("rawtypes") PersistencyWriter pwriter, List<ShotDescriptor> knownShotBoundaries){
 		this.vdecoder = vdecoder;
 		this.movieId = movieId;
 		this.pwriter = pwriter;
+		this.pwriter.setFieldNames("id", "multimediaobject", "segmentstart", "segmentend");
 		this.pwriter.open("cineast.shots");
 		this.knownShotBoundaries = ((knownShotBoundaries == null) ? new LinkedList<ShotDescriptor>() : knownShotBoundaries);
 	}
@@ -166,14 +167,14 @@ public class ShotSegmenter implements ShotProvider{
 		}
 		
 		int shotNumber = idCounter.incrementAndGet();
-		long shotId = (((long)movieId) << 16) | shotNumber;
+		String shotId = Shot.generateShotID(movieId, shotNumber);
 		
 		shot.setShotId(shotId);
 		addSubtitleItems(shot);
 		
 		
-		PersistentTuple tuple = this.pwriter.makeTuple(shotId, shotNumber, movieId, shot.getStart(), shot.getEnd());
-		this.pwriter.write(tuple);
+		PersistentTuple tuple = this.pwriter.generateTuple(shotId, movieId, shot.getStart(), shot.getEnd());
+		this.pwriter.persist(tuple);
 		
 
 		

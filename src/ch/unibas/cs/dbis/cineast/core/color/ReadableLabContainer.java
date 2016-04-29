@@ -1,5 +1,8 @@
 package ch.unibas.cs.dbis.cineast.core.color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReadableLabContainer extends AbstractColorContainer<ReadableLabContainer> implements Cloneable{
 
 	public static final float SPACE_DIAMETER_SQUARED = 100 * 100 +
@@ -93,14 +96,33 @@ public class ReadableLabContainer extends AbstractColorContainer<ReadableLabCont
 		}
 	}
 
-	@Override
+	
 	public String toFeatureString() {
 		return "<" + L + ", " + a + ", " + b + ">";
 	}
 
 	@Override
-	public float[] toFloatArray() {
+	public float[] toArray(float[] arr) {
+		if(arr != null && arr.length == 3){
+			arr[0] = L;
+			arr[1] = a;
+			arr[2] = b;
+			return arr;
+		}
 		return new float[]{L, a, b};
+	}
+
+	@Override
+	public List<Float> toList(List<Float> list) {
+		if(list != null){
+			list.clear();
+		}else{
+			list = new ArrayList<>(3);
+		}
+		list.add(L);
+		list.add(a);
+		list.add(b);
+		return list;
 	}
 
 }

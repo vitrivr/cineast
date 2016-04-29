@@ -41,7 +41,7 @@ public final class JSONEncoder {
 		return _return;
 	}
 	
-	public static final JsonObject encodeShot(long shotId, long videoId, long startFrame, long endFrame, boolean includeType){
+	public static final JsonObject encodeShot(String shotId, String videoId, long startFrame, long endFrame, boolean includeType){
 		JsonObject _return = new JsonObject();
 		if(includeType){
 			_return.add("type", "shot");
@@ -57,7 +57,7 @@ public final class JSONEncoder {
 		return encodeShot(sd.getShotId(), sd.getVideoId(), sd.getStartFrame(), sd.getEndFrame(), includeType);
 	}
 	
-	public static final JsonObject encodeShot(long shotId, long videoId, long startFrame, long endFrame){
+	public static final JsonObject encodeShot(String shotId, String videoId, long startFrame, long endFrame){
 		return encodeShot(shotId, videoId, startFrame, endFrame, true);
 	}
 	
@@ -77,7 +77,7 @@ public final class JSONEncoder {
 		return _return;
 	}
 	
-	public static final JsonObject encodeVideo(String name, long videoId, String path, int width, int height, long frames, double seconds, boolean includeType){
+	public static final JsonObject encodeVideo(String name, String videoId, String path, int width, int height, long frames, double seconds, boolean includeType){
 		JsonObject _return = new JsonObject();
 		if(includeType){
 			_return.add("type", "video");
@@ -96,7 +96,7 @@ public final class JSONEncoder {
 		return encodeVideo(sd.getName(), sd.getVideoId(), sd.getPath(), sd.getWidth(), sd.getHeight(), sd.getFramecount(), sd.getSeconds(), includeType);
 	}
 	
-	public static final JsonObject encodeVideo(String name, long videoId, String path, int width, int height, long frames, double seconds){
+	public static final JsonObject encodeVideo(String name, String videoId, String path, int width, int height, long frames, double seconds){
 		return encodeVideo(name, videoId, path, width, height, frames, seconds, true);
 	}
 	

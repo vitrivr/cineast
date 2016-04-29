@@ -1,6 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -13,14 +12,14 @@ import ch.unibas.cs.dbis.cineast.core.color.ColorConverter;
 import ch.unibas.cs.dbis.cineast.core.color.HSVContainer;
 import ch.unibas.cs.dbis.cineast.core.color.RGBContainer;
 import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
-import ch.unibas.cs.dbis.cineast.core.config.Config;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StatElement;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import ch.unibas.cs.dbis.cineast.core.util.GridPartitioner;
@@ -33,7 +32,7 @@ public class HueValueVarianceGrid8 extends AbstractFeatureModule {
 		super("features.HueValueVarianceGrid8", "grid", 17f / 4f);
 	}
 	
-	private Pair<FloatVector, float[]> computeGrid(FrameContainer qc){
+	private Pair<FloatVector, float[]> computeGrid(SegmentContainer qc){
 		ArrayList<StatElement> stats = new ArrayList<StatElement>(64);
 		for(int i = 0; i < 128; ++i){
 			stats.add(new StatElement());
@@ -80,28 +79,28 @@ public class HueValueVarianceGrid8 extends AbstractFeatureModule {
 		return new Pair<FloatVector, float[]>(new FloatVectorImpl(f), weights);
 	}
 	
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
+//		Pair<FloatVector, float[]> p = computeGrid(qc);
+//
+//		ResultSet rset = this.selector.select("SELECT * FROM features.HueValueVarianceGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
+//		return manageResultSet(rset);
+//	}
+//
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
+//		Pair<FloatVector, float[]> p = computeGrid(qc);
+//
+//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.HueValueVarianceGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
+//		return manageResultSet(rset);
+//	}
+
 	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-		Pair<FloatVector, float[]> p = computeGrid(qc);
-
-		ResultSet rset = this.selector.select("SELECT * FROM features.HueValueVarianceGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-		return manageResultSet(rset);
-	}
-
-	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-		Pair<FloatVector, float[]> p = computeGrid(qc);
-
-		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.HueValueVarianceGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-		return manageResultSet(rset);
-	}
-
-	@Override
-	public void processShot(FrameContainer shot) {
+	public void processShot(SegmentContainer shot) {
 		LOGGER.entry();
-		if (!phandler.check("SELECT * FROM features.HueValueVarianceGrid8 WHERE shotid = " + shot.getId())) {
+		if (!phandler.idExists(shot.getId())) {
 			StatElement[] stats = new StatElement[128];
 			for(int i = 0; i < 128; ++i){
 				stats[i] = new StatElement();
@@ -140,8 +139,20 @@ public class HueValueVarianceGrid8 extends AbstractFeatureModule {
 				fv[i++] = s.getVariance();
 			}
 			
-			addToDB(shot.getId(), new FloatVectorImpl(fv));
+			persist(shot.getId(), new FloatVectorImpl(fv));
 		}
+	}
+
+	@Override
+	public List<LongDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<LongDoublePair> getSimilar(long shotId, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

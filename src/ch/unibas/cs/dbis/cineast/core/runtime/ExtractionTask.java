@@ -3,17 +3,17 @@ package ch.unibas.cs.dbis.cineast.core.runtime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 import ch.unibas.cs.dbis.cineast.core.util.DecodingError;
 
 class ExtractionTask implements Runnable {
 
 	private Extractor feature;
-	private FrameContainer shot;
+	private SegmentContainer shot;
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	ExtractionTask(Extractor feature, FrameContainer shot) {
+	ExtractionTask(Extractor feature, SegmentContainer shot) {
 		this.feature = feature;
 		this.shot = shot;
 	}

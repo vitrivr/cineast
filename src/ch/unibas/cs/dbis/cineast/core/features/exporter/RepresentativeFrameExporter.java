@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 
@@ -27,7 +27,7 @@ public class RepresentativeFrameExporter implements Extractor {
 	}
 
 	@Override
-	public void processShot(FrameContainer shot) {
+	public void processShot(SegmentContainer shot) {
 		File outFolder = new File(this.folder, Long.toString(shot.getSuperId()));
 		outFolder.mkdirs();
 		File outFile = new File(outFolder, shot.getId() + ".jpg");
@@ -37,7 +37,7 @@ public class RepresentativeFrameExporter implements Extractor {
 		} catch (IOException e) {
 			LOGGER.error("Could not write representative frame: {}", e.getMessage());
 		}
-		addToDB(shot.getId(), f.getId());
+		persist(shot.getId(), f.getId());
 	}
 
 	protected void addToDB(long shotId, int frameId) {

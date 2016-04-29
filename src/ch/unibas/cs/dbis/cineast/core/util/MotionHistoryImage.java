@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 
 public class MotionHistoryImage {
@@ -30,7 +30,7 @@ public class MotionHistoryImage {
 		return this.intensities;
 	}
 	
-	public static MotionHistoryImage motionHistoryImage(FrameContainer container, int lifeTime, int threshold){
+	public static MotionHistoryImage motionHistoryImage(SegmentContainer container, int lifeTime, int threshold){
 		return motionHistoryImage(container, lifeTime, threshold, true);
 	}
 	/**
@@ -41,7 +41,7 @@ public class MotionHistoryImage {
 	 * @param useThumbnails produce image based on thumbnails to entire frame
 	 * @return
 	 */
-	public static MotionHistoryImage motionHistoryImage(FrameContainer container, int lifeTime, int threshold, boolean useThumbnails){
+	public static MotionHistoryImage motionHistoryImage(SegmentContainer container, int lifeTime, int threshold, boolean useThumbnails){
 		if(container.getFrames().isEmpty()){
 			return null;
 		}

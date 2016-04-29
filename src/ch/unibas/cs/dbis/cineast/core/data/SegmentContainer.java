@@ -10,14 +10,14 @@ import ch.unibas.cs.dbis.cineast.core.data.providers.PathProvider;
 import ch.unibas.cs.dbis.cineast.core.data.providers.SubtitleItemProvider;
 import ch.unibas.cs.dbis.cineast.core.data.providers.TagProvider;
 
-public interface FrameContainer extends AvgImgProvider, DurationProvider, MedianImgProvider, MostRepresentativeFrameProvider, SubtitleItemProvider, PathProvider, TagProvider{
+public interface SegmentContainer extends AvgImgProvider, DurationProvider, MedianImgProvider, MostRepresentativeFrameProvider, SubtitleItemProvider, PathProvider, TagProvider{
 
 	List<Frame> getFrames();
 	
 	/**
 	 * @return a unique id of this 
 	 */
-	long getId();
+	String getId();
 	
-	long getSuperId();
+	String getSuperId();
 }

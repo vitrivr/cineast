@@ -1,5 +1,8 @@
 package ch.unibas.cs.dbis.cineast.core.color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReadableHSVContainer extends AbstractColorContainer<ReadableHSVContainer> implements Cloneable{
 
 	protected float h, s, v;
@@ -24,7 +27,7 @@ public class ReadableHSVContainer extends AbstractColorContainer<ReadableHSVCont
 		}
 	}
 	
-	@Override
+	
 	public String toFeatureString() {
 		return "<" + h + ", " + s + ", " + v + ">";
 	}
@@ -47,8 +50,27 @@ public class ReadableHSVContainer extends AbstractColorContainer<ReadableHSVCont
 	}
 
 	@Override
-	public float[] toFloatArray() {
+	public float[] toArray(float[] arr) {
+		if(arr != null && arr.length == 3){
+			arr[0] = h;
+			arr[1] = s;
+			arr[2] = v;
+			return arr;
+		}
 		return new float[]{h, s, v};
+	}
+
+	@Override
+	public List<Float> toList(List<Float> list) {
+		if(list != null){
+			list.clear();
+		}else{
+			list = new ArrayList<>(3);
+		}
+		list.add(h);
+		list.add(s);
+		list.add(v);
+		return list;
 	}
 	
 }

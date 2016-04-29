@@ -5,21 +5,24 @@ import java.util.List;
 
 public abstract class PersistentTuple<R> {
 
-	protected LinkedList<Object> elements;
-	protected PersistencyWriter<?> phandler;
+	protected LinkedList<Object> elements = new LinkedList<>();
 	
-	protected PersistentTuple(PersistencyWriter<?> phandler){
-		this.elements = new LinkedList<>();
-		this.phandler = phandler;
+	protected PersistentTuple(Object...objects){
+		if(objects != null){
+			for(Object obj : objects){
+				addElement(obj);
+			}
+		}
 	}
 	
-	public void addElement(Object element){
-		this.elements.add(element);
+	public void addElement(Object o){
+		this.elements.add(o);
 	}
 	
-	public List<Object> getElemets(){
+	public List<Object> getElements(){
 		return this.elements;
 	}
 	
 	public abstract R getPersistentRepresentation();
+	
 }

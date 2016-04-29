@@ -1,5 +1,8 @@
 package ch.unibas.cs.dbis.cineast.core.color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBContainer> implements Cloneable{
 
 	public static final int WHITE_INT = ReadableRGBContainer.toIntColor(255, 255, 255);
@@ -105,13 +108,31 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
 		}
 	}
 	
-	@Override
 	public String toFeatureString() {
 		return "<" + r + ", " + g + ", " + b + ">";
 	}
 
 	@Override
-	public float[] toFloatArray() {
+	public float[] toArray(float[] arr) {
+		if(arr != null && arr.length == 3){
+			arr[0] = r / 255f;
+			arr[1] = g / 255f;
+			arr[2] = b / 255f;
+			return arr;
+		}
 		return new float[]{r / 255f, g / 255f, b / 255f};
+	}
+	
+	@Override
+	public List<Float> toList(List<Float> list) {
+		if(list != null){
+			list.clear();
+		}else{
+			list = new ArrayList<>(3);
+		}
+		list.add(r / 255f);
+		list.add(g / 255f);
+		list.add(b / 255f);
+		return list;
 	}
 }

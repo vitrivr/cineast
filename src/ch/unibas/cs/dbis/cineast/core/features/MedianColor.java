@@ -1,6 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,10 +9,10 @@ import ch.unibas.cs.dbis.cineast.core.color.ColorConverter;
 import ch.unibas.cs.dbis.cineast.core.color.LabContainer;
 import ch.unibas.cs.dbis.cineast.core.color.RGBContainer;
 import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.providers.MedianImgProvider;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import ch.unibas.cs.dbis.cineast.core.util.TimeHelper;
@@ -61,35 +60,46 @@ public class MedianColor extends AbstractFeatureModule {
 	}
 
 	@Override
-	public void processShot(FrameContainer shot) {
-		if(!phandler.check("SELECT * FROM features.MedianColor WHERE shotid = " + shot.getId())){
+	public void processShot(SegmentContainer shot) {
+		if(!phandler.idExists(shot.getId())){
 			TimeHelper.tic();
 			LOGGER.entry();
 			LabContainer median = getMedian(shot);
-			long shotId = shot.getId();
 	
-			addToDB(shotId, median);
+			persist(shot.getId(), median);
 			LOGGER.debug("MedianColor.processShot() done in {}", TimeHelper.toc());
 			LOGGER.exit();
 		}
 	}
 
 	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc) {
-		LabContainer query = getMedian(qc.getMedianImg());
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-		
-		ResultSet rset = this.selector.select("SELECT * FROM features.MedianColor USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', color) ORDER USING DISTANCE LIMIT " + limit);
-		return manageResultSet(rset);
+	public List<LongDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
-		LabContainer query = getMedian(qc.getMedianImg());
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-		
-		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MedianColor, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', color) ORDER USING DISTANCE LIMIT " + limit);
-		return manageResultSet(rset);
+	public List<LongDoublePair> getSimilar(long shotId, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
+//		LabContainer query = getMedian(qc.getMedianImg());
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
+//		
+//		ResultSet rset = this.selector.select("SELECT * FROM features.MedianColor USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', color) ORDER USING DISTANCE LIMIT " + limit);
+//		return manageResultSet(rset);
+//	}
+//
+//	@Override
+//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
+//		LabContainer query = getMedian(qc.getMedianImg());
+//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
+//		
+//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MedianColor, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', color) ORDER USING DISTANCE LIMIT " + limit);
+//		return manageResultSet(rset);
+//	}
 	
 }

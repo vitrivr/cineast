@@ -3,7 +3,7 @@ package ch.unibas.cs.dbis.cineast.core.features.retriever;
 import java.util.HashMap;
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import gnu.trove.map.hash.TLongObjectHashMap;
@@ -11,7 +11,7 @@ import gnu.trove.map.hash.TLongObjectHashMap;
 public class CachedRetriever implements Retriever {
 
 	private Retriever retriever;
-	private HashMap<FrameContainer, List<LongDoublePair>> resultCache = new HashMap<FrameContainer, List<LongDoublePair>>();
+	private HashMap<SegmentContainer, List<LongDoublePair>> resultCache = new HashMap<SegmentContainer, List<LongDoublePair>>();
 	private TLongObjectHashMap<List<LongDoublePair>> longResultCache = new TLongObjectHashMap<List<LongDoublePair>>();
 	private DBSelector selector = null;
 	
@@ -25,7 +25,7 @@ public class CachedRetriever implements Retriever {
 	}
 
 	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc) {
+	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
 		if(this.resultCache.containsKey(qc)){
 			return this.resultCache.get(qc);
 		}
@@ -64,7 +64,7 @@ public class CachedRetriever implements Retriever {
 	/* no point in caching here */
 	
 	@Override
-	public List<LongDoublePair> getSimilar(FrameContainer qc, String resultCacheName) {
+	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
 		return this.retriever.getSimilar(qc, resultCacheName);
 	}
 

@@ -12,7 +12,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
@@ -31,7 +31,7 @@ private static File folder = new File("debug2");
 	}
 
 	@Override
-	public void processShot(FrameContainer shot) {
+	public void processShot(SegmentContainer shot) {
 		List<Pair<Integer,LinkedList<Point2D_F32>>> paths = shot.getPaths();
 		for(Frame f : shot.getFrames()){
 			File file = new File(folder, String.format("%06d",f.getId()) + ".jpg");

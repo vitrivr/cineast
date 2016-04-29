@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ch.unibas.cs.dbis.cineast.core.data.FrameContainer;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
@@ -29,9 +29,9 @@ public class ShotThumbNails implements Extractor {
 	}
 
 	@Override
-	public void processShot(FrameContainer shot) {
+	public void processShot(SegmentContainer shot) {
 		
-		File imageFolder = new File(this.folder, Long.toString(shot.getSuperId()));
+		File imageFolder = new File(this.folder, shot.getSuperId());
 		if(!imageFolder.exists()){
 			imageFolder.mkdirs();
 		}
