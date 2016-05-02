@@ -1,6 +1,6 @@
 package ch.unibas.cs.dbis.cineast.core.db;
 
-public class ADAMProSelector implements DBSelector {
+public class ADAMproSelector implements DBSelector {
 
 	@Override
 	public boolean open(String name) {

@@ -14,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.db.ADAMProSelector;
+import ch.unibas.cs.dbis.cineast.core.db.ADAMproSelector;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import ch.unibas.cs.dbis.cineast.core.features.AverageColor;
 import ch.unibas.cs.dbis.cineast.core.features.AverageColorARP44;
@@ -69,7 +69,7 @@ public class API {
 
 		@Override
 		public void initialize(Retriever r) {
-			r.init(new ADAMProSelector());
+			r.init(new ADAMproSelector());
 
 		}
 	};

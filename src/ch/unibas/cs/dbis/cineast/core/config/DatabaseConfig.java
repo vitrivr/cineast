@@ -4,46 +4,43 @@ import com.eclipsesource.json.JsonObject;
 
 public final class DatabaseConfig {
 	
-	private final String location;
-	private final String user;
-	private final String password;
+	private final String host;
+	private final int port;
+	private final boolean plaintext;
 	
-	public static final String DEFAULT_LOCATION = "127.0.0.1:5432/cineast";
-	public static final String DEFAULT_USER = "cineast";
-	public static final String DEFAULT_PASSWORD = "ilikemovies";
+	public static final String DEFAULT_HOST = "127.0.0.1";
+	public static final int DEFAULT_PORT = 5890;
+	public static final boolean DEFAULT_PLAINTEXT = false;
 	
 	
-	public DatabaseConfig(String location, String user, String password){
-		if(location == null){
+	public DatabaseConfig(String host, int port, boolean plaintext){
+		if(host == null){
 			throw new NullPointerException("Database location cannot be null");
 		}
-		if(user == null){
-			throw new NullPointerException("Database user cannot be null");
-		}
-		if(password == null){
-			throw new NullPointerException("Database password cannot be null");
+		if(port < 1 || port > 65535){
+			throw new IllegalArgumentException(port + " is outside of valid port range");
 		}
 		
-		this.location = location;
-		this.user = user;
-		this.password = password;
+		this.host = host;
+		this.port = port;
+		this.plaintext = plaintext;
 	}
 	
 	public DatabaseConfig(){
-		this(DEFAULT_LOCATION, DEFAULT_USER, DEFAULT_PASSWORD);
+		this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_PLAINTEXT);
 	}
 	
 	
-	public String getLocation(){
-		return this.location;
+	public String getHost(){
+		return this.host;
 	}
 	
-	public String getUser(){
-		return this.user;
+	public int getPort(){
+		return this.port;
 	}
 	
-	public String getPassword(){
-		return this.password;
+	public boolean getPplaintext(){
+		return this.plaintext;
 	}
 	
 	/**
@@ -51,47 +48,47 @@ public final class DatabaseConfig {
 	 * expects a json object of the follwing form:
 	 * <pre>
 	 * {
-	 * 	"location" : (string)
-	 * 	"user" : (string)
-	 * 	"password" : (string)
+	 * 	"host" : (string)
+	 * 	"port" : (int)
+	 * 	"plaintext" : (boolean)
 	 * }
 	 * </pre>
 	 * @throws NullPointerException in case provided JsonObject is null
-	 * @throws IllegalArgumentException in case one of the specified parameters is not a string
+	 * @throws IllegalArgumentException in case one of the parameters is not of the correct type or not within the valid range
 	 */
 	public static DatabaseConfig parse(JsonObject obj) throws NullPointerException, IllegalArgumentException{
 		if(obj == null){
 			throw new NullPointerException("JsonObject was null");
 		}
 		
-		String location = DEFAULT_LOCATION;
-		if(obj.get("location") != null){
+		String host = DEFAULT_HOST;
+		if(obj.get("host") != null){
 			try{
-				location = obj.get("location").asString();
+				host = obj.get("host").asString();
 			} catch(UnsupportedOperationException notastring){
-				throw new IllegalArgumentException("'location' was not a string in database configuration");
+				throw new IllegalArgumentException("'host' was not a string in database configuration");
 			}
 		}
 		
-		String user = DEFAULT_USER;
-		if(obj.get("user") != null){
+		int port = DEFAULT_PORT;
+		if(obj.get("port") != null){
 			try{
-				user = obj.get("user").asString();
+				port = obj.get("port").asInt();
 			} catch(UnsupportedOperationException notastring){
-				throw new IllegalArgumentException("'user' was not a string in database configuration");
+				throw new IllegalArgumentException("'port' was not an integer in database configuration");
 			}
 		}
 		
-		String password = DEFAULT_PASSWORD;
-		if(obj.get("password") != null){
+		boolean plaintext = DEFAULT_PLAINTEXT;
+		if(obj.get("plaintext") != null){
 			try{
-				location = obj.get("password").asString();
+				plaintext = obj.get("plaintext").asBoolean();
 			} catch(UnsupportedOperationException notastring){
-				throw new IllegalArgumentException("'password' was not a string in database configuration");
+				throw new IllegalArgumentException("'plaintext' was not a boolean in database configuration");
 			}
 		}
 		
-		return new DatabaseConfig(location, user, password);
+		return new DatabaseConfig(host, port, plaintext);
 		
 	}
 }

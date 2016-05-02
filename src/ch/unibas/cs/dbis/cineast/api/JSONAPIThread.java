@@ -20,10 +20,9 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.db.ADAMProSelector;
+import ch.unibas.cs.dbis.cineast.core.db.ADAMproSelector;
 import ch.unibas.cs.dbis.cineast.core.db.DBResultCache;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
@@ -31,9 +30,7 @@ import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.db.VideoLookup;
 import ch.unibas.cs.dbis.cineast.core.util.ContinousRetrievalLogic;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
-import gnu.trove.map.hash.TLongDoubleHashMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import gnu.trove.set.hash.TLongHashSet;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,
@@ -90,14 +87,14 @@ public class JSONAPIThread extends Thread {
 			
 				JsonObject resultobj = JSONEncoder.encodeVideo(descriptor);
 				
-				vl.close();
+//				vl.close();
 				this.printer.print(resultobj.toString());
 				this.printer.print(',');
 				
 				String id = descriptor.getVideoId();
 				
 				//send shots
-				DBSelector selector = new ADAMProSelector();
+				DBSelector selector = new ADAMproSelector();
 				ResultSet rset;
 //				rset = selector.select("SELECT id, startframe, endframe FROM cineast.shots WHERE video = " + id);
 				int i = 0;
@@ -248,7 +245,7 @@ public class JSONAPIThread extends Thread {
 				JsonObject query = clientJSON.get("query").asObject();
 				JsonArray shotidlist = query.get("shotidlist").asArray();
 				int limit = query.get("limit") == null ? 1 : query.get("limit").asInt();
-				DBSelector selector = new ADAMProSelector();
+				DBSelector selector = new ADAMproSelector();
 				ShotLookup sl = new ShotLookup();
 				ShotLookup.ShotDescriptor descriptor;
 				this.printer.print('[');

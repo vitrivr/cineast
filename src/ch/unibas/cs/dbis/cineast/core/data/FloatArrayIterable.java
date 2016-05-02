@@ -34,8 +34,6 @@ public class FloatArrayIterable implements Iterable<Float> {
 			//ignore
 		}
 
-		
-		
 	}
 
 }

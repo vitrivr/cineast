@@ -1,8 +1,8 @@
 {
 	"database": {
-		"location": "127.0.0.1:5432/cineast",
-		"user": "pg_user",
-		"password": "pg_password"
+		"host": "127.0.0.1",
+		"port": 5890,
+		"plaintext": true
 	},
 	
 	"retriever": {

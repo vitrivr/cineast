@@ -1,19 +1,15 @@
 package ch.unibas.cs.dbis.cineast.core.db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
 import ch.unibas.cs.dbis.cineast.core.data.Shot;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
@@ -24,26 +20,26 @@ public class ShotLookup {
 	private Connection connection;
 	
 	public ShotLookup(){
-		this(Config.getDatabaseConfig());
+//		this(Config.getDatabaseConfig());
 	}
-	
-	public ShotLookup(DatabaseConfig config){
-		this(config.getLocation(), config.getUser(), config.getPassword());
-	}
+//	
+//	public ShotLookup(DatabaseConfig config){
+//		this(config.getLocation(), config.getUser(), config.getPassword());
+//	}
 	
 	public ShotLookup(String database, String username, String password){
-		Properties props = new Properties();
-
-		props.setProperty("user", username);
-		props.setProperty("password", password);
-		props.setProperty("tcpKeepAlive", "true");
-
-		String url = "jdbc:postgresql://" + database;
-		try {
-			connection = DriverManager.getConnection(url, props);
-		} catch (SQLException e) {
-			LOGGER.fatal(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-		}
+//		Properties props = new Properties();
+//
+//		props.setProperty("user", username);
+//		props.setProperty("password", password);
+//		props.setProperty("tcpKeepAlive", "true");
+//
+//		String url = "jdbc:postgresql://" + database;
+//		try {
+//			connection = DriverManager.getConnection(url, props);
+//		} catch (SQLException e) {
+//			LOGGER.fatal(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
+//		}
 	}
 	
 	public void close(){
