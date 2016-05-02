@@ -28,6 +28,13 @@ public class FloatArrayIterable implements Iterable<Float> {
 		public Float next() {
 			return arr[i++];
 		}
+
+		@Override
+		public void remove() {
+			//ignore
+		}
+
+		
 		
 	}
 
