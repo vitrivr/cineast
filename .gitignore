@@ -16,6 +16,6 @@ bin
 .project
 .classpath
 .settings/
-/generated/
+
 
 .idea
