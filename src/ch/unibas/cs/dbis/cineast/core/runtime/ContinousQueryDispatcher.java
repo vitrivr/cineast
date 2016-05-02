@@ -17,13 +17,12 @@ import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.LimitedQueue;
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
+import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.RetrieverInitializer;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
-import gnu.trove.map.hash.TLongDoubleHashMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 public class ContinousQueryDispatcher {
@@ -55,11 +54,11 @@ public class ContinousQueryDispatcher {
 		
 	}
 	
-	public static List<LongDoublePair> retirieve(QueryContainer query, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, String resultCacheName){
+	public static List<StringDoublePair> retirieve(QueryContainer query, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, String resultCacheName){
 		if(executor == null || executor.isShutdown()){
 			init();
 		}
-		LinkedList<Future<Pair<Retriever, List<LongDoublePair>>>> futures = new LinkedList<>();
+		LinkedList<Future<Pair<Retriever, List<StringDoublePair>>>> futures = new LinkedList<>();
 		double wheightSum = 0;
 		Set<Retriever> features = retrievers.keySet();
 		for(Retriever r : features){
@@ -74,11 +73,11 @@ public class ContinousQueryDispatcher {
 		return handleFutures(futures, retrievers, wheightSum);
 	}
 	
-	public static List<LongDoublePair> retirieve(long shotId, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, String resultCacheName){
+	public static List<StringDoublePair> retirieve(long shotId, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, String resultCacheName){
 		if(executor == null || executor.isShutdown()){
 			init();
 		}
-		LinkedList<Future<Pair<Retriever, List<LongDoublePair>>>> futures = new LinkedList<>();
+		LinkedList<Future<Pair<Retriever, List<StringDoublePair>>>> futures = new LinkedList<>();
 		double wheightSum = 0;
 		Set<Retriever> features = retrievers.keySet();
 		for(Retriever r : features){
@@ -94,26 +93,26 @@ public class ContinousQueryDispatcher {
 	}
 	
 	
-	private static List<LongDoublePair> handleFutures(LinkedList<Future<Pair<Retriever, List<LongDoublePair>>>> futures, TObjectDoubleHashMap<Retriever> retrievers, double wheightSum) {
-		TLongDoubleHashMap result = new TLongDoubleHashMap();
+	private static List<StringDoublePair> handleFutures(LinkedList<Future<Pair<Retriever, List<StringDoublePair>>>> futures, TObjectDoubleHashMap<Retriever> retrievers, double wheightSum) {
+		TObjectDoubleHashMap<String> result = new TObjectDoubleHashMap<>();
 
 		while (!futures.isEmpty()) {
-			Iterator<Future<Pair<Retriever, List<LongDoublePair>>>> iter = futures.iterator();
+			Iterator<Future<Pair<Retriever, List<StringDoublePair>>>> iter = futures.iterator();
 			while (iter.hasNext()) {
-				Future<Pair<Retriever, List<LongDoublePair>>> future = iter.next();
+				Future<Pair<Retriever, List<StringDoublePair>>> future = iter.next();
 				if (future.isDone()) {
 					try {
-						Pair<Retriever, List<LongDoublePair>> pair = future.get();
+						Pair<Retriever, List<StringDoublePair>> pair = future.get();
 						double weight = retrievers.get(pair.first);
-						List<LongDoublePair> list = pair.second;
-						for (LongDoublePair ldp : list) {
-							if (Double.isInfinite(ldp.value) || Double.isNaN(ldp.value)) {
+						List<StringDoublePair> list = pair.second;
+						for (StringDoublePair sdp : list) {
+							if (Double.isInfinite(sdp.value) || Double.isNaN(sdp.value)) {
 								continue;
 							}
-							if (!result.containsKey(ldp.key)) {
-								result.put(ldp.key, (double) 0);
+							if (!result.containsKey(sdp.key)) {
+								result.put(sdp.key, (double) 0);
 							}
-							result.put(ldp.key, result.get(ldp.key) + (weight * ldp.value));
+							result.put(sdp.key, result.get(sdp.key) + (weight * sdp.value));
 						}
 					} catch (InterruptedException e) {
 						LOGGER.warn(LogHelper.getStackTrace(e));
@@ -129,13 +128,13 @@ public class ContinousQueryDispatcher {
 			}
 		}
 		
-		List<LongDoublePair> _return = new ArrayList<>(result.size());
-		long[] keys = result.keys();
-		for(long key : keys){
-			_return.add(new LongDoublePair(key, result.get(key)));
+		List<StringDoublePair> _return = new ArrayList<>(result.size());
+		String[] keys = (String[]) result.keys();
+		for(String key : keys){
+			_return.add(new StringDoublePair(key, result.get(key)));
 		}
 		
-		Collections.sort(_return, LongDoublePair.COMPARATOR);
+		Collections.sort(_return, StringDoublePair.COMPARATOR);
 		
 		Set<Retriever> features = retrievers.keySet();
 		for(Retriever r : features){
@@ -146,7 +145,7 @@ public class ContinousQueryDispatcher {
 			_return = _return.subList(0, MAX_RESULTS);
 		}
 
-		for(LongDoublePair p : _return){
+		for(StringDoublePair p : _return){
 			p.value /= wheightSum;
 		}
 		

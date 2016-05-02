@@ -74,4 +74,9 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
 		baseFolder.mkdirs();
 	}
 
+	@Override
+	public boolean exists(String key, String value) {
+		return false;
+	}
+
 }

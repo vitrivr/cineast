@@ -54,7 +54,7 @@ public class ShotLookup {
 		}
 	}
 	
-	public ShotDescriptor lookUpShot(long shotId){
+	public ShotDescriptor lookUpShot(String shotId){
 		ResultSet set = null;
 		try {
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM cineast.videos JOIN cineast.shots ON (cineast.videos.id = cineast.shots.video) WHERE cineast.shots.id = " + shotId);
@@ -63,41 +63,44 @@ public class ShotLookup {
 			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
 		}
 		
-		return new ShotDescriptor(set, shotId);
+//		return new ShotDescriptor(set, shotId);
+		return null;
 		
 	}
 	
 	
-	public int lookUpVideoid(String name){
+	public String lookUpVideoid(String name){
 		
-		try {
-			PreparedStatement statement = connection.prepareStatement("SELECT id FROM cineast.videos WHERE name = \'" + name + "\'");
-			ResultSet set = statement.executeQuery();
-			if(set.next()){
-				return set.getInt(1);
-			}
-		} catch (SQLException e) {
-			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-		}
-		return -1;
+//		try {
+//			PreparedStatement statement = connection.prepareStatement("SELECT id FROM cineast.videos WHERE name = \'" + name + "\'");
+//			ResultSet set = statement.executeQuery();
+//			if(set.next()){
+//				return set.getInt(1);
+//			}
+//		} catch (SQLException e) {
+//			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
+//		}
+//		return -1;
+		
+		return "";
 
 	}
 	
-	public List<ShotDescriptor> lookUpVideo(int videoId){
+	public List<ShotDescriptor> lookUpVideo(String videoId){
 		LinkedList<ShotDescriptor> _return = new LinkedList<ShotLookup.ShotDescriptor>();
-		try {
-			PreparedStatement statement = connection.prepareStatement("SELECT id FROM cineast.shots WHERE video = " + videoId);
-			ResultSet set = statement.executeQuery();
-			while(set.next()){
-				long shotId = set.getLong(1);
-				ShotDescriptor des = lookUpShot(shotId);
-				if(des.videoId == videoId){//sanity check
-					_return.add(des);
-				}
-			}
-		} catch (SQLException e) {
-			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-		}
+//		try {
+//			PreparedStatement statement = connection.prepareStatement("SELECT id FROM cineast.shots WHERE video = " + videoId);
+//			ResultSet set = statement.executeQuery();
+//			while(set.next()){
+//				long shotId = set.getLong(1);
+//				ShotDescriptor des = lookUpShot(shotId);
+//				if(des.videoId == videoId){//sanity check
+//					_return.add(des);
+//				}
+//			}
+//		} catch (SQLException e) {
+//			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
+//		}
 		
 		return _return;
 	}

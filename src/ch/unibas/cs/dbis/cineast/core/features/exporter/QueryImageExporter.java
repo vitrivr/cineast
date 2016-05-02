@@ -15,6 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
+import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
@@ -35,38 +37,24 @@ public class QueryImageExporter implements Retriever {
 	}
 
 	@Override
-	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-		BufferedImage bimg = qc.getMostRepresentativeFrame().getImage().getBufferedImage();
+	public void finish() {
+	}
+
+	@Override
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		BufferedImage bimg = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
 		try {
 			ImageIO.write(bimg, "PNG", new File(folder, this.df.format(Calendar.getInstance().getTime()) + ".png"));
 		} catch (IOException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
 		}
-		return new LinkedList<LongDoublePair>();
+		return new LinkedList<StringDoublePair>();
 	}
 
 	@Override
-	public List<LongDoublePair> getSimilar(long shotId) {
-		return new LinkedList<LongDoublePair>();
+	public List<StringDoublePair> getSimilar(long shotId, QueryConfig qc) {
+		return new LinkedList<StringDoublePair>();
 	}
 
-	@Override
-	public void finish() {
-	}
-
-	@Override
-	public float getConfidenceWeight() {
-		return 0;
-	}
-
-	@Override
-	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-		return this.getSimilar(qc);
-	}
-
-	@Override
-	public List<LongDoublePair> getSimilar(long shotId, String resultCacheName) {
-		return new LinkedList<LongDoublePair>();
-	}
 
 }

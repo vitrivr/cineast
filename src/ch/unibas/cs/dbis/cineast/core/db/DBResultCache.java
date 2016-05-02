@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
@@ -20,11 +19,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.base.Joiner;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
-import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
-import gnu.trove.iterator.TLongIterator;
-import gnu.trove.set.hash.TLongHashSet;
 
 public final class DBResultCache {
 
@@ -111,18 +106,18 @@ private DBResultCache(){}
 		return -1L;
 	}
 	
-	private static void addResultElementsToDB(long id, long[] results){
-		try {
-			PreparedStatement statement = dbConnection.prepareStatement("INSERT INTO cineast.resultcacheelements (chacheid, shotid) VALUES (?, ?)");
-			for(long shorid : results){
-				statement.setLong(1, id);
-				statement.setLong(2, shorid);
-				statement.addBatch();
-			}
-			statement.executeBatch();
-		} catch (SQLException e) {
-			LOGGER.fatal(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-		}
+	private static void addResultElementsToDB(long id, String[] results){
+//		try {
+//			PreparedStatement statement = dbConnection.prepareStatement("INSERT INTO cineast.resultcacheelements (chacheid, shotid) VALUES (?, ?)");
+//			for(String shorid : results){
+//				statement.setLong(1, id);
+//				statement.setLong(2, shorid);
+//				statement.addBatch();
+//			}
+//			statement.executeBatch();
+//		} catch (SQLException e) {
+//			LOGGER.fatal(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
+//		}
 	}
 	
 	private static void deleteResultFromDB(String resultName){
@@ -142,7 +137,7 @@ private DBResultCache(){}
 		}
 	}
 	
-	private static synchronized String newCachedResult(long[] ids){
+	private static synchronized String newCachedResult(String[] ids){
 		synchronized(dbConnection){
 			String name = createUniqueName();
 			long id = insertNewSetToDB(name);
@@ -153,24 +148,24 @@ private DBResultCache(){}
 		}
 	}
 	
-	public static String newCachedResult(List<LongDoublePair> result){
-		long[] tmp = new long[result.size()];
+	public static String newCachedResult(HashSet<String> result){
+		String[] tmp = new String[result.size()];
 		int i = 0;
-		for(LongDoublePair ldp : result){
-			tmp[i++] = ldp.key;
+		for(String s : result){
+			tmp[i++] = s;
 		}
 		return newCachedResult(tmp);
 	}
 	
-	public static String newCachedResult(TLongHashSet result){
-		long[] tmp = new long[result.size()];
-		int i = 0;
-		TLongIterator iter = result.iterator();
-		while(iter.hasNext()){
-			tmp[i++] = iter.next();
-		}
-		return newCachedResult(tmp);
-	}
+//	public static String newCachedResult(TLongHashSet result){
+//		long[] tmp = new long[result.size()];
+//		int i = 0;
+//		TLongIterator iter = result.iterator();
+//		while(iter.hasNext()){
+//			tmp[i++] = iter.next();
+//		}
+//		return newCachedResult(tmp);
+//	}
 	
 	public static String cacheVideosByIds(List<Long> videoids){
 		
@@ -209,48 +204,48 @@ private DBResultCache(){}
 	 * @param resultCacheName
 	 */
 	public static void createIfNecessary(String resultCacheName) {
-		if(resultCacheName == null){
-			return;
-		}
-		resultCacheName = resultCacheName.toLowerCase();
-		if(!resultCacheName.startsWith("v")){
-			return;
-		}
-		resultCacheName = resultCacheName.substring(1);
-		String[] idsStrings = resultCacheName.split("-");
-		int[] ids = new int[idsStrings.length];
-		for(int i = 0; i < idsStrings.length; ++i){
-			try{
-				ids[i] = Integer.parseInt(idsStrings[i]);
-			}catch(NumberFormatException e){
-				//ignore?!
-			}
-		}
-		Arrays.sort(ids);
-		StringBuilder builder = new StringBuilder();
-		builder.append('v');
-		for(int i = 0; i < ids.length - 1; ++i){
-			builder.append(ids[i]);
-			builder.append('-');
-		}
-		builder.append(ids[ids.length - 1]);
-		String newResultCacheName = builder.toString();
-		if(getIdByCacheName(newResultCacheName) > -1L){
-			return;
-		}
-		
-		long resultCacheId = insertNewSetToDB(newResultCacheName);
-		ShotLookup sl = new ShotLookup();
-		for(int videoId : ids){
-			List<ShotDescriptor> shots = sl.lookUpVideo(videoId);
-			long[] shotIds = new long[shots.size()];
-			int i = 0;
-			for(ShotDescriptor s : shots){
-				shotIds[i++] = s.getShotId();
-			}
-			addResultElementsToDB(resultCacheId, shotIds);
-		}
-		sl.close();
+//		if(resultCacheName == null){
+//			return;
+//		}
+//		resultCacheName = resultCacheName.toLowerCase();
+//		if(!resultCacheName.startsWith("v")){
+//			return;
+//		}
+//		resultCacheName = resultCacheName.substring(1);
+//		String[] idsStrings = resultCacheName.split("-");
+//		int[] ids = new int[idsStrings.length];
+//		for(int i = 0; i < idsStrings.length; ++i){
+//			try{
+//				ids[i] = Integer.parseInt(idsStrings[i]);
+//			}catch(NumberFormatException e){
+//				//ignore?!
+//			}
+//		}
+//		Arrays.sort(ids);
+//		StringBuilder builder = new StringBuilder();
+//		builder.append('v');
+//		for(int i = 0; i < ids.length - 1; ++i){
+//			builder.append(ids[i]);
+//			builder.append('-');
+//		}
+//		builder.append(ids[ids.length - 1]);
+//		String newResultCacheName = builder.toString();
+//		if(getIdByCacheName(newResultCacheName) > -1L){
+//			return;
+//		}
+//		
+//		long resultCacheId = insertNewSetToDB(newResultCacheName);
+//		ShotLookup sl = new ShotLookup();
+//		for(int videoId : ids){
+//			List<ShotDescriptor> shots = sl.lookUpVideo(videoId);
+//			long[] shotIds = new long[shots.size()];
+//			int i = 0;
+//			for(ShotDescriptor s : shots){
+//				shotIds[i++] = s.getShotId();
+//			}
+//			addResultElementsToDB(resultCacheId, shotIds);
+//		}
+//		sl.close();
 	}
 	
 }

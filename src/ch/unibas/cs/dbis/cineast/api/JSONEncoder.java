@@ -5,7 +5,7 @@ import java.util.List;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
+import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.db.VideoLookup.VideoDescriptor;
 
@@ -13,7 +13,7 @@ public final class JSONEncoder {
 
 	private JSONEncoder(){}
 	
-	public static final JsonObject encodeResult(long shotId, double score, String category, int containerId, boolean includeType){
+	public static final JsonObject encodeResult(String shotId, double score, String category, int containerId, boolean includeType){
 		JsonObject _return = new JsonObject();
 		if(includeType){
 			_return.add("type", "result");
@@ -25,17 +25,17 @@ public final class JSONEncoder {
 		return _return;
 	}
 	
-	public static final JsonObject encodeResult(long shotId, double score, String category, int containerId){
+	public static final JsonObject encodeResult(String shotId, double score, String category, int containerId){
 		return encodeResult(shotId, score, category, containerId, true);
 	}
 	
-	public static final JsonObject encodeResultBatched(List<LongDoublePair> ldpList, String category, int containerId){
+	public static final JsonObject encodeResultBatched(List<StringDoublePair> sdpList, String category, int containerId){
 		JsonObject _return = new JsonObject();
 		_return.add("type", "batch");
 		_return.add("inner", "result");
 		JsonArray array = new JsonArray();
-		for(LongDoublePair ldp : ldpList){
-			array.add(encodeResult(ldp.key, ldp.value, category, containerId, false));
+		for(StringDoublePair sdp : sdpList){
+			array.add(encodeResult(sdp.key, sdp.value, category, containerId, false));
 		}
 		_return.add("array", array);
 		return _return;

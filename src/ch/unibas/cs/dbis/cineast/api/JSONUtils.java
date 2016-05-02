@@ -16,18 +16,17 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImageFactory;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
 import ch.unibas.cs.dbis.cineast.core.data.QuerySubTitleItem;
+import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import georegression.struct.point.Point2D_F32;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import gnu.trove.set.hash.TLongHashSet;
 
 public class JSONUtils {
 
@@ -130,24 +129,6 @@ public class JSONUtils {
 		return weightMap;
 	}
 
-	@Deprecated
-	/**
-	 * Sends Results to the client as specified in the JSON-Doc
-	 * @param printer Output goes here
-	 * @param resultlist Pair of shots and scores
-	 * @param category which category has been used to generate the results
-	 * @param index index of the query (used for multisketch)
-	 */
-	public static void printResults(PrintStream printer, List<LongDoublePair> resultlist, JsonValue category, int index) {
-		String categoryName = category.asString();
-		JsonObject resultobj = new JsonObject();
-		for(int i = 0; i<resultlist.size();i++){
-			resultobj = JSONEncoder.encodeResult(resultlist.get(i).key, resultlist.get(i).value, categoryName, index);
-			printer.print(resultobj.toString());
-			printer.println(',');
-		}
-		
-	}
 	
 	/**
 	 * Sends Results to the client as specified in the JSON-Doc
@@ -156,17 +137,17 @@ public class JSONUtils {
 	 * @param category which category has been used to generate the results
 	 * @param index index of the query (used for multisketch)
 	 */
-	public static void printResultsBatched(PrintStream printer, List<LongDoublePair> resultlist, JsonValue category, int index) {
+	public static void printResultsBatched(PrintStream printer, List<StringDoublePair> resultlist, JsonValue category, int index) {
 		printer.print(JSONEncoder.encodeResultBatched(resultlist, category.asString(), index).toString());
 		printer.println(',');
 	}
 	
-	public static TLongHashSet printShotsBatched(PrintStream printer, List<LongDoublePair> resultlist, TLongHashSet shotids) {
+	public static HashSet<String> printShotsBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> shotids) {
 		ArrayList<ShotDescriptor> sdList = new ArrayList<>(resultlist.size());
 		ShotLookup sl = new ShotLookup();
 		for(int i = 0; i < resultlist.size(); ++i){
 			
-			long shotid = resultlist.get(i).key;
+			String shotid = resultlist.get(i).key;
 			if(shotids.contains(shotid)){
 				continue;
 			}
@@ -182,11 +163,11 @@ public class JSONUtils {
 		return shotids;
 	}
 	
-	public static HashSet<String> printVideosBatched(PrintStream printer, List<LongDoublePair> resultlist, HashSet<String> videoids) {
+	public static HashSet<String> printVideosBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> videoids) {
 		ShotLookup sl = new ShotLookup();
 		ArrayList<ShotDescriptor> sdList = new ArrayList<>(resultlist.size());
 		for(int i = 0; i < resultlist.size(); ++i){
-			long shotid = resultlist.get(i).key;
+			String shotid = resultlist.get(i).key;
 			ShotDescriptor descriptor = sl.lookUpShot(shotid);
 			
 			if(videoids.contains(descriptor.getVideoId())){

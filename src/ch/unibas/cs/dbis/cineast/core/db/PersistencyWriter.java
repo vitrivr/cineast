@@ -14,6 +14,8 @@ public interface PersistencyWriter <R> {
 	
 	boolean idExists(String id);
 	
+	boolean exists(String key, String value);
+	
 	PersistentTuple<R> generateTuple(Object...objects);
 	
 	boolean persist(PersistentTuple<R> tuple);

@@ -11,10 +11,10 @@ import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StatElement;
+import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.descriptor.EdgeImg;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import ch.unibas.cs.dbis.cineast.core.util.ARPartioner;
@@ -99,13 +99,13 @@ public class EdgeARP88Full extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<LongDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<LongDoublePair> getSimilar(long shotId, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(long shotId, QueryConfig qc) {
 		// TODO Auto-generated method stub
 		return null;
 	}

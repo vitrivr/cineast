@@ -2,12 +2,10 @@ package ch.unibas.cs.dbis.cineast.core.runtime;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -21,15 +19,15 @@ import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.LimitedQueue;
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
+import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.RetrieverInitializer;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
-import gnu.trove.map.hash.TLongDoubleHashMap;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 
-public class QueryDispatcher implements Callable<List<LongDoublePair>> {
+public class QueryDispatcher implements Callable<List<StringDoublePair>> {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
@@ -81,8 +79,8 @@ public class QueryDispatcher implements Callable<List<LongDoublePair>> {
 		}
 	}
 	
-	public List<LongDoublePair> retirieve(QueryContainer query){
-		LinkedList<Future<Pair<Retriever, List<LongDoublePair>>>> futures = new LinkedList<>();
+	public List<StringDoublePair> retirieve(QueryContainer query){
+		LinkedList<Future<Pair<Retriever, List<StringDoublePair>>>> futures = new LinkedList<>();
 		double weightSum = 0;
 		Set<Retriever> features = this.retrieverWeights.keySet();
 		for(Retriever r : features){
@@ -91,26 +89,26 @@ public class QueryDispatcher implements Callable<List<LongDoublePair>> {
 			
 			futures.add(this.executor.submit(new RetrievalTask(r, query)));
 		}		
-		TLongDoubleHashMap result = new TLongDoubleHashMap();
+		TObjectDoubleHashMap<String> result = new TObjectDoubleHashMap<>();
 		
 		while(!futures.isEmpty()){
-			Iterator<Future<Pair<Retriever, List<LongDoublePair>>>> iter = futures.iterator();
+			Iterator<Future<Pair<Retriever, List<StringDoublePair>>>> iter = futures.iterator();
 			while(iter.hasNext()){
-				Future<Pair<Retriever, List<LongDoublePair>>> future = iter.next();
+				Future<Pair<Retriever, List<StringDoublePair>>> future = iter.next();
 				if(future.isDone()){
 					try {
-						Pair<Retriever, List<LongDoublePair>> pair = future.get();
+						Pair<Retriever, List<StringDoublePair>> pair = future.get();
 						double weight = this.retrieverWeights.get(pair.first);
-						weightSum += retrieverWeights.get(pair.first) * pair.first.getConfidenceWeight();
-						List<LongDoublePair> list = pair.second;
-						for(LongDoublePair ldp : list){
-							if(Double.isInfinite(ldp.value) || Double.isNaN(ldp.value)){
+						weightSum += retrieverWeights.get(pair.first);
+						List<StringDoublePair> list = pair.second;
+						for(StringDoublePair sdp : list){
+							if(Double.isInfinite(sdp.value) || Double.isNaN(sdp.value)){
 								continue;
 							}
-							if(!result.containsKey(ldp.key)){
-								result.put(ldp.key, 0d);
+							if(!result.containsKey(sdp.key)){
+								result.put(sdp.key, 0d);
 							}
-							result.put(ldp.key, result.get(ldp.key) + (weight * ldp.value));
+							result.put(sdp.key, result.get(sdp.key) + (weight * sdp.value));
 						}
 					} catch (InterruptedException e) {
 						LOGGER.warn(LogHelper.getStackTrace(e));
@@ -125,21 +123,14 @@ public class QueryDispatcher implements Callable<List<LongDoublePair>> {
 			} catch (InterruptedException e) {}
 		}
 		
-		List<LongDoublePair> _return = new ArrayList<>(result.size());
+		List<StringDoublePair> _return = new ArrayList<>(result.size());
 		//Set<Entry<Long, Double>> entries = result.entrySet();
-		long[] keys = result.keys();
-		for(long key : keys){
-			_return.add(new LongDoublePair(key, result.get(key)));
+		String[] keys = (String[]) result.keys();
+		for(String key : keys){
+			_return.add(new StringDoublePair(key, result.get(key)));
 		}
 		
-		Collections.sort(_return, new Comparator<LongDoublePair>(){
-
-			@Override
-			public int compare(LongDoublePair o1, LongDoublePair o2) {
-				return Double.compare(o2.value, o1.value);
-			}
-			
-		});
+		Collections.sort(_return, StringDoublePair.COMPARATOR);
 		
 		 features = this.retrieverWeights.keySet();
 		for(Retriever r : features){
@@ -154,15 +145,15 @@ public class QueryDispatcher implements Callable<List<LongDoublePair>> {
 			weightSum = 1d;
 		}
 		
-		for(LongDoublePair p : _return){
+		for(StringDoublePair p : _return){
 			p.value /= weightSum;
 		}
 		
 		return _return;
 	}
 	
-	public List<LongDoublePair> retirieve(long shotId){
-		LinkedList<Future<Pair<Retriever, List<LongDoublePair>>>> futures = new LinkedList<>();
+	public List<StringDoublePair> retirieve(long shotId){
+		LinkedList<Future<Pair<Retriever, List<StringDoublePair>>>> futures = new LinkedList<>();
 		double weightSum = 0;
 		Set<Retriever> features = this.retrieverWeights.keySet();
 		for(Retriever r : features){
@@ -175,26 +166,26 @@ public class QueryDispatcher implements Callable<List<LongDoublePair>> {
 					this.executor.submit(new RetrievalTask(r, shotId))
 					);
 		}		
-		HashMap<Long, Double> result = new HashMap<>();
+		TObjectDoubleHashMap<String> result = new TObjectDoubleHashMap<>();
 		
 		while(!futures.isEmpty()){
-			Iterator<Future<Pair<Retriever, List<LongDoublePair>>>> iter = futures.iterator();
+			Iterator<Future<Pair<Retriever, List<StringDoublePair>>>> iter = futures.iterator();
 			while(iter.hasNext()){
-				Future<Pair<Retriever, List<LongDoublePair>>> future = iter.next();
+				Future<Pair<Retriever, List<StringDoublePair>>> future = iter.next();
 				if(future.isDone()){
 					try {
-						Pair<Retriever, List<LongDoublePair>> pair = future.get();
+						Pair<Retriever, List<StringDoublePair>> pair = future.get();
 						double weight = this.retrieverWeights.get(pair.first);
-						weightSum += retrieverWeights.get(pair.first) * pair.first.getConfidenceWeight();
-						List<LongDoublePair> list = pair.second;
-						for(LongDoublePair ldp : list){
-							if(Double.isInfinite(ldp.value) || Double.isNaN(ldp.value)){
+						weightSum += retrieverWeights.get(pair.first);
+						List<StringDoublePair> list = pair.second;
+						for(StringDoublePair sdp : list){
+							if(Double.isInfinite(sdp.value) || Double.isNaN(sdp.value)){
 								continue;
 							}
-							if(!result.containsKey(ldp.key)){
-								result.put(ldp.key, 0d);
+							if(!result.containsKey(sdp.key)){
+								result.put(sdp.key, 0d);
 							}
-							result.put(ldp.key, result.get(ldp.key) + (weight * ldp.value));
+							result.put(sdp.key, result.get(sdp.key) + (weight * sdp.value));
 						}
 					} catch (InterruptedException e) {
 						LOGGER.warn(LogHelper.getStackTrace(e));
@@ -209,13 +200,13 @@ public class QueryDispatcher implements Callable<List<LongDoublePair>> {
 			} catch (InterruptedException e) {}
 		}
 		
-		List<LongDoublePair> _return = new ArrayList<>(result.size());
-		Set<Entry<Long, Double>> entries = result.entrySet();
-		for(Entry<Long, Double> e : entries){
-			_return.add(new LongDoublePair(e.getKey(), e.getValue()));
+		List<StringDoublePair> _return = new ArrayList<>(result.size());
+		String[] keys = (String[]) result.keys();
+		for(String key : keys){
+			_return.add(new StringDoublePair(key, result.get(key)));
 		}
 		
-		Collections.sort(_return, LongDoublePair.COMPARATOR);
+		Collections.sort(_return, StringDoublePair.COMPARATOR);
 		
 		 features = this.retrieverWeights.keySet();
 		for(Retriever r : features){
@@ -230,7 +221,7 @@ public class QueryDispatcher implements Callable<List<LongDoublePair>> {
 			weightSum = 1d;
 		}
 		
-		for(LongDoublePair p : _return){
+		for(StringDoublePair p : _return){
 			p.value /= weightSum;
 		}
 		
@@ -238,10 +229,10 @@ public class QueryDispatcher implements Callable<List<LongDoublePair>> {
 	}
 	
 	@Override
-	public List<LongDoublePair> call(){
+	public List<StringDoublePair> call(){
 		LOGGER.entry();
 		startPool();
-		List<LongDoublePair> _return;
+		List<StringDoublePair> _return;
 		if(this.query == null){
 			_return = retirieve(this.shotId);
 		}else{

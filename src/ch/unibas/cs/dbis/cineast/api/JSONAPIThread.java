@@ -5,9 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.net.Socket;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,6 +22,8 @@ import com.eclipsesource.json.JsonValue;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
+import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
+import ch.unibas.cs.dbis.cineast.core.db.ADAMProSelector;
 import ch.unibas.cs.dbis.cineast.core.db.DBResultCache;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
@@ -32,7 +32,7 @@ import ch.unibas.cs.dbis.cineast.core.db.VideoLookup;
 import ch.unibas.cs.dbis.cineast.core.util.ContinousRetrievalLogic;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import gnu.trove.map.hash.TLongDoubleHashMap;
-import gnu.trove.set.hash.TIntHashSet;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import gnu.trove.set.hash.TLongHashSet;
 
 /**
@@ -78,7 +78,7 @@ public class JSONAPIThread extends Thread {
 			case "video": {
 				JsonObject queryObject = clientJSON.get("query").asObject();
 				// String category = queryObject.get("category").asString();
-				long shotId = queryObject.get("shotid").asLong();
+				String shotId = queryObject.get("shotid").asString();
 				
 				ShotLookup sl = new ShotLookup();
 				ShotDescriptor shot = sl.lookUpShot(shotId);
@@ -94,25 +94,25 @@ public class JSONAPIThread extends Thread {
 				this.printer.print(resultobj.toString());
 				this.printer.print(',');
 				
-				long id = descriptor.getVideoId();
+				String id = descriptor.getVideoId();
 				
 				//send shots
-				DBSelector selector = new DBSelector();
+				DBSelector selector = new ADAMProSelector();
 				ResultSet rset;
-				rset = selector.select("SELECT id, startframe, endframe FROM cineast.shots WHERE video = " + id);
+//				rset = selector.select("SELECT id, startframe, endframe FROM cineast.shots WHERE video = " + id);
 				int i = 0;
-				while (rset.next()) {
-					ShotLookup.ShotDescriptor desc= sl.lookUpShot(rset.getInt(1));
-					
-					resultobj = JSONEncoder.encodeShot(rset.getInt(1), desc.getVideoId(), desc.getStartFrame(), desc.getEndFrame());
-					
-					this.printer.print(resultobj.toString());
-					this.printer.print(',');
-					printer.flush();
-					if(i % 20 == 0){
-						Thread.sleep(100);
-					}
-				}
+//				while (rset.next()) {
+//					ShotLookup.ShotDescriptor desc= sl.lookUpShot(rset.getInt(1));
+//					
+//					resultobj = JSONEncoder.encodeShot(rset.getInt(1), desc.getVideoId(), desc.getStartFrame(), desc.getEndFrame());
+//					
+//					this.printer.print(resultobj.toString());
+//					this.printer.print(',');
+//					printer.flush();
+//					if(i % 20 == 0){
+//						Thread.sleep(100);
+//					}
+//				}
 
 				sl.close();
 				selector.close();
@@ -125,20 +125,20 @@ public class JSONAPIThread extends Thread {
 				JsonArray categories = queryObject.get("categories").asArray();
 				JsonArray parr = queryObject.get("positive").asArray();
 				JsonArray narr = queryObject.get("negative").asArray();
-				TLongHashSet shotids = new TLongHashSet();
+				HashSet<String> shotids = new HashSet<>();
 				HashSet<String> videoids = new HashSet<>();
-				List<LongDoublePair> result;
-				TLongDoubleHashMap map;
+				List<StringDoublePair> result;
+				TObjectDoubleHashMap<String> map;
 
 				String resultCacheName = clientJSON.get("resultname") == null ? null : clientJSON.get("resultname").asString(); 
 				
 				for (JsonValue category : categories) {
-					map = new TLongDoubleHashMap();
+					map = new TObjectDoubleHashMap<>();
 
 					for (JsonValue _el : parr) {
 						long _shotid = _el.asLong();
 						result = ContinousRetrievalLogic.retrieve(_shotid, category.asString(), resultCacheName);
-						for (LongDoublePair pair : result) {
+						for (StringDoublePair pair : result) {
 							if (Double.isInfinite(pair.value) || Double.isNaN(pair.value)) {
 								continue;
 							}
@@ -152,7 +152,7 @@ public class JSONAPIThread extends Thread {
 					for (JsonValue _el : narr) {
 						long _shotid = _el.asLong();
 						result = ContinousRetrievalLogic.retrieve(_shotid, category.asString(), resultCacheName);
-						for (LongDoublePair pair : result) {
+						for (StringDoublePair pair : result) {
 							if (Double.isInfinite(pair.value) || Double.isNaN(pair.value)) {
 								continue;
 							}
@@ -166,16 +166,16 @@ public class JSONAPIThread extends Thread {
 
 					// Take positive score values & put together the definite
 					// list
-					List<LongDoublePair> list = new ArrayList<>(map.size());
-					long[] keys = map.keys();
-					for (long key : keys) {
+					List<StringDoublePair> list = new ArrayList<>(map.size());
+					String[] keys = (String[]) map.keys();
+					for (String key : keys) {
 						double val = map.get(key);
 						if (val > 0) {
-							list.add(new LongDoublePair(key, val));
+							list.add(new StringDoublePair(key, val));
 						}
 					}
 
-					Collections.sort(list, LongDoublePair.COMPARATOR);
+					Collections.sort(list, StringDoublePair.COMPARATOR);
 
 					int MAX_RESULTS = Config.getRetrieverConfig().getMaxResults();
 
@@ -201,7 +201,7 @@ public class JSONAPIThread extends Thread {
 				 */
 			case "multiSketch": {
 				JsonArray queryArray = clientJSON.get("query").asArray();
-				TLongHashSet shotids = new TLongHashSet();
+				HashSet<String> shotids = new HashSet<>();
 				HashSet<String> videoids = new HashSet<>();
 
 				String resultCacheName = clientJSON.get("resultname") == null ? null : clientJSON.get("resultname").asString();
@@ -217,7 +217,7 @@ public class JSONAPIThread extends Thread {
 					JsonObject query = it.next().asObject();
 					for (JsonValue category : query.get("categories").asArray()) {
 
-						List<LongDoublePair> result;
+						List<StringDoublePair> result;
 						if (query.get("id") != null && query.get("id").asLong() > 0) {
 							long id = query.get("id").asLong();
 							result = ContinousRetrievalLogic.retrieve(id, category.asString(), resultCacheName);
@@ -248,12 +248,12 @@ public class JSONAPIThread extends Thread {
 				JsonObject query = clientJSON.get("query").asObject();
 				JsonArray shotidlist = query.get("shotidlist").asArray();
 				int limit = query.get("limit") == null ? 1 : query.get("limit").asInt();
-				DBSelector selector = new DBSelector();
+				DBSelector selector = new ADAMProSelector();
 				ShotLookup sl = new ShotLookup();
 				ShotLookup.ShotDescriptor descriptor;
 				this.printer.print('[');
 				
-				PreparedStatement select = selector.createPreparedStatement("(select id, startframe, endframe from cineast.shots WHERE video=? AND startframe<? ORDER BY startframe desc LIMIT ?)UNION(select id, startframe, endframe from cineast.shots WHERE video=? AND endframe>? ORDER BY startframe asc LIMIT ?)");
+//				PreparedStatement select = selector.createPreparedStatement("(select id, startframe, endframe from cineast.shots WHERE video=? AND startframe<? ORDER BY startframe desc LIMIT ?)UNION(select id, startframe, endframe from cineast.shots WHERE video=? AND endframe>? ORDER BY startframe asc LIMIT ?)");
 				
 				JsonObject batch = new JsonObject();
 				batch.add("type", "batch");
@@ -262,21 +262,21 @@ public class JSONAPIThread extends Thread {
 				
 				for(int i = 0; i < shotidlist.size(); ++i){
 					JsonValue val = shotidlist.get(i);
-					long shotid = val.asLong();
+					String shotid = val.asString();
 					descriptor = sl.lookUpShot(shotid);
 					
-					select.setInt(1, descriptor.getVideoId());
-					select.setInt(2, descriptor.getStartFrame());
-					select.setInt(3, limit);
-					select.setInt(4, descriptor.getVideoId());
-					select.setInt(5, descriptor.getEndFrame());
-					select.setInt(6, limit);
+//					select.setInt(1, descriptor.getVideoId());
+//					select.setInt(2, descriptor.getStartFrame());
+//					select.setInt(3, limit);
+//					select.setInt(4, descriptor.getVideoId());
+//					select.setInt(5, descriptor.getEndFrame());
+//					select.setInt(6, limit);
 					
 					
-					ResultSet rset = select.executeQuery();
-					while(rset != null && rset.next()){
-						array.add(JSONEncoder.encodeShot(rset.getLong(1), descriptor.getVideoId(), rset.getLong(2), rset.getLong(3), false));						
-					}					
+//					ResultSet rset = select.executeQuery();
+//					while(rset != null && rset.next()){
+//						array.add(JSONEncoder.encodeShot(rset.getLong(1), descriptor.getVideoId(), rset.getLong(2), rset.getLong(3), false));						
+//					}					
 				}
 				batch.add("array", array);
 				printer.println(batch.toString());
@@ -296,8 +296,6 @@ public class JSONAPIThread extends Thread {
 			}
 
 		} catch (IOException e) {
-			LOGGER.error(LogHelper.getStackTrace(e));
-		} catch (SQLException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage() + " | " + e.toString() + "\n");

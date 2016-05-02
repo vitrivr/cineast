@@ -11,9 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
-import ch.unibas.cs.dbis.cineast.core.db.ADAMTuple;
-import ch.unibas.cs.dbis.cineast.core.db.ADAMWriter;
-import ch.unibas.cs.dbis.cineast.core.db.ReturningADAMTuple;
+import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
+import ch.unibas.cs.dbis.cineast.core.db.ProtobufFileWriter;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
@@ -80,19 +79,8 @@ public class FeatureExtractionRunner {
 		
 		DatabaseConfig dbconfig = Config.getDatabaseConfig();
 		
-		ADAMWriter writer = new ADAMWriter(dbconfig.getLocation(), dbconfig.getUser(), dbconfig.getPassword(), "id"){
-
-			@Override
-			public int getParameterCount() {
-				return 6;
-			}
-
-			@Override
-			public String[] getParameterNames() {
-				return new String[]{"name", "path", "width", "height", "frames", "seconds"};
-			}
-			
-		};
+		PersistencyWriter writer = new ProtobufFileWriter(); //FIXME
+		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
 		
 		VideoDecoder vd = new JLibAVVideoDecoder(new File(collectionFolder, fileName));
 		
@@ -103,34 +91,23 @@ public class FeatureExtractionRunner {
 		writer.open("cineast.videos");
 		
 		List<ShotDescriptor> knownShots = null;
-		int id;
+		String id = "";
 		
-		if(writer.check("select * from cineast.videos where name = \'" + ADAMTuple.escape(fileName) + "\'")){
+		if(writer.exists("name", fileName)){
 			System.err.println(fileName + " allready in database");
 			ShotLookup lookup = new ShotLookup();
-			id = lookup.lookUpVideoid(ADAMTuple.escape(fileName));
+			id = lookup.lookUpVideoid(fileName);
 			knownShots = lookup.lookUpVideo(id);
 			lookup.close();
-		}else{
-			ReturningADAMTuple tuple = (ReturningADAMTuple) writer.makeTuple(fileName, fileName, vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
-			writer.write(tuple);
-			
-			id = (int) tuple.getReturnValue();
+		}else{//TODO
+//			ReturningADAMTuple tuple = (ReturningADAMTuple) writer.makeTuple(fileName, fileName, vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
+//			writer.write(tuple);
+//			
+//			id = (int) tuple.getReturnValue();
 		}
 		
 		
-		ShotSegmenter segmenter = new ShotSegmenter(vd, id, new ADAMWriter(dbconfig.getLocation(), dbconfig.getUser(), dbconfig.getPassword(), "id") {
-			
-			@Override
-			public String[] getParameterNames() {
-				return new String[]{"number", "video", "startFrame", "endFrame"};
-			}
-			
-			@Override
-			public int getParameterCount() {
-				return 4;
-			}
-		}, knownShots);
+		ShotSegmenter segmenter = new ShotSegmenter(vd, id, new ProtobufFileWriter(), knownShots); //FIXME
 		
 		ArrayList<Extractor> featureList = new ArrayList<>();
 		featureList.add(new AverageColor());
@@ -170,19 +147,7 @@ public class FeatureExtractionRunner {
 			
 			@Override
 			public void initialize(Extractor e) {
-				e.init(new ADAMWriter(){
-
-					@Override
-					public int getParameterCount() {
-						return 0;
-					}
-
-					@Override
-					public String[] getParameterNames() {
-						return null;
-					}
-					
-				});				
+				e.init(new ProtobufFileWriter());				
 			}
 		};
 		
@@ -226,19 +191,8 @@ public class FeatureExtractionRunner {
 
 		DatabaseConfig dbconfig = Config.getDatabaseConfig();
 		
-		ADAMWriter writer = new ADAMWriter(dbconfig.getLocation(), dbconfig.getUser(), dbconfig.getPassword(), "id") {
-
-			@Override
-			public int getParameterCount() {
-				return 6;
-			}
-
-			@Override
-			public String[] getParameterNames() {
-				return new String[] { "name", "path", "width", "height", "frames", "seconds" };
-			}
-
-		};
+		PersistencyWriter writer = new ProtobufFileWriter(); //FIXME
+		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
 
 		VideoDecoder vd = new JLibAVVideoDecoder(new File(baseFolder, path));
 
@@ -248,35 +202,23 @@ public class FeatureExtractionRunner {
 		writer.open("cineast.videos");
 
 		List<ShotDescriptor> knownShots = null;
-		int id;
+		String id = null;
 
-		if (writer.check("select * from cineast.videos where name = \'" + ADAMTuple.escape(folderName) + "\'")) {
+		if (writer.exists("name", folderName)) {
 			System.err.println(folderName + " allready in database");
 			ShotLookup lookup = new ShotLookup();
-			id = lookup.lookUpVideoid(ADAMTuple.escape(folderName));
+			id = lookup.lookUpVideoid(folderName);
 			knownShots = lookup.lookUpVideo(id);
 			lookup.close();
 		} else {
-			ReturningADAMTuple tuple = (ReturningADAMTuple) writer.makeTuple(folderName, path, vd.getWidth(),
-					vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
-			writer.write(tuple);
-
-			id = (int) tuple.getReturnValue();
+//			ReturningADAMTuple tuple = (ReturningADAMTuple) writer.makeTuple(folderName, path, vd.getWidth(),
+//					vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
+//			writer.write(tuple);
+//
+//			id = (int) tuple.getReturnValue();
 		}
 
-		ShotSegmenter segmenter = new ShotSegmenter(vd, id,
-				new ADAMWriter(dbconfig.getLocation(), dbconfig.getUser(), dbconfig.getPassword(), "id") {
-
-					@Override
-					public String[] getParameterNames() {
-						return new String[] { "id", "number", "video", "startFrame", "endFrame" };
-					}
-
-					@Override
-					public int getParameterCount() {
-						return 5;
-					}
-				}, knownShots);
+		ShotSegmenter segmenter = new ShotSegmenter(vd, id, new ProtobufFileWriter(), knownShots); //FIXME
 
 		// search subtitles
 		File[] subtitleFiles = inputfolder.listFiles(new FileFilter() {
@@ -340,19 +282,7 @@ public class FeatureExtractionRunner {
 
 			@Override
 			public void initialize(Extractor e) {
-				e.init(new ADAMWriter() {
-
-					@Override
-					public int getParameterCount() {
-						return 0;
-					}
-
-					@Override
-					public String[] getParameterNames() {
-						return null;
-					}
-
-				});
+				e.init(new ProtobufFileWriter()); //FIXME
 			}
 		};
 

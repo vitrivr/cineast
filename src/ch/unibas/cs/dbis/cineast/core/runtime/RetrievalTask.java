@@ -6,18 +6,20 @@ import java.util.concurrent.Callable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
+import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
 
-public class RetrievalTask implements Callable<Pair<Retriever, List<LongDoublePair>>> {
+public class RetrievalTask implements Callable<Pair<Retriever, List<StringDoublePair>>> {
 
 	private Retriever retriever;
 	private QueryContainer query = null;
 	private long shotId = -1;
 	private String resultCacheName = null;
 	private static final Logger LOGGER = LogManager.getLogger();
+	private QueryConfig config = null; //TODO
 		
 	private RetrievalTask(Retriever retriever){
 		this.retriever = retriever;
@@ -45,26 +47,16 @@ public class RetrievalTask implements Callable<Pair<Retriever, List<LongDoublePa
 	}
 	
 	@Override
-	public Pair<Retriever, List<LongDoublePair>> call() throws Exception {
+	public Pair<Retriever, List<StringDoublePair>> call() throws Exception {
 		LOGGER.entry();
 		LOGGER.debug("starting {}", retriever.getClass().getSimpleName());
-		List<LongDoublePair> result;
+		List<StringDoublePair> result;
 		if(this.query == null){
-			if(this.resultCacheName != null){
-				result = this.retriever.getSimilar(this.shotId, this.resultCacheName);
-			}else{
-				result = this.retriever.getSimilar(this.shotId);
-			}
-			
+			result = this.retriever.getSimilar(this.shotId, this.config);
 		}else{
-			if(this.resultCacheName != null){
-				result = this.retriever.getSimilar(this.query, this.resultCacheName);
-
-			}else{
-				result = this.retriever.getSimilar(this.query);
-			}
+			result = this.retriever.getSimilar(this.query, this.config);
 		}
-		return LOGGER.exit(new Pair<Retriever, List<LongDoublePair>>(this.retriever, result));
+		return LOGGER.exit(new Pair<Retriever, List<StringDoublePair>>(this.retriever, result));
 	}
 
 

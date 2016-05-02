@@ -28,7 +28,7 @@ public class RepresentativeFrameExporter implements Extractor {
 
 	@Override
 	public void processShot(SegmentContainer shot) {
-		File outFolder = new File(this.folder, Long.toString(shot.getSuperId()));
+		File outFolder = new File(this.folder, shot.getSuperId());
 		outFolder.mkdirs();
 		File outFile = new File(outFolder, shot.getId() + ".jpg");
 		Frame f = shot.getMostRepresentativeFrame();
@@ -40,8 +40,8 @@ public class RepresentativeFrameExporter implements Extractor {
 		persist(shot.getId(), f.getId());
 	}
 
-	protected void addToDB(long shotId, int frameId) {
-		this.phandler.write(this.phandler.makeTuple(shotId, frameId));
+	protected void persist(String shotId, int frameId) {
+		this.phandler.persist(this.phandler.generateTuple(shotId, frameId));
 	}
 	
 	@Override
