@@ -45,10 +45,10 @@ public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleI
 				for(Object o : this.elements){
 					if(o instanceof ReadableFloatVector){
 						ReadableFloatVector fv = (ReadableFloatVector) o;
-						builder.addAllVector(fv.toList(null));
+						builder.addAllVector(fv.toList(null)); //FIXME will change in next API version
 					}else if(o instanceof float[]){
 						float[] vector = (float[]) o;
-						builder.addAllVector(new FloatArrayIterable(vector));
+						builder.addAllVector(new FloatArrayIterable(vector)); //FIXME will change in next API version
 					}else{
 						if(nameIndex >= names.length){
 							continue;

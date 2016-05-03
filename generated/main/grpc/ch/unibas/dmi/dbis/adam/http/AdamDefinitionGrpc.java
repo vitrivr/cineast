@@ -58,6 +58,15 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage,
+      ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> METHOD_GENERATE_ALL_INDEXES =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamDefinition", "GenerateAllIndexes"),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.IndexNameMessage,
       ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> METHOD_DROP_INDEX =
       io.grpc.MethodDescriptor.create(
@@ -76,13 +85,13 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomEntityMessage,
-      ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> METHOD_PREPARE_FOR_DEMO =
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage,
+      ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> METHOD_GENERATE_RANDOM_DATA =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
-              "AdamDefinition", "PrepareForDemo"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomEntityMessage.getDefaultInstance()),
+              "AdamDefinition", "GenerateRandomData"),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.Empty,
@@ -149,13 +158,16 @@ public class AdamDefinitionGrpc {
     public void index(ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
 
+    public void generateAllIndexes(ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
+
     public void dropIndex(ch.unibas.dmi.dbis.adam.http.Grpc.IndexNameMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
 
     public void count(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
 
-    public void prepareForDemo(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomEntityMessage request,
+    public void generateRandomData(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
 
     public void listEntities(ch.unibas.dmi.dbis.adam.http.Grpc.Empty request,
@@ -179,11 +191,13 @@ public class AdamDefinitionGrpc {
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage index(ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage request);
 
+    public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage generateAllIndexes(ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage request);
+
     public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage dropIndex(ch.unibas.dmi.dbis.adam.http.Grpc.IndexNameMessage request);
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage count(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request);
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage prepareForDemo(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomEntityMessage request);
+    public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage generateRandomData(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage request);
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage listEntities(ch.unibas.dmi.dbis.adam.http.Grpc.Empty request);
 
@@ -205,14 +219,17 @@ public class AdamDefinitionGrpc {
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> index(
         ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage request);
 
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> generateAllIndexes(
+        ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage request);
+
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> dropIndex(
         ch.unibas.dmi.dbis.adam.http.Grpc.IndexNameMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> count(
         ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request);
 
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> prepareForDemo(
-        ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomEntityMessage request);
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> generateRandomData(
+        ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage> listEntities(
         ch.unibas.dmi.dbis.adam.http.Grpc.Empty request);
@@ -273,6 +290,13 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public void generateAllIndexes(ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_GENERATE_ALL_INDEXES, getCallOptions()), request, responseObserver);
+    }
+
+    @java.lang.Override
     public void dropIndex(ch.unibas.dmi.dbis.adam.http.Grpc.IndexNameMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver) {
       asyncUnaryCall(
@@ -287,10 +311,10 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public void prepareForDemo(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomEntityMessage request,
+    public void generateRandomData(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(METHOD_PREPARE_FOR_DEMO, getCallOptions()), request, responseObserver);
+          getChannel().newCall(METHOD_GENERATE_RANDOM_DATA, getCallOptions()), request, responseObserver);
     }
 
     @java.lang.Override
@@ -358,6 +382,12 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage generateAllIndexes(ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_GENERATE_ALL_INDEXES, getCallOptions(), request);
+    }
+
+    @java.lang.Override
     public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage dropIndex(ch.unibas.dmi.dbis.adam.http.Grpc.IndexNameMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_DROP_INDEX, getCallOptions(), request);
@@ -370,9 +400,9 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage prepareForDemo(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomEntityMessage request) {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage generateRandomData(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage request) {
       return blockingUnaryCall(
-          getChannel(), METHOD_PREPARE_FOR_DEMO, getCallOptions(), request);
+          getChannel(), METHOD_GENERATE_RANDOM_DATA, getCallOptions(), request);
     }
 
     @java.lang.Override
@@ -439,6 +469,13 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> generateAllIndexes(
+        ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_GENERATE_ALL_INDEXES, getCallOptions()), request);
+    }
+
+    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> dropIndex(
         ch.unibas.dmi.dbis.adam.http.Grpc.IndexNameMessage request) {
       return futureUnaryCall(
@@ -453,10 +490,10 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> prepareForDemo(
-        ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomEntityMessage request) {
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> generateRandomData(
+        ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage request) {
       return futureUnaryCall(
-          getChannel().newCall(METHOD_PREPARE_FOR_DEMO, getCallOptions()), request);
+          getChannel().newCall(METHOD_GENERATE_RANDOM_DATA, getCallOptions()), request);
     }
 
     @java.lang.Override
@@ -491,14 +528,15 @@ public class AdamDefinitionGrpc {
   private static final int METHODID_CREATE_ENTITY = 0;
   private static final int METHODID_DROP_ENTITY = 1;
   private static final int METHODID_INDEX = 2;
-  private static final int METHODID_DROP_INDEX = 3;
-  private static final int METHODID_COUNT = 4;
-  private static final int METHODID_PREPARE_FOR_DEMO = 5;
-  private static final int METHODID_LIST_ENTITIES = 6;
-  private static final int METHODID_GET_ENTITY_PROPERTIES = 7;
-  private static final int METHODID_REPARTITION_INDEX_DATA = 8;
-  private static final int METHODID_SET_INDEX_WEIGHT = 9;
-  private static final int METHODID_INSERT = 10;
+  private static final int METHODID_GENERATE_ALL_INDEXES = 3;
+  private static final int METHODID_DROP_INDEX = 4;
+  private static final int METHODID_COUNT = 5;
+  private static final int METHODID_GENERATE_RANDOM_DATA = 6;
+  private static final int METHODID_LIST_ENTITIES = 7;
+  private static final int METHODID_GET_ENTITY_PROPERTIES = 8;
+  private static final int METHODID_REPARTITION_INDEX_DATA = 9;
+  private static final int METHODID_SET_INDEX_WEIGHT = 10;
+  private static final int METHODID_INSERT = 11;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -528,6 +566,10 @@ public class AdamDefinitionGrpc {
           serviceImpl.index((ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
           break;
+        case METHODID_GENERATE_ALL_INDEXES:
+          serviceImpl.generateAllIndexes((ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
+          break;
         case METHODID_DROP_INDEX:
           serviceImpl.dropIndex((ch.unibas.dmi.dbis.adam.http.Grpc.IndexNameMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
@@ -536,8 +578,8 @@ public class AdamDefinitionGrpc {
           serviceImpl.count((ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
           break;
-        case METHODID_PREPARE_FOR_DEMO:
-          serviceImpl.prepareForDemo((ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomEntityMessage) request,
+        case METHODID_GENERATE_RANDOM_DATA:
+          serviceImpl.generateRandomData((ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
           break;
         case METHODID_LIST_ENTITIES:
@@ -606,6 +648,13 @@ public class AdamDefinitionGrpc {
               ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>(
                 serviceImpl, METHODID_INDEX)))
         .addMethod(
+          METHOD_GENERATE_ALL_INDEXES,
+          asyncUnaryCall(
+            new MethodHandlers<
+              ch.unibas.dmi.dbis.adam.http.Grpc.IndexMessage,
+              ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>(
+                serviceImpl, METHODID_GENERATE_ALL_INDEXES)))
+        .addMethod(
           METHOD_DROP_INDEX,
           asyncUnaryCall(
             new MethodHandlers<
@@ -620,12 +669,12 @@ public class AdamDefinitionGrpc {
               ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>(
                 serviceImpl, METHODID_COUNT)))
         .addMethod(
-          METHOD_PREPARE_FOR_DEMO,
+          METHOD_GENERATE_RANDOM_DATA,
           asyncUnaryCall(
             new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomEntityMessage,
+              ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage,
               ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>(
-                serviceImpl, METHODID_PREPARE_FOR_DEMO)))
+                serviceImpl, METHODID_GENERATE_RANDOM_DATA)))
         .addMethod(
           METHOD_LIST_ENTITIES,
           asyncUnaryCall(

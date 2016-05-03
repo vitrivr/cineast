@@ -2,8 +2,12 @@ package ch.unibas.cs.dbis.cineast.core.setup;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ch.unibas.cs.dbis.cineast.core.db.ADAMproWrapper;
 import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.Code;
 import ch.unibas.dmi.dbis.adam.http.Grpc.CreateEntityMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage.Builder;
@@ -11,6 +15,7 @@ import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage.FieldType;
 
 public class EntityCreator {
 
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	/**
 	 * Initialises the main entity holding information about mutlimedia objects
@@ -31,7 +36,15 @@ public class EntityCreator {
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("multimediaobject").addAllFields(fields).build();
 		
-		return ADAMproWrapper.getInstance().createEntityBlocking(message);
+		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
+		
+		if(ack.getCode() == Code.OK){
+			LOGGER.info("successfully created multimedia object entity");
+		}else{
+			LOGGER.error("error creating multimedia object entity: {}", ack.getMessage());
+		}
+		
+		return ack;
 	}
 	
 	/**
@@ -49,7 +62,15 @@ public class EntityCreator {
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("segment").addAllFields(fields).build();
 		
-		return ADAMproWrapper.getInstance().createEntityBlocking(message);
+		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
+		
+		if(ack.getCode() == Code.OK){
+			LOGGER.info("successfully created segment entity");
+		}else{
+			LOGGER.error("error creating segment entity: {}", ack.getMessage());
+		}
+		
+		return ack;
 		
 	}
 	
@@ -64,10 +85,19 @@ public class EntityCreator {
 		Builder builder = FieldDefinitionMessage.newBuilder();
 		
 		fields.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(unique).setIndexed(true).build());
+		fields.add(builder.setName("feature").setFieldtype(FieldType.FEATURE).setPk(false).setIndexed(false).build());
 		
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllFields(fields).build();
 		
-		return ADAMproWrapper.getInstance().createEntityBlocking(message);
+		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
+		
+		if(ack.getCode() == Code.OK){
+			LOGGER.info("successfully created feature entity {}", featurename);
+		}else{
+			LOGGER.error("error creating feature entity {}: {}", featurename, ack.getMessage());
+		}
+		
+		return ack;
  
 	}
 	
