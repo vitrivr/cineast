@@ -2,22 +2,16 @@ package ch.unibas.cs.dbis.cineast.core.setup;
 
 import java.util.ArrayList;
 
-import ch.unibas.dmi.dbis.adam.http.AdamDefinitionGrpc;
-import ch.unibas.dmi.dbis.adam.http.AdamDefinitionGrpc.AdamDefinitionBlockingStub;
+import ch.unibas.cs.dbis.cineast.core.db.ADAMproWrapper;
 import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.CreateEntityMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage.Builder;
 import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage.FieldType;
-import io.grpc.ManagedChannel;
 
 public class EntityCreator {
 
-	private AdamDefinitionBlockingStub adamDefinition;
 	
-	public EntityCreator(ManagedChannel channel){
-		this.adamDefinition = AdamDefinitionGrpc.newBlockingStub(channel);
-	}
 	/**
 	 * Initialises the main entity holding information about mutlimedia objects
 	 */
@@ -37,7 +31,7 @@ public class EntityCreator {
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("multimediaobject").addAllFields(fields).build();
 		
-		return adamDefinition.createEntity(message);
+		return ADAMproWrapper.getInstance().createEntityBlocking(message);
 	}
 	
 	/**
@@ -55,7 +49,7 @@ public class EntityCreator {
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("segment").addAllFields(fields).build();
 		
-		return adamDefinition.createEntity(message);
+		return ADAMproWrapper.getInstance().createEntityBlocking(message);
 		
 	}
 	
@@ -73,7 +67,7 @@ public class EntityCreator {
 		
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllFields(fields).build();
 		
-		return adamDefinition.createEntity(message);
+		return ADAMproWrapper.getInstance().createEntityBlocking(message);
  
 	}
 	

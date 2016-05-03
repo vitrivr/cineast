@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
+import ch.unibas.cs.dbis.cineast.core.db.ADAMproWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
-import ch.unibas.cs.dbis.cineast.core.db.ProtobufFileWriter;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
@@ -79,7 +79,7 @@ public class FeatureExtractionRunner {
 		
 		DatabaseConfig dbconfig = Config.getDatabaseConfig();
 		
-		PersistencyWriter writer = new ProtobufFileWriter(); //FIXME
+		PersistencyWriter writer = new ADAMproWriter();
 		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
 		
 		VideoDecoder vd = new JLibAVVideoDecoder(new File(collectionFolder, fileName));
@@ -107,7 +107,7 @@ public class FeatureExtractionRunner {
 		}
 		
 		
-		ShotSegmenter segmenter = new ShotSegmenter(vd, id, new ProtobufFileWriter(), knownShots); //FIXME
+		ShotSegmenter segmenter = new ShotSegmenter(vd, id, new ADAMproWriter(), knownShots);
 		
 		ArrayList<Extractor> featureList = new ArrayList<>();
 		featureList.add(new AverageColor());
@@ -147,7 +147,7 @@ public class FeatureExtractionRunner {
 			
 			@Override
 			public void initialize(Extractor e) {
-				e.init(new ProtobufFileWriter());				
+				e.init(new ADAMproWriter());				
 			}
 		};
 		
@@ -189,9 +189,9 @@ public class FeatureExtractionRunner {
 
 		String path = folderName + "/" + videoFiles[0];
 
-		DatabaseConfig dbconfig = Config.getDatabaseConfig();
 		
-		PersistencyWriter writer = new ProtobufFileWriter(); //FIXME
+		
+		PersistencyWriter writer = new ADAMproWriter();
 		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
 
 		VideoDecoder vd = new JLibAVVideoDecoder(new File(baseFolder, path));
@@ -211,6 +211,11 @@ public class FeatureExtractionRunner {
 			knownShots = lookup.lookUpVideo(id);
 			lookup.close();
 		} else {
+			
+			//TODO
+			
+			id = folderName;
+			
 //			ReturningADAMTuple tuple = (ReturningADAMTuple) writer.makeTuple(folderName, path, vd.getWidth(),
 //					vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
 //			writer.write(tuple);
@@ -218,7 +223,7 @@ public class FeatureExtractionRunner {
 //			id = (int) tuple.getReturnValue();
 		}
 
-		ShotSegmenter segmenter = new ShotSegmenter(vd, id, new ProtobufFileWriter(), knownShots); //FIXME
+		ShotSegmenter segmenter = new ShotSegmenter(vd, id, new ADAMproWriter(), knownShots);
 
 		// search subtitles
 		File[] subtitleFiles = inputfolder.listFiles(new FileFilter() {
@@ -236,45 +241,45 @@ public class FeatureExtractionRunner {
 
 		ArrayList<Extractor> featureList = new ArrayList<>();
 		featureList.add(new AverageColor());
-		featureList.add(new AverageColorARP44());
-		featureList.add(new AverageColorARP44Normalized());
-		featureList.add(new AverageColorCLD());
-		featureList.add(new AverageColorCLDNormalized());
-		featureList.add(new AverageColorGrid8());
-		featureList.add(new AverageColorGrid8Normalized());
-		featureList.add(new AverageColorRaster());
-		featureList.add(new AverageFuzzyHist());
-		featureList.add(new AverageFuzzyHistNormalized());
-		featureList.add(new ChromaGrid8());
-		featureList.add(new CLD());
-		featureList.add(new CLDNormalized());
-		featureList.add(new DominantColors());
-		featureList.add(new DominantEdgeGrid16());
-		featureList.add(new DominantEdgeGrid8());
-		featureList.add(new EdgeARP88());
-		featureList.add(new EdgeARP88Full());
-		featureList.add(new EdgeGrid16());
-		featureList.add(new EdgeGrid16Full());
-		featureList.add(new EHD());
-		featureList.add(new HueValueVarianceGrid8());
-		featureList.add(new MedianColor());
-		featureList.add(new MedianColorARP44());
-		featureList.add(new MedianColorARP44Normalized());
-		featureList.add(new MedianColorGrid8());
-		featureList.add(new MedianColorGrid8Normalized());
-		featureList.add(new MedianColorRaster());
-		featureList.add(new MedianFuzzyHist());
-		featureList.add(new MedianFuzzyHistNormalized());
-		featureList.add(new MotionHistogram());
-		featureList.add(new SaturationGrid8());
-		featureList.add(new SimplePerceptualHash());
-		featureList.add(new STMP7EH());
-		featureList.add(new SubDivAverageFuzzyColor());
-		featureList.add(new SubDivMedianFuzzyColor());
-		featureList.add(new SubDivMotionHistogram2());
-		featureList.add(new SubDivMotionHistogram3());
-		featureList.add(new SubDivMotionHistogram4());
-		featureList.add(new SubDivMotionHistogram5());
+//		featureList.add(new AverageColorARP44());
+//		featureList.add(new AverageColorARP44Normalized());
+//		featureList.add(new AverageColorCLD());
+//		featureList.add(new AverageColorCLDNormalized());
+//		featureList.add(new AverageColorGrid8());
+//		featureList.add(new AverageColorGrid8Normalized());
+//		featureList.add(new AverageColorRaster());
+//		featureList.add(new AverageFuzzyHist());
+//		featureList.add(new AverageFuzzyHistNormalized());
+//		featureList.add(new ChromaGrid8());
+//		featureList.add(new CLD());
+//		featureList.add(new CLDNormalized());
+//		featureList.add(new DominantColors());
+//		featureList.add(new DominantEdgeGrid16());
+//		featureList.add(new DominantEdgeGrid8());
+//		featureList.add(new EdgeARP88());
+//		featureList.add(new EdgeARP88Full());
+//		featureList.add(new EdgeGrid16());
+//		featureList.add(new EdgeGrid16Full());
+//		featureList.add(new EHD());
+//		featureList.add(new HueValueVarianceGrid8());
+//		featureList.add(new MedianColor());
+//		featureList.add(new MedianColorARP44());
+//		featureList.add(new MedianColorARP44Normalized());
+//		featureList.add(new MedianColorGrid8());
+//		featureList.add(new MedianColorGrid8Normalized());
+//		featureList.add(new MedianColorRaster());
+//		featureList.add(new MedianFuzzyHist());
+//		featureList.add(new MedianFuzzyHistNormalized());
+//		featureList.add(new MotionHistogram());
+//		featureList.add(new SaturationGrid8());
+//		featureList.add(new SimplePerceptualHash());
+//		featureList.add(new STMP7EH());
+//		featureList.add(new SubDivAverageFuzzyColor());
+//		featureList.add(new SubDivMedianFuzzyColor());
+//		featureList.add(new SubDivMotionHistogram2());
+//		featureList.add(new SubDivMotionHistogram3());
+//		featureList.add(new SubDivMotionHistogram4());
+//		featureList.add(new SubDivMotionHistogram5());
 		featureList.add(new RepresentativeFrameExporter());
 		featureList.add(new ShotThumbNails());
 
@@ -282,7 +287,7 @@ public class FeatureExtractionRunner {
 
 			@Override
 			public void initialize(Extractor e) {
-				e.init(new ProtobufFileWriter()); //FIXME
+				e.init(new ADAMproWriter());
 			}
 		};
 
