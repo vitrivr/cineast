@@ -2,6 +2,8 @@ package ch.unibas.cs.dbis.cineast.core.db;
 
 import java.util.HashMap;
 
+import com.google.common.base.Joiner;
+
 import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
 import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
 import ch.unibas.dmi.dbis.adam.http.Grpc;
@@ -12,11 +14,15 @@ public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleI
 
 	protected String[] names; 
 	private static final Builder builder = Grpc.InsertMessage.TupleInsertMessage.newBuilder();
-	
+	private Joiner joiner = Joiner.on(',');
 	
 	
 	protected ProtobufTupleGenerator(String...names){
 		this.names = names;
+	}
+	
+	protected ProtobufTupleGenerator(){
+		this("id", "feature");
 	}
 
 	@Override
@@ -42,13 +48,14 @@ public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleI
 				builder.clear();			
 				HashMap<String, String> tmpMap = new HashMap<>();
 				int nameIndex = 0;
+				
 				for(Object o : this.elements){
 					if(o instanceof ReadableFloatVector){
 						ReadableFloatVector fv = (ReadableFloatVector) o;
-						builder.addAllVector(fv.toList(null)); //FIXME will change in next API version
+						tmpMap.put(names[nameIndex++], joiner.join(fv.toList(null)));
 					}else if(o instanceof float[]){
 						float[] vector = (float[]) o;
-						builder.addAllVector(new FloatArrayIterable(vector)); //FIXME will change in next API version
+						tmpMap.put(names[nameIndex++], joiner.join(new FloatArrayIterable(vector)));
 					}else{
 						if(nameIndex >= names.length){
 							continue;
@@ -56,7 +63,7 @@ public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleI
 						tmpMap.put(names[nameIndex++], o.toString());
 					}
 				}
-				return builder.putAllMetadata(tmpMap).build();
+				return builder.putAllData(tmpMap).build();
 			}
 		}
 		

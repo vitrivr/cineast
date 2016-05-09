@@ -3706,23 +3706,10 @@ public final class Grpc {
         com.google.protobuf.MessageOrBuilder {
 
       /**
-       * <code>repeated float vector = 1 [packed = true];</code>
-       */
-      java.util.List<java.lang.Float> getVectorList();
-      /**
-       * <code>repeated float vector = 1 [packed = true];</code>
-       */
-      int getVectorCount();
-      /**
-       * <code>repeated float vector = 1 [packed = true];</code>
-       */
-      float getVector(int index);
-
-      /**
-       * <code>map&lt;string, string&gt; metadata = 2;</code>
+       * <code>map&lt;string, string&gt; data = 1;</code>
        */
       java.util.Map<java.lang.String, java.lang.String>
-      getMetadata();
+      getData();
     }
     /**
      * Protobuf type {@code InsertMessage.TupleInsertMessage}
@@ -3736,7 +3723,6 @@ public final class Grpc {
         super(builder);
       }
       private TupleInsertMessage() {
-        vector_ = java.util.Collections.emptyList();
       }
 
       @java.lang.Override
@@ -3763,37 +3749,16 @@ public final class Grpc {
                 }
                 break;
               }
-              case 13: {
-                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                  vector_ = new java.util.ArrayList<java.lang.Float>();
-                  mutable_bitField0_ |= 0x00000001;
-                }
-                vector_.add(input.readFloat());
-                break;
-              }
               case 10: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
-                  vector_ = new java.util.ArrayList<java.lang.Float>();
+                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                  data_ = com.google.protobuf.MapField.newMapField(
+                      DataDefaultEntryHolder.defaultEntry);
                   mutable_bitField0_ |= 0x00000001;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  vector_.add(input.readFloat());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 18: {
-                if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                  metadata_ = com.google.protobuf.MapField.newMapField(
-                      MetadataDefaultEntryHolder.defaultEntry);
-                  mutable_bitField0_ |= 0x00000002;
                 }
                 com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-                metadata = input.readMessage(
-                    MetadataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-                metadata_.getMutableMap().put(metadata.getKey(), metadata.getValue());
+                data = input.readMessage(
+                    DataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+                data_.getMutableMap().put(data.getKey(), data.getValue());
                 break;
               }
             }
@@ -3805,9 +3770,6 @@ public final class Grpc {
               new com.google.protobuf.InvalidProtocolBufferException(
                   e.getMessage()).setUnfinishedMessage(this));
         } finally {
-          if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-            vector_ = java.util.Collections.unmodifiableList(vector_);
-          }
           makeExtensionsImmutable();
         }
       }
@@ -3820,8 +3782,8 @@ public final class Grpc {
       protected com.google.protobuf.MapField internalGetMapField(
           int number) {
         switch (number) {
-          case 2:
-            return internalGetMetadata();
+          case 1:
+            return internalGetData();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -3834,57 +3796,34 @@ public final class Grpc {
                 ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage.Builder.class);
       }
 
-      public static final int VECTOR_FIELD_NUMBER = 1;
-      private java.util.List<java.lang.Float> vector_;
-      /**
-       * <code>repeated float vector = 1 [packed = true];</code>
-       */
-      public java.util.List<java.lang.Float>
-          getVectorList() {
-        return vector_;
-      }
-      /**
-       * <code>repeated float vector = 1 [packed = true];</code>
-       */
-      public int getVectorCount() {
-        return vector_.size();
-      }
-      /**
-       * <code>repeated float vector = 1 [packed = true];</code>
-       */
-      public float getVector(int index) {
-        return vector_.get(index);
-      }
-      private int vectorMemoizedSerializedSize = -1;
-
-      public static final int METADATA_FIELD_NUMBER = 2;
-      private static final class MetadataDefaultEntryHolder {
+      public static final int DATA_FIELD_NUMBER = 1;
+      private static final class DataDefaultEntryHolder {
         static final com.google.protobuf.MapEntry<
             java.lang.String, java.lang.String> defaultEntry =
                 com.google.protobuf.MapEntry
                 .<java.lang.String, java.lang.String>newDefaultInstance(
-                    ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertMessage_TupleInsertMessage_MetadataEntry_descriptor, 
+                    ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertMessage_TupleInsertMessage_DataEntry_descriptor, 
                     com.google.protobuf.WireFormat.FieldType.STRING,
                     "",
                     com.google.protobuf.WireFormat.FieldType.STRING,
                     "");
       }
       private com.google.protobuf.MapField<
-          java.lang.String, java.lang.String> metadata_;
+          java.lang.String, java.lang.String> data_;
       private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetMetadata() {
-        if (metadata_ == null) {
+      internalGetData() {
+        if (data_ == null) {
           return com.google.protobuf.MapField.emptyMapField(
-              MetadataDefaultEntryHolder.defaultEntry);
+              DataDefaultEntryHolder.defaultEntry);
        }
-        return metadata_;
+        return data_;
       }
       /**
-       * <code>map&lt;string, string&gt; metadata = 2;</code>
+       * <code>map&lt;string, string&gt; data = 1;</code>
        */
 
-      public java.util.Map<java.lang.String, java.lang.String> getMetadata() {
-        return internalGetMetadata().getMap();
+      public java.util.Map<java.lang.String, java.lang.String> getData() {
+        return internalGetData().getMap();
       }
 
       private byte memoizedIsInitialized = -1;
@@ -3899,22 +3838,14 @@ public final class Grpc {
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
-        getSerializedSize();
-        if (getVectorList().size() > 0) {
-          output.writeRawVarint32(10);
-          output.writeRawVarint32(vectorMemoizedSerializedSize);
-        }
-        for (int i = 0; i < vector_.size(); i++) {
-          output.writeFloatNoTag(vector_.get(i));
-        }
         for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
-             : internalGetMetadata().getMap().entrySet()) {
+             : internalGetData().getMap().entrySet()) {
           com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-          metadata = MetadataDefaultEntryHolder.defaultEntry.newBuilderForType()
+          data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
               .setKey(entry.getKey())
               .setValue(entry.getValue())
               .build();
-          output.writeMessage(2, metadata);
+          output.writeMessage(1, data);
         }
       }
 
@@ -3923,26 +3854,15 @@ public final class Grpc {
         if (size != -1) return size;
 
         size = 0;
-        {
-          int dataSize = 0;
-          dataSize = 4 * getVectorList().size();
-          size += dataSize;
-          if (!getVectorList().isEmpty()) {
-            size += 1;
-            size += com.google.protobuf.CodedOutputStream
-                .computeInt32SizeNoTag(dataSize);
-          }
-          vectorMemoizedSerializedSize = dataSize;
-        }
         for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
-             : internalGetMetadata().getMap().entrySet()) {
+             : internalGetData().getMap().entrySet()) {
           com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-          metadata = MetadataDefaultEntryHolder.defaultEntry.newBuilderForType()
+          data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
               .setKey(entry.getKey())
               .setValue(entry.getValue())
               .build();
           size += com.google.protobuf.CodedOutputStream
-              .computeMessageSize(2, metadata);
+              .computeMessageSize(1, data);
         }
         memoizedSize = size;
         return size;
@@ -4036,8 +3956,8 @@ public final class Grpc {
         protected com.google.protobuf.MapField internalGetMapField(
             int number) {
           switch (number) {
-            case 2:
-              return internalGetMetadata();
+            case 1:
+              return internalGetData();
             default:
               throw new RuntimeException(
                   "Invalid map field number: " + number);
@@ -4047,8 +3967,8 @@ public final class Grpc {
         protected com.google.protobuf.MapField internalGetMutableMapField(
             int number) {
           switch (number) {
-            case 2:
-              return internalGetMutableMetadata();
+            case 1:
+              return internalGetMutableData();
             default:
               throw new RuntimeException(
                   "Invalid map field number: " + number);
@@ -4077,9 +3997,7 @@ public final class Grpc {
         }
         public Builder clear() {
           super.clear();
-          vector_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          internalGetMutableMetadata().clear();
+          internalGetMutableData().clear();
           return this;
         }
 
@@ -4103,13 +4021,8 @@ public final class Grpc {
         public ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage buildPartial() {
           ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage(this);
           int from_bitField0_ = bitField0_;
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            vector_ = java.util.Collections.unmodifiableList(vector_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.vector_ = vector_;
-          result.metadata_ = internalGetMetadata();
-          result.metadata_.makeImmutable();
+          result.data_ = internalGetData();
+          result.data_.makeImmutable();
           onBuilt();
           return result;
         }
@@ -4125,18 +4038,8 @@ public final class Grpc {
 
         public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage other) {
           if (other == ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage.getDefaultInstance()) return this;
-          if (!other.vector_.isEmpty()) {
-            if (vector_.isEmpty()) {
-              vector_ = other.vector_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureVectorIsMutable();
-              vector_.addAll(other.vector_);
-            }
-            onChanged();
-          }
-          internalGetMutableMetadata().mergeFrom(
-              other.internalGetMetadata());
+          internalGetMutableData().mergeFrom(
+              other.internalGetData());
           onChanged();
           return this;
         }
@@ -4164,113 +4067,47 @@ public final class Grpc {
         }
         private int bitField0_;
 
-        private java.util.List<java.lang.Float> vector_ = java.util.Collections.emptyList();
-        private void ensureVectorIsMutable() {
-          if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-            vector_ = new java.util.ArrayList<java.lang.Float>(vector_);
-            bitField0_ |= 0x00000001;
-           }
-        }
-        /**
-         * <code>repeated float vector = 1 [packed = true];</code>
-         */
-        public java.util.List<java.lang.Float>
-            getVectorList() {
-          return java.util.Collections.unmodifiableList(vector_);
-        }
-        /**
-         * <code>repeated float vector = 1 [packed = true];</code>
-         */
-        public int getVectorCount() {
-          return vector_.size();
-        }
-        /**
-         * <code>repeated float vector = 1 [packed = true];</code>
-         */
-        public float getVector(int index) {
-          return vector_.get(index);
-        }
-        /**
-         * <code>repeated float vector = 1 [packed = true];</code>
-         */
-        public Builder setVector(
-            int index, float value) {
-          ensureVectorIsMutable();
-          vector_.set(index, value);
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>repeated float vector = 1 [packed = true];</code>
-         */
-        public Builder addVector(float value) {
-          ensureVectorIsMutable();
-          vector_.add(value);
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>repeated float vector = 1 [packed = true];</code>
-         */
-        public Builder addAllVector(
-            java.lang.Iterable<? extends java.lang.Float> values) {
-          ensureVectorIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, vector_);
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>repeated float vector = 1 [packed = true];</code>
-         */
-        public Builder clearVector() {
-          vector_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-          return this;
-        }
-
         private com.google.protobuf.MapField<
-            java.lang.String, java.lang.String> metadata_;
+            java.lang.String, java.lang.String> data_;
         private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-        internalGetMetadata() {
-          if (metadata_ == null) {
+        internalGetData() {
+          if (data_ == null) {
             return com.google.protobuf.MapField.emptyMapField(
-                MetadataDefaultEntryHolder.defaultEntry);
+                DataDefaultEntryHolder.defaultEntry);
          }
-          return metadata_;
+          return data_;
         }
         private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-        internalGetMutableMetadata() {
+        internalGetMutableData() {
           onChanged();;
-          if (metadata_ == null) {
-            metadata_ = com.google.protobuf.MapField.newMapField(
-                MetadataDefaultEntryHolder.defaultEntry);
+          if (data_ == null) {
+            data_ = com.google.protobuf.MapField.newMapField(
+                DataDefaultEntryHolder.defaultEntry);
           }
-          if (!metadata_.isMutable()) {
-            metadata_ = metadata_.copy();
+          if (!data_.isMutable()) {
+            data_ = data_.copy();
           }
-          return metadata_;
+          return data_;
         }
         /**
-         * <code>map&lt;string, string&gt; metadata = 2;</code>
+         * <code>map&lt;string, string&gt; data = 1;</code>
          */
-        public java.util.Map<java.lang.String, java.lang.String> getMetadata() {
-          return internalGetMetadata().getMap();
+        public java.util.Map<java.lang.String, java.lang.String> getData() {
+          return internalGetData().getMap();
         }
         /**
-         * <code>map&lt;string, string&gt; metadata = 2;</code>
+         * <code>map&lt;string, string&gt; data = 1;</code>
          */
         public java.util.Map<java.lang.String, java.lang.String>
-        getMutableMetadata() {
-          return internalGetMutableMetadata().getMutableMap();
+        getMutableData() {
+          return internalGetMutableData().getMutableMap();
         }
         /**
-         * <code>map&lt;string, string&gt; metadata = 2;</code>
+         * <code>map&lt;string, string&gt; data = 1;</code>
          */
-        public Builder putAllMetadata(
+        public Builder putAllData(
             java.util.Map<java.lang.String, java.lang.String> values) {
-          getMutableMetadata().putAll(values);
+          getMutableData().putAll(values);
           return this;
         }
         public final Builder setUnknownFields(
@@ -27752,10 +27589,10 @@ public final class Grpc {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_InsertMessage_TupleInsertMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_InsertMessage_TupleInsertMessage_MetadataEntry_descriptor;
+    internal_static_InsertMessage_TupleInsertMessage_DataEntry_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_InsertMessage_TupleInsertMessage_MetadataEntry_fieldAccessorTable;
+      internal_static_InsertMessage_TupleInsertMessage_DataEntry_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_IndexMessage_descriptor;
   private static
@@ -27922,151 +27759,150 @@ public final class Grpc {
       "ntity\030\001 \001(\t\"!\n\020IndexNameMessage\022\r\n\005index",
       "\030\001 \001(\t\"K\n\031GenerateRandomDataMessage\022\016\n\006e" +
       "ntity\030\001 \001(\t\022\017\n\007ntuples\030\002 \001(\005\022\r\n\005ndims\030\003 " +
-      "\001(\005\"\361\001\n\rInsertMessage\022\016\n\006entity\030\001 \001(\t\0221\n" +
+      "\001(\005\"\320\001\n\rInsertMessage\022\016\n\006entity\030\001 \001(\t\0221\n" +
       "\006tuples\030\002 \003(\0132!.InsertMessage.TupleInser" +
-      "tMessage\032\234\001\n\022TupleInsertMessage\022\022\n\006vecto" +
-      "r\030\001 \003(\002B\002\020\001\022A\n\010metadata\030\002 \003(\0132/.InsertMe" +
-      "ssage.TupleInsertMessage.MetadataEntry\032/" +
-      "\n\rMetadataEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
-      "\001(\t:\0028\001\"\316\001\n\014IndexMessage\022\016\n\006entity\030\001 \001(\t" +
-      "\022\016\n\006column\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\0162\n.In",
-      "dexType\022\"\n\010distance\030\004 \001(\0132\020.DistanceMess" +
-      "age\022+\n\007options\030\005 \003(\0132\032.IndexMessage.Opti" +
-      "onsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n" +
-      "\005value\030\002 \001(\t:\0028\001\"\365\001\n\022RepartitionMessage\022" +
-      "\r\n\005index\030\001 \001(\t\022\032\n\022numberOfPartitions\030\002 \001" +
-      "(\005\022\"\n\032useMetadataForPartitioning\030\003 \001(\010\022\017" +
-      "\n\007columns\030\004 \003(\t\0224\n\006option\030\005 \001(\0162$.Repart" +
-      "itionMessage.PartitionOptions\"I\n\020Partiti" +
-      "onOptions\022\016\n\nCREATE_NEW\020\000\022\024\n\020REPLACE_EXI" +
-      "STING\020\001\022\017\n\013CREATE_TEMP\020\002\"3\n\022IndexWeightM",
-      "essage\022\r\n\005index\030\001 \001(\t\022\016\n\006weight\030\002 \001(\002\"\323\001" +
-      "\n\022SimpleQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n" +
-      "\006entity\030\002 \001(\t\022\r\n\005hints\030\003 \003(\t\022*\n\003nnq\030\004 \001(" +
-      "\0132\035.NearestNeighbourQueryMessage\022 \n\002bq\030\005" +
-      " \001(\0132\024.BooleanQueryMessage\022\024\n\014withMetada" +
-      "ta\030\006 \001(\010\022\025\n\rreadFromCache\030\007 \001(\010\022\022\n\nputIn" +
-      "Cache\030\010 \001(\010\"\211\001\n\031SimpleBooleanQueryMessag" +
-      "e\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022 \n\002bq" +
-      "\030\003 \001(\0132\024.BooleanQueryMessage\022\025\n\rreadFrom" +
-      "Cache\030\004 \001(\010\022\022\n\nputInCache\030\005 \001(\010\"\316\001\n\034Simp",
-      "leSequentialQueryMessage\022\017\n\007queryid\030\001 \001(" +
-      "\t\022\016\n\006entity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.Nearest" +
-      "NeighbourQueryMessage\022 \n\002bq\030\004 \001(\0132\024.Bool" +
-      "eanQueryMessage\022\024\n\014withMetadata\030\005 \001(\010\022\025\n" +
-      "\rreadFromCache\030\006 \001(\010\022\022\n\nputInCache\030\007 \001(\010" +
-      "\"\321\001\n SimpleSpecifiedIndexQueryMessage\022\017\n" +
-      "\007queryid\030\001 \001(\t\022\r\n\005index\030\002 \001(\t\022*\n\003nnq\030\003 \001" +
+      "tMessage\032|\n\022TupleInsertMessage\0229\n\004data\030\001" +
+      " \003(\0132+.InsertMessage.TupleInsertMessage." +
+      "DataEntry\032+\n\tDataEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005v" +
+      "alue\030\002 \001(\t:\0028\001\"\316\001\n\014IndexMessage\022\016\n\006entit" +
+      "y\030\001 \001(\t\022\016\n\006column\030\002 \001(\t\022\035\n\tindextype\030\003 \001" +
+      "(\0162\n.IndexType\022\"\n\010distance\030\004 \001(\0132\020.Dista",
+      "nceMessage\022+\n\007options\030\005 \003(\0132\032.IndexMessa" +
+      "ge.OptionsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001" +
+      " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\365\001\n\022RepartitionM" +
+      "essage\022\r\n\005index\030\001 \001(\t\022\032\n\022numberOfPartiti" +
+      "ons\030\002 \001(\005\022\"\n\032useMetadataForPartitioning\030" +
+      "\003 \001(\010\022\017\n\007columns\030\004 \003(\t\0224\n\006option\030\005 \001(\0162$" +
+      ".RepartitionMessage.PartitionOptions\"I\n\020" +
+      "PartitionOptions\022\016\n\nCREATE_NEW\020\000\022\024\n\020REPL" +
+      "ACE_EXISTING\020\001\022\017\n\013CREATE_TEMP\020\002\"3\n\022Index" +
+      "WeightMessage\022\r\n\005index\030\001 \001(\t\022\016\n\006weight\030\002",
+      " \001(\002\"\323\001\n\022SimpleQueryMessage\022\017\n\007queryid\030\001" +
+      " \001(\t\022\016\n\006entity\030\002 \001(\t\022\r\n\005hints\030\003 \003(\t\022*\n\003n" +
+      "nq\030\004 \001(\0132\035.NearestNeighbourQueryMessage\022" +
+      " \n\002bq\030\005 \001(\0132\024.BooleanQueryMessage\022\024\n\014wit" +
+      "hMetadata\030\006 \001(\010\022\025\n\rreadFromCache\030\007 \001(\010\022\022" +
+      "\n\nputInCache\030\010 \001(\010\"\211\001\n\031SimpleBooleanQuer" +
+      "yMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(" +
+      "\t\022 \n\002bq\030\003 \001(\0132\024.BooleanQueryMessage\022\025\n\rr" +
+      "eadFromCache\030\004 \001(\010\022\022\n\nputInCache\030\005 \001(\010\"\316" +
+      "\001\n\034SimpleSequentialQueryMessage\022\017\n\007query",
+      "id\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035." +
+      "NearestNeighbourQueryMessage\022 \n\002bq\030\004 \001(\013" +
+      "2\024.BooleanQueryMessage\022\024\n\014withMetadata\030\005" +
+      " \001(\010\022\025\n\rreadFromCache\030\006 \001(\010\022\022\n\nputInCach" +
+      "e\030\007 \001(\010\"\321\001\n SimpleSpecifiedIndexQueryMes" +
+      "sage\022\017\n\007queryid\030\001 \001(\t\022\r\n\005index\030\002 \001(\t\022*\n\003" +
+      "nnq\030\003 \001(\0132\035.NearestNeighbourQueryMessage" +
+      "\022 \n\002bq\030\004 \001(\0132\024.BooleanQueryMessage\022\024\n\014wi" +
+      "thMetadata\030\005 \001(\010\022\025\n\rreadFromCache\030\006 \001(\010\022" +
+      "\022\n\nputInCache\030\007 \001(\010\"\350\001\n\027SimpleIndexQuery",
+      "Message\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t" +
+      "\022\035\n\tindextype\030\003 \001(\0162\n.IndexType\022*\n\003nnq\030\004" +
+      " \001(\0132\035.NearestNeighbourQueryMessage\022 \n\002b" +
+      "q\030\005 \001(\0132\024.BooleanQueryMessage\022\024\n\014withMet" +
+      "adata\030\006 \001(\010\022\025\n\rreadFromCache\030\007 \001(\010\022\022\n\npu" +
+      "tInCache\030\010 \001(\010\"\246\001\n\021TimedQueryMessage\022\017\n\007" +
+      "queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022*\n\003nnq\030\003 \001" +
       "(\0132\035.NearestNeighbourQueryMessage\022 \n\002bq\030" +
-      "\004 \001(\0132\024.BooleanQueryMessage\022\024\n\014withMetad" +
-      "ata\030\005 \001(\010\022\025\n\rreadFromCache\030\006 \001(\010\022\022\n\nputI",
-      "nCache\030\007 \001(\010\"\350\001\n\027SimpleIndexQueryMessage" +
-      "\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\035\n\tind" +
-      "extype\030\003 \001(\0162\n.IndexType\022*\n\003nnq\030\004 \001(\0132\035." +
-      "NearestNeighbourQueryMessage\022 \n\002bq\030\005 \001(\013" +
-      "2\024.BooleanQueryMessage\022\024\n\014withMetadata\030\006" +
-      " \001(\010\022\025\n\rreadFromCache\030\007 \001(\010\022\022\n\nputInCach" +
-      "e\030\010 \001(\010\"\246\001\n\021TimedQueryMessage\022\017\n\007queryid" +
-      "\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.Ne" +
-      "arestNeighbourQueryMessage\022 \n\002bq\030\004 \001(\0132\024" +
-      ".BooleanQueryMessage\022\014\n\004time\030\005 \001(\003\022\024\n\014wi",
-      "thMetadata\030\006 \001(\010\"\367\001\n\024CompoundQueryMessag" +
-      "e\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022*\n\003nn" +
-      "q\030\003 \001(\0132\035.NearestNeighbourQueryMessage\022 " +
-      "\n\002bq\030\004 \001(\0132\024.BooleanQueryMessage\0229\n\025inde" +
-      "xFilterExpression\030\005 \001(\0132\032.SubExpressionQ" +
-      "ueryMessage\022\024\n\014withMetadata\030\006 \001(\010\022\037\n\027wit" +
-      "hIntermediateResults\030\007 \001(\010\"\335\002\n\026Expressio" +
-      "nQueryMessage\022\017\n\007queryid\030\001 \001(\t\022(\n\004left\030\002" +
-      " \001(\0132\032.SubExpressionQueryMessage\0224\n\toper" +
-      "ation\030\003 \001(\0162!.ExpressionQueryMessage.Ope",
-      "ration\0225\n\005order\030\004 \001(\0162&.ExpressionQueryM" +
-      "essage.OperationOrder\022)\n\005right\030\005 \001(\0132\032.S" +
-      "ubExpressionQueryMessage\"1\n\tOperation\022\t\n" +
-      "\005UNION\020\000\022\r\n\tINTERSECT\020\001\022\n\n\006EXCEPT\020\002\"=\n\016O" +
-      "perationOrder\022\r\n\tLEFTFIRST\020\000\022\016\n\nRIGHTFIR" +
-      "ST\020\001\022\014\n\010PARALLEL\020\002\"\357\001\n\031SubExpressionQuer" +
-      "yMessage\022\017\n\007queryid\030\001 \001(\t\022-\n\004ssqm\030\002 \001(\0132" +
-      "\035.SimpleSequentialQueryMessageH\000\0222\n\005ssiq" +
-      "m\030\003 \001(\0132!.SimpleSpecifiedIndexQueryMessa" +
-      "geH\000\022(\n\004siqm\030\004 \001(\0132\030.SimpleIndexQueryMes",
-      "sageH\000\022&\n\003eqm\030\005 \001(\0132\027.ExpressionQueryMes" +
-      "sageH\000B\014\n\nsubmessage\"\204\002\n\034NearestNeighbou" +
-      "rQueryMessage\022\016\n\006column\030\001 \001(\t\022\021\n\005query\030\002" +
-      " \003(\002B\002\020\001\022\"\n\010distance\030\003 \001(\0132\020.DistanceMes" +
-      "sage\022\t\n\001k\030\004 \001(\005\022\021\n\tindexOnly\030\005 \001(\010\022;\n\007op" +
-      "tions\030\006 \003(\0132*.NearestNeighbourQueryMessa" +
-      "ge.OptionsEntry\022\022\n\npartitions\030\007 \003(\005\032.\n\014O" +
-      "ptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:" +
-      "\0028\001\"\305\001\n\017DistanceMessage\0223\n\014distancetype\030" +
-      "\001 \001(\0162\035.DistanceMessage.DistanceType\022.\n\007",
-      "options\030\002 \003(\0132\035.DistanceMessage.OptionsE" +
-      "ntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005val" +
-      "ue\030\002 \001(\t:\0028\001\"\035\n\014DistanceType\022\r\n\tminkowsk" +
-      "i\020\000\"\350\001\n\023BooleanQueryMessage\0220\n\005where\030\002 \003" +
-      "(\0132!.BooleanQueryMessage.WhereMessage\022/\n" +
-      "\005joins\030\003 \003(\0132 .BooleanQueryMessage.JoinM" +
-      "essage\022\021\n\tprefilter\030\001 \003(\003\032,\n\014WhereMessag" +
-      "e\022\r\n\005field\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\032-\n\013JoinM" +
-      "essage\022\r\n\005table\030\001 \001(\t\022\017\n\007columns\030\002 \003(\t\"\'" +
-      "\n\024CachedResultsMessage\022\017\n\007queryid\030\001 \001(\t\"",
-      "X\n\nAckMessage\022\036\n\004code\030\001 \001(\0162\020.AckMessage" +
-      ".Code\022\017\n\007message\030\002 \001(\t\"\031\n\004Code\022\006\n\002OK\020\000\022\t" +
-      "\n\005ERROR\020\001\"=\n\017EntitiesMessage\022\030\n\003ack\030\001 \001(" +
-      "\0132\013.AckMessage\022\020\n\010entities\030\002 \003(\t\"\264\001\n\027Ent" +
-      "ityPropertiesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckM" +
-      "essage\022\016\n\006entity\030\002 \001(\t\022<\n\nproperties\030\003 \003" +
-      "(\0132(.EntityPropertiesMessage.PropertiesE" +
-      "ntry\0321\n\017PropertiesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005" +
-      "value\030\002 \001(\t:\0028\001\"P\n CompoundQueryResponse" +
-      "InfoMessage\022,\n\tresponses\030\001 \003(\0132\031.QueryRe",
-      "sponseInfoMessage\"\203\001\n\030QueryResponseInfoM" +
-      "essage\022\017\n\007queryid\030\003 \001(\t\022\022\n\nconfidence\030\004 " +
-      "\001(\001\022\014\n\004time\030\005 \001(\003\022\016\n\006source\030\006 \001(\t\022$\n\007res" +
-      "ults\030\007 \003(\0132\023.QueryResultMessage\"\230\001\n\022Quer" +
-      "yResultMessage\022\n\n\002id\030\001 \001(\003\022\020\n\010distance\030\002" +
-      " \001(\002\0223\n\010metadata\030\003 \003(\0132!.QueryResultMess" +
-      "age.MetadataEntry\032/\n\rMetadataEntry\022\013\n\003ke" +
-      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001*?\n\tIndexType\022" +
-      "\007\n\003ecp\020\000\022\007\n\003lsh\020\001\022\006\n\002pq\020\002\022\006\n\002sh\020\003\022\007\n\003vaf" +
-      "\020\004\022\007\n\003vav\020\0052\375\004\n\016AdamDefinition\0223\n\014Create",
-      "Entity\022\024.CreateEntityMessage\032\013.AckMessag" +
-      "e\"\000\022/\n\nDropEntity\022\022.EntityNameMessage\032\013." +
-      "AckMessage\"\000\022)\n\006Insert\022\016.InsertMessage\032\013" +
-      ".AckMessage\"\000(\001\022%\n\005Index\022\r.IndexMessage\032" +
-      "\013.AckMessage\"\000\0222\n\022GenerateAllIndexes\022\r.I" +
-      "ndexMessage\032\013.AckMessage\"\000\022-\n\tDropIndex\022" +
-      "\021.IndexNameMessage\032\013.AckMessage\"\000\022*\n\005Cou" +
-      "nt\022\022.EntityNameMessage\032\013.AckMessage\"\000\022?\n" +
-      "\022GenerateRandomData\022\032.GenerateRandomData" +
-      "Message\032\013.AckMessage\"\000\022*\n\014ListEntities\022\006",
-      ".Empty\032\020.EntitiesMessage\"\000\022E\n\023GetEntityP" +
-      "roperties\022\022.EntityNameMessage\032\030.EntityPr" +
-      "opertiesMessage\"\000\022:\n\024RepartitionIndexDat" +
-      "a\022\023.RepartitionMessage\032\013.AckMessage\"\000\0224\n" +
-      "\016SetIndexWeight\022\023.IndexWeightMessage\032\013.A" +
-      "ckMessage\"\0002\234\006\n\nAdamSearch\022.\n\nCacheIndex" +
-      "\022\021.IndexNameMessage\032\013.AckMessage\"\000\0220\n\013Ca" +
-      "cheEntity\022\022.EntityNameMessage\032\013.AckMessa" +
-      "ge\"\000\022C\n\017DoStandardQuery\022\023.SimpleQueryMes" +
-      "sage\032\031.QueryResponseInfoMessage\"\000\022O\n\021DoS",
-      "equentialQuery\022\035.SimpleSequentialQueryMe" +
-      "ssage\032\031.QueryResponseInfoMessage\"\000\022W\n\025Do" +
-      "SpecifiedIndexQuery\022!.SimpleSpecifiedInd" +
-      "exQueryMessage\032\031.QueryResponseInfoMessag" +
-      "e\"\000\022E\n\014DoIndexQuery\022\030.SimpleIndexQueryMe" +
-      "ssage\032\031.QueryResponseInfoMessage\"\000\022H\n\022Do" +
-      "ProgressiveQuery\022\023.SimpleQueryMessage\032\031." +
-      "QueryResponseInfoMessage\"\0000\001\022J\n\027DoTimedP" +
-      "rogressiveQuery\022\022.TimedQueryMessage\032\031.Qu" +
-      "eryResponseInfoMessage\"\000\022M\n\017DoCompoundQu",
-      "ery\022\025.CompoundQueryMessage\032!.CompoundQue" +
-      "ryResponseInfoMessage\"\000\022I\n\016DoBooleanQuer" +
-      "y\022\032.SimpleBooleanQueryMessage\032\031.QueryRes" +
-      "ponseInfoMessage\"\000\022F\n\020GetCachedResults\022\025" +
-      ".CachedResultsMessage\032\031.QueryResponseInf" +
-      "oMessage\"\000B\036\n\034ch.unibas.dmi.dbis.adam.ht" +
-      "tpb\006proto3"
+      "\004 \001(\0132\024.BooleanQueryMessage\022\014\n\004time\030\005 \001(" +
+      "\003\022\024\n\014withMetadata\030\006 \001(\010\"\367\001\n\024CompoundQuer",
+      "yMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(" +
+      "\t\022*\n\003nnq\030\003 \001(\0132\035.NearestNeighbourQueryMe" +
+      "ssage\022 \n\002bq\030\004 \001(\0132\024.BooleanQueryMessage\022" +
+      "9\n\025indexFilterExpression\030\005 \001(\0132\032.SubExpr" +
+      "essionQueryMessage\022\024\n\014withMetadata\030\006 \001(\010" +
+      "\022\037\n\027withIntermediateResults\030\007 \001(\010\"\335\002\n\026Ex" +
+      "pressionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022(\n" +
+      "\004left\030\002 \001(\0132\032.SubExpressionQueryMessage\022" +
+      "4\n\toperation\030\003 \001(\0162!.ExpressionQueryMess" +
+      "age.Operation\0225\n\005order\030\004 \001(\0162&.Expressio",
+      "nQueryMessage.OperationOrder\022)\n\005right\030\005 " +
+      "\001(\0132\032.SubExpressionQueryMessage\"1\n\tOpera" +
+      "tion\022\t\n\005UNION\020\000\022\r\n\tINTERSECT\020\001\022\n\n\006EXCEPT" +
+      "\020\002\"=\n\016OperationOrder\022\r\n\tLEFTFIRST\020\000\022\016\n\nR" +
+      "IGHTFIRST\020\001\022\014\n\010PARALLEL\020\002\"\357\001\n\031SubExpress" +
+      "ionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022-\n\004ssqm" +
+      "\030\002 \001(\0132\035.SimpleSequentialQueryMessageH\000\022" +
+      "2\n\005ssiqm\030\003 \001(\0132!.SimpleSpecifiedIndexQue" +
+      "ryMessageH\000\022(\n\004siqm\030\004 \001(\0132\030.SimpleIndexQ" +
+      "ueryMessageH\000\022&\n\003eqm\030\005 \001(\0132\027.ExpressionQ",
+      "ueryMessageH\000B\014\n\nsubmessage\"\204\002\n\034NearestN" +
+      "eighbourQueryMessage\022\016\n\006column\030\001 \001(\t\022\021\n\005" +
+      "query\030\002 \003(\002B\002\020\001\022\"\n\010distance\030\003 \001(\0132\020.Dist" +
+      "anceMessage\022\t\n\001k\030\004 \001(\005\022\021\n\tindexOnly\030\005 \001(" +
+      "\010\022;\n\007options\030\006 \003(\0132*.NearestNeighbourQue" +
+      "ryMessage.OptionsEntry\022\022\n\npartitions\030\007 \003" +
+      "(\005\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value" +
+      "\030\002 \001(\t:\0028\001\"\305\001\n\017DistanceMessage\0223\n\014distan" +
+      "cetype\030\001 \001(\0162\035.DistanceMessage.DistanceT" +
+      "ype\022.\n\007options\030\002 \003(\0132\035.DistanceMessage.O",
+      "ptionsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t" +
+      "\022\r\n\005value\030\002 \001(\t:\0028\001\"\035\n\014DistanceType\022\r\n\tm" +
+      "inkowski\020\000\"\350\001\n\023BooleanQueryMessage\0220\n\005wh" +
+      "ere\030\002 \003(\0132!.BooleanQueryMessage.WhereMes" +
+      "sage\022/\n\005joins\030\003 \003(\0132 .BooleanQueryMessag" +
+      "e.JoinMessage\022\021\n\tprefilter\030\001 \003(\003\032,\n\014Wher" +
+      "eMessage\022\r\n\005field\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\032-" +
+      "\n\013JoinMessage\022\r\n\005table\030\001 \001(\t\022\017\n\007columns\030" +
+      "\002 \003(\t\"\'\n\024CachedResultsMessage\022\017\n\007queryid" +
+      "\030\001 \001(\t\"X\n\nAckMessage\022\036\n\004code\030\001 \001(\0162\020.Ack",
+      "Message.Code\022\017\n\007message\030\002 \001(\t\"\031\n\004Code\022\006\n" +
+      "\002OK\020\000\022\t\n\005ERROR\020\001\"=\n\017EntitiesMessage\022\030\n\003a" +
+      "ck\030\001 \001(\0132\013.AckMessage\022\020\n\010entities\030\002 \003(\t\"" +
+      "\264\001\n\027EntityPropertiesMessage\022\030\n\003ack\030\001 \001(\013" +
+      "2\013.AckMessage\022\016\n\006entity\030\002 \001(\t\022<\n\npropert" +
+      "ies\030\003 \003(\0132(.EntityPropertiesMessage.Prop" +
+      "ertiesEntry\0321\n\017PropertiesEntry\022\013\n\003key\030\001 " +
+      "\001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"P\n CompoundQueryR" +
+      "esponseInfoMessage\022,\n\tresponses\030\001 \003(\0132\031." +
+      "QueryResponseInfoMessage\"\203\001\n\030QueryRespon",
+      "seInfoMessage\022\017\n\007queryid\030\003 \001(\t\022\022\n\nconfid" +
+      "ence\030\004 \001(\001\022\014\n\004time\030\005 \001(\003\022\016\n\006source\030\006 \001(\t" +
+      "\022$\n\007results\030\007 \003(\0132\023.QueryResultMessage\"\230" +
+      "\001\n\022QueryResultMessage\022\n\n\002id\030\001 \001(\003\022\020\n\010dis" +
+      "tance\030\002 \001(\002\0223\n\010metadata\030\003 \003(\0132!.QueryRes" +
+      "ultMessage.MetadataEntry\032/\n\rMetadataEntr" +
+      "y\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001*?\n\tInd" +
+      "exType\022\007\n\003ecp\020\000\022\007\n\003lsh\020\001\022\006\n\002pq\020\002\022\006\n\002sh\020\003" +
+      "\022\007\n\003vaf\020\004\022\007\n\003vav\020\0052\375\004\n\016AdamDefinition\0223\n" +
+      "\014CreateEntity\022\024.CreateEntityMessage\032\013.Ac",
+      "kMessage\"\000\022/\n\nDropEntity\022\022.EntityNameMes" +
+      "sage\032\013.AckMessage\"\000\022)\n\006Insert\022\016.InsertMe" +
+      "ssage\032\013.AckMessage\"\000(\001\022%\n\005Index\022\r.IndexM" +
+      "essage\032\013.AckMessage\"\000\0222\n\022GenerateAllInde" +
+      "xes\022\r.IndexMessage\032\013.AckMessage\"\000\022-\n\tDro" +
+      "pIndex\022\021.IndexNameMessage\032\013.AckMessage\"\000" +
+      "\022*\n\005Count\022\022.EntityNameMessage\032\013.AckMessa" +
+      "ge\"\000\022?\n\022GenerateRandomData\022\032.GenerateRan" +
+      "domDataMessage\032\013.AckMessage\"\000\022*\n\014ListEnt" +
+      "ities\022\006.Empty\032\020.EntitiesMessage\"\000\022E\n\023Get",
+      "EntityProperties\022\022.EntityNameMessage\032\030.E" +
+      "ntityPropertiesMessage\"\000\022:\n\024RepartitionI" +
+      "ndexData\022\023.RepartitionMessage\032\013.AckMessa" +
+      "ge\"\000\0224\n\016SetIndexWeight\022\023.IndexWeightMess" +
+      "age\032\013.AckMessage\"\0002\234\006\n\nAdamSearch\022.\n\nCac" +
+      "heIndex\022\021.IndexNameMessage\032\013.AckMessage\"" +
+      "\000\0220\n\013CacheEntity\022\022.EntityNameMessage\032\013.A" +
+      "ckMessage\"\000\022C\n\017DoStandardQuery\022\023.SimpleQ" +
+      "ueryMessage\032\031.QueryResponseInfoMessage\"\000" +
+      "\022O\n\021DoSequentialQuery\022\035.SimpleSequential",
+      "QueryMessage\032\031.QueryResponseInfoMessage\"" +
+      "\000\022W\n\025DoSpecifiedIndexQuery\022!.SimpleSpeci" +
+      "fiedIndexQueryMessage\032\031.QueryResponseInf" +
+      "oMessage\"\000\022E\n\014DoIndexQuery\022\030.SimpleIndex" +
+      "QueryMessage\032\031.QueryResponseInfoMessage\"" +
+      "\000\022H\n\022DoProgressiveQuery\022\023.SimpleQueryMes" +
+      "sage\032\031.QueryResponseInfoMessage\"\0000\001\022J\n\027D" +
+      "oTimedProgressiveQuery\022\022.TimedQueryMessa" +
+      "ge\032\031.QueryResponseInfoMessage\"\000\022M\n\017DoCom" +
+      "poundQuery\022\025.CompoundQueryMessage\032!.Comp",
+      "oundQueryResponseInfoMessage\"\000\022I\n\016DoBool" +
+      "eanQuery\022\032.SimpleBooleanQueryMessage\032\031.Q" +
+      "ueryResponseInfoMessage\"\000\022F\n\020GetCachedRe" +
+      "sults\022\025.CachedResultsMessage\032\031.QueryResp" +
+      "onseInfoMessage\"\000B\036\n\034ch.unibas.dmi.dbis." +
+      "adam.httpb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -28127,12 +27963,12 @@ public final class Grpc {
     internal_static_InsertMessage_TupleInsertMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_InsertMessage_TupleInsertMessage_descriptor,
-        new java.lang.String[] { "Vector", "Metadata", });
-    internal_static_InsertMessage_TupleInsertMessage_MetadataEntry_descriptor =
+        new java.lang.String[] { "Data", });
+    internal_static_InsertMessage_TupleInsertMessage_DataEntry_descriptor =
       internal_static_InsertMessage_TupleInsertMessage_descriptor.getNestedTypes().get(0);
-    internal_static_InsertMessage_TupleInsertMessage_MetadataEntry_fieldAccessorTable = new
+    internal_static_InsertMessage_TupleInsertMessage_DataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_InsertMessage_TupleInsertMessage_MetadataEntry_descriptor,
+        internal_static_InsertMessage_TupleInsertMessage_DataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_IndexMessage_descriptor =
       getDescriptor().getMessageTypes().get(7);

@@ -5,7 +5,7 @@ import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
 
 public class Test {
 
-	private static final String entityName = "inserttest2";
+	private static final String entityName = "inserttest3";
 	
 	public static void main(String[] args) {
 		

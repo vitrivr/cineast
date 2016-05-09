@@ -14,7 +14,7 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
 	private FileOutputStream out;
 	
 	public ProtobufFileWriter(){
-		super("id");
+		super("id", "feature");
 	}
 	
 	public ProtobufFileWriter(String...names){
