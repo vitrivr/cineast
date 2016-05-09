@@ -80,12 +80,19 @@ public class EntityCreator {
 	 * @param unique true if the feature module produces at most one vector per segment
 	 */
 	public AckMessage createFeatureEntity(String featurename, boolean unique){
+		return createFeatureEntity(featurename, unique, "feature");
+ 
+	}
+	
+	public AckMessage createFeatureEntity(String featurename, boolean unique, String...featrueNames){
 		ArrayList<FieldDefinitionMessage> fields = new ArrayList<>(1);
 		
 		Builder builder = FieldDefinitionMessage.newBuilder();
 		
 		fields.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(unique).setIndexed(true).build());
-		fields.add(builder.setName("feature").setFieldtype(FieldType.FEATURE).setPk(false).setIndexed(false).build());
+		for(String feature : featrueNames){
+			fields.add(builder.setName(feature).setFieldtype(FieldType.FEATURE).setPk(false).setIndexed(false).build());
+		}
 		
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllFields(fields).build();
 		

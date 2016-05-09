@@ -9,7 +9,7 @@ import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.MotionHistogramCalculator;
-
+@Deprecated
 public class MotionSum extends MotionHistogramCalculator {
 
 	public MotionSum() {
