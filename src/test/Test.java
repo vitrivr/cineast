@@ -1,17 +1,34 @@
 package test;
 
+import ch.unibas.cs.dbis.cineast.core.db.ADAMproWrapper;
 import ch.unibas.cs.dbis.cineast.core.db.ADAMproWriter;
+import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
+import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
 import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
+import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage;
 
 public class Test {
 
-	private static final String entityName = "inserttest3";
+	private static final String entityName = "inserttest1";
 	
 	public static void main(String[] args) {
+		
+		ADAMproWriter pwriter = new ADAMproWriter();
+		pwriter.setFieldNames("id", "multimediaobject", "segmentstart", "segmentend");
+		pwriter.open("segment");
+		
+		
+		System.out.println(pwriter.idExists("v_aqua_1"));
 		
 		EntityCreator creator = new EntityCreator();
 		creator.createFeatureEntity(entityName, true);
 		
+//		EntityNameMessage message = EntityNameMessage.newBuilder().setEntity("segment").build();
+//		AckMessage ack = ADAMproWrapper.getInstance().dropEntityBlocking(message);
+		
+//		System.out.println(ack.getCode());
 		
 		ADAMproWriter writer = new ADAMproWriter();
 		writer.open(entityName);
@@ -23,16 +40,15 @@ public class Test {
 				vector[j] = (float) Math.random();
 			}
 			
-			boolean success = writer.persist(writer.generateTuple(i, vector));
+			PersistentTuple<TupleInsertMessage> t = writer.generateTuple(Integer.toString(i), vector);
+			
+			System.out.println(t.getPersistentRepresentation());
+			
+			boolean success = writer.persist(t);
 			System.out.println(i + " : " + success);
 			
 		}
 		
-		
-		
-//		FeatureExtractionRunner runner = new FeatureExtractionRunner(new File("D:/ownCloud/Shared/iMotion Project/Data/Open Short Video Collection/collection"));
-//		runner.extractFolder(new File("D:/ownCloud/Shared/iMotion Project/Data/Open Short Video Collection/collection/Copying Is Not Theft"));
-
 	}
 
 }

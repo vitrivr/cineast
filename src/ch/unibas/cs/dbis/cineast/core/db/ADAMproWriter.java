@@ -55,11 +55,8 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 			return false;
 		}
 		
-		QueryResultMessage result = responce.getResults(0);
+		return responce.getResultsCount() > 0;
 		
-		System.out.println(result);
-		
-		return false;
 	}
 
 	@Override
@@ -67,9 +64,11 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		this.builder.clear();
 		this.builder.setEntity(this.entityName);
 		ArrayList<TupleInsertMessage> tmp = new ArrayList<>(1);
-		tmp.add(tuple.getPersistentRepresentation());
+		TupleInsertMessage tim = tuple.getPersistentRepresentation();
+		tmp.add(tim);
 		this.builder.addAllTuples(tmp);
-		AckMessage ack = ADAMproWrapper.getInstance().insertOneBlocking(this.builder.build());
+		InsertMessage im = this.builder.build();
+		AckMessage ack = ADAMproWrapper.getInstance().insertOneBlocking(im);
 		return ack.getCode() == Code.OK;
 	}
 

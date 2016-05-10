@@ -17,6 +17,7 @@ import ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -95,7 +96,17 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	
 	public ListenableFuture<QueryResponseInfoMessage> booleanQuery(SimpleBooleanQueryMessage message){
 		SettableFuture<QueryResponseInfoMessage> future = SettableFuture.create();
-		this.searchStub.doBooleanQuery(message, new LastQueryResponseStreamObserver(future));
+		synchronized (this.searchStub) {
+			this.searchStub.doBooleanQuery(message, new LastQueryResponseStreamObserver(future));
+		}
+		return future;
+	}
+	
+	public ListenableFuture<QueryResponseInfoMessage> standardQuery(SimpleQueryMessage message){
+		SettableFuture<QueryResponseInfoMessage> future = SettableFuture.create();
+		synchronized (this.searchStub) {
+			this.searchStub.doStandardQuery(message, new LastQueryResponseStreamObserver(future));
+		}
 		return future;
 	}
 	
@@ -116,16 +127,19 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 		
 		@Override
 		public void onCompleted() {
+			System.err.println("ADAMproWrapper.LastObserver.onCompleted(): " + this.last);
 			future.set(this.last);
 		}
 
 		@Override
 		public void onError(Throwable e) {
+			e.printStackTrace();
 			future.setException(e);
 		}
 
 		@Override
 		public void onNext(T t) {
+			System.out.println("ADAMproWrapper.LastObserver.onNext()");
 			this.last = t;
 		}
 		

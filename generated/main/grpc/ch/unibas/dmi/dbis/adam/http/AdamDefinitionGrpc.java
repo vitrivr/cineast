@@ -94,13 +94,13 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.Empty,
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.EmptyMessage,
       ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage> METHOD_LIST_ENTITIES =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
               "AdamDefinition", "ListEntities"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.Empty.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.EmptyMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage,
@@ -170,7 +170,7 @@ public class AdamDefinitionGrpc {
     public void generateRandomData(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
 
-    public void listEntities(ch.unibas.dmi.dbis.adam.http.Grpc.Empty request,
+    public void listEntities(ch.unibas.dmi.dbis.adam.http.Grpc.EmptyMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage> responseObserver);
 
     public void getEntityProperties(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request,
@@ -199,7 +199,7 @@ public class AdamDefinitionGrpc {
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage generateRandomData(ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage request);
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage listEntities(ch.unibas.dmi.dbis.adam.http.Grpc.Empty request);
+    public ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage listEntities(ch.unibas.dmi.dbis.adam.http.Grpc.EmptyMessage request);
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.EntityPropertiesMessage getEntityProperties(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request);
 
@@ -232,7 +232,7 @@ public class AdamDefinitionGrpc {
         ch.unibas.dmi.dbis.adam.http.Grpc.GenerateRandomDataMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage> listEntities(
-        ch.unibas.dmi.dbis.adam.http.Grpc.Empty request);
+        ch.unibas.dmi.dbis.adam.http.Grpc.EmptyMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.EntityPropertiesMessage> getEntityProperties(
         ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request);
@@ -318,7 +318,7 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public void listEntities(ch.unibas.dmi.dbis.adam.http.Grpc.Empty request,
+    public void listEntities(ch.unibas.dmi.dbis.adam.http.Grpc.EmptyMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_LIST_ENTITIES, getCallOptions()), request, responseObserver);
@@ -406,7 +406,7 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage listEntities(ch.unibas.dmi.dbis.adam.http.Grpc.Empty request) {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage listEntities(ch.unibas.dmi.dbis.adam.http.Grpc.EmptyMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_LIST_ENTITIES, getCallOptions(), request);
     }
@@ -498,7 +498,7 @@ public class AdamDefinitionGrpc {
 
     @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage> listEntities(
-        ch.unibas.dmi.dbis.adam.http.Grpc.Empty request) {
+        ch.unibas.dmi.dbis.adam.http.Grpc.EmptyMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_LIST_ENTITIES, getCallOptions()), request);
     }
@@ -583,7 +583,7 @@ public class AdamDefinitionGrpc {
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
           break;
         case METHODID_LIST_ENTITIES:
-          serviceImpl.listEntities((ch.unibas.dmi.dbis.adam.http.Grpc.Empty) request,
+          serviceImpl.listEntities((ch.unibas.dmi.dbis.adam.http.Grpc.EmptyMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage>) responseObserver);
           break;
         case METHODID_GET_ENTITY_PROPERTIES:
@@ -679,7 +679,7 @@ public class AdamDefinitionGrpc {
           METHOD_LIST_ENTITIES,
           asyncUnaryCall(
             new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Grpc.Empty,
+              ch.unibas.dmi.dbis.adam.http.Grpc.EmptyMessage,
               ch.unibas.dmi.dbis.adam.http.Grpc.EntitiesMessage>(
                 serviceImpl, METHODID_LIST_ENTITIES)))
         .addMethod(
