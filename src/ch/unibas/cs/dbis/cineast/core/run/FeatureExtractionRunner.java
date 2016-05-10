@@ -13,6 +13,7 @@ import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
 import ch.unibas.cs.dbis.cineast.core.db.ADAMproWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
+import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
@@ -76,8 +77,6 @@ public class FeatureExtractionRunner {
 	}
 	
 	public void extract(String fileName){
-		
-		DatabaseConfig dbconfig = Config.getDatabaseConfig();
 		
 		PersistencyWriter writer = new ADAMproWriter();
 		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
@@ -191,7 +190,7 @@ public class FeatureExtractionRunner {
 
 		
 		
-		PersistencyWriter writer = new ADAMproWriter();
+		PersistencyWriter<?> writer = new ADAMproWriter();
 		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
 
 		VideoDecoder vd = new JLibAVVideoDecoder(new File(baseFolder, path));
@@ -205,22 +204,20 @@ public class FeatureExtractionRunner {
 		String id = null;
 
 		if (writer.exists("name", folderName)) {
-			System.err.println(folderName + " allready in database");
-			ShotLookup lookup = new ShotLookup();
-			id = lookup.lookUpVideoid(folderName);
-			knownShots = lookup.lookUpVideo(id);
-			lookup.close();
+//			System.err.println(folderName + " allready in database");
+//			ShotLookup lookup = new ShotLookup();
+//			id = lookup.lookUpVideoid(folderName);
+//			knownShots = lookup.lookUpVideo(id);
+//			lookup.close();
 		} else {
 			
-			//TODO
 			
-			id = folderName;
 			
-//			ReturningADAMTuple tuple = (ReturningADAMTuple) writer.makeTuple(folderName, path, vd.getWidth(),
-//					vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
-//			writer.write(tuple);
-//
-//			id = (int) tuple.getReturnValue();
+			id = folderName.replace(' ', '-');//TODO
+			
+			PersistentTuple tuple = writer.generateTuple(id, 0, folderName, path, vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
+			writer.persist(tuple);
+		
 		}
 
 		ShotSegmenter segmenter = new ShotSegmenter(vd, id, new ADAMproWriter(), knownShots);

@@ -9,9 +9,14 @@ import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
 import ch.unibas.dmi.dbis.adam.http.AdamDefinitionGrpc;
 import ch.unibas.dmi.dbis.adam.http.AdamDefinitionGrpc.AdamDefinitionStub;
+import ch.unibas.dmi.dbis.adam.http.AdamSearchGrpc;
+import ch.unibas.dmi.dbis.adam.http.AdamSearchGrpc.AdamSearchStub;
 import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.CreateEntityMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -33,17 +38,19 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	}
 	
 	private ManagedChannel channel;
-	private AdamDefinitionStub stub;
+	private AdamDefinitionStub definitionStub;
+	private AdamSearchStub searchStub;
 	
 	private ADAMproWrapper(){
 		DatabaseConfig config = Config.getDatabaseConfig();
 		this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPplaintext()).build();
-		this.stub = AdamDefinitionGrpc.newStub(channel);
+		this.definitionStub = AdamDefinitionGrpc.newStub(channel);
+		this.searchStub = AdamSearchGrpc.newStub(channel);
 	}
 	
 	public synchronized ListenableFuture<AckMessage> createEntity(CreateEntityMessage message){
 		SettableFuture<AckMessage> future = SettableFuture.create();
-		this.stub.createEntity(message, new LastAckStreamObserver(future));
+		this.definitionStub.createEntity(message, new LastAckStreamObserver(future));
 		return future;
 	}
 
@@ -59,7 +66,7 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	
 	public synchronized ListenableFuture<AckMessage> insertOne(InsertMessage message){
 		SettableFuture<AckMessage> future = SettableFuture.create();
-		StreamObserver<InsertMessage> insertObserver = this.stub.insert(new LastAckStreamObserver(future));
+		StreamObserver<InsertMessage> insertObserver = this.definitionStub.insert(new LastAckStreamObserver(future));
 		insertObserver.onNext(message);
 		insertObserver.onCompleted();
 		return future;
@@ -75,18 +82,35 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 		}
 	}
 	
+	public AckMessage dropEntityBlocking(EntityNameMessage message){
+		SettableFuture<AckMessage> future = SettableFuture.create();
+		this.definitionStub.dropEntity(message, new LastAckStreamObserver(future));
+		try {
+			return future.get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public ListenableFuture<QueryResponseInfoMessage> booleanQuery(SimpleBooleanQueryMessage message){
+		SettableFuture<QueryResponseInfoMessage> future = SettableFuture.create();
+		this.searchStub.doBooleanQuery(message, new LastQueryResponseStreamObserver(future));
+		return future;
+	}
+	
 	@Override
 	protected void finalize() throws Throwable {
 		this.channel.shutdown();
 		super.finalize();
 	}
 	
-	class LastAckStreamObserver implements StreamObserver<AckMessage>{
+	class LastObserver<T> implements StreamObserver<T>{
 
-		private final SettableFuture<AckMessage> future;
-		private AckMessage last = null;
+		private final SettableFuture<T> future;
+		private T last = null;
 		
-		LastAckStreamObserver(final SettableFuture<AckMessage> future){
+		LastObserver(final SettableFuture<T> future){
 			this.future = future;
 		}
 		
@@ -101,10 +125,22 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 		}
 
 		@Override
-		public void onNext(AckMessage ack) {
-			this.last = ack;
+		public void onNext(T t) {
+			this.last = t;
 		}
 		
 	}
+	
+	class LastAckStreamObserver extends LastObserver<AckMessage>{
+
+		LastAckStreamObserver(SettableFuture<AckMessage> future) {
+			super(future);
+		}}
+	
+	class LastQueryResponseStreamObserver extends LastObserver<QueryResponseInfoMessage>{
+
+		LastQueryResponseStreamObserver(SettableFuture<QueryResponseInfoMessage> future) {
+			super(future);
+		}}
 	
 }

@@ -1,12 +1,20 @@
 package ch.unibas.cs.dbis.cineast.core.db;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.Code;
+import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.Builder;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
 
 public class ADAMproWriter extends ProtobufTupleGenerator {
 
@@ -27,13 +35,30 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 
 	@Override
 	public boolean idExists(String id) {
-		// TODO Auto-generated method stub
-		return false;
+		return exists("id", id);
 	}
 
 	@Override
-	public boolean exists(String key, String value) {
-		// TODO Auto-generated method stub
+	public boolean exists(String key, String value) { //TODO reduce the number of new objects created
+		WhereMessage where = WhereMessage.newBuilder().setField(key).setValue(value).build();
+		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
+		tmp.add(where);
+		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(this.entityName)
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
+		ListenableFuture<QueryResponseInfoMessage> f = ADAMproWrapper.getInstance().booleanQuery(qbqm);
+		QueryResponseInfoMessage responce;
+		try {
+			responce = f.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		QueryResultMessage result = responce.getResults(0);
+		
+		System.out.println(result);
+		
 		return false;
 	}
 

@@ -36,7 +36,7 @@ public class ShotSegmenter implements ShotProvider{
 		this.movieId = movieId;
 		this.pwriter = pwriter;
 		this.pwriter.setFieldNames("id", "multimediaobject", "segmentstart", "segmentend");
-		this.pwriter.open("cineast.shots");
+		this.pwriter.open("segment");
 		this.knownShotBoundaries = ((knownShotBoundaries == null) ? new LinkedList<ShotDescriptor>() : knownShotBoundaries);
 	}
 	
@@ -175,8 +175,6 @@ public class ShotSegmenter implements ShotProvider{
 		
 		PersistentTuple tuple = this.pwriter.generateTuple(shotId, movieId, shot.getStart(), shot.getEnd());
 		this.pwriter.persist(tuple);
-		
-
 		
 		return shot;
 	}

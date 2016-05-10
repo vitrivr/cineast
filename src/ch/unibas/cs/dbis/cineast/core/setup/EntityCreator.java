@@ -56,7 +56,7 @@ public class EntityCreator {
 		Builder builder = FieldDefinitionMessage.newBuilder();
 
 		fields.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(true).setIndexed(true).build());
-		fields.add(builder.setName("multimediaobject").setFieldtype(FieldType.LONG).setPk(false).setIndexed(true).build());
+		fields.add(builder.setName("multimediaobject").setFieldtype(FieldType.STRING).setPk(false).setIndexed(true).build());
 		fields.add(builder.setName("segmentstart").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 		fields.add(builder.setName("segmentend").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 
