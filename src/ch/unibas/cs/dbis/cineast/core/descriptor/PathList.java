@@ -66,7 +66,9 @@ private PathList(){}
 		long[] keys = paths.keys();
 		ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> pathList = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>(keys.length);
 		for(long key : keys){
-			pathList.add(new Pair<>(trackStartFrames.get(key), paths.get(key)));
+			if(paths.get(key).size() > 1){
+				pathList.add(new Pair<>(trackStartFrames.get(key), paths.get(key)));
+			}
 		}
 		
 		return pathList;
