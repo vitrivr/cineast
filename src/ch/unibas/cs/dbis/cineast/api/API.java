@@ -15,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.db.ADAMproSelector;
-import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import ch.unibas.cs.dbis.cineast.core.features.AverageColor;
 import ch.unibas.cs.dbis.cineast.core.features.AverageColorARP44;
 import ch.unibas.cs.dbis.cineast.core.features.AverageColorCLD;
@@ -113,7 +112,7 @@ public class API {
 									+ videoFolder.getAbsolutePath() + " is not a folder");
 							break;
 						}
-						FeatureExtractionRunner runner = new FeatureExtractionRunner(null);
+						FeatureExtractionRunner runner = new FeatureExtractionRunner();
 						runner.extractFolder(videoFolder);
 						break;
 					}

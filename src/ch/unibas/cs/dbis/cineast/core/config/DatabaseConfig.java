@@ -2,18 +2,29 @@ package ch.unibas.cs.dbis.cineast.core.config;
 
 import com.eclipsesource.json.JsonObject;
 
+import ch.unibas.cs.dbis.cineast.core.db.ADAMproWriter;
+import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
+import ch.unibas.cs.dbis.cineast.core.db.ProtobufFileWriter;
+
 public final class DatabaseConfig {
 	
 	private final String host;
 	private final int port;
 	private final boolean plaintext;
+	private final Writer writer;
+	
+	public static enum Writer{
+		PROTO,
+		ADAMPRO
+	}
 	
 	public static final String DEFAULT_HOST = "127.0.0.1";
 	public static final int DEFAULT_PORT = 5890;
 	public static final boolean DEFAULT_PLAINTEXT = false;
+	public static final Writer DEFAULT_WRITER = Writer.ADAMPRO;
 	
 	
-	public DatabaseConfig(String host, int port, boolean plaintext){
+	public DatabaseConfig(String host, int port, boolean plaintext, Writer writer){
 		if(host == null){
 			throw new NullPointerException("Database location cannot be null");
 		}
@@ -24,10 +35,11 @@ public final class DatabaseConfig {
 		this.host = host;
 		this.port = port;
 		this.plaintext = plaintext;
+		this.writer = writer;
 	}
 	
 	public DatabaseConfig(){
-		this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_PLAINTEXT);
+		this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_PLAINTEXT, DEFAULT_WRITER);
 	}
 	
 	
@@ -43,6 +55,22 @@ public final class DatabaseConfig {
 		return this.plaintext;
 	}
 	
+	public Writer getWriter(){
+		return this.writer;
+	}
+	
+	public PersistencyWriter<?> newWriter(){
+		switch(this.writer){
+		case ADAMPRO:
+			return new ADAMproWriter();
+		case PROTO:
+			return new ProtobufFileWriter();
+		default:
+			throw new IllegalStateException("no factory for writer " + this.writer);
+			
+		}
+	}
+	
 	/**
 	 * 
 	 * expects a json object of the follwing form:
@@ -51,6 +79,7 @@ public final class DatabaseConfig {
 	 * 	"host" : (string)
 	 * 	"port" : (int)
 	 * 	"plaintext" : (boolean)
+	 *  "writer" : PROTO | ADAMPRO
 	 * }
 	 * </pre>
 	 * @throws NullPointerException in case provided JsonObject is null
@@ -88,7 +117,20 @@ public final class DatabaseConfig {
 			}
 		}
 		
-		return new DatabaseConfig(host, port, plaintext);
+		Writer writer = DEFAULT_WRITER;
+		if(obj.get("writer") != null){
+			String writerName = "";
+			try{
+				writerName = obj.get("writer").asString();
+				writer = Writer.valueOf(writerName);
+			} catch(UnsupportedOperationException notastring){
+				throw new IllegalArgumentException("'writer' was not a string in database configuration");
+			} catch(IllegalArgumentException notawriter){
+				throw new IllegalArgumentException("'" + writerName + "' is not a valid value for 'writer'");
+			}
+		}
+		
+		return new DatabaseConfig(host, port, plaintext, writer);
 		
 	}
 }
