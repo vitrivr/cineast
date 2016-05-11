@@ -20,11 +20,6 @@ public class MotionHistogram extends SubDivMotionHistogram {
 		super("features.motionhistogram", "hist", MathHelper.SQRT2);
 	}
 	
-	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		this.phandler = phandler;
-		this.phandler.open("features.MotionHistogram");
-	}
 
 	@Override
 	public void processShot(SegmentContainer shot) {

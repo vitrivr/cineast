@@ -18,6 +18,7 @@ import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
+import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import ch.unibas.cs.dbis.cineast.core.util.ColorUtils;
@@ -31,6 +32,12 @@ public class AverageColorRaster extends AbstractFeatureModule {
 		super("features.AverageColorRaster", "raster", 1);
 	}
 	
+	@Override
+	public void init(PersistencyWriter<?> phandler) {
+		super.init(phandler);
+		this.phandler.setFieldNames("id", "raster", "hist");
+	}
+
 	protected static int get(Color c){
 		switch(c){
 		case Black:		return 0;
