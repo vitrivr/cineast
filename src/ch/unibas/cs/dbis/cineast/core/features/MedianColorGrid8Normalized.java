@@ -13,7 +13,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ImageHistogramEqualizer;
 public class MedianColorGrid8Normalized extends MedianColorGrid8 {
 
 	public MedianColorGrid8Normalized(){
-		super("features.MedianColorGrid8Normalized", 12595f / 4f);
+		super("features_MedianColorGrid8Normalized", 12595f / 4f);
 	}
 	
 	

@@ -15,7 +15,7 @@ import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
 public class SubDivMotionHistogram5 extends SubDivMotionHistogram {
 
 	public SubDivMotionHistogram5() {
-		super("features.SubDivMotionHistogram5", MathHelper.SQRT2 * 25);
+		super("features_SubDivMotionHistogram5", MathHelper.SQRT2 * 25);
 	}
 
 	@Override

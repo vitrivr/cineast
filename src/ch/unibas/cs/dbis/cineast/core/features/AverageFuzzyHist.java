@@ -17,7 +17,7 @@ public class AverageFuzzyHist extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public AverageFuzzyHist(){
-		super("features.AverageFuzzyHist", 2f / 4f);
+		super("features_AverageFuzzyHist", 2f / 4f);
 	}
 
 	@Override

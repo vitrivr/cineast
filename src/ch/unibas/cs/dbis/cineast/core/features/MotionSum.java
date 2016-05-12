@@ -13,7 +13,7 @@ import ch.unibas.cs.dbis.cineast.core.features.abstracts.MotionHistogramCalculat
 public class MotionSum extends MotionHistogramCalculator {
 
 	public MotionSum() {
-		super("features.motionhistogram", 1);
+		super("features_motionhistogram", 1);
 	}
 
 	private static final Logger LOGGER = LogManager.getLogger();

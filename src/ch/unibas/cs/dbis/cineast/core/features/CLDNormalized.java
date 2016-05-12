@@ -13,7 +13,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ImageHistogramEqualizer;
 public class CLDNormalized extends AbstractFeatureModule {
 
 	public CLDNormalized(){
-		super("features.CLDNormalized", 1960f / 4f);
+		super("features_CLDNormalized", 1960f / 4f);
 	}
 	
 	@Override

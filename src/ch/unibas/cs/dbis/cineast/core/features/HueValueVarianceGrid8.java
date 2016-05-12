@@ -29,7 +29,7 @@ public class HueValueVarianceGrid8 extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public HueValueVarianceGrid8(){
-		super("features.HueValueVarianceGrid8", 17f / 4f);
+		super("features_HueValueVarianceGrid8", 17f / 4f);
 	}
 	
 	private Pair<FloatVector, float[]> computeGrid(SegmentContainer qc){

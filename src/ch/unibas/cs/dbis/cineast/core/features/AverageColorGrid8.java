@@ -24,7 +24,7 @@ import ch.unibas.cs.dbis.cineast.core.util.GridPartitioner;
 public class AverageColorGrid8 extends AbstractFeatureModule {
 
 	public AverageColorGrid8(){
-		super("features.AverageColorGrid8", 12595f / 4f);
+		super("features_AverageColorGrid8", 12595f / 4f);
 	}
 	
 	protected AverageColorGrid8(String tableName, float maxDist){

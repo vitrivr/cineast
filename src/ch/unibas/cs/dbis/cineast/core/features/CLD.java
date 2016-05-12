@@ -12,7 +12,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ColorLayoutDescriptor;
 public class CLD extends AbstractFeatureModule {
 
 	public CLD(){
-		super("features.CLD", 1960f / 4f);
+		super("features_CLD", 1960f / 4f);
 	}
 	
 

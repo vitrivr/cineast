@@ -34,7 +34,7 @@ public class EntityCreator {
 		fields.add(builder.setName("framecount").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 		fields.add(builder.setName("duration").setFieldtype(FieldType.FLOAT).setPk(false).setIndexed(false).build());
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("cineast.multimediaobject").addAllFields(fields).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("cineast_multimediaobject").addAllFields(fields).build();
 		
 		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
 		
@@ -60,7 +60,7 @@ public class EntityCreator {
 		fields.add(builder.setName("segmentstart").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 		fields.add(builder.setName("segmentend").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("cineast.segment").addAllFields(fields).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("cineast_segment").addAllFields(fields).build();
 		
 		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
 		

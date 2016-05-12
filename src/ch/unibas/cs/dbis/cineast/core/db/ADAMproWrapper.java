@@ -127,19 +127,19 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 		
 		@Override
 		public void onCompleted() {
-			System.err.println("ADAMproWrapper.LastObserver.onCompleted(): " + this.last);
+//			System.err.println("ADAMproWrapper.LastObserver.onCompleted(): " + this.last);
 			future.set(this.last);
 		}
 
 		@Override
 		public void onError(Throwable e) {
-			e.printStackTrace();
+			e.printStackTrace(); //TODO
 			future.setException(e);
 		}
 
 		@Override
 		public void onNext(T t) {
-			System.out.println("ADAMproWrapper.LastObserver.onNext()");
+//			System.out.println("ADAMproWrapper.LastObserver.onNext()");
 			this.last = t;
 		}
 		

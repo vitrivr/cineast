@@ -13,7 +13,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ImageHistogramEqualizer;
 public class MedianFuzzyHistNormalized extends AbstractFeatureModule {
 
 	public MedianFuzzyHistNormalized(){
-		super("features.MedianFuzzyHistNormalized", 2f / 4f);
+		super("features_MedianFuzzyHistNormalized", 2f / 4f);
 	}
 	
 	@Override

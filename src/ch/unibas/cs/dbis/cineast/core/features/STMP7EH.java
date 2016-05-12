@@ -21,7 +21,7 @@ public class STMP7EH extends EHD {
 	@Override
 	public void init(PersistencyWriter<?> phandler) {
 		this.phandler = phandler;
-		this.phandler.open("features.STMP7EH");
+		this.phandler.open("features_STMP7EH");
 	}
 	
 	@Override

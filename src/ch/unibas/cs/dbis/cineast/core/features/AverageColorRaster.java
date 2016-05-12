@@ -29,7 +29,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public AverageColorRaster(){
-		super("features.AverageColorRaster", 1);
+		super("features_AverageColorRaster", 1);
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ARPartioner;
 public class AverageColorARP44 extends AbstractFeatureModule {
 	
 	public AverageColorARP44(){
-		super("features.AverageColorARP44", 115854f / 4f);
+		super("features_AverageColorARP44", 115854f / 4f);
 	}
 	
 	@Override

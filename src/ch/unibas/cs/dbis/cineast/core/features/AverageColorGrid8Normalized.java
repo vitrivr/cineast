@@ -13,7 +13,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ImageHistogramEqualizer;
 public class AverageColorGrid8Normalized extends AverageColorGrid8 {
 
 	public AverageColorGrid8Normalized(){
-		super("features.AverageColorGrid8Normalized", 12595f / 4f);
+		super("features_AverageColorGrid8Normalized", 12595f / 4f);
 	}
 
 	@Override

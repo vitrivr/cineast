@@ -28,7 +28,7 @@ public class MedianColorRaster extends AverageColorRaster {
 	@Override
 	public void init(PersistencyWriter<?> phandler) {
 		this.phandler = phandler;
-		this.phandler.open("features.MedianColorRaster");
+		this.phandler.open("features_MedianColorRaster");
 		this.phandler.setFieldNames("id", "raster", "hist");
 	}
 

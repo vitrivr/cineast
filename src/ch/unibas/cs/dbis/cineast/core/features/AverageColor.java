@@ -18,7 +18,7 @@ import ch.unibas.cs.dbis.cineast.core.util.TimeHelper;
 public class AverageColor extends AbstractFeatureModule {
 
 	public AverageColor() {
-		super("features.AverageColor", 196f / 4f);
+		super("features_AverageColor", 196f / 4f);
 	}
 
 	private static final Logger LOGGER = LogManager.getLogger();

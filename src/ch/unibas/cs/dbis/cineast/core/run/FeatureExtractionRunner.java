@@ -91,7 +91,7 @@ public class FeatureExtractionRunner {
 		LOGGER.debug("Total frames: {}", vd.getTotalFrameCount());
 		LOGGER.debug("frames per second: {}", vd.getFPS());
 
-		writer.open("cineast.multimediaobject");
+		writer.open("cineast_multimediaobject");
 
 		List<ShotDescriptor> knownShots = null;
 		String id = null;
@@ -164,7 +164,7 @@ public class FeatureExtractionRunner {
 		featureList.add(new MedianFuzzyHistNormalized());
 		featureList.add(new MotionHistogram());
 		featureList.add(new SaturationGrid8());
-		featureList.add(new SimplePerceptualHash());
+		//featureList.add(new SimplePerceptualHash());
 		featureList.add(new STMP7EH());
 		featureList.add(new SubDivAverageFuzzyColor());
 		featureList.add(new SubDivMedianFuzzyColor());

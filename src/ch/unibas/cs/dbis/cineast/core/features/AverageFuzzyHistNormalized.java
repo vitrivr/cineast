@@ -13,7 +13,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ImageHistogramEqualizer;
 public class AverageFuzzyHistNormalized extends AbstractFeatureModule {
 
 	public AverageFuzzyHistNormalized(){
-		super("features.AverageFuzzyHistNormalized", 2f / 4f);
+		super("features_AverageFuzzyHistNormalized", 2f / 4f);
 	}
 	
 	@Override

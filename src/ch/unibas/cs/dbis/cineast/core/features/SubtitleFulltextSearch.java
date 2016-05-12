@@ -18,7 +18,7 @@ public class SubtitleFulltextSearch extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public SubtitleFulltextSearch(){
-		super("features.fulltext", 1);
+		super("features_fulltext", 1);
 	}
 	
 	@Override

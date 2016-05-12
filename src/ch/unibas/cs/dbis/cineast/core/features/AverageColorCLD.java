@@ -12,7 +12,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ColorLayoutDescriptor;
 public class AverageColorCLD extends AbstractFeatureModule {
 
 	public AverageColorCLD(){
-		super("features.AverageColorCLD", 1960f / 4f);
+		super("features_AverageColorCLD", 1960f / 4f);
 	}
 
 	@Override

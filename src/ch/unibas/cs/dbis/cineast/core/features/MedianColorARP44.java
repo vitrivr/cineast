@@ -20,7 +20,7 @@ public class MedianColorARP44 extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public MedianColorARP44(){
-		super("features.MedianColorARP44", 115854f / 4f);
+		super("features_MedianColorARP44", 115854f / 4f);
 	}
 
 

@@ -10,7 +10,7 @@ import ch.unibas.cs.dbis.cineast.core.features.abstracts.MotionHistogramCalculat
 public class SubDivMotionSum3 extends MotionHistogramCalculator {
 
 	public SubDivMotionSum3() {
-		super("features.SubDivMotionHistogram3", 900f);
+		super("features_SubDivMotionHistogram3", 900f);
 	}
 
 	@Override
