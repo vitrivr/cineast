@@ -24,37 +24,14 @@ import ch.unibas.cs.dbis.cineast.core.util.GridPartitioner;
 public class AverageColorGrid8 extends AbstractFeatureModule {
 
 	public AverageColorGrid8(){
-		super("features.AverageColorGrid8", "grid", 12595f / 4f);
+		super("features.AverageColorGrid8", 12595f / 4f);
 	}
 	
-	protected AverageColorGrid8(String tableName, String colName, float maxDist){
-		super(tableName, colName, maxDist);
+	protected AverageColorGrid8(String tableName, float maxDist){
+		super(tableName, maxDist);
 	}
 	
 	private static final Logger LOGGER = LogManager.getLogger();
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		Pair<FloatVector, float[]> p = partition(qc.getAvgImg());
-//		FloatVector query = p.first;
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColorGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-//		
-//		return manageResultSet(rset);
-//	}
-
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		Pair<FloatVector, float[]> p = partition(qc.getAvgImg());
-//		FloatVector query = p.first;
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + "SELECT * FROM features.AverageColorGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-//		
-//		return manageResultSet(rset);
-//	}
 
 	@Override
 	public void processShot(SegmentContainer shot) {
@@ -108,8 +85,8 @@ public class AverageColorGrid8 extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		Pair<FloatVector, float[]> p = partition(sc.getAvgImg());
+		return getSimilar(p.first.toArray(null), qc);
 	}
 
 	@Override

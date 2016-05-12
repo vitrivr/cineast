@@ -12,17 +12,8 @@ import ch.unibas.cs.dbis.cineast.core.util.ColorLayoutDescriptor;
 public class AverageColorCLD extends AbstractFeatureModule {
 
 	public AverageColorCLD(){
-		super("features.AverageColorCLD", "cld", 1960f / 4f);
+		super("features.AverageColorCLD", 1960f / 4f);
 	}
-	
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		FloatVector query = ColorLayoutDescriptor.calculateCLD(qc.getAvgImg());
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColorCLD USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', cld) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 	@Override
 	public void processShot(SegmentContainer shot) {
@@ -34,8 +25,8 @@ public class AverageColorCLD extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		FloatVector query = ColorLayoutDescriptor.calculateCLD(sc.getAvgImg());
+		return getSimilar(query.toArray(null), qc);
 	}
 
 	@Override
@@ -43,14 +34,5 @@ public class AverageColorCLD extends AbstractFeatureModule {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		FloatVector query = ColorLayoutDescriptor.calculateCLD(qc.getAvgImg());
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + "SELECT * FROM features.AverageColorCLD, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', cld) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 }

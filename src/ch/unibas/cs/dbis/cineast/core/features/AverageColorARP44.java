@@ -13,19 +13,9 @@ import ch.unibas.cs.dbis.cineast.core.util.ARPartioner;
 public class AverageColorARP44 extends AbstractFeatureModule {
 	
 	public AverageColorARP44(){
-		super("features.AverageColorARP44", "arp", 115854f / 4f);
+		super("features.AverageColorARP44", 115854f / 4f);
 	}
 	
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		Pair<FloatVector, float[]> p = ARPartioner.partitionImage(qc.getAvgImg(), 4, 4);
-//		FloatVector query = p.first;
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColorARP44 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', arp) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-
 	@Override
 	public void processShot(SegmentContainer shot) {
 		if(!phandler.idExists(shot.getId())){
@@ -36,8 +26,8 @@ public class AverageColorARP44 extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		Pair<FloatVector, float[]> p = ARPartioner.partitionImage(sc.getAvgImg(), 4, 4);
+		return getSimilar(p.first.toArray(null), qc);
 	}
 
 	@Override
@@ -45,15 +35,5 @@ public class AverageColorARP44 extends AbstractFeatureModule {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		Pair<FloatVector, float[]> p = ARPartioner.partitionImage(qc.getAvgImg(), 4, 4);
-//		FloatVector query = p.first;
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.AverageColorARP44, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', arp) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 }

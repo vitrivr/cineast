@@ -14,7 +14,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ImageHistogramEqualizer;
 public class AverageColorARP44Normalized extends AbstractFeatureModule {
 
 	public AverageColorARP44Normalized() {
-		super("features.AverageColorARP44Normalized", "arp", 115854f / 4f);
+		super("features.AverageColorARP44Normalized", 115854f / 4f);
 	}
 
 	@Override
@@ -27,8 +27,8 @@ public class AverageColorARP44Normalized extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		Pair<FloatVector, float[]> p = ARPartioner.partitionImage(ImageHistogramEqualizer.getEqualized(sc.getAvgImg()), 4, 4);
+		return getSimilar(p.first.toArray(null), qc);
 	}
 
 	@Override
@@ -36,25 +36,5 @@ public class AverageColorARP44Normalized extends AbstractFeatureModule {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		Pair<FloatVector, float[]> p = ARPartioner.partitionImage(ImageHistogramEqualizer.getEqualized(qc.getAvgImg()), 4, 4);
-//		FloatVector query = p.first;
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColorARP44Normalized USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', arp) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		Pair<FloatVector, float[]> p = ARPartioner.partitionImage(ImageHistogramEqualizer.getEqualized(qc.getAvgImg()), 4, 4);
-//		FloatVector query = p.first;
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + "SELECT * FROM features.AverageColorARP44Normalized, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', arp) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 }

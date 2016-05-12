@@ -13,7 +13,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ImageHistogramEqualizer;
 public class MedianFuzzyHistNormalized extends AbstractFeatureModule {
 
 	public MedianFuzzyHistNormalized(){
-		super("features.MedianFuzzyHistNormalized", "hist", 2f / 4f);
+		super("features.MedianFuzzyHistNormalized", 2f / 4f);
 	}
 	
 	@Override
@@ -26,8 +26,8 @@ public class MedianFuzzyHistNormalized extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(ImageHistogramEqualizer.getEqualized(sc.getMedianImg()).getBufferedImage());
+		return getSimilar(query.toArray(null), qc);
 	}
 
 	@Override
@@ -35,23 +35,5 @@ public class MedianFuzzyHistNormalized extends AbstractFeatureModule {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(ImageHistogramEqualizer.getEqualized(qc.getMedianImg()).getBufferedImage());
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.MedianFuzzyHistNormalized USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(ImageHistogramEqualizer.getEqualized(qc.getMedianImg()).getBufferedImage());
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MedianFuzzyHistNormalized, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 }

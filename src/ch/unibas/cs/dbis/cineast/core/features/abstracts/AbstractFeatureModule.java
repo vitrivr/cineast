@@ -20,10 +20,9 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 	protected PersistencyWriter<?> phandler;
 	protected DBSelector selector;
 	protected final float maxDist;
-	protected final String colName, tableName;
+	protected final String tableName;
 
-	protected AbstractFeatureModule(String tableName, String colName, float maxDist){
-		this.colName = colName;
+	protected AbstractFeatureModule(String tableName, float maxDist){
 		this.tableName = tableName;
 		this.maxDist = maxDist;
 	}

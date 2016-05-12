@@ -24,7 +24,7 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public EdgeGrid16Full(){
-		super("features.EdgeGrid16Full", "grid", 124f / 4f);
+		super("features.EdgeGrid16Full", 124f / 4f);
 	}
 	
 	
@@ -59,25 +59,6 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
 		LOGGER.exit();
 	}
 
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.EdgeGrid16Full USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.EdgeGrid16Full, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 
 	private static FloatVector getEdges(MultiImage img){
@@ -105,8 +86,8 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		FloatVector query = getEdges(sc.getMostRepresentativeFrame().getImage());
+		return getSimilar(query.toArray(null), qc);
 	}
 
 

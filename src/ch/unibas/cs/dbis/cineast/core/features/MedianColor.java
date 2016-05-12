@@ -22,7 +22,7 @@ public class MedianColor extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public MedianColor(){
-		super("features.MedianColor", "color", 196f / 4f);
+		super("features.MedianColor", 196f / 4f);
 	}
 	
 	protected LabContainer getMedian(MedianImgProvider provider){
@@ -74,8 +74,8 @@ public class MedianColor extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		LabContainer query = getMedian(sc.getMedianImg());
+		return getSimilar(query.toArray(null), qc);
 	}
 
 	@Override
@@ -84,22 +84,4 @@ public class MedianColor extends AbstractFeatureModule {
 		return null;
 	}
 
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		LabContainer query = getMedian(qc.getMedianImg());
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.MedianColor USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', color) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		LabContainer query = getMedian(qc.getMedianImg());
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MedianColor, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', color) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-	
 }

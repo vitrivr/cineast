@@ -26,7 +26,7 @@ public class DominantColors extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public DominantColors(){
-		super("features.DominantColors", "colors", 488f / 4f);
+		super("features.DominantColors", 488f / 4f);
 	}
 	
 	public static LabContainer[] getDominantColor(MultiImage img){
@@ -83,8 +83,14 @@ public class DominantColors extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		LabContainer[] query = getDominantColor(sc.getMostRepresentativeFrame().getImage());
+		FloatVectorImpl fvi = new FloatVectorImpl();
+		for(LabContainer lab : query){
+			fvi.add(lab.getL());
+			fvi.add(lab.getA());
+			fvi.add(lab.getB());
+		}
+		return getSimilar(fvi.toArray(null), qc);
 	}
 
 	@Override
@@ -93,38 +99,4 @@ public class DominantColors extends AbstractFeatureModule {
 		return null;
 	}
 
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		LabContainer[] query = getDominantColor(qc.getMostRepresentativeFrame().getImage());
-//
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		FloatVectorImpl fvi = new FloatVectorImpl();
-//		for(LabContainer lab : query){
-//			fvi.add(lab.getL());
-//			fvi.add(lab.getA());
-//			fvi.add(lab.getB());
-//		}
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.DominantColors USING DISTANCE MINKOWSKI(1)(\'" + fvi.toFeatureString() + "\', colors) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		LabContainer[] query = getDominantColor(qc.getMostRepresentativeFrame().getImage());
-//
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		FloatVectorImpl fvi = new FloatVectorImpl();
-//		for(LabContainer lab : query){
-//			fvi.add(lab.getL());
-//			fvi.add(lab.getA());
-//			fvi.add(lab.getB());
-//		}
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.DominantColors, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + fvi.toFeatureString() + "\', colors) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-	
 }

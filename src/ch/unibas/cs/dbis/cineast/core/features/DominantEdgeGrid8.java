@@ -22,7 +22,7 @@ public class DominantEdgeGrid8 extends AbstractFeatureModule {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	public DominantEdgeGrid8() {
-		super("features.DominantEdgeGrid8", "edges", 437f / 4f);
+		super("features.DominantEdgeGrid8", 437f / 4f);
 	}
 
 	@Override
@@ -38,28 +38,6 @@ public class DominantEdgeGrid8 extends AbstractFeatureModule {
 		LOGGER.exit();
 	}
 
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		short[][][] edgeHist = new short[8][8][4];
-//		buildEdgeHist(edgeHist, qc.getMostRepresentativeFrame().getImage());
-//		short[] dominant = getDominants(edgeHist);
-//		FloatVector fv = new FloatVectorImpl(dominant);
-//		ResultSet rset = this.selector.select("SELECT * FROM features.DominantEdgeGrid8 USING DISTANCE MINKOWSKI(1)(\'" + fv.toFeatureString() + "\', edges) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//		
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		short[][][] edgeHist = new short[8][8][4];
-//		buildEdgeHist(edgeHist, qc.getMostRepresentativeFrame().getImage());
-//		short[] dominant = getDominants(edgeHist);
-//		FloatVector fv = new FloatVectorImpl(dominant);
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.DominantEdgeGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + fv.toFeatureString() + "\', edges) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 	static void buildEdgeHist(short[][][] edgeHist, MultiImage img){
 		List<EdgeContour> contourList = EdgeList.getEdgeList(img);
@@ -104,8 +82,11 @@ public class DominantEdgeGrid8 extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		short[][][] edgeHist = new short[8][8][4];
+		buildEdgeHist(edgeHist, sc.getMostRepresentativeFrame().getImage());
+		short[] dominant = getDominants(edgeHist);
+		FloatVector fv = new FloatVectorImpl(dominant);
+		return getSimilar(fv.toArray(null), qc);
 	}
 
 	@Override

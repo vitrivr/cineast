@@ -13,7 +13,7 @@ import ch.unibas.cs.dbis.cineast.core.util.ImageHistogramEqualizer;
 public class AverageColorCLDNormalized extends AbstractFeatureModule {
 
 	public AverageColorCLDNormalized(){
-		super("features.AverageColorCLDNormalized", "cld", 1960f / 4f);
+		super("features.AverageColorCLDNormalized", 1960f / 4f);
 	}
 	
 	@Override
@@ -26,8 +26,8 @@ public class AverageColorCLDNormalized extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		FloatVector query = ColorLayoutDescriptor.calculateCLD(ImageHistogramEqualizer.getEqualized(sc.getAvgImg()));
+		return getSimilar(query.toArray(null), qc);
 	}
 
 	@Override
@@ -35,23 +35,5 @@ public class AverageColorCLDNormalized extends AbstractFeatureModule {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		FloatVector query = ColorLayoutDescriptor.calculateCLD(ImageHistogramEqualizer.getEqualized(qc.getAvgImg()));
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColorCLDNormalized USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', cld) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		FloatVector query = ColorLayoutDescriptor.calculateCLD(ImageHistogramEqualizer.getEqualized(qc.getAvgImg()));
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.AverageColorCLDNormalized, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', cld) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 }

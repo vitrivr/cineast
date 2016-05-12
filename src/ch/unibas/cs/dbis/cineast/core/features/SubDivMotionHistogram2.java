@@ -15,7 +15,7 @@ import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
 public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
 
 	public SubDivMotionHistogram2() {
-		super("features.SubDivMotionHistogram2", "hists", MathHelper.SQRT2 * 4);
+		super("features.SubDivMotionHistogram2", MathHelper.SQRT2 * 4);
 	}
 
 	@Override
@@ -39,8 +39,15 @@ public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, sc.getPaths());
+		ArrayList<Float> tmp = new ArrayList<Float>(2 * 2 * 8);
+		for(List<Float> l : pair.second){
+			for(float f : l){
+				tmp.add(f);
+			}
+		}
+		FloatVectorImpl fv = new FloatVectorImpl(tmp);
+		return getSimilar(fv.toArray(null), qc);
 	}
 
 	@Override
@@ -49,39 +56,4 @@ public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
 		return null;
 	}
 
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, qc.getPaths());
-//
-//		ArrayList<Float> tmp = new ArrayList<Float>(2 * 2 * 8);
-//		for(List<Float> l : pair.second){
-//			for(float f : l){
-//				tmp.add(f);
-//			}
-//		}
-//		FloatVectorImpl fv = new FloatVectorImpl(tmp);
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.SubDivMotionHistogram2 USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hists) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, qc.getPaths());
-//
-//		ArrayList<Float> tmp = new ArrayList<Float>(2 * 2 * 8);
-//		for(List<Float> l : pair.second){
-//			for(float f : l){
-//				tmp.add(f);
-//			}
-//		}
-//		FloatVectorImpl fv = new FloatVectorImpl(tmp);
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.SubDivMotionHistogram2, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hists) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 }

@@ -19,7 +19,7 @@ import ch.unibas.cs.dbis.cineast.core.util.GridPartitioner;
 public class SimplePerceptualHash extends AbstractFeatureModule {
 
 	public SimplePerceptualHash() {
-		super("features.SimplePerceptualHash", "hash", 1);
+		super("features.SimplePerceptualHash", 1);
 	}
 
 	@Override

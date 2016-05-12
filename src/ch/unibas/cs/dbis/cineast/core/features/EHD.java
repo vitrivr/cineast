@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayU8;
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
+import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
@@ -26,7 +27,7 @@ public class EHD extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public EHD(){
-		super("features.EHD", "hist", 16f / 4f);
+		super("features.EHD", 16f / 4f);
 	}
 	
 	private static final float[]
@@ -56,24 +57,6 @@ public class EHD extends AbstractFeatureModule {
 		}
 		LOGGER.exit();
 	}
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		FloatVector query = new FloatVectorImpl(process(qc.getMostRepresentativeFrame().getImage(), new float[80]));
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.EHD USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//	
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		FloatVector query = new FloatVectorImpl(process(qc.getMostRepresentativeFrame().getImage(), new float[80]));
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.EHD, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 	protected static float[] process(MultiImage img, float[] hist){
 		GrayU8 gray = ConvertBufferedImage.convertFrom(img.getBufferedImage(), (GrayU8) null);
@@ -131,8 +114,8 @@ public class EHD extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		FloatVector query = new FloatVectorImpl(process(sc.getMostRepresentativeFrame().getImage(), new float[80]));
+		return getSimilar(query.toArray(null), qc);
 	}
 
 	@Override

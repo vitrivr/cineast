@@ -27,7 +27,7 @@ public class SaturationGrid8 extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public SaturationGrid8(){
-		super("features.SaturationGrid8", "grid", 45f / 4f);
+		super("features.SaturationGrid8", 45f / 4f);
 	}
 	
 	private Pair<FloatVector, float[]> computeGrid(SegmentContainer qc){
@@ -76,27 +76,6 @@ public class SaturationGrid8 extends AbstractFeatureModule {
 		
 		return new Pair<FloatVector, float[]>(new FloatVectorImpl(f), weights);
 	}
-	
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		Pair<FloatVector, float[]> p = computeGrid(qc);
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.SaturationGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		Pair<FloatVector, float[]> p = computeGrid(qc);
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.SaturationGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 	@Override
 	public void processShot(SegmentContainer shot) {
@@ -146,8 +125,8 @@ public class SaturationGrid8 extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		Pair<FloatVector, float[]> p = computeGrid(sc);
+		return getSimilar(p.first.toArray(null), qc);
 	}
 
 	@Override

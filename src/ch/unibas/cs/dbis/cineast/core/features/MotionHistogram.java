@@ -9,7 +9,6 @@ import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.SubDivMotionHistogram;
 import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
@@ -17,7 +16,7 @@ import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
 public class MotionHistogram extends SubDivMotionHistogram {
 
 	public MotionHistogram() {
-		super("features.motionhistogram", "hist", MathHelper.SQRT2);
+		super("features.motionhistogram", MathHelper.SQRT2);
 	}
 	
 
@@ -41,8 +40,10 @@ public class MotionHistogram extends SubDivMotionHistogram {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, sc.getPaths());
+		
+		FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
+		return getSimilar(fv.toArray(null), qc);
 	}
 
 	@Override
@@ -51,27 +52,4 @@ public class MotionHistogram extends SubDivMotionHistogram {
 		return null;
 	}
 	
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {		
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, qc.getPaths());
-//
-//		FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.MotionHistogram USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, qc.getPaths());
-//
-//		FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MotionHistogram, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 }

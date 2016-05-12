@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.features.abstracts;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -10,19 +8,15 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
-import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
 import georegression.struct.point.Point2D_F32;
 
 public abstract class MotionHistogramCalculator implements Retriever {
 
 	protected DBSelector selector;
-	private final float maxDist;
+	protected final float maxDist;
 	protected final String tableName;
 	private static Logger LOGGER = LogManager.getLogger();
 
@@ -109,23 +103,6 @@ public abstract class MotionHistogramCalculator implements Retriever {
 		}
 	}
 
-	protected ArrayList<LongDoublePair> manageResultSet(ResultSet rset){
-		ArrayList<LongDoublePair> result = new ArrayList<>(Config.getRetrieverConfig().getMaxResultsPerModule());
-		if(rset != null){
-			try {
-				while(rset.next()){
-					double dist = rset.getDouble(1);
-					long shotId = rset.getLong(2);
-
-					result.add(new LongDoublePair(shotId, MathHelper.getScore(dist, this.maxDist)));
-				}
-			} catch (SQLException e) {
-				LOGGER.fatal(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-			}
-		}
-		
-		return result;
-	}
 	
 	
 	

@@ -27,7 +27,7 @@ public class ChromaGrid8 extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public ChromaGrid8(){
-		super("features.ChromaGrid8", "grid", 86609f / 4f);
+		super("features.ChromaGrid8", 86609f / 4f);
 	}
 	
 	private Pair<FloatVector, float[]> buildChromaGrid(SegmentContainer qc){
@@ -79,20 +79,6 @@ public class ChromaGrid8 extends AbstractFeatureModule {
 		return new Pair<>(query, weights);
 	}
 	
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		Pair<FloatVector, float[]> p = buildChromaGrid(qc);
-//		ResultSet rset = this.selector.select("SELECT * FROM features.ChromaGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + Config.getRetrieverConfig().getMaxResultsPerModule());
-//		return manageResultSet(rset);
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		Pair<FloatVector, float[]> p = buildChromaGrid(qc);
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.ChromaGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + p.first.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + Config.getRetrieverConfig().getMaxResultsPerModule());
-//		return manageResultSet(rset);
-//	}
-
 	@Override
 	public void processShot(SegmentContainer shot) {
 		LOGGER.entry();
@@ -141,8 +127,8 @@ public class ChromaGrid8 extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		Pair<FloatVector, float[]> p = buildChromaGrid(sc);
+		return getSimilar(p.first.toArray(null), qc);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package ch.unibas.cs.dbis.cineast.core.features;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,11 +10,13 @@ import org.apache.logging.log4j.Logger;
 import ch.unibas.cs.dbis.cineast.core.color.ColorConverter;
 import ch.unibas.cs.dbis.cineast.core.color.FuzzyColorHistogramQuantizer;
 import ch.unibas.cs.dbis.cineast.core.color.ReadableLabContainer;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
+import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.util.ColorUtils;
 import ch.unibas.cs.dbis.cineast.core.util.GridPartitioner;
@@ -81,6 +84,18 @@ public class MedianColorRaster extends AverageColorRaster {
 		FloatVector query = new FloatVectorImpl(hist);
 		
 		return new Pair<FloatVector, float[]>(query, queryraster);
+	}
+
+	@Override
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return super.getSimilar(sc, qc);
+	}
+
+	@Override
+	public List<StringDoublePair> getSimilar(long shotId, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return super.getSimilar(shotId, qc);
 	}
 	
 //	@Override

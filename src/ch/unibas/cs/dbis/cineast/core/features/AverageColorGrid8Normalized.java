@@ -1,36 +1,20 @@
 package ch.unibas.cs.dbis.cineast.core.features;
 
+import java.util.List;
+
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
+import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
+import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
+import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.util.ImageHistogramEqualizer;
 
 public class AverageColorGrid8Normalized extends AverageColorGrid8 {
 
 	public AverageColorGrid8Normalized(){
-		super("features.AverageColorGrid8Normalized", "grid", 12595f / 4f);
+		super("features.AverageColorGrid8Normalized", 12595f / 4f);
 	}
-	
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		Pair<FloatVector, float[]> p = partition(ImageHistogramEqualizer.getEqualized(qc.getAvgImg()));
-//		FloatVector query = p.first;
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColorGrid8Normalized USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-//		
-//		return manageResultSet(rset);
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		Pair<FloatVector, float[]> p = partition(ImageHistogramEqualizer.getEqualized(qc.getAvgImg()));
-//		FloatVector query = p.first;
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + "SELECT * FROM features.AverageColorGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-//		
-//		return manageResultSet(rset);
-//	}
 
 	@Override
 	public void processShot(SegmentContainer shot) {
@@ -39,5 +23,17 @@ public class AverageColorGrid8Normalized extends AverageColorGrid8 {
 			
 			persist(shot.getId(), partition(avgimg).first);
 		}
+	}
+
+	@Override
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		Pair<FloatVector, float[]> p = partition(ImageHistogramEqualizer.getEqualized(sc.getAvgImg()));
+		return getSimilar(p.first.toArray(null), qc);
+	}
+
+	@Override
+	public List<StringDoublePair> getSimilar(long shotId, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return super.getSimilar(shotId, qc);
 	}
 }

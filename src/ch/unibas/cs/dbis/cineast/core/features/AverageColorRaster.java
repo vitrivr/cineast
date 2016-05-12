@@ -29,7 +29,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public AverageColorRaster(){
-		super("features.AverageColorRaster", "raster", 1);
+		super("features.AverageColorRaster", 1);
 	}
 	
 	@Override
@@ -118,29 +118,6 @@ public class AverageColorRaster extends AbstractFeatureModule {
 		PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2);
 		this.phandler.persist(tuple);
 	}
-
-	
-	
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		FloatVector query = buildQueryVector(qc);
-//		
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
-//
-//		ResultSet rset = this.selector.select("SELECT * FROM features.AverageColorRaster USING DISTANCE MINKOWSKI(2)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		FloatVector query = buildQueryVector(qc);
-//		
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
-//
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.AverageColorRaster, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(2)(\'" + query.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 	private FloatVector buildQueryVector(SegmentContainer qc) {
 		MultiImage avg = qc.getAvgImg();

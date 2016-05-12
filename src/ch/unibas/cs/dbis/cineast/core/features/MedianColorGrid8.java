@@ -26,11 +26,11 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public MedianColorGrid8(){
-		super("features.MedianColorGrid8", "grid", 12595f / 4f);
+		super("features.MedianColorGrid8", 12595f / 4f);
 	}
 	
-	protected MedianColorGrid8(String tableName, String colName, float maxDist){
-		super(tableName, colName, maxDist);
+	protected MedianColorGrid8(String tableName, float maxDist){
+		super(tableName, maxDist);
 	}
 	
 
@@ -45,26 +45,6 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
 		LOGGER.exit();
 
 	}
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		Pair<FloatVector, float[]> p = partition(qc.getMedianImg());
-//		FloatVector query = p.first;
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.MedianColorGrid8 USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//	
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		Pair<FloatVector, float[]> p = partition(qc.getMedianImg());
-//		FloatVector query = p.first;
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.MedianColorGrid8, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1, " + formatQueryWeights(p.second) + ")(\'" + query.toFeatureString() + "\', grid) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 	protected static Pair<FloatVector, float[]> partition(MultiImage img){
 		ArrayList<Integer> labs = new ArrayList<Integer>(img.getWidth() * img.getHeight());
@@ -106,8 +86,8 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		Pair<FloatVector, float[]> p = partition(sc.getMedianImg());
+		return getSimilar(p.first.toArray(null), qc);
 	}
 
 	@Override

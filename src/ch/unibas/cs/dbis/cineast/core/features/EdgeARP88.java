@@ -23,7 +23,7 @@ public class EdgeARP88 extends AbstractFeatureModule {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public EdgeARP88(){
-		super("features.EdgeARP88", "arp", 31f / 4f);
+		super("features.EdgeARP88", 31f / 4f);
 	}
 
 	@Override
@@ -34,24 +34,6 @@ public class EdgeARP88 extends AbstractFeatureModule {
 		}
 		LOGGER.exit();
 	}
-
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
-//		
-//		ResultSet rset = this.selector.select("SELECT * FROM features.EdgeARP88 USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', arp) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
-//
-//	@Override
-//	public List<LongDoublePair> getSimilar(SegmentContainer qc, String resultCacheName) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule();
-//		FloatVector query = getEdges(qc.getMostRepresentativeFrame().getImage());
-//		
-//		ResultSet rset = this.selector.select(getResultCacheLimitSQL(resultCacheName) + " SELECT * FROM features.EdgeARP88, c WHERE shotid = c.filter USING DISTANCE MINKOWSKI(1)(\'" + query.toFeatureString() + "\', arp) ORDER USING DISTANCE LIMIT " + limit);
-//		return manageResultSet(rset);
-//	}
 
 	private static FloatVector getEdges(MultiImage img){
 		StatElement[] stats = new StatElement[64];
@@ -77,8 +59,8 @@ public class EdgeARP88 extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		FloatVector query = getEdges(sc.getMostRepresentativeFrame().getImage());
+		return getSimilar(query.toArray(null), qc);
 	}
 
 	@Override
