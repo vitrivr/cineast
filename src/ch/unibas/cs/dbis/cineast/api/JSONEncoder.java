@@ -92,17 +92,13 @@ public final class JSONEncoder {
 		return _return;
 	}
 	
-	public static final JsonObject encodeVideo(ShotDescriptor sd, boolean includeType){
-		return encodeVideo(sd.getName(), sd.getVideoId(), sd.getPath(), sd.getWidth(), sd.getHeight(), sd.getFramecount(), sd.getSeconds(), includeType);
-	}
+	
 	
 	public static final JsonObject encodeVideo(String name, String videoId, String path, int width, int height, long frames, double seconds){
 		return encodeVideo(name, videoId, path, width, height, frames, seconds, true);
 	}
 	
-	public static final JsonObject encodeVideo(ShotDescriptor sd){
-		return encodeVideo(sd, true);
-	}
+
 	
 	public static final JsonObject encodeVideo(VideoDescriptor vd, boolean includeType){
 		return encodeVideo(vd.getName(), vd.getVideoId(), vd.getPath(), vd.getWidth(), vd.getHeight(), vd.getFramecount(), vd.getSeconds(), includeType);
@@ -112,13 +108,13 @@ public final class JSONEncoder {
 		return encodeVideo(vd, true);
 	}
 	
-	public static final JsonObject encodeVideoBatch(List<ShotDescriptor> sdList){
+	public static final JsonObject encodeVideoBatch(List<VideoDescriptor> vdList){
 		JsonObject _return = new JsonObject();
 		_return.add("type", "batch");
 		_return.add("inner", "video");
 		JsonArray array = new JsonArray();
-		for(ShotDescriptor sd : sdList){
-			array.add(encodeVideo(sd, false));
+		for(VideoDescriptor vd : vdList){
+			array.add(encodeVideo(vd, false));
 		}
 		_return.add("array", array);
 		return _return;

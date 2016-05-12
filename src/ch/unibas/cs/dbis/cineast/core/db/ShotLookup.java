@@ -1,155 +1,126 @@
 package ch.unibas.cs.dbis.cineast.core.db;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 import ch.unibas.cs.dbis.cineast.core.data.Shot;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
+import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
 
 public class ShotLookup {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private Connection connection;
-	
-	public ShotLookup(){
-//		this(Config.getDatabaseConfig());
-	}
-//	
-//	public ShotLookup(DatabaseConfig config){
-//		this(config.getLocation(), config.getUser(), config.getPassword());
-//	}
-	
-	public ShotLookup(String database, String username, String password){
-//		Properties props = new Properties();
-//
-//		props.setProperty("user", username);
-//		props.setProperty("password", password);
-//		props.setProperty("tcpKeepAlive", "true");
-//
-//		String url = "jdbc:postgresql://" + database;
-//		try {
-//			connection = DriverManager.getConnection(url, props);
-//		} catch (SQLException e) {
-//			LOGGER.fatal(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-//		}
-	}
 	
 	public void close(){
-		try {
-			this.connection.close();
-		} catch (SQLException e) {
-			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-		}
+		
 	}
 	
 	public ShotDescriptor lookUpShot(String shotId){
-		ResultSet set = null;
-		try {
-			PreparedStatement statement = connection.prepareStatement("SELECT * FROM cineast.videos JOIN cineast.shots ON (cineast.videos.id = cineast.shots.video) WHERE cineast.shots.id = " + shotId);
-			set = statement.executeQuery();
-		} catch (SQLException e) {
-			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-		}
-		
-//		return new ShotDescriptor(set, shotId);
+
 		return null;
 		
 	}
 	
 	
 	public String lookUpVideoid(String name){
+		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
+		WhereMessage where = WhereMessage.newBuilder().setField("name").setValue(name).build();
+		//TODO check type as well
+		tmp.add(where);
+		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT)
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
+		ListenableFuture<QueryResponseInfoMessage> f = ADAMproWrapper.getInstance().booleanQuery(qbqm);
+		QueryResponseInfoMessage responce;
+		try {
+			responce = f.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+
+		List<QueryResultMessage> results = responce.getResultsList();
 		
-//		try {
-//			PreparedStatement statement = connection.prepareStatement("SELECT id FROM cineast.videos WHERE name = \'" + name + "\'");
-//			ResultSet set = statement.executeQuery();
-//			if(set.next()){
-//				return set.getInt(1);
-//			}
-//		} catch (SQLException e) {
-//			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-//		}
-//		return -1;
+		if(results.isEmpty()){//no such video
+			return "";
+		}
 		
-		return "";
+		QueryResultMessage result = results.get(0);
+		
+		String id = result.getMetadata().get("id");
+		
+		return id;
 
 	}
 	
 	public List<ShotDescriptor> lookUpVideo(String videoId){
 		LinkedList<ShotDescriptor> _return = new LinkedList<ShotLookup.ShotDescriptor>();
-//		try {
-//			PreparedStatement statement = connection.prepareStatement("SELECT id FROM cineast.shots WHERE video = " + videoId);
-//			ResultSet set = statement.executeQuery();
-//			while(set.next()){
-//				long shotId = set.getLong(1);
-//				ShotDescriptor des = lookUpShot(shotId);
-//				if(des.videoId == videoId){//sanity check
-//					_return.add(des);
-//				}
-//			}
-//		} catch (SQLException e) {
-//			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-//		}
+		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
+		WhereMessage where = WhereMessage.newBuilder().setField("multimediaobject").setValue(videoId).build();
+		//TODO check type as well
+		tmp.add(where);
+		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT)
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
+		ListenableFuture<QueryResponseInfoMessage> f = ADAMproWrapper.getInstance().booleanQuery(qbqm);
+		QueryResponseInfoMessage responce;
+		try {
+			responce = f.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return _return;
+		}
+		
+		List<QueryResultMessage> results = responce.getResultsList();
+		
+		for(QueryResultMessage result : results){
+			Map<String, String> metadata = result.getMetadata();
+			_return.add(new ShotDescriptor(
+					videoId, 
+					metadata.get("id"), 
+					Integer.parseInt(metadata.get("segmentstart")), 
+					Integer.parseInt(metadata.get("segmentend"))));
+		}
+		
+
 		
 		return _return;
 	}
 	
-	@Override
-	protected void finalize() throws Throwable {
-		this.connection.close();
-		super.finalize();
-	}
+//	@Override
+//	protected void finalize() throws Throwable {
+//		
+//		super.finalize();
+//	}
 
 	public static class ShotDescriptor{
 		
-		private String shotId, videoId;
-		private int  width = -1, height = -1, framecount = -1, shotNumber = -1, startFrame = -1, endFrame = -1;
-		private float seconds = -1f, fps = 0;
-		private String name = null, path = null;
+		private final String shotId, videoId;
+		private final int startFrame, endFrame;
 		
-//		ShotDescriptor(String shotId){
-//			this.shotId = shotId;
-//			if(rset != null){
-//				try {
-//					rset.next();
-//					
-//					
-//					
-////					this.videoId	= rset.getInt(1);
-//					this.name	= rset.getString(2);
-//					this.path	= rset.getString(3);
-//					this.width	= rset.getInt(4);
-//					this.height	= rset.getInt(5);
-//					this.framecount	= rset.getInt(6);
-//					this.seconds = rset.getFloat(7);
-//					this.shotNumber = rset.getInt(9);
-//					this.startFrame = rset.getInt(11);
-//					this.endFrame = rset.getInt(12);
-//					this.fps = framecount / seconds;
-//					if(Float.isNaN(fps) || Float.isInfinite(fps)){
-//						this.fps = 0;
-//					}
-//				} catch (SQLException e) {
-//					LOGGER.warn(LogHelper.SQL_MARKER, "Error for ShotID {}", shotId);
-//					LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-//				}
-//			}
-//		}
 		
 		public ShotDescriptor(String videoId, int shotNumber, int startFrame, int endFrame) {
+			this(videoId, Shot.generateShotID(videoId, shotNumber), startFrame, endFrame);
+		}
+		
+		ShotDescriptor(String videoId, String shotId,  int startFrame, int endFrame){
 			this.videoId = videoId;
-			this.shotId = Shot.generateShotID(videoId, shotNumber);
+			this.shotId = shotId;
 			this.startFrame = startFrame;
 			this.endFrame = endFrame;
-			this.framecount = endFrame - startFrame + 1;
-			this.shotNumber = shotNumber;
 		}
 
 		public String getShotId() {
@@ -160,20 +131,10 @@ public class ShotLookup {
 			return videoId;
 		}
 
-		public int getWidth() {
-			return width;
-		}
 
-		public int getHeight() {
-			return height;
-		}
 
 		public int getFramecount() {
-			return framecount;
-		}
-
-		public int getShotNumber() {
-			return shotNumber;
+			return endFrame - startFrame + 1;
 		}
 
 		public int getStartFrame() {
@@ -182,22 +143,6 @@ public class ShotLookup {
 
 		public int getEndFrame() {
 			return endFrame;
-		}
-		
-		public float getSeconds() {
-			return seconds;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public String getPath() {
-			return path;
-		}
-		
-		public float getFPS(){
-			return fps;
 		}
 
 		@Override

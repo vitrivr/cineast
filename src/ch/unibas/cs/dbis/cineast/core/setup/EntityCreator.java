@@ -15,6 +15,8 @@ import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage.FieldType;
 
 public class EntityCreator {
 
+	public static final String CINEAST_SEGMENT = "cineast_segment";
+	public static final String CINEAST_MULTIMEDIAOBJECT = "cineast_multimediaobject";
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	/**
@@ -34,7 +36,7 @@ public class EntityCreator {
 		fields.add(builder.setName("framecount").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 		fields.add(builder.setName("duration").setFieldtype(FieldType.FLOAT).setPk(false).setIndexed(false).build());
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("cineast_multimediaobject").addAllFields(fields).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_MULTIMEDIAOBJECT).addAllFields(fields).build();
 		
 		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
 		
@@ -60,7 +62,7 @@ public class EntityCreator {
 		fields.add(builder.setName("segmentstart").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 		fields.add(builder.setName("segmentend").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("cineast_segment").addAllFields(fields).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_SEGMENT).addAllFields(fields).build();
 		
 		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
 		

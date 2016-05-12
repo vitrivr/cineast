@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
+import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.srt.SRTSubTitle;
@@ -97,11 +98,14 @@ public class FeatureExtractionRunner {
 		String id = null;
 
 		if (writer.exists("name", videoName)) {
-//			System.err.println(folderName + " allready in database");
-//			ShotLookup lookup = new ShotLookup();
-//			id = lookup.lookUpVideoid(folderName);
+			LOGGER.info("video '{}' is already in database", videoName);
+			ShotLookup lookup = new ShotLookup();
+			id = lookup.lookUpVideoid(videoName);
 //			knownShots = lookup.lookUpVideo(id);
 //			lookup.close();
+			
+			
+			
 		} else {
 			
 			

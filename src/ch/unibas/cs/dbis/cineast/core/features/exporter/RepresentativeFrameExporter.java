@@ -22,7 +22,7 @@ public class RepresentativeFrameExporter implements Extractor {
 	@Override
 	public void init(PersistencyWriter<?> phandler) {
 		this.phandler = phandler;
-		this.phandler.open("cineast.representativeframes");
+		this.phandler.open("cineast_representativeframes");
 		this.phandler.setFieldNames("id", "frame");
 		this.folder.mkdirs();
 	}

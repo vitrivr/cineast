@@ -22,7 +22,9 @@ import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
 import ch.unibas.cs.dbis.cineast.core.data.QuerySubTitleItem;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
+import ch.unibas.cs.dbis.cineast.core.db.VideoLookup;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
+import ch.unibas.cs.dbis.cineast.core.db.VideoLookup.VideoDescriptor;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import georegression.struct.point.Point2D_F32;
@@ -165,7 +167,8 @@ public class JSONUtils {
 	
 	public static HashSet<String> printVideosBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> videoids) {
 		ShotLookup sl = new ShotLookup();
-		ArrayList<ShotDescriptor> sdList = new ArrayList<>(resultlist.size());
+		VideoLookup vl = new VideoLookup();
+		ArrayList<VideoDescriptor> vdList = new ArrayList<>(resultlist.size());
 		for(int i = 0; i < resultlist.size(); ++i){
 			String shotid = resultlist.get(i).key;
 			ShotDescriptor descriptor = sl.lookUpShot(shotid);
@@ -175,12 +178,13 @@ public class JSONUtils {
 			}
 			videoids.add(descriptor.getVideoId());
 			
-			sdList.add(descriptor);			
+			vdList.add(vl.lookUpVideo(descriptor.getVideoId()));			
 		}
 		
-		printer.print(JSONEncoder.encodeVideoBatch(sdList).toString());
+		printer.print(JSONEncoder.encodeVideoBatch(vdList).toString());
 		printer.println(',');
 		sl.close();
+
 		return videoids;
 	}
 	
