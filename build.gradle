@@ -80,7 +80,7 @@ jar {
 }
 
 task copyConfigs(type: Copy){
-	from "cineast.properties"
+	from "cineast.json"
 	into "$buildDir/libs/"
 	outputs.upToDateWhen { false }
 	}
