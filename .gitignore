@@ -19,3 +19,6 @@ bin
 
 
 .idea
+proto/
+representative_frames/
+thumbnails/
