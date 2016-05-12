@@ -1,5 +1,8 @@
 package ch.unibas.cs.dbis.cineast.core.setup;
 
+import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator.FieldDefinition;
+import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage.FieldType;
+
 public class Setup {
 
 	public static void main(String[] args) { //TODO this should ideally not be its own main
@@ -7,6 +10,8 @@ public class Setup {
 		
 		ec.createMultiMediaObjectsEntity();
 		ec.createSegmentEntity();
+		
+		ec.createIdEntity("cineast.representativeframes", new FieldDefinition("frame", FieldType.INT));
 		
 		ec.createFeatureEntity("features.AverageColor", true);
 		ec.createFeatureEntity("features.AverageColorARP44", true);

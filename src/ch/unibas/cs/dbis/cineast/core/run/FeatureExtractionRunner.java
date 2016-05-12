@@ -91,7 +91,7 @@ public class FeatureExtractionRunner {
 		LOGGER.debug("Total frames: {}", vd.getTotalFrameCount());
 		LOGGER.debug("frames per second: {}", vd.getFPS());
 
-		writer.open("multimediaobject");
+		writer.open("cineast.multimediaobject");
 
 		List<ShotDescriptor> knownShots = null;
 		String id = null;

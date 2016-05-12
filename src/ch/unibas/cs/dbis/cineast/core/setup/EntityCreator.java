@@ -34,7 +34,7 @@ public class EntityCreator {
 		fields.add(builder.setName("framecount").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 		fields.add(builder.setName("duration").setFieldtype(FieldType.FLOAT).setPk(false).setIndexed(false).build());
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("multimediaobject").addAllFields(fields).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("cineast.multimediaobject").addAllFields(fields).build();
 		
 		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
 		
@@ -60,7 +60,7 @@ public class EntityCreator {
 		fields.add(builder.setName("segmentstart").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 		fields.add(builder.setName("segmentend").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("segment").addAllFields(fields).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity("cineast.segment").addAllFields(fields).build();
 		
 		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
 		
@@ -85,7 +85,7 @@ public class EntityCreator {
 	}
 	
 	public AckMessage createFeatureEntity(String featurename, boolean unique, String...featrueNames){
-		ArrayList<FieldDefinitionMessage> fields = new ArrayList<>(1);
+		ArrayList<FieldDefinitionMessage> fields = new ArrayList<>();
 		
 		Builder builder = FieldDefinitionMessage.newBuilder();
 		
@@ -106,6 +106,39 @@ public class EntityCreator {
 		
 		return ack;
  
+	}
+	
+	public AckMessage createIdEntity(String entityName, FieldDefinition...fields){
+		ArrayList<FieldDefinitionMessage> fieldList = new ArrayList<>();
+		
+		Builder builder = FieldDefinitionMessage.newBuilder();
+		
+		fieldList.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(true).setIndexed(true).build());
+		for(FieldDefinition field : fields){
+			fieldList.add(builder.setName(field.name).setFieldtype(field.type).setPk(false).setIndexed(false).build());
+		}
+		
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(entityName.toLowerCase()).addAllFields(fieldList).build();
+		
+		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
+		
+		if(ack.getCode() == Code.OK){
+			LOGGER.info("successfully created feature entity {}", entityName);
+		}else{
+			LOGGER.error("error creating feature entity {}: {}", entityName, ack.getMessage());
+		}
+		
+		return ack;
+	}
+	
+	public static class FieldDefinition{
+		private final String name;
+		private final FieldType type;
+		
+		public FieldDefinition(String name, FieldType type){
+			this.name = name;
+			this.type = type;
+		}
 	}
 	
 }
