@@ -10,6 +10,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
+import ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage.DistanceType;
 import ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage;
@@ -56,7 +57,7 @@ public class ADAMproSelector implements DBSelector {
 		hints.add("exact");
 		
 		
-		FeatureVectorMessage fvqm = FeatureVectorMessage.newBuilder().addAllVector(new FloatArrayIterable(vector)).build();
+		FeatureVectorMessage fvqm = FeatureVectorMessage.newBuilder().setDenseVector(DenseVectorMessage.newBuilder().addAllVector(new FloatArrayIterable(vector))).build();
 		
 		NearestNeighbourQueryMessage nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
 		SimpleQueryMessage sqMessage = sqmBuilder.setEntity(entityName).setNnq(nnqMessage).addAllHints(hints).build();

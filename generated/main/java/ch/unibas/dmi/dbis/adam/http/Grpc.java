@@ -456,17 +456,33 @@ public final class Grpc {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated float vector = 1 [packed = true];</code>
+     * <code>optional .DenseVectorMessage denseVector = 1;</code>
      */
-    java.util.List<java.lang.Float> getVectorList();
+    ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage getDenseVector();
     /**
-     * <code>repeated float vector = 1 [packed = true];</code>
+     * <code>optional .DenseVectorMessage denseVector = 1;</code>
      */
-    int getVectorCount();
+    ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessageOrBuilder getDenseVectorOrBuilder();
+
     /**
-     * <code>repeated float vector = 1 [packed = true];</code>
+     * <code>optional .SparseVectorMessage sparseVector = 2;</code>
      */
-    float getVector(int index);
+    ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage getSparseVector();
+    /**
+     * <code>optional .SparseVectorMessage sparseVector = 2;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessageOrBuilder getSparseVectorOrBuilder();
+
+    /**
+     * <code>optional .IntVectorMessage intVector = 3;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage getIntVector();
+    /**
+     * <code>optional .IntVectorMessage intVector = 3;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessageOrBuilder getIntVectorOrBuilder();
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.FeatureCase getFeatureCase();
   }
   /**
    * Protobuf type {@code FeatureVectorMessage}
@@ -480,7 +496,6 @@ public final class Grpc {
       super(builder);
     }
     private FeatureVectorMessage() {
-      vector_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -507,25 +522,46 @@ public final class Grpc {
               }
               break;
             }
-            case 13: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                vector_ = new java.util.ArrayList<java.lang.Float>();
-                mutable_bitField0_ |= 0x00000001;
+            case 10: {
+              ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.Builder subBuilder = null;
+              if (featureCase_ == 1) {
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) feature_).toBuilder();
               }
-              vector_.add(input.readFloat());
+              feature_ =
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) feature_);
+                feature_ = subBuilder.buildPartial();
+              }
+              featureCase_ = 1;
               break;
             }
-            case 10: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
-                vector_ = new java.util.ArrayList<java.lang.Float>();
-                mutable_bitField0_ |= 0x00000001;
+            case 18: {
+              ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.Builder subBuilder = null;
+              if (featureCase_ == 2) {
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) feature_).toBuilder();
               }
-              while (input.getBytesUntilLimit() > 0) {
-                vector_.add(input.readFloat());
+              feature_ =
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) feature_);
+                feature_ = subBuilder.buildPartial();
               }
-              input.popLimit(limit);
+              featureCase_ = 2;
+              break;
+            }
+            case 26: {
+              ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.Builder subBuilder = null;
+              if (featureCase_ == 3) {
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) feature_).toBuilder();
+              }
+              feature_ =
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) feature_);
+                feature_ = subBuilder.buildPartial();
+              }
+              featureCase_ = 3;
               break;
             }
           }
@@ -537,9 +573,6 @@ public final class Grpc {
             new com.google.protobuf.InvalidProtocolBufferException(
                 e.getMessage()).setUnfinishedMessage(this));
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          vector_ = java.util.Collections.unmodifiableList(vector_);
-        }
         makeExtensionsImmutable();
       }
     }
@@ -555,28 +588,98 @@ public final class Grpc {
               ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder.class);
     }
 
-    public static final int VECTOR_FIELD_NUMBER = 1;
-    private java.util.List<java.lang.Float> vector_;
+    private int featureCase_ = 0;
+    private java.lang.Object feature_;
+    public enum FeatureCase
+        implements com.google.protobuf.Internal.EnumLite {
+      DENSEVECTOR(1),
+      SPARSEVECTOR(2),
+      INTVECTOR(3),
+      FEATURE_NOT_SET(0);
+      private int value = 0;
+      private FeatureCase(int value) {
+        this.value = value;
+      }
+      public static FeatureCase valueOf(int value) {
+        switch (value) {
+          case 1: return DENSEVECTOR;
+          case 2: return SPARSEVECTOR;
+          case 3: return INTVECTOR;
+          case 0: return FEATURE_NOT_SET;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public FeatureCase
+    getFeatureCase() {
+      return FeatureCase.valueOf(
+          featureCase_);
+    }
+
+    public static final int DENSEVECTOR_FIELD_NUMBER = 1;
     /**
-     * <code>repeated float vector = 1 [packed = true];</code>
+     * <code>optional .DenseVectorMessage denseVector = 1;</code>
      */
-    public java.util.List<java.lang.Float>
-        getVectorList() {
-      return vector_;
+    public ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage getDenseVector() {
+      if (featureCase_ == 1) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) feature_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.getDefaultInstance();
     }
     /**
-     * <code>repeated float vector = 1 [packed = true];</code>
+     * <code>optional .DenseVectorMessage denseVector = 1;</code>
      */
-    public int getVectorCount() {
-      return vector_.size();
+    public ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessageOrBuilder getDenseVectorOrBuilder() {
+      if (featureCase_ == 1) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) feature_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.getDefaultInstance();
+    }
+
+    public static final int SPARSEVECTOR_FIELD_NUMBER = 2;
+    /**
+     * <code>optional .SparseVectorMessage sparseVector = 2;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage getSparseVector() {
+      if (featureCase_ == 2) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) feature_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.getDefaultInstance();
     }
     /**
-     * <code>repeated float vector = 1 [packed = true];</code>
+     * <code>optional .SparseVectorMessage sparseVector = 2;</code>
      */
-    public float getVector(int index) {
-      return vector_.get(index);
+    public ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessageOrBuilder getSparseVectorOrBuilder() {
+      if (featureCase_ == 2) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) feature_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.getDefaultInstance();
     }
-    private int vectorMemoizedSerializedSize = -1;
+
+    public static final int INTVECTOR_FIELD_NUMBER = 3;
+    /**
+     * <code>optional .IntVectorMessage intVector = 3;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage getIntVector() {
+      if (featureCase_ == 3) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) feature_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.getDefaultInstance();
+    }
+    /**
+     * <code>optional .IntVectorMessage intVector = 3;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessageOrBuilder getIntVectorOrBuilder() {
+      if (featureCase_ == 3) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) feature_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.getDefaultInstance();
+    }
 
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -590,13 +693,14 @@ public final class Grpc {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      getSerializedSize();
-      if (getVectorList().size() > 0) {
-        output.writeRawVarint32(10);
-        output.writeRawVarint32(vectorMemoizedSerializedSize);
+      if (featureCase_ == 1) {
+        output.writeMessage(1, (ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) feature_);
       }
-      for (int i = 0; i < vector_.size(); i++) {
-        output.writeFloatNoTag(vector_.get(i));
+      if (featureCase_ == 2) {
+        output.writeMessage(2, (ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) feature_);
+      }
+      if (featureCase_ == 3) {
+        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) feature_);
       }
     }
 
@@ -605,16 +709,17 @@ public final class Grpc {
       if (size != -1) return size;
 
       size = 0;
-      {
-        int dataSize = 0;
-        dataSize = 4 * getVectorList().size();
-        size += dataSize;
-        if (!getVectorList().isEmpty()) {
-          size += 1;
-          size += com.google.protobuf.CodedOutputStream
-              .computeInt32SizeNoTag(dataSize);
-        }
-        vectorMemoizedSerializedSize = dataSize;
+      if (featureCase_ == 1) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, (ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) feature_);
+      }
+      if (featureCase_ == 2) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, (ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) feature_);
+      }
+      if (featureCase_ == 3) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) feature_);
       }
       memoizedSize = size;
       return size;
@@ -727,8 +832,8 @@ public final class Grpc {
       }
       public Builder clear() {
         super.clear();
-        vector_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
+        featureCase_ = 0;
+        feature_ = null;
         return this;
       }
 
@@ -751,12 +856,28 @@ public final class Grpc {
 
       public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage buildPartial() {
         ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage(this);
-        int from_bitField0_ = bitField0_;
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          vector_ = java.util.Collections.unmodifiableList(vector_);
-          bitField0_ = (bitField0_ & ~0x00000001);
+        if (featureCase_ == 1) {
+          if (denseVectorBuilder_ == null) {
+            result.feature_ = feature_;
+          } else {
+            result.feature_ = denseVectorBuilder_.build();
+          }
         }
-        result.vector_ = vector_;
+        if (featureCase_ == 2) {
+          if (sparseVectorBuilder_ == null) {
+            result.feature_ = feature_;
+          } else {
+            result.feature_ = sparseVectorBuilder_.build();
+          }
+        }
+        if (featureCase_ == 3) {
+          if (intVectorBuilder_ == null) {
+            result.feature_ = feature_;
+          } else {
+            result.feature_ = intVectorBuilder_.build();
+          }
+        }
+        result.featureCase_ = featureCase_;
         onBuilt();
         return result;
       }
@@ -772,6 +893,832 @@ public final class Grpc {
 
       public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage other) {
         if (other == ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance()) return this;
+        switch (other.getFeatureCase()) {
+          case DENSEVECTOR: {
+            mergeDenseVector(other.getDenseVector());
+            break;
+          }
+          case SPARSEVECTOR: {
+            mergeSparseVector(other.getSparseVector());
+            break;
+          }
+          case INTVECTOR: {
+            mergeIntVector(other.getIntVector());
+            break;
+          }
+          case FEATURE_NOT_SET: {
+            break;
+          }
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int featureCase_ = 0;
+      private java.lang.Object feature_;
+      public FeatureCase
+          getFeatureCase() {
+        return FeatureCase.valueOf(
+            featureCase_);
+      }
+
+      public Builder clearFeature() {
+        featureCase_ = 0;
+        feature_ = null;
+        onChanged();
+        return this;
+      }
+
+
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessageOrBuilder> denseVectorBuilder_;
+      /**
+       * <code>optional .DenseVectorMessage denseVector = 1;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage getDenseVector() {
+        if (denseVectorBuilder_ == null) {
+          if (featureCase_ == 1) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) feature_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.getDefaultInstance();
+        } else {
+          if (featureCase_ == 1) {
+            return denseVectorBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .DenseVectorMessage denseVector = 1;</code>
+       */
+      public Builder setDenseVector(ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage value) {
+        if (denseVectorBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          feature_ = value;
+          onChanged();
+        } else {
+          denseVectorBuilder_.setMessage(value);
+        }
+        featureCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>optional .DenseVectorMessage denseVector = 1;</code>
+       */
+      public Builder setDenseVector(
+          ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.Builder builderForValue) {
+        if (denseVectorBuilder_ == null) {
+          feature_ = builderForValue.build();
+          onChanged();
+        } else {
+          denseVectorBuilder_.setMessage(builderForValue.build());
+        }
+        featureCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>optional .DenseVectorMessage denseVector = 1;</code>
+       */
+      public Builder mergeDenseVector(ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage value) {
+        if (denseVectorBuilder_ == null) {
+          if (featureCase_ == 1 &&
+              feature_ != ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.getDefaultInstance()) {
+            feature_ = ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) feature_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            feature_ = value;
+          }
+          onChanged();
+        } else {
+          if (featureCase_ == 1) {
+            denseVectorBuilder_.mergeFrom(value);
+          }
+          denseVectorBuilder_.setMessage(value);
+        }
+        featureCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>optional .DenseVectorMessage denseVector = 1;</code>
+       */
+      public Builder clearDenseVector() {
+        if (denseVectorBuilder_ == null) {
+          if (featureCase_ == 1) {
+            featureCase_ = 0;
+            feature_ = null;
+            onChanged();
+          }
+        } else {
+          if (featureCase_ == 1) {
+            featureCase_ = 0;
+            feature_ = null;
+          }
+          denseVectorBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .DenseVectorMessage denseVector = 1;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.Builder getDenseVectorBuilder() {
+        return getDenseVectorFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .DenseVectorMessage denseVector = 1;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessageOrBuilder getDenseVectorOrBuilder() {
+        if ((featureCase_ == 1) && (denseVectorBuilder_ != null)) {
+          return denseVectorBuilder_.getMessageOrBuilder();
+        } else {
+          if (featureCase_ == 1) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) feature_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .DenseVectorMessage denseVector = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessageOrBuilder> 
+          getDenseVectorFieldBuilder() {
+        if (denseVectorBuilder_ == null) {
+          if (!(featureCase_ == 1)) {
+            feature_ = ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.getDefaultInstance();
+          }
+          denseVectorBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) feature_,
+                  getParentForChildren(),
+                  isClean());
+          feature_ = null;
+        }
+        featureCase_ = 1;
+        onChanged();;
+        return denseVectorBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessageOrBuilder> sparseVectorBuilder_;
+      /**
+       * <code>optional .SparseVectorMessage sparseVector = 2;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage getSparseVector() {
+        if (sparseVectorBuilder_ == null) {
+          if (featureCase_ == 2) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) feature_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.getDefaultInstance();
+        } else {
+          if (featureCase_ == 2) {
+            return sparseVectorBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .SparseVectorMessage sparseVector = 2;</code>
+       */
+      public Builder setSparseVector(ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage value) {
+        if (sparseVectorBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          feature_ = value;
+          onChanged();
+        } else {
+          sparseVectorBuilder_.setMessage(value);
+        }
+        featureCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>optional .SparseVectorMessage sparseVector = 2;</code>
+       */
+      public Builder setSparseVector(
+          ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.Builder builderForValue) {
+        if (sparseVectorBuilder_ == null) {
+          feature_ = builderForValue.build();
+          onChanged();
+        } else {
+          sparseVectorBuilder_.setMessage(builderForValue.build());
+        }
+        featureCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>optional .SparseVectorMessage sparseVector = 2;</code>
+       */
+      public Builder mergeSparseVector(ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage value) {
+        if (sparseVectorBuilder_ == null) {
+          if (featureCase_ == 2 &&
+              feature_ != ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.getDefaultInstance()) {
+            feature_ = ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) feature_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            feature_ = value;
+          }
+          onChanged();
+        } else {
+          if (featureCase_ == 2) {
+            sparseVectorBuilder_.mergeFrom(value);
+          }
+          sparseVectorBuilder_.setMessage(value);
+        }
+        featureCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>optional .SparseVectorMessage sparseVector = 2;</code>
+       */
+      public Builder clearSparseVector() {
+        if (sparseVectorBuilder_ == null) {
+          if (featureCase_ == 2) {
+            featureCase_ = 0;
+            feature_ = null;
+            onChanged();
+          }
+        } else {
+          if (featureCase_ == 2) {
+            featureCase_ = 0;
+            feature_ = null;
+          }
+          sparseVectorBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .SparseVectorMessage sparseVector = 2;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.Builder getSparseVectorBuilder() {
+        return getSparseVectorFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .SparseVectorMessage sparseVector = 2;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessageOrBuilder getSparseVectorOrBuilder() {
+        if ((featureCase_ == 2) && (sparseVectorBuilder_ != null)) {
+          return sparseVectorBuilder_.getMessageOrBuilder();
+        } else {
+          if (featureCase_ == 2) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) feature_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .SparseVectorMessage sparseVector = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessageOrBuilder> 
+          getSparseVectorFieldBuilder() {
+        if (sparseVectorBuilder_ == null) {
+          if (!(featureCase_ == 2)) {
+            feature_ = ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.getDefaultInstance();
+          }
+          sparseVectorBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) feature_,
+                  getParentForChildren(),
+                  isClean());
+          feature_ = null;
+        }
+        featureCase_ = 2;
+        onChanged();;
+        return sparseVectorBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessageOrBuilder> intVectorBuilder_;
+      /**
+       * <code>optional .IntVectorMessage intVector = 3;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage getIntVector() {
+        if (intVectorBuilder_ == null) {
+          if (featureCase_ == 3) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) feature_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.getDefaultInstance();
+        } else {
+          if (featureCase_ == 3) {
+            return intVectorBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .IntVectorMessage intVector = 3;</code>
+       */
+      public Builder setIntVector(ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage value) {
+        if (intVectorBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          feature_ = value;
+          onChanged();
+        } else {
+          intVectorBuilder_.setMessage(value);
+        }
+        featureCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .IntVectorMessage intVector = 3;</code>
+       */
+      public Builder setIntVector(
+          ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.Builder builderForValue) {
+        if (intVectorBuilder_ == null) {
+          feature_ = builderForValue.build();
+          onChanged();
+        } else {
+          intVectorBuilder_.setMessage(builderForValue.build());
+        }
+        featureCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .IntVectorMessage intVector = 3;</code>
+       */
+      public Builder mergeIntVector(ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage value) {
+        if (intVectorBuilder_ == null) {
+          if (featureCase_ == 3 &&
+              feature_ != ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.getDefaultInstance()) {
+            feature_ = ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) feature_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            feature_ = value;
+          }
+          onChanged();
+        } else {
+          if (featureCase_ == 3) {
+            intVectorBuilder_.mergeFrom(value);
+          }
+          intVectorBuilder_.setMessage(value);
+        }
+        featureCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .IntVectorMessage intVector = 3;</code>
+       */
+      public Builder clearIntVector() {
+        if (intVectorBuilder_ == null) {
+          if (featureCase_ == 3) {
+            featureCase_ = 0;
+            feature_ = null;
+            onChanged();
+          }
+        } else {
+          if (featureCase_ == 3) {
+            featureCase_ = 0;
+            feature_ = null;
+          }
+          intVectorBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .IntVectorMessage intVector = 3;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.Builder getIntVectorBuilder() {
+        return getIntVectorFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .IntVectorMessage intVector = 3;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessageOrBuilder getIntVectorOrBuilder() {
+        if ((featureCase_ == 3) && (intVectorBuilder_ != null)) {
+          return intVectorBuilder_.getMessageOrBuilder();
+        } else {
+          if (featureCase_ == 3) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) feature_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .IntVectorMessage intVector = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessageOrBuilder> 
+          getIntVectorFieldBuilder() {
+        if (intVectorBuilder_ == null) {
+          if (!(featureCase_ == 3)) {
+            feature_ = ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.getDefaultInstance();
+          }
+          intVectorBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) feature_,
+                  getParentForChildren(),
+                  isClean());
+          feature_ = null;
+        }
+        featureCase_ = 3;
+        onChanged();;
+        return intVectorBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:FeatureVectorMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:FeatureVectorMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage();
+    }
+
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<FeatureVectorMessage>
+        PARSER = new com.google.protobuf.AbstractParser<FeatureVectorMessage>() {
+      public FeatureVectorMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new FeatureVectorMessage(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<FeatureVectorMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<FeatureVectorMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface DenseVectorMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:DenseVectorMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    java.util.List<java.lang.Float> getVectorList();
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    int getVectorCount();
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    float getVector(int index);
+  }
+  /**
+   * Protobuf type {@code DenseVectorMessage}
+   */
+  public  static final class DenseVectorMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:DenseVectorMessage)
+      DenseVectorMessageOrBuilder {
+    // Use DenseVectorMessage.newBuilder() to construct.
+    private DenseVectorMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private DenseVectorMessage() {
+      vector_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private DenseVectorMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 13: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                vector_ = new java.util.ArrayList<java.lang.Float>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              vector_.add(input.readFloat());
+              break;
+            }
+            case 10: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
+                vector_ = new java.util.ArrayList<java.lang.Float>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                vector_.add(input.readFloat());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          vector_ = java.util.Collections.unmodifiableList(vector_);
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_DenseVectorMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_DenseVectorMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.Builder.class);
+    }
+
+    public static final int VECTOR_FIELD_NUMBER = 1;
+    private java.util.List<java.lang.Float> vector_;
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    public java.util.List<java.lang.Float>
+        getVectorList() {
+      return vector_;
+    }
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    public int getVectorCount() {
+      return vector_.size();
+    }
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    public float getVector(int index) {
+      return vector_.get(index);
+    }
+    private int vectorMemoizedSerializedSize = -1;
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (getVectorList().size() > 0) {
+        output.writeRawVarint32(10);
+        output.writeRawVarint32(vectorMemoizedSerializedSize);
+      }
+      for (int i = 0; i < vector_.size(); i++) {
+        output.writeFloatNoTag(vector_.get(i));
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      {
+        int dataSize = 0;
+        dataSize = 4 * getVectorList().size();
+        size += dataSize;
+        if (!getVectorList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        vectorMemoizedSerializedSize = dataSize;
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code DenseVectorMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:DenseVectorMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_DenseVectorMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_DenseVectorMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        vector_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_DenseVectorMessage_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          vector_ = java.util.Collections.unmodifiableList(vector_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.vector_ = vector_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage.getDefaultInstance()) return this;
         if (!other.vector_.isEmpty()) {
           if (vector_.isEmpty()) {
             vector_ = other.vector_;
@@ -794,11 +1741,11 @@ public final class Grpc {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -885,27 +1832,27 @@ public final class Grpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:FeatureVectorMessage)
+      // @@protoc_insertion_point(builder_scope:DenseVectorMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:FeatureVectorMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:DenseVectorMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<FeatureVectorMessage>
-        PARSER = new com.google.protobuf.AbstractParser<FeatureVectorMessage>() {
-      public FeatureVectorMessage parsePartialFrom(
+    private static final com.google.protobuf.Parser<DenseVectorMessage>
+        PARSER = new com.google.protobuf.AbstractParser<DenseVectorMessage>() {
+      public DenseVectorMessage parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         try {
-          return new FeatureVectorMessage(input, extensionRegistry);
+          return new DenseVectorMessage(input, extensionRegistry);
         } catch (RuntimeException e) {
           if (e.getCause() instanceof
               com.google.protobuf.InvalidProtocolBufferException) {
@@ -917,16 +1864,1208 @@ public final class Grpc {
       }
     };
 
-    public static com.google.protobuf.Parser<FeatureVectorMessage> parser() {
+    public static com.google.protobuf.Parser<DenseVectorMessage> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<FeatureVectorMessage> getParserForType() {
+    public com.google.protobuf.Parser<DenseVectorMessage> getParserForType() {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface SparseVectorMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:SparseVectorMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    java.util.List<java.lang.Float> getVectorList();
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    int getVectorCount();
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    float getVector(int index);
+
+    /**
+     * <code>repeated int32 position = 2 [packed = true];</code>
+     */
+    java.util.List<java.lang.Integer> getPositionList();
+    /**
+     * <code>repeated int32 position = 2 [packed = true];</code>
+     */
+    int getPositionCount();
+    /**
+     * <code>repeated int32 position = 2 [packed = true];</code>
+     */
+    int getPosition(int index);
+
+    /**
+     * <code>optional int32 length = 3;</code>
+     */
+    int getLength();
+  }
+  /**
+   * Protobuf type {@code SparseVectorMessage}
+   */
+  public  static final class SparseVectorMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:SparseVectorMessage)
+      SparseVectorMessageOrBuilder {
+    // Use SparseVectorMessage.newBuilder() to construct.
+    private SparseVectorMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private SparseVectorMessage() {
+      vector_ = java.util.Collections.emptyList();
+      position_ = java.util.Collections.emptyList();
+      length_ = 0;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private SparseVectorMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 13: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                vector_ = new java.util.ArrayList<java.lang.Float>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              vector_.add(input.readFloat());
+              break;
+            }
+            case 10: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
+                vector_ = new java.util.ArrayList<java.lang.Float>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                vector_.add(input.readFloat());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 16: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                position_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              position_.add(input.readInt32());
+              break;
+            }
+            case 18: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
+                position_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                position_.add(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 24: {
+
+              length_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          vector_ = java.util.Collections.unmodifiableList(vector_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          position_ = java.util.Collections.unmodifiableList(position_);
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SparseVectorMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SparseVectorMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int VECTOR_FIELD_NUMBER = 1;
+    private java.util.List<java.lang.Float> vector_;
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    public java.util.List<java.lang.Float>
+        getVectorList() {
+      return vector_;
+    }
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    public int getVectorCount() {
+      return vector_.size();
+    }
+    /**
+     * <code>repeated float vector = 1 [packed = true];</code>
+     */
+    public float getVector(int index) {
+      return vector_.get(index);
+    }
+    private int vectorMemoizedSerializedSize = -1;
+
+    public static final int POSITION_FIELD_NUMBER = 2;
+    private java.util.List<java.lang.Integer> position_;
+    /**
+     * <code>repeated int32 position = 2 [packed = true];</code>
+     */
+    public java.util.List<java.lang.Integer>
+        getPositionList() {
+      return position_;
+    }
+    /**
+     * <code>repeated int32 position = 2 [packed = true];</code>
+     */
+    public int getPositionCount() {
+      return position_.size();
+    }
+    /**
+     * <code>repeated int32 position = 2 [packed = true];</code>
+     */
+    public int getPosition(int index) {
+      return position_.get(index);
+    }
+    private int positionMemoizedSerializedSize = -1;
+
+    public static final int LENGTH_FIELD_NUMBER = 3;
+    private int length_;
+    /**
+     * <code>optional int32 length = 3;</code>
+     */
+    public int getLength() {
+      return length_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (getVectorList().size() > 0) {
+        output.writeRawVarint32(10);
+        output.writeRawVarint32(vectorMemoizedSerializedSize);
+      }
+      for (int i = 0; i < vector_.size(); i++) {
+        output.writeFloatNoTag(vector_.get(i));
+      }
+      if (getPositionList().size() > 0) {
+        output.writeRawVarint32(18);
+        output.writeRawVarint32(positionMemoizedSerializedSize);
+      }
+      for (int i = 0; i < position_.size(); i++) {
+        output.writeInt32NoTag(position_.get(i));
+      }
+      if (length_ != 0) {
+        output.writeInt32(3, length_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      {
+        int dataSize = 0;
+        dataSize = 4 * getVectorList().size();
+        size += dataSize;
+        if (!getVectorList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        vectorMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < position_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(position_.get(i));
+        }
+        size += dataSize;
+        if (!getPositionList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        positionMemoizedSerializedSize = dataSize;
+      }
+      if (length_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, length_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code SparseVectorMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:SparseVectorMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SparseVectorMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SparseVectorMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        vector_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        position_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        length_ = 0;
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SparseVectorMessage_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          vector_ = java.util.Collections.unmodifiableList(vector_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.vector_ = vector_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          position_ = java.util.Collections.unmodifiableList(position_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.position_ = position_;
+        result.length_ = length_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage.getDefaultInstance()) return this;
+        if (!other.vector_.isEmpty()) {
+          if (vector_.isEmpty()) {
+            vector_ = other.vector_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureVectorIsMutable();
+            vector_.addAll(other.vector_);
+          }
+          onChanged();
+        }
+        if (!other.position_.isEmpty()) {
+          if (position_.isEmpty()) {
+            position_ = other.position_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensurePositionIsMutable();
+            position_.addAll(other.position_);
+          }
+          onChanged();
+        }
+        if (other.getLength() != 0) {
+          setLength(other.getLength());
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<java.lang.Float> vector_ = java.util.Collections.emptyList();
+      private void ensureVectorIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          vector_ = new java.util.ArrayList<java.lang.Float>(vector_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <code>repeated float vector = 1 [packed = true];</code>
+       */
+      public java.util.List<java.lang.Float>
+          getVectorList() {
+        return java.util.Collections.unmodifiableList(vector_);
+      }
+      /**
+       * <code>repeated float vector = 1 [packed = true];</code>
+       */
+      public int getVectorCount() {
+        return vector_.size();
+      }
+      /**
+       * <code>repeated float vector = 1 [packed = true];</code>
+       */
+      public float getVector(int index) {
+        return vector_.get(index);
+      }
+      /**
+       * <code>repeated float vector = 1 [packed = true];</code>
+       */
+      public Builder setVector(
+          int index, float value) {
+        ensureVectorIsMutable();
+        vector_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated float vector = 1 [packed = true];</code>
+       */
+      public Builder addVector(float value) {
+        ensureVectorIsMutable();
+        vector_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated float vector = 1 [packed = true];</code>
+       */
+      public Builder addAllVector(
+          java.lang.Iterable<? extends java.lang.Float> values) {
+        ensureVectorIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, vector_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated float vector = 1 [packed = true];</code>
+       */
+      public Builder clearVector() {
+        vector_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Integer> position_ = java.util.Collections.emptyList();
+      private void ensurePositionIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          position_ = new java.util.ArrayList<java.lang.Integer>(position_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      /**
+       * <code>repeated int32 position = 2 [packed = true];</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getPositionList() {
+        return java.util.Collections.unmodifiableList(position_);
+      }
+      /**
+       * <code>repeated int32 position = 2 [packed = true];</code>
+       */
+      public int getPositionCount() {
+        return position_.size();
+      }
+      /**
+       * <code>repeated int32 position = 2 [packed = true];</code>
+       */
+      public int getPosition(int index) {
+        return position_.get(index);
+      }
+      /**
+       * <code>repeated int32 position = 2 [packed = true];</code>
+       */
+      public Builder setPosition(
+          int index, int value) {
+        ensurePositionIsMutable();
+        position_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 position = 2 [packed = true];</code>
+       */
+      public Builder addPosition(int value) {
+        ensurePositionIsMutable();
+        position_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 position = 2 [packed = true];</code>
+       */
+      public Builder addAllPosition(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensurePositionIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, position_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 position = 2 [packed = true];</code>
+       */
+      public Builder clearPosition() {
+        position_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+
+      private int length_ ;
+      /**
+       * <code>optional int32 length = 3;</code>
+       */
+      public int getLength() {
+        return length_;
+      }
+      /**
+       * <code>optional int32 length = 3;</code>
+       */
+      public Builder setLength(int value) {
+        
+        length_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 length = 3;</code>
+       */
+      public Builder clearLength() {
+        
+        length_ = 0;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:SparseVectorMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:SparseVectorMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage();
+    }
+
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<SparseVectorMessage>
+        PARSER = new com.google.protobuf.AbstractParser<SparseVectorMessage>() {
+      public SparseVectorMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new SparseVectorMessage(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<SparseVectorMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SparseVectorMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.SparseVectorMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface IntVectorMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:IntVectorMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated int32 vector = 1 [packed = true];</code>
+     */
+    java.util.List<java.lang.Integer> getVectorList();
+    /**
+     * <code>repeated int32 vector = 1 [packed = true];</code>
+     */
+    int getVectorCount();
+    /**
+     * <code>repeated int32 vector = 1 [packed = true];</code>
+     */
+    int getVector(int index);
+  }
+  /**
+   * Protobuf type {@code IntVectorMessage}
+   */
+  public  static final class IntVectorMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:IntVectorMessage)
+      IntVectorMessageOrBuilder {
+    // Use IntVectorMessage.newBuilder() to construct.
+    private IntVectorMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private IntVectorMessage() {
+      vector_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private IntVectorMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                vector_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              vector_.add(input.readInt32());
+              break;
+            }
+            case 10: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
+                vector_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                vector_.add(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          vector_ = java.util.Collections.unmodifiableList(vector_);
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_IntVectorMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_IntVectorMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.Builder.class);
+    }
+
+    public static final int VECTOR_FIELD_NUMBER = 1;
+    private java.util.List<java.lang.Integer> vector_;
+    /**
+     * <code>repeated int32 vector = 1 [packed = true];</code>
+     */
+    public java.util.List<java.lang.Integer>
+        getVectorList() {
+      return vector_;
+    }
+    /**
+     * <code>repeated int32 vector = 1 [packed = true];</code>
+     */
+    public int getVectorCount() {
+      return vector_.size();
+    }
+    /**
+     * <code>repeated int32 vector = 1 [packed = true];</code>
+     */
+    public int getVector(int index) {
+      return vector_.get(index);
+    }
+    private int vectorMemoizedSerializedSize = -1;
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (getVectorList().size() > 0) {
+        output.writeRawVarint32(10);
+        output.writeRawVarint32(vectorMemoizedSerializedSize);
+      }
+      for (int i = 0; i < vector_.size(); i++) {
+        output.writeInt32NoTag(vector_.get(i));
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      {
+        int dataSize = 0;
+        for (int i = 0; i < vector_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(vector_.get(i));
+        }
+        size += dataSize;
+        if (!getVectorList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        vectorMemoizedSerializedSize = dataSize;
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code IntVectorMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:IntVectorMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_IntVectorMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_IntVectorMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        vector_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_IntVectorMessage_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          vector_ = java.util.Collections.unmodifiableList(vector_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.vector_ = vector_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage.getDefaultInstance()) return this;
+        if (!other.vector_.isEmpty()) {
+          if (vector_.isEmpty()) {
+            vector_ = other.vector_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureVectorIsMutable();
+            vector_.addAll(other.vector_);
+          }
+          onChanged();
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<java.lang.Integer> vector_ = java.util.Collections.emptyList();
+      private void ensureVectorIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          vector_ = new java.util.ArrayList<java.lang.Integer>(vector_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <code>repeated int32 vector = 1 [packed = true];</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getVectorList() {
+        return java.util.Collections.unmodifiableList(vector_);
+      }
+      /**
+       * <code>repeated int32 vector = 1 [packed = true];</code>
+       */
+      public int getVectorCount() {
+        return vector_.size();
+      }
+      /**
+       * <code>repeated int32 vector = 1 [packed = true];</code>
+       */
+      public int getVector(int index) {
+        return vector_.get(index);
+      }
+      /**
+       * <code>repeated int32 vector = 1 [packed = true];</code>
+       */
+      public Builder setVector(
+          int index, int value) {
+        ensureVectorIsMutable();
+        vector_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 vector = 1 [packed = true];</code>
+       */
+      public Builder addVector(int value) {
+        ensureVectorIsMutable();
+        vector_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 vector = 1 [packed = true];</code>
+       */
+      public Builder addAllVector(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureVectorIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, vector_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 vector = 1 [packed = true];</code>
+       */
+      public Builder clearVector() {
+        vector_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:IntVectorMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:IntVectorMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage();
+    }
+
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<IntVectorMessage>
+        PARSER = new com.google.protobuf.AbstractParser<IntVectorMessage>() {
+      public IntVectorMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new IntVectorMessage(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<IntVectorMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<IntVectorMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -4196,13 +6335,9 @@ public final class Grpc {
         com.google.protobuf.MessageOrBuilder {
 
       /**
-       * <code>map&lt;string, string&gt; data = 1;</code>
-       *
-       * <pre>
-       *possibly switch from string to any or oneof?
-       * </pre>
+       * <code>map&lt;string, .InsertDataMessage&gt; data = 1;</code>
        */
-      java.util.Map<java.lang.String, java.lang.String>
+      java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
       getData();
     }
     /**
@@ -4249,7 +6384,7 @@ public final class Grpc {
                       DataDefaultEntryHolder.defaultEntry);
                   mutable_bitField0_ |= 0x00000001;
                 }
-                com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+                com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
                 data = input.readMessage(
                     DataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
                 data_.getMutableMap().put(data.getKey(), data.getValue());
@@ -4293,18 +6428,18 @@ public final class Grpc {
       public static final int DATA_FIELD_NUMBER = 1;
       private static final class DataDefaultEntryHolder {
         static final com.google.protobuf.MapEntry<
-            java.lang.String, java.lang.String> defaultEntry =
+            java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> defaultEntry =
                 com.google.protobuf.MapEntry
-                .<java.lang.String, java.lang.String>newDefaultInstance(
+                .<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>newDefaultInstance(
                     ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertMessage_TupleInsertMessage_DataEntry_descriptor, 
                     com.google.protobuf.WireFormat.FieldType.STRING,
                     "",
-                    com.google.protobuf.WireFormat.FieldType.STRING,
-                    "");
+                    com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                    ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.getDefaultInstance());
       }
       private com.google.protobuf.MapField<
-          java.lang.String, java.lang.String> data_;
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+          java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> data_;
+      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
       internalGetData() {
         if (data_ == null) {
           return com.google.protobuf.MapField.emptyMapField(
@@ -4313,14 +6448,10 @@ public final class Grpc {
         return data_;
       }
       /**
-       * <code>map&lt;string, string&gt; data = 1;</code>
-       *
-       * <pre>
-       *possibly switch from string to any or oneof?
-       * </pre>
+       * <code>map&lt;string, .InsertDataMessage&gt; data = 1;</code>
        */
 
-      public java.util.Map<java.lang.String, java.lang.String> getData() {
+      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> getData() {
         return internalGetData().getMap();
       }
 
@@ -4336,9 +6467,9 @@ public final class Grpc {
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
-        for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+        for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> entry
              : internalGetData().getMap().entrySet()) {
-          com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+          com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
           data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
               .setKey(entry.getKey())
               .setValue(entry.getValue())
@@ -4352,9 +6483,9 @@ public final class Grpc {
         if (size != -1) return size;
 
         size = 0;
-        for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+        for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> entry
              : internalGetData().getMap().entrySet()) {
-          com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+          com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
           data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
               .setKey(entry.getKey())
               .setValue(entry.getValue())
@@ -4566,8 +6697,8 @@ public final class Grpc {
         private int bitField0_;
 
         private com.google.protobuf.MapField<
-            java.lang.String, java.lang.String> data_;
-        private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+            java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> data_;
+        private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
         internalGetData() {
           if (data_ == null) {
             return com.google.protobuf.MapField.emptyMapField(
@@ -4575,7 +6706,7 @@ public final class Grpc {
          }
           return data_;
         }
-        private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+        private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
         internalGetMutableData() {
           onChanged();;
           if (data_ == null) {
@@ -4588,35 +6719,23 @@ public final class Grpc {
           return data_;
         }
         /**
-         * <code>map&lt;string, string&gt; data = 1;</code>
-         *
-         * <pre>
-         *possibly switch from string to any or oneof?
-         * </pre>
+         * <code>map&lt;string, .InsertDataMessage&gt; data = 1;</code>
          */
-        public java.util.Map<java.lang.String, java.lang.String> getData() {
+        public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> getData() {
           return internalGetData().getMap();
         }
         /**
-         * <code>map&lt;string, string&gt; data = 1;</code>
-         *
-         * <pre>
-         *possibly switch from string to any or oneof?
-         * </pre>
+         * <code>map&lt;string, .InsertDataMessage&gt; data = 1;</code>
          */
-        public java.util.Map<java.lang.String, java.lang.String>
+        public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
         getMutableData() {
           return internalGetMutableData().getMutableMap();
         }
         /**
-         * <code>map&lt;string, string&gt; data = 1;</code>
-         *
-         * <pre>
-         *possibly switch from string to any or oneof?
-         * </pre>
+         * <code>map&lt;string, .InsertDataMessage&gt; data = 1;</code>
          */
         public Builder putAllData(
-            java.util.Map<java.lang.String, java.lang.String> values) {
+            java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> values) {
           getMutableData().putAll(values);
           return this;
         }
@@ -5368,6 +7487,1068 @@ public final class Grpc {
     }
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface InsertDataMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:InsertDataMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional int64 longData = 1;</code>
+     */
+    long getLongData();
+
+    /**
+     * <code>optional int32 intData = 2;</code>
+     */
+    int getIntData();
+
+    /**
+     * <code>optional float floatData = 3;</code>
+     */
+    float getFloatData();
+
+    /**
+     * <code>optional double doubleData = 4;</code>
+     */
+    double getDoubleData();
+
+    /**
+     * <code>optional string stringData = 5;</code>
+     */
+    java.lang.String getStringData();
+    /**
+     * <code>optional string stringData = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getStringDataBytes();
+
+    /**
+     * <code>optional bool booleanData = 6;</code>
+     */
+    boolean getBooleanData();
+
+    /**
+     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getFeatureData();
+    /**
+     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder();
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.InserttypeCase getInserttypeCase();
+  }
+  /**
+   * Protobuf type {@code InsertDataMessage}
+   */
+  public  static final class InsertDataMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:InsertDataMessage)
+      InsertDataMessageOrBuilder {
+    // Use InsertDataMessage.newBuilder() to construct.
+    private InsertDataMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private InsertDataMessage() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private InsertDataMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              inserttypeCase_ = 1;
+              inserttype_ = input.readInt64();
+              break;
+            }
+            case 16: {
+              inserttypeCase_ = 2;
+              inserttype_ = input.readInt32();
+              break;
+            }
+            case 29: {
+              inserttypeCase_ = 3;
+              inserttype_ = input.readFloat();
+              break;
+            }
+            case 33: {
+              inserttypeCase_ = 4;
+              inserttype_ = input.readDouble();
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+              inserttypeCase_ = 5;
+              inserttype_ = s;
+              break;
+            }
+            case 48: {
+              inserttypeCase_ = 6;
+              inserttype_ = input.readBool();
+              break;
+            }
+            case 58: {
+              ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder subBuilder = null;
+              if (inserttypeCase_ == 7) {
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_).toBuilder();
+              }
+              inserttype_ =
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_);
+                inserttype_ = subBuilder.buildPartial();
+              }
+              inserttypeCase_ = 7;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertDataMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertDataMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.Builder.class);
+    }
+
+    private int inserttypeCase_ = 0;
+    private java.lang.Object inserttype_;
+    public enum InserttypeCase
+        implements com.google.protobuf.Internal.EnumLite {
+      LONGDATA(1),
+      INTDATA(2),
+      FLOATDATA(3),
+      DOUBLEDATA(4),
+      STRINGDATA(5),
+      BOOLEANDATA(6),
+      FEATUREDATA(7),
+      INSERTTYPE_NOT_SET(0);
+      private int value = 0;
+      private InserttypeCase(int value) {
+        this.value = value;
+      }
+      public static InserttypeCase valueOf(int value) {
+        switch (value) {
+          case 1: return LONGDATA;
+          case 2: return INTDATA;
+          case 3: return FLOATDATA;
+          case 4: return DOUBLEDATA;
+          case 5: return STRINGDATA;
+          case 6: return BOOLEANDATA;
+          case 7: return FEATUREDATA;
+          case 0: return INSERTTYPE_NOT_SET;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public InserttypeCase
+    getInserttypeCase() {
+      return InserttypeCase.valueOf(
+          inserttypeCase_);
+    }
+
+    public static final int LONGDATA_FIELD_NUMBER = 1;
+    /**
+     * <code>optional int64 longData = 1;</code>
+     */
+    public long getLongData() {
+      if (inserttypeCase_ == 1) {
+        return (java.lang.Long) inserttype_;
+      }
+      return 0L;
+    }
+
+    public static final int INTDATA_FIELD_NUMBER = 2;
+    /**
+     * <code>optional int32 intData = 2;</code>
+     */
+    public int getIntData() {
+      if (inserttypeCase_ == 2) {
+        return (java.lang.Integer) inserttype_;
+      }
+      return 0;
+    }
+
+    public static final int FLOATDATA_FIELD_NUMBER = 3;
+    /**
+     * <code>optional float floatData = 3;</code>
+     */
+    public float getFloatData() {
+      if (inserttypeCase_ == 3) {
+        return (java.lang.Float) inserttype_;
+      }
+      return 0F;
+    }
+
+    public static final int DOUBLEDATA_FIELD_NUMBER = 4;
+    /**
+     * <code>optional double doubleData = 4;</code>
+     */
+    public double getDoubleData() {
+      if (inserttypeCase_ == 4) {
+        return (java.lang.Double) inserttype_;
+      }
+      return 0D;
+    }
+
+    public static final int STRINGDATA_FIELD_NUMBER = 5;
+    /**
+     * <code>optional string stringData = 5;</code>
+     */
+    public java.lang.String getStringData() {
+      java.lang.Object ref = "";
+      if (inserttypeCase_ == 5) {
+        ref = inserttype_;
+      }
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (inserttypeCase_ == 5) {
+          inserttype_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string stringData = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getStringDataBytes() {
+      java.lang.Object ref = "";
+      if (inserttypeCase_ == 5) {
+        ref = inserttype_;
+      }
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        if (inserttypeCase_ == 5) {
+          inserttype_ = b;
+        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int BOOLEANDATA_FIELD_NUMBER = 6;
+    /**
+     * <code>optional bool booleanData = 6;</code>
+     */
+    public boolean getBooleanData() {
+      if (inserttypeCase_ == 6) {
+        return (java.lang.Boolean) inserttype_;
+      }
+      return false;
+    }
+
+    public static final int FEATUREDATA_FIELD_NUMBER = 7;
+    /**
+     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getFeatureData() {
+      if (inserttypeCase_ == 7) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+    }
+    /**
+     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
+      if (inserttypeCase_ == 7) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (inserttypeCase_ == 1) {
+        output.writeInt64(
+            1, (long)((java.lang.Long) inserttype_));
+      }
+      if (inserttypeCase_ == 2) {
+        output.writeInt32(
+            2, (int)((java.lang.Integer) inserttype_));
+      }
+      if (inserttypeCase_ == 3) {
+        output.writeFloat(
+            3, (float)((java.lang.Float) inserttype_));
+      }
+      if (inserttypeCase_ == 4) {
+        output.writeDouble(
+            4, (double)((java.lang.Double) inserttype_));
+      }
+      if (inserttypeCase_ == 5) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 5, inserttype_);
+      }
+      if (inserttypeCase_ == 6) {
+        output.writeBool(
+            6, (boolean)((java.lang.Boolean) inserttype_));
+      }
+      if (inserttypeCase_ == 7) {
+        output.writeMessage(7, (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (inserttypeCase_ == 1) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(
+              1, (long)((java.lang.Long) inserttype_));
+      }
+      if (inserttypeCase_ == 2) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(
+              2, (int)((java.lang.Integer) inserttype_));
+      }
+      if (inserttypeCase_ == 3) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(
+              3, (float)((java.lang.Float) inserttype_));
+      }
+      if (inserttypeCase_ == 4) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(
+              4, (double)((java.lang.Double) inserttype_));
+      }
+      if (inserttypeCase_ == 5) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(5, inserttype_);
+      }
+      if (inserttypeCase_ == 6) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(
+              6, (boolean)((java.lang.Boolean) inserttype_));
+      }
+      if (inserttypeCase_ == 7) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code InsertDataMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:InsertDataMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertDataMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertDataMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        inserttypeCase_ = 0;
+        inserttype_ = null;
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertDataMessage_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage(this);
+        if (inserttypeCase_ == 1) {
+          result.inserttype_ = inserttype_;
+        }
+        if (inserttypeCase_ == 2) {
+          result.inserttype_ = inserttype_;
+        }
+        if (inserttypeCase_ == 3) {
+          result.inserttype_ = inserttype_;
+        }
+        if (inserttypeCase_ == 4) {
+          result.inserttype_ = inserttype_;
+        }
+        if (inserttypeCase_ == 5) {
+          result.inserttype_ = inserttype_;
+        }
+        if (inserttypeCase_ == 6) {
+          result.inserttype_ = inserttype_;
+        }
+        if (inserttypeCase_ == 7) {
+          if (featureDataBuilder_ == null) {
+            result.inserttype_ = inserttype_;
+          } else {
+            result.inserttype_ = featureDataBuilder_.build();
+          }
+        }
+        result.inserttypeCase_ = inserttypeCase_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.getDefaultInstance()) return this;
+        switch (other.getInserttypeCase()) {
+          case LONGDATA: {
+            setLongData(other.getLongData());
+            break;
+          }
+          case INTDATA: {
+            setIntData(other.getIntData());
+            break;
+          }
+          case FLOATDATA: {
+            setFloatData(other.getFloatData());
+            break;
+          }
+          case DOUBLEDATA: {
+            setDoubleData(other.getDoubleData());
+            break;
+          }
+          case STRINGDATA: {
+            inserttypeCase_ = 5;
+            inserttype_ = other.inserttype_;
+            onChanged();
+            break;
+          }
+          case BOOLEANDATA: {
+            setBooleanData(other.getBooleanData());
+            break;
+          }
+          case FEATUREDATA: {
+            mergeFeatureData(other.getFeatureData());
+            break;
+          }
+          case INSERTTYPE_NOT_SET: {
+            break;
+          }
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int inserttypeCase_ = 0;
+      private java.lang.Object inserttype_;
+      public InserttypeCase
+          getInserttypeCase() {
+        return InserttypeCase.valueOf(
+            inserttypeCase_);
+      }
+
+      public Builder clearInserttype() {
+        inserttypeCase_ = 0;
+        inserttype_ = null;
+        onChanged();
+        return this;
+      }
+
+
+      /**
+       * <code>optional int64 longData = 1;</code>
+       */
+      public long getLongData() {
+        if (inserttypeCase_ == 1) {
+          return (java.lang.Long) inserttype_;
+        }
+        return 0L;
+      }
+      /**
+       * <code>optional int64 longData = 1;</code>
+       */
+      public Builder setLongData(long value) {
+        inserttypeCase_ = 1;
+        inserttype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int64 longData = 1;</code>
+       */
+      public Builder clearLongData() {
+        if (inserttypeCase_ == 1) {
+          inserttypeCase_ = 0;
+          inserttype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>optional int32 intData = 2;</code>
+       */
+      public int getIntData() {
+        if (inserttypeCase_ == 2) {
+          return (java.lang.Integer) inserttype_;
+        }
+        return 0;
+      }
+      /**
+       * <code>optional int32 intData = 2;</code>
+       */
+      public Builder setIntData(int value) {
+        inserttypeCase_ = 2;
+        inserttype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 intData = 2;</code>
+       */
+      public Builder clearIntData() {
+        if (inserttypeCase_ == 2) {
+          inserttypeCase_ = 0;
+          inserttype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>optional float floatData = 3;</code>
+       */
+      public float getFloatData() {
+        if (inserttypeCase_ == 3) {
+          return (java.lang.Float) inserttype_;
+        }
+        return 0F;
+      }
+      /**
+       * <code>optional float floatData = 3;</code>
+       */
+      public Builder setFloatData(float value) {
+        inserttypeCase_ = 3;
+        inserttype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional float floatData = 3;</code>
+       */
+      public Builder clearFloatData() {
+        if (inserttypeCase_ == 3) {
+          inserttypeCase_ = 0;
+          inserttype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>optional double doubleData = 4;</code>
+       */
+      public double getDoubleData() {
+        if (inserttypeCase_ == 4) {
+          return (java.lang.Double) inserttype_;
+        }
+        return 0D;
+      }
+      /**
+       * <code>optional double doubleData = 4;</code>
+       */
+      public Builder setDoubleData(double value) {
+        inserttypeCase_ = 4;
+        inserttype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional double doubleData = 4;</code>
+       */
+      public Builder clearDoubleData() {
+        if (inserttypeCase_ == 4) {
+          inserttypeCase_ = 0;
+          inserttype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>optional string stringData = 5;</code>
+       */
+      public java.lang.String getStringData() {
+        java.lang.Object ref = "";
+        if (inserttypeCase_ == 5) {
+          ref = inserttype_;
+        }
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (inserttypeCase_ == 5) {
+            inserttype_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string stringData = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getStringDataBytes() {
+        java.lang.Object ref = "";
+        if (inserttypeCase_ == 5) {
+          ref = inserttype_;
+        }
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          if (inserttypeCase_ == 5) {
+            inserttype_ = b;
+          }
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string stringData = 5;</code>
+       */
+      public Builder setStringData(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  inserttypeCase_ = 5;
+        inserttype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string stringData = 5;</code>
+       */
+      public Builder clearStringData() {
+        if (inserttypeCase_ == 5) {
+          inserttypeCase_ = 0;
+          inserttype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <code>optional string stringData = 5;</code>
+       */
+      public Builder setStringDataBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        inserttypeCase_ = 5;
+        inserttype_ = value;
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>optional bool booleanData = 6;</code>
+       */
+      public boolean getBooleanData() {
+        if (inserttypeCase_ == 6) {
+          return (java.lang.Boolean) inserttype_;
+        }
+        return false;
+      }
+      /**
+       * <code>optional bool booleanData = 6;</code>
+       */
+      public Builder setBooleanData(boolean value) {
+        inserttypeCase_ = 6;
+        inserttype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool booleanData = 6;</code>
+       */
+      public Builder clearBooleanData() {
+        if (inserttypeCase_ == 6) {
+          inserttypeCase_ = 0;
+          inserttype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder> featureDataBuilder_;
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getFeatureData() {
+        if (featureDataBuilder_ == null) {
+          if (inserttypeCase_ == 7) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+        } else {
+          if (inserttypeCase_ == 7) {
+            return featureDataBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public Builder setFeatureData(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage value) {
+        if (featureDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          inserttype_ = value;
+          onChanged();
+        } else {
+          featureDataBuilder_.setMessage(value);
+        }
+        inserttypeCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public Builder setFeatureData(
+          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder builderForValue) {
+        if (featureDataBuilder_ == null) {
+          inserttype_ = builderForValue.build();
+          onChanged();
+        } else {
+          featureDataBuilder_.setMessage(builderForValue.build());
+        }
+        inserttypeCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public Builder mergeFeatureData(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage value) {
+        if (featureDataBuilder_ == null) {
+          if (inserttypeCase_ == 7 &&
+              inserttype_ != ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance()) {
+            inserttype_ = ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            inserttype_ = value;
+          }
+          onChanged();
+        } else {
+          if (inserttypeCase_ == 7) {
+            featureDataBuilder_.mergeFrom(value);
+          }
+          featureDataBuilder_.setMessage(value);
+        }
+        inserttypeCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public Builder clearFeatureData() {
+        if (featureDataBuilder_ == null) {
+          if (inserttypeCase_ == 7) {
+            inserttypeCase_ = 0;
+            inserttype_ = null;
+            onChanged();
+          }
+        } else {
+          if (inserttypeCase_ == 7) {
+            inserttypeCase_ = 0;
+            inserttype_ = null;
+          }
+          featureDataBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder getFeatureDataBuilder() {
+        return getFeatureDataFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
+        if ((inserttypeCase_ == 7) && (featureDataBuilder_ != null)) {
+          return featureDataBuilder_.getMessageOrBuilder();
+        } else {
+          if (inserttypeCase_ == 7) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder> 
+          getFeatureDataFieldBuilder() {
+        if (featureDataBuilder_ == null) {
+          if (!(inserttypeCase_ == 7)) {
+            inserttype_ = ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+          }
+          featureDataBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_,
+                  getParentForChildren(),
+                  isClean());
+          inserttype_ = null;
+        }
+        inserttypeCase_ = 7;
+        onChanged();;
+        return featureDataBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:InsertDataMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:InsertDataMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage();
+    }
+
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<InsertDataMessage>
+        PARSER = new com.google.protobuf.AbstractParser<InsertDataMessage>() {
+      public InsertDataMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new InsertDataMessage(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<InsertDataMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<InsertDataMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -29302,6 +32483,21 @@ public final class Grpc {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_FeatureVectorMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_DenseVectorMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_DenseVectorMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_SparseVectorMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_SparseVectorMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_IntVectorMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_IntVectorMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CreateEntityMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -29341,6 +32537,11 @@ public final class Grpc {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_InsertMessage_TupleInsertMessage_DataEntry_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_InsertDataMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_InsertDataMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_IndexMessage_descriptor;
   private static
@@ -29505,170 +32706,183 @@ public final class Grpc {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\ngrpc.proto\"\016\n\014EmptyMessage\"*\n\024FeatureV" +
-      "ectorMessage\022\022\n\006vector\030\001 \003(\002B\002\020\001\"N\n\023Crea" +
-      "teEntityMessage\022\016\n\006entity\030\001 \001(\t\022\'\n\006field" +
-      "s\030\002 \003(\0132\027.FieldDefinitionMessage\"\360\001\n\026Fie" +
-      "ldDefinitionMessage\022\014\n\004name\030\001 \001(\t\0224\n\tfie" +
-      "ldtype\030\002 \001(\0162!.FieldDefinitionMessage.Fi" +
-      "eldType\022\n\n\002pk\030\003 \001(\010\022\016\n\006unique\030\004 \001(\010\022\017\n\007i" +
-      "ndexed\030\005 \001(\010\"e\n\tFieldType\022\010\n\004LONG\020\000\022\007\n\003I" +
-      "NT\020\001\022\t\n\005FLOAT\020\002\022\n\n\006DOUBLE\020\003\022\n\n\006STRING\020\004\022" +
-      "\013\n\007BOOLEAN\020\005\022\013\n\007FEATURE\020\006\022\010\n\004AUTO\020\007\"#\n\021E",
-      "ntityNameMessage\022\016\n\006entity\030\001 \001(\t\"!\n\020Inde" +
-      "xNameMessage\022\r\n\005index\030\001 \001(\t\"K\n\031GenerateR" +
-      "andomDataMessage\022\016\n\006entity\030\001 \001(\t\022\017\n\007ntup" +
-      "les\030\002 \001(\005\022\r\n\005ndims\030\003 \001(\005\"\320\001\n\rInsertMessa" +
-      "ge\022\016\n\006entity\030\001 \001(\t\0221\n\006tuples\030\002 \003(\0132!.Ins" +
-      "ertMessage.TupleInsertMessage\032|\n\022TupleIn" +
-      "sertMessage\0229\n\004data\030\001 \003(\0132+.InsertMessag" +
-      "e.TupleInsertMessage.DataEntry\032+\n\tDataEn" +
-      "try\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\316\001\n\014" +
-      "IndexMessage\022\016\n\006entity\030\001 \001(\t\022\016\n\006column\030\002",
-      " \001(\t\022\035\n\tindextype\030\003 \001(\0162\n.IndexType\022\"\n\010d" +
-      "istance\030\004 \001(\0132\020.DistanceMessage\022+\n\007optio" +
-      "ns\030\005 \003(\0132\032.IndexMessage.OptionsEntry\032.\n\014" +
-      "OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t" +
-      ":\0028\001\"\365\001\n\022RepartitionMessage\022\r\n\005index\030\001 \001" +
-      "(\t\022\032\n\022numberOfPartitions\030\002 \001(\005\022\"\n\032useMet" +
-      "adataForPartitioning\030\003 \001(\010\022\017\n\007columns\030\004 " +
-      "\003(\t\0224\n\006option\030\005 \001(\0162$.RepartitionMessage" +
-      ".PartitionOptions\"I\n\020PartitionOptions\022\016\n" +
-      "\nCREATE_NEW\020\000\022\024\n\020REPLACE_EXISTING\020\001\022\017\n\013C",
-      "REATE_TEMP\020\002\"3\n\022IndexWeightMessage\022\r\n\005in" +
-      "dex\030\001 \001(\t\022\016\n\006weight\030\002 \001(\002\"\323\001\n\022SimpleQuer" +
-      "yMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(" +
-      "\t\022\r\n\005hints\030\003 \003(\t\022*\n\003nnq\030\004 \001(\0132\035.NearestN" +
-      "eighbourQueryMessage\022 \n\002bq\030\005 \001(\0132\024.Boole" +
-      "anQueryMessage\022\024\n\014withMetadata\030\006 \001(\010\022\025\n\r" +
-      "readFromCache\030\007 \001(\010\022\022\n\nputInCache\030\010 \001(\010\"" +
-      "\211\001\n\031SimpleBooleanQueryMessage\022\017\n\007queryid" +
-      "\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022 \n\002bq\030\003 \001(\0132\024.Boo" +
-      "leanQueryMessage\022\025\n\rreadFromCache\030\004 \001(\010\022",
-      "\022\n\nputInCache\030\005 \001(\010\"\316\001\n\034SimpleSequential" +
+      "\n\ngrpc.proto\"\016\n\014EmptyMessage\"\243\001\n\024Feature" +
+      "VectorMessage\022*\n\013denseVector\030\001 \001(\0132\023.Den" +
+      "seVectorMessageH\000\022,\n\014sparseVector\030\002 \001(\0132" +
+      "\024.SparseVectorMessageH\000\022&\n\tintVector\030\003 \001" +
+      "(\0132\021.IntVectorMessageH\000B\t\n\007feature\"(\n\022De" +
+      "nseVectorMessage\022\022\n\006vector\030\001 \003(\002B\002\020\001\"O\n\023" +
+      "SparseVectorMessage\022\022\n\006vector\030\001 \003(\002B\002\020\001\022" +
+      "\024\n\010position\030\002 \003(\005B\002\020\001\022\016\n\006length\030\003 \001(\005\"&\n" +
+      "\020IntVectorMessage\022\022\n\006vector\030\001 \003(\005B\002\020\001\"N\n" +
+      "\023CreateEntityMessage\022\016\n\006entity\030\001 \001(\t\022\'\n\006",
+      "fields\030\002 \003(\0132\027.FieldDefinitionMessage\"\360\001" +
+      "\n\026FieldDefinitionMessage\022\014\n\004name\030\001 \001(\t\0224" +
+      "\n\tfieldtype\030\002 \001(\0162!.FieldDefinitionMessa" +
+      "ge.FieldType\022\n\n\002pk\030\003 \001(\010\022\016\n\006unique\030\004 \001(\010" +
+      "\022\017\n\007indexed\030\005 \001(\010\"e\n\tFieldType\022\010\n\004LONG\020\000" +
+      "\022\007\n\003INT\020\001\022\t\n\005FLOAT\020\002\022\n\n\006DOUBLE\020\003\022\n\n\006STRI" +
+      "NG\020\004\022\013\n\007BOOLEAN\020\005\022\013\n\007FEATURE\020\006\022\010\n\004AUTO\020\007" +
+      "\"#\n\021EntityNameMessage\022\016\n\006entity\030\001 \001(\t\"!\n" +
+      "\020IndexNameMessage\022\r\n\005index\030\001 \001(\t\"K\n\031Gene" +
+      "rateRandomDataMessage\022\016\n\006entity\030\001 \001(\t\022\017\n",
+      "\007ntuples\030\002 \001(\005\022\r\n\005ndims\030\003 \001(\005\"\345\001\n\rInsert" +
+      "Message\022\016\n\006entity\030\001 \001(\t\0221\n\006tuples\030\002 \003(\0132" +
+      "!.InsertMessage.TupleInsertMessage\032\220\001\n\022T" +
+      "upleInsertMessage\0229\n\004data\030\001 \003(\0132+.Insert" +
+      "Message.TupleInsertMessage.DataEntry\032?\n\t" +
+      "DataEntry\022\013\n\003key\030\001 \001(\t\022!\n\005value\030\002 \001(\0132\022." +
+      "InsertDataMessage:\0028\001\"\316\001\n\021InsertDataMess" +
+      "age\022\022\n\010longData\030\001 \001(\003H\000\022\021\n\007intData\030\002 \001(\005" +
+      "H\000\022\023\n\tfloatData\030\003 \001(\002H\000\022\024\n\ndoubleData\030\004 " +
+      "\001(\001H\000\022\024\n\nstringData\030\005 \001(\tH\000\022\025\n\013booleanDa",
+      "ta\030\006 \001(\010H\000\022,\n\013featureData\030\007 \001(\0132\025.Featur" +
+      "eVectorMessageH\000B\014\n\ninserttype\"\316\001\n\014Index" +
+      "Message\022\016\n\006entity\030\001 \001(\t\022\016\n\006column\030\002 \001(\t\022" +
+      "\035\n\tindextype\030\003 \001(\0162\n.IndexType\022\"\n\010distan" +
+      "ce\030\004 \001(\0132\020.DistanceMessage\022+\n\007options\030\005 " +
+      "\003(\0132\032.IndexMessage.OptionsEntry\032.\n\014Optio" +
+      "nsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"" +
+      "\365\001\n\022RepartitionMessage\022\r\n\005index\030\001 \001(\t\022\032\n" +
+      "\022numberOfPartitions\030\002 \001(\005\022\"\n\032useMetadata" +
+      "ForPartitioning\030\003 \001(\010\022\017\n\007columns\030\004 \003(\t\0224",
+      "\n\006option\030\005 \001(\0162$.RepartitionMessage.Part" +
+      "itionOptions\"I\n\020PartitionOptions\022\016\n\nCREA" +
+      "TE_NEW\020\000\022\024\n\020REPLACE_EXISTING\020\001\022\017\n\013CREATE" +
+      "_TEMP\020\002\"3\n\022IndexWeightMessage\022\r\n\005index\030\001" +
+      " \001(\t\022\016\n\006weight\030\002 \001(\002\"\323\001\n\022SimpleQueryMess" +
+      "age\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\r\n\005" +
+      "hints\030\003 \003(\t\022*\n\003nnq\030\004 \001(\0132\035.NearestNeighb" +
+      "ourQueryMessage\022 \n\002bq\030\005 \001(\0132\024.BooleanQue" +
+      "ryMessage\022\024\n\014withMetadata\030\006 \001(\010\022\025\n\rreadF" +
+      "romCache\030\007 \001(\010\022\022\n\nputInCache\030\010 \001(\010\"\211\001\n\031S",
+      "impleBooleanQueryMessage\022\017\n\007queryid\030\001 \001(" +
+      "\t\022\016\n\006entity\030\002 \001(\t\022 \n\002bq\030\003 \001(\0132\024.BooleanQ" +
+      "ueryMessage\022\025\n\rreadFromCache\030\004 \001(\010\022\022\n\npu" +
+      "tInCache\030\005 \001(\010\"\316\001\n\034SimpleSequentialQuery" +
+      "Message\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t" +
+      "\022*\n\003nnq\030\003 \001(\0132\035.NearestNeighbourQueryMes" +
+      "sage\022 \n\002bq\030\004 \001(\0132\024.BooleanQueryMessage\022\024" +
+      "\n\014withMetadata\030\005 \001(\010\022\025\n\rreadFromCache\030\006 " +
+      "\001(\010\022\022\n\nputInCache\030\007 \001(\010\"\321\001\n SimpleSpecif" +
+      "iedIndexQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\r\n",
+      "\005index\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestNeigh" +
+      "bourQueryMessage\022 \n\002bq\030\004 \001(\0132\024.BooleanQu" +
+      "eryMessage\022\024\n\014withMetadata\030\005 \001(\010\022\025\n\rread" +
+      "FromCache\030\006 \001(\010\022\022\n\nputInCache\030\007 \001(\010\"\350\001\n\027" +
+      "SimpleIndexQueryMessage\022\017\n\007queryid\030\001 \001(\t" +
+      "\022\016\n\006entity\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\0162\n.In" +
+      "dexType\022*\n\003nnq\030\004 \001(\0132\035.NearestNeighbourQ" +
+      "ueryMessage\022 \n\002bq\030\005 \001(\0132\024.BooleanQueryMe" +
+      "ssage\022\024\n\014withMetadata\030\006 \001(\010\022\025\n\rreadFromC" +
+      "ache\030\007 \001(\010\022\022\n\nputInCache\030\010 \001(\010\"\246\001\n\021Timed",
       "QueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030" +
       "\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestNeighbourQue" +
       "ryMessage\022 \n\002bq\030\004 \001(\0132\024.BooleanQueryMess" +
-      "age\022\024\n\014withMetadata\030\005 \001(\010\022\025\n\rreadFromCac" +
-      "he\030\006 \001(\010\022\022\n\nputInCache\030\007 \001(\010\"\321\001\n SimpleS" +
-      "pecifiedIndexQueryMessage\022\017\n\007queryid\030\001 \001" +
-      "(\t\022\r\n\005index\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.Nearest" +
+      "age\022\014\n\004time\030\005 \001(\003\022\024\n\014withMetadata\030\006 \001(\010\"" +
+      "\367\001\n\024CompoundQueryMessage\022\017\n\007queryid\030\001 \001(" +
+      "\t\022\016\n\006entity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.Nearest" +
       "NeighbourQueryMessage\022 \n\002bq\030\004 \001(\0132\024.Bool" +
-      "eanQueryMessage\022\024\n\014withMetadata\030\005 \001(\010\022\025\n",
-      "\rreadFromCache\030\006 \001(\010\022\022\n\nputInCache\030\007 \001(\010" +
-      "\"\350\001\n\027SimpleIndexQueryMessage\022\017\n\007queryid\030" +
-      "\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\016" +
-      "2\n.IndexType\022*\n\003nnq\030\004 \001(\0132\035.NearestNeigh" +
-      "bourQueryMessage\022 \n\002bq\030\005 \001(\0132\024.BooleanQu" +
-      "eryMessage\022\024\n\014withMetadata\030\006 \001(\010\022\025\n\rread" +
-      "FromCache\030\007 \001(\010\022\022\n\nputInCache\030\010 \001(\010\"\246\001\n\021" +
-      "TimedQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006en" +
-      "tity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestNeighbo" +
-      "urQueryMessage\022 \n\002bq\030\004 \001(\0132\024.BooleanQuer",
-      "yMessage\022\014\n\004time\030\005 \001(\003\022\024\n\014withMetadata\030\006" +
-      " \001(\010\"\367\001\n\024CompoundQueryMessage\022\017\n\007queryid" +
-      "\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.Ne" +
-      "arestNeighbourQueryMessage\022 \n\002bq\030\004 \001(\0132\024" +
-      ".BooleanQueryMessage\0229\n\025indexFilterExpre" +
-      "ssion\030\005 \001(\0132\032.SubExpressionQueryMessage\022" +
-      "\024\n\014withMetadata\030\006 \001(\010\022\037\n\027withIntermediat" +
-      "eResults\030\007 \001(\010\"\335\002\n\026ExpressionQueryMessag" +
-      "e\022\017\n\007queryid\030\001 \001(\t\022(\n\004left\030\002 \001(\0132\032.SubEx" +
-      "pressionQueryMessage\0224\n\toperation\030\003 \001(\0162",
-      "!.ExpressionQueryMessage.Operation\0225\n\005or" +
-      "der\030\004 \001(\0162&.ExpressionQueryMessage.Opera" +
-      "tionOrder\022)\n\005right\030\005 \001(\0132\032.SubExpression" +
-      "QueryMessage\"1\n\tOperation\022\t\n\005UNION\020\000\022\r\n\t" +
-      "INTERSECT\020\001\022\n\n\006EXCEPT\020\002\"=\n\016OperationOrde" +
-      "r\022\r\n\tLEFTFIRST\020\000\022\016\n\nRIGHTFIRST\020\001\022\014\n\010PARA" +
-      "LLEL\020\002\"\270\001\n\033ExternalHandlerQueryMessage\022\017" +
-      "\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\017\n\007handl" +
-      "er\030\003 \001(\t\0228\n\006params\030\004 \003(\0132(.ExternalHandl" +
-      "erQueryMessage.ParamsEntry\032-\n\013ParamsEntr",
-      "y\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\235\002\n\031Su" +
-      "bExpressionQueryMessage\022\017\n\007queryid\030\001 \001(\t" +
-      "\022-\n\004ssqm\030\002 \001(\0132\035.SimpleSequentialQueryMe" +
-      "ssageH\000\0222\n\005ssiqm\030\003 \001(\0132!.SimpleSpecified" +
-      "IndexQueryMessageH\000\022(\n\004siqm\030\004 \001(\0132\030.Simp" +
-      "leIndexQueryMessageH\000\022&\n\003eqm\030\005 \001(\0132\027.Exp" +
-      "ressionQueryMessageH\000\022,\n\004ehqm\030\006 \001(\0132\034.Ex" +
-      "ternalHandlerQueryMessageH\000B\014\n\nsubmessag" +
-      "e\"\227\002\n\034NearestNeighbourQueryMessage\022\016\n\006co" +
-      "lumn\030\001 \001(\t\022$\n\005query\030\002 \001(\0132\025.FeatureVecto",
-      "rMessage\022\"\n\010distance\030\003 \001(\0132\020.DistanceMes" +
-      "sage\022\t\n\001k\030\004 \001(\005\022\021\n\tindexOnly\030\005 \001(\010\022;\n\007op" +
-      "tions\030\006 \003(\0132*.NearestNeighbourQueryMessa" +
-      "ge.OptionsEntry\022\022\n\npartitions\030\007 \003(\005\032.\n\014O" +
-      "ptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:" +
-      "\0028\001\"\305\001\n\017DistanceMessage\0223\n\014distancetype\030" +
-      "\001 \001(\0162\035.DistanceMessage.DistanceType\022.\n\007" +
-      "options\030\002 \003(\0132\035.DistanceMessage.OptionsE" +
-      "ntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005val" +
-      "ue\030\002 \001(\t:\0028\001\"\035\n\014DistanceType\022\r\n\tminkowsk",
-      "i\020\000\"\325\001\n\023BooleanQueryMessage\0220\n\005where\030\001 \003" +
-      "(\0132!.BooleanQueryMessage.WhereMessage\022/\n" +
-      "\005joins\030\002 \003(\0132 .BooleanQueryMessage.JoinM" +
-      "essage\032,\n\014WhereMessage\022\r\n\005field\030\001 \001(\t\022\r\n" +
-      "\005value\030\002 \001(\t\032-\n\013JoinMessage\022\r\n\005table\030\001 \001" +
-      "(\t\022\017\n\007columns\030\002 \003(\t\"\'\n\024CachedResultsMess" +
-      "age\022\017\n\007queryid\030\001 \001(\t\"X\n\nAckMessage\022\036\n\004co" +
-      "de\030\001 \001(\0162\020.AckMessage.Code\022\017\n\007message\030\002 " +
-      "\001(\t\"\031\n\004Code\022\006\n\002OK\020\000\022\t\n\005ERROR\020\001\"=\n\017Entiti" +
-      "esMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\020\n\010e",
-      "ntities\030\002 \003(\t\"\264\001\n\027EntityPropertiesMessag" +
-      "e\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\016\n\006entity\030\002 " +
-      "\001(\t\022<\n\nproperties\030\003 \003(\0132(.EntityProperti" +
-      "esMessage.PropertiesEntry\0321\n\017PropertiesE" +
-      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"j\n " +
-      "CompoundQueryResponseInfoMessage\022\030\n\003ack\030" +
-      "\001 \001(\0132\013.AckMessage\022,\n\tresponses\030\002 \003(\0132\031." +
-      "QueryResponseInfoMessage\"\235\001\n\030QueryRespon" +
-      "seInfoMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022" +
-      "\017\n\007queryid\030\002 \001(\t\022\022\n\nconfidence\030\003 \001(\001\022\014\n\004",
-      "time\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022$\n\007results\030\006 " +
-      "\003(\0132\023.QueryResultMessage\"\214\001\n\022QueryResult" +
-      "Message\022\020\n\010distance\030\002 \001(\002\0223\n\010metadata\030\003 " +
-      "\003(\0132!.QueryResultMessage.MetadataEntry\032/" +
-      "\n\rMetadataEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
-      "\001(\t:\0028\001*?\n\tIndexType\022\007\n\003ecp\020\000\022\007\n\003lsh\020\001\022\006" +
-      "\n\002pq\020\002\022\006\n\002sh\020\003\022\007\n\003vaf\020\004\022\007\n\003vav\020\0052\204\005\n\016Ada" +
-      "mDefinition\0223\n\014CreateEntity\022\024.CreateEnti" +
-      "tyMessage\032\013.AckMessage\"\000\022/\n\nDropEntity\022\022" +
-      ".EntityNameMessage\032\013.AckMessage\"\000\022)\n\006Ins",
-      "ert\022\016.InsertMessage\032\013.AckMessage\"\000(\001\022%\n\005" +
-      "Index\022\r.IndexMessage\032\013.AckMessage\"\000\0222\n\022G" +
-      "enerateAllIndexes\022\r.IndexMessage\032\013.AckMe" +
-      "ssage\"\000\022-\n\tDropIndex\022\021.IndexNameMessage\032" +
-      "\013.AckMessage\"\000\022*\n\005Count\022\022.EntityNameMess" +
-      "age\032\013.AckMessage\"\000\022?\n\022GenerateRandomData" +
-      "\022\032.GenerateRandomDataMessage\032\013.AckMessag" +
-      "e\"\000\0221\n\014ListEntities\022\r.EmptyMessage\032\020.Ent" +
-      "itiesMessage\"\000\022E\n\023GetEntityProperties\022\022." +
-      "EntityNameMessage\032\030.EntityPropertiesMess",
-      "age\"\000\022:\n\024RepartitionIndexData\022\023.Repartit" +
-      "ionMessage\032\013.AckMessage\"\000\0224\n\016SetIndexWei" +
-      "ght\022\023.IndexWeightMessage\032\013.AckMessage\"\0002" +
-      "\234\006\n\nAdamSearch\022.\n\nCacheIndex\022\021.IndexName" +
-      "Message\032\013.AckMessage\"\000\0220\n\013CacheEntity\022\022." +
-      "EntityNameMessage\032\013.AckMessage\"\000\022C\n\017DoSt" +
-      "andardQuery\022\023.SimpleQueryMessage\032\031.Query" +
-      "ResponseInfoMessage\"\000\022O\n\021DoSequentialQue" +
-      "ry\022\035.SimpleSequentialQueryMessage\032\031.Quer" +
-      "yResponseInfoMessage\"\000\022W\n\025DoSpecifiedInd",
-      "exQuery\022!.SimpleSpecifiedIndexQueryMessa" +
-      "ge\032\031.QueryResponseInfoMessage\"\000\022E\n\014DoInd" +
-      "exQuery\022\030.SimpleIndexQueryMessage\032\031.Quer" +
-      "yResponseInfoMessage\"\000\022H\n\022DoProgressiveQ" +
-      "uery\022\023.SimpleQueryMessage\032\031.QueryRespons" +
-      "eInfoMessage\"\0000\001\022J\n\027DoTimedProgressiveQu" +
-      "ery\022\022.TimedQueryMessage\032\031.QueryResponseI" +
-      "nfoMessage\"\000\022M\n\017DoCompoundQuery\022\025.Compou" +
-      "ndQueryMessage\032!.CompoundQueryResponseIn" +
-      "foMessage\"\000\022I\n\016DoBooleanQuery\022\032.SimpleBo",
-      "oleanQueryMessage\032\031.QueryResponseInfoMes" +
-      "sage\"\000\022F\n\020GetCachedResults\022\025.CachedResul" +
-      "tsMessage\032\031.QueryResponseInfoMessage\"\000B\036" +
-      "\n\034ch.unibas.dmi.dbis.adam.httpb\006proto3"
+      "eanQueryMessage\0229\n\025indexFilterExpression" +
+      "\030\005 \001(\0132\032.SubExpressionQueryMessage\022\024\n\014wi" +
+      "thMetadata\030\006 \001(\010\022\037\n\027withIntermediateResu",
+      "lts\030\007 \001(\010\"\335\002\n\026ExpressionQueryMessage\022\017\n\007" +
+      "queryid\030\001 \001(\t\022(\n\004left\030\002 \001(\0132\032.SubExpress" +
+      "ionQueryMessage\0224\n\toperation\030\003 \001(\0162!.Exp" +
+      "ressionQueryMessage.Operation\0225\n\005order\030\004" +
+      " \001(\0162&.ExpressionQueryMessage.OperationO" +
+      "rder\022)\n\005right\030\005 \001(\0132\032.SubExpressionQuery" +
+      "Message\"1\n\tOperation\022\t\n\005UNION\020\000\022\r\n\tINTER" +
+      "SECT\020\001\022\n\n\006EXCEPT\020\002\"=\n\016OperationOrder\022\r\n\t" +
+      "LEFTFIRST\020\000\022\016\n\nRIGHTFIRST\020\001\022\014\n\010PARALLEL\020" +
+      "\002\"\270\001\n\033ExternalHandlerQueryMessage\022\017\n\007que",
+      "ryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\017\n\007handler\030\003 " +
+      "\001(\t\0228\n\006params\030\004 \003(\0132(.ExternalHandlerQue" +
+      "ryMessage.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003" +
+      "key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\235\002\n\031SubExpr" +
+      "essionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022-\n\004s" +
+      "sqm\030\002 \001(\0132\035.SimpleSequentialQueryMessage" +
+      "H\000\0222\n\005ssiqm\030\003 \001(\0132!.SimpleSpecifiedIndex" +
+      "QueryMessageH\000\022(\n\004siqm\030\004 \001(\0132\030.SimpleInd" +
+      "exQueryMessageH\000\022&\n\003eqm\030\005 \001(\0132\027.Expressi" +
+      "onQueryMessageH\000\022,\n\004ehqm\030\006 \001(\0132\034.Externa",
+      "lHandlerQueryMessageH\000B\014\n\nsubmessage\"\227\002\n" +
+      "\034NearestNeighbourQueryMessage\022\016\n\006column\030" +
+      "\001 \001(\t\022$\n\005query\030\002 \001(\0132\025.FeatureVectorMess" +
+      "age\022\"\n\010distance\030\003 \001(\0132\020.DistanceMessage\022" +
+      "\t\n\001k\030\004 \001(\005\022\021\n\tindexOnly\030\005 \001(\010\022;\n\007options" +
+      "\030\006 \003(\0132*.NearestNeighbourQueryMessage.Op" +
+      "tionsEntry\022\022\n\npartitions\030\007 \003(\005\032.\n\014Option" +
+      "sEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\305" +
+      "\001\n\017DistanceMessage\0223\n\014distancetype\030\001 \001(\016" +
+      "2\035.DistanceMessage.DistanceType\022.\n\007optio",
+      "ns\030\002 \003(\0132\035.DistanceMessage.OptionsEntry\032" +
+      ".\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
+      "\001(\t:\0028\001\"\035\n\014DistanceType\022\r\n\tminkowski\020\000\"\325" +
+      "\001\n\023BooleanQueryMessage\0220\n\005where\030\001 \003(\0132!." +
+      "BooleanQueryMessage.WhereMessage\022/\n\005join" +
+      "s\030\002 \003(\0132 .BooleanQueryMessage.JoinMessag" +
+      "e\032,\n\014WhereMessage\022\r\n\005field\030\001 \001(\t\022\r\n\005valu" +
+      "e\030\002 \001(\t\032-\n\013JoinMessage\022\r\n\005table\030\001 \001(\t\022\017\n" +
+      "\007columns\030\002 \003(\t\"\'\n\024CachedResultsMessage\022\017" +
+      "\n\007queryid\030\001 \001(\t\"X\n\nAckMessage\022\036\n\004code\030\001 ",
+      "\001(\0162\020.AckMessage.Code\022\017\n\007message\030\002 \001(\t\"\031" +
+      "\n\004Code\022\006\n\002OK\020\000\022\t\n\005ERROR\020\001\"=\n\017EntitiesMes" +
+      "sage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\020\n\010entiti" +
+      "es\030\002 \003(\t\"\264\001\n\027EntityPropertiesMessage\022\030\n\003" +
+      "ack\030\001 \001(\0132\013.AckMessage\022\016\n\006entity\030\002 \001(\t\022<" +
+      "\n\nproperties\030\003 \003(\0132(.EntityPropertiesMes" +
+      "sage.PropertiesEntry\0321\n\017PropertiesEntry\022" +
+      "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"j\n Compo" +
+      "undQueryResponseInfoMessage\022\030\n\003ack\030\001 \001(\013" +
+      "2\013.AckMessage\022,\n\tresponses\030\002 \003(\0132\031.Query",
+      "ResponseInfoMessage\"\235\001\n\030QueryResponseInf" +
+      "oMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\017\n\007qu" +
+      "eryid\030\002 \001(\t\022\022\n\nconfidence\030\003 \001(\001\022\014\n\004time\030" +
+      "\004 \001(\003\022\016\n\006source\030\005 \001(\t\022$\n\007results\030\006 \003(\0132\023" +
+      ".QueryResultMessage\"\214\001\n\022QueryResultMessa" +
+      "ge\022\020\n\010distance\030\002 \001(\002\0223\n\010metadata\030\003 \003(\0132!" +
+      ".QueryResultMessage.MetadataEntry\032/\n\rMet" +
+      "adataEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\002" +
+      "8\001*?\n\tIndexType\022\007\n\003ecp\020\000\022\007\n\003lsh\020\001\022\006\n\002pq\020" +
+      "\002\022\006\n\002sh\020\003\022\007\n\003vaf\020\004\022\007\n\003vav\020\0052\204\005\n\016AdamDefi",
+      "nition\0223\n\014CreateEntity\022\024.CreateEntityMes" +
+      "sage\032\013.AckMessage\"\000\022/\n\nDropEntity\022\022.Enti" +
+      "tyNameMessage\032\013.AckMessage\"\000\022)\n\006Insert\022\016" +
+      ".InsertMessage\032\013.AckMessage\"\000(\001\022%\n\005Index" +
+      "\022\r.IndexMessage\032\013.AckMessage\"\000\0222\n\022Genera" +
+      "teAllIndexes\022\r.IndexMessage\032\013.AckMessage" +
+      "\"\000\022-\n\tDropIndex\022\021.IndexNameMessage\032\013.Ack" +
+      "Message\"\000\022*\n\005Count\022\022.EntityNameMessage\032\013" +
+      ".AckMessage\"\000\022?\n\022GenerateRandomData\022\032.Ge" +
+      "nerateRandomDataMessage\032\013.AckMessage\"\000\0221",
+      "\n\014ListEntities\022\r.EmptyMessage\032\020.Entities" +
+      "Message\"\000\022E\n\023GetEntityProperties\022\022.Entit" +
+      "yNameMessage\032\030.EntityPropertiesMessage\"\000" +
+      "\022:\n\024RepartitionIndexData\022\023.RepartitionMe" +
+      "ssage\032\013.AckMessage\"\000\0224\n\016SetIndexWeight\022\023" +
+      ".IndexWeightMessage\032\013.AckMessage\"\0002\234\006\n\nA" +
+      "damSearch\022.\n\nCacheIndex\022\021.IndexNameMessa" +
+      "ge\032\013.AckMessage\"\000\0220\n\013CacheEntity\022\022.Entit" +
+      "yNameMessage\032\013.AckMessage\"\000\022C\n\017DoStandar" +
+      "dQuery\022\023.SimpleQueryMessage\032\031.QueryRespo",
+      "nseInfoMessage\"\000\022O\n\021DoSequentialQuery\022\035." +
+      "SimpleSequentialQueryMessage\032\031.QueryResp" +
+      "onseInfoMessage\"\000\022W\n\025DoSpecifiedIndexQue" +
+      "ry\022!.SimpleSpecifiedIndexQueryMessage\032\031." +
+      "QueryResponseInfoMessage\"\000\022E\n\014DoIndexQue" +
+      "ry\022\030.SimpleIndexQueryMessage\032\031.QueryResp" +
+      "onseInfoMessage\"\000\022H\n\022DoProgressiveQuery\022" +
+      "\023.SimpleQueryMessage\032\031.QueryResponseInfo" +
+      "Message\"\0000\001\022J\n\027DoTimedProgressiveQuery\022\022" +
+      ".TimedQueryMessage\032\031.QueryResponseInfoMe",
+      "ssage\"\000\022M\n\017DoCompoundQuery\022\025.CompoundQue" +
+      "ryMessage\032!.CompoundQueryResponseInfoMes" +
+      "sage\"\000\022I\n\016DoBooleanQuery\022\032.SimpleBoolean" +
+      "QueryMessage\032\031.QueryResponseInfoMessage\"" +
+      "\000\022F\n\020GetCachedResults\022\025.CachedResultsMes" +
+      "sage\032\031.QueryResponseInfoMessage\"\000B\036\n\034ch." +
+      "unibas.dmi.dbis.adam.httpb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -29693,39 +32907,57 @@ public final class Grpc {
     internal_static_FeatureVectorMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_FeatureVectorMessage_descriptor,
+        new java.lang.String[] { "DenseVector", "SparseVector", "IntVector", "Feature", });
+    internal_static_DenseVectorMessage_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_DenseVectorMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_DenseVectorMessage_descriptor,
+        new java.lang.String[] { "Vector", });
+    internal_static_SparseVectorMessage_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_SparseVectorMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_SparseVectorMessage_descriptor,
+        new java.lang.String[] { "Vector", "Position", "Length", });
+    internal_static_IntVectorMessage_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_IntVectorMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_IntVectorMessage_descriptor,
         new java.lang.String[] { "Vector", });
     internal_static_CreateEntityMessage_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_CreateEntityMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_CreateEntityMessage_descriptor,
         new java.lang.String[] { "Entity", "Fields", });
     internal_static_FieldDefinitionMessage_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_FieldDefinitionMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_FieldDefinitionMessage_descriptor,
         new java.lang.String[] { "Name", "Fieldtype", "Pk", "Unique", "Indexed", });
     internal_static_EntityNameMessage_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_EntityNameMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EntityNameMessage_descriptor,
         new java.lang.String[] { "Entity", });
     internal_static_IndexNameMessage_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_IndexNameMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_IndexNameMessage_descriptor,
         new java.lang.String[] { "Index", });
     internal_static_GenerateRandomDataMessage_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_GenerateRandomDataMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_GenerateRandomDataMessage_descriptor,
         new java.lang.String[] { "Entity", "Ntuples", "Ndims", });
     internal_static_InsertMessage_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_InsertMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_InsertMessage_descriptor,
@@ -29742,8 +32974,14 @@ public final class Grpc {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_InsertMessage_TupleInsertMessage_DataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
+    internal_static_InsertDataMessage_descriptor =
+      getDescriptor().getMessageTypes().get(11);
+    internal_static_InsertDataMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_InsertDataMessage_descriptor,
+        new java.lang.String[] { "LongData", "IntData", "FloatData", "DoubleData", "StringData", "BooleanData", "FeatureData", "Inserttype", });
     internal_static_IndexMessage_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_IndexMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_IndexMessage_descriptor,
@@ -29755,67 +32993,67 @@ public final class Grpc {
         internal_static_IndexMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_RepartitionMessage_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_RepartitionMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_RepartitionMessage_descriptor,
         new java.lang.String[] { "Index", "NumberOfPartitions", "UseMetadataForPartitioning", "Columns", "Option", });
     internal_static_IndexWeightMessage_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_IndexWeightMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_IndexWeightMessage_descriptor,
         new java.lang.String[] { "Index", "Weight", });
     internal_static_SimpleQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_SimpleQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SimpleQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Entity", "Hints", "Nnq", "Bq", "WithMetadata", "ReadFromCache", "PutInCache", });
     internal_static_SimpleBooleanQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_SimpleBooleanQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SimpleBooleanQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Entity", "Bq", "ReadFromCache", "PutInCache", });
     internal_static_SimpleSequentialQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_SimpleSequentialQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SimpleSequentialQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Entity", "Nnq", "Bq", "WithMetadata", "ReadFromCache", "PutInCache", });
     internal_static_SimpleSpecifiedIndexQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_SimpleSpecifiedIndexQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SimpleSpecifiedIndexQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Index", "Nnq", "Bq", "WithMetadata", "ReadFromCache", "PutInCache", });
     internal_static_SimpleIndexQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(19);
     internal_static_SimpleIndexQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SimpleIndexQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Entity", "Indextype", "Nnq", "Bq", "WithMetadata", "ReadFromCache", "PutInCache", });
     internal_static_TimedQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_TimedQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_TimedQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Entity", "Nnq", "Bq", "Time", "WithMetadata", });
     internal_static_CompoundQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(17);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_CompoundQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_CompoundQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Entity", "Nnq", "Bq", "IndexFilterExpression", "WithMetadata", "WithIntermediateResults", });
     internal_static_ExpressionQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(18);
+      getDescriptor().getMessageTypes().get(22);
     internal_static_ExpressionQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ExpressionQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Left", "Operation", "Order", "Right", });
     internal_static_ExternalHandlerQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(19);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_ExternalHandlerQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ExternalHandlerQueryMessage_descriptor,
@@ -29827,13 +33065,13 @@ public final class Grpc {
         internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_SubExpressionQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(20);
+      getDescriptor().getMessageTypes().get(24);
     internal_static_SubExpressionQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SubExpressionQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Ssqm", "Ssiqm", "Siqm", "Eqm", "Ehqm", "Submessage", });
     internal_static_NearestNeighbourQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(21);
+      getDescriptor().getMessageTypes().get(25);
     internal_static_NearestNeighbourQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_NearestNeighbourQueryMessage_descriptor,
@@ -29845,7 +33083,7 @@ public final class Grpc {
         internal_static_NearestNeighbourQueryMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DistanceMessage_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(26);
     internal_static_DistanceMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_DistanceMessage_descriptor,
@@ -29857,7 +33095,7 @@ public final class Grpc {
         internal_static_DistanceMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_BooleanQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(23);
+      getDescriptor().getMessageTypes().get(27);
     internal_static_BooleanQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BooleanQueryMessage_descriptor,
@@ -29875,25 +33113,25 @@ public final class Grpc {
         internal_static_BooleanQueryMessage_JoinMessage_descriptor,
         new java.lang.String[] { "Table", "Columns", });
     internal_static_CachedResultsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(24);
+      getDescriptor().getMessageTypes().get(28);
     internal_static_CachedResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_CachedResultsMessage_descriptor,
         new java.lang.String[] { "Queryid", });
     internal_static_AckMessage_descriptor =
-      getDescriptor().getMessageTypes().get(25);
+      getDescriptor().getMessageTypes().get(29);
     internal_static_AckMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_AckMessage_descriptor,
         new java.lang.String[] { "Code", "Message", });
     internal_static_EntitiesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(26);
+      getDescriptor().getMessageTypes().get(30);
     internal_static_EntitiesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EntitiesMessage_descriptor,
         new java.lang.String[] { "Ack", "Entities", });
     internal_static_EntityPropertiesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(27);
+      getDescriptor().getMessageTypes().get(31);
     internal_static_EntityPropertiesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EntityPropertiesMessage_descriptor,
@@ -29905,19 +33143,19 @@ public final class Grpc {
         internal_static_EntityPropertiesMessage_PropertiesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_CompoundQueryResponseInfoMessage_descriptor =
-      getDescriptor().getMessageTypes().get(28);
+      getDescriptor().getMessageTypes().get(32);
     internal_static_CompoundQueryResponseInfoMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_CompoundQueryResponseInfoMessage_descriptor,
         new java.lang.String[] { "Ack", "Responses", });
     internal_static_QueryResponseInfoMessage_descriptor =
-      getDescriptor().getMessageTypes().get(29);
+      getDescriptor().getMessageTypes().get(33);
     internal_static_QueryResponseInfoMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_QueryResponseInfoMessage_descriptor,
         new java.lang.String[] { "Ack", "Queryid", "Confidence", "Time", "Source", "Results", });
     internal_static_QueryResultMessage_descriptor =
-      getDescriptor().getMessageTypes().get(30);
+      getDescriptor().getMessageTypes().get(34);
     internal_static_QueryResultMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_QueryResultMessage_descriptor,
