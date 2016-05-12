@@ -52,10 +52,14 @@ public class ADAMproSelector implements DBSelector {
 		this.sqmBuilder.clear();
 		this.nnqmBuilder.clear();
 		
+		ArrayList<String> hints = new ArrayList<>(1);
+		hints.add("exact");
+		
+		
 		FeatureVectorMessage fvqm = FeatureVectorMessage.newBuilder().addAllVector(new FloatArrayIterable(vector)).build();
 		
 		NearestNeighbourQueryMessage nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
-		SimpleQueryMessage sqMessage = sqmBuilder.setEntity(entityName).setNnq(nnqMessage).build();
+		SimpleQueryMessage sqMessage = sqmBuilder.setEntity(entityName).setNnq(nnqMessage).addAllHints(hints).build();
 		
 		ListenableFuture<QueryResponseInfoMessage> future = ADAMproWrapper.getInstance().standardQuery(sqMessage);
 		
