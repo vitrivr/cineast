@@ -2,7 +2,6 @@
 	"database": {
 		"host": "127.0.0.1",
 		"port": 5890,
-		"plaintext": true
 		"plaintext": true,
 		"writer": "PROTO"
 	},
