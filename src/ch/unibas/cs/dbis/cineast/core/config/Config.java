@@ -78,6 +78,14 @@ public class Config {
 				}
 				break;
 			}
+			case "extractor":{
+				try{
+					extractorConfig = ExtractorConfig.parse(obj.get("extractor").asObject());
+				}catch(IllegalArgumentException | NullPointerException e){
+					LOGGER.warn("could not parse 'extractor' config: {}", e.getMessage());
+				}
+				break;
+			}
 			case "imagecache":{
 				try{
 					imageCacheConfig = ImageCacheConfig.parse(obj.get("imagecache").asObject());
@@ -95,7 +103,7 @@ public class Config {
 				break;
 			}
 			default: {
-				LOGGER.info("unrecognized parameter in config: {}, ignoring");
+				LOGGER.info("unrecognized parameter in config: {}, ignoring", name);
 			}
 			}
 		}
