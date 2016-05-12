@@ -1,61 +1,71 @@
 package ch.unibas.cs.dbis.cineast.core.db;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import com.google.common.util.concurrent.ListenableFuture;
+
+import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
+import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
 
 public class VideoLookup{
 	
 	public VideoLookup(){
 		super();
 	}
-	
-//	public VideoLookup(String database, String username, String password){
-//		super(database, username, password);
-//	}
+
 	
 	public VideoDescriptor lookUpVideo(String videoId){
-//		ResultSet set = null;
-//		try {
-//			PreparedStatement statement = connection.prepareStatement("SELECT * FROM cineast.videos WHERE cineast.videos.id = " + videoId);
-//			set = statement.executeQuery();
-//		} catch (SQLException e) {
-//			LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-//		}
+		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
+		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(videoId).build();
+		//TODO check type as well
+		tmp.add(where);
+		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT)
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
+		ListenableFuture<QueryResponseInfoMessage> f = ADAMproWrapper.getInstance().booleanQuery(qbqm);
+		QueryResponseInfoMessage responce;
+		try {
+			responce = f.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		
-		return new VideoDescriptor(null, videoId);
+		List<QueryResultMessage> results = responce.getResultsList();
+		
+		if(results.isEmpty()){//no such video
+			return null;
+		}
+		
+		QueryResultMessage result = results.get(0);
+		
+		return new VideoDescriptor(result.getMetadata());
 		
 	}
 	
 public static class VideoDescriptor{
 		
-		private String videoId; 
-		private int width, height, framecount;
-		private float seconds, fps;
-		private String name = null, path = null;
+		private final String videoId; 
+		private final int width, height, framecount;
+		private final float seconds, fps;
+		private final String name, path;
 		
-		VideoDescriptor(ResultSet rset, String videoId){
-//			this.videoId = videoId;
-//			if(rset != null){
-//				try {
-//					rset.next();
-//					this.name	= rset.getString(2);
-//					this.path	= rset.getString(3);
-//					this.width	= rset.getInt(4);
-//					this.height	= rset.getInt(5);
-//					this.framecount	= rset.getInt(6);
-//					this.seconds = rset.getFloat(7);
-//					this.fps = framecount / seconds;
-//					if(Float.isNaN(fps) || Float.isInfinite(fps)){
-//						this.fps = 0;
-//					}
-//				} catch (SQLException e) {
-//					LOGGER.warn(LogHelper.SQL_MARKER, "Error for VideoID {}", videoId);
-//					LOGGER.warn(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-//				}
-//			}
+		VideoDescriptor(Map<String, String> map){
+			this.videoId = map.get("id");
+			this.name = map.get("name");
+			this.path = map.get("path");
+			this.width = Integer.parseInt(map.get("width"));
+			this.height = Integer.parseInt(map.get("height"));
+			this.framecount = Integer.parseInt(map.get("framecount"));
+			this.seconds = Float.parseFloat(map.get("duration"));
+			this.fps = this.framecount / this.seconds;
 		}
 
 		public String getVideoId() {
@@ -94,8 +104,5 @@ public static class VideoDescriptor{
 		public String toString() {
 			return "VideoDescriptor(" + videoId + ")";
 		}
-
 	}
-	
-
 }

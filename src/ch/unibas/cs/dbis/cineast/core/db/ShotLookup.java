@@ -35,7 +35,7 @@ public class ShotLookup {
 	}
 	
 	
-	public String lookUpVideoid(String name){
+	public String lookUpVideoid(String name){ //TODO move to VideoLookup
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		WhereMessage where = WhereMessage.newBuilder().setField("name").setValue(name).build();
 		//TODO check type as well
