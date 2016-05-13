@@ -5,11 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.util.concurrent.ListenableFuture;
 
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
+import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.Code;
 import ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage.DistanceType;
@@ -24,7 +29,8 @@ public class ADAMproSelector implements DBSelector {
 	private String entityName;
 	private SimpleQueryMessage.Builder sqmBuilder = SimpleQueryMessage.newBuilder();
 	private NearestNeighbourQueryMessage.Builder nnqmBuilder = NearestNeighbourQueryMessage.newBuilder();
-	
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private static DistanceMessage minkowski_1;
 	
 	static{
@@ -72,8 +78,15 @@ public class ADAMproSelector implements DBSelector {
 			e.printStackTrace();
 			return null;
 		}
-		
 		ArrayList<StringDoublePair> _return = new ArrayList<>(k);
+		
+		AckMessage ack = response.getAck();
+		if(ack.getCode() != Code.OK){
+			LOGGER.error("error in getNearestNeighbours ({}) : {}", ack.getCode(), ack.getMessage());
+			return _return;
+		}
+		
+		
 		
 		for(QueryResultMessage msg : response.getResultsList()){
 			String id = msg.getMetadata().get("id");

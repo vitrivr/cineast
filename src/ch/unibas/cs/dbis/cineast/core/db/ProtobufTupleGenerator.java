@@ -2,23 +2,21 @@ package ch.unibas.cs.dbis.cineast.core.db;
 
 import java.util.HashMap;
 
-import com.google.common.base.Joiner;
-
 import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
 import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
 import ch.unibas.dmi.dbis.adam.http.Grpc;
 import ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage.Builder;
+import ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage;
 
 public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleInsertMessage> {
 
 	protected String[] names; 
 	private static final Builder builder = Grpc.InsertMessage.TupleInsertMessage.newBuilder();
-	private Joiner joiner = Joiner.on(',');
+	
 	
 	private final InsertDataMessage.Builder insertMessageBuilder = InsertDataMessage.newBuilder();
 	
