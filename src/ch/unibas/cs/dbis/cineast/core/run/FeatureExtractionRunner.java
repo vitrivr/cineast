@@ -110,7 +110,7 @@ public class FeatureExtractionRunner {
 			
 			
 			
-			id = videoName.replace(' ', '-');//TODO
+			id = "v_" + videoName.replace(' ', '-');//TODO
 			
 			PersistentTuple tuple = writer.generateTuple(id, 0, videoName, videoFile.getAbsolutePath(), vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
 			writer.persist(tuple);

@@ -185,7 +185,7 @@ public class Shot implements SegmentContainer{
 		if(videoId == null){
 			throw new NullPointerException("video id cannot be null");
 		}
-		StringBuilder builder = new StringBuilder("v_");
+		StringBuilder builder = new StringBuilder();
 		builder.append(videoId);
 		builder.append('_');
 		builder.append(shotNumber);
