@@ -40,6 +40,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 	@Override
 	public void init(DBSelector selector) {
 		this.selector = selector;
+		this.selector.open(this.tableName);
 	}
 
 	private float[] arrayCache = null; //avoiding the creation of new arrays on every call
