@@ -74,8 +74,9 @@ public class MedianColor extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		LOGGER.entry();
 		LabContainer query = getMedian(sc.getMedianImg());
-		return getSimilar(query.toArray(null), qc);
+		return LOGGER.exit(getSimilar(query.toArray(null), qc));
 	}
 
 }

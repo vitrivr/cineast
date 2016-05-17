@@ -118,8 +118,8 @@ public class API {
 		switch(c){
 		case "globalcolor":{
 			_return.put(new AverageColor(),				2.3);
-//			_return.put(new DominantColors(),			1.0);
-//			_return.put(new MedianColor(),				1.2);
+			_return.put(new DominantColors(),			1.0);
+			_return.put(new MedianColor(),				1.2);
 			_return.put(new QueryImageExporter(), 		0.001);
 			return _return;
 		}

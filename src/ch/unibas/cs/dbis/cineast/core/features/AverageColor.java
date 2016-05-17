@@ -43,8 +43,12 @@ public class AverageColor extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		LOGGER.entry();
+		long start = System.currentTimeMillis();
 		ReadableLabContainer query = getAvg(sc.getAvgImg());
-		return getSimilar(query.toArray(null), qc);
+		List<StringDoublePair> _reutrn = getSimilar(query.toArray(null), qc);
+		LOGGER.debug("AverageColor.getSimilar() done in {}ms", (System.currentTimeMillis() - start));
+		return LOGGER.exit(_reutrn);
 	}
 
 }

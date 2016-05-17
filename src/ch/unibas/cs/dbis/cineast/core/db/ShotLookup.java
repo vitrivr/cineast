@@ -30,7 +30,8 @@ public class ShotLookup {
 	}
 	
 	public ShotDescriptor lookUpShot(String shotId){
-		
+		LOGGER.entry();
+		long start = System.currentTimeMillis();
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(shotId).build();
 		//TODO check type as well
@@ -58,7 +59,10 @@ public class ShotLookup {
 		
 		Map<String, String> map = result.getMetadata();
 		
-		return new ShotDescriptor(map.get("multimediaobject"), map.get("id"), Integer.parseInt(map.get("segmentstart")), Integer.parseInt(map.get("segmentend")));
+		ShotDescriptor _return = new ShotDescriptor(map.get("multimediaobject"), map.get("id"), Integer.parseInt(map.get("segmentstart")), Integer.parseInt(map.get("segmentend")));
+		
+		LOGGER.debug("lookUpShot done in {}ms", System.currentTimeMillis() - start);
+		return LOGGER.exit(_return);
 		
 	}
 	
