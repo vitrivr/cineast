@@ -105,6 +105,8 @@ public class ADAMproSelector implements DBSelector {
 		NearestNeighbourQueryMessage nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
 		SimpleQueryMessage sqMessage = sqmBuilder.setEntity(entityName).setNnq(nnqMessage).addAllHints(hints).build();
 		
+		LOGGER.debug(sqMessage);
+		
 		ListenableFuture<QueryResponseInfoMessage> future = this.adampro.standardQuery(sqMessage);
 		
 		QueryResponseInfoMessage response;
@@ -113,7 +115,7 @@ public class ADAMproSelector implements DBSelector {
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
+			return new ArrayList<>(1);
 		}
 		ArrayList<StringDoublePair> _return = new ArrayList<>(k);
 		

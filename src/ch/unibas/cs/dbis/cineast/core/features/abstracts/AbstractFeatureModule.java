@@ -115,6 +115,9 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 	 */
 	protected List<StringDoublePair> getSimilar(float[] vector, QueryConfig qc) {
 		List<StringDoublePair> distances = this.selector.getNearestNeighbours(Config.getRetrieverConfig().getMaxResultsPerModule(), vector, "feature", qc);
+		if(distances == null){
+			return new ArrayList<>(1);
+		}
 		for(StringDoublePair sdp : distances){
 			double dist = sdp.value;
 			sdp.value = MathHelper.getScore(dist, maxDist);
