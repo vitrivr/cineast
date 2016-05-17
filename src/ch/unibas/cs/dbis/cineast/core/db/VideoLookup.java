@@ -18,11 +18,6 @@ public class VideoLookup{
 	
 	private ADAMproWrapper adampro = new ADAMproWrapper();
 	
-	public VideoLookup(){
-		super();
-	}
-
-	
 	public VideoDescriptor lookUpVideo(String videoId){
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(videoId).build();
@@ -52,9 +47,8 @@ public class VideoLookup{
 		
 	}
 
-	public boolean close() {
+	public void close() {
 		this.adampro.close();
-		return true;
 	}
 
 	@Override

@@ -185,7 +185,7 @@ public class JSONUtils {
 		printer.print(JSONEncoder.encodeVideoBatch(vdList).toString());
 		printer.println(',');
 		sl.close();
-
+		vl.close();
 		return videoids;
 	}
 	

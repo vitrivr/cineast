@@ -113,6 +113,7 @@ public class JSONAPIThread extends Thread {
 //				}
 
 				sl.close();
+				vl.close();
 				selector.close();
 				
 				break;
@@ -263,9 +264,9 @@ public class JSONAPIThread extends Thread {
 				JsonArray array = new JsonArray();
 				
 				for(int i = 0; i < shotidlist.size(); ++i){
-					JsonValue val = shotidlist.get(i);
-					String shotid = val.asString();
-					descriptor = sl.lookUpShot(shotid);
+//					JsonValue val = shotidlist.get(i);
+//					String shotid = val.asString();
+//					descriptor = sl.lookUpShot(shotid);
 					
 //					select.setInt(1, descriptor.getVideoId());
 //					select.setInt(2, descriptor.getStartFrame());
