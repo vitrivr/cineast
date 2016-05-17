@@ -76,7 +76,7 @@ public final class APIConfig {
 			}
 		}
 		
-		boolean enableJson = DEFAULT_ALLOW_EXTRACTION;
+		boolean enableJson = DEFAULT_ENABLE_JSON;
 		if(obj.get("enableJson") != null){
 			try{
 				enableJson = obj.get("enableJson").asBoolean();
