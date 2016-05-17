@@ -106,6 +106,9 @@ public class ContinousQueryDispatcher {
 						Pair<Retriever, List<StringDoublePair>> pair = future.get();
 						double weight = retrievers.get(pair.first);
 						List<StringDoublePair> list = pair.second;
+						if(list == null){
+							continue;
+						}
 						for (StringDoublePair sdp : list) {
 							if (Double.isInfinite(sdp.value) || Double.isNaN(sdp.value)) {
 								continue;
@@ -130,7 +133,7 @@ public class ContinousQueryDispatcher {
 		}
 		
 		List<StringDoublePair> _return = new ArrayList<>(result.size());
-		String[] keys = (String[]) result.keys();
+		Set<String> keys = result.keySet();
 		for(String key : keys){
 			_return.add(new StringDoublePair(key, result.get(key)));
 		}
