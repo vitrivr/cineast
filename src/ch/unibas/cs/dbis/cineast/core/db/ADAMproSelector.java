@@ -13,11 +13,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.Code;
+import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage;

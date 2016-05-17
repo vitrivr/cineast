@@ -3,6 +3,9 @@ package ch.unibas.cs.dbis.cineast.core.db;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.util.concurrent.ListenableFuture;
 
 import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
@@ -13,10 +16,11 @@ import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.Builder;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
 
 public class ADAMproWriter extends ProtobufTupleGenerator {
+	
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private String entityName;
 	private Builder builder = InsertMessage.newBuilder();
@@ -69,6 +73,9 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		this.builder.addAllTuples(tmp);
 		InsertMessage im = this.builder.build();
 		AckMessage ack = ADAMproWrapper.getInstance().insertOneBlocking(im);
+		if(ack.getCode() != Code.OK){
+			LOGGER.warn("{} during persist", ack.getMessage());
+		}
 		return ack.getCode() == Code.OK;
 	}
 
