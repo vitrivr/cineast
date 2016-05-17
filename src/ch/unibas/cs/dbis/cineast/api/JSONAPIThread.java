@@ -20,6 +20,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.db.ADAMproSelector;
@@ -127,14 +128,16 @@ public class JSONAPIThread extends Thread {
 				List<StringDoublePair> result;
 				TObjectDoubleHashMap<String> map;
 
-				String resultCacheName = clientJSON.get("resultname") == null ? null : clientJSON.get("resultname").asString(); 
+				//String resultCacheName = clientJSON.get("resultname") == null ? null : clientJSON.get("resultname").asString(); 
+				QueryConfig qconf = null;
+				
 				
 				for (JsonValue category : categories) {
 					map = new TObjectDoubleHashMap<>();
 
 					for (JsonValue _el : parr) {
-						long _shotid = _el.asLong();
-						result = ContinousRetrievalLogic.retrieve(_shotid, category.asString(), resultCacheName);
+						String _shotid = _el.asString();
+						result = ContinousRetrievalLogic.retrieve(_shotid, category.asString(), qconf);
 						for (StringDoublePair pair : result) {
 							if (Double.isInfinite(pair.value) || Double.isNaN(pair.value)) {
 								continue;
@@ -147,8 +150,8 @@ public class JSONAPIThread extends Thread {
 						}
 					}
 					for (JsonValue _el : narr) {
-						long _shotid = _el.asLong();
-						result = ContinousRetrievalLogic.retrieve(_shotid, category.asString(), resultCacheName);
+						String _shotid = _el.asString();
+						result = ContinousRetrievalLogic.retrieve(_shotid, category.asString(), qconf);
 						for (StringDoublePair pair : result) {
 							if (Double.isInfinite(pair.value) || Double.isNaN(pair.value)) {
 								continue;
@@ -206,6 +209,8 @@ public class JSONAPIThread extends Thread {
 					resultCacheName = null;
 				}
 				
+				QueryConfig qconf = null; //TODO
+				
 				DBResultCache.createIfNecessary(resultCacheName);
 				
 				int index = 1;
@@ -215,12 +220,12 @@ public class JSONAPIThread extends Thread {
 					for (JsonValue category : query.get("categories").asArray()) {
 
 						List<StringDoublePair> result;
-						if (query.get("id") != null && query.get("id").asLong() > 0) {
-							long id = query.get("id").asLong();
-							result = ContinousRetrievalLogic.retrieve(id, category.asString(), resultCacheName);
+						if (query.get("id") != null) {
+							String id = query.get("id").asString();
+							result = ContinousRetrievalLogic.retrieve(id, category.asString(), qconf);
 						} else {
 							QueryContainer qc = JSONUtils.queryContainerFromJSON(query);
-							result = ContinousRetrievalLogic.retrieve(qc, category.asString(), resultCacheName);
+							result = ContinousRetrievalLogic.retrieve(qc, category.asString(), qconf);
 						}
 						
 						videoids = JSONUtils.printVideosBatched(printer, result, videoids);

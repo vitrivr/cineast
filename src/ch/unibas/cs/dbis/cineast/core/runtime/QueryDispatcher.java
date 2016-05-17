@@ -39,7 +39,7 @@ public class QueryDispatcher implements Callable<List<StringDoublePair>> {
 	private QueryContainer query = null;
 	private ExecutorService executor;
 	private RetrieverInitializer initializer;
-	private long shotId;
+	private String shotId = null;
 	
 	private QueryDispatcher(HashMap<Retriever, Double> featureWeights, RetrieverInitializer initializer){
 		this.retrieverWeights = featureWeights;
@@ -61,7 +61,7 @@ public class QueryDispatcher implements Callable<List<StringDoublePair>> {
 		this.query = query;
 	}
 	
-	public QueryDispatcher(HashMap<Retriever, Double> featureWeights, RetrieverInitializer initializer, long shotId){
+	public QueryDispatcher(HashMap<Retriever, Double> featureWeights, RetrieverInitializer initializer, String shotId){
 		this(featureWeights, initializer);
 		this.shotId = shotId;
 	}
@@ -152,7 +152,7 @@ public class QueryDispatcher implements Callable<List<StringDoublePair>> {
 		return _return;
 	}
 	
-	public List<StringDoublePair> retirieve(long shotId){
+	public List<StringDoublePair> retirieve(String shotId){
 		LinkedList<Future<Pair<Retriever, List<StringDoublePair>>>> futures = new LinkedList<>();
 		double weightSum = 0;
 		Set<Retriever> features = this.retrieverWeights.keySet();

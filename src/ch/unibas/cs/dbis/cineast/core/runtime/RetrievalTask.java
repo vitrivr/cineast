@@ -16,8 +16,7 @@ public class RetrievalTask implements Callable<Pair<Retriever, List<StringDouble
 
 	private Retriever retriever;
 	private QueryContainer query = null;
-	private long shotId = -1;
-	private String resultCacheName = null;
+	private String shotId = null;
 	private static final Logger LOGGER = LogManager.getLogger();
 	private QueryConfig config = null; //TODO
 		
@@ -25,24 +24,24 @@ public class RetrievalTask implements Callable<Pair<Retriever, List<StringDouble
 		this.retriever = retriever;
 	}
 	
-	public RetrievalTask(Retriever retriever, QueryContainer query, String resultCacheName) {
+	public RetrievalTask(Retriever retriever, QueryContainer query, QueryConfig qc) {
 		this(retriever);
 		this.query = query;
-		this.resultCacheName = resultCacheName;
+		this.config = qc;
 	}
 	
 	public RetrievalTask(Retriever retriever, QueryContainer query) {
 		this(retriever, query, null);
 	}
 	
-	public RetrievalTask(Retriever retriever, long shotId, String resultCacheName) {
+	public RetrievalTask(Retriever retriever, String shotId, QueryConfig qc) {
 		this(retriever);
 		this.shotId = shotId;
-		this.resultCacheName = resultCacheName;
+		this.config = qc;
 
 	}
 	
-	public RetrievalTask(Retriever retriever, long shotId){
+	public RetrievalTask(Retriever retriever, String shotId){
 		this(retriever, shotId, null);
 	}
 	

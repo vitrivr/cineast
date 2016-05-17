@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.LimitedQueue;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
@@ -54,7 +55,7 @@ public class ContinousQueryDispatcher {
 		
 	}
 	
-	public static List<StringDoublePair> retirieve(QueryContainer query, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, String resultCacheName){
+	public static List<StringDoublePair> retirieve(QueryContainer query, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, QueryConfig qc){
 		if(executor == null || executor.isShutdown()){
 			init();
 		}
@@ -66,14 +67,14 @@ public class ContinousQueryDispatcher {
 				wheightSum += retrievers.get(r);
 				initializer.initialize(r);
 				
-				futures.add(executor.submit(new RetrievalTask(r, query, resultCacheName)));
+				futures.add(executor.submit(new RetrievalTask(r, query, qc)));
 			}
 		}		
 		
 		return handleFutures(futures, retrievers, wheightSum);
 	}
 	
-	public static List<StringDoublePair> retirieve(long shotId, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, String resultCacheName){
+	public static List<StringDoublePair> retirieve(String shotId, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, QueryConfig qc){
 		if(executor == null || executor.isShutdown()){
 			init();
 		}
@@ -85,7 +86,7 @@ public class ContinousQueryDispatcher {
 				wheightSum += retrievers.get(r);
 				initializer.initialize(r);
 				
-				futures.add(executor.submit(new RetrievalTask(r, shotId, resultCacheName)));
+				futures.add(executor.submit(new RetrievalTask(r, shotId, qc)));
 			}
 		}		
 		
