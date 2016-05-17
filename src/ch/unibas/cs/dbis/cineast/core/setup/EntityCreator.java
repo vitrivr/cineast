@@ -18,6 +18,7 @@ public class EntityCreator {
 	public static final String CINEAST_SEGMENT = "cineast_segment";
 	public static final String CINEAST_MULTIMEDIAOBJECT = "cineast_multimediaobject";
 	private static final Logger LOGGER = LogManager.getLogger();
+	private ADAMproWrapper adampro = new ADAMproWrapper();
 	
 	/**
 	 * Initialises the main entity holding information about mutlimedia objects
@@ -38,7 +39,7 @@ public class EntityCreator {
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_MULTIMEDIAOBJECT).addAllFields(fields).build();
 		
-		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
+		AckMessage ack = adampro.createEntityBlocking(message);
 		
 		if(ack.getCode() == Code.OK){
 			LOGGER.info("successfully created multimedia object entity");
@@ -64,7 +65,7 @@ public class EntityCreator {
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_SEGMENT).addAllFields(fields).build();
 		
-		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
+		AckMessage ack = adampro.createEntityBlocking(message);
 		
 		if(ack.getCode() == Code.OK){
 			LOGGER.info("successfully created segment entity");
@@ -98,7 +99,7 @@ public class EntityCreator {
 		
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllFields(fields).build();
 		
-		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
+		AckMessage ack = adampro.createEntityBlocking(message);
 		
 		if(ack.getCode() == Code.OK){
 			LOGGER.info("successfully created feature entity {}", featurename);
@@ -122,7 +123,7 @@ public class EntityCreator {
 		
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(entityName.toLowerCase()).addAllFields(fieldList).build();
 		
-		AckMessage ack = ADAMproWrapper.getInstance().createEntityBlocking(message);
+		AckMessage ack = adampro.createEntityBlocking(message);
 		
 		if(ack.getCode() == Code.OK){
 			LOGGER.info("successfully created feature entity {}", entityName);
@@ -131,6 +132,10 @@ public class EntityCreator {
 		}
 		
 		return ack;
+	}
+	
+	public void close(){
+		this.adampro.close();
 	}
 	
 	public static class FieldDefinition{

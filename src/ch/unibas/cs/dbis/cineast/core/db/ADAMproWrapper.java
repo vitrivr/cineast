@@ -24,25 +24,11 @@ import io.grpc.stub.StreamObserver;
 
 public class ADAMproWrapper { //TODO generate interrupted ackmessage
 
-	private static ADAMproWrapper instance = null;
-	private static final Object instanceLock = new Object();
-	
-	public static final ADAMproWrapper getInstance(){
-		if(instance == null){
-			synchronized (instanceLock) {
-				if(instance == null){
-					instance = new ADAMproWrapper();
-				}
-			}
-		}
-		return instance;
-	}
-	
 	private ManagedChannel channel;
 	private AdamDefinitionStub definitionStub;
 	private AdamSearchStub searchStub;
 	
-	private ADAMproWrapper(){
+	public ADAMproWrapper(){
 		DatabaseConfig config = Config.getDatabaseConfig();
 		this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPplaintext()).build();
 		this.definitionStub = AdamDefinitionGrpc.newStub(channel);
@@ -110,9 +96,13 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 		return future;
 	}
 	
+	public void close(){
+		this.channel.shutdown();
+	}
+	
 	@Override
 	protected void finalize() throws Throwable {
-		this.channel.shutdown();
+		this.close();
 		super.finalize();
 	}
 	

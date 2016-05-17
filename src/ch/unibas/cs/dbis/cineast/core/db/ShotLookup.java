@@ -23,14 +23,42 @@ public class ShotLookup {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
+	private ADAMproWrapper adampro = new ADAMproWrapper();
 	
 	public void close(){
-		
+		this.adampro.close();
 	}
 	
 	public ShotDescriptor lookUpShot(String shotId){
+		
+		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
+		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(shotId).build();
+		//TODO check type as well
+		tmp.add(where);
+		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT)
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
+		ListenableFuture<QueryResponseInfoMessage> f = adampro.booleanQuery(qbqm);
+		QueryResponseInfoMessage responce;
 
-		return null;
+		try {
+			responce = f.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ShotDescriptor("", "", 0, 0);
+		}
+
+		List<QueryResultMessage> results = responce.getResultsList();
+		
+		if(results.isEmpty()){//no such video
+			return new ShotDescriptor("", "", 0, 0);
+		}
+		
+		QueryResultMessage result = results.get(0);
+		
+		Map<String, String> map = result.getMetadata();
+		
+		return new ShotDescriptor(map.get("multimediaobject"), map.get("id"), Integer.parseInt(map.get("segmentstart")), Integer.parseInt(map.get("segmentend")));
 		
 	}
 	
@@ -42,7 +70,7 @@ public class ShotLookup {
 		tmp.add(where);
 		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT)
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = ADAMproWrapper.getInstance().booleanQuery(qbqm);
+		ListenableFuture<QueryResponseInfoMessage> f = adampro.booleanQuery(qbqm);
 		QueryResponseInfoMessage responce;
 		try {
 			responce = f.get();
@@ -74,7 +102,7 @@ public class ShotLookup {
 		tmp.add(where);
 		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT)
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = ADAMproWrapper.getInstance().booleanQuery(qbqm);
+		ListenableFuture<QueryResponseInfoMessage> f = adampro.booleanQuery(qbqm);
 		QueryResponseInfoMessage responce;
 		try {
 			responce = f.get();

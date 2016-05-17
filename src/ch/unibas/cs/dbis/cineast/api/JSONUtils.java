@@ -178,7 +178,8 @@ public class JSONUtils {
 			}
 			videoids.add(descriptor.getVideoId());
 			
-			vdList.add(vl.lookUpVideo(descriptor.getVideoId()));			
+			vdList.add(vl.lookUpVideo(descriptor.getVideoId()));	
+			
 		}
 		
 		printer.print(JSONEncoder.encodeVideoBatch(vdList).toString());

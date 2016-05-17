@@ -79,60 +79,6 @@ public class API {
 	
 	private static boolean running = true;
 
-	private static final class APICLIThread extends Thread{
-		
-		@Override
-		public void run(){
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-			String line = null;
-			try {
-				while ((line = reader.readLine()) != null) {
-					line = line.trim();
-					if (line.isEmpty()) {
-						continue;
-					}
-					Matcher matcher = inputSplitPattern.matcher(line);
-					List<String> commands = new ArrayList<String>();
-					while (matcher.find()) {
-						commands.add(matcher.group(1).replace("\"", ""));
-					}
-
-					if (commands.isEmpty()) {
-						continue;
-					}
-					switch (commands.get(0).toLowerCase()) {
-					case "extract": {
-						if (commands.size() < 2) {
-							System.out.println("expected base folder of video to extract");
-							break;
-						}
-						File videoFolder = new File(commands.get(1));
-						if (!videoFolder.exists() || !videoFolder.isDirectory()) {
-							System.out.println("expected base folder of video to extract: "
-									+ videoFolder.getAbsolutePath() + " is not a folder");
-							break;
-						}
-						FeatureExtractionRunner runner = new FeatureExtractionRunner();
-						runner.extractFolder(videoFolder);
-						break;
-					}
-					case "exit":
-					case "quit": {
-						running = false;
-						System.exit(0);
-						break;
-					}
-					default:
-						System.err.println("unrecognized command: " + line);
-					}
-				}
-			} catch (IOException e) {
-				//ignore
-			}
-		}
-		
-	}
-	
 	public static void main(String[] args) {
 		// TODO parse command line arguments
 
@@ -172,8 +118,8 @@ public class API {
 		switch(c){
 		case "globalcolor":{
 			_return.put(new AverageColor(),				2.3);
-			_return.put(new DominantColors(),			1.0);
-			_return.put(new MedianColor(),				1.2);
+//			_return.put(new DominantColors(),			1.0);
+//			_return.put(new MedianColor(),				1.2);
 			_return.put(new QueryImageExporter(), 		0.001);
 			return _return;
 		}
@@ -268,6 +214,60 @@ public class API {
 		}
 		
 		return _return;
+		
+	}
+
+	private static final class APICLIThread extends Thread{
+		
+		@Override
+		public void run(){
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			String line = null;
+			try {
+				while ((line = reader.readLine()) != null) {
+					line = line.trim();
+					if (line.isEmpty()) {
+						continue;
+					}
+					Matcher matcher = inputSplitPattern.matcher(line);
+					List<String> commands = new ArrayList<String>();
+					while (matcher.find()) {
+						commands.add(matcher.group(1).replace("\"", ""));
+					}
+	
+					if (commands.isEmpty()) {
+						continue;
+					}
+					switch (commands.get(0).toLowerCase()) {
+					case "extract": {
+						if (commands.size() < 2) {
+							System.out.println("expected base folder of video to extract");
+							break;
+						}
+						File videoFolder = new File(commands.get(1));
+						if (!videoFolder.exists() || !videoFolder.isDirectory()) {
+							System.out.println("expected base folder of video to extract: "
+									+ videoFolder.getAbsolutePath() + " is not a folder");
+							break;
+						}
+						FeatureExtractionRunner runner = new FeatureExtractionRunner();
+						runner.extractFolder(videoFolder);
+						break;
+					}
+					case "exit":
+					case "quit": {
+						running = false;
+						System.exit(0);
+						break;
+					}
+					default:
+						System.err.println("unrecognized command: " + line);
+					}
+				}
+			} catch (IOException e) {
+				//ignore
+			}
+		}
 		
 	}
 	

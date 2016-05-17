@@ -30,6 +30,8 @@ import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage;
 
 public class ADAMproSelector implements DBSelector {
 
+	private ADAMproWrapper adampro = new ADAMproWrapper();
+	
 	private String entityName;
 	private SimpleQueryMessage.Builder sqmBuilder = SimpleQueryMessage.newBuilder();
 	private NearestNeighbourQueryMessage.Builder nnqmBuilder = NearestNeighbourQueryMessage.newBuilder();
@@ -54,7 +56,7 @@ public class ADAMproSelector implements DBSelector {
 
 	@Override
 	public boolean close() {
-		// TODO Auto-generated method stub
+		this.adampro.close();
 		return false;
 	}
 
@@ -64,7 +66,7 @@ public class ADAMproSelector implements DBSelector {
 		tmp.add(where);
 		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(this.entityName)
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = ADAMproWrapper.getInstance().booleanQuery(qbqm);
+		ListenableFuture<QueryResponseInfoMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResponseInfoMessage response;
 		ArrayList<Map<String, String>> _return = new ArrayList<>();
 		try {
@@ -103,7 +105,7 @@ public class ADAMproSelector implements DBSelector {
 		NearestNeighbourQueryMessage nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
 		SimpleQueryMessage sqMessage = sqmBuilder.setEntity(entityName).setNnq(nnqMessage).addAllHints(hints).build();
 		
-		ListenableFuture<QueryResponseInfoMessage> future = ADAMproWrapper.getInstance().standardQuery(sqMessage);
+		ListenableFuture<QueryResponseInfoMessage> future = this.adampro.standardQuery(sqMessage);
 		
 		QueryResponseInfoMessage response;
 		try {
@@ -130,6 +132,12 @@ public class ADAMproSelector implements DBSelector {
 		}
 		
 		return _return;
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		this.close();
+		super.finalize();
 	}
 
 }

@@ -16,6 +16,8 @@ import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
 
 public class VideoLookup{
 	
+	private ADAMproWrapper adampro = new ADAMproWrapper();
+	
 	public VideoLookup(){
 		super();
 	}
@@ -28,7 +30,7 @@ public class VideoLookup{
 		tmp.add(where);
 		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT)
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = ADAMproWrapper.getInstance().booleanQuery(qbqm);
+		ListenableFuture<QueryResponseInfoMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResponseInfoMessage responce;
 		try {
 			responce = f.get();
@@ -49,7 +51,18 @@ public class VideoLookup{
 		return new VideoDescriptor(result.getMetadata());
 		
 	}
-	
+
+	public boolean close() {
+		this.adampro.close();
+		return true;
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		this.close();
+		super.finalize();
+	}
+
 public static class VideoDescriptor{
 		
 		private final String videoId; 

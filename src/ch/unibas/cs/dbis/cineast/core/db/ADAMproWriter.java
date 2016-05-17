@@ -21,7 +21,7 @@ import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
 public class ADAMproWriter extends ProtobufTupleGenerator {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
-
+	private ADAMproWrapper adampro = new ADAMproWrapper();
 	private String entityName;
 	private Builder builder = InsertMessage.newBuilder();
 	
@@ -33,7 +33,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 
 	@Override
 	public boolean close() {
-		// TODO Auto-generated method stub
+		this.adampro.close();
 		return false;
 	}
 
@@ -49,7 +49,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		tmp.add(where);
 		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(this.entityName)
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = ADAMproWrapper.getInstance().booleanQuery(qbqm);
+		ListenableFuture<QueryResponseInfoMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResponseInfoMessage responce;
 		try {
 			responce = f.get();
@@ -72,11 +72,17 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		tmp.add(tim);
 		this.builder.addAllTuples(tmp);
 		InsertMessage im = this.builder.build();
-		AckMessage ack = ADAMproWrapper.getInstance().insertOneBlocking(im);
+		AckMessage ack = this.adampro.insertOneBlocking(im);
 		if(ack.getCode() != Code.OK){
 			LOGGER.warn("{} during persist", ack.getMessage());
 		}
 		return ack.getCode() == Code.OK;
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		this.close();
+		super.finalize();
 	}
 
 }
