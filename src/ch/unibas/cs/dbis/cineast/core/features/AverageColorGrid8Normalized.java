@@ -31,9 +31,4 @@ public class AverageColorGrid8Normalized extends AverageColorGrid8 {
 		return getSimilar(p.first.toArray(null), qc);
 	}
 
-	@Override
-	public List<StringDoublePair> getSimilar(long shotId, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return super.getSimilar(shotId, qc);
-	}
 }

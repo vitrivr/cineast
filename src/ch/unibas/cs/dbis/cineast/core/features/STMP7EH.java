@@ -60,7 +60,7 @@ public class STMP7EH extends EHD {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(long shotId, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
 		// TODO Auto-generated method stub
 		return super.getSimilar(shotId, qc);
 	}

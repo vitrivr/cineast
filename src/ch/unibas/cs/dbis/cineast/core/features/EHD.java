@@ -118,10 +118,4 @@ public class EHD extends AbstractFeatureModule {
 		return getSimilar(query.toArray(null), qc);
 	}
 
-	@Override
-	public List<StringDoublePair> getSimilar(long shotId, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

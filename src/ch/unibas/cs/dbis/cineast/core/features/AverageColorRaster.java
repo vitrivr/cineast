@@ -260,7 +260,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(long shotId, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
 		// TODO Auto-generated method stub
 		return null;
 	}

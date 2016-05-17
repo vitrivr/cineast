@@ -52,7 +52,7 @@ public class QueryImageExporter implements Retriever {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(long shotId, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
 		return new LinkedList<StringDoublePair>();
 	}
 

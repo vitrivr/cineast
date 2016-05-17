@@ -13,7 +13,7 @@ public interface Retriever {
 
 	List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc);
 		
-	List<StringDoublePair> getSimilar(long shotId, QueryConfig qc);
+	List<StringDoublePair> getSimilar(String shotId, QueryConfig qc);
 
 	void finish();
 	

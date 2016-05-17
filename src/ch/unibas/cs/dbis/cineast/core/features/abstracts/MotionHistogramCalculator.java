@@ -103,7 +103,4 @@ public abstract class MotionHistogramCalculator implements Retriever {
 		}
 	}
 
-	
-	
-	
 }

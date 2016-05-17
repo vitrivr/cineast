@@ -129,9 +129,4 @@ public class SaturationGrid8 extends AbstractFeatureModule {
 		return getSimilar(p.first.toArray(null), qc);
 	}
 
-	@Override
-	public List<StringDoublePair> getSimilar(long shotId, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
