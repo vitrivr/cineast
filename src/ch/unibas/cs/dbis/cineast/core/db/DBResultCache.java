@@ -31,7 +31,7 @@ public final class DBResultCache {
 private DBResultCache(){}
 	
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static DateFormat df = new SimpleDateFormat("SSS-ss-mm-HH-dd-MM-yyyy-");
+	private static DateFormat df = new SimpleDateFormat("SSS-ss-mm-HH-dd-MM-yyyy");
 	private static Connection dbConnection;
 	private static HashSet<String> resultNames = new HashSet<>();
 	
@@ -79,7 +79,7 @@ private DBResultCache(){}
 	}
 	
 	private static String createUniqueName(){
-		return df.format(Calendar.getInstance().getTime()) + Config.UNIQUE_ID;
+		return df.format(Calendar.getInstance().getTime());
 	}
 	
 	private static long insertNewSetToDB(String name){
