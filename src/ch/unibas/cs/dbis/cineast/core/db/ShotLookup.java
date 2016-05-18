@@ -1,6 +1,7 @@
 package ch.unibas.cs.dbis.cineast.core.db;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,55 @@ public class ShotLookup {
 		LOGGER.debug("lookUpShot done in {}ms", System.currentTimeMillis() - start);
 		return LOGGER.exit(_return);
 		
+	}
+	
+	public Map<String, ShotDescriptor> lookUpShots(String...ids){
+		LOGGER.entry();
+		
+		if(ids == null || ids.length == 0){
+			return new HashMap<>();
+		}
+		
+		long start = System.currentTimeMillis();
+		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
+		StringBuilder builder = new StringBuilder("IN(");
+		for(int i = 0; i < ids.length - 1; ++i){
+			builder.append("'");
+			builder.append(ids[i]);
+			builder.append("', ");
+		}
+		builder.append("'");
+		builder.append(ids[ids.length - 1]);
+		builder.append("')");
+		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(builder.toString()).build();
+		//TODO check type as well
+		tmp.add(where);
+		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT)
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
+		ListenableFuture<QueryResponseInfoMessage> f = adampro.booleanQuery(qbqm);
+		QueryResponseInfoMessage responce;
+		
+		try {
+			responce = f.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new HashMap<>();
+		}
+
+		List<QueryResultMessage> results = responce.getResultsList();
+		
+		if(results.isEmpty()){//no such video
+			return new HashMap<>();
+		}
+		
+		HashMap<String, ShotDescriptor> _return = new HashMap<>();
+		for(QueryResultMessage result : results){
+			Map<String, String> map = result.getMetadata();
+			_return.put(map.get("id"), new ShotDescriptor(map.get("multimediaobject"), map.get("id"), Integer.parseInt(map.get("segmentstart")), Integer.parseInt(map.get("segmentend"))));
+		}
+		LOGGER.debug("lookUpShot done in {}ms", System.currentTimeMillis() - start);
+		return LOGGER.exit(_return);
 	}
 	
 	

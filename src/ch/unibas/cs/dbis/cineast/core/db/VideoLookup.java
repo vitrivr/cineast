@@ -1,6 +1,7 @@
 package ch.unibas.cs.dbis.cineast.core.db;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -45,6 +46,50 @@ public class VideoLookup{
 		
 		return new VideoDescriptor(result.getMetadata());
 		
+	}
+	
+	public Map<String, VideoDescriptor> lookUpVideos(String... videoIds){
+		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
+		
+		StringBuilder builder = new StringBuilder("IN(");
+		for(int i = 0; i < videoIds.length - 1; ++i){
+			builder.append("'");
+			builder.append(videoIds[i]);
+			builder.append("', ");
+		}
+		builder.append("'");
+		builder.append(videoIds[videoIds.length - 1]);
+		builder.append("')");
+		
+		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(builder.toString()).build();
+		//TODO check type as well
+		tmp.add(where);
+		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT)
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
+		ListenableFuture<QueryResponseInfoMessage> f = this.adampro.booleanQuery(qbqm);
+		QueryResponseInfoMessage responce;
+		try {
+			responce = f.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null; //TODO
+		}
+		
+		List<QueryResultMessage> results = responce.getResultsList();
+		
+		if(results.isEmpty()){//no such video
+			return null; //TODO
+		}
+		
+		HashMap<String, VideoDescriptor> _return = new HashMap<>();
+		
+		for(QueryResultMessage result : results){
+			Map<String, String> meta = result.getMetadata();
+			_return.put(meta.get("id"), new VideoDescriptor(meta));
+		}
+		
+		return _return;
 	}
 
 	public void close() {

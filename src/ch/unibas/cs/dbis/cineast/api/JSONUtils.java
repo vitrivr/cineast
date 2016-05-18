@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -147,18 +148,34 @@ public class JSONUtils {
 	public static HashSet<String> printShotsBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> shotids) {
 		ArrayList<ShotDescriptor> sdList = new ArrayList<>(resultlist.size());
 		ShotLookup sl = new ShotLookup();
-		for(int i = 0; i < resultlist.size(); ++i){
-			
-			String shotid = resultlist.get(i).key;
-			if(shotids.contains(shotid)){
-				continue;
-			}
-			shotids.add(shotid);
-			ShotDescriptor descriptor = sl.lookUpShot(shotid);
-
-			sdList.add(descriptor);
-			
+		
+		String[] ids = new String[resultlist.size()];
+		int i = 0;
+		for(StringDoublePair sdp : resultlist){
+			ids[i++] = sdp.key;
 		}
+		
+		Map<String, ShotDescriptor> map = sl.lookUpShots(ids);
+		
+		for(String id : ids){
+			ShotDescriptor sd = map.get(id);
+			if(sd != null){
+				sdList.add(sd);
+			}
+		}
+		
+//		for(int i = 0; i < resultlist.size(); ++i){
+//			
+//			String shotid = resultlist.get(i).key;
+//			if(shotids.contains(shotid)){
+//				continue;
+//			}
+//			shotids.add(shotid);
+//			ShotDescriptor descriptor = sl.lookUpShot(shotid);
+//
+//			sdList.add(descriptor);
+//			
+//		}
 		printer.print(JSONEncoder.encodeShotBatch(sdList).toString());
 		printer.println(',');
 		sl.close();
@@ -168,19 +185,46 @@ public class JSONUtils {
 	public static HashSet<String> printVideosBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> videoids) {
 		ShotLookup sl = new ShotLookup();
 		VideoLookup vl = new VideoLookup();
-		ArrayList<VideoDescriptor> vdList = new ArrayList<>(resultlist.size());
-		for(int i = 0; i < resultlist.size(); ++i){
-			String shotid = resultlist.get(i).key;
-			ShotDescriptor descriptor = sl.lookUpShot(shotid);
-			
-			if(videoids.contains(descriptor.getVideoId())){
-				continue;
-			}
-			videoids.add(descriptor.getVideoId());
-			
-			vdList.add(vl.lookUpVideo(descriptor.getVideoId()));	
-			
+		
+		String[] ids = new String[resultlist.size()];
+		int i = 0;
+		for(StringDoublePair sdp : resultlist){
+			ids[i++] = sdp.key;
 		}
+		
+		Map<String, ShotDescriptor> map = sl.lookUpShots(ids);
+		
+		HashSet<String> videoIds = new HashSet<>();
+		for(String id : ids){
+			videoIds.add(map.get(id).getVideoId());
+		}
+		
+		String[] vids = new String[videoIds.size()];
+		i = 0;
+		for(String vid : videoIds){
+			vids[i++] = vid;
+		}
+		
+		ArrayList<VideoDescriptor> vdList = new ArrayList<>(vids.length);
+		
+		Map<String, VideoDescriptor> vmap = vl.lookUpVideos(vids);
+		
+		for(String vid : vids){
+			vdList.add(vmap.get(vid));
+		}
+		
+//		for(int i = 0; i < resultlist.size(); ++i){
+//			String shotid = resultlist.get(i).key;
+//			ShotDescriptor descriptor = sl.lookUpShot(shotid);
+//			
+//			if(videoids.contains(descriptor.getVideoId())){
+//				continue;
+//			}
+//			videoids.add(descriptor.getVideoId());
+//			
+//			vdList.add(vl.lookUpVideo(descriptor.getVideoId()));	
+//			
+//		}
 		
 		printer.print(JSONEncoder.encodeVideoBatch(vdList).toString());
 		printer.println(',');
