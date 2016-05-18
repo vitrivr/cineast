@@ -29,6 +29,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	@Override
 	public void init(DBSelector selector) {
 		this.selector = selector;
+		this.selector.open(tableName);
 	}
 
 	private static int getidx(int subdiv, float x, float y) {

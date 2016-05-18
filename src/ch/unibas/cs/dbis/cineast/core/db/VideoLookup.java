@@ -49,6 +49,10 @@ public class VideoLookup{
 	}
 	
 	public Map<String, VideoDescriptor> lookUpVideos(String... videoIds){
+		if(videoIds == null || videoIds.length == 0){
+			return new HashMap<>();
+		}
+		
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		
 		StringBuilder builder = new StringBuilder("IN(");
