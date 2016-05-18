@@ -9604,35 +9604,30 @@ public final class Grpc {
     int getNumberOfPartitions();
 
     /**
-     * <code>optional bool useMetadataForPartitioning = 3;</code>
-     */
-    boolean getUseMetadataForPartitioning();
-
-    /**
-     * <code>repeated string columns = 4;</code>
+     * <code>repeated string columns = 3;</code>
      */
     com.google.protobuf.ProtocolStringList
         getColumnsList();
     /**
-     * <code>repeated string columns = 4;</code>
+     * <code>repeated string columns = 3;</code>
      */
     int getColumnsCount();
     /**
-     * <code>repeated string columns = 4;</code>
+     * <code>repeated string columns = 3;</code>
      */
     java.lang.String getColumns(int index);
     /**
-     * <code>repeated string columns = 4;</code>
+     * <code>repeated string columns = 3;</code>
      */
     com.google.protobuf.ByteString
         getColumnsBytes(int index);
 
     /**
-     * <code>optional .RepartitionMessage.PartitionOptions option = 5;</code>
+     * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
      */
     int getOptionValue();
     /**
-     * <code>optional .RepartitionMessage.PartitionOptions option = 5;</code>
+     * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
      */
     ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions getOption();
   }
@@ -9650,7 +9645,6 @@ public final class Grpc {
     private RepartitionMessage() {
       index_ = "";
       numberOfPartitions_ = 0;
-      useMetadataForPartitioning_ = false;
       columns_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       option_ = 0;
     }
@@ -9690,21 +9684,16 @@ public final class Grpc {
               numberOfPartitions_ = input.readInt32();
               break;
             }
-            case 24: {
-
-              useMetadataForPartitioning_ = input.readBool();
-              break;
-            }
-            case 34: {
+            case 26: {
               java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
                 columns_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000008;
+                mutable_bitField0_ |= 0x00000004;
               }
               columns_.add(s);
               break;
             }
-            case 40: {
+            case 32: {
               int rawValue = input.readEnum();
 
               option_ = rawValue;
@@ -9719,7 +9708,7 @@ public final class Grpc {
             new com.google.protobuf.InvalidProtocolBufferException(
                 e.getMessage()).setUnfinishedMessage(this));
       } finally {
-        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           columns_ = columns_.getUnmodifiableView();
         }
         makeExtensionsImmutable();
@@ -9882,54 +9871,45 @@ public final class Grpc {
       return numberOfPartitions_;
     }
 
-    public static final int USEMETADATAFORPARTITIONING_FIELD_NUMBER = 3;
-    private boolean useMetadataForPartitioning_;
-    /**
-     * <code>optional bool useMetadataForPartitioning = 3;</code>
-     */
-    public boolean getUseMetadataForPartitioning() {
-      return useMetadataForPartitioning_;
-    }
-
-    public static final int COLUMNS_FIELD_NUMBER = 4;
+    public static final int COLUMNS_FIELD_NUMBER = 3;
     private com.google.protobuf.LazyStringList columns_;
     /**
-     * <code>repeated string columns = 4;</code>
+     * <code>repeated string columns = 3;</code>
      */
     public com.google.protobuf.ProtocolStringList
         getColumnsList() {
       return columns_;
     }
     /**
-     * <code>repeated string columns = 4;</code>
+     * <code>repeated string columns = 3;</code>
      */
     public int getColumnsCount() {
       return columns_.size();
     }
     /**
-     * <code>repeated string columns = 4;</code>
+     * <code>repeated string columns = 3;</code>
      */
     public java.lang.String getColumns(int index) {
       return columns_.get(index);
     }
     /**
-     * <code>repeated string columns = 4;</code>
+     * <code>repeated string columns = 3;</code>
      */
     public com.google.protobuf.ByteString
         getColumnsBytes(int index) {
       return columns_.getByteString(index);
     }
 
-    public static final int OPTION_FIELD_NUMBER = 5;
+    public static final int OPTION_FIELD_NUMBER = 4;
     private int option_;
     /**
-     * <code>optional .RepartitionMessage.PartitionOptions option = 5;</code>
+     * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
      */
     public int getOptionValue() {
       return option_;
     }
     /**
-     * <code>optional .RepartitionMessage.PartitionOptions option = 5;</code>
+     * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
      */
     public ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions getOption() {
       ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions result = ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions.valueOf(option_);
@@ -9954,14 +9934,11 @@ public final class Grpc {
       if (numberOfPartitions_ != 0) {
         output.writeInt32(2, numberOfPartitions_);
       }
-      if (useMetadataForPartitioning_ != false) {
-        output.writeBool(3, useMetadataForPartitioning_);
-      }
       for (int i = 0; i < columns_.size(); i++) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 4, columns_.getRaw(i));
+        com.google.protobuf.GeneratedMessage.writeString(output, 3, columns_.getRaw(i));
       }
       if (option_ != ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions.CREATE_NEW.getNumber()) {
-        output.writeEnum(5, option_);
+        output.writeEnum(4, option_);
       }
     }
 
@@ -9977,10 +9954,6 @@ public final class Grpc {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, numberOfPartitions_);
       }
-      if (useMetadataForPartitioning_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, useMetadataForPartitioning_);
-      }
       {
         int dataSize = 0;
         for (int i = 0; i < columns_.size(); i++) {
@@ -9991,7 +9964,7 @@ public final class Grpc {
       }
       if (option_ != ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions.CREATE_NEW.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(5, option_);
+          .computeEnumSize(4, option_);
       }
       memoizedSize = size;
       return size;
@@ -10108,10 +10081,8 @@ public final class Grpc {
 
         numberOfPartitions_ = 0;
 
-        useMetadataForPartitioning_ = false;
-
         columns_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         option_ = 0;
 
         return this;
@@ -10140,10 +10111,9 @@ public final class Grpc {
         int to_bitField0_ = 0;
         result.index_ = index_;
         result.numberOfPartitions_ = numberOfPartitions_;
-        result.useMetadataForPartitioning_ = useMetadataForPartitioning_;
-        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
           columns_ = columns_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000008);
+          bitField0_ = (bitField0_ & ~0x00000004);
         }
         result.columns_ = columns_;
         result.option_ = option_;
@@ -10170,13 +10140,10 @@ public final class Grpc {
         if (other.getNumberOfPartitions() != 0) {
           setNumberOfPartitions(other.getNumberOfPartitions());
         }
-        if (other.getUseMetadataForPartitioning() != false) {
-          setUseMetadataForPartitioning(other.getUseMetadataForPartitioning());
-        }
         if (!other.columns_.isEmpty()) {
           if (columns_.isEmpty()) {
             columns_ = other.columns_;
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ = (bitField0_ & ~0x00000004);
           } else {
             ensureColumnsIsMutable();
             columns_.addAll(other.columns_);
@@ -10308,67 +10275,41 @@ public final class Grpc {
         return this;
       }
 
-      private boolean useMetadataForPartitioning_ ;
-      /**
-       * <code>optional bool useMetadataForPartitioning = 3;</code>
-       */
-      public boolean getUseMetadataForPartitioning() {
-        return useMetadataForPartitioning_;
-      }
-      /**
-       * <code>optional bool useMetadataForPartitioning = 3;</code>
-       */
-      public Builder setUseMetadataForPartitioning(boolean value) {
-        
-        useMetadataForPartitioning_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool useMetadataForPartitioning = 3;</code>
-       */
-      public Builder clearUseMetadataForPartitioning() {
-        
-        useMetadataForPartitioning_ = false;
-        onChanged();
-        return this;
-      }
-
       private com.google.protobuf.LazyStringList columns_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureColumnsIsMutable() {
-        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
           columns_ = new com.google.protobuf.LazyStringArrayList(columns_);
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000004;
          }
       }
       /**
-       * <code>repeated string columns = 4;</code>
+       * <code>repeated string columns = 3;</code>
        */
       public com.google.protobuf.ProtocolStringList
           getColumnsList() {
         return columns_.getUnmodifiableView();
       }
       /**
-       * <code>repeated string columns = 4;</code>
+       * <code>repeated string columns = 3;</code>
        */
       public int getColumnsCount() {
         return columns_.size();
       }
       /**
-       * <code>repeated string columns = 4;</code>
+       * <code>repeated string columns = 3;</code>
        */
       public java.lang.String getColumns(int index) {
         return columns_.get(index);
       }
       /**
-       * <code>repeated string columns = 4;</code>
+       * <code>repeated string columns = 3;</code>
        */
       public com.google.protobuf.ByteString
           getColumnsBytes(int index) {
         return columns_.getByteString(index);
       }
       /**
-       * <code>repeated string columns = 4;</code>
+       * <code>repeated string columns = 3;</code>
        */
       public Builder setColumns(
           int index, java.lang.String value) {
@@ -10381,7 +10322,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated string columns = 4;</code>
+       * <code>repeated string columns = 3;</code>
        */
       public Builder addColumns(
           java.lang.String value) {
@@ -10394,7 +10335,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated string columns = 4;</code>
+       * <code>repeated string columns = 3;</code>
        */
       public Builder addAllColumns(
           java.lang.Iterable<java.lang.String> values) {
@@ -10405,16 +10346,16 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated string columns = 4;</code>
+       * <code>repeated string columns = 3;</code>
        */
       public Builder clearColumns() {
         columns_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string columns = 4;</code>
+       * <code>repeated string columns = 3;</code>
        */
       public Builder addColumnsBytes(
           com.google.protobuf.ByteString value) {
@@ -10430,13 +10371,13 @@ public final class Grpc {
 
       private int option_ = 0;
       /**
-       * <code>optional .RepartitionMessage.PartitionOptions option = 5;</code>
+       * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
        */
       public int getOptionValue() {
         return option_;
       }
       /**
-       * <code>optional .RepartitionMessage.PartitionOptions option = 5;</code>
+       * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
        */
       public Builder setOptionValue(int value) {
         option_ = value;
@@ -10444,14 +10385,14 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>optional .RepartitionMessage.PartitionOptions option = 5;</code>
+       * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
        */
       public ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions getOption() {
         ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions result = ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions.valueOf(option_);
         return result == null ? ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions.UNRECOGNIZED : result;
       }
       /**
-       * <code>optional .RepartitionMessage.PartitionOptions option = 5;</code>
+       * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
        */
       public Builder setOption(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.PartitionOptions value) {
         if (value == null) {
@@ -10463,7 +10404,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>optional .RepartitionMessage.PartitionOptions option = 5;</code>
+       * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
        */
       public Builder clearOption() {
         
@@ -21428,6 +21369,15 @@ public final class Grpc {
      */
     ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessageOrBuilder getEhqmOrBuilder();
 
+    /**
+     * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage getSbqm();
+    /**
+     * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder getSbqmOrBuilder();
+
     public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.SubmessageCase getSubmessageCase();
   }
   /**
@@ -21545,6 +21495,20 @@ public final class Grpc {
               submessageCase_ = 6;
               break;
             }
+            case 58: {
+              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder subBuilder = null;
+              if (submessageCase_ == 7) {
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_).toBuilder();
+              }
+              submessage_ =
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_);
+                submessage_ = subBuilder.buildPartial();
+              }
+              submessageCase_ = 7;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -21578,6 +21542,7 @@ public final class Grpc {
       SIQM(4),
       EQM(5),
       EHQM(6),
+      SBQM(7),
       SUBMESSAGE_NOT_SET(0);
       private int value = 0;
       private SubmessageCase(int value) {
@@ -21590,6 +21555,7 @@ public final class Grpc {
           case 4: return SIQM;
           case 5: return EQM;
           case 6: return EHQM;
+          case 7: return SBQM;
           case 0: return SUBMESSAGE_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
             "Value is undefined for this oneof enum.");
@@ -21740,6 +21706,26 @@ public final class Grpc {
       return ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance();
     }
 
+    public static final int SBQM_FIELD_NUMBER = 7;
+    /**
+     * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage getSbqm() {
+      if (submessageCase_ == 7) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
+    }
+    /**
+     * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder getSbqmOrBuilder() {
+      if (submessageCase_ == 7) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -21770,6 +21756,9 @@ public final class Grpc {
       if (submessageCase_ == 6) {
         output.writeMessage(6, (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_);
       }
+      if (submessageCase_ == 7) {
+        output.writeMessage(7, (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_);
+      }
     }
 
     public int getSerializedSize() {
@@ -21799,6 +21788,10 @@ public final class Grpc {
       if (submessageCase_ == 6) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(6, (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_);
+      }
+      if (submessageCase_ == 7) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_);
       }
       memoizedSize = size;
       return size;
@@ -21973,6 +21966,13 @@ public final class Grpc {
             result.submessage_ = ehqmBuilder_.build();
           }
         }
+        if (submessageCase_ == 7) {
+          if (sbqmBuilder_ == null) {
+            result.submessage_ = submessage_;
+          } else {
+            result.submessage_ = sbqmBuilder_.build();
+          }
+        }
         result.submessageCase_ = submessageCase_;
         onBuilt();
         return result;
@@ -22012,6 +22012,10 @@ public final class Grpc {
           }
           case EHQM: {
             mergeEhqm(other.getEhqm());
+            break;
+          }
+          case SBQM: {
+            mergeSbqm(other.getSbqm());
             break;
           }
           case SUBMESSAGE_NOT_SET: {
@@ -22776,6 +22780,136 @@ public final class Grpc {
         submessageCase_ = 6;
         onChanged();;
         return ehqmBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder> sbqmBuilder_;
+      /**
+       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage getSbqm() {
+        if (sbqmBuilder_ == null) {
+          if (submessageCase_ == 7) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
+        } else {
+          if (submessageCase_ == 7) {
+            return sbqmBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+       */
+      public Builder setSbqm(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage value) {
+        if (sbqmBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          submessage_ = value;
+          onChanged();
+        } else {
+          sbqmBuilder_.setMessage(value);
+        }
+        submessageCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+       */
+      public Builder setSbqm(
+          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder builderForValue) {
+        if (sbqmBuilder_ == null) {
+          submessage_ = builderForValue.build();
+          onChanged();
+        } else {
+          sbqmBuilder_.setMessage(builderForValue.build());
+        }
+        submessageCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+       */
+      public Builder mergeSbqm(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage value) {
+        if (sbqmBuilder_ == null) {
+          if (submessageCase_ == 7 &&
+              submessage_ != ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance()) {
+            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            submessage_ = value;
+          }
+          onChanged();
+        } else {
+          if (submessageCase_ == 7) {
+            sbqmBuilder_.mergeFrom(value);
+          }
+          sbqmBuilder_.setMessage(value);
+        }
+        submessageCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+       */
+      public Builder clearSbqm() {
+        if (sbqmBuilder_ == null) {
+          if (submessageCase_ == 7) {
+            submessageCase_ = 0;
+            submessage_ = null;
+            onChanged();
+          }
+        } else {
+          if (submessageCase_ == 7) {
+            submessageCase_ = 0;
+            submessage_ = null;
+          }
+          sbqmBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder getSbqmBuilder() {
+        return getSbqmFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder getSbqmOrBuilder() {
+        if ((submessageCase_ == 7) && (sbqmBuilder_ != null)) {
+          return sbqmBuilder_.getMessageOrBuilder();
+        } else {
+          if (submessageCase_ == 7) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder> 
+          getSbqmFieldBuilder() {
+        if (sbqmBuilder_ == null) {
+          if (!(submessageCase_ == 7)) {
+            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
+          }
+          sbqmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_,
+                  getParentForChildren(),
+                  isClean());
+          submessage_ = null;
+        }
+        submessageCase_ = 7;
+        onChanged();;
+        return sbqmBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -32743,146 +32877,147 @@ public final class Grpc {
       "ce\030\004 \001(\0132\020.DistanceMessage\022+\n\007options\030\005 " +
       "\003(\0132\032.IndexMessage.OptionsEntry\032.\n\014Optio" +
       "nsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"" +
-      "\365\001\n\022RepartitionMessage\022\r\n\005index\030\001 \001(\t\022\032\n" +
-      "\022numberOfPartitions\030\002 \001(\005\022\"\n\032useMetadata" +
-      "ForPartitioning\030\003 \001(\010\022\017\n\007columns\030\004 \003(\t\0224",
-      "\n\006option\030\005 \001(\0162$.RepartitionMessage.Part" +
-      "itionOptions\"I\n\020PartitionOptions\022\016\n\nCREA" +
-      "TE_NEW\020\000\022\024\n\020REPLACE_EXISTING\020\001\022\017\n\013CREATE" +
-      "_TEMP\020\002\"3\n\022IndexWeightMessage\022\r\n\005index\030\001" +
-      " \001(\t\022\016\n\006weight\030\002 \001(\002\"\323\001\n\022SimpleQueryMess" +
-      "age\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\r\n\005" +
-      "hints\030\003 \003(\t\022*\n\003nnq\030\004 \001(\0132\035.NearestNeighb" +
+      "\321\001\n\022RepartitionMessage\022\r\n\005index\030\001 \001(\t\022\032\n" +
+      "\022numberOfPartitions\030\002 \001(\005\022\017\n\007columns\030\003 \003" +
+      "(\t\0224\n\006option\030\004 \001(\0162$.RepartitionMessage.",
+      "PartitionOptions\"I\n\020PartitionOptions\022\016\n\n" +
+      "CREATE_NEW\020\000\022\024\n\020REPLACE_EXISTING\020\001\022\017\n\013CR" +
+      "EATE_TEMP\020\002\"3\n\022IndexWeightMessage\022\r\n\005ind" +
+      "ex\030\001 \001(\t\022\016\n\006weight\030\002 \001(\002\"\323\001\n\022SimpleQuery" +
+      "Message\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t" +
+      "\022\r\n\005hints\030\003 \003(\t\022*\n\003nnq\030\004 \001(\0132\035.NearestNe" +
+      "ighbourQueryMessage\022 \n\002bq\030\005 \001(\0132\024.Boolea" +
+      "nQueryMessage\022\024\n\014withMetadata\030\006 \001(\010\022\025\n\rr" +
+      "eadFromCache\030\007 \001(\010\022\022\n\nputInCache\030\010 \001(\010\"\211" +
+      "\001\n\031SimpleBooleanQueryMessage\022\017\n\007queryid\030",
+      "\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022 \n\002bq\030\003 \001(\0132\024.Bool" +
+      "eanQueryMessage\022\025\n\rreadFromCache\030\004 \001(\010\022\022" +
+      "\n\nputInCache\030\005 \001(\010\"\316\001\n\034SimpleSequentialQ" +
+      "ueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002" +
+      " \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestNeighbourQuer" +
+      "yMessage\022 \n\002bq\030\004 \001(\0132\024.BooleanQueryMessa" +
+      "ge\022\024\n\014withMetadata\030\005 \001(\010\022\025\n\rreadFromCach" +
+      "e\030\006 \001(\010\022\022\n\nputInCache\030\007 \001(\010\"\321\001\n SimpleSp" +
+      "ecifiedIndexQueryMessage\022\017\n\007queryid\030\001 \001(" +
+      "\t\022\r\n\005index\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestN",
+      "eighbourQueryMessage\022 \n\002bq\030\004 \001(\0132\024.Boole" +
+      "anQueryMessage\022\024\n\014withMetadata\030\005 \001(\010\022\025\n\r" +
+      "readFromCache\030\006 \001(\010\022\022\n\nputInCache\030\007 \001(\010\"" +
+      "\350\001\n\027SimpleIndexQueryMessage\022\017\n\007queryid\030\001" +
+      " \001(\t\022\016\n\006entity\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\0162" +
+      "\n.IndexType\022*\n\003nnq\030\004 \001(\0132\035.NearestNeighb" +
       "ourQueryMessage\022 \n\002bq\030\005 \001(\0132\024.BooleanQue" +
       "ryMessage\022\024\n\014withMetadata\030\006 \001(\010\022\025\n\rreadF" +
-      "romCache\030\007 \001(\010\022\022\n\nputInCache\030\010 \001(\010\"\211\001\n\031S",
-      "impleBooleanQueryMessage\022\017\n\007queryid\030\001 \001(" +
-      "\t\022\016\n\006entity\030\002 \001(\t\022 \n\002bq\030\003 \001(\0132\024.BooleanQ" +
-      "ueryMessage\022\025\n\rreadFromCache\030\004 \001(\010\022\022\n\npu" +
-      "tInCache\030\005 \001(\010\"\316\001\n\034SimpleSequentialQuery" +
-      "Message\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t" +
-      "\022*\n\003nnq\030\003 \001(\0132\035.NearestNeighbourQueryMes" +
-      "sage\022 \n\002bq\030\004 \001(\0132\024.BooleanQueryMessage\022\024" +
-      "\n\014withMetadata\030\005 \001(\010\022\025\n\rreadFromCache\030\006 " +
-      "\001(\010\022\022\n\nputInCache\030\007 \001(\010\"\321\001\n SimpleSpecif" +
-      "iedIndexQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\r\n",
-      "\005index\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestNeigh" +
-      "bourQueryMessage\022 \n\002bq\030\004 \001(\0132\024.BooleanQu" +
-      "eryMessage\022\024\n\014withMetadata\030\005 \001(\010\022\025\n\rread" +
-      "FromCache\030\006 \001(\010\022\022\n\nputInCache\030\007 \001(\010\"\350\001\n\027" +
-      "SimpleIndexQueryMessage\022\017\n\007queryid\030\001 \001(\t" +
-      "\022\016\n\006entity\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\0162\n.In" +
-      "dexType\022*\n\003nnq\030\004 \001(\0132\035.NearestNeighbourQ" +
-      "ueryMessage\022 \n\002bq\030\005 \001(\0132\024.BooleanQueryMe" +
-      "ssage\022\024\n\014withMetadata\030\006 \001(\010\022\025\n\rreadFromC" +
-      "ache\030\007 \001(\010\022\022\n\nputInCache\030\010 \001(\010\"\246\001\n\021Timed",
-      "QueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030" +
-      "\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestNeighbourQue" +
-      "ryMessage\022 \n\002bq\030\004 \001(\0132\024.BooleanQueryMess" +
-      "age\022\014\n\004time\030\005 \001(\003\022\024\n\014withMetadata\030\006 \001(\010\"" +
-      "\367\001\n\024CompoundQueryMessage\022\017\n\007queryid\030\001 \001(" +
-      "\t\022\016\n\006entity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.Nearest" +
-      "NeighbourQueryMessage\022 \n\002bq\030\004 \001(\0132\024.Bool" +
-      "eanQueryMessage\0229\n\025indexFilterExpression" +
-      "\030\005 \001(\0132\032.SubExpressionQueryMessage\022\024\n\014wi" +
-      "thMetadata\030\006 \001(\010\022\037\n\027withIntermediateResu",
-      "lts\030\007 \001(\010\"\335\002\n\026ExpressionQueryMessage\022\017\n\007" +
-      "queryid\030\001 \001(\t\022(\n\004left\030\002 \001(\0132\032.SubExpress" +
-      "ionQueryMessage\0224\n\toperation\030\003 \001(\0162!.Exp" +
-      "ressionQueryMessage.Operation\0225\n\005order\030\004" +
-      " \001(\0162&.ExpressionQueryMessage.OperationO" +
-      "rder\022)\n\005right\030\005 \001(\0132\032.SubExpressionQuery" +
-      "Message\"1\n\tOperation\022\t\n\005UNION\020\000\022\r\n\tINTER" +
-      "SECT\020\001\022\n\n\006EXCEPT\020\002\"=\n\016OperationOrder\022\r\n\t" +
-      "LEFTFIRST\020\000\022\016\n\nRIGHTFIRST\020\001\022\014\n\010PARALLEL\020" +
-      "\002\"\270\001\n\033ExternalHandlerQueryMessage\022\017\n\007que",
-      "ryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\017\n\007handler\030\003 " +
-      "\001(\t\0228\n\006params\030\004 \003(\0132(.ExternalHandlerQue" +
-      "ryMessage.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003" +
-      "key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\235\002\n\031SubExpr" +
-      "essionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022-\n\004s" +
-      "sqm\030\002 \001(\0132\035.SimpleSequentialQueryMessage" +
-      "H\000\0222\n\005ssiqm\030\003 \001(\0132!.SimpleSpecifiedIndex" +
-      "QueryMessageH\000\022(\n\004siqm\030\004 \001(\0132\030.SimpleInd" +
-      "exQueryMessageH\000\022&\n\003eqm\030\005 \001(\0132\027.Expressi" +
-      "onQueryMessageH\000\022,\n\004ehqm\030\006 \001(\0132\034.Externa",
-      "lHandlerQueryMessageH\000B\014\n\nsubmessage\"\227\002\n" +
-      "\034NearestNeighbourQueryMessage\022\016\n\006column\030" +
-      "\001 \001(\t\022$\n\005query\030\002 \001(\0132\025.FeatureVectorMess" +
-      "age\022\"\n\010distance\030\003 \001(\0132\020.DistanceMessage\022" +
-      "\t\n\001k\030\004 \001(\005\022\021\n\tindexOnly\030\005 \001(\010\022;\n\007options" +
-      "\030\006 \003(\0132*.NearestNeighbourQueryMessage.Op" +
-      "tionsEntry\022\022\n\npartitions\030\007 \003(\005\032.\n\014Option" +
-      "sEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\305" +
-      "\001\n\017DistanceMessage\0223\n\014distancetype\030\001 \001(\016" +
-      "2\035.DistanceMessage.DistanceType\022.\n\007optio",
-      "ns\030\002 \003(\0132\035.DistanceMessage.OptionsEntry\032" +
-      ".\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
-      "\001(\t:\0028\001\"\035\n\014DistanceType\022\r\n\tminkowski\020\000\"\325" +
-      "\001\n\023BooleanQueryMessage\0220\n\005where\030\001 \003(\0132!." +
-      "BooleanQueryMessage.WhereMessage\022/\n\005join" +
-      "s\030\002 \003(\0132 .BooleanQueryMessage.JoinMessag" +
-      "e\032,\n\014WhereMessage\022\r\n\005field\030\001 \001(\t\022\r\n\005valu" +
-      "e\030\002 \001(\t\032-\n\013JoinMessage\022\r\n\005table\030\001 \001(\t\022\017\n" +
-      "\007columns\030\002 \003(\t\"\'\n\024CachedResultsMessage\022\017" +
-      "\n\007queryid\030\001 \001(\t\"X\n\nAckMessage\022\036\n\004code\030\001 ",
-      "\001(\0162\020.AckMessage.Code\022\017\n\007message\030\002 \001(\t\"\031" +
-      "\n\004Code\022\006\n\002OK\020\000\022\t\n\005ERROR\020\001\"=\n\017EntitiesMes" +
-      "sage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\020\n\010entiti" +
-      "es\030\002 \003(\t\"\264\001\n\027EntityPropertiesMessage\022\030\n\003" +
-      "ack\030\001 \001(\0132\013.AckMessage\022\016\n\006entity\030\002 \001(\t\022<" +
-      "\n\nproperties\030\003 \003(\0132(.EntityPropertiesMes" +
-      "sage.PropertiesEntry\0321\n\017PropertiesEntry\022" +
-      "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"j\n Compo" +
-      "undQueryResponseInfoMessage\022\030\n\003ack\030\001 \001(\013" +
-      "2\013.AckMessage\022,\n\tresponses\030\002 \003(\0132\031.Query",
-      "ResponseInfoMessage\"\235\001\n\030QueryResponseInf" +
-      "oMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\017\n\007qu" +
-      "eryid\030\002 \001(\t\022\022\n\nconfidence\030\003 \001(\001\022\014\n\004time\030" +
-      "\004 \001(\003\022\016\n\006source\030\005 \001(\t\022$\n\007results\030\006 \003(\0132\023" +
-      ".QueryResultMessage\"\214\001\n\022QueryResultMessa" +
-      "ge\022\020\n\010distance\030\002 \001(\002\0223\n\010metadata\030\003 \003(\0132!" +
-      ".QueryResultMessage.MetadataEntry\032/\n\rMet" +
-      "adataEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\002" +
-      "8\001*?\n\tIndexType\022\007\n\003ecp\020\000\022\007\n\003lsh\020\001\022\006\n\002pq\020" +
-      "\002\022\006\n\002sh\020\003\022\007\n\003vaf\020\004\022\007\n\003vav\020\0052\204\005\n\016AdamDefi",
-      "nition\0223\n\014CreateEntity\022\024.CreateEntityMes" +
-      "sage\032\013.AckMessage\"\000\022/\n\nDropEntity\022\022.Enti" +
-      "tyNameMessage\032\013.AckMessage\"\000\022)\n\006Insert\022\016" +
-      ".InsertMessage\032\013.AckMessage\"\000(\001\022%\n\005Index" +
-      "\022\r.IndexMessage\032\013.AckMessage\"\000\0222\n\022Genera" +
-      "teAllIndexes\022\r.IndexMessage\032\013.AckMessage" +
-      "\"\000\022-\n\tDropIndex\022\021.IndexNameMessage\032\013.Ack" +
-      "Message\"\000\022*\n\005Count\022\022.EntityNameMessage\032\013" +
-      ".AckMessage\"\000\022?\n\022GenerateRandomData\022\032.Ge" +
-      "nerateRandomDataMessage\032\013.AckMessage\"\000\0221",
-      "\n\014ListEntities\022\r.EmptyMessage\032\020.Entities" +
-      "Message\"\000\022E\n\023GetEntityProperties\022\022.Entit" +
-      "yNameMessage\032\030.EntityPropertiesMessage\"\000" +
-      "\022:\n\024RepartitionIndexData\022\023.RepartitionMe" +
-      "ssage\032\013.AckMessage\"\000\0224\n\016SetIndexWeight\022\023" +
-      ".IndexWeightMessage\032\013.AckMessage\"\0002\234\006\n\nA" +
-      "damSearch\022.\n\nCacheIndex\022\021.IndexNameMessa" +
-      "ge\032\013.AckMessage\"\000\0220\n\013CacheEntity\022\022.Entit" +
-      "yNameMessage\032\013.AckMessage\"\000\022C\n\017DoStandar" +
-      "dQuery\022\023.SimpleQueryMessage\032\031.QueryRespo",
-      "nseInfoMessage\"\000\022O\n\021DoSequentialQuery\022\035." +
-      "SimpleSequentialQueryMessage\032\031.QueryResp" +
-      "onseInfoMessage\"\000\022W\n\025DoSpecifiedIndexQue" +
-      "ry\022!.SimpleSpecifiedIndexQueryMessage\032\031." +
-      "QueryResponseInfoMessage\"\000\022E\n\014DoIndexQue" +
-      "ry\022\030.SimpleIndexQueryMessage\032\031.QueryResp" +
-      "onseInfoMessage\"\000\022H\n\022DoProgressiveQuery\022" +
-      "\023.SimpleQueryMessage\032\031.QueryResponseInfo" +
-      "Message\"\0000\001\022J\n\027DoTimedProgressiveQuery\022\022" +
-      ".TimedQueryMessage\032\031.QueryResponseInfoMe",
-      "ssage\"\000\022M\n\017DoCompoundQuery\022\025.CompoundQue" +
-      "ryMessage\032!.CompoundQueryResponseInfoMes" +
-      "sage\"\000\022I\n\016DoBooleanQuery\022\032.SimpleBoolean" +
-      "QueryMessage\032\031.QueryResponseInfoMessage\"" +
-      "\000\022F\n\020GetCachedResults\022\025.CachedResultsMes" +
-      "sage\032\031.QueryResponseInfoMessage\"\000B\036\n\034ch." +
-      "unibas.dmi.dbis.adam.httpb\006proto3"
+      "romCache\030\007 \001(\010\022\022\n\nputInCache\030\010 \001(\010\"\246\001\n\021T" +
+      "imedQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006ent",
+      "ity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestNeighbou" +
+      "rQueryMessage\022 \n\002bq\030\004 \001(\0132\024.BooleanQuery" +
+      "Message\022\014\n\004time\030\005 \001(\003\022\024\n\014withMetadata\030\006 " +
+      "\001(\010\"\367\001\n\024CompoundQueryMessage\022\017\n\007queryid\030" +
+      "\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.Nea" +
+      "restNeighbourQueryMessage\022 \n\002bq\030\004 \001(\0132\024." +
+      "BooleanQueryMessage\0229\n\025indexFilterExpres" +
+      "sion\030\005 \001(\0132\032.SubExpressionQueryMessage\022\024" +
+      "\n\014withMetadata\030\006 \001(\010\022\037\n\027withIntermediate" +
+      "Results\030\007 \001(\010\"\335\002\n\026ExpressionQueryMessage",
+      "\022\017\n\007queryid\030\001 \001(\t\022(\n\004left\030\002 \001(\0132\032.SubExp" +
+      "ressionQueryMessage\0224\n\toperation\030\003 \001(\0162!" +
+      ".ExpressionQueryMessage.Operation\0225\n\005ord" +
+      "er\030\004 \001(\0162&.ExpressionQueryMessage.Operat" +
+      "ionOrder\022)\n\005right\030\005 \001(\0132\032.SubExpressionQ" +
+      "ueryMessage\"1\n\tOperation\022\t\n\005UNION\020\000\022\r\n\tI" +
+      "NTERSECT\020\001\022\n\n\006EXCEPT\020\002\"=\n\016OperationOrder" +
+      "\022\r\n\tLEFTFIRST\020\000\022\016\n\nRIGHTFIRST\020\001\022\014\n\010PARAL" +
+      "LEL\020\002\"\270\001\n\033ExternalHandlerQueryMessage\022\017\n" +
+      "\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\017\n\007handle",
+      "r\030\003 \001(\t\0228\n\006params\030\004 \003(\0132(.ExternalHandle" +
+      "rQueryMessage.ParamsEntry\032-\n\013ParamsEntry" +
+      "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\311\002\n\031Sub" +
+      "ExpressionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022" +
+      "-\n\004ssqm\030\002 \001(\0132\035.SimpleSequentialQueryMes" +
+      "sageH\000\0222\n\005ssiqm\030\003 \001(\0132!.SimpleSpecifiedI" +
+      "ndexQueryMessageH\000\022(\n\004siqm\030\004 \001(\0132\030.Simpl" +
+      "eIndexQueryMessageH\000\022&\n\003eqm\030\005 \001(\0132\027.Expr" +
+      "essionQueryMessageH\000\022,\n\004ehqm\030\006 \001(\0132\034.Ext" +
+      "ernalHandlerQueryMessageH\000\022*\n\004sbqm\030\007 \001(\013",
+      "2\032.SimpleBooleanQueryMessageH\000B\014\n\nsubmes" +
+      "sage\"\227\002\n\034NearestNeighbourQueryMessage\022\016\n" +
+      "\006column\030\001 \001(\t\022$\n\005query\030\002 \001(\0132\025.FeatureVe" +
+      "ctorMessage\022\"\n\010distance\030\003 \001(\0132\020.Distance" +
+      "Message\022\t\n\001k\030\004 \001(\005\022\021\n\tindexOnly\030\005 \001(\010\022;\n" +
+      "\007options\030\006 \003(\0132*.NearestNeighbourQueryMe" +
+      "ssage.OptionsEntry\022\022\n\npartitions\030\007 \003(\005\032." +
+      "\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001" +
+      "(\t:\0028\001\"\305\001\n\017DistanceMessage\0223\n\014distancety" +
+      "pe\030\001 \001(\0162\035.DistanceMessage.DistanceType\022",
+      ".\n\007options\030\002 \003(\0132\035.DistanceMessage.Optio" +
+      "nsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005" +
+      "value\030\002 \001(\t:\0028\001\"\035\n\014DistanceType\022\r\n\tminko" +
+      "wski\020\000\"\325\001\n\023BooleanQueryMessage\0220\n\005where\030" +
+      "\001 \003(\0132!.BooleanQueryMessage.WhereMessage" +
+      "\022/\n\005joins\030\002 \003(\0132 .BooleanQueryMessage.Jo" +
+      "inMessage\032,\n\014WhereMessage\022\r\n\005field\030\001 \001(\t" +
+      "\022\r\n\005value\030\002 \001(\t\032-\n\013JoinMessage\022\r\n\005table\030" +
+      "\001 \001(\t\022\017\n\007columns\030\002 \003(\t\"\'\n\024CachedResultsM" +
+      "essage\022\017\n\007queryid\030\001 \001(\t\"X\n\nAckMessage\022\036\n",
+      "\004code\030\001 \001(\0162\020.AckMessage.Code\022\017\n\007message" +
+      "\030\002 \001(\t\"\031\n\004Code\022\006\n\002OK\020\000\022\t\n\005ERROR\020\001\"=\n\017Ent" +
+      "itiesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\020" +
+      "\n\010entities\030\002 \003(\t\"\264\001\n\027EntityPropertiesMes" +
+      "sage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\016\n\006entity" +
+      "\030\002 \001(\t\022<\n\nproperties\030\003 \003(\0132(.EntityPrope" +
+      "rtiesMessage.PropertiesEntry\0321\n\017Properti" +
+      "esEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"" +
+      "j\n CompoundQueryResponseInfoMessage\022\030\n\003a" +
+      "ck\030\001 \001(\0132\013.AckMessage\022,\n\tresponses\030\002 \003(\013",
+      "2\031.QueryResponseInfoMessage\"\235\001\n\030QueryRes" +
+      "ponseInfoMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessa" +
+      "ge\022\017\n\007queryid\030\002 \001(\t\022\022\n\nconfidence\030\003 \001(\001\022" +
+      "\014\n\004time\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022$\n\007results" +
+      "\030\006 \003(\0132\023.QueryResultMessage\"\214\001\n\022QueryRes" +
+      "ultMessage\022\020\n\010distance\030\002 \001(\002\0223\n\010metadata" +
+      "\030\003 \003(\0132!.QueryResultMessage.MetadataEntr" +
+      "y\032/\n\rMetadataEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value" +
+      "\030\002 \001(\t:\0028\001*?\n\tIndexType\022\007\n\003ecp\020\000\022\007\n\003lsh\020" +
+      "\001\022\006\n\002pq\020\002\022\006\n\002sh\020\003\022\007\n\003vaf\020\004\022\007\n\003vav\020\0052\204\005\n\016",
+      "AdamDefinition\0223\n\014CreateEntity\022\024.CreateE" +
+      "ntityMessage\032\013.AckMessage\"\000\022/\n\nDropEntit" +
+      "y\022\022.EntityNameMessage\032\013.AckMessage\"\000\022)\n\006" +
+      "Insert\022\016.InsertMessage\032\013.AckMessage\"\000(\001\022" +
+      "%\n\005Index\022\r.IndexMessage\032\013.AckMessage\"\000\0222" +
+      "\n\022GenerateAllIndexes\022\r.IndexMessage\032\013.Ac" +
+      "kMessage\"\000\022-\n\tDropIndex\022\021.IndexNameMessa" +
+      "ge\032\013.AckMessage\"\000\022*\n\005Count\022\022.EntityNameM" +
+      "essage\032\013.AckMessage\"\000\022?\n\022GenerateRandomD" +
+      "ata\022\032.GenerateRandomDataMessage\032\013.AckMes",
+      "sage\"\000\0221\n\014ListEntities\022\r.EmptyMessage\032\020." +
+      "EntitiesMessage\"\000\022E\n\023GetEntityProperties" +
+      "\022\022.EntityNameMessage\032\030.EntityPropertiesM" +
+      "essage\"\000\022:\n\024RepartitionIndexData\022\023.Repar" +
+      "titionMessage\032\013.AckMessage\"\000\0224\n\016SetIndex" +
+      "Weight\022\023.IndexWeightMessage\032\013.AckMessage" +
+      "\"\0002\234\006\n\nAdamSearch\022.\n\nCacheIndex\022\021.IndexN" +
+      "ameMessage\032\013.AckMessage\"\000\0220\n\013CacheEntity" +
+      "\022\022.EntityNameMessage\032\013.AckMessage\"\000\022C\n\017D" +
+      "oStandardQuery\022\023.SimpleQueryMessage\032\031.Qu",
+      "eryResponseInfoMessage\"\000\022O\n\021DoSequential" +
+      "Query\022\035.SimpleSequentialQueryMessage\032\031.Q" +
+      "ueryResponseInfoMessage\"\000\022W\n\025DoSpecified" +
+      "IndexQuery\022!.SimpleSpecifiedIndexQueryMe" +
+      "ssage\032\031.QueryResponseInfoMessage\"\000\022E\n\014Do" +
+      "IndexQuery\022\030.SimpleIndexQueryMessage\032\031.Q" +
+      "ueryResponseInfoMessage\"\000\022H\n\022DoProgressi" +
+      "veQuery\022\023.SimpleQueryMessage\032\031.QueryResp" +
+      "onseInfoMessage\"\0000\001\022J\n\027DoTimedProgressiv" +
+      "eQuery\022\022.TimedQueryMessage\032\031.QueryRespon",
+      "seInfoMessage\"\000\022M\n\017DoCompoundQuery\022\025.Com" +
+      "poundQueryMessage\032!.CompoundQueryRespons" +
+      "eInfoMessage\"\000\022I\n\016DoBooleanQuery\022\032.Simpl" +
+      "eBooleanQueryMessage\032\031.QueryResponseInfo" +
+      "Message\"\000\022F\n\020GetCachedResults\022\025.CachedRe" +
+      "sultsMessage\032\031.QueryResponseInfoMessage\"" +
+      "\000B\036\n\034ch.unibas.dmi.dbis.adam.httpb\006proto" +
+      "3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -32997,7 +33132,7 @@ public final class Grpc {
     internal_static_RepartitionMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_RepartitionMessage_descriptor,
-        new java.lang.String[] { "Index", "NumberOfPartitions", "UseMetadataForPartitioning", "Columns", "Option", });
+        new java.lang.String[] { "Index", "NumberOfPartitions", "Columns", "Option", });
     internal_static_IndexWeightMessage_descriptor =
       getDescriptor().getMessageTypes().get(14);
     internal_static_IndexWeightMessage_fieldAccessorTable = new
@@ -33069,7 +33204,7 @@ public final class Grpc {
     internal_static_SubExpressionQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SubExpressionQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Ssqm", "Ssiqm", "Siqm", "Eqm", "Ehqm", "Submessage", });
+        new java.lang.String[] { "Queryid", "Ssqm", "Ssiqm", "Siqm", "Eqm", "Ehqm", "Sbqm", "Submessage", });
     internal_static_NearestNeighbourQueryMessage_descriptor =
       getDescriptor().getMessageTypes().get(25);
     internal_static_NearestNeighbourQueryMessage_fieldAccessorTable = new
