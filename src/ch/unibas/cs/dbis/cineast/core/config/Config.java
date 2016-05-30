@@ -43,6 +43,46 @@ public class Config {
 		
 	}
 	
+	public static void setDatabaseConfig(JsonObject obj){
+		try{
+			databaseConfig = DatabaseConfig.parse(obj);
+		}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
+			LOGGER.warn("could not parse 'database' config: {}", e.getMessage());
+		}
+	}
+	
+	public static void setRetriverConfig(JsonObject obj){
+		try{
+			retrieverConfig = RetrieverConfig.parse(obj);
+		}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
+			LOGGER.warn("could not parse 'retriever' config: {}", e.getMessage());
+		}
+	}
+	
+	public static void setDecoderConfig(JsonObject obj){
+		try{
+			decoderConfig = DecoderConfig.parse(obj);
+		}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
+			LOGGER.warn("could not parse 'decoder' config: {}", e.getMessage());
+		}
+	}
+	
+	public static void setExtractorConfig(JsonObject obj){
+		try{
+			extractorConfig = ExtractorConfig.parse(obj);
+		}catch(IllegalArgumentException | NullPointerException e){
+			LOGGER.warn("could not parse 'extractor' config: {}", e.getMessage());
+		}
+	}
+	
+	public static void setImagecacheConfig(JsonObject obj){
+		try{
+			imageCacheConfig = ImageCacheConfig.parse(obj);
+		}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
+			LOGGER.warn("could not parse 'imagecache' config: {}", e.getMessage());
+		}
+	}
+	
 	private static void parse(InputStream in) throws IOException{
 		JsonObject obj = null;
 		try{
@@ -53,45 +93,25 @@ public class Config {
 		}
 		
 		for(String name : obj.names()){
-			switch(name){
+			switch(name.toLowerCase()){
 			case "database":{
-				try{
-					databaseConfig = DatabaseConfig.parse(obj.get("database").asObject());
-				}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
-					LOGGER.warn("could not parse 'database' config: {}", e.getMessage());
-				}
+				setDatabaseConfig(obj.get("database").asObject());
 				break;
 			}
 			case "retriever":{
-				try{
-					retrieverConfig = RetrieverConfig.parse(obj.get("retriever").asObject());
-				}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
-					LOGGER.warn("could not parse 'retriever' config: {}", e.getMessage());
-				}
+				setRetriverConfig(obj.get("retriever").asObject());
 				break;
 			}
 			case "decoder":{
-				try{
-					decoderConfig = DecoderConfig.parse(obj.get("decoder").asObject());
-				}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
-					LOGGER.warn("could not parse 'decoder' config: {}", e.getMessage());
-				}
+				setDecoderConfig(obj.get("decoder").asObject());
 				break;
 			}
 			case "extractor":{
-				try{
-					extractorConfig = ExtractorConfig.parse(obj.get("extractor").asObject());
-				}catch(IllegalArgumentException | NullPointerException e){
-					LOGGER.warn("could not parse 'extractor' config: {}", e.getMessage());
-				}
+				setExtractorConfig(obj.get("extractor").asObject());
 				break;
 			}
 			case "imagecache":{
-				try{
-					imageCacheConfig = ImageCacheConfig.parse(obj.get("imagecache").asObject());
-				}catch(UnsupportedOperationException | IllegalArgumentException | NullPointerException e){
-					LOGGER.warn("could not parse 'imagecache' config: {}", e.getMessage());
-				}
+				setImagecacheConfig(obj.get("imagecache").asObject());
 				break;
 			}
 			case "api":{
