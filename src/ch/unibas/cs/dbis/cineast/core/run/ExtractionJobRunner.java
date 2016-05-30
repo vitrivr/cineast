@@ -1,6 +1,8 @@
 package ch.unibas.cs.dbis.cineast.core.run;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,17 @@ public class ExtractionJobRunner implements Runnable{
 	private List<File> subtitleFiles = null;
 	private String inputId = null;
 	private List<Extractor> extractors = new ArrayList<>();
+	
+	public ExtractionJobRunner(File jobFile) {
+		try {
+			JsonObject obj = JsonValue.readFrom(new FileReader(jobFile)).asObject();
+			parseJobConfig(obj);
+
+		} catch (IOException e) {
+			//TODO
+		}
+		chechValidity();
+	}
 	
 	public ExtractionJobRunner(JsonObject jobConfig){
 		parseJobConfig(jobConfig);

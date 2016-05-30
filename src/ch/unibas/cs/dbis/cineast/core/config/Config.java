@@ -1,5 +1,6 @@
 package ch.unibas.cs.dbis.cineast.core.config;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,6 +42,28 @@ public class Config {
 		}
 		
 		
+	}
+	
+	public static void parse(File configFile){
+		if(configFile == null){
+			LOGGER.error("config file cannot be null");
+			return;
+		}
+		if(!configFile.exists() || configFile.isDirectory()){
+			LOGGER.error("specified path is not a config file: {}", configFile.getAbsolutePath());
+			return;
+		}
+		if(!configFile.canRead()){
+			LOGGER.error("specified config file is not readable: {}", configFile.getAbsolutePath());
+			return;
+		}
+		try{
+			FileInputStream fin = new FileInputStream("cineast.json");
+			parse(fin);
+			fin.close();
+		}catch(IOException e){
+			LOGGER.error("an error occurred while reading the config file: {}", e.getMessage());
+		}
 	}
 	
 	public static void setDatabaseConfig(JsonObject obj){

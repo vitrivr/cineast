@@ -10,6 +10,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,6 +60,7 @@ import ch.unibas.cs.dbis.cineast.core.features.SubtitleWordSearch;
 import ch.unibas.cs.dbis.cineast.core.features.exporter.QueryImageExporter;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
 import ch.unibas.cs.dbis.cineast.core.features.retriever.RetrieverInitializer;
+import ch.unibas.cs.dbis.cineast.core.run.ExtractionJobRunner;
 import ch.unibas.cs.dbis.cineast.core.run.FeatureExtractionRunner;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -82,13 +90,27 @@ public class API {
 	public static void main(String[] args) {
 		// TODO parse command line arguments
 
+		CommandLine commandline = handleCommandLine(args);
 		
-		if(Config.getApiConfig().getEnableCli()){
+		if(commandline.hasOption("config")){
+			Config.parse(new File(commandline.getOptionValue("config")));
+		}
+		
+		boolean disableAllAPI = false;
+		
+		if(commandline.hasOption("job")){
+			ExtractionJobRunner ejr = new ExtractionJobRunner(new File(commandline.getOptionValue("job")));
+			Thread thread = new Thread(ejr);
+			thread.start();
+			disableAllAPI = true;
+		}
+		
+		if(!disableAllAPI && Config.getApiConfig().getEnableCli() || commandline.hasOption('i')){
 			APICLIThread cli = new APICLIThread();
 			cli.start();
 		}
 		
-		if(Config.getApiConfig().getEnableJsonAPI()){
+		if(!disableAllAPI && Config.getApiConfig().getEnableJsonAPI()){
 			try {
 				ServerSocket ssocket = new ServerSocket(Config.getApiConfig().getJsonApiPort());
 				/*
@@ -104,6 +126,37 @@ public class API {
 			}
 			LOGGER.info("Exiting...");
 		}
+	}
+
+	private static CommandLine handleCommandLine(String[] args) {
+		Options options = new Options();
+		
+		options.addOption("h", "help", false, "print this message");
+		options.addOption("i", "interactive", false, "enables the CLI independently of what is specified in the config");
+		
+		Option configLocation = new Option(null, "config", true, "alternative config file, by default 'cineast.json' is used");
+		configLocation.setArgName("CONFIG_FILE");
+		options.addOption(configLocation);
+		
+		Option extractionJob = new Option(null, "job", true, "job file containing settings for extraction");
+		configLocation.setArgName("JOB_FILE");
+		options.addOption(extractionJob);
+		
+		CommandLineParser parser = new DefaultParser();
+		CommandLine line;
+	    try {
+	         line = parser.parse( options, args );
+	    }catch(ParseException e) {
+	    	LOGGER.error("Error parsing command line arguments: {}", e.getMessage());
+	    	return null;
+	    }
+
+	    if(line.hasOption("help")){
+	    	HelpFormatter formatter = new HelpFormatter();
+	    	formatter.printHelp("cineast", options);
+	    }
+	    
+		return line;
 	}
 
 	public static RetrieverInitializer getInitializer() {
