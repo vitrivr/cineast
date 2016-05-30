@@ -11,6 +11,7 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 import ch.unibas.cs.dbis.cineast.core.util.FileUtil;
@@ -23,7 +24,7 @@ public class ExtractionJobRunner implements Runnable{
 	private File inputFile = null;
 	private String inputName = null;
 	private List<File> subtitleFiles = null;
-	private long inputId = -1;
+	private String inputId = null;
 	private List<Extractor> extractors = new ArrayList<>();
 	
 	public ExtractionJobRunner(JsonObject jobConfig){
@@ -93,6 +94,26 @@ public class ExtractionJobRunner implements Runnable{
 				parseExportersEntry(inputArray);
 				break;
 			}
+			case "database":{
+				Config.setDatabaseConfig(configEntry.asObject());
+				break;
+			}
+			case "retriever":{
+				Config.setRetriverConfig(configEntry.asObject());
+				break;
+			}
+			case "decoder":{
+				Config.setDecoderConfig(configEntry.asObject());
+				break;
+			}
+			case "extractor":{
+				Config.setExtractorConfig(configEntry.asObject());
+				break;
+			}
+			case "imagecache":{
+				Config.setImagecacheConfig(configEntry.asObject());
+				break;
+			}
 		
 			default:{
 				LOGGER.warn("unrecognized config entry {}, ignoring", entryName);
@@ -145,7 +166,7 @@ public class ExtractionJobRunner implements Runnable{
 	 * 	"file" : "...",
 	 * 	"name" : "...",
 	 * 	"subtitles" : ["", "", ""],
-	 * 	"id" : long
+	 * 	"id" : string
 	 * }
 	 * 'folder' designates the base folder in which the input files are to be found. If 'file' or 'subtitles' is not specified, the folder is scanned for files.
 	 * 'file' designates the input (video) file to be processed. If a 'folder' is specified, the path is expected to be relative to it and absolute otherwise.
@@ -310,14 +331,14 @@ public class ExtractionJobRunner implements Runnable{
 		
 		if(inputObject.get("id") != null){
 			try{
-				long id = inputObject.get("id").asLong();
-				if(id > 0){
+				String id = inputObject.get("id").asString();
+				if(id != null && !id.isEmpty()){
 					this.inputId = id;
 				}else{
-					LOGGER.warn("Could not parse job config entry 'input.id': entry cannot be < 1, ignoring 'id'");
+					LOGGER.warn("Could not parse job config entry 'input.id': entry cannot be empty, ignoring 'id'");
 				}
 			}catch(UnsupportedOperationException | NumberFormatException notAValidNumber){
-				LOGGER.warn("Could not parse job config entry 'input.id': entry is not a valid number, ignoring 'id'");
+				LOGGER.warn("Could not parse job config entry 'input.id': entry is not a string, ignoring 'id'");
 			}
 		}
 		
