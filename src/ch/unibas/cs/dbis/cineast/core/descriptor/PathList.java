@@ -5,15 +5,20 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import boofcv.abst.feature.associate.AssociateDescTo2D;
 import boofcv.abst.feature.associate.AssociateDescription;
+import boofcv.abst.feature.associate.AssociateDescription2D;
 import boofcv.abst.feature.associate.ScoreAssociation;
+import boofcv.abst.feature.associate.WrapAssociateSurfBasic;
 import boofcv.abst.feature.detdesc.DetectDescribePoint;
 import boofcv.abst.feature.detect.interest.ConfigFastHessian;
 import boofcv.abst.feature.detect.interest.ConfigGeneralDetector;
+import boofcv.abst.feature.tracker.DdaManagerDetectDescribePoint;
+import boofcv.abst.feature.tracker.DetectDescribeAssociate;
 import boofcv.abst.feature.tracker.PointTrack;
 import boofcv.abst.feature.tracker.PointTracker;
-import boofcv.abst.sfm.d2.ImageMotion2D;
 import boofcv.alg.descriptor.UtilFeature;
+import boofcv.alg.feature.associate.AssociateSurfBasic;
 import boofcv.alg.filter.derivative.GImageDerivativeOps;
 import boofcv.alg.tracker.klt.PkltConfig;
 import boofcv.factory.feature.associate.FactoryAssociation;
@@ -21,10 +26,10 @@ import boofcv.factory.feature.detdesc.FactoryDetectDescribe;
 import boofcv.factory.feature.tracker.FactoryPointTracker;
 import boofcv.factory.geo.ConfigRansac;
 import boofcv.factory.geo.FactoryMultiViewRobust;
-import boofcv.factory.sfm.FactoryMotion2D;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.feature.AssociatedIndex;
 import boofcv.struct.feature.BrightFeature;
+import boofcv.struct.feature.TupleDesc_F64;
 import boofcv.struct.geo.AssociatedPair;
 import boofcv.struct.image.GrayU8;
 
@@ -52,12 +57,6 @@ public class PathList {
 		MultiImage img = frames.get(0).getImage();
 		int numberOfPointsToTrack = img.getWidth() * img.getHeight() / 100;
 		
-		PkltConfig config = new PkltConfig();
-		config.templateRadius = 3;
-		config.pyramidScaling = new int[] { 1, 2, 4, 8 };
-		PointTracker<GrayU8> tracker = FactoryPointTracker.klt(config, new ConfigGeneralDetector(numberOfPointsToTrack, 3, 1), GrayU8.class, GImageDerivativeOps.getDerivativeType(GrayU8.class));
-		//PointTracker<GrayU8> tracker = FactoryPointTracker.dda_FH_SURF_Stable(new ConfigFastHessian(1, 2, 200, 1, 9, 4, 4), null,null, GrayU8.class);
-				
 		DetectDescribePoint<GrayU8, BrightFeature> detDesc = FactoryDetectDescribe.surfStable(new ConfigFastHessian(1, 2, 200, 1, 9, 4, 4), null,null, GrayU8.class);
 		ScoreAssociation<BrightFeature> scorer = FactoryAssociation.defaultScore(detDesc.getDescriptionType());
 		AssociateDescription<BrightFeature> associate = FactoryAssociation.greedy( scorer, 2, true);
@@ -65,9 +64,20 @@ public class PathList {
 		Homography2D_F64 currentToFirst = new Homography2D_F64(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
 		Homography2D_F64 currentToLast = null;
 		
+		//PkltConfig config = new PkltConfig();
+		//config.templateRadius = 3;
+		//config.pyramidScaling = new int[] { 1, 2, 4, 8 };
+		//PointTracker<GrayU8> tracker = FactoryPointTracker.klt(config, new ConfigGeneralDetector(numberOfPointsToTrack, 3, 1), GrayU8.class, GImageDerivativeOps.getDerivativeType(GrayU8.class));
+		ScoreAssociation<TupleDesc_F64> score = FactoryAssociation.scoreEuclidean(TupleDesc_F64.class, true);
+		AssociateSurfBasic assoc = new AssociateSurfBasic(FactoryAssociation.greedy(score, 5, true));
+		AssociateDescription2D<BrightFeature> generalAssoc = new AssociateDescTo2D<BrightFeature>(new WrapAssociateSurfBasic(assoc));
+		DdaManagerDetectDescribePoint<GrayU8,BrightFeature> manager = new DdaManagerDetectDescribePoint<GrayU8,BrightFeature>(FactoryDetectDescribe.surfStable(new ConfigFastHessian(1, 2, 200, 1, 9, 4, 4), null,null, GrayU8.class));
+		PointTracker<GrayU8> tracker = new DetectDescribeAssociate<GrayU8,BrightFeature>(manager, generalAssoc,true);
+		
 		TLongObjectHashMap<LinkedList<Point2D_F32>> paths = new TLongObjectHashMap<LinkedList<Point2D_F32>>();
 		TLongIntHashMap trackStartFrames = new TLongIntHashMap();
 		ArrayList<PointTrack> tracks = new ArrayList<PointTrack>(numberOfPointsToTrack);
+		ArrayList<PointTrack> inactiveTracks = new ArrayList<PointTrack>(numberOfPointsToTrack);
 		
 		GrayU8 gray = null;
 		GrayU8 grayLast = null;
@@ -77,16 +87,20 @@ public class PathList {
 			
 			tracker.process(gray);
 			tracks.clear();
-			tracker.spawnTracks();
 			if (tracker.getActiveTracks(tracks).size() < (numberOfPointsToTrack * 0.9f)){
 				tracker.spawnTracks();
+			}
+			inactiveTracks.clear();
+			tracker.getInactiveTracks(inactiveTracks);
+			for (PointTrack p : inactiveTracks){
+				tracker.dropTrack(p);
 			}
 			
 			if (0 == frameIdx){
 				currentToLast = new Homography2D_F64(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
 			}
 			else{
-				currentToLast = getHomography(gray,grayLast, detDesc, associate, modelMatcher);
+				currentToLast = getHomography(gray,grayLast, detDesc, associate, modelMatcher,currentToLast);
 			}
 			currentToFirst = currentToLast.concat(currentToFirst,null);
 			
@@ -117,13 +131,11 @@ public class PathList {
 		
 		return pathList;
 	}
-	
-
-	
+		
 	private static Homography2D_F64 getHomography(GrayU8 src, GrayU8 dst,
 			DetectDescribePoint<GrayU8, BrightFeature> detDesc, 
 			AssociateDescription<BrightFeature> associate,
-			ModelMatcher<Homography2D_F64,AssociatedPair> modelMatcher){
+			ModelMatcher<Homography2D_F64,AssociatedPair> modelMatcher,Homography2D_F64 result){
 		
 		List<Point2D_F64> pointsSrc = new ArrayList<Point2D_F64>();
 		List<Point2D_F64> pointsDst = new ArrayList<Point2D_F64>();
@@ -143,15 +155,15 @@ public class PathList {
  
 		for( int i = 0; i < matches.size(); i++ ) {
 			AssociatedIndex match = matches.get(i);
- 
 			Point2D_F64 s = pointsSrc.get(match.src);
 			Point2D_F64 d = pointsDst.get(match.dst);
- 
+			if(s.x > src.width * 0.25 && s.x < src.width * 0.75 && s.y > src.height * 0.25 && s.y < src.height * 0.75)
+				continue;
 			pairs.add( new AssociatedPair(s,d,false));
 		}
  
 		if( !modelMatcher.process(pairs) )
-			return new Homography2D_F64(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
+			return result;
  
 		return modelMatcher.getModelParameters().copy();		
 	}
