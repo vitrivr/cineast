@@ -3071,6 +3071,1068 @@ public final class Grpc {
 
   }
 
+  public interface DataMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:DataMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional int64 longData = 1;</code>
+     */
+    long getLongData();
+
+    /**
+     * <code>optional int32 intData = 2;</code>
+     */
+    int getIntData();
+
+    /**
+     * <code>optional float floatData = 3;</code>
+     */
+    float getFloatData();
+
+    /**
+     * <code>optional double doubleData = 4;</code>
+     */
+    double getDoubleData();
+
+    /**
+     * <code>optional string stringData = 5;</code>
+     */
+    java.lang.String getStringData();
+    /**
+     * <code>optional string stringData = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getStringDataBytes();
+
+    /**
+     * <code>optional bool booleanData = 6;</code>
+     */
+    boolean getBooleanData();
+
+    /**
+     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getFeatureData();
+    /**
+     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder();
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage.DatatypeCase getDatatypeCase();
+  }
+  /**
+   * Protobuf type {@code DataMessage}
+   */
+  public  static final class DataMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:DataMessage)
+      DataMessageOrBuilder {
+    // Use DataMessage.newBuilder() to construct.
+    private DataMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private DataMessage() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private DataMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              datatypeCase_ = 1;
+              datatype_ = input.readInt64();
+              break;
+            }
+            case 16: {
+              datatypeCase_ = 2;
+              datatype_ = input.readInt32();
+              break;
+            }
+            case 29: {
+              datatypeCase_ = 3;
+              datatype_ = input.readFloat();
+              break;
+            }
+            case 33: {
+              datatypeCase_ = 4;
+              datatype_ = input.readDouble();
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+              datatypeCase_ = 5;
+              datatype_ = s;
+              break;
+            }
+            case 48: {
+              datatypeCase_ = 6;
+              datatype_ = input.readBool();
+              break;
+            }
+            case 58: {
+              ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder subBuilder = null;
+              if (datatypeCase_ == 7) {
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) datatype_).toBuilder();
+              }
+              datatype_ =
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) datatype_);
+                datatype_ = subBuilder.buildPartial();
+              }
+              datatypeCase_ = 7;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_DataMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_DataMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage.Builder.class);
+    }
+
+    private int datatypeCase_ = 0;
+    private java.lang.Object datatype_;
+    public enum DatatypeCase
+        implements com.google.protobuf.Internal.EnumLite {
+      LONGDATA(1),
+      INTDATA(2),
+      FLOATDATA(3),
+      DOUBLEDATA(4),
+      STRINGDATA(5),
+      BOOLEANDATA(6),
+      FEATUREDATA(7),
+      DATATYPE_NOT_SET(0);
+      private int value = 0;
+      private DatatypeCase(int value) {
+        this.value = value;
+      }
+      public static DatatypeCase valueOf(int value) {
+        switch (value) {
+          case 1: return LONGDATA;
+          case 2: return INTDATA;
+          case 3: return FLOATDATA;
+          case 4: return DOUBLEDATA;
+          case 5: return STRINGDATA;
+          case 6: return BOOLEANDATA;
+          case 7: return FEATUREDATA;
+          case 0: return DATATYPE_NOT_SET;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public DatatypeCase
+    getDatatypeCase() {
+      return DatatypeCase.valueOf(
+          datatypeCase_);
+    }
+
+    public static final int LONGDATA_FIELD_NUMBER = 1;
+    /**
+     * <code>optional int64 longData = 1;</code>
+     */
+    public long getLongData() {
+      if (datatypeCase_ == 1) {
+        return (java.lang.Long) datatype_;
+      }
+      return 0L;
+    }
+
+    public static final int INTDATA_FIELD_NUMBER = 2;
+    /**
+     * <code>optional int32 intData = 2;</code>
+     */
+    public int getIntData() {
+      if (datatypeCase_ == 2) {
+        return (java.lang.Integer) datatype_;
+      }
+      return 0;
+    }
+
+    public static final int FLOATDATA_FIELD_NUMBER = 3;
+    /**
+     * <code>optional float floatData = 3;</code>
+     */
+    public float getFloatData() {
+      if (datatypeCase_ == 3) {
+        return (java.lang.Float) datatype_;
+      }
+      return 0F;
+    }
+
+    public static final int DOUBLEDATA_FIELD_NUMBER = 4;
+    /**
+     * <code>optional double doubleData = 4;</code>
+     */
+    public double getDoubleData() {
+      if (datatypeCase_ == 4) {
+        return (java.lang.Double) datatype_;
+      }
+      return 0D;
+    }
+
+    public static final int STRINGDATA_FIELD_NUMBER = 5;
+    /**
+     * <code>optional string stringData = 5;</code>
+     */
+    public java.lang.String getStringData() {
+      java.lang.Object ref = "";
+      if (datatypeCase_ == 5) {
+        ref = datatype_;
+      }
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (datatypeCase_ == 5) {
+          datatype_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string stringData = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getStringDataBytes() {
+      java.lang.Object ref = "";
+      if (datatypeCase_ == 5) {
+        ref = datatype_;
+      }
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        if (datatypeCase_ == 5) {
+          datatype_ = b;
+        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int BOOLEANDATA_FIELD_NUMBER = 6;
+    /**
+     * <code>optional bool booleanData = 6;</code>
+     */
+    public boolean getBooleanData() {
+      if (datatypeCase_ == 6) {
+        return (java.lang.Boolean) datatype_;
+      }
+      return false;
+    }
+
+    public static final int FEATUREDATA_FIELD_NUMBER = 7;
+    /**
+     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getFeatureData() {
+      if (datatypeCase_ == 7) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) datatype_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+    }
+    /**
+     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
+      if (datatypeCase_ == 7) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) datatype_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (datatypeCase_ == 1) {
+        output.writeInt64(
+            1, (long)((java.lang.Long) datatype_));
+      }
+      if (datatypeCase_ == 2) {
+        output.writeInt32(
+            2, (int)((java.lang.Integer) datatype_));
+      }
+      if (datatypeCase_ == 3) {
+        output.writeFloat(
+            3, (float)((java.lang.Float) datatype_));
+      }
+      if (datatypeCase_ == 4) {
+        output.writeDouble(
+            4, (double)((java.lang.Double) datatype_));
+      }
+      if (datatypeCase_ == 5) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 5, datatype_);
+      }
+      if (datatypeCase_ == 6) {
+        output.writeBool(
+            6, (boolean)((java.lang.Boolean) datatype_));
+      }
+      if (datatypeCase_ == 7) {
+        output.writeMessage(7, (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) datatype_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (datatypeCase_ == 1) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(
+              1, (long)((java.lang.Long) datatype_));
+      }
+      if (datatypeCase_ == 2) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(
+              2, (int)((java.lang.Integer) datatype_));
+      }
+      if (datatypeCase_ == 3) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(
+              3, (float)((java.lang.Float) datatype_));
+      }
+      if (datatypeCase_ == 4) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(
+              4, (double)((java.lang.Double) datatype_));
+      }
+      if (datatypeCase_ == 5) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(5, datatype_);
+      }
+      if (datatypeCase_ == 6) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(
+              6, (boolean)((java.lang.Boolean) datatype_));
+      }
+      if (datatypeCase_ == 7) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) datatype_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code DataMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:DataMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.DataMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_DataMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_DataMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        datatypeCase_ = 0;
+        datatype_ = null;
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_DataMessage_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage(this);
+        if (datatypeCase_ == 1) {
+          result.datatype_ = datatype_;
+        }
+        if (datatypeCase_ == 2) {
+          result.datatype_ = datatype_;
+        }
+        if (datatypeCase_ == 3) {
+          result.datatype_ = datatype_;
+        }
+        if (datatypeCase_ == 4) {
+          result.datatype_ = datatype_;
+        }
+        if (datatypeCase_ == 5) {
+          result.datatype_ = datatype_;
+        }
+        if (datatypeCase_ == 6) {
+          result.datatype_ = datatype_;
+        }
+        if (datatypeCase_ == 7) {
+          if (featureDataBuilder_ == null) {
+            result.datatype_ = datatype_;
+          } else {
+            result.datatype_ = featureDataBuilder_.build();
+          }
+        }
+        result.datatypeCase_ = datatypeCase_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage.getDefaultInstance()) return this;
+        switch (other.getDatatypeCase()) {
+          case LONGDATA: {
+            setLongData(other.getLongData());
+            break;
+          }
+          case INTDATA: {
+            setIntData(other.getIntData());
+            break;
+          }
+          case FLOATDATA: {
+            setFloatData(other.getFloatData());
+            break;
+          }
+          case DOUBLEDATA: {
+            setDoubleData(other.getDoubleData());
+            break;
+          }
+          case STRINGDATA: {
+            datatypeCase_ = 5;
+            datatype_ = other.datatype_;
+            onChanged();
+            break;
+          }
+          case BOOLEANDATA: {
+            setBooleanData(other.getBooleanData());
+            break;
+          }
+          case FEATUREDATA: {
+            mergeFeatureData(other.getFeatureData());
+            break;
+          }
+          case DATATYPE_NOT_SET: {
+            break;
+          }
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int datatypeCase_ = 0;
+      private java.lang.Object datatype_;
+      public DatatypeCase
+          getDatatypeCase() {
+        return DatatypeCase.valueOf(
+            datatypeCase_);
+      }
+
+      public Builder clearDatatype() {
+        datatypeCase_ = 0;
+        datatype_ = null;
+        onChanged();
+        return this;
+      }
+
+
+      /**
+       * <code>optional int64 longData = 1;</code>
+       */
+      public long getLongData() {
+        if (datatypeCase_ == 1) {
+          return (java.lang.Long) datatype_;
+        }
+        return 0L;
+      }
+      /**
+       * <code>optional int64 longData = 1;</code>
+       */
+      public Builder setLongData(long value) {
+        datatypeCase_ = 1;
+        datatype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int64 longData = 1;</code>
+       */
+      public Builder clearLongData() {
+        if (datatypeCase_ == 1) {
+          datatypeCase_ = 0;
+          datatype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>optional int32 intData = 2;</code>
+       */
+      public int getIntData() {
+        if (datatypeCase_ == 2) {
+          return (java.lang.Integer) datatype_;
+        }
+        return 0;
+      }
+      /**
+       * <code>optional int32 intData = 2;</code>
+       */
+      public Builder setIntData(int value) {
+        datatypeCase_ = 2;
+        datatype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 intData = 2;</code>
+       */
+      public Builder clearIntData() {
+        if (datatypeCase_ == 2) {
+          datatypeCase_ = 0;
+          datatype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>optional float floatData = 3;</code>
+       */
+      public float getFloatData() {
+        if (datatypeCase_ == 3) {
+          return (java.lang.Float) datatype_;
+        }
+        return 0F;
+      }
+      /**
+       * <code>optional float floatData = 3;</code>
+       */
+      public Builder setFloatData(float value) {
+        datatypeCase_ = 3;
+        datatype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional float floatData = 3;</code>
+       */
+      public Builder clearFloatData() {
+        if (datatypeCase_ == 3) {
+          datatypeCase_ = 0;
+          datatype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>optional double doubleData = 4;</code>
+       */
+      public double getDoubleData() {
+        if (datatypeCase_ == 4) {
+          return (java.lang.Double) datatype_;
+        }
+        return 0D;
+      }
+      /**
+       * <code>optional double doubleData = 4;</code>
+       */
+      public Builder setDoubleData(double value) {
+        datatypeCase_ = 4;
+        datatype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional double doubleData = 4;</code>
+       */
+      public Builder clearDoubleData() {
+        if (datatypeCase_ == 4) {
+          datatypeCase_ = 0;
+          datatype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>optional string stringData = 5;</code>
+       */
+      public java.lang.String getStringData() {
+        java.lang.Object ref = "";
+        if (datatypeCase_ == 5) {
+          ref = datatype_;
+        }
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (datatypeCase_ == 5) {
+            datatype_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string stringData = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getStringDataBytes() {
+        java.lang.Object ref = "";
+        if (datatypeCase_ == 5) {
+          ref = datatype_;
+        }
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          if (datatypeCase_ == 5) {
+            datatype_ = b;
+          }
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string stringData = 5;</code>
+       */
+      public Builder setStringData(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  datatypeCase_ = 5;
+        datatype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string stringData = 5;</code>
+       */
+      public Builder clearStringData() {
+        if (datatypeCase_ == 5) {
+          datatypeCase_ = 0;
+          datatype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <code>optional string stringData = 5;</code>
+       */
+      public Builder setStringDataBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        datatypeCase_ = 5;
+        datatype_ = value;
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>optional bool booleanData = 6;</code>
+       */
+      public boolean getBooleanData() {
+        if (datatypeCase_ == 6) {
+          return (java.lang.Boolean) datatype_;
+        }
+        return false;
+      }
+      /**
+       * <code>optional bool booleanData = 6;</code>
+       */
+      public Builder setBooleanData(boolean value) {
+        datatypeCase_ = 6;
+        datatype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool booleanData = 6;</code>
+       */
+      public Builder clearBooleanData() {
+        if (datatypeCase_ == 6) {
+          datatypeCase_ = 0;
+          datatype_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder> featureDataBuilder_;
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getFeatureData() {
+        if (featureDataBuilder_ == null) {
+          if (datatypeCase_ == 7) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) datatype_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+        } else {
+          if (datatypeCase_ == 7) {
+            return featureDataBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public Builder setFeatureData(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage value) {
+        if (featureDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          datatype_ = value;
+          onChanged();
+        } else {
+          featureDataBuilder_.setMessage(value);
+        }
+        datatypeCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public Builder setFeatureData(
+          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder builderForValue) {
+        if (featureDataBuilder_ == null) {
+          datatype_ = builderForValue.build();
+          onChanged();
+        } else {
+          featureDataBuilder_.setMessage(builderForValue.build());
+        }
+        datatypeCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public Builder mergeFeatureData(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage value) {
+        if (featureDataBuilder_ == null) {
+          if (datatypeCase_ == 7 &&
+              datatype_ != ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance()) {
+            datatype_ = ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) datatype_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            datatype_ = value;
+          }
+          onChanged();
+        } else {
+          if (datatypeCase_ == 7) {
+            featureDataBuilder_.mergeFrom(value);
+          }
+          featureDataBuilder_.setMessage(value);
+        }
+        datatypeCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public Builder clearFeatureData() {
+        if (featureDataBuilder_ == null) {
+          if (datatypeCase_ == 7) {
+            datatypeCase_ = 0;
+            datatype_ = null;
+            onChanged();
+          }
+        } else {
+          if (datatypeCase_ == 7) {
+            datatypeCase_ = 0;
+            datatype_ = null;
+          }
+          featureDataBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder getFeatureDataBuilder() {
+        return getFeatureDataFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
+        if ((datatypeCase_ == 7) && (featureDataBuilder_ != null)) {
+          return featureDataBuilder_.getMessageOrBuilder();
+        } else {
+          if (datatypeCase_ == 7) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) datatype_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder> 
+          getFeatureDataFieldBuilder() {
+        if (featureDataBuilder_ == null) {
+          if (!(datatypeCase_ == 7)) {
+            datatype_ = ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
+          }
+          featureDataBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) datatype_,
+                  getParentForChildren(),
+                  isClean());
+          datatype_ = null;
+        }
+        datatypeCase_ = 7;
+        onChanged();;
+        return featureDataBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:DataMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:DataMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage();
+    }
+
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<DataMessage>
+        PARSER = new com.google.protobuf.AbstractParser<DataMessage>() {
+      public DataMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new DataMessage(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<DataMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DataMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface CreateEntityMessageOrBuilder extends
       // @@protoc_insertion_point(interface_extends:CreateEntityMessage)
       com.google.protobuf.MessageOrBuilder {
@@ -6335,9 +7397,9 @@ public final class Grpc {
         com.google.protobuf.MessageOrBuilder {
 
       /**
-       * <code>map&lt;string, .InsertDataMessage&gt; data = 1;</code>
+       * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
        */
-      java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
+      java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
       getData();
     }
     /**
@@ -6384,7 +7446,7 @@ public final class Grpc {
                       DataDefaultEntryHolder.defaultEntry);
                   mutable_bitField0_ |= 0x00000001;
                 }
-                com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
+                com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
                 data = input.readMessage(
                     DataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
                 data_.getMutableMap().put(data.getKey(), data.getValue());
@@ -6428,18 +7490,18 @@ public final class Grpc {
       public static final int DATA_FIELD_NUMBER = 1;
       private static final class DataDefaultEntryHolder {
         static final com.google.protobuf.MapEntry<
-            java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> defaultEntry =
+            java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> defaultEntry =
                 com.google.protobuf.MapEntry
-                .<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>newDefaultInstance(
+                .<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>newDefaultInstance(
                     ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertMessage_TupleInsertMessage_DataEntry_descriptor, 
                     com.google.protobuf.WireFormat.FieldType.STRING,
                     "",
                     com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                    ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.getDefaultInstance());
+                    ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage.getDefaultInstance());
       }
       private com.google.protobuf.MapField<
-          java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> data_;
-      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
+          java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> data_;
+      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
       internalGetData() {
         if (data_ == null) {
           return com.google.protobuf.MapField.emptyMapField(
@@ -6448,10 +7510,10 @@ public final class Grpc {
         return data_;
       }
       /**
-       * <code>map&lt;string, .InsertDataMessage&gt; data = 1;</code>
+       * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
        */
 
-      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> getData() {
+      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> getData() {
         return internalGetData().getMap();
       }
 
@@ -6467,9 +7529,9 @@ public final class Grpc {
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
-        for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> entry
+        for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> entry
              : internalGetData().getMap().entrySet()) {
-          com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
+          com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
           data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
               .setKey(entry.getKey())
               .setValue(entry.getValue())
@@ -6483,9 +7545,9 @@ public final class Grpc {
         if (size != -1) return size;
 
         size = 0;
-        for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> entry
+        for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> entry
              : internalGetData().getMap().entrySet()) {
-          com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
+          com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
           data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
               .setKey(entry.getKey())
               .setValue(entry.getValue())
@@ -6697,8 +7759,8 @@ public final class Grpc {
         private int bitField0_;
 
         private com.google.protobuf.MapField<
-            java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> data_;
-        private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
+            java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> data_;
+        private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
         internalGetData() {
           if (data_ == null) {
             return com.google.protobuf.MapField.emptyMapField(
@@ -6706,7 +7768,7 @@ public final class Grpc {
          }
           return data_;
         }
-        private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
+        private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
         internalGetMutableData() {
           onChanged();;
           if (data_ == null) {
@@ -6719,23 +7781,23 @@ public final class Grpc {
           return data_;
         }
         /**
-         * <code>map&lt;string, .InsertDataMessage&gt; data = 1;</code>
+         * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
          */
-        public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> getData() {
+        public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> getData() {
           return internalGetData().getMap();
         }
         /**
-         * <code>map&lt;string, .InsertDataMessage&gt; data = 1;</code>
+         * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
          */
-        public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage>
+        public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
         getMutableData() {
           return internalGetMutableData().getMutableMap();
         }
         /**
-         * <code>map&lt;string, .InsertDataMessage&gt; data = 1;</code>
+         * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
          */
         public Builder putAllData(
-            java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage> values) {
+            java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> values) {
           getMutableData().putAll(values);
           return this;
         }
@@ -7487,1068 +8549,6 @@ public final class Grpc {
     }
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface InsertDataMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:InsertDataMessage)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>optional int64 longData = 1;</code>
-     */
-    long getLongData();
-
-    /**
-     * <code>optional int32 intData = 2;</code>
-     */
-    int getIntData();
-
-    /**
-     * <code>optional float floatData = 3;</code>
-     */
-    float getFloatData();
-
-    /**
-     * <code>optional double doubleData = 4;</code>
-     */
-    double getDoubleData();
-
-    /**
-     * <code>optional string stringData = 5;</code>
-     */
-    java.lang.String getStringData();
-    /**
-     * <code>optional string stringData = 5;</code>
-     */
-    com.google.protobuf.ByteString
-        getStringDataBytes();
-
-    /**
-     * <code>optional bool booleanData = 6;</code>
-     */
-    boolean getBooleanData();
-
-    /**
-     * <code>optional .FeatureVectorMessage featureData = 7;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getFeatureData();
-    /**
-     * <code>optional .FeatureVectorMessage featureData = 7;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder();
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.InserttypeCase getInserttypeCase();
-  }
-  /**
-   * Protobuf type {@code InsertDataMessage}
-   */
-  public  static final class InsertDataMessage extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:InsertDataMessage)
-      InsertDataMessageOrBuilder {
-    // Use InsertDataMessage.newBuilder() to construct.
-    private InsertDataMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-    }
-    private InsertDataMessage() {
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private InsertDataMessage(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 8: {
-              inserttypeCase_ = 1;
-              inserttype_ = input.readInt64();
-              break;
-            }
-            case 16: {
-              inserttypeCase_ = 2;
-              inserttype_ = input.readInt32();
-              break;
-            }
-            case 29: {
-              inserttypeCase_ = 3;
-              inserttype_ = input.readFloat();
-              break;
-            }
-            case 33: {
-              inserttypeCase_ = 4;
-              inserttype_ = input.readDouble();
-              break;
-            }
-            case 42: {
-              java.lang.String s = input.readStringRequireUtf8();
-              inserttypeCase_ = 5;
-              inserttype_ = s;
-              break;
-            }
-            case 48: {
-              inserttypeCase_ = 6;
-              inserttype_ = input.readBool();
-              break;
-            }
-            case 58: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder subBuilder = null;
-              if (inserttypeCase_ == 7) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_).toBuilder();
-              }
-              inserttype_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_);
-                inserttype_ = subBuilder.buildPartial();
-              }
-              inserttypeCase_ = 7;
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw new RuntimeException(e.setUnfinishedMessage(this));
-      } catch (java.io.IOException e) {
-        throw new RuntimeException(
-            new com.google.protobuf.InvalidProtocolBufferException(
-                e.getMessage()).setUnfinishedMessage(this));
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertDataMessage_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertDataMessage_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.Builder.class);
-    }
-
-    private int inserttypeCase_ = 0;
-    private java.lang.Object inserttype_;
-    public enum InserttypeCase
-        implements com.google.protobuf.Internal.EnumLite {
-      LONGDATA(1),
-      INTDATA(2),
-      FLOATDATA(3),
-      DOUBLEDATA(4),
-      STRINGDATA(5),
-      BOOLEANDATA(6),
-      FEATUREDATA(7),
-      INSERTTYPE_NOT_SET(0);
-      private int value = 0;
-      private InserttypeCase(int value) {
-        this.value = value;
-      }
-      public static InserttypeCase valueOf(int value) {
-        switch (value) {
-          case 1: return LONGDATA;
-          case 2: return INTDATA;
-          case 3: return FLOATDATA;
-          case 4: return DOUBLEDATA;
-          case 5: return STRINGDATA;
-          case 6: return BOOLEANDATA;
-          case 7: return FEATUREDATA;
-          case 0: return INSERTTYPE_NOT_SET;
-          default: throw new java.lang.IllegalArgumentException(
-            "Value is undefined for this oneof enum.");
-        }
-      }
-      public int getNumber() {
-        return this.value;
-      }
-    };
-
-    public InserttypeCase
-    getInserttypeCase() {
-      return InserttypeCase.valueOf(
-          inserttypeCase_);
-    }
-
-    public static final int LONGDATA_FIELD_NUMBER = 1;
-    /**
-     * <code>optional int64 longData = 1;</code>
-     */
-    public long getLongData() {
-      if (inserttypeCase_ == 1) {
-        return (java.lang.Long) inserttype_;
-      }
-      return 0L;
-    }
-
-    public static final int INTDATA_FIELD_NUMBER = 2;
-    /**
-     * <code>optional int32 intData = 2;</code>
-     */
-    public int getIntData() {
-      if (inserttypeCase_ == 2) {
-        return (java.lang.Integer) inserttype_;
-      }
-      return 0;
-    }
-
-    public static final int FLOATDATA_FIELD_NUMBER = 3;
-    /**
-     * <code>optional float floatData = 3;</code>
-     */
-    public float getFloatData() {
-      if (inserttypeCase_ == 3) {
-        return (java.lang.Float) inserttype_;
-      }
-      return 0F;
-    }
-
-    public static final int DOUBLEDATA_FIELD_NUMBER = 4;
-    /**
-     * <code>optional double doubleData = 4;</code>
-     */
-    public double getDoubleData() {
-      if (inserttypeCase_ == 4) {
-        return (java.lang.Double) inserttype_;
-      }
-      return 0D;
-    }
-
-    public static final int STRINGDATA_FIELD_NUMBER = 5;
-    /**
-     * <code>optional string stringData = 5;</code>
-     */
-    public java.lang.String getStringData() {
-      java.lang.Object ref = "";
-      if (inserttypeCase_ == 5) {
-        ref = inserttype_;
-      }
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (inserttypeCase_ == 5) {
-          inserttype_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string stringData = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getStringDataBytes() {
-      java.lang.Object ref = "";
-      if (inserttypeCase_ == 5) {
-        ref = inserttype_;
-      }
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        if (inserttypeCase_ == 5) {
-          inserttype_ = b;
-        }
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int BOOLEANDATA_FIELD_NUMBER = 6;
-    /**
-     * <code>optional bool booleanData = 6;</code>
-     */
-    public boolean getBooleanData() {
-      if (inserttypeCase_ == 6) {
-        return (java.lang.Boolean) inserttype_;
-      }
-      return false;
-    }
-
-    public static final int FEATUREDATA_FIELD_NUMBER = 7;
-    /**
-     * <code>optional .FeatureVectorMessage featureData = 7;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getFeatureData() {
-      if (inserttypeCase_ == 7) {
-         return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_;
-      }
-      return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
-    }
-    /**
-     * <code>optional .FeatureVectorMessage featureData = 7;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
-      if (inserttypeCase_ == 7) {
-         return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_;
-      }
-      return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (inserttypeCase_ == 1) {
-        output.writeInt64(
-            1, (long)((java.lang.Long) inserttype_));
-      }
-      if (inserttypeCase_ == 2) {
-        output.writeInt32(
-            2, (int)((java.lang.Integer) inserttype_));
-      }
-      if (inserttypeCase_ == 3) {
-        output.writeFloat(
-            3, (float)((java.lang.Float) inserttype_));
-      }
-      if (inserttypeCase_ == 4) {
-        output.writeDouble(
-            4, (double)((java.lang.Double) inserttype_));
-      }
-      if (inserttypeCase_ == 5) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 5, inserttype_);
-      }
-      if (inserttypeCase_ == 6) {
-        output.writeBool(
-            6, (boolean)((java.lang.Boolean) inserttype_));
-      }
-      if (inserttypeCase_ == 7) {
-        output.writeMessage(7, (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (inserttypeCase_ == 1) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(
-              1, (long)((java.lang.Long) inserttype_));
-      }
-      if (inserttypeCase_ == 2) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(
-              2, (int)((java.lang.Integer) inserttype_));
-      }
-      if (inserttypeCase_ == 3) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(
-              3, (float)((java.lang.Float) inserttype_));
-      }
-      if (inserttypeCase_ == 4) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeDoubleSize(
-              4, (double)((java.lang.Double) inserttype_));
-      }
-      if (inserttypeCase_ == 5) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(5, inserttype_);
-      }
-      if (inserttypeCase_ == 6) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(
-              6, (boolean)((java.lang.Boolean) inserttype_));
-      }
-      if (inserttypeCase_ == 7) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code InsertDataMessage}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:InsertDataMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertDataMessage_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertDataMessage_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.Builder.class);
-      }
-
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        inserttypeCase_ = 0;
-        inserttype_ = null;
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_InsertDataMessage_descriptor;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.getDefaultInstance();
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage(this);
-        if (inserttypeCase_ == 1) {
-          result.inserttype_ = inserttype_;
-        }
-        if (inserttypeCase_ == 2) {
-          result.inserttype_ = inserttype_;
-        }
-        if (inserttypeCase_ == 3) {
-          result.inserttype_ = inserttype_;
-        }
-        if (inserttypeCase_ == 4) {
-          result.inserttype_ = inserttype_;
-        }
-        if (inserttypeCase_ == 5) {
-          result.inserttype_ = inserttype_;
-        }
-        if (inserttypeCase_ == 6) {
-          result.inserttype_ = inserttype_;
-        }
-        if (inserttypeCase_ == 7) {
-          if (featureDataBuilder_ == null) {
-            result.inserttype_ = inserttype_;
-          } else {
-            result.inserttype_ = featureDataBuilder_.build();
-          }
-        }
-        result.inserttypeCase_ = inserttypeCase_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage.getDefaultInstance()) return this;
-        switch (other.getInserttypeCase()) {
-          case LONGDATA: {
-            setLongData(other.getLongData());
-            break;
-          }
-          case INTDATA: {
-            setIntData(other.getIntData());
-            break;
-          }
-          case FLOATDATA: {
-            setFloatData(other.getFloatData());
-            break;
-          }
-          case DOUBLEDATA: {
-            setDoubleData(other.getDoubleData());
-            break;
-          }
-          case STRINGDATA: {
-            inserttypeCase_ = 5;
-            inserttype_ = other.inserttype_;
-            onChanged();
-            break;
-          }
-          case BOOLEANDATA: {
-            setBooleanData(other.getBooleanData());
-            break;
-          }
-          case FEATUREDATA: {
-            mergeFeatureData(other.getFeatureData());
-            break;
-          }
-          case INSERTTYPE_NOT_SET: {
-            break;
-          }
-        }
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int inserttypeCase_ = 0;
-      private java.lang.Object inserttype_;
-      public InserttypeCase
-          getInserttypeCase() {
-        return InserttypeCase.valueOf(
-            inserttypeCase_);
-      }
-
-      public Builder clearInserttype() {
-        inserttypeCase_ = 0;
-        inserttype_ = null;
-        onChanged();
-        return this;
-      }
-
-
-      /**
-       * <code>optional int64 longData = 1;</code>
-       */
-      public long getLongData() {
-        if (inserttypeCase_ == 1) {
-          return (java.lang.Long) inserttype_;
-        }
-        return 0L;
-      }
-      /**
-       * <code>optional int64 longData = 1;</code>
-       */
-      public Builder setLongData(long value) {
-        inserttypeCase_ = 1;
-        inserttype_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int64 longData = 1;</code>
-       */
-      public Builder clearLongData() {
-        if (inserttypeCase_ == 1) {
-          inserttypeCase_ = 0;
-          inserttype_ = null;
-          onChanged();
-        }
-        return this;
-      }
-
-      /**
-       * <code>optional int32 intData = 2;</code>
-       */
-      public int getIntData() {
-        if (inserttypeCase_ == 2) {
-          return (java.lang.Integer) inserttype_;
-        }
-        return 0;
-      }
-      /**
-       * <code>optional int32 intData = 2;</code>
-       */
-      public Builder setIntData(int value) {
-        inserttypeCase_ = 2;
-        inserttype_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int32 intData = 2;</code>
-       */
-      public Builder clearIntData() {
-        if (inserttypeCase_ == 2) {
-          inserttypeCase_ = 0;
-          inserttype_ = null;
-          onChanged();
-        }
-        return this;
-      }
-
-      /**
-       * <code>optional float floatData = 3;</code>
-       */
-      public float getFloatData() {
-        if (inserttypeCase_ == 3) {
-          return (java.lang.Float) inserttype_;
-        }
-        return 0F;
-      }
-      /**
-       * <code>optional float floatData = 3;</code>
-       */
-      public Builder setFloatData(float value) {
-        inserttypeCase_ = 3;
-        inserttype_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional float floatData = 3;</code>
-       */
-      public Builder clearFloatData() {
-        if (inserttypeCase_ == 3) {
-          inserttypeCase_ = 0;
-          inserttype_ = null;
-          onChanged();
-        }
-        return this;
-      }
-
-      /**
-       * <code>optional double doubleData = 4;</code>
-       */
-      public double getDoubleData() {
-        if (inserttypeCase_ == 4) {
-          return (java.lang.Double) inserttype_;
-        }
-        return 0D;
-      }
-      /**
-       * <code>optional double doubleData = 4;</code>
-       */
-      public Builder setDoubleData(double value) {
-        inserttypeCase_ = 4;
-        inserttype_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional double doubleData = 4;</code>
-       */
-      public Builder clearDoubleData() {
-        if (inserttypeCase_ == 4) {
-          inserttypeCase_ = 0;
-          inserttype_ = null;
-          onChanged();
-        }
-        return this;
-      }
-
-      /**
-       * <code>optional string stringData = 5;</code>
-       */
-      public java.lang.String getStringData() {
-        java.lang.Object ref = "";
-        if (inserttypeCase_ == 5) {
-          ref = inserttype_;
-        }
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (inserttypeCase_ == 5) {
-            inserttype_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string stringData = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getStringDataBytes() {
-        java.lang.Object ref = "";
-        if (inserttypeCase_ == 5) {
-          ref = inserttype_;
-        }
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          if (inserttypeCase_ == 5) {
-            inserttype_ = b;
-          }
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string stringData = 5;</code>
-       */
-      public Builder setStringData(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  inserttypeCase_ = 5;
-        inserttype_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string stringData = 5;</code>
-       */
-      public Builder clearStringData() {
-        if (inserttypeCase_ == 5) {
-          inserttypeCase_ = 0;
-          inserttype_ = null;
-          onChanged();
-        }
-        return this;
-      }
-      /**
-       * <code>optional string stringData = 5;</code>
-       */
-      public Builder setStringDataBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        inserttypeCase_ = 5;
-        inserttype_ = value;
-        onChanged();
-        return this;
-      }
-
-      /**
-       * <code>optional bool booleanData = 6;</code>
-       */
-      public boolean getBooleanData() {
-        if (inserttypeCase_ == 6) {
-          return (java.lang.Boolean) inserttype_;
-        }
-        return false;
-      }
-      /**
-       * <code>optional bool booleanData = 6;</code>
-       */
-      public Builder setBooleanData(boolean value) {
-        inserttypeCase_ = 6;
-        inserttype_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool booleanData = 6;</code>
-       */
-      public Builder clearBooleanData() {
-        if (inserttypeCase_ == 6) {
-          inserttypeCase_ = 0;
-          inserttype_ = null;
-          onChanged();
-        }
-        return this;
-      }
-
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder> featureDataBuilder_;
-      /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getFeatureData() {
-        if (featureDataBuilder_ == null) {
-          if (inserttypeCase_ == 7) {
-            return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_;
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
-        } else {
-          if (inserttypeCase_ == 7) {
-            return featureDataBuilder_.getMessage();
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
-       */
-      public Builder setFeatureData(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage value) {
-        if (featureDataBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          inserttype_ = value;
-          onChanged();
-        } else {
-          featureDataBuilder_.setMessage(value);
-        }
-        inserttypeCase_ = 7;
-        return this;
-      }
-      /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
-       */
-      public Builder setFeatureData(
-          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder builderForValue) {
-        if (featureDataBuilder_ == null) {
-          inserttype_ = builderForValue.build();
-          onChanged();
-        } else {
-          featureDataBuilder_.setMessage(builderForValue.build());
-        }
-        inserttypeCase_ = 7;
-        return this;
-      }
-      /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
-       */
-      public Builder mergeFeatureData(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage value) {
-        if (featureDataBuilder_ == null) {
-          if (inserttypeCase_ == 7 &&
-              inserttype_ != ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance()) {
-            inserttype_ = ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            inserttype_ = value;
-          }
-          onChanged();
-        } else {
-          if (inserttypeCase_ == 7) {
-            featureDataBuilder_.mergeFrom(value);
-          }
-          featureDataBuilder_.setMessage(value);
-        }
-        inserttypeCase_ = 7;
-        return this;
-      }
-      /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
-       */
-      public Builder clearFeatureData() {
-        if (featureDataBuilder_ == null) {
-          if (inserttypeCase_ == 7) {
-            inserttypeCase_ = 0;
-            inserttype_ = null;
-            onChanged();
-          }
-        } else {
-          if (inserttypeCase_ == 7) {
-            inserttypeCase_ = 0;
-            inserttype_ = null;
-          }
-          featureDataBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder getFeatureDataBuilder() {
-        return getFeatureDataFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
-        if ((inserttypeCase_ == 7) && (featureDataBuilder_ != null)) {
-          return featureDataBuilder_.getMessageOrBuilder();
-        } else {
-          if (inserttypeCase_ == 7) {
-            return (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_;
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder> 
-          getFeatureDataFieldBuilder() {
-        if (featureDataBuilder_ == null) {
-          if (!(inserttypeCase_ == 7)) {
-            inserttype_ = ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance();
-          }
-          featureDataBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage) inserttype_,
-                  getParentForChildren(),
-                  isClean());
-          inserttype_ = null;
-        }
-        inserttypeCase_ = 7;
-        onChanged();;
-        return featureDataBuilder_;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:InsertDataMessage)
-    }
-
-    // @@protoc_insertion_point(class_scope:InsertDataMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage();
-    }
-
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<InsertDataMessage>
-        PARSER = new com.google.protobuf.AbstractParser<InsertDataMessage>() {
-      public InsertDataMessage parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        try {
-          return new InsertDataMessage(input, extensionRegistry);
-        } catch (RuntimeException e) {
-          if (e.getCause() instanceof
-              com.google.protobuf.InvalidProtocolBufferException) {
-            throw (com.google.protobuf.InvalidProtocolBufferException)
-                e.getCause();
-          }
-          throw e;
-        }
-      }
-    };
-
-    public static com.google.protobuf.Parser<InsertDataMessage> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<InsertDataMessage> getParserForType() {
-      return PARSER;
-    }
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -9589,14 +9589,22 @@ public final class Grpc {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional string index = 1;</code>
+     * <code>optional string entity = 1;</code>
+     *
+     * <pre>
+     *entity or index
+     * </pre>
      */
-    java.lang.String getIndex();
+    java.lang.String getEntity();
     /**
-     * <code>optional string index = 1;</code>
+     * <code>optional string entity = 1;</code>
+     *
+     * <pre>
+     *entity or index
+     * </pre>
      */
     com.google.protobuf.ByteString
-        getIndexBytes();
+        getEntityBytes();
 
     /**
      * <code>optional int32 numberOfPartitions = 2;</code>
@@ -9643,7 +9651,7 @@ public final class Grpc {
       super(builder);
     }
     private RepartitionMessage() {
-      index_ = "";
+      entity_ = "";
       numberOfPartitions_ = 0;
       columns_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       option_ = 0;
@@ -9676,7 +9684,7 @@ public final class Grpc {
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              index_ = s;
+              entity_ = s;
               break;
             }
             case 16: {
@@ -9828,34 +9836,42 @@ public final class Grpc {
     }
 
     private int bitField0_;
-    public static final int INDEX_FIELD_NUMBER = 1;
-    private volatile java.lang.Object index_;
+    public static final int ENTITY_FIELD_NUMBER = 1;
+    private volatile java.lang.Object entity_;
     /**
-     * <code>optional string index = 1;</code>
+     * <code>optional string entity = 1;</code>
+     *
+     * <pre>
+     *entity or index
+     * </pre>
      */
-    public java.lang.String getIndex() {
-      java.lang.Object ref = index_;
+    public java.lang.String getEntity() {
+      java.lang.Object ref = entity_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        index_ = s;
+        entity_ = s;
         return s;
       }
     }
     /**
-     * <code>optional string index = 1;</code>
+     * <code>optional string entity = 1;</code>
+     *
+     * <pre>
+     *entity or index
+     * </pre>
      */
     public com.google.protobuf.ByteString
-        getIndexBytes() {
-      java.lang.Object ref = index_;
+        getEntityBytes() {
+      java.lang.Object ref = entity_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        index_ = b;
+        entity_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -9928,8 +9944,8 @@ public final class Grpc {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getIndexBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 1, index_);
+      if (!getEntityBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 1, entity_);
       }
       if (numberOfPartitions_ != 0) {
         output.writeInt32(2, numberOfPartitions_);
@@ -9947,8 +9963,8 @@ public final class Grpc {
       if (size != -1) return size;
 
       size = 0;
-      if (!getIndexBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, index_);
+      if (!getEntityBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, entity_);
       }
       if (numberOfPartitions_ != 0) {
         size += com.google.protobuf.CodedOutputStream
@@ -10077,7 +10093,7 @@ public final class Grpc {
       }
       public Builder clear() {
         super.clear();
-        index_ = "";
+        entity_ = "";
 
         numberOfPartitions_ = 0;
 
@@ -10109,7 +10125,7 @@ public final class Grpc {
         ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
-        result.index_ = index_;
+        result.entity_ = entity_;
         result.numberOfPartitions_ = numberOfPartitions_;
         if (((bitField0_ & 0x00000004) == 0x00000004)) {
           columns_ = columns_.getUnmodifiableView();
@@ -10133,8 +10149,8 @@ public final class Grpc {
 
       public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage other) {
         if (other == ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.getDefaultInstance()) return this;
-        if (!other.getIndex().isEmpty()) {
-          index_ = other.index_;
+        if (!other.getEntity().isEmpty()) {
+          entity_ = other.entity_;
           onChanged();
         }
         if (other.getNumberOfPartitions() != 0) {
@@ -10180,71 +10196,91 @@ public final class Grpc {
       }
       private int bitField0_;
 
-      private java.lang.Object index_ = "";
+      private java.lang.Object entity_ = "";
       /**
-       * <code>optional string index = 1;</code>
+       * <code>optional string entity = 1;</code>
+       *
+       * <pre>
+       *entity or index
+       * </pre>
        */
-      public java.lang.String getIndex() {
-        java.lang.Object ref = index_;
+      public java.lang.String getEntity() {
+        java.lang.Object ref = entity_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          index_ = s;
+          entity_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>optional string index = 1;</code>
+       * <code>optional string entity = 1;</code>
+       *
+       * <pre>
+       *entity or index
+       * </pre>
        */
       public com.google.protobuf.ByteString
-          getIndexBytes() {
-        java.lang.Object ref = index_;
+          getEntityBytes() {
+        java.lang.Object ref = entity_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          index_ = b;
+          entity_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>optional string index = 1;</code>
+       * <code>optional string entity = 1;</code>
+       *
+       * <pre>
+       *entity or index
+       * </pre>
        */
-      public Builder setIndex(
+      public Builder setEntity(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        index_ = value;
+        entity_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string index = 1;</code>
+       * <code>optional string entity = 1;</code>
+       *
+       * <pre>
+       *entity or index
+       * </pre>
        */
-      public Builder clearIndex() {
+      public Builder clearEntity() {
         
-        index_ = getDefaultInstance().getIndex();
+        entity_ = getDefaultInstance().getEntity();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string index = 1;</code>
+       * <code>optional string entity = 1;</code>
+       *
+       * <pre>
+       *entity or index
+       * </pre>
        */
-      public Builder setIndexBytes(
+      public Builder setEntityBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        index_ = value;
+        entity_ = value;
         onChanged();
         return this;
       }
@@ -10978,8 +11014,892 @@ public final class Grpc {
 
   }
 
-  public interface SimpleQueryMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:SimpleQueryMessage)
+  public interface ImportMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ImportMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional string host = 1;</code>
+     *
+     * <pre>
+     *EXPERIMENTAL!
+     * </pre>
+     */
+    java.lang.String getHost();
+    /**
+     * <code>optional string host = 1;</code>
+     *
+     * <pre>
+     *EXPERIMENTAL!
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getHostBytes();
+
+    /**
+     * <code>optional string database = 2;</code>
+     */
+    java.lang.String getDatabase();
+    /**
+     * <code>optional string database = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getDatabaseBytes();
+
+    /**
+     * <code>optional string username = 3;</code>
+     */
+    java.lang.String getUsername();
+    /**
+     * <code>optional string username = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getUsernameBytes();
+
+    /**
+     * <code>optional string password = 4;</code>
+     */
+    java.lang.String getPassword();
+    /**
+     * <code>optional string password = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getPasswordBytes();
+  }
+  /**
+   * Protobuf type {@code ImportMessage}
+   */
+  public  static final class ImportMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:ImportMessage)
+      ImportMessageOrBuilder {
+    // Use ImportMessage.newBuilder() to construct.
+    private ImportMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private ImportMessage() {
+      host_ = "";
+      database_ = "";
+      username_ = "";
+      password_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private ImportMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              host_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              database_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              username_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              password_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ImportMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ImportMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage.Builder.class);
+    }
+
+    public static final int HOST_FIELD_NUMBER = 1;
+    private volatile java.lang.Object host_;
+    /**
+     * <code>optional string host = 1;</code>
+     *
+     * <pre>
+     *EXPERIMENTAL!
+     * </pre>
+     */
+    public java.lang.String getHost() {
+      java.lang.Object ref = host_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        host_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string host = 1;</code>
+     *
+     * <pre>
+     *EXPERIMENTAL!
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getHostBytes() {
+      java.lang.Object ref = host_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        host_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DATABASE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object database_;
+    /**
+     * <code>optional string database = 2;</code>
+     */
+    public java.lang.String getDatabase() {
+      java.lang.Object ref = database_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        database_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string database = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDatabaseBytes() {
+      java.lang.Object ref = database_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        database_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int USERNAME_FIELD_NUMBER = 3;
+    private volatile java.lang.Object username_;
+    /**
+     * <code>optional string username = 3;</code>
+     */
+    public java.lang.String getUsername() {
+      java.lang.Object ref = username_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        username_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string username = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUsernameBytes() {
+      java.lang.Object ref = username_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        username_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PASSWORD_FIELD_NUMBER = 4;
+    private volatile java.lang.Object password_;
+    /**
+     * <code>optional string password = 4;</code>
+     */
+    public java.lang.String getPassword() {
+      java.lang.Object ref = password_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        password_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string password = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPasswordBytes() {
+      java.lang.Object ref = password_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        password_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getHostBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 1, host_);
+      }
+      if (!getDatabaseBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 2, database_);
+      }
+      if (!getUsernameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 3, username_);
+      }
+      if (!getPasswordBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 4, password_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getHostBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, host_);
+      }
+      if (!getDatabaseBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, database_);
+      }
+      if (!getUsernameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(3, username_);
+      }
+      if (!getPasswordBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(4, password_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ImportMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ImportMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ImportMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ImportMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        host_ = "";
+
+        database_ = "";
+
+        username_ = "";
+
+        password_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ImportMessage_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage(this);
+        result.host_ = host_;
+        result.database_ = database_;
+        result.username_ = username_;
+        result.password_ = password_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage.getDefaultInstance()) return this;
+        if (!other.getHost().isEmpty()) {
+          host_ = other.host_;
+          onChanged();
+        }
+        if (!other.getDatabase().isEmpty()) {
+          database_ = other.database_;
+          onChanged();
+        }
+        if (!other.getUsername().isEmpty()) {
+          username_ = other.username_;
+          onChanged();
+        }
+        if (!other.getPassword().isEmpty()) {
+          password_ = other.password_;
+          onChanged();
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object host_ = "";
+      /**
+       * <code>optional string host = 1;</code>
+       *
+       * <pre>
+       *EXPERIMENTAL!
+       * </pre>
+       */
+      public java.lang.String getHost() {
+        java.lang.Object ref = host_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          host_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string host = 1;</code>
+       *
+       * <pre>
+       *EXPERIMENTAL!
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getHostBytes() {
+        java.lang.Object ref = host_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          host_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string host = 1;</code>
+       *
+       * <pre>
+       *EXPERIMENTAL!
+       * </pre>
+       */
+      public Builder setHost(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        host_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string host = 1;</code>
+       *
+       * <pre>
+       *EXPERIMENTAL!
+       * </pre>
+       */
+      public Builder clearHost() {
+        
+        host_ = getDefaultInstance().getHost();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string host = 1;</code>
+       *
+       * <pre>
+       *EXPERIMENTAL!
+       * </pre>
+       */
+      public Builder setHostBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        host_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object database_ = "";
+      /**
+       * <code>optional string database = 2;</code>
+       */
+      public java.lang.String getDatabase() {
+        java.lang.Object ref = database_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          database_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string database = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDatabaseBytes() {
+        java.lang.Object ref = database_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          database_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string database = 2;</code>
+       */
+      public Builder setDatabase(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        database_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string database = 2;</code>
+       */
+      public Builder clearDatabase() {
+        
+        database_ = getDefaultInstance().getDatabase();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string database = 2;</code>
+       */
+      public Builder setDatabaseBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        database_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object username_ = "";
+      /**
+       * <code>optional string username = 3;</code>
+       */
+      public java.lang.String getUsername() {
+        java.lang.Object ref = username_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          username_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string username = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUsernameBytes() {
+        java.lang.Object ref = username_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          username_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string username = 3;</code>
+       */
+      public Builder setUsername(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        username_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string username = 3;</code>
+       */
+      public Builder clearUsername() {
+        
+        username_ = getDefaultInstance().getUsername();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string username = 3;</code>
+       */
+      public Builder setUsernameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        username_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object password_ = "";
+      /**
+       * <code>optional string password = 4;</code>
+       */
+      public java.lang.String getPassword() {
+        java.lang.Object ref = password_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          password_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string password = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPasswordBytes() {
+        java.lang.Object ref = password_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          password_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string password = 4;</code>
+       */
+      public Builder setPassword(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        password_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string password = 4;</code>
+       */
+      public Builder clearPassword() {
+        
+        password_ = getDefaultInstance().getPassword();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string password = 4;</code>
+       */
+      public Builder setPasswordBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        password_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ImportMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:ImportMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage();
+    }
+
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ImportMessage>
+        PARSER = new com.google.protobuf.AbstractParser<ImportMessage>() {
+      public ImportMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new ImportMessage(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<ImportMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ImportMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface QueryMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:QueryMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -10993,117 +11913,203 @@ public final class Grpc {
         getQueryidBytes();
 
     /**
-     * <code>optional string entity = 2;</code>
+     * <code>optional .ProjectionMessage projection = 2;</code>
+     *
+     * <pre>
+     *SELECT ...
+     * </pre>
      */
-    java.lang.String getEntity();
+    boolean hasProjection();
     /**
-     * <code>optional string entity = 2;</code>
+     * <code>optional .ProjectionMessage projection = 2;</code>
+     *
+     * <pre>
+     *SELECT ...
+     * </pre>
      */
-    com.google.protobuf.ByteString
-        getEntityBytes();
+    ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage getProjection();
+    /**
+     * <code>optional .ProjectionMessage projection = 2;</code>
+     *
+     * <pre>
+     *SELECT ...
+     * </pre>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessageOrBuilder getProjectionOrBuilder();
 
     /**
-     * <code>repeated string hints = 3;</code>
+     * <code>optional .FromMessage from = 3;</code>
+     *
+     * <pre>
+     *FROM ...
+     * </pre>
+     */
+    boolean hasFrom();
+    /**
+     * <code>optional .FromMessage from = 3;</code>
+     *
+     * <pre>
+     *FROM ...
+     * </pre>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage getFrom();
+    /**
+     * <code>optional .FromMessage from = 3;</code>
+     *
+     * <pre>
+     *FROM ...
+     * </pre>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.FromMessageOrBuilder getFromOrBuilder();
+
+    /**
+     * <code>optional .BooleanQueryMessage bq = 6;</code>
+     *
+     * <pre>
+     *WHERE ...
+     * </pre>
+     */
+    boolean hasBq();
+    /**
+     * <code>optional .BooleanQueryMessage bq = 6;</code>
+     *
+     * <pre>
+     *WHERE ...
+     * </pre>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq();
+    /**
+     * <code>optional .BooleanQueryMessage bq = 6;</code>
+     *
+     * <pre>
+     *WHERE ...
+     * </pre>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder();
+
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+     *
+     * <pre>
+     *USING DISTANCE ...
+     * </pre>
+     */
+    boolean hasNnq();
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+     *
+     * <pre>
+     *USING DISTANCE ...
+     * </pre>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq();
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+     *
+     * <pre>
+     *USING DISTANCE ...
+     * </pre>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder();
+
+    /**
+     * <code>repeated string hints = 8;</code>
      *
      * <pre>
      *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
      * </pre>
      */
     com.google.protobuf.ProtocolStringList
         getHintsList();
     /**
-     * <code>repeated string hints = 3;</code>
+     * <code>repeated string hints = 8;</code>
      *
      * <pre>
      *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
      * </pre>
      */
     int getHintsCount();
     /**
-     * <code>repeated string hints = 3;</code>
+     * <code>repeated string hints = 8;</code>
      *
      * <pre>
      *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
      * </pre>
      */
     java.lang.String getHints(int index);
     /**
-     * <code>repeated string hints = 3;</code>
+     * <code>repeated string hints = 8;</code>
      *
      * <pre>
      *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
      * </pre>
      */
     com.google.protobuf.ByteString
         getHintsBytes(int index);
 
     /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    boolean hasNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder();
-
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    boolean hasBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder();
-
-    /**
-     * <code>optional bool withMetadata = 6;</code>
+     * <code>optional int64 time = 9;</code>
      *
      * <pre>
-     *specifies whether we should join the structured metadata to the results
+     *maximum duration of query in ms
      * </pre>
      */
-    boolean getWithMetadata();
+    long getTime();
 
     /**
-     * <code>optional bool readFromCache = 7;</code>
+     * <code>optional bool readFromCache = 10;</code>
      */
     boolean getReadFromCache();
 
     /**
-     * <code>optional bool putInCache = 8;</code>
+     * <code>optional bool putInCache = 11;</code>
      */
     boolean getPutInCache();
+
+    /**
+     * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+     */
+    java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel> getInformationList();
+    /**
+     * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+     */
+    int getInformationCount();
+    /**
+     * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel getInformation(int index);
+    /**
+     * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+     */
+    java.util.List<java.lang.Integer>
+    getInformationValueList();
+    /**
+     * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+     */
+    int getInformationValue(int index);
   }
   /**
-   * Protobuf type {@code SimpleQueryMessage}
+   * Protobuf type {@code QueryMessage}
    */
-  public  static final class SimpleQueryMessage extends
+  public  static final class QueryMessage extends
       com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:SimpleQueryMessage)
-      SimpleQueryMessageOrBuilder {
-    // Use SimpleQueryMessage.newBuilder() to construct.
-    private SimpleQueryMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:QueryMessage)
+      QueryMessageOrBuilder {
+    // Use QueryMessage.newBuilder() to construct.
+    private QueryMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
     }
-    private SimpleQueryMessage() {
+    private QueryMessage() {
       queryid_ = "";
-      entity_ = "";
       hints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      withMetadata_ = false;
+      time_ = 0L;
       readFromCache_ = false;
       putInCache_ = false;
+      information_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -11111,7 +12117,7 @@ public final class Grpc {
     getUnknownFields() {
       return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
     }
-    private SimpleQueryMessage(
+    private QueryMessage(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
       this();
@@ -11137,34 +12143,32 @@ public final class Grpc {
               break;
             }
             case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
+              ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Builder subBuilder = null;
+              if (projection_ != null) {
+                subBuilder = projection_.toBuilder();
+              }
+              projection_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(projection_);
+                projection_ = subBuilder.buildPartial();
+              }
 
-              entity_ = s;
               break;
             }
             case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                hints_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000004;
+              ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.Builder subBuilder = null;
+              if (from_ != null) {
+                subBuilder = from_.toBuilder();
               }
-              hints_.add(s);
-              break;
-            }
-            case 34: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder subBuilder = null;
-              if (nnq_ != null) {
-                subBuilder = nnq_.toBuilder();
-              }
-              nnq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.parser(), extensionRegistry);
+              from_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(nnq_);
-                nnq_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(from_);
+                from_ = subBuilder.buildPartial();
               }
 
               break;
             }
-            case 42: {
+            case 50: {
               ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder subBuilder = null;
               if (bq_ != null) {
                 subBuilder = bq_.toBuilder();
@@ -11177,19 +12181,64 @@ public final class Grpc {
 
               break;
             }
-            case 48: {
+            case 58: {
+              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder subBuilder = null;
+              if (nnq_ != null) {
+                subBuilder = nnq_.toBuilder();
+              }
+              nnq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(nnq_);
+                nnq_ = subBuilder.buildPartial();
+              }
 
-              withMetadata_ = input.readBool();
               break;
             }
-            case 56: {
+            case 66: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+                hints_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              hints_.add(s);
+              break;
+            }
+            case 72: {
+
+              time_ = input.readInt64();
+              break;
+            }
+            case 80: {
 
               readFromCache_ = input.readBool();
               break;
             }
-            case 64: {
+            case 88: {
 
               putInCache_ = input.readBool();
+              break;
+            }
+            case 96: {
+              int rawValue = input.readEnum();
+              if (!((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+                information_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000200;
+              }
+              information_.add(rawValue);
+              break;
+            }
+            case 98: {
+              int length = input.readRawVarint32();
+              int oldLimit = input.pushLimit(length);
+              while(input.getBytesUntilLimit() > 0) {
+                int rawValue = input.readEnum();
+                if (!((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+                  information_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000200;
+                }
+                information_.add(rawValue);
+              }
+              input.popLimit(oldLimit);
               break;
             }
           }
@@ -11201,22 +12250,136 @@ public final class Grpc {
             new com.google.protobuf.InvalidProtocolBufferException(
                 e.getMessage()).setUnfinishedMessage(this));
       } finally {
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+        if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
           hints_ = hints_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+          information_ = java.util.Collections.unmodifiableList(information_);
         }
         makeExtensionsImmutable();
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleQueryMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleQueryMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.Builder.class);
+    }
+
+    /**
+     * Protobuf enum {@code QueryMessage.InformationLevel}
+     */
+    public enum InformationLevel
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>INFORMATION_FULL_TREE = 0;</code>
+       */
+      INFORMATION_FULL_TREE(0, 0),
+      /**
+       * <code>INFORMATION_LAST_STEP_ONLY = 1;</code>
+       */
+      INFORMATION_LAST_STEP_ONLY(1, 1),
+      /**
+       * <code>INFORMATION_INTERMEDIATE_RESULTS = 2;</code>
+       *
+       * <pre>
+       *WITH_PROVENANCE_PARTITION_INFORMATION = 2;
+       *WITH_PROVENANCE_INDEX_INFORMATION = 3;
+       * </pre>
+       */
+      INFORMATION_INTERMEDIATE_RESULTS(2, 2),
+      UNRECOGNIZED(-1, -1),
+      ;
+
+      /**
+       * <code>INFORMATION_FULL_TREE = 0;</code>
+       */
+      public static final int INFORMATION_FULL_TREE_VALUE = 0;
+      /**
+       * <code>INFORMATION_LAST_STEP_ONLY = 1;</code>
+       */
+      public static final int INFORMATION_LAST_STEP_ONLY_VALUE = 1;
+      /**
+       * <code>INFORMATION_INTERMEDIATE_RESULTS = 2;</code>
+       *
+       * <pre>
+       *WITH_PROVENANCE_PARTITION_INFORMATION = 2;
+       *WITH_PROVENANCE_INDEX_INFORMATION = 3;
+       * </pre>
+       */
+      public static final int INFORMATION_INTERMEDIATE_RESULTS_VALUE = 2;
+
+
+      public final int getNumber() {
+        if (index == -1) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      public static InformationLevel valueOf(int value) {
+        switch (value) {
+          case 0: return INFORMATION_FULL_TREE;
+          case 1: return INFORMATION_LAST_STEP_ONLY;
+          case 2: return INFORMATION_INTERMEDIATE_RESULTS;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<InformationLevel>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          InformationLevel> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<InformationLevel>() {
+              public InformationLevel findValueByNumber(int number) {
+                return InformationLevel.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final InformationLevel[] VALUES = values();
+
+      public static InformationLevel valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private InformationLevel(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:QueryMessage.InformationLevel)
     }
 
     private int bitField0_;
@@ -11254,48 +12417,146 @@ public final class Grpc {
       }
     }
 
-    public static final int ENTITY_FIELD_NUMBER = 2;
-    private volatile java.lang.Object entity_;
+    public static final int PROJECTION_FIELD_NUMBER = 2;
+    private ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage projection_;
     /**
-     * <code>optional string entity = 2;</code>
+     * <code>optional .ProjectionMessage projection = 2;</code>
+     *
+     * <pre>
+     *SELECT ...
+     * </pre>
      */
-    public java.lang.String getEntity() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        entity_ = s;
-        return s;
-      }
+    public boolean hasProjection() {
+      return projection_ != null;
     }
     /**
-     * <code>optional string entity = 2;</code>
+     * <code>optional .ProjectionMessage projection = 2;</code>
+     *
+     * <pre>
+     *SELECT ...
+     * </pre>
      */
-    public com.google.protobuf.ByteString
-        getEntityBytes() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        entity_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage getProjection() {
+      return projection_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.getDefaultInstance() : projection_;
+    }
+    /**
+     * <code>optional .ProjectionMessage projection = 2;</code>
+     *
+     * <pre>
+     *SELECT ...
+     * </pre>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessageOrBuilder getProjectionOrBuilder() {
+      return getProjection();
     }
 
-    public static final int HINTS_FIELD_NUMBER = 3;
+    public static final int FROM_FIELD_NUMBER = 3;
+    private ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage from_;
+    /**
+     * <code>optional .FromMessage from = 3;</code>
+     *
+     * <pre>
+     *FROM ...
+     * </pre>
+     */
+    public boolean hasFrom() {
+      return from_ != null;
+    }
+    /**
+     * <code>optional .FromMessage from = 3;</code>
+     *
+     * <pre>
+     *FROM ...
+     * </pre>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage getFrom() {
+      return from_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.getDefaultInstance() : from_;
+    }
+    /**
+     * <code>optional .FromMessage from = 3;</code>
+     *
+     * <pre>
+     *FROM ...
+     * </pre>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FromMessageOrBuilder getFromOrBuilder() {
+      return getFrom();
+    }
+
+    public static final int BQ_FIELD_NUMBER = 6;
+    private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_;
+    /**
+     * <code>optional .BooleanQueryMessage bq = 6;</code>
+     *
+     * <pre>
+     *WHERE ...
+     * </pre>
+     */
+    public boolean hasBq() {
+      return bq_ != null;
+    }
+    /**
+     * <code>optional .BooleanQueryMessage bq = 6;</code>
+     *
+     * <pre>
+     *WHERE ...
+     * </pre>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
+      return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
+    }
+    /**
+     * <code>optional .BooleanQueryMessage bq = 6;</code>
+     *
+     * <pre>
+     *WHERE ...
+     * </pre>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
+      return getBq();
+    }
+
+    public static final int NNQ_FIELD_NUMBER = 7;
+    private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_;
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+     *
+     * <pre>
+     *USING DISTANCE ...
+     * </pre>
+     */
+    public boolean hasNnq() {
+      return nnq_ != null;
+    }
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+     *
+     * <pre>
+     *USING DISTANCE ...
+     * </pre>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
+      return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
+    }
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+     *
+     * <pre>
+     *USING DISTANCE ...
+     * </pre>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
+      return getNnq();
+    }
+
+    public static final int HINTS_FIELD_NUMBER = 8;
     private com.google.protobuf.LazyStringList hints_;
     /**
-     * <code>repeated string hints = 3;</code>
+     * <code>repeated string hints = 8;</code>
      *
      * <pre>
      *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
      * </pre>
      */
     public com.google.protobuf.ProtocolStringList
@@ -11303,33 +12564,33 @@ public final class Grpc {
       return hints_;
     }
     /**
-     * <code>repeated string hints = 3;</code>
+     * <code>repeated string hints = 8;</code>
      *
      * <pre>
      *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
      * </pre>
      */
     public int getHintsCount() {
       return hints_.size();
     }
     /**
-     * <code>repeated string hints = 3;</code>
+     * <code>repeated string hints = 8;</code>
      *
      * <pre>
      *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
      * </pre>
      */
     public java.lang.String getHints(int index) {
       return hints_.get(index);
     }
     /**
-     * <code>repeated string hints = 3;</code>
+     * <code>repeated string hints = 8;</code>
      *
      * <pre>
      *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+     *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
      * </pre>
      */
     public com.google.protobuf.ByteString
@@ -11337,78 +12598,81 @@ public final class Grpc {
       return hints_.getByteString(index);
     }
 
-    public static final int NNQ_FIELD_NUMBER = 4;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_;
+    public static final int TIME_FIELD_NUMBER = 9;
+    private long time_;
     /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    public boolean hasNnq() {
-      return nnq_ != null;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-      return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-      return getNnq();
-    }
-
-    public static final int BQ_FIELD_NUMBER = 5;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_;
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    public boolean hasBq() {
-      return bq_ != null;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-      return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-      return getBq();
-    }
-
-    public static final int WITHMETADATA_FIELD_NUMBER = 6;
-    private boolean withMetadata_;
-    /**
-     * <code>optional bool withMetadata = 6;</code>
+     * <code>optional int64 time = 9;</code>
      *
      * <pre>
-     *specifies whether we should join the structured metadata to the results
+     *maximum duration of query in ms
      * </pre>
      */
-    public boolean getWithMetadata() {
-      return withMetadata_;
+    public long getTime() {
+      return time_;
     }
 
-    public static final int READFROMCACHE_FIELD_NUMBER = 7;
+    public static final int READFROMCACHE_FIELD_NUMBER = 10;
     private boolean readFromCache_;
     /**
-     * <code>optional bool readFromCache = 7;</code>
+     * <code>optional bool readFromCache = 10;</code>
      */
     public boolean getReadFromCache() {
       return readFromCache_;
     }
 
-    public static final int PUTINCACHE_FIELD_NUMBER = 8;
+    public static final int PUTINCACHE_FIELD_NUMBER = 11;
     private boolean putInCache_;
     /**
-     * <code>optional bool putInCache = 8;</code>
+     * <code>optional bool putInCache = 11;</code>
      */
     public boolean getPutInCache() {
       return putInCache_;
     }
+
+    public static final int INFORMATION_FIELD_NUMBER = 12;
+    private java.util.List<java.lang.Integer> information_;
+    private static final com.google.protobuf.Internal.ListAdapter.Converter<
+        java.lang.Integer, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel> information_converter_ =
+            new com.google.protobuf.Internal.ListAdapter.Converter<
+                java.lang.Integer, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel>() {
+              public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel convert(java.lang.Integer from) {
+                ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel result = ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel.valueOf(from);
+                return result == null ? ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel.UNRECOGNIZED : result;
+              }
+            };
+    /**
+     * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+     */
+    public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel> getInformationList() {
+      return new com.google.protobuf.Internal.ListAdapter<
+          java.lang.Integer, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel>(information_, information_converter_);
+    }
+    /**
+     * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+     */
+    public int getInformationCount() {
+      return information_.size();
+    }
+    /**
+     * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel getInformation(int index) {
+      return information_converter_.convert(information_.get(index));
+    }
+    /**
+     * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+     */
+    public java.util.List<java.lang.Integer>
+    getInformationValueList() {
+      return information_;
+    }
+    /**
+     * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+     */
+    public int getInformationValue(int index) {
+      return information_.get(index);
+    }
+    private int informationMemoizedSerializedSize;
 
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -11422,29 +12686,40 @@ public final class Grpc {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (!getQueryidBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
       }
-      if (!getEntityBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, entity_);
+      if (projection_ != null) {
+        output.writeMessage(2, getProjection());
       }
-      for (int i = 0; i < hints_.size(); i++) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 3, hints_.getRaw(i));
-      }
-      if (nnq_ != null) {
-        output.writeMessage(4, getNnq());
+      if (from_ != null) {
+        output.writeMessage(3, getFrom());
       }
       if (bq_ != null) {
-        output.writeMessage(5, getBq());
+        output.writeMessage(6, getBq());
       }
-      if (withMetadata_ != false) {
-        output.writeBool(6, withMetadata_);
+      if (nnq_ != null) {
+        output.writeMessage(7, getNnq());
+      }
+      for (int i = 0; i < hints_.size(); i++) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 8, hints_.getRaw(i));
+      }
+      if (time_ != 0L) {
+        output.writeInt64(9, time_);
       }
       if (readFromCache_ != false) {
-        output.writeBool(7, readFromCache_);
+        output.writeBool(10, readFromCache_);
       }
       if (putInCache_ != false) {
-        output.writeBool(8, putInCache_);
+        output.writeBool(11, putInCache_);
+      }
+      if (getInformationList().size() > 0) {
+        output.writeRawVarint32(98);
+        output.writeRawVarint32(informationMemoizedSerializedSize);
+      }
+      for (int i = 0; i < information_.size(); i++) {
+        output.writeEnumNoTag(information_.get(i));
       }
     }
 
@@ -11456,8 +12731,21 @@ public final class Grpc {
       if (!getQueryidBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessage.computeStringSize(1, queryid_);
       }
-      if (!getEntityBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, entity_);
+      if (projection_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getProjection());
+      }
+      if (from_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getFrom());
+      }
+      if (bq_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(6, getBq());
+      }
+      if (nnq_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, getNnq());
       }
       {
         int dataSize = 0;
@@ -11467,78 +12755,82 @@ public final class Grpc {
         size += dataSize;
         size += 1 * getHintsList().size();
       }
-      if (nnq_ != null) {
+      if (time_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getNnq());
-      }
-      if (bq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getBq());
-      }
-      if (withMetadata_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(6, withMetadata_);
+          .computeInt64Size(9, time_);
       }
       if (readFromCache_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(7, readFromCache_);
+          .computeBoolSize(10, readFromCache_);
       }
       if (putInCache_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(8, putInCache_);
+          .computeBoolSize(11, putInCache_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < information_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeEnumSizeNoTag(information_.get(i));
+        }
+        size += dataSize;
+        if (!getInformationList().isEmpty()) {  size += 1;
+          size += com.google.protobuf.CodedOutputStream
+            .computeRawVarint32Size(dataSize);
+        }informationMemoizedSerializedSize = dataSize;
       }
       memoizedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -11549,7 +12841,7 @@ public final class Grpc {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -11564,25 +12856,25 @@ public final class Grpc {
       return builder;
     }
     /**
-     * Protobuf type {@code SimpleQueryMessage}
+     * Protobuf type {@code QueryMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:SimpleQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessageOrBuilder {
+        // @@protoc_insertion_point(builder_implements:QueryMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleQueryMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -11600,15 +12892,17 @@ public final class Grpc {
         super.clear();
         queryid_ = "";
 
-        entity_ = "";
-
-        hints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
+        if (projectionBuilder_ == null) {
+          projection_ = null;
         } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
+          projection_ = null;
+          projectionBuilder_ = null;
+        }
+        if (fromBuilder_ == null) {
+          from_ = null;
+        } else {
+          from_ = null;
+          fromBuilder_ = null;
         }
         if (bqBuilder_ == null) {
           bq_ = null;
@@ -11616,104 +12910,140 @@ public final class Grpc {
           bq_ = null;
           bqBuilder_ = null;
         }
-        withMetadata_ = false;
+        if (nnqBuilder_ == null) {
+          nnq_ = null;
+        } else {
+          nnq_ = null;
+          nnqBuilder_ = null;
+        }
+        hints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        time_ = 0L;
 
         readFromCache_ = false;
 
         putInCache_ = false;
 
+        information_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.queryid_ = queryid_;
-        result.entity_ = entity_;
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          hints_ = hints_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.hints_ = hints_;
-        if (nnqBuilder_ == null) {
-          result.nnq_ = nnq_;
+        if (projectionBuilder_ == null) {
+          result.projection_ = projection_;
         } else {
-          result.nnq_ = nnqBuilder_.build();
+          result.projection_ = projectionBuilder_.build();
+        }
+        if (fromBuilder_ == null) {
+          result.from_ = from_;
+        } else {
+          result.from_ = fromBuilder_.build();
         }
         if (bqBuilder_ == null) {
           result.bq_ = bq_;
         } else {
           result.bq_ = bqBuilder_.build();
         }
-        result.withMetadata_ = withMetadata_;
+        if (nnqBuilder_ == null) {
+          result.nnq_ = nnq_;
+        } else {
+          result.nnq_ = nnqBuilder_.build();
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          hints_ = hints_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000020);
+        }
+        result.hints_ = hints_;
+        result.time_ = time_;
         result.readFromCache_ = readFromCache_;
         result.putInCache_ = putInCache_;
+        if (((bitField0_ & 0x00000200) == 0x00000200)) {
+          information_ = java.util.Collections.unmodifiableList(information_);
+          bitField0_ = (bitField0_ & ~0x00000200);
+        }
+        result.information_ = information_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance()) return this;
         if (!other.getQueryid().isEmpty()) {
           queryid_ = other.queryid_;
           onChanged();
         }
-        if (!other.getEntity().isEmpty()) {
-          entity_ = other.entity_;
-          onChanged();
+        if (other.hasProjection()) {
+          mergeProjection(other.getProjection());
+        }
+        if (other.hasFrom()) {
+          mergeFrom(other.getFrom());
+        }
+        if (other.hasBq()) {
+          mergeBq(other.getBq());
+        }
+        if (other.hasNnq()) {
+          mergeNnq(other.getNnq());
         }
         if (!other.hints_.isEmpty()) {
           if (hints_.isEmpty()) {
             hints_ = other.hints_;
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000020);
           } else {
             ensureHintsIsMutable();
             hints_.addAll(other.hints_);
           }
           onChanged();
         }
-        if (other.hasNnq()) {
-          mergeNnq(other.getNnq());
-        }
-        if (other.hasBq()) {
-          mergeBq(other.getBq());
-        }
-        if (other.getWithMetadata() != false) {
-          setWithMetadata(other.getWithMetadata());
+        if (other.getTime() != 0L) {
+          setTime(other.getTime());
         }
         if (other.getReadFromCache() != false) {
           setReadFromCache(other.getReadFromCache());
         }
         if (other.getPutInCache() != false) {
           setPutInCache(other.getPutInCache());
+        }
+        if (!other.information_.isEmpty()) {
+          if (information_.isEmpty()) {
+            information_ = other.information_;
+            bitField0_ = (bitField0_ & ~0x00000200);
+          } else {
+            ensureInformationIsMutable();
+            information_.addAll(other.information_);
+          }
+          onChanged();
         }
         onChanged();
         return this;
@@ -11727,11 +13057,11 @@ public final class Grpc {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -11811,88 +13141,631 @@ public final class Grpc {
         return this;
       }
 
-      private java.lang.Object entity_ = "";
+      private ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage projection_ = null;
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessageOrBuilder> projectionBuilder_;
       /**
-       * <code>optional string entity = 2;</code>
+       * <code>optional .ProjectionMessage projection = 2;</code>
+       *
+       * <pre>
+       *SELECT ...
+       * </pre>
        */
-      public java.lang.String getEntity() {
-        java.lang.Object ref = entity_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          entity_ = s;
-          return s;
+      public boolean hasProjection() {
+        return projectionBuilder_ != null || projection_ != null;
+      }
+      /**
+       * <code>optional .ProjectionMessage projection = 2;</code>
+       *
+       * <pre>
+       *SELECT ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage getProjection() {
+        if (projectionBuilder_ == null) {
+          return projection_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.getDefaultInstance() : projection_;
         } else {
-          return (java.lang.String) ref;
+          return projectionBuilder_.getMessage();
         }
       }
       /**
-       * <code>optional string entity = 2;</code>
+       * <code>optional .ProjectionMessage projection = 2;</code>
+       *
+       * <pre>
+       *SELECT ...
+       * </pre>
        */
-      public com.google.protobuf.ByteString
-          getEntityBytes() {
-        java.lang.Object ref = entity_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          entity_ = b;
-          return b;
+      public Builder setProjection(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage value) {
+        if (projectionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          projection_ = value;
+          onChanged();
         } else {
-          return (com.google.protobuf.ByteString) ref;
+          projectionBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .ProjectionMessage projection = 2;</code>
+       *
+       * <pre>
+       *SELECT ...
+       * </pre>
+       */
+      public Builder setProjection(
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Builder builderForValue) {
+        if (projectionBuilder_ == null) {
+          projection_ = builderForValue.build();
+          onChanged();
+        } else {
+          projectionBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .ProjectionMessage projection = 2;</code>
+       *
+       * <pre>
+       *SELECT ...
+       * </pre>
+       */
+      public Builder mergeProjection(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage value) {
+        if (projectionBuilder_ == null) {
+          if (projection_ != null) {
+            projection_ =
+              ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.newBuilder(projection_).mergeFrom(value).buildPartial();
+          } else {
+            projection_ = value;
+          }
+          onChanged();
+        } else {
+          projectionBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .ProjectionMessage projection = 2;</code>
+       *
+       * <pre>
+       *SELECT ...
+       * </pre>
+       */
+      public Builder clearProjection() {
+        if (projectionBuilder_ == null) {
+          projection_ = null;
+          onChanged();
+        } else {
+          projection_ = null;
+          projectionBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .ProjectionMessage projection = 2;</code>
+       *
+       * <pre>
+       *SELECT ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Builder getProjectionBuilder() {
+        
+        onChanged();
+        return getProjectionFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .ProjectionMessage projection = 2;</code>
+       *
+       * <pre>
+       *SELECT ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessageOrBuilder getProjectionOrBuilder() {
+        if (projectionBuilder_ != null) {
+          return projectionBuilder_.getMessageOrBuilder();
+        } else {
+          return projection_ == null ?
+              ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.getDefaultInstance() : projection_;
         }
       }
       /**
-       * <code>optional string entity = 2;</code>
+       * <code>optional .ProjectionMessage projection = 2;</code>
+       *
+       * <pre>
+       *SELECT ...
+       * </pre>
        */
-      public Builder setEntity(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        entity_ = value;
-        onChanged();
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessageOrBuilder> 
+          getProjectionFieldBuilder() {
+        if (projectionBuilder_ == null) {
+          projectionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessageOrBuilder>(
+                  getProjection(),
+                  getParentForChildren(),
+                  isClean());
+          projection_ = null;
+        }
+        return projectionBuilder_;
+      }
+
+      private ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage from_ = null;
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FromMessageOrBuilder> fromBuilder_;
+      /**
+       * <code>optional .FromMessage from = 3;</code>
+       *
+       * <pre>
+       *FROM ...
+       * </pre>
+       */
+      public boolean hasFrom() {
+        return fromBuilder_ != null || from_ != null;
+      }
+      /**
+       * <code>optional .FromMessage from = 3;</code>
+       *
+       * <pre>
+       *FROM ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage getFrom() {
+        if (fromBuilder_ == null) {
+          return from_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.getDefaultInstance() : from_;
+        } else {
+          return fromBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .FromMessage from = 3;</code>
+       *
+       * <pre>
+       *FROM ...
+       * </pre>
+       */
+      public Builder setFrom(ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage value) {
+        if (fromBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          from_ = value;
+          onChanged();
+        } else {
+          fromBuilder_.setMessage(value);
+        }
+
         return this;
       }
       /**
-       * <code>optional string entity = 2;</code>
+       * <code>optional .FromMessage from = 3;</code>
+       *
+       * <pre>
+       *FROM ...
+       * </pre>
        */
-      public Builder clearEntity() {
-        
-        entity_ = getDefaultInstance().getEntity();
-        onChanged();
+      public Builder setFrom(
+          ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.Builder builderForValue) {
+        if (fromBuilder_ == null) {
+          from_ = builderForValue.build();
+          onChanged();
+        } else {
+          fromBuilder_.setMessage(builderForValue.build());
+        }
+
         return this;
       }
       /**
-       * <code>optional string entity = 2;</code>
+       * <code>optional .FromMessage from = 3;</code>
+       *
+       * <pre>
+       *FROM ...
+       * </pre>
        */
-      public Builder setEntityBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        entity_ = value;
-        onChanged();
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage value) {
+        if (fromBuilder_ == null) {
+          if (from_ != null) {
+            from_ =
+              ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.newBuilder(from_).mergeFrom(value).buildPartial();
+          } else {
+            from_ = value;
+          }
+          onChanged();
+        } else {
+          fromBuilder_.mergeFrom(value);
+        }
+
         return this;
+      }
+      /**
+       * <code>optional .FromMessage from = 3;</code>
+       *
+       * <pre>
+       *FROM ...
+       * </pre>
+       */
+      public Builder clearFrom() {
+        if (fromBuilder_ == null) {
+          from_ = null;
+          onChanged();
+        } else {
+          from_ = null;
+          fromBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .FromMessage from = 3;</code>
+       *
+       * <pre>
+       *FROM ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.Builder getFromBuilder() {
+        
+        onChanged();
+        return getFromFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .FromMessage from = 3;</code>
+       *
+       * <pre>
+       *FROM ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FromMessageOrBuilder getFromOrBuilder() {
+        if (fromBuilder_ != null) {
+          return fromBuilder_.getMessageOrBuilder();
+        } else {
+          return from_ == null ?
+              ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.getDefaultInstance() : from_;
+        }
+      }
+      /**
+       * <code>optional .FromMessage from = 3;</code>
+       *
+       * <pre>
+       *FROM ...
+       * </pre>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FromMessageOrBuilder> 
+          getFromFieldBuilder() {
+        if (fromBuilder_ == null) {
+          fromBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FromMessageOrBuilder>(
+                  getFrom(),
+                  getParentForChildren(),
+                  isClean());
+          from_ = null;
+        }
+        return fromBuilder_;
+      }
+
+      private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_ = null;
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> bqBuilder_;
+      /**
+       * <code>optional .BooleanQueryMessage bq = 6;</code>
+       *
+       * <pre>
+       *WHERE ...
+       * </pre>
+       */
+      public boolean hasBq() {
+        return bqBuilder_ != null || bq_ != null;
+      }
+      /**
+       * <code>optional .BooleanQueryMessage bq = 6;</code>
+       *
+       * <pre>
+       *WHERE ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
+        if (bqBuilder_ == null) {
+          return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
+        } else {
+          return bqBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .BooleanQueryMessage bq = 6;</code>
+       *
+       * <pre>
+       *WHERE ...
+       * </pre>
+       */
+      public Builder setBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
+        if (bqBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          bq_ = value;
+          onChanged();
+        } else {
+          bqBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .BooleanQueryMessage bq = 6;</code>
+       *
+       * <pre>
+       *WHERE ...
+       * </pre>
+       */
+      public Builder setBq(
+          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder builderForValue) {
+        if (bqBuilder_ == null) {
+          bq_ = builderForValue.build();
+          onChanged();
+        } else {
+          bqBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .BooleanQueryMessage bq = 6;</code>
+       *
+       * <pre>
+       *WHERE ...
+       * </pre>
+       */
+      public Builder mergeBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
+        if (bqBuilder_ == null) {
+          if (bq_ != null) {
+            bq_ =
+              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.newBuilder(bq_).mergeFrom(value).buildPartial();
+          } else {
+            bq_ = value;
+          }
+          onChanged();
+        } else {
+          bqBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .BooleanQueryMessage bq = 6;</code>
+       *
+       * <pre>
+       *WHERE ...
+       * </pre>
+       */
+      public Builder clearBq() {
+        if (bqBuilder_ == null) {
+          bq_ = null;
+          onChanged();
+        } else {
+          bq_ = null;
+          bqBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .BooleanQueryMessage bq = 6;</code>
+       *
+       * <pre>
+       *WHERE ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder getBqBuilder() {
+        
+        onChanged();
+        return getBqFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .BooleanQueryMessage bq = 6;</code>
+       *
+       * <pre>
+       *WHERE ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
+        if (bqBuilder_ != null) {
+          return bqBuilder_.getMessageOrBuilder();
+        } else {
+          return bq_ == null ?
+              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
+        }
+      }
+      /**
+       * <code>optional .BooleanQueryMessage bq = 6;</code>
+       *
+       * <pre>
+       *WHERE ...
+       * </pre>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> 
+          getBqFieldBuilder() {
+        if (bqBuilder_ == null) {
+          bqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder>(
+                  getBq(),
+                  getParentForChildren(),
+                  isClean());
+          bq_ = null;
+        }
+        return bqBuilder_;
+      }
+
+      private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_ = null;
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> nnqBuilder_;
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+       *
+       * <pre>
+       *USING DISTANCE ...
+       * </pre>
+       */
+      public boolean hasNnq() {
+        return nnqBuilder_ != null || nnq_ != null;
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+       *
+       * <pre>
+       *USING DISTANCE ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
+        if (nnqBuilder_ == null) {
+          return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
+        } else {
+          return nnqBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+       *
+       * <pre>
+       *USING DISTANCE ...
+       * </pre>
+       */
+      public Builder setNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
+        if (nnqBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          nnq_ = value;
+          onChanged();
+        } else {
+          nnqBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+       *
+       * <pre>
+       *USING DISTANCE ...
+       * </pre>
+       */
+      public Builder setNnq(
+          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder builderForValue) {
+        if (nnqBuilder_ == null) {
+          nnq_ = builderForValue.build();
+          onChanged();
+        } else {
+          nnqBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+       *
+       * <pre>
+       *USING DISTANCE ...
+       * </pre>
+       */
+      public Builder mergeNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
+        if (nnqBuilder_ == null) {
+          if (nnq_ != null) {
+            nnq_ =
+              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.newBuilder(nnq_).mergeFrom(value).buildPartial();
+          } else {
+            nnq_ = value;
+          }
+          onChanged();
+        } else {
+          nnqBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+       *
+       * <pre>
+       *USING DISTANCE ...
+       * </pre>
+       */
+      public Builder clearNnq() {
+        if (nnqBuilder_ == null) {
+          nnq_ = null;
+          onChanged();
+        } else {
+          nnq_ = null;
+          nnqBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+       *
+       * <pre>
+       *USING DISTANCE ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder getNnqBuilder() {
+        
+        onChanged();
+        return getNnqFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+       *
+       * <pre>
+       *USING DISTANCE ...
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
+        if (nnqBuilder_ != null) {
+          return nnqBuilder_.getMessageOrBuilder();
+        } else {
+          return nnq_ == null ?
+              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
+        }
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
+       *
+       * <pre>
+       *USING DISTANCE ...
+       * </pre>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> 
+          getNnqFieldBuilder() {
+        if (nnqBuilder_ == null) {
+          nnqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder>(
+                  getNnq(),
+                  getParentForChildren(),
+                  isClean());
+          nnq_ = null;
+        }
+        return nnqBuilder_;
       }
 
       private com.google.protobuf.LazyStringList hints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureHintsIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (!((bitField0_ & 0x00000020) == 0x00000020)) {
           hints_ = new com.google.protobuf.LazyStringArrayList(hints_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000020;
          }
       }
       /**
-       * <code>repeated string hints = 3;</code>
+       * <code>repeated string hints = 8;</code>
        *
        * <pre>
        *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
        * </pre>
        */
       public com.google.protobuf.ProtocolStringList
@@ -11900,33 +13773,33 @@ public final class Grpc {
         return hints_.getUnmodifiableView();
       }
       /**
-       * <code>repeated string hints = 3;</code>
+       * <code>repeated string hints = 8;</code>
        *
        * <pre>
        *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
        * </pre>
        */
       public int getHintsCount() {
         return hints_.size();
       }
       /**
-       * <code>repeated string hints = 3;</code>
+       * <code>repeated string hints = 8;</code>
        *
        * <pre>
        *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
        * </pre>
        */
       public java.lang.String getHints(int index) {
         return hints_.get(index);
       }
       /**
-       * <code>repeated string hints = 3;</code>
+       * <code>repeated string hints = 8;</code>
        *
        * <pre>
        *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
        * </pre>
        */
       public com.google.protobuf.ByteString
@@ -11934,11 +13807,11 @@ public final class Grpc {
         return hints_.getByteString(index);
       }
       /**
-       * <code>repeated string hints = 3;</code>
+       * <code>repeated string hints = 8;</code>
        *
        * <pre>
        *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
        * </pre>
        */
       public Builder setHints(
@@ -11952,11 +13825,11 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated string hints = 3;</code>
+       * <code>repeated string hints = 8;</code>
        *
        * <pre>
        *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
        * </pre>
        */
       public Builder addHints(
@@ -11970,11 +13843,11 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated string hints = 3;</code>
+       * <code>repeated string hints = 8;</code>
        *
        * <pre>
        *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
        * </pre>
        */
       public Builder addAllHints(
@@ -11986,25 +13859,25 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated string hints = 3;</code>
+       * <code>repeated string hints = 8;</code>
        *
        * <pre>
        *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
        * </pre>
        */
       public Builder clearHints() {
         hints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000020);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string hints = 3;</code>
+       * <code>repeated string hints = 8;</code>
        *
        * <pre>
        *for hints see  ch.unibas.dmi.dbis.adam.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav"
+       *include "index", "inexact", "ecp", "lsh", "pq", "sh", "exact", "va", "vaf", "vav", "sequential"
        * </pre>
        */
       public Builder addHintsBytes(
@@ -12019,5800 +13892,9 @@ public final class Grpc {
         return this;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> nnqBuilder_;
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public boolean hasNnq() {
-        return nnqBuilder_ != null || nnq_ != null;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-        if (nnqBuilder_ == null) {
-          return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        } else {
-          return nnqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public Builder setNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          nnq_ = value;
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public Builder setNnq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder builderForValue) {
-        if (nnqBuilder_ == null) {
-          nnq_ = builderForValue.build();
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public Builder mergeNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (nnq_ != null) {
-            nnq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.newBuilder(nnq_).mergeFrom(value).buildPartial();
-          } else {
-            nnq_ = value;
-          }
-          onChanged();
-        } else {
-          nnqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public Builder clearNnq() {
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-          onChanged();
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder getNnqBuilder() {
-        
-        onChanged();
-        return getNnqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-        if (nnqBuilder_ != null) {
-          return nnqBuilder_.getMessageOrBuilder();
-        } else {
-          return nnq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> 
-          getNnqFieldBuilder() {
-        if (nnqBuilder_ == null) {
-          nnqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder>(
-                  getNnq(),
-                  getParentForChildren(),
-                  isClean());
-          nnq_ = null;
-        }
-        return nnqBuilder_;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> bqBuilder_;
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public boolean hasBq() {
-        return bqBuilder_ != null || bq_ != null;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-        if (bqBuilder_ == null) {
-          return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        } else {
-          return bqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public Builder setBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          bq_ = value;
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public Builder setBq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder builderForValue) {
-        if (bqBuilder_ == null) {
-          bq_ = builderForValue.build();
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public Builder mergeBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (bq_ != null) {
-            bq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.newBuilder(bq_).mergeFrom(value).buildPartial();
-          } else {
-            bq_ = value;
-          }
-          onChanged();
-        } else {
-          bqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public Builder clearBq() {
-        if (bqBuilder_ == null) {
-          bq_ = null;
-          onChanged();
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder getBqBuilder() {
-        
-        onChanged();
-        return getBqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-        if (bqBuilder_ != null) {
-          return bqBuilder_.getMessageOrBuilder();
-        } else {
-          return bq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> 
-          getBqFieldBuilder() {
-        if (bqBuilder_ == null) {
-          bqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder>(
-                  getBq(),
-                  getParentForChildren(),
-                  isClean());
-          bq_ = null;
-        }
-        return bqBuilder_;
-      }
-
-      private boolean withMetadata_ ;
-      /**
-       * <code>optional bool withMetadata = 6;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public boolean getWithMetadata() {
-        return withMetadata_;
-      }
-      /**
-       * <code>optional bool withMetadata = 6;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public Builder setWithMetadata(boolean value) {
-        
-        withMetadata_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool withMetadata = 6;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public Builder clearWithMetadata() {
-        
-        withMetadata_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean readFromCache_ ;
-      /**
-       * <code>optional bool readFromCache = 7;</code>
-       */
-      public boolean getReadFromCache() {
-        return readFromCache_;
-      }
-      /**
-       * <code>optional bool readFromCache = 7;</code>
-       */
-      public Builder setReadFromCache(boolean value) {
-        
-        readFromCache_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool readFromCache = 7;</code>
-       */
-      public Builder clearReadFromCache() {
-        
-        readFromCache_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean putInCache_ ;
-      /**
-       * <code>optional bool putInCache = 8;</code>
-       */
-      public boolean getPutInCache() {
-        return putInCache_;
-      }
-      /**
-       * <code>optional bool putInCache = 8;</code>
-       */
-      public Builder setPutInCache(boolean value) {
-        
-        putInCache_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool putInCache = 8;</code>
-       */
-      public Builder clearPutInCache() {
-        
-        putInCache_ = false;
-        onChanged();
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:SimpleQueryMessage)
-    }
-
-    // @@protoc_insertion_point(class_scope:SimpleQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage();
-    }
-
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<SimpleQueryMessage>
-        PARSER = new com.google.protobuf.AbstractParser<SimpleQueryMessage>() {
-      public SimpleQueryMessage parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        try {
-          return new SimpleQueryMessage(input, extensionRegistry);
-        } catch (RuntimeException e) {
-          if (e.getCause() instanceof
-              com.google.protobuf.InvalidProtocolBufferException) {
-            throw (com.google.protobuf.InvalidProtocolBufferException)
-                e.getCause();
-          }
-          throw e;
-        }
-      }
-    };
-
-    public static com.google.protobuf.Parser<SimpleQueryMessage> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<SimpleQueryMessage> getParserForType() {
-      return PARSER;
-    }
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface SimpleBooleanQueryMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:SimpleBooleanQueryMessage)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    java.lang.String getQueryid();
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getQueryidBytes();
-
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    java.lang.String getEntity();
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getEntityBytes();
-
-    /**
-     * <code>optional .BooleanQueryMessage bq = 3;</code>
-     */
-    boolean hasBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder();
-
-    /**
-     * <code>optional bool readFromCache = 4;</code>
-     *
-     * <pre>
-     *specifies whether we should join the structured metadata to the results
-     * </pre>
-     */
-    boolean getReadFromCache();
-
-    /**
-     * <code>optional bool putInCache = 5;</code>
-     */
-    boolean getPutInCache();
-  }
-  /**
-   * Protobuf type {@code SimpleBooleanQueryMessage}
-   */
-  public  static final class SimpleBooleanQueryMessage extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:SimpleBooleanQueryMessage)
-      SimpleBooleanQueryMessageOrBuilder {
-    // Use SimpleBooleanQueryMessage.newBuilder() to construct.
-    private SimpleBooleanQueryMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-    }
-    private SimpleBooleanQueryMessage() {
-      queryid_ = "";
-      entity_ = "";
-      readFromCache_ = false;
-      putInCache_ = false;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private SimpleBooleanQueryMessage(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              queryid_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              entity_ = s;
-              break;
-            }
-            case 26: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder subBuilder = null;
-              if (bq_ != null) {
-                subBuilder = bq_.toBuilder();
-              }
-              bq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(bq_);
-                bq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 32: {
-
-              readFromCache_ = input.readBool();
-              break;
-            }
-            case 40: {
-
-              putInCache_ = input.readBool();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw new RuntimeException(e.setUnfinishedMessage(this));
-      } catch (java.io.IOException e) {
-        throw new RuntimeException(
-            new com.google.protobuf.InvalidProtocolBufferException(
-                e.getMessage()).setUnfinishedMessage(this));
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleBooleanQueryMessage_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleBooleanQueryMessage_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder.class);
-    }
-
-    public static final int QUERYID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object queryid_;
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public java.lang.String getQueryid() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        queryid_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getQueryidBytes() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        queryid_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ENTITY_FIELD_NUMBER = 2;
-    private volatile java.lang.Object entity_;
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public java.lang.String getEntity() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        entity_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getEntityBytes() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        entity_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int BQ_FIELD_NUMBER = 3;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_;
-    /**
-     * <code>optional .BooleanQueryMessage bq = 3;</code>
-     */
-    public boolean hasBq() {
-      return bq_ != null;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-      return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-      return getBq();
-    }
-
-    public static final int READFROMCACHE_FIELD_NUMBER = 4;
-    private boolean readFromCache_;
-    /**
-     * <code>optional bool readFromCache = 4;</code>
-     *
-     * <pre>
-     *specifies whether we should join the structured metadata to the results
-     * </pre>
-     */
-    public boolean getReadFromCache() {
-      return readFromCache_;
-    }
-
-    public static final int PUTINCACHE_FIELD_NUMBER = 5;
-    private boolean putInCache_;
-    /**
-     * <code>optional bool putInCache = 5;</code>
-     */
-    public boolean getPutInCache() {
-      return putInCache_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getQueryidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, entity_);
-      }
-      if (bq_ != null) {
-        output.writeMessage(3, getBq());
-      }
-      if (readFromCache_ != false) {
-        output.writeBool(4, readFromCache_);
-      }
-      if (putInCache_ != false) {
-        output.writeBool(5, putInCache_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getQueryidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, entity_);
-      }
-      if (bq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getBq());
-      }
-      if (readFromCache_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(4, readFromCache_);
-      }
-      if (putInCache_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(5, putInCache_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code SimpleBooleanQueryMessage}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:SimpleBooleanQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleBooleanQueryMessage_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleBooleanQueryMessage_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder.class);
-      }
-
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        queryid_ = "";
-
-        entity_ = "";
-
-        if (bqBuilder_ == null) {
-          bq_ = null;
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-        readFromCache_ = false;
-
-        putInCache_ = false;
-
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleBooleanQueryMessage_descriptor;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage(this);
-        result.queryid_ = queryid_;
-        result.entity_ = entity_;
-        if (bqBuilder_ == null) {
-          result.bq_ = bq_;
-        } else {
-          result.bq_ = bqBuilder_.build();
-        }
-        result.readFromCache_ = readFromCache_;
-        result.putInCache_ = putInCache_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance()) return this;
-        if (!other.getQueryid().isEmpty()) {
-          queryid_ = other.queryid_;
-          onChanged();
-        }
-        if (!other.getEntity().isEmpty()) {
-          entity_ = other.entity_;
-          onChanged();
-        }
-        if (other.hasBq()) {
-          mergeBq(other.getBq());
-        }
-        if (other.getReadFromCache() != false) {
-          setReadFromCache(other.getReadFromCache());
-        }
-        if (other.getPutInCache() != false) {
-          setPutInCache(other.getPutInCache());
-        }
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object queryid_ = "";
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public java.lang.String getQueryid() {
-        java.lang.Object ref = queryid_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          queryid_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getQueryidBytes() {
-        java.lang.Object ref = queryid_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          queryid_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryid(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder clearQueryid() {
-        
-        queryid_ = getDefaultInstance().getQueryid();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryidBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object entity_ = "";
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public java.lang.String getEntity() {
-        java.lang.Object ref = entity_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          entity_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getEntityBytes() {
-        java.lang.Object ref = entity_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          entity_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntity(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder clearEntity() {
-        
-        entity_ = getDefaultInstance().getEntity();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntityBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> bqBuilder_;
-      /**
-       * <code>optional .BooleanQueryMessage bq = 3;</code>
-       */
-      public boolean hasBq() {
-        return bqBuilder_ != null || bq_ != null;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-        if (bqBuilder_ == null) {
-          return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        } else {
-          return bqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 3;</code>
-       */
-      public Builder setBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          bq_ = value;
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 3;</code>
-       */
-      public Builder setBq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder builderForValue) {
-        if (bqBuilder_ == null) {
-          bq_ = builderForValue.build();
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 3;</code>
-       */
-      public Builder mergeBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (bq_ != null) {
-            bq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.newBuilder(bq_).mergeFrom(value).buildPartial();
-          } else {
-            bq_ = value;
-          }
-          onChanged();
-        } else {
-          bqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 3;</code>
-       */
-      public Builder clearBq() {
-        if (bqBuilder_ == null) {
-          bq_ = null;
-          onChanged();
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder getBqBuilder() {
-        
-        onChanged();
-        return getBqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-        if (bqBuilder_ != null) {
-          return bqBuilder_.getMessageOrBuilder();
-        } else {
-          return bq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> 
-          getBqFieldBuilder() {
-        if (bqBuilder_ == null) {
-          bqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder>(
-                  getBq(),
-                  getParentForChildren(),
-                  isClean());
-          bq_ = null;
-        }
-        return bqBuilder_;
-      }
-
-      private boolean readFromCache_ ;
-      /**
-       * <code>optional bool readFromCache = 4;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public boolean getReadFromCache() {
-        return readFromCache_;
-      }
-      /**
-       * <code>optional bool readFromCache = 4;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public Builder setReadFromCache(boolean value) {
-        
-        readFromCache_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool readFromCache = 4;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public Builder clearReadFromCache() {
-        
-        readFromCache_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean putInCache_ ;
-      /**
-       * <code>optional bool putInCache = 5;</code>
-       */
-      public boolean getPutInCache() {
-        return putInCache_;
-      }
-      /**
-       * <code>optional bool putInCache = 5;</code>
-       */
-      public Builder setPutInCache(boolean value) {
-        
-        putInCache_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool putInCache = 5;</code>
-       */
-      public Builder clearPutInCache() {
-        
-        putInCache_ = false;
-        onChanged();
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:SimpleBooleanQueryMessage)
-    }
-
-    // @@protoc_insertion_point(class_scope:SimpleBooleanQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage();
-    }
-
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<SimpleBooleanQueryMessage>
-        PARSER = new com.google.protobuf.AbstractParser<SimpleBooleanQueryMessage>() {
-      public SimpleBooleanQueryMessage parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        try {
-          return new SimpleBooleanQueryMessage(input, extensionRegistry);
-        } catch (RuntimeException e) {
-          if (e.getCause() instanceof
-              com.google.protobuf.InvalidProtocolBufferException) {
-            throw (com.google.protobuf.InvalidProtocolBufferException)
-                e.getCause();
-          }
-          throw e;
-        }
-      }
-    };
-
-    public static com.google.protobuf.Parser<SimpleBooleanQueryMessage> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<SimpleBooleanQueryMessage> getParserForType() {
-      return PARSER;
-    }
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface SimpleSequentialQueryMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:SimpleSequentialQueryMessage)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    java.lang.String getQueryid();
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getQueryidBytes();
-
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    java.lang.String getEntity();
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getEntityBytes();
-
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    boolean hasNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder();
-
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    boolean hasBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder();
-
-    /**
-     * <code>optional bool withMetadata = 5;</code>
-     *
-     * <pre>
-     *specifies whether we should join the structured metadata to the results
-     * </pre>
-     */
-    boolean getWithMetadata();
-
-    /**
-     * <code>optional bool readFromCache = 6;</code>
-     */
-    boolean getReadFromCache();
-
-    /**
-     * <code>optional bool putInCache = 7;</code>
-     */
-    boolean getPutInCache();
-  }
-  /**
-   * Protobuf type {@code SimpleSequentialQueryMessage}
-   */
-  public  static final class SimpleSequentialQueryMessage extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:SimpleSequentialQueryMessage)
-      SimpleSequentialQueryMessageOrBuilder {
-    // Use SimpleSequentialQueryMessage.newBuilder() to construct.
-    private SimpleSequentialQueryMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-    }
-    private SimpleSequentialQueryMessage() {
-      queryid_ = "";
-      entity_ = "";
-      withMetadata_ = false;
-      readFromCache_ = false;
-      putInCache_ = false;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private SimpleSequentialQueryMessage(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              queryid_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              entity_ = s;
-              break;
-            }
-            case 26: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder subBuilder = null;
-              if (nnq_ != null) {
-                subBuilder = nnq_.toBuilder();
-              }
-              nnq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(nnq_);
-                nnq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 34: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder subBuilder = null;
-              if (bq_ != null) {
-                subBuilder = bq_.toBuilder();
-              }
-              bq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(bq_);
-                bq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 40: {
-
-              withMetadata_ = input.readBool();
-              break;
-            }
-            case 48: {
-
-              readFromCache_ = input.readBool();
-              break;
-            }
-            case 56: {
-
-              putInCache_ = input.readBool();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw new RuntimeException(e.setUnfinishedMessage(this));
-      } catch (java.io.IOException e) {
-        throw new RuntimeException(
-            new com.google.protobuf.InvalidProtocolBufferException(
-                e.getMessage()).setUnfinishedMessage(this));
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleSequentialQueryMessage_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleSequentialQueryMessage_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.Builder.class);
-    }
-
-    public static final int QUERYID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object queryid_;
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public java.lang.String getQueryid() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        queryid_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getQueryidBytes() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        queryid_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ENTITY_FIELD_NUMBER = 2;
-    private volatile java.lang.Object entity_;
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public java.lang.String getEntity() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        entity_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getEntityBytes() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        entity_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int NNQ_FIELD_NUMBER = 3;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_;
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public boolean hasNnq() {
-      return nnq_ != null;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-      return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-      return getNnq();
-    }
-
-    public static final int BQ_FIELD_NUMBER = 4;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_;
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public boolean hasBq() {
-      return bq_ != null;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-      return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-      return getBq();
-    }
-
-    public static final int WITHMETADATA_FIELD_NUMBER = 5;
-    private boolean withMetadata_;
-    /**
-     * <code>optional bool withMetadata = 5;</code>
-     *
-     * <pre>
-     *specifies whether we should join the structured metadata to the results
-     * </pre>
-     */
-    public boolean getWithMetadata() {
-      return withMetadata_;
-    }
-
-    public static final int READFROMCACHE_FIELD_NUMBER = 6;
-    private boolean readFromCache_;
-    /**
-     * <code>optional bool readFromCache = 6;</code>
-     */
-    public boolean getReadFromCache() {
-      return readFromCache_;
-    }
-
-    public static final int PUTINCACHE_FIELD_NUMBER = 7;
-    private boolean putInCache_;
-    /**
-     * <code>optional bool putInCache = 7;</code>
-     */
-    public boolean getPutInCache() {
-      return putInCache_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getQueryidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, entity_);
-      }
-      if (nnq_ != null) {
-        output.writeMessage(3, getNnq());
-      }
-      if (bq_ != null) {
-        output.writeMessage(4, getBq());
-      }
-      if (withMetadata_ != false) {
-        output.writeBool(5, withMetadata_);
-      }
-      if (readFromCache_ != false) {
-        output.writeBool(6, readFromCache_);
-      }
-      if (putInCache_ != false) {
-        output.writeBool(7, putInCache_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getQueryidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, entity_);
-      }
-      if (nnq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getNnq());
-      }
-      if (bq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getBq());
-      }
-      if (withMetadata_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(5, withMetadata_);
-      }
-      if (readFromCache_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(6, readFromCache_);
-      }
-      if (putInCache_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(7, putInCache_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code SimpleSequentialQueryMessage}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:SimpleSequentialQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleSequentialQueryMessage_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleSequentialQueryMessage_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.Builder.class);
-      }
-
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        queryid_ = "";
-
-        entity_ = "";
-
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-        if (bqBuilder_ == null) {
-          bq_ = null;
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-        withMetadata_ = false;
-
-        readFromCache_ = false;
-
-        putInCache_ = false;
-
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleSequentialQueryMessage_descriptor;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.getDefaultInstance();
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage(this);
-        result.queryid_ = queryid_;
-        result.entity_ = entity_;
-        if (nnqBuilder_ == null) {
-          result.nnq_ = nnq_;
-        } else {
-          result.nnq_ = nnqBuilder_.build();
-        }
-        if (bqBuilder_ == null) {
-          result.bq_ = bq_;
-        } else {
-          result.bq_ = bqBuilder_.build();
-        }
-        result.withMetadata_ = withMetadata_;
-        result.readFromCache_ = readFromCache_;
-        result.putInCache_ = putInCache_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.getDefaultInstance()) return this;
-        if (!other.getQueryid().isEmpty()) {
-          queryid_ = other.queryid_;
-          onChanged();
-        }
-        if (!other.getEntity().isEmpty()) {
-          entity_ = other.entity_;
-          onChanged();
-        }
-        if (other.hasNnq()) {
-          mergeNnq(other.getNnq());
-        }
-        if (other.hasBq()) {
-          mergeBq(other.getBq());
-        }
-        if (other.getWithMetadata() != false) {
-          setWithMetadata(other.getWithMetadata());
-        }
-        if (other.getReadFromCache() != false) {
-          setReadFromCache(other.getReadFromCache());
-        }
-        if (other.getPutInCache() != false) {
-          setPutInCache(other.getPutInCache());
-        }
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object queryid_ = "";
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public java.lang.String getQueryid() {
-        java.lang.Object ref = queryid_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          queryid_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getQueryidBytes() {
-        java.lang.Object ref = queryid_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          queryid_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryid(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder clearQueryid() {
-        
-        queryid_ = getDefaultInstance().getQueryid();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryidBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object entity_ = "";
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public java.lang.String getEntity() {
-        java.lang.Object ref = entity_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          entity_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getEntityBytes() {
-        java.lang.Object ref = entity_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          entity_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntity(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder clearEntity() {
-        
-        entity_ = getDefaultInstance().getEntity();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntityBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> nnqBuilder_;
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public boolean hasNnq() {
-        return nnqBuilder_ != null || nnq_ != null;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-        if (nnqBuilder_ == null) {
-          return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        } else {
-          return nnqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder setNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          nnq_ = value;
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder setNnq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder builderForValue) {
-        if (nnqBuilder_ == null) {
-          nnq_ = builderForValue.build();
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder mergeNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (nnq_ != null) {
-            nnq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.newBuilder(nnq_).mergeFrom(value).buildPartial();
-          } else {
-            nnq_ = value;
-          }
-          onChanged();
-        } else {
-          nnqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder clearNnq() {
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-          onChanged();
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder getNnqBuilder() {
-        
-        onChanged();
-        return getNnqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-        if (nnqBuilder_ != null) {
-          return nnqBuilder_.getMessageOrBuilder();
-        } else {
-          return nnq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> 
-          getNnqFieldBuilder() {
-        if (nnqBuilder_ == null) {
-          nnqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder>(
-                  getNnq(),
-                  getParentForChildren(),
-                  isClean());
-          nnq_ = null;
-        }
-        return nnqBuilder_;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> bqBuilder_;
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public boolean hasBq() {
-        return bqBuilder_ != null || bq_ != null;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-        if (bqBuilder_ == null) {
-          return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        } else {
-          return bqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder setBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          bq_ = value;
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder setBq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder builderForValue) {
-        if (bqBuilder_ == null) {
-          bq_ = builderForValue.build();
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder mergeBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (bq_ != null) {
-            bq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.newBuilder(bq_).mergeFrom(value).buildPartial();
-          } else {
-            bq_ = value;
-          }
-          onChanged();
-        } else {
-          bqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder clearBq() {
-        if (bqBuilder_ == null) {
-          bq_ = null;
-          onChanged();
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder getBqBuilder() {
-        
-        onChanged();
-        return getBqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-        if (bqBuilder_ != null) {
-          return bqBuilder_.getMessageOrBuilder();
-        } else {
-          return bq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> 
-          getBqFieldBuilder() {
-        if (bqBuilder_ == null) {
-          bqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder>(
-                  getBq(),
-                  getParentForChildren(),
-                  isClean());
-          bq_ = null;
-        }
-        return bqBuilder_;
-      }
-
-      private boolean withMetadata_ ;
-      /**
-       * <code>optional bool withMetadata = 5;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public boolean getWithMetadata() {
-        return withMetadata_;
-      }
-      /**
-       * <code>optional bool withMetadata = 5;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public Builder setWithMetadata(boolean value) {
-        
-        withMetadata_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool withMetadata = 5;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public Builder clearWithMetadata() {
-        
-        withMetadata_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean readFromCache_ ;
-      /**
-       * <code>optional bool readFromCache = 6;</code>
-       */
-      public boolean getReadFromCache() {
-        return readFromCache_;
-      }
-      /**
-       * <code>optional bool readFromCache = 6;</code>
-       */
-      public Builder setReadFromCache(boolean value) {
-        
-        readFromCache_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool readFromCache = 6;</code>
-       */
-      public Builder clearReadFromCache() {
-        
-        readFromCache_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean putInCache_ ;
-      /**
-       * <code>optional bool putInCache = 7;</code>
-       */
-      public boolean getPutInCache() {
-        return putInCache_;
-      }
-      /**
-       * <code>optional bool putInCache = 7;</code>
-       */
-      public Builder setPutInCache(boolean value) {
-        
-        putInCache_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool putInCache = 7;</code>
-       */
-      public Builder clearPutInCache() {
-        
-        putInCache_ = false;
-        onChanged();
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:SimpleSequentialQueryMessage)
-    }
-
-    // @@protoc_insertion_point(class_scope:SimpleSequentialQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage();
-    }
-
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<SimpleSequentialQueryMessage>
-        PARSER = new com.google.protobuf.AbstractParser<SimpleSequentialQueryMessage>() {
-      public SimpleSequentialQueryMessage parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        try {
-          return new SimpleSequentialQueryMessage(input, extensionRegistry);
-        } catch (RuntimeException e) {
-          if (e.getCause() instanceof
-              com.google.protobuf.InvalidProtocolBufferException) {
-            throw (com.google.protobuf.InvalidProtocolBufferException)
-                e.getCause();
-          }
-          throw e;
-        }
-      }
-    };
-
-    public static com.google.protobuf.Parser<SimpleSequentialQueryMessage> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<SimpleSequentialQueryMessage> getParserForType() {
-      return PARSER;
-    }
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface SimpleSpecifiedIndexQueryMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:SimpleSpecifiedIndexQueryMessage)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    java.lang.String getQueryid();
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getQueryidBytes();
-
-    /**
-     * <code>optional string index = 2;</code>
-     */
-    java.lang.String getIndex();
-    /**
-     * <code>optional string index = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getIndexBytes();
-
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    boolean hasNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder();
-
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    boolean hasBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder();
-
-    /**
-     * <code>optional bool withMetadata = 5;</code>
-     *
-     * <pre>
-     *specifies whether we should join the structured metadata to the results
-     * </pre>
-     */
-    boolean getWithMetadata();
-
-    /**
-     * <code>optional bool readFromCache = 6;</code>
-     */
-    boolean getReadFromCache();
-
-    /**
-     * <code>optional bool putInCache = 7;</code>
-     */
-    boolean getPutInCache();
-  }
-  /**
-   * Protobuf type {@code SimpleSpecifiedIndexQueryMessage}
-   */
-  public  static final class SimpleSpecifiedIndexQueryMessage extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:SimpleSpecifiedIndexQueryMessage)
-      SimpleSpecifiedIndexQueryMessageOrBuilder {
-    // Use SimpleSpecifiedIndexQueryMessage.newBuilder() to construct.
-    private SimpleSpecifiedIndexQueryMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-    }
-    private SimpleSpecifiedIndexQueryMessage() {
-      queryid_ = "";
-      index_ = "";
-      withMetadata_ = false;
-      readFromCache_ = false;
-      putInCache_ = false;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private SimpleSpecifiedIndexQueryMessage(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              queryid_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              index_ = s;
-              break;
-            }
-            case 26: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder subBuilder = null;
-              if (nnq_ != null) {
-                subBuilder = nnq_.toBuilder();
-              }
-              nnq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(nnq_);
-                nnq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 34: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder subBuilder = null;
-              if (bq_ != null) {
-                subBuilder = bq_.toBuilder();
-              }
-              bq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(bq_);
-                bq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 40: {
-
-              withMetadata_ = input.readBool();
-              break;
-            }
-            case 48: {
-
-              readFromCache_ = input.readBool();
-              break;
-            }
-            case 56: {
-
-              putInCache_ = input.readBool();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw new RuntimeException(e.setUnfinishedMessage(this));
-      } catch (java.io.IOException e) {
-        throw new RuntimeException(
-            new com.google.protobuf.InvalidProtocolBufferException(
-                e.getMessage()).setUnfinishedMessage(this));
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleSpecifiedIndexQueryMessage_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleSpecifiedIndexQueryMessage_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.Builder.class);
-    }
-
-    public static final int QUERYID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object queryid_;
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public java.lang.String getQueryid() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        queryid_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getQueryidBytes() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        queryid_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int INDEX_FIELD_NUMBER = 2;
-    private volatile java.lang.Object index_;
-    /**
-     * <code>optional string index = 2;</code>
-     */
-    public java.lang.String getIndex() {
-      java.lang.Object ref = index_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        index_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string index = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getIndexBytes() {
-      java.lang.Object ref = index_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        index_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int NNQ_FIELD_NUMBER = 3;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_;
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public boolean hasNnq() {
-      return nnq_ != null;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-      return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-      return getNnq();
-    }
-
-    public static final int BQ_FIELD_NUMBER = 4;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_;
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public boolean hasBq() {
-      return bq_ != null;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-      return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-      return getBq();
-    }
-
-    public static final int WITHMETADATA_FIELD_NUMBER = 5;
-    private boolean withMetadata_;
-    /**
-     * <code>optional bool withMetadata = 5;</code>
-     *
-     * <pre>
-     *specifies whether we should join the structured metadata to the results
-     * </pre>
-     */
-    public boolean getWithMetadata() {
-      return withMetadata_;
-    }
-
-    public static final int READFROMCACHE_FIELD_NUMBER = 6;
-    private boolean readFromCache_;
-    /**
-     * <code>optional bool readFromCache = 6;</code>
-     */
-    public boolean getReadFromCache() {
-      return readFromCache_;
-    }
-
-    public static final int PUTINCACHE_FIELD_NUMBER = 7;
-    private boolean putInCache_;
-    /**
-     * <code>optional bool putInCache = 7;</code>
-     */
-    public boolean getPutInCache() {
-      return putInCache_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getQueryidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
-      }
-      if (!getIndexBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, index_);
-      }
-      if (nnq_ != null) {
-        output.writeMessage(3, getNnq());
-      }
-      if (bq_ != null) {
-        output.writeMessage(4, getBq());
-      }
-      if (withMetadata_ != false) {
-        output.writeBool(5, withMetadata_);
-      }
-      if (readFromCache_ != false) {
-        output.writeBool(6, readFromCache_);
-      }
-      if (putInCache_ != false) {
-        output.writeBool(7, putInCache_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getQueryidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, queryid_);
-      }
-      if (!getIndexBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, index_);
-      }
-      if (nnq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getNnq());
-      }
-      if (bq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getBq());
-      }
-      if (withMetadata_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(5, withMetadata_);
-      }
-      if (readFromCache_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(6, readFromCache_);
-      }
-      if (putInCache_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(7, putInCache_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code SimpleSpecifiedIndexQueryMessage}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:SimpleSpecifiedIndexQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleSpecifiedIndexQueryMessage_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleSpecifiedIndexQueryMessage_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.Builder.class);
-      }
-
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        queryid_ = "";
-
-        index_ = "";
-
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-        if (bqBuilder_ == null) {
-          bq_ = null;
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-        withMetadata_ = false;
-
-        readFromCache_ = false;
-
-        putInCache_ = false;
-
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleSpecifiedIndexQueryMessage_descriptor;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.getDefaultInstance();
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage(this);
-        result.queryid_ = queryid_;
-        result.index_ = index_;
-        if (nnqBuilder_ == null) {
-          result.nnq_ = nnq_;
-        } else {
-          result.nnq_ = nnqBuilder_.build();
-        }
-        if (bqBuilder_ == null) {
-          result.bq_ = bq_;
-        } else {
-          result.bq_ = bqBuilder_.build();
-        }
-        result.withMetadata_ = withMetadata_;
-        result.readFromCache_ = readFromCache_;
-        result.putInCache_ = putInCache_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.getDefaultInstance()) return this;
-        if (!other.getQueryid().isEmpty()) {
-          queryid_ = other.queryid_;
-          onChanged();
-        }
-        if (!other.getIndex().isEmpty()) {
-          index_ = other.index_;
-          onChanged();
-        }
-        if (other.hasNnq()) {
-          mergeNnq(other.getNnq());
-        }
-        if (other.hasBq()) {
-          mergeBq(other.getBq());
-        }
-        if (other.getWithMetadata() != false) {
-          setWithMetadata(other.getWithMetadata());
-        }
-        if (other.getReadFromCache() != false) {
-          setReadFromCache(other.getReadFromCache());
-        }
-        if (other.getPutInCache() != false) {
-          setPutInCache(other.getPutInCache());
-        }
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object queryid_ = "";
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public java.lang.String getQueryid() {
-        java.lang.Object ref = queryid_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          queryid_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getQueryidBytes() {
-        java.lang.Object ref = queryid_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          queryid_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryid(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder clearQueryid() {
-        
-        queryid_ = getDefaultInstance().getQueryid();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryidBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object index_ = "";
-      /**
-       * <code>optional string index = 2;</code>
-       */
-      public java.lang.String getIndex() {
-        java.lang.Object ref = index_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          index_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string index = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getIndexBytes() {
-        java.lang.Object ref = index_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          index_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string index = 2;</code>
-       */
-      public Builder setIndex(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        index_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string index = 2;</code>
-       */
-      public Builder clearIndex() {
-        
-        index_ = getDefaultInstance().getIndex();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string index = 2;</code>
-       */
-      public Builder setIndexBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        index_ = value;
-        onChanged();
-        return this;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> nnqBuilder_;
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public boolean hasNnq() {
-        return nnqBuilder_ != null || nnq_ != null;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-        if (nnqBuilder_ == null) {
-          return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        } else {
-          return nnqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder setNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          nnq_ = value;
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder setNnq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder builderForValue) {
-        if (nnqBuilder_ == null) {
-          nnq_ = builderForValue.build();
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder mergeNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (nnq_ != null) {
-            nnq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.newBuilder(nnq_).mergeFrom(value).buildPartial();
-          } else {
-            nnq_ = value;
-          }
-          onChanged();
-        } else {
-          nnqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder clearNnq() {
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-          onChanged();
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder getNnqBuilder() {
-        
-        onChanged();
-        return getNnqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-        if (nnqBuilder_ != null) {
-          return nnqBuilder_.getMessageOrBuilder();
-        } else {
-          return nnq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> 
-          getNnqFieldBuilder() {
-        if (nnqBuilder_ == null) {
-          nnqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder>(
-                  getNnq(),
-                  getParentForChildren(),
-                  isClean());
-          nnq_ = null;
-        }
-        return nnqBuilder_;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> bqBuilder_;
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public boolean hasBq() {
-        return bqBuilder_ != null || bq_ != null;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-        if (bqBuilder_ == null) {
-          return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        } else {
-          return bqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder setBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          bq_ = value;
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder setBq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder builderForValue) {
-        if (bqBuilder_ == null) {
-          bq_ = builderForValue.build();
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder mergeBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (bq_ != null) {
-            bq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.newBuilder(bq_).mergeFrom(value).buildPartial();
-          } else {
-            bq_ = value;
-          }
-          onChanged();
-        } else {
-          bqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder clearBq() {
-        if (bqBuilder_ == null) {
-          bq_ = null;
-          onChanged();
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder getBqBuilder() {
-        
-        onChanged();
-        return getBqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-        if (bqBuilder_ != null) {
-          return bqBuilder_.getMessageOrBuilder();
-        } else {
-          return bq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> 
-          getBqFieldBuilder() {
-        if (bqBuilder_ == null) {
-          bqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder>(
-                  getBq(),
-                  getParentForChildren(),
-                  isClean());
-          bq_ = null;
-        }
-        return bqBuilder_;
-      }
-
-      private boolean withMetadata_ ;
-      /**
-       * <code>optional bool withMetadata = 5;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public boolean getWithMetadata() {
-        return withMetadata_;
-      }
-      /**
-       * <code>optional bool withMetadata = 5;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public Builder setWithMetadata(boolean value) {
-        
-        withMetadata_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool withMetadata = 5;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public Builder clearWithMetadata() {
-        
-        withMetadata_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean readFromCache_ ;
-      /**
-       * <code>optional bool readFromCache = 6;</code>
-       */
-      public boolean getReadFromCache() {
-        return readFromCache_;
-      }
-      /**
-       * <code>optional bool readFromCache = 6;</code>
-       */
-      public Builder setReadFromCache(boolean value) {
-        
-        readFromCache_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool readFromCache = 6;</code>
-       */
-      public Builder clearReadFromCache() {
-        
-        readFromCache_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean putInCache_ ;
-      /**
-       * <code>optional bool putInCache = 7;</code>
-       */
-      public boolean getPutInCache() {
-        return putInCache_;
-      }
-      /**
-       * <code>optional bool putInCache = 7;</code>
-       */
-      public Builder setPutInCache(boolean value) {
-        
-        putInCache_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool putInCache = 7;</code>
-       */
-      public Builder clearPutInCache() {
-        
-        putInCache_ = false;
-        onChanged();
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:SimpleSpecifiedIndexQueryMessage)
-    }
-
-    // @@protoc_insertion_point(class_scope:SimpleSpecifiedIndexQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage();
-    }
-
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<SimpleSpecifiedIndexQueryMessage>
-        PARSER = new com.google.protobuf.AbstractParser<SimpleSpecifiedIndexQueryMessage>() {
-      public SimpleSpecifiedIndexQueryMessage parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        try {
-          return new SimpleSpecifiedIndexQueryMessage(input, extensionRegistry);
-        } catch (RuntimeException e) {
-          if (e.getCause() instanceof
-              com.google.protobuf.InvalidProtocolBufferException) {
-            throw (com.google.protobuf.InvalidProtocolBufferException)
-                e.getCause();
-          }
-          throw e;
-        }
-      }
-    };
-
-    public static com.google.protobuf.Parser<SimpleSpecifiedIndexQueryMessage> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<SimpleSpecifiedIndexQueryMessage> getParserForType() {
-      return PARSER;
-    }
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface SimpleIndexQueryMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:SimpleIndexQueryMessage)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    java.lang.String getQueryid();
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getQueryidBytes();
-
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    java.lang.String getEntity();
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getEntityBytes();
-
-    /**
-     * <code>optional .IndexType indextype = 3;</code>
-     */
-    int getIndextypeValue();
-    /**
-     * <code>optional .IndexType indextype = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.IndexType getIndextype();
-
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    boolean hasNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder();
-
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    boolean hasBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder();
-
-    /**
-     * <code>optional bool withMetadata = 6;</code>
-     *
-     * <pre>
-     *specifies whether we should join the structured metadata to the results
-     * </pre>
-     */
-    boolean getWithMetadata();
-
-    /**
-     * <code>optional bool readFromCache = 7;</code>
-     */
-    boolean getReadFromCache();
-
-    /**
-     * <code>optional bool putInCache = 8;</code>
-     */
-    boolean getPutInCache();
-  }
-  /**
-   * Protobuf type {@code SimpleIndexQueryMessage}
-   */
-  public  static final class SimpleIndexQueryMessage extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:SimpleIndexQueryMessage)
-      SimpleIndexQueryMessageOrBuilder {
-    // Use SimpleIndexQueryMessage.newBuilder() to construct.
-    private SimpleIndexQueryMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-    }
-    private SimpleIndexQueryMessage() {
-      queryid_ = "";
-      entity_ = "";
-      indextype_ = 0;
-      withMetadata_ = false;
-      readFromCache_ = false;
-      putInCache_ = false;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private SimpleIndexQueryMessage(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              queryid_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              entity_ = s;
-              break;
-            }
-            case 24: {
-              int rawValue = input.readEnum();
-
-              indextype_ = rawValue;
-              break;
-            }
-            case 34: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder subBuilder = null;
-              if (nnq_ != null) {
-                subBuilder = nnq_.toBuilder();
-              }
-              nnq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(nnq_);
-                nnq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 42: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder subBuilder = null;
-              if (bq_ != null) {
-                subBuilder = bq_.toBuilder();
-              }
-              bq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(bq_);
-                bq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 48: {
-
-              withMetadata_ = input.readBool();
-              break;
-            }
-            case 56: {
-
-              readFromCache_ = input.readBool();
-              break;
-            }
-            case 64: {
-
-              putInCache_ = input.readBool();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw new RuntimeException(e.setUnfinishedMessage(this));
-      } catch (java.io.IOException e) {
-        throw new RuntimeException(
-            new com.google.protobuf.InvalidProtocolBufferException(
-                e.getMessage()).setUnfinishedMessage(this));
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleIndexQueryMessage_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleIndexQueryMessage_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.Builder.class);
-    }
-
-    public static final int QUERYID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object queryid_;
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public java.lang.String getQueryid() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        queryid_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getQueryidBytes() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        queryid_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ENTITY_FIELD_NUMBER = 2;
-    private volatile java.lang.Object entity_;
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public java.lang.String getEntity() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        entity_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getEntityBytes() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        entity_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int INDEXTYPE_FIELD_NUMBER = 3;
-    private int indextype_;
-    /**
-     * <code>optional .IndexType indextype = 3;</code>
-     */
-    public int getIndextypeValue() {
-      return indextype_;
-    }
-    /**
-     * <code>optional .IndexType indextype = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.IndexType getIndextype() {
-      ch.unibas.dmi.dbis.adam.http.Grpc.IndexType result = ch.unibas.dmi.dbis.adam.http.Grpc.IndexType.valueOf(indextype_);
-      return result == null ? ch.unibas.dmi.dbis.adam.http.Grpc.IndexType.UNRECOGNIZED : result;
-    }
-
-    public static final int NNQ_FIELD_NUMBER = 4;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_;
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    public boolean hasNnq() {
-      return nnq_ != null;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-      return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-      return getNnq();
-    }
-
-    public static final int BQ_FIELD_NUMBER = 5;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_;
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    public boolean hasBq() {
-      return bq_ != null;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-      return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 5;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-      return getBq();
-    }
-
-    public static final int WITHMETADATA_FIELD_NUMBER = 6;
-    private boolean withMetadata_;
-    /**
-     * <code>optional bool withMetadata = 6;</code>
-     *
-     * <pre>
-     *specifies whether we should join the structured metadata to the results
-     * </pre>
-     */
-    public boolean getWithMetadata() {
-      return withMetadata_;
-    }
-
-    public static final int READFROMCACHE_FIELD_NUMBER = 7;
-    private boolean readFromCache_;
-    /**
-     * <code>optional bool readFromCache = 7;</code>
-     */
-    public boolean getReadFromCache() {
-      return readFromCache_;
-    }
-
-    public static final int PUTINCACHE_FIELD_NUMBER = 8;
-    private boolean putInCache_;
-    /**
-     * <code>optional bool putInCache = 8;</code>
-     */
-    public boolean getPutInCache() {
-      return putInCache_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getQueryidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, entity_);
-      }
-      if (indextype_ != ch.unibas.dmi.dbis.adam.http.Grpc.IndexType.ecp.getNumber()) {
-        output.writeEnum(3, indextype_);
-      }
-      if (nnq_ != null) {
-        output.writeMessage(4, getNnq());
-      }
-      if (bq_ != null) {
-        output.writeMessage(5, getBq());
-      }
-      if (withMetadata_ != false) {
-        output.writeBool(6, withMetadata_);
-      }
-      if (readFromCache_ != false) {
-        output.writeBool(7, readFromCache_);
-      }
-      if (putInCache_ != false) {
-        output.writeBool(8, putInCache_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getQueryidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, entity_);
-      }
-      if (indextype_ != ch.unibas.dmi.dbis.adam.http.Grpc.IndexType.ecp.getNumber()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, indextype_);
-      }
-      if (nnq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getNnq());
-      }
-      if (bq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getBq());
-      }
-      if (withMetadata_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(6, withMetadata_);
-      }
-      if (readFromCache_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(7, readFromCache_);
-      }
-      if (putInCache_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(8, putInCache_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code SimpleIndexQueryMessage}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:SimpleIndexQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleIndexQueryMessage_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleIndexQueryMessage_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.Builder.class);
-      }
-
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        queryid_ = "";
-
-        entity_ = "";
-
-        indextype_ = 0;
-
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-        if (bqBuilder_ == null) {
-          bq_ = null;
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-        withMetadata_ = false;
-
-        readFromCache_ = false;
-
-        putInCache_ = false;
-
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_SimpleIndexQueryMessage_descriptor;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.getDefaultInstance();
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage(this);
-        result.queryid_ = queryid_;
-        result.entity_ = entity_;
-        result.indextype_ = indextype_;
-        if (nnqBuilder_ == null) {
-          result.nnq_ = nnq_;
-        } else {
-          result.nnq_ = nnqBuilder_.build();
-        }
-        if (bqBuilder_ == null) {
-          result.bq_ = bq_;
-        } else {
-          result.bq_ = bqBuilder_.build();
-        }
-        result.withMetadata_ = withMetadata_;
-        result.readFromCache_ = readFromCache_;
-        result.putInCache_ = putInCache_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.getDefaultInstance()) return this;
-        if (!other.getQueryid().isEmpty()) {
-          queryid_ = other.queryid_;
-          onChanged();
-        }
-        if (!other.getEntity().isEmpty()) {
-          entity_ = other.entity_;
-          onChanged();
-        }
-        if (other.indextype_ != 0) {
-          setIndextypeValue(other.getIndextypeValue());
-        }
-        if (other.hasNnq()) {
-          mergeNnq(other.getNnq());
-        }
-        if (other.hasBq()) {
-          mergeBq(other.getBq());
-        }
-        if (other.getWithMetadata() != false) {
-          setWithMetadata(other.getWithMetadata());
-        }
-        if (other.getReadFromCache() != false) {
-          setReadFromCache(other.getReadFromCache());
-        }
-        if (other.getPutInCache() != false) {
-          setPutInCache(other.getPutInCache());
-        }
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object queryid_ = "";
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public java.lang.String getQueryid() {
-        java.lang.Object ref = queryid_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          queryid_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getQueryidBytes() {
-        java.lang.Object ref = queryid_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          queryid_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryid(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder clearQueryid() {
-        
-        queryid_ = getDefaultInstance().getQueryid();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryidBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object entity_ = "";
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public java.lang.String getEntity() {
-        java.lang.Object ref = entity_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          entity_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getEntityBytes() {
-        java.lang.Object ref = entity_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          entity_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntity(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder clearEntity() {
-        
-        entity_ = getDefaultInstance().getEntity();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntityBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-
-      private int indextype_ = 0;
-      /**
-       * <code>optional .IndexType indextype = 3;</code>
-       */
-      public int getIndextypeValue() {
-        return indextype_;
-      }
-      /**
-       * <code>optional .IndexType indextype = 3;</code>
-       */
-      public Builder setIndextypeValue(int value) {
-        indextype_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional .IndexType indextype = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.IndexType getIndextype() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.IndexType result = ch.unibas.dmi.dbis.adam.http.Grpc.IndexType.valueOf(indextype_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Grpc.IndexType.UNRECOGNIZED : result;
-      }
-      /**
-       * <code>optional .IndexType indextype = 3;</code>
-       */
-      public Builder setIndextype(ch.unibas.dmi.dbis.adam.http.Grpc.IndexType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        
-        indextype_ = value.getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional .IndexType indextype = 3;</code>
-       */
-      public Builder clearIndextype() {
-        
-        indextype_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> nnqBuilder_;
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public boolean hasNnq() {
-        return nnqBuilder_ != null || nnq_ != null;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-        if (nnqBuilder_ == null) {
-          return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        } else {
-          return nnqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public Builder setNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          nnq_ = value;
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public Builder setNnq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder builderForValue) {
-        if (nnqBuilder_ == null) {
-          nnq_ = builderForValue.build();
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public Builder mergeNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (nnq_ != null) {
-            nnq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.newBuilder(nnq_).mergeFrom(value).buildPartial();
-          } else {
-            nnq_ = value;
-          }
-          onChanged();
-        } else {
-          nnqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public Builder clearNnq() {
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-          onChanged();
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder getNnqBuilder() {
-        
-        onChanged();
-        return getNnqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-        if (nnqBuilder_ != null) {
-          return nnqBuilder_.getMessageOrBuilder();
-        } else {
-          return nnq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 4;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> 
-          getNnqFieldBuilder() {
-        if (nnqBuilder_ == null) {
-          nnqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder>(
-                  getNnq(),
-                  getParentForChildren(),
-                  isClean());
-          nnq_ = null;
-        }
-        return nnqBuilder_;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> bqBuilder_;
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public boolean hasBq() {
-        return bqBuilder_ != null || bq_ != null;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-        if (bqBuilder_ == null) {
-          return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        } else {
-          return bqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public Builder setBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          bq_ = value;
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public Builder setBq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder builderForValue) {
-        if (bqBuilder_ == null) {
-          bq_ = builderForValue.build();
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public Builder mergeBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (bq_ != null) {
-            bq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.newBuilder(bq_).mergeFrom(value).buildPartial();
-          } else {
-            bq_ = value;
-          }
-          onChanged();
-        } else {
-          bqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public Builder clearBq() {
-        if (bqBuilder_ == null) {
-          bq_ = null;
-          onChanged();
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder getBqBuilder() {
-        
-        onChanged();
-        return getBqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-        if (bqBuilder_ != null) {
-          return bqBuilder_.getMessageOrBuilder();
-        } else {
-          return bq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 5;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> 
-          getBqFieldBuilder() {
-        if (bqBuilder_ == null) {
-          bqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder>(
-                  getBq(),
-                  getParentForChildren(),
-                  isClean());
-          bq_ = null;
-        }
-        return bqBuilder_;
-      }
-
-      private boolean withMetadata_ ;
-      /**
-       * <code>optional bool withMetadata = 6;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public boolean getWithMetadata() {
-        return withMetadata_;
-      }
-      /**
-       * <code>optional bool withMetadata = 6;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public Builder setWithMetadata(boolean value) {
-        
-        withMetadata_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool withMetadata = 6;</code>
-       *
-       * <pre>
-       *specifies whether we should join the structured metadata to the results
-       * </pre>
-       */
-      public Builder clearWithMetadata() {
-        
-        withMetadata_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean readFromCache_ ;
-      /**
-       * <code>optional bool readFromCache = 7;</code>
-       */
-      public boolean getReadFromCache() {
-        return readFromCache_;
-      }
-      /**
-       * <code>optional bool readFromCache = 7;</code>
-       */
-      public Builder setReadFromCache(boolean value) {
-        
-        readFromCache_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool readFromCache = 7;</code>
-       */
-      public Builder clearReadFromCache() {
-        
-        readFromCache_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean putInCache_ ;
-      /**
-       * <code>optional bool putInCache = 8;</code>
-       */
-      public boolean getPutInCache() {
-        return putInCache_;
-      }
-      /**
-       * <code>optional bool putInCache = 8;</code>
-       */
-      public Builder setPutInCache(boolean value) {
-        
-        putInCache_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool putInCache = 8;</code>
-       */
-      public Builder clearPutInCache() {
-        
-        putInCache_ = false;
-        onChanged();
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:SimpleIndexQueryMessage)
-    }
-
-    // @@protoc_insertion_point(class_scope:SimpleIndexQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage();
-    }
-
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<SimpleIndexQueryMessage>
-        PARSER = new com.google.protobuf.AbstractParser<SimpleIndexQueryMessage>() {
-      public SimpleIndexQueryMessage parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        try {
-          return new SimpleIndexQueryMessage(input, extensionRegistry);
-        } catch (RuntimeException e) {
-          if (e.getCause() instanceof
-              com.google.protobuf.InvalidProtocolBufferException) {
-            throw (com.google.protobuf.InvalidProtocolBufferException)
-                e.getCause();
-          }
-          throw e;
-        }
-      }
-    };
-
-    public static com.google.protobuf.Parser<SimpleIndexQueryMessage> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<SimpleIndexQueryMessage> getParserForType() {
-      return PARSER;
-    }
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface TimedQueryMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:TimedQueryMessage)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    java.lang.String getQueryid();
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getQueryidBytes();
-
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    java.lang.String getEntity();
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getEntityBytes();
-
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    boolean hasNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder();
-
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    boolean hasBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder();
-
-    /**
-     * <code>optional int64 time = 5;</code>
-     *
-     * <pre>
-     *maximum duration of query in ms
-     * </pre>
-     */
-    long getTime();
-
-    /**
-     * <code>optional bool withMetadata = 6;</code>
-     */
-    boolean getWithMetadata();
-  }
-  /**
-   * Protobuf type {@code TimedQueryMessage}
-   */
-  public  static final class TimedQueryMessage extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:TimedQueryMessage)
-      TimedQueryMessageOrBuilder {
-    // Use TimedQueryMessage.newBuilder() to construct.
-    private TimedQueryMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-    }
-    private TimedQueryMessage() {
-      queryid_ = "";
-      entity_ = "";
-      time_ = 0L;
-      withMetadata_ = false;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private TimedQueryMessage(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              queryid_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              entity_ = s;
-              break;
-            }
-            case 26: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder subBuilder = null;
-              if (nnq_ != null) {
-                subBuilder = nnq_.toBuilder();
-              }
-              nnq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(nnq_);
-                nnq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 34: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder subBuilder = null;
-              if (bq_ != null) {
-                subBuilder = bq_.toBuilder();
-              }
-              bq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(bq_);
-                bq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 40: {
-
-              time_ = input.readInt64();
-              break;
-            }
-            case 48: {
-
-              withMetadata_ = input.readBool();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw new RuntimeException(e.setUnfinishedMessage(this));
-      } catch (java.io.IOException e) {
-        throw new RuntimeException(
-            new com.google.protobuf.InvalidProtocolBufferException(
-                e.getMessage()).setUnfinishedMessage(this));
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_TimedQueryMessage_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_TimedQueryMessage_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage.Builder.class);
-    }
-
-    public static final int QUERYID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object queryid_;
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public java.lang.String getQueryid() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        queryid_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getQueryidBytes() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        queryid_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ENTITY_FIELD_NUMBER = 2;
-    private volatile java.lang.Object entity_;
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public java.lang.String getEntity() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        entity_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getEntityBytes() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        entity_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int NNQ_FIELD_NUMBER = 3;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_;
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public boolean hasNnq() {
-      return nnq_ != null;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-      return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-      return getNnq();
-    }
-
-    public static final int BQ_FIELD_NUMBER = 4;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_;
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public boolean hasBq() {
-      return bq_ != null;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-      return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-      return getBq();
-    }
-
-    public static final int TIME_FIELD_NUMBER = 5;
-    private long time_;
-    /**
-     * <code>optional int64 time = 5;</code>
-     *
-     * <pre>
-     *maximum duration of query in ms
-     * </pre>
-     */
-    public long getTime() {
-      return time_;
-    }
-
-    public static final int WITHMETADATA_FIELD_NUMBER = 6;
-    private boolean withMetadata_;
-    /**
-     * <code>optional bool withMetadata = 6;</code>
-     */
-    public boolean getWithMetadata() {
-      return withMetadata_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getQueryidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, entity_);
-      }
-      if (nnq_ != null) {
-        output.writeMessage(3, getNnq());
-      }
-      if (bq_ != null) {
-        output.writeMessage(4, getBq());
-      }
-      if (time_ != 0L) {
-        output.writeInt64(5, time_);
-      }
-      if (withMetadata_ != false) {
-        output.writeBool(6, withMetadata_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getQueryidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, entity_);
-      }
-      if (nnq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getNnq());
-      }
-      if (bq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getBq());
-      }
-      if (time_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(5, time_);
-      }
-      if (withMetadata_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(6, withMetadata_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code TimedQueryMessage}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:TimedQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_TimedQueryMessage_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_TimedQueryMessage_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage.Builder.class);
-      }
-
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        queryid_ = "";
-
-        entity_ = "";
-
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-        if (bqBuilder_ == null) {
-          bq_ = null;
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-        time_ = 0L;
-
-        withMetadata_ = false;
-
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_TimedQueryMessage_descriptor;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage.getDefaultInstance();
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage(this);
-        result.queryid_ = queryid_;
-        result.entity_ = entity_;
-        if (nnqBuilder_ == null) {
-          result.nnq_ = nnq_;
-        } else {
-          result.nnq_ = nnqBuilder_.build();
-        }
-        if (bqBuilder_ == null) {
-          result.bq_ = bq_;
-        } else {
-          result.bq_ = bqBuilder_.build();
-        }
-        result.time_ = time_;
-        result.withMetadata_ = withMetadata_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage.getDefaultInstance()) return this;
-        if (!other.getQueryid().isEmpty()) {
-          queryid_ = other.queryid_;
-          onChanged();
-        }
-        if (!other.getEntity().isEmpty()) {
-          entity_ = other.entity_;
-          onChanged();
-        }
-        if (other.hasNnq()) {
-          mergeNnq(other.getNnq());
-        }
-        if (other.hasBq()) {
-          mergeBq(other.getBq());
-        }
-        if (other.getTime() != 0L) {
-          setTime(other.getTime());
-        }
-        if (other.getWithMetadata() != false) {
-          setWithMetadata(other.getWithMetadata());
-        }
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object queryid_ = "";
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public java.lang.String getQueryid() {
-        java.lang.Object ref = queryid_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          queryid_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getQueryidBytes() {
-        java.lang.Object ref = queryid_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          queryid_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryid(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder clearQueryid() {
-        
-        queryid_ = getDefaultInstance().getQueryid();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryidBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object entity_ = "";
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public java.lang.String getEntity() {
-        java.lang.Object ref = entity_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          entity_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getEntityBytes() {
-        java.lang.Object ref = entity_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          entity_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntity(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder clearEntity() {
-        
-        entity_ = getDefaultInstance().getEntity();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntityBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> nnqBuilder_;
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public boolean hasNnq() {
-        return nnqBuilder_ != null || nnq_ != null;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-        if (nnqBuilder_ == null) {
-          return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        } else {
-          return nnqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder setNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          nnq_ = value;
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder setNnq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder builderForValue) {
-        if (nnqBuilder_ == null) {
-          nnq_ = builderForValue.build();
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder mergeNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (nnq_ != null) {
-            nnq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.newBuilder(nnq_).mergeFrom(value).buildPartial();
-          } else {
-            nnq_ = value;
-          }
-          onChanged();
-        } else {
-          nnqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder clearNnq() {
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-          onChanged();
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder getNnqBuilder() {
-        
-        onChanged();
-        return getNnqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-        if (nnqBuilder_ != null) {
-          return nnqBuilder_.getMessageOrBuilder();
-        } else {
-          return nnq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> 
-          getNnqFieldBuilder() {
-        if (nnqBuilder_ == null) {
-          nnqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder>(
-                  getNnq(),
-                  getParentForChildren(),
-                  isClean());
-          nnq_ = null;
-        }
-        return nnqBuilder_;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> bqBuilder_;
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public boolean hasBq() {
-        return bqBuilder_ != null || bq_ != null;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-        if (bqBuilder_ == null) {
-          return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        } else {
-          return bqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder setBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          bq_ = value;
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder setBq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder builderForValue) {
-        if (bqBuilder_ == null) {
-          bq_ = builderForValue.build();
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder mergeBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (bq_ != null) {
-            bq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.newBuilder(bq_).mergeFrom(value).buildPartial();
-          } else {
-            bq_ = value;
-          }
-          onChanged();
-        } else {
-          bqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder clearBq() {
-        if (bqBuilder_ == null) {
-          bq_ = null;
-          onChanged();
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder getBqBuilder() {
-        
-        onChanged();
-        return getBqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-        if (bqBuilder_ != null) {
-          return bqBuilder_.getMessageOrBuilder();
-        } else {
-          return bq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> 
-          getBqFieldBuilder() {
-        if (bqBuilder_ == null) {
-          bqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder>(
-                  getBq(),
-                  getParentForChildren(),
-                  isClean());
-          bq_ = null;
-        }
-        return bqBuilder_;
-      }
-
       private long time_ ;
       /**
-       * <code>optional int64 time = 5;</code>
+       * <code>optional int64 time = 9;</code>
        *
        * <pre>
        *maximum duration of query in ms
@@ -17822,7 +13904,7 @@ public final class Grpc {
         return time_;
       }
       /**
-       * <code>optional int64 time = 5;</code>
+       * <code>optional int64 time = 9;</code>
        *
        * <pre>
        *maximum duration of query in ms
@@ -17835,7 +13917,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>optional int64 time = 5;</code>
+       * <code>optional int64 time = 9;</code>
        *
        * <pre>
        *maximum duration of query in ms
@@ -17848,28 +13930,172 @@ public final class Grpc {
         return this;
       }
 
-      private boolean withMetadata_ ;
+      private boolean readFromCache_ ;
       /**
-       * <code>optional bool withMetadata = 6;</code>
+       * <code>optional bool readFromCache = 10;</code>
        */
-      public boolean getWithMetadata() {
-        return withMetadata_;
+      public boolean getReadFromCache() {
+        return readFromCache_;
       }
       /**
-       * <code>optional bool withMetadata = 6;</code>
+       * <code>optional bool readFromCache = 10;</code>
        */
-      public Builder setWithMetadata(boolean value) {
+      public Builder setReadFromCache(boolean value) {
         
-        withMetadata_ = value;
+        readFromCache_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bool withMetadata = 6;</code>
+       * <code>optional bool readFromCache = 10;</code>
        */
-      public Builder clearWithMetadata() {
+      public Builder clearReadFromCache() {
         
-        withMetadata_ = false;
+        readFromCache_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean putInCache_ ;
+      /**
+       * <code>optional bool putInCache = 11;</code>
+       */
+      public boolean getPutInCache() {
+        return putInCache_;
+      }
+      /**
+       * <code>optional bool putInCache = 11;</code>
+       */
+      public Builder setPutInCache(boolean value) {
+        
+        putInCache_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool putInCache = 11;</code>
+       */
+      public Builder clearPutInCache() {
+        
+        putInCache_ = false;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Integer> information_ =
+        java.util.Collections.emptyList();
+      private void ensureInformationIsMutable() {
+        if (!((bitField0_ & 0x00000200) == 0x00000200)) {
+          information_ = new java.util.ArrayList<java.lang.Integer>(information_);
+          bitField0_ |= 0x00000200;
+        }
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel> getInformationList() {
+        return new com.google.protobuf.Internal.ListAdapter<
+            java.lang.Integer, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel>(information_, information_converter_);
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public int getInformationCount() {
+        return information_.size();
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel getInformation(int index) {
+        return information_converter_.convert(information_.get(index));
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public Builder setInformation(
+          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureInformationIsMutable();
+        information_.set(index, value.getNumber());
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public Builder addInformation(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureInformationIsMutable();
+        information_.add(value.getNumber());
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public Builder addAllInformation(
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel> values) {
+        ensureInformationIsMutable();
+        for (ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.InformationLevel value : values) {
+          information_.add(value.getNumber());
+        }
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public Builder clearInformation() {
+        information_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000200);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public java.util.List<java.lang.Integer>
+      getInformationValueList() {
+        return java.util.Collections.unmodifiableList(information_);
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public int getInformationValue(int index) {
+        return information_.get(index);
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public Builder setInformationValue(
+          int index, int value) {
+        ensureInformationIsMutable();
+        information_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public Builder addInformationValue(int value) {
+        ensureInformationIsMutable();
+        information_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .QueryMessage.InformationLevel information = 12;</code>
+       */
+      public Builder addAllInformationValue(
+          java.lang.Iterable<java.lang.Integer> values) {
+        ensureInformationIsMutable();
+        for (int value : values) {
+          information_.add(value);
+        }
         onChanged();
         return this;
       }
@@ -17884,27 +14110,27 @@ public final class Grpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:TimedQueryMessage)
+      // @@protoc_insertion_point(builder_scope:QueryMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:TimedQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:QueryMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<TimedQueryMessage>
-        PARSER = new com.google.protobuf.AbstractParser<TimedQueryMessage>() {
-      public TimedQueryMessage parsePartialFrom(
+    private static final com.google.protobuf.Parser<QueryMessage>
+        PARSER = new com.google.protobuf.AbstractParser<QueryMessage>() {
+      public QueryMessage parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         try {
-          return new TimedQueryMessage(input, extensionRegistry);
+          return new QueryMessage(input, extensionRegistry);
         } catch (RuntimeException e) {
           if (e.getCause() instanceof
               com.google.protobuf.InvalidProtocolBufferException) {
@@ -17916,1327 +14142,16 @@ public final class Grpc {
       }
     };
 
-    public static com.google.protobuf.Parser<TimedQueryMessage> parser() {
+    public static com.google.protobuf.Parser<QueryMessage> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<TimedQueryMessage> getParserForType() {
+    public com.google.protobuf.Parser<QueryMessage> getParserForType() {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface CompoundQueryMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:CompoundQueryMessage)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>optional string queryid = 1;</code>
-     *
-     * <pre>
-     *if an id is specified, the id of the block is returned in the intermediate results
-     * </pre>
-     */
-    java.lang.String getQueryid();
-    /**
-     * <code>optional string queryid = 1;</code>
-     *
-     * <pre>
-     *if an id is specified, the id of the block is returned in the intermediate results
-     * </pre>
-     */
-    com.google.protobuf.ByteString
-        getQueryidBytes();
-
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    java.lang.String getEntity();
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getEntityBytes();
-
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    boolean hasNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq();
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder();
-
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    boolean hasBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq();
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder();
-
-    /**
-     * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-     */
-    boolean hasIndexFilterExpression();
-    /**
-     * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage getIndexFilterExpression();
-    /**
-     * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder getIndexFilterExpressionOrBuilder();
-
-    /**
-     * <code>optional bool withMetadata = 6;</code>
-     */
-    boolean getWithMetadata();
-
-    /**
-     * <code>optional bool withIntermediateResults = 7;</code>
-     *
-     * <pre>
-     *specifies whether intermediate results should be returned (i.e. of all sub-expressions and not only the final result)
-     * </pre>
-     */
-    boolean getWithIntermediateResults();
-  }
-  /**
-   * Protobuf type {@code CompoundQueryMessage}
-   */
-  public  static final class CompoundQueryMessage extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:CompoundQueryMessage)
-      CompoundQueryMessageOrBuilder {
-    // Use CompoundQueryMessage.newBuilder() to construct.
-    private CompoundQueryMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-    }
-    private CompoundQueryMessage() {
-      queryid_ = "";
-      entity_ = "";
-      withMetadata_ = false;
-      withIntermediateResults_ = false;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private CompoundQueryMessage(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              queryid_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              entity_ = s;
-              break;
-            }
-            case 26: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder subBuilder = null;
-              if (nnq_ != null) {
-                subBuilder = nnq_.toBuilder();
-              }
-              nnq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(nnq_);
-                nnq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 34: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder subBuilder = null;
-              if (bq_ != null) {
-                subBuilder = bq_.toBuilder();
-              }
-              bq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(bq_);
-                bq_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 42: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder subBuilder = null;
-              if (indexFilterExpression_ != null) {
-                subBuilder = indexFilterExpression_.toBuilder();
-              }
-              indexFilterExpression_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(indexFilterExpression_);
-                indexFilterExpression_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 48: {
-
-              withMetadata_ = input.readBool();
-              break;
-            }
-            case 56: {
-
-              withIntermediateResults_ = input.readBool();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw new RuntimeException(e.setUnfinishedMessage(this));
-      } catch (java.io.IOException e) {
-        throw new RuntimeException(
-            new com.google.protobuf.InvalidProtocolBufferException(
-                e.getMessage()).setUnfinishedMessage(this));
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_CompoundQueryMessage_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_CompoundQueryMessage_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage.Builder.class);
-    }
-
-    public static final int QUERYID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object queryid_;
-    /**
-     * <code>optional string queryid = 1;</code>
-     *
-     * <pre>
-     *if an id is specified, the id of the block is returned in the intermediate results
-     * </pre>
-     */
-    public java.lang.String getQueryid() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        queryid_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string queryid = 1;</code>
-     *
-     * <pre>
-     *if an id is specified, the id of the block is returned in the intermediate results
-     * </pre>
-     */
-    public com.google.protobuf.ByteString
-        getQueryidBytes() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        queryid_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ENTITY_FIELD_NUMBER = 2;
-    private volatile java.lang.Object entity_;
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public java.lang.String getEntity() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        entity_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getEntityBytes() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        entity_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int NNQ_FIELD_NUMBER = 3;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_;
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public boolean hasNnq() {
-      return nnq_ != null;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-      return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-    }
-    /**
-     * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-      return getNnq();
-    }
-
-    public static final int BQ_FIELD_NUMBER = 4;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_;
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public boolean hasBq() {
-      return bq_ != null;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-      return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-    }
-    /**
-     * <code>optional .BooleanQueryMessage bq = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-      return getBq();
-    }
-
-    public static final int INDEXFILTEREXPRESSION_FIELD_NUMBER = 5;
-    private ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage indexFilterExpression_;
-    /**
-     * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-     */
-    public boolean hasIndexFilterExpression() {
-      return indexFilterExpression_ != null;
-    }
-    /**
-     * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage getIndexFilterExpression() {
-      return indexFilterExpression_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.getDefaultInstance() : indexFilterExpression_;
-    }
-    /**
-     * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder getIndexFilterExpressionOrBuilder() {
-      return getIndexFilterExpression();
-    }
-
-    public static final int WITHMETADATA_FIELD_NUMBER = 6;
-    private boolean withMetadata_;
-    /**
-     * <code>optional bool withMetadata = 6;</code>
-     */
-    public boolean getWithMetadata() {
-      return withMetadata_;
-    }
-
-    public static final int WITHINTERMEDIATERESULTS_FIELD_NUMBER = 7;
-    private boolean withIntermediateResults_;
-    /**
-     * <code>optional bool withIntermediateResults = 7;</code>
-     *
-     * <pre>
-     *specifies whether intermediate results should be returned (i.e. of all sub-expressions and not only the final result)
-     * </pre>
-     */
-    public boolean getWithIntermediateResults() {
-      return withIntermediateResults_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getQueryidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, entity_);
-      }
-      if (nnq_ != null) {
-        output.writeMessage(3, getNnq());
-      }
-      if (bq_ != null) {
-        output.writeMessage(4, getBq());
-      }
-      if (indexFilterExpression_ != null) {
-        output.writeMessage(5, getIndexFilterExpression());
-      }
-      if (withMetadata_ != false) {
-        output.writeBool(6, withMetadata_);
-      }
-      if (withIntermediateResults_ != false) {
-        output.writeBool(7, withIntermediateResults_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getQueryidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, entity_);
-      }
-      if (nnq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getNnq());
-      }
-      if (bq_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getBq());
-      }
-      if (indexFilterExpression_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getIndexFilterExpression());
-      }
-      if (withMetadata_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(6, withMetadata_);
-      }
-      if (withIntermediateResults_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(7, withIntermediateResults_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code CompoundQueryMessage}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:CompoundQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_CompoundQueryMessage_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_CompoundQueryMessage_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage.Builder.class);
-      }
-
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        queryid_ = "";
-
-        entity_ = "";
-
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-        if (bqBuilder_ == null) {
-          bq_ = null;
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-        if (indexFilterExpressionBuilder_ == null) {
-          indexFilterExpression_ = null;
-        } else {
-          indexFilterExpression_ = null;
-          indexFilterExpressionBuilder_ = null;
-        }
-        withMetadata_ = false;
-
-        withIntermediateResults_ = false;
-
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_CompoundQueryMessage_descriptor;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage.getDefaultInstance();
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage(this);
-        result.queryid_ = queryid_;
-        result.entity_ = entity_;
-        if (nnqBuilder_ == null) {
-          result.nnq_ = nnq_;
-        } else {
-          result.nnq_ = nnqBuilder_.build();
-        }
-        if (bqBuilder_ == null) {
-          result.bq_ = bq_;
-        } else {
-          result.bq_ = bqBuilder_.build();
-        }
-        if (indexFilterExpressionBuilder_ == null) {
-          result.indexFilterExpression_ = indexFilterExpression_;
-        } else {
-          result.indexFilterExpression_ = indexFilterExpressionBuilder_.build();
-        }
-        result.withMetadata_ = withMetadata_;
-        result.withIntermediateResults_ = withIntermediateResults_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage.getDefaultInstance()) return this;
-        if (!other.getQueryid().isEmpty()) {
-          queryid_ = other.queryid_;
-          onChanged();
-        }
-        if (!other.getEntity().isEmpty()) {
-          entity_ = other.entity_;
-          onChanged();
-        }
-        if (other.hasNnq()) {
-          mergeNnq(other.getNnq());
-        }
-        if (other.hasBq()) {
-          mergeBq(other.getBq());
-        }
-        if (other.hasIndexFilterExpression()) {
-          mergeIndexFilterExpression(other.getIndexFilterExpression());
-        }
-        if (other.getWithMetadata() != false) {
-          setWithMetadata(other.getWithMetadata());
-        }
-        if (other.getWithIntermediateResults() != false) {
-          setWithIntermediateResults(other.getWithIntermediateResults());
-        }
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object queryid_ = "";
-      /**
-       * <code>optional string queryid = 1;</code>
-       *
-       * <pre>
-       *if an id is specified, the id of the block is returned in the intermediate results
-       * </pre>
-       */
-      public java.lang.String getQueryid() {
-        java.lang.Object ref = queryid_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          queryid_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       *
-       * <pre>
-       *if an id is specified, the id of the block is returned in the intermediate results
-       * </pre>
-       */
-      public com.google.protobuf.ByteString
-          getQueryidBytes() {
-        java.lang.Object ref = queryid_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          queryid_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       *
-       * <pre>
-       *if an id is specified, the id of the block is returned in the intermediate results
-       * </pre>
-       */
-      public Builder setQueryid(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       *
-       * <pre>
-       *if an id is specified, the id of the block is returned in the intermediate results
-       * </pre>
-       */
-      public Builder clearQueryid() {
-        
-        queryid_ = getDefaultInstance().getQueryid();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       *
-       * <pre>
-       *if an id is specified, the id of the block is returned in the intermediate results
-       * </pre>
-       */
-      public Builder setQueryidBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object entity_ = "";
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public java.lang.String getEntity() {
-        java.lang.Object ref = entity_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          entity_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getEntityBytes() {
-        java.lang.Object ref = entity_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          entity_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntity(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder clearEntity() {
-        
-        entity_ = getDefaultInstance().getEntity();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntityBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage nnq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> nnqBuilder_;
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public boolean hasNnq() {
-        return nnqBuilder_ != null || nnq_ != null;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage getNnq() {
-        if (nnqBuilder_ == null) {
-          return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        } else {
-          return nnqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder setNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          nnq_ = value;
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder setNnq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder builderForValue) {
-        if (nnqBuilder_ == null) {
-          nnq_ = builderForValue.build();
-          onChanged();
-        } else {
-          nnqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder mergeNnq(ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage value) {
-        if (nnqBuilder_ == null) {
-          if (nnq_ != null) {
-            nnq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.newBuilder(nnq_).mergeFrom(value).buildPartial();
-          } else {
-            nnq_ = value;
-          }
-          onChanged();
-        } else {
-          nnqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public Builder clearNnq() {
-        if (nnqBuilder_ == null) {
-          nnq_ = null;
-          onChanged();
-        } else {
-          nnq_ = null;
-          nnqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder getNnqBuilder() {
-        
-        onChanged();
-        return getNnqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
-        if (nnqBuilder_ != null) {
-          return nnqBuilder_.getMessageOrBuilder();
-        } else {
-          return nnq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
-        }
-      }
-      /**
-       * <code>optional .NearestNeighbourQueryMessage nnq = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder> 
-          getNnqFieldBuilder() {
-        if (nnqBuilder_ == null) {
-          nnqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessageOrBuilder>(
-                  getNnq(),
-                  getParentForChildren(),
-                  isClean());
-          nnq_ = null;
-        }
-        return nnqBuilder_;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage bq_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> bqBuilder_;
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public boolean hasBq() {
-        return bqBuilder_ != null || bq_ != null;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getBq() {
-        if (bqBuilder_ == null) {
-          return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        } else {
-          return bqBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder setBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          bq_ = value;
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder setBq(
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder builderForValue) {
-        if (bqBuilder_ == null) {
-          bq_ = builderForValue.build();
-          onChanged();
-        } else {
-          bqBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder mergeBq(ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage value) {
-        if (bqBuilder_ == null) {
-          if (bq_ != null) {
-            bq_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.newBuilder(bq_).mergeFrom(value).buildPartial();
-          } else {
-            bq_ = value;
-          }
-          onChanged();
-        } else {
-          bqBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public Builder clearBq() {
-        if (bqBuilder_ == null) {
-          bq_ = null;
-          onChanged();
-        } else {
-          bq_ = null;
-          bqBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder getBqBuilder() {
-        
-        onChanged();
-        return getBqFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
-        if (bqBuilder_ != null) {
-          return bqBuilder_.getMessageOrBuilder();
-        } else {
-          return bq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.getDefaultInstance() : bq_;
-        }
-      }
-      /**
-       * <code>optional .BooleanQueryMessage bq = 4;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder> 
-          getBqFieldBuilder() {
-        if (bqBuilder_ == null) {
-          bqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessageOrBuilder>(
-                  getBq(),
-                  getParentForChildren(),
-                  isClean());
-          bq_ = null;
-        }
-        return bqBuilder_;
-      }
-
-      private ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage indexFilterExpression_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder> indexFilterExpressionBuilder_;
-      /**
-       * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-       */
-      public boolean hasIndexFilterExpression() {
-        return indexFilterExpressionBuilder_ != null || indexFilterExpression_ != null;
-      }
-      /**
-       * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage getIndexFilterExpression() {
-        if (indexFilterExpressionBuilder_ == null) {
-          return indexFilterExpression_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.getDefaultInstance() : indexFilterExpression_;
-        } else {
-          return indexFilterExpressionBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-       */
-      public Builder setIndexFilterExpression(ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage value) {
-        if (indexFilterExpressionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          indexFilterExpression_ = value;
-          onChanged();
-        } else {
-          indexFilterExpressionBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-       */
-      public Builder setIndexFilterExpression(
-          ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder builderForValue) {
-        if (indexFilterExpressionBuilder_ == null) {
-          indexFilterExpression_ = builderForValue.build();
-          onChanged();
-        } else {
-          indexFilterExpressionBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-       */
-      public Builder mergeIndexFilterExpression(ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage value) {
-        if (indexFilterExpressionBuilder_ == null) {
-          if (indexFilterExpression_ != null) {
-            indexFilterExpression_ =
-              ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.newBuilder(indexFilterExpression_).mergeFrom(value).buildPartial();
-          } else {
-            indexFilterExpression_ = value;
-          }
-          onChanged();
-        } else {
-          indexFilterExpressionBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-       */
-      public Builder clearIndexFilterExpression() {
-        if (indexFilterExpressionBuilder_ == null) {
-          indexFilterExpression_ = null;
-          onChanged();
-        } else {
-          indexFilterExpression_ = null;
-          indexFilterExpressionBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder getIndexFilterExpressionBuilder() {
-        
-        onChanged();
-        return getIndexFilterExpressionFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder getIndexFilterExpressionOrBuilder() {
-        if (indexFilterExpressionBuilder_ != null) {
-          return indexFilterExpressionBuilder_.getMessageOrBuilder();
-        } else {
-          return indexFilterExpression_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.getDefaultInstance() : indexFilterExpression_;
-        }
-      }
-      /**
-       * <code>optional .SubExpressionQueryMessage indexFilterExpression = 5;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder> 
-          getIndexFilterExpressionFieldBuilder() {
-        if (indexFilterExpressionBuilder_ == null) {
-          indexFilterExpressionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder>(
-                  getIndexFilterExpression(),
-                  getParentForChildren(),
-                  isClean());
-          indexFilterExpression_ = null;
-        }
-        return indexFilterExpressionBuilder_;
-      }
-
-      private boolean withMetadata_ ;
-      /**
-       * <code>optional bool withMetadata = 6;</code>
-       */
-      public boolean getWithMetadata() {
-        return withMetadata_;
-      }
-      /**
-       * <code>optional bool withMetadata = 6;</code>
-       */
-      public Builder setWithMetadata(boolean value) {
-        
-        withMetadata_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool withMetadata = 6;</code>
-       */
-      public Builder clearWithMetadata() {
-        
-        withMetadata_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean withIntermediateResults_ ;
-      /**
-       * <code>optional bool withIntermediateResults = 7;</code>
-       *
-       * <pre>
-       *specifies whether intermediate results should be returned (i.e. of all sub-expressions and not only the final result)
-       * </pre>
-       */
-      public boolean getWithIntermediateResults() {
-        return withIntermediateResults_;
-      }
-      /**
-       * <code>optional bool withIntermediateResults = 7;</code>
-       *
-       * <pre>
-       *specifies whether intermediate results should be returned (i.e. of all sub-expressions and not only the final result)
-       * </pre>
-       */
-      public Builder setWithIntermediateResults(boolean value) {
-        
-        withIntermediateResults_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool withIntermediateResults = 7;</code>
-       *
-       * <pre>
-       *specifies whether intermediate results should be returned (i.e. of all sub-expressions and not only the final result)
-       * </pre>
-       */
-      public Builder clearWithIntermediateResults() {
-        
-        withIntermediateResults_ = false;
-        onChanged();
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:CompoundQueryMessage)
-    }
-
-    // @@protoc_insertion_point(class_scope:CompoundQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage();
-    }
-
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<CompoundQueryMessage>
-        PARSER = new com.google.protobuf.AbstractParser<CompoundQueryMessage>() {
-      public CompoundQueryMessage parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        try {
-          return new CompoundQueryMessage(input, extensionRegistry);
-        } catch (RuntimeException e) {
-          if (e.getCause() instanceof
-              com.google.protobuf.InvalidProtocolBufferException) {
-            throw (com.google.protobuf.InvalidProtocolBufferException)
-                e.getCause();
-          }
-          throw e;
-        }
-      }
-    };
-
-    public static com.google.protobuf.Parser<CompoundQueryMessage> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<CompoundQueryMessage> getParserForType() {
-      return PARSER;
-    }
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -20441,875 +15356,6 @@ public final class Grpc {
 
   }
 
-  public interface ExternalHandlerQueryMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ExternalHandlerQueryMessage)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    java.lang.String getQueryid();
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getQueryidBytes();
-
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    java.lang.String getEntity();
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getEntityBytes();
-
-    /**
-     * <code>optional string handler = 3;</code>
-     */
-    java.lang.String getHandler();
-    /**
-     * <code>optional string handler = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getHandlerBytes();
-
-    /**
-     * <code>map&lt;string, string&gt; params = 4;</code>
-     */
-    java.util.Map<java.lang.String, java.lang.String>
-    getParams();
-  }
-  /**
-   * Protobuf type {@code ExternalHandlerQueryMessage}
-   */
-  public  static final class ExternalHandlerQueryMessage extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:ExternalHandlerQueryMessage)
-      ExternalHandlerQueryMessageOrBuilder {
-    // Use ExternalHandlerQueryMessage.newBuilder() to construct.
-    private ExternalHandlerQueryMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-    }
-    private ExternalHandlerQueryMessage() {
-      queryid_ = "";
-      entity_ = "";
-      handler_ = "";
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private ExternalHandlerQueryMessage(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              queryid_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              entity_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              handler_ = s;
-              break;
-            }
-            case 34: {
-              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                params_ = com.google.protobuf.MapField.newMapField(
-                    ParamsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000008;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-              params = input.readMessage(
-                  ParamsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              params_.getMutableMap().put(params.getKey(), params.getValue());
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw new RuntimeException(e.setUnfinishedMessage(this));
-      } catch (java.io.IOException e) {
-        throw new RuntimeException(
-            new com.google.protobuf.InvalidProtocolBufferException(
-                e.getMessage()).setUnfinishedMessage(this));
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_descriptor;
-    }
-
-    @SuppressWarnings({"rawtypes"})
-    protected com.google.protobuf.MapField internalGetMapField(
-        int number) {
-      switch (number) {
-        case 4:
-          return internalGetParams();
-        default:
-          throw new RuntimeException(
-              "Invalid map field number: " + number);
-      }
-    }
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.Builder.class);
-    }
-
-    private int bitField0_;
-    public static final int QUERYID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object queryid_;
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public java.lang.String getQueryid() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        queryid_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string queryid = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getQueryidBytes() {
-      java.lang.Object ref = queryid_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        queryid_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ENTITY_FIELD_NUMBER = 2;
-    private volatile java.lang.Object entity_;
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public java.lang.String getEntity() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        entity_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string entity = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getEntityBytes() {
-      java.lang.Object ref = entity_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        entity_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int HANDLER_FIELD_NUMBER = 3;
-    private volatile java.lang.Object handler_;
-    /**
-     * <code>optional string handler = 3;</code>
-     */
-    public java.lang.String getHandler() {
-      java.lang.Object ref = handler_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        handler_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>optional string handler = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getHandlerBytes() {
-      java.lang.Object ref = handler_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        handler_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int PARAMS_FIELD_NUMBER = 4;
-    private static final class ParamsDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, java.lang.String> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "");
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, java.lang.String> params_;
-    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-    internalGetParams() {
-      if (params_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            ParamsDefaultEntryHolder.defaultEntry);
-     }
-      return params_;
-    }
-    /**
-     * <code>map&lt;string, string&gt; params = 4;</code>
-     */
-
-    public java.util.Map<java.lang.String, java.lang.String> getParams() {
-      return internalGetParams().getMap();
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getQueryidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, entity_);
-      }
-      if (!getHandlerBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 3, handler_);
-      }
-      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
-           : internalGetParams().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-        params = ParamsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        output.writeMessage(4, params);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getQueryidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, queryid_);
-      }
-      if (!getEntityBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, entity_);
-      }
-      if (!getHandlerBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(3, handler_);
-      }
-      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
-           : internalGetParams().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-        params = ParamsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(4, params);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code ExternalHandlerQueryMessage}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ExternalHandlerQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_descriptor;
-      }
-
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMapField(
-          int number) {
-        switch (number) {
-          case 4:
-            return internalGetParams();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
-        }
-      }
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMutableMapField(
-          int number) {
-        switch (number) {
-          case 4:
-            return internalGetMutableParams();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
-        }
-      }
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.Builder.class);
-      }
-
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        queryid_ = "";
-
-        entity_ = "";
-
-        handler_ = "";
-
-        internalGetMutableParams().clear();
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_descriptor;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance();
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        result.queryid_ = queryid_;
-        result.entity_ = entity_;
-        result.handler_ = handler_;
-        result.params_ = internalGetParams();
-        result.params_.makeImmutable();
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance()) return this;
-        if (!other.getQueryid().isEmpty()) {
-          queryid_ = other.queryid_;
-          onChanged();
-        }
-        if (!other.getEntity().isEmpty()) {
-          entity_ = other.entity_;
-          onChanged();
-        }
-        if (!other.getHandler().isEmpty()) {
-          handler_ = other.handler_;
-          onChanged();
-        }
-        internalGetMutableParams().mergeFrom(
-            other.internalGetParams());
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private java.lang.Object queryid_ = "";
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public java.lang.String getQueryid() {
-        java.lang.Object ref = queryid_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          queryid_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getQueryidBytes() {
-        java.lang.Object ref = queryid_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          queryid_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryid(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder clearQueryid() {
-        
-        queryid_ = getDefaultInstance().getQueryid();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string queryid = 1;</code>
-       */
-      public Builder setQueryidBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        queryid_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object entity_ = "";
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public java.lang.String getEntity() {
-        java.lang.Object ref = entity_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          entity_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getEntityBytes() {
-        java.lang.Object ref = entity_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          entity_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntity(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder clearEntity() {
-        
-        entity_ = getDefaultInstance().getEntity();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string entity = 2;</code>
-       */
-      public Builder setEntityBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        entity_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object handler_ = "";
-      /**
-       * <code>optional string handler = 3;</code>
-       */
-      public java.lang.String getHandler() {
-        java.lang.Object ref = handler_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          handler_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string handler = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getHandlerBytes() {
-        java.lang.Object ref = handler_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          handler_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string handler = 3;</code>
-       */
-      public Builder setHandler(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        handler_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string handler = 3;</code>
-       */
-      public Builder clearHandler() {
-        
-        handler_ = getDefaultInstance().getHandler();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string handler = 3;</code>
-       */
-      public Builder setHandlerBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        handler_ = value;
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.MapField<
-          java.lang.String, java.lang.String> params_;
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetParams() {
-        if (params_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              ParamsDefaultEntryHolder.defaultEntry);
-       }
-        return params_;
-      }
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetMutableParams() {
-        onChanged();;
-        if (params_ == null) {
-          params_ = com.google.protobuf.MapField.newMapField(
-              ParamsDefaultEntryHolder.defaultEntry);
-        }
-        if (!params_.isMutable()) {
-          params_ = params_.copy();
-        }
-        return params_;
-      }
-      /**
-       * <code>map&lt;string, string&gt; params = 4;</code>
-       */
-      public java.util.Map<java.lang.String, java.lang.String> getParams() {
-        return internalGetParams().getMap();
-      }
-      /**
-       * <code>map&lt;string, string&gt; params = 4;</code>
-       */
-      public java.util.Map<java.lang.String, java.lang.String>
-      getMutableParams() {
-        return internalGetMutableParams().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, string&gt; params = 4;</code>
-       */
-      public Builder putAllParams(
-          java.util.Map<java.lang.String, java.lang.String> values) {
-        getMutableParams().putAll(values);
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:ExternalHandlerQueryMessage)
-    }
-
-    // @@protoc_insertion_point(class_scope:ExternalHandlerQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage();
-    }
-
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<ExternalHandlerQueryMessage>
-        PARSER = new com.google.protobuf.AbstractParser<ExternalHandlerQueryMessage>() {
-      public ExternalHandlerQueryMessage parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        try {
-          return new ExternalHandlerQueryMessage(input, extensionRegistry);
-        } catch (RuntimeException e) {
-          if (e.getCause() instanceof
-              com.google.protobuf.InvalidProtocolBufferException) {
-            throw (com.google.protobuf.InvalidProtocolBufferException)
-                e.getCause();
-          }
-          throw e;
-        }
-      }
-    };
-
-    public static com.google.protobuf.Parser<ExternalHandlerQueryMessage> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<ExternalHandlerQueryMessage> getParserForType() {
-      return PARSER;
-    }
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
   public interface SubExpressionQueryMessageOrBuilder extends
       // @@protoc_insertion_point(interface_extends:SubExpressionQueryMessage)
       com.google.protobuf.MessageOrBuilder {
@@ -21325,58 +15371,31 @@ public final class Grpc {
         getQueryidBytes();
 
     /**
-     * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+     * <code>optional .QueryMessage qm = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage getSsqm();
+    ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage getQm();
     /**
-     * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+     * <code>optional .QueryMessage qm = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessageOrBuilder getSsqmOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessageOrBuilder getQmOrBuilder();
 
     /**
-     * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage getSsiqm();
-    /**
-     * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessageOrBuilder getSsiqmOrBuilder();
-
-    /**
-     * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage getSiqm();
-    /**
-     * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessageOrBuilder getSiqmOrBuilder();
-
-    /**
-     * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+     * <code>optional .ExpressionQueryMessage eqm = 3;</code>
      */
     ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage getEqm();
     /**
-     * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+     * <code>optional .ExpressionQueryMessage eqm = 3;</code>
      */
     ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessageOrBuilder getEqmOrBuilder();
 
     /**
-     * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+     * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
      */
     ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage getEhqm();
     /**
-     * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+     * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
      */
     ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessageOrBuilder getEhqmOrBuilder();
-
-    /**
-     * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage getSbqm();
-    /**
-     * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-     */
-    ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder getSbqmOrBuilder();
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.SubmessageCase getSubmessageCase();
   }
@@ -21426,50 +15445,22 @@ public final class Grpc {
               break;
             }
             case 18: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.Builder subBuilder = null;
               if (submessageCase_ == 2) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) submessage_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) submessage_).toBuilder();
               }
               submessage_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) submessage_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) submessage_);
                 submessage_ = subBuilder.buildPartial();
               }
               submessageCase_ = 2;
               break;
             }
             case 26: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.Builder subBuilder = null;
-              if (submessageCase_ == 3) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) submessage_).toBuilder();
-              }
-              submessage_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) submessage_);
-                submessage_ = subBuilder.buildPartial();
-              }
-              submessageCase_ = 3;
-              break;
-            }
-            case 34: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.Builder subBuilder = null;
-              if (submessageCase_ == 4) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) submessage_).toBuilder();
-              }
-              submessage_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) submessage_);
-                submessage_ = subBuilder.buildPartial();
-              }
-              submessageCase_ = 4;
-              break;
-            }
-            case 42: {
               ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.Builder subBuilder = null;
-              if (submessageCase_ == 5) {
+              if (submessageCase_ == 3) {
                 subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_).toBuilder();
               }
               submessage_ =
@@ -21478,12 +15469,12 @@ public final class Grpc {
                 subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_);
                 submessage_ = subBuilder.buildPartial();
               }
-              submessageCase_ = 5;
+              submessageCase_ = 3;
               break;
             }
-            case 50: {
+            case 34: {
               ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.Builder subBuilder = null;
-              if (submessageCase_ == 6) {
+              if (submessageCase_ == 4) {
                 subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_).toBuilder();
               }
               submessage_ =
@@ -21492,21 +15483,7 @@ public final class Grpc {
                 subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_);
                 submessage_ = subBuilder.buildPartial();
               }
-              submessageCase_ = 6;
-              break;
-            }
-            case 58: {
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder subBuilder = null;
-              if (submessageCase_ == 7) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_).toBuilder();
-              }
-              submessage_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_);
-                submessage_ = subBuilder.buildPartial();
-              }
-              submessageCase_ = 7;
+              submessageCase_ = 4;
               break;
             }
           }
@@ -21537,12 +15514,9 @@ public final class Grpc {
     private java.lang.Object submessage_;
     public enum SubmessageCase
         implements com.google.protobuf.Internal.EnumLite {
-      SSQM(2),
-      SSIQM(3),
-      SIQM(4),
-      EQM(5),
-      EHQM(6),
-      SBQM(7),
+      QM(2),
+      EQM(3),
+      EHQM(4),
       SUBMESSAGE_NOT_SET(0);
       private int value = 0;
       private SubmessageCase(int value) {
@@ -21550,12 +15524,9 @@ public final class Grpc {
       }
       public static SubmessageCase valueOf(int value) {
         switch (value) {
-          case 2: return SSQM;
-          case 3: return SSIQM;
-          case 4: return SIQM;
-          case 5: return EQM;
-          case 6: return EHQM;
-          case 7: return SBQM;
+          case 2: return QM;
+          case 3: return EQM;
+          case 4: return EHQM;
           case 0: return SUBMESSAGE_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
             "Value is undefined for this oneof enum.");
@@ -21606,124 +15577,64 @@ public final class Grpc {
       }
     }
 
-    public static final int SSQM_FIELD_NUMBER = 2;
+    public static final int QM_FIELD_NUMBER = 2;
     /**
-     * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+     * <code>optional .QueryMessage qm = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage getSsqm() {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage getQm() {
       if (submessageCase_ == 2) {
-         return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) submessage_;
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) submessage_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance();
     }
     /**
-     * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+     * <code>optional .QueryMessage qm = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessageOrBuilder getSsqmOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessageOrBuilder getQmOrBuilder() {
       if (submessageCase_ == 2) {
-         return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) submessage_;
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) submessage_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance();
     }
 
-    public static final int SSIQM_FIELD_NUMBER = 3;
+    public static final int EQM_FIELD_NUMBER = 3;
     /**
-     * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage getSsiqm() {
-      if (submessageCase_ == 3) {
-         return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) submessage_;
-      }
-      return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.getDefaultInstance();
-    }
-    /**
-     * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessageOrBuilder getSsiqmOrBuilder() {
-      if (submessageCase_ == 3) {
-         return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) submessage_;
-      }
-      return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.getDefaultInstance();
-    }
-
-    public static final int SIQM_FIELD_NUMBER = 4;
-    /**
-     * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage getSiqm() {
-      if (submessageCase_ == 4) {
-         return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) submessage_;
-      }
-      return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.getDefaultInstance();
-    }
-    /**
-     * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessageOrBuilder getSiqmOrBuilder() {
-      if (submessageCase_ == 4) {
-         return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) submessage_;
-      }
-      return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.getDefaultInstance();
-    }
-
-    public static final int EQM_FIELD_NUMBER = 5;
-    /**
-     * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+     * <code>optional .ExpressionQueryMessage eqm = 3;</code>
      */
     public ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage getEqm() {
-      if (submessageCase_ == 5) {
+      if (submessageCase_ == 3) {
          return (ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_;
       }
       return ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.getDefaultInstance();
     }
     /**
-     * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+     * <code>optional .ExpressionQueryMessage eqm = 3;</code>
      */
     public ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessageOrBuilder getEqmOrBuilder() {
-      if (submessageCase_ == 5) {
+      if (submessageCase_ == 3) {
          return (ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_;
       }
       return ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.getDefaultInstance();
     }
 
-    public static final int EHQM_FIELD_NUMBER = 6;
+    public static final int EHQM_FIELD_NUMBER = 4;
     /**
-     * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+     * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
      */
     public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage getEhqm() {
-      if (submessageCase_ == 6) {
+      if (submessageCase_ == 4) {
          return (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_;
       }
       return ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance();
     }
     /**
-     * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+     * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
      */
     public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessageOrBuilder getEhqmOrBuilder() {
-      if (submessageCase_ == 6) {
+      if (submessageCase_ == 4) {
          return (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_;
       }
       return ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance();
-    }
-
-    public static final int SBQM_FIELD_NUMBER = 7;
-    /**
-     * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage getSbqm() {
-      if (submessageCase_ == 7) {
-         return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_;
-      }
-      return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
-    }
-    /**
-     * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-     */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder getSbqmOrBuilder() {
-      if (submessageCase_ == 7) {
-         return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_;
-      }
-      return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -21742,22 +15653,13 @@ public final class Grpc {
         com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
       }
       if (submessageCase_ == 2) {
-        output.writeMessage(2, (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) submessage_);
+        output.writeMessage(2, (ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) submessage_);
       }
       if (submessageCase_ == 3) {
-        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) submessage_);
+        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_);
       }
       if (submessageCase_ == 4) {
-        output.writeMessage(4, (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) submessage_);
-      }
-      if (submessageCase_ == 5) {
-        output.writeMessage(5, (ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_);
-      }
-      if (submessageCase_ == 6) {
-        output.writeMessage(6, (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_);
-      }
-      if (submessageCase_ == 7) {
-        output.writeMessage(7, (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_);
+        output.writeMessage(4, (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_);
       }
     }
 
@@ -21771,27 +15673,15 @@ public final class Grpc {
       }
       if (submessageCase_ == 2) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) submessage_);
+          .computeMessageSize(2, (ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) submessage_);
       }
       if (submessageCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) submessage_);
+          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_);
       }
       if (submessageCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) submessage_);
-      }
-      if (submessageCase_ == 5) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, (ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_);
-      }
-      if (submessageCase_ == 6) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_);
-      }
-      if (submessageCase_ == 7) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_);
+          .computeMessageSize(4, (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_);
       }
       memoizedSize = size;
       return size;
@@ -21932,45 +15822,24 @@ public final class Grpc {
         ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage(this);
         result.queryid_ = queryid_;
         if (submessageCase_ == 2) {
-          if (ssqmBuilder_ == null) {
+          if (qmBuilder_ == null) {
             result.submessage_ = submessage_;
           } else {
-            result.submessage_ = ssqmBuilder_.build();
+            result.submessage_ = qmBuilder_.build();
           }
         }
         if (submessageCase_ == 3) {
-          if (ssiqmBuilder_ == null) {
-            result.submessage_ = submessage_;
-          } else {
-            result.submessage_ = ssiqmBuilder_.build();
-          }
-        }
-        if (submessageCase_ == 4) {
-          if (siqmBuilder_ == null) {
-            result.submessage_ = submessage_;
-          } else {
-            result.submessage_ = siqmBuilder_.build();
-          }
-        }
-        if (submessageCase_ == 5) {
           if (eqmBuilder_ == null) {
             result.submessage_ = submessage_;
           } else {
             result.submessage_ = eqmBuilder_.build();
           }
         }
-        if (submessageCase_ == 6) {
+        if (submessageCase_ == 4) {
           if (ehqmBuilder_ == null) {
             result.submessage_ = submessage_;
           } else {
             result.submessage_ = ehqmBuilder_.build();
-          }
-        }
-        if (submessageCase_ == 7) {
-          if (sbqmBuilder_ == null) {
-            result.submessage_ = submessage_;
-          } else {
-            result.submessage_ = sbqmBuilder_.build();
           }
         }
         result.submessageCase_ = submessageCase_;
@@ -21994,16 +15863,8 @@ public final class Grpc {
           onChanged();
         }
         switch (other.getSubmessageCase()) {
-          case SSQM: {
-            mergeSsqm(other.getSsqm());
-            break;
-          }
-          case SSIQM: {
-            mergeSsiqm(other.getSsiqm());
-            break;
-          }
-          case SIQM: {
-            mergeSiqm(other.getSiqm());
+          case QM: {
+            mergeQm(other.getQm());
             break;
           }
           case EQM: {
@@ -22012,10 +15873,6 @@ public final class Grpc {
           }
           case EHQM: {
             mergeEhqm(other.getEhqm());
-            break;
-          }
-          case SBQM: {
-            mergeSbqm(other.getSbqm());
             break;
           }
           case SUBMESSAGE_NOT_SET: {
@@ -22133,61 +15990,61 @@ public final class Grpc {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessageOrBuilder> ssqmBuilder_;
+          ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessageOrBuilder> qmBuilder_;
       /**
-       * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+       * <code>optional .QueryMessage qm = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage getSsqm() {
-        if (ssqmBuilder_ == null) {
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage getQm() {
+        if (qmBuilder_ == null) {
           if (submessageCase_ == 2) {
-            return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) submessage_;
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) submessage_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance();
         } else {
           if (submessageCase_ == 2) {
-            return ssqmBuilder_.getMessage();
+            return qmBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+       * <code>optional .QueryMessage qm = 2;</code>
        */
-      public Builder setSsqm(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage value) {
-        if (ssqmBuilder_ == null) {
+      public Builder setQm(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage value) {
+        if (qmBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           submessage_ = value;
           onChanged();
         } else {
-          ssqmBuilder_.setMessage(value);
+          qmBuilder_.setMessage(value);
         }
         submessageCase_ = 2;
         return this;
       }
       /**
-       * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+       * <code>optional .QueryMessage qm = 2;</code>
        */
-      public Builder setSsqm(
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.Builder builderForValue) {
-        if (ssqmBuilder_ == null) {
+      public Builder setQm(
+          ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.Builder builderForValue) {
+        if (qmBuilder_ == null) {
           submessage_ = builderForValue.build();
           onChanged();
         } else {
-          ssqmBuilder_.setMessage(builderForValue.build());
+          qmBuilder_.setMessage(builderForValue.build());
         }
         submessageCase_ = 2;
         return this;
       }
       /**
-       * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+       * <code>optional .QueryMessage qm = 2;</code>
        */
-      public Builder mergeSsqm(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage value) {
-        if (ssqmBuilder_ == null) {
+      public Builder mergeQm(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage value) {
+        if (qmBuilder_ == null) {
           if (submessageCase_ == 2 &&
-              submessage_ != ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.getDefaultInstance()) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) submessage_)
+              submessage_ != ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance()) {
+            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) submessage_)
                 .mergeFrom(value).buildPartial();
           } else {
             submessage_ = value;
@@ -22195,18 +16052,18 @@ public final class Grpc {
           onChanged();
         } else {
           if (submessageCase_ == 2) {
-            ssqmBuilder_.mergeFrom(value);
+            qmBuilder_.mergeFrom(value);
           }
-          ssqmBuilder_.setMessage(value);
+          qmBuilder_.setMessage(value);
         }
         submessageCase_ = 2;
         return this;
       }
       /**
-       * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+       * <code>optional .QueryMessage qm = 2;</code>
        */
-      public Builder clearSsqm() {
-        if (ssqmBuilder_ == null) {
+      public Builder clearQm() {
+        if (qmBuilder_ == null) {
           if (submessageCase_ == 2) {
             submessageCase_ = 0;
             submessage_ = null;
@@ -22217,331 +16074,71 @@ public final class Grpc {
             submessageCase_ = 0;
             submessage_ = null;
           }
-          ssqmBuilder_.clear();
+          qmBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+       * <code>optional .QueryMessage qm = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.Builder getSsqmBuilder() {
-        return getSsqmFieldBuilder().getBuilder();
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.Builder getQmBuilder() {
+        return getQmFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+       * <code>optional .QueryMessage qm = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessageOrBuilder getSsqmOrBuilder() {
-        if ((submessageCase_ == 2) && (ssqmBuilder_ != null)) {
-          return ssqmBuilder_.getMessageOrBuilder();
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessageOrBuilder getQmOrBuilder() {
+        if ((submessageCase_ == 2) && (qmBuilder_ != null)) {
+          return qmBuilder_.getMessageOrBuilder();
         } else {
           if (submessageCase_ == 2) {
-            return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) submessage_;
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) submessage_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .SimpleSequentialQueryMessage ssqm = 2;</code>
+       * <code>optional .QueryMessage qm = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessageOrBuilder> 
-          getSsqmFieldBuilder() {
-        if (ssqmBuilder_ == null) {
+          ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessageOrBuilder> 
+          getQmFieldBuilder() {
+        if (qmBuilder_ == null) {
           if (!(submessageCase_ == 2)) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.getDefaultInstance();
+            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance();
           }
-          ssqmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) submessage_,
+          qmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) submessage_,
                   getParentForChildren(),
                   isClean());
           submessage_ = null;
         }
         submessageCase_ = 2;
         onChanged();;
-        return ssqmBuilder_;
-      }
-
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessageOrBuilder> ssiqmBuilder_;
-      /**
-       * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage getSsiqm() {
-        if (ssiqmBuilder_ == null) {
-          if (submessageCase_ == 3) {
-            return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) submessage_;
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.getDefaultInstance();
-        } else {
-          if (submessageCase_ == 3) {
-            return ssiqmBuilder_.getMessage();
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-       */
-      public Builder setSsiqm(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage value) {
-        if (ssiqmBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          submessage_ = value;
-          onChanged();
-        } else {
-          ssiqmBuilder_.setMessage(value);
-        }
-        submessageCase_ = 3;
-        return this;
-      }
-      /**
-       * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-       */
-      public Builder setSsiqm(
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.Builder builderForValue) {
-        if (ssiqmBuilder_ == null) {
-          submessage_ = builderForValue.build();
-          onChanged();
-        } else {
-          ssiqmBuilder_.setMessage(builderForValue.build());
-        }
-        submessageCase_ = 3;
-        return this;
-      }
-      /**
-       * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-       */
-      public Builder mergeSsiqm(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage value) {
-        if (ssiqmBuilder_ == null) {
-          if (submessageCase_ == 3 &&
-              submessage_ != ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.getDefaultInstance()) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) submessage_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            submessage_ = value;
-          }
-          onChanged();
-        } else {
-          if (submessageCase_ == 3) {
-            ssiqmBuilder_.mergeFrom(value);
-          }
-          ssiqmBuilder_.setMessage(value);
-        }
-        submessageCase_ = 3;
-        return this;
-      }
-      /**
-       * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-       */
-      public Builder clearSsiqm() {
-        if (ssiqmBuilder_ == null) {
-          if (submessageCase_ == 3) {
-            submessageCase_ = 0;
-            submessage_ = null;
-            onChanged();
-          }
-        } else {
-          if (submessageCase_ == 3) {
-            submessageCase_ = 0;
-            submessage_ = null;
-          }
-          ssiqmBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.Builder getSsiqmBuilder() {
-        return getSsiqmFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessageOrBuilder getSsiqmOrBuilder() {
-        if ((submessageCase_ == 3) && (ssiqmBuilder_ != null)) {
-          return ssiqmBuilder_.getMessageOrBuilder();
-        } else {
-          if (submessageCase_ == 3) {
-            return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) submessage_;
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>optional .SimpleSpecifiedIndexQueryMessage ssiqm = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessageOrBuilder> 
-          getSsiqmFieldBuilder() {
-        if (ssiqmBuilder_ == null) {
-          if (!(submessageCase_ == 3)) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.getDefaultInstance();
-          }
-          ssiqmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) submessage_,
-                  getParentForChildren(),
-                  isClean());
-          submessage_ = null;
-        }
-        submessageCase_ = 3;
-        onChanged();;
-        return ssiqmBuilder_;
-      }
-
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessageOrBuilder> siqmBuilder_;
-      /**
-       * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage getSiqm() {
-        if (siqmBuilder_ == null) {
-          if (submessageCase_ == 4) {
-            return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) submessage_;
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.getDefaultInstance();
-        } else {
-          if (submessageCase_ == 4) {
-            return siqmBuilder_.getMessage();
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-       */
-      public Builder setSiqm(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage value) {
-        if (siqmBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          submessage_ = value;
-          onChanged();
-        } else {
-          siqmBuilder_.setMessage(value);
-        }
-        submessageCase_ = 4;
-        return this;
-      }
-      /**
-       * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-       */
-      public Builder setSiqm(
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.Builder builderForValue) {
-        if (siqmBuilder_ == null) {
-          submessage_ = builderForValue.build();
-          onChanged();
-        } else {
-          siqmBuilder_.setMessage(builderForValue.build());
-        }
-        submessageCase_ = 4;
-        return this;
-      }
-      /**
-       * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-       */
-      public Builder mergeSiqm(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage value) {
-        if (siqmBuilder_ == null) {
-          if (submessageCase_ == 4 &&
-              submessage_ != ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.getDefaultInstance()) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) submessage_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            submessage_ = value;
-          }
-          onChanged();
-        } else {
-          if (submessageCase_ == 4) {
-            siqmBuilder_.mergeFrom(value);
-          }
-          siqmBuilder_.setMessage(value);
-        }
-        submessageCase_ = 4;
-        return this;
-      }
-      /**
-       * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-       */
-      public Builder clearSiqm() {
-        if (siqmBuilder_ == null) {
-          if (submessageCase_ == 4) {
-            submessageCase_ = 0;
-            submessage_ = null;
-            onChanged();
-          }
-        } else {
-          if (submessageCase_ == 4) {
-            submessageCase_ = 0;
-            submessage_ = null;
-          }
-          siqmBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.Builder getSiqmBuilder() {
-        return getSiqmFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessageOrBuilder getSiqmOrBuilder() {
-        if ((submessageCase_ == 4) && (siqmBuilder_ != null)) {
-          return siqmBuilder_.getMessageOrBuilder();
-        } else {
-          if (submessageCase_ == 4) {
-            return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) submessage_;
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>optional .SimpleIndexQueryMessage siqm = 4;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessageOrBuilder> 
-          getSiqmFieldBuilder() {
-        if (siqmBuilder_ == null) {
-          if (!(submessageCase_ == 4)) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.getDefaultInstance();
-          }
-          siqmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) submessage_,
-                  getParentForChildren(),
-                  isClean());
-          submessage_ = null;
-        }
-        submessageCase_ = 4;
-        onChanged();;
-        return siqmBuilder_;
+        return qmBuilder_;
       }
 
       private com.google.protobuf.SingleFieldBuilder<
           ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessageOrBuilder> eqmBuilder_;
       /**
-       * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+       * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
       public ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage getEqm() {
         if (eqmBuilder_ == null) {
-          if (submessageCase_ == 5) {
+          if (submessageCase_ == 3) {
             return (ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_;
           }
           return ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.getDefaultInstance();
         } else {
-          if (submessageCase_ == 5) {
+          if (submessageCase_ == 3) {
             return eqmBuilder_.getMessage();
           }
           return ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+       * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
       public Builder setEqm(ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage value) {
         if (eqmBuilder_ == null) {
@@ -22553,11 +16150,11 @@ public final class Grpc {
         } else {
           eqmBuilder_.setMessage(value);
         }
-        submessageCase_ = 5;
+        submessageCase_ = 3;
         return this;
       }
       /**
-       * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+       * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
       public Builder setEqm(
           ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.Builder builderForValue) {
@@ -22567,15 +16164,15 @@ public final class Grpc {
         } else {
           eqmBuilder_.setMessage(builderForValue.build());
         }
-        submessageCase_ = 5;
+        submessageCase_ = 3;
         return this;
       }
       /**
-       * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+       * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
       public Builder mergeEqm(ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage value) {
         if (eqmBuilder_ == null) {
-          if (submessageCase_ == 5 &&
+          if (submessageCase_ == 3 &&
               submessage_ != ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.getDefaultInstance()) {
             submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_)
                 .mergeFrom(value).buildPartial();
@@ -22584,26 +16181,26 @@ public final class Grpc {
           }
           onChanged();
         } else {
-          if (submessageCase_ == 5) {
+          if (submessageCase_ == 3) {
             eqmBuilder_.mergeFrom(value);
           }
           eqmBuilder_.setMessage(value);
         }
-        submessageCase_ = 5;
+        submessageCase_ = 3;
         return this;
       }
       /**
-       * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+       * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
       public Builder clearEqm() {
         if (eqmBuilder_ == null) {
-          if (submessageCase_ == 5) {
+          if (submessageCase_ == 3) {
             submessageCase_ = 0;
             submessage_ = null;
             onChanged();
           }
         } else {
-          if (submessageCase_ == 5) {
+          if (submessageCase_ == 3) {
             submessageCase_ = 0;
             submessage_ = null;
           }
@@ -22612,32 +16209,32 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+       * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
       public ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.Builder getEqmBuilder() {
         return getEqmFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+       * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
       public ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessageOrBuilder getEqmOrBuilder() {
-        if ((submessageCase_ == 5) && (eqmBuilder_ != null)) {
+        if ((submessageCase_ == 3) && (eqmBuilder_ != null)) {
           return eqmBuilder_.getMessageOrBuilder();
         } else {
-          if (submessageCase_ == 5) {
+          if (submessageCase_ == 3) {
             return (ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage) submessage_;
           }
           return ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .ExpressionQueryMessage eqm = 5;</code>
+       * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessageOrBuilder> 
           getEqmFieldBuilder() {
         if (eqmBuilder_ == null) {
-          if (!(submessageCase_ == 5)) {
+          if (!(submessageCase_ == 3)) {
             submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.ExpressionQueryMessage.getDefaultInstance();
           }
           eqmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -22647,7 +16244,7 @@ public final class Grpc {
                   isClean());
           submessage_ = null;
         }
-        submessageCase_ = 5;
+        submessageCase_ = 3;
         onChanged();;
         return eqmBuilder_;
       }
@@ -22655,23 +16252,23 @@ public final class Grpc {
       private com.google.protobuf.SingleFieldBuilder<
           ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessageOrBuilder> ehqmBuilder_;
       /**
-       * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+       * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
       public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage getEhqm() {
         if (ehqmBuilder_ == null) {
-          if (submessageCase_ == 6) {
+          if (submessageCase_ == 4) {
             return (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_;
           }
           return ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance();
         } else {
-          if (submessageCase_ == 6) {
+          if (submessageCase_ == 4) {
             return ehqmBuilder_.getMessage();
           }
           return ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+       * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
       public Builder setEhqm(ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage value) {
         if (ehqmBuilder_ == null) {
@@ -22683,11 +16280,11 @@ public final class Grpc {
         } else {
           ehqmBuilder_.setMessage(value);
         }
-        submessageCase_ = 6;
+        submessageCase_ = 4;
         return this;
       }
       /**
-       * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+       * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
       public Builder setEhqm(
           ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.Builder builderForValue) {
@@ -22697,15 +16294,15 @@ public final class Grpc {
         } else {
           ehqmBuilder_.setMessage(builderForValue.build());
         }
-        submessageCase_ = 6;
+        submessageCase_ = 4;
         return this;
       }
       /**
-       * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+       * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
       public Builder mergeEhqm(ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage value) {
         if (ehqmBuilder_ == null) {
-          if (submessageCase_ == 6 &&
+          if (submessageCase_ == 4 &&
               submessage_ != ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance()) {
             submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_)
                 .mergeFrom(value).buildPartial();
@@ -22714,26 +16311,26 @@ public final class Grpc {
           }
           onChanged();
         } else {
-          if (submessageCase_ == 6) {
+          if (submessageCase_ == 4) {
             ehqmBuilder_.mergeFrom(value);
           }
           ehqmBuilder_.setMessage(value);
         }
-        submessageCase_ = 6;
+        submessageCase_ = 4;
         return this;
       }
       /**
-       * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+       * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
       public Builder clearEhqm() {
         if (ehqmBuilder_ == null) {
-          if (submessageCase_ == 6) {
+          if (submessageCase_ == 4) {
             submessageCase_ = 0;
             submessage_ = null;
             onChanged();
           }
         } else {
-          if (submessageCase_ == 6) {
+          if (submessageCase_ == 4) {
             submessageCase_ = 0;
             submessage_ = null;
           }
@@ -22742,32 +16339,32 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+       * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
       public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.Builder getEhqmBuilder() {
         return getEhqmFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+       * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
       public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessageOrBuilder getEhqmOrBuilder() {
-        if ((submessageCase_ == 6) && (ehqmBuilder_ != null)) {
+        if ((submessageCase_ == 4) && (ehqmBuilder_ != null)) {
           return ehqmBuilder_.getMessageOrBuilder();
         } else {
-          if (submessageCase_ == 6) {
+          if (submessageCase_ == 4) {
             return (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) submessage_;
           }
           return ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .ExternalHandlerQueryMessage ehqm = 6;</code>
+       * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessageOrBuilder> 
           getEhqmFieldBuilder() {
         if (ehqmBuilder_ == null) {
-          if (!(submessageCase_ == 6)) {
+          if (!(submessageCase_ == 4)) {
             submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance();
           }
           ehqmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -22777,139 +16374,9 @@ public final class Grpc {
                   isClean());
           submessage_ = null;
         }
-        submessageCase_ = 6;
+        submessageCase_ = 4;
         onChanged();;
         return ehqmBuilder_;
-      }
-
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder> sbqmBuilder_;
-      /**
-       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage getSbqm() {
-        if (sbqmBuilder_ == null) {
-          if (submessageCase_ == 7) {
-            return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_;
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
-        } else {
-          if (submessageCase_ == 7) {
-            return sbqmBuilder_.getMessage();
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-       */
-      public Builder setSbqm(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage value) {
-        if (sbqmBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          submessage_ = value;
-          onChanged();
-        } else {
-          sbqmBuilder_.setMessage(value);
-        }
-        submessageCase_ = 7;
-        return this;
-      }
-      /**
-       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-       */
-      public Builder setSbqm(
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder builderForValue) {
-        if (sbqmBuilder_ == null) {
-          submessage_ = builderForValue.build();
-          onChanged();
-        } else {
-          sbqmBuilder_.setMessage(builderForValue.build());
-        }
-        submessageCase_ = 7;
-        return this;
-      }
-      /**
-       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-       */
-      public Builder mergeSbqm(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage value) {
-        if (sbqmBuilder_ == null) {
-          if (submessageCase_ == 7 &&
-              submessage_ != ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance()) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            submessage_ = value;
-          }
-          onChanged();
-        } else {
-          if (submessageCase_ == 7) {
-            sbqmBuilder_.mergeFrom(value);
-          }
-          sbqmBuilder_.setMessage(value);
-        }
-        submessageCase_ = 7;
-        return this;
-      }
-      /**
-       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-       */
-      public Builder clearSbqm() {
-        if (sbqmBuilder_ == null) {
-          if (submessageCase_ == 7) {
-            submessageCase_ = 0;
-            submessage_ = null;
-            onChanged();
-          }
-        } else {
-          if (submessageCase_ == 7) {
-            submessageCase_ = 0;
-            submessage_ = null;
-          }
-          sbqmBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder getSbqmBuilder() {
-        return getSbqmFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-       */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder getSbqmOrBuilder() {
-        if ((submessageCase_ == 7) && (sbqmBuilder_ != null)) {
-          return sbqmBuilder_.getMessageOrBuilder();
-        } else {
-          if (submessageCase_ == 7) {
-            return (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_;
-          }
-          return ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>optional .SimpleBooleanQueryMessage sbqm = 7;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder> 
-          getSbqmFieldBuilder() {
-        if (sbqmBuilder_ == null) {
-          if (!(submessageCase_ == 7)) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance();
-          }
-          sbqmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) submessage_,
-                  getParentForChildren(),
-                  isClean());
-          submessage_ = null;
-        }
-        submessageCase_ = 7;
-        onChanged();;
-        return sbqmBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -22969,6 +16436,2137 @@ public final class Grpc {
 
   }
 
+  public interface ProjectionMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ProjectionMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage getField();
+    /**
+     * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessageOrBuilder getFieldOrBuilder();
+
+    /**
+     * <code>optional .ProjectionMessage.Operation op = 2;</code>
+     */
+    int getOpValue();
+    /**
+     * <code>optional .ProjectionMessage.Operation op = 2;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation getOp();
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.SubmessageCase getSubmessageCase();
+  }
+  /**
+   * Protobuf type {@code ProjectionMessage}
+   */
+  public  static final class ProjectionMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:ProjectionMessage)
+      ProjectionMessageOrBuilder {
+    // Use ProjectionMessage.newBuilder() to construct.
+    private ProjectionMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private ProjectionMessage() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private ProjectionMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.Builder subBuilder = null;
+              if (submessageCase_ == 1) {
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) submessage_).toBuilder();
+              }
+              submessage_ =
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) submessage_);
+                submessage_ = subBuilder.buildPartial();
+              }
+              submessageCase_ = 1;
+              break;
+            }
+            case 16: {
+              int rawValue = input.readEnum();
+              submessageCase_ = 2;
+              submessage_ = rawValue;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ProjectionMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ProjectionMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Builder.class);
+    }
+
+    /**
+     * Protobuf enum {@code ProjectionMessage.Operation}
+     */
+    public enum Operation
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>COUNT = 0;</code>
+       */
+      COUNT(0, 0),
+      /**
+       * <code>EXISTS = 1;</code>
+       */
+      EXISTS(1, 1),
+      UNRECOGNIZED(-1, -1),
+      ;
+
+      /**
+       * <code>COUNT = 0;</code>
+       */
+      public static final int COUNT_VALUE = 0;
+      /**
+       * <code>EXISTS = 1;</code>
+       */
+      public static final int EXISTS_VALUE = 1;
+
+
+      public final int getNumber() {
+        if (index == -1) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      public static Operation valueOf(int value) {
+        switch (value) {
+          case 0: return COUNT;
+          case 1: return EXISTS;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<Operation>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          Operation> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<Operation>() {
+              public Operation findValueByNumber(int number) {
+                return Operation.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final Operation[] VALUES = values();
+
+      public static Operation valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private Operation(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:ProjectionMessage.Operation)
+    }
+
+    public interface FieldnameMessageOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:ProjectionMessage.FieldnameMessage)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>repeated string field = 1;</code>
+       */
+      com.google.protobuf.ProtocolStringList
+          getFieldList();
+      /**
+       * <code>repeated string field = 1;</code>
+       */
+      int getFieldCount();
+      /**
+       * <code>repeated string field = 1;</code>
+       */
+      java.lang.String getField(int index);
+      /**
+       * <code>repeated string field = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getFieldBytes(int index);
+    }
+    /**
+     * Protobuf type {@code ProjectionMessage.FieldnameMessage}
+     */
+    public  static final class FieldnameMessage extends
+        com.google.protobuf.GeneratedMessage implements
+        // @@protoc_insertion_point(message_implements:ProjectionMessage.FieldnameMessage)
+        FieldnameMessageOrBuilder {
+      // Use FieldnameMessage.newBuilder() to construct.
+      private FieldnameMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+      }
+      private FieldnameMessage() {
+        field_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      }
+
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+      }
+      private FieldnameMessage(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+        this();
+        int mutable_bitField0_ = 0;
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!input.skipField(tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                java.lang.String s = input.readStringRequireUtf8();
+                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                  field_ = new com.google.protobuf.LazyStringArrayList();
+                  mutable_bitField0_ |= 0x00000001;
+                }
+                field_.add(s);
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw new RuntimeException(e.setUnfinishedMessage(this));
+        } catch (java.io.IOException e) {
+          throw new RuntimeException(
+              new com.google.protobuf.InvalidProtocolBufferException(
+                  e.getMessage()).setUnfinishedMessage(this));
+        } finally {
+          if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+            field_ = field_.getUnmodifiableView();
+          }
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ProjectionMessage_FieldnameMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ProjectionMessage_FieldnameMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.Builder.class);
+      }
+
+      public static final int FIELD_FIELD_NUMBER = 1;
+      private com.google.protobuf.LazyStringList field_;
+      /**
+       * <code>repeated string field = 1;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getFieldList() {
+        return field_;
+      }
+      /**
+       * <code>repeated string field = 1;</code>
+       */
+      public int getFieldCount() {
+        return field_.size();
+      }
+      /**
+       * <code>repeated string field = 1;</code>
+       */
+      public java.lang.String getField(int index) {
+        return field_.get(index);
+      }
+      /**
+       * <code>repeated string field = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getFieldBytes(int index) {
+        return field_.getByteString(index);
+      }
+
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        for (int i = 0; i < field_.size(); i++) {
+          com.google.protobuf.GeneratedMessage.writeString(output, 1, field_.getRaw(i));
+        }
+      }
+
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        {
+          int dataSize = 0;
+          for (int i = 0; i < field_.size(); i++) {
+            dataSize += computeStringSizeNoTag(field_.getRaw(i));
+          }
+          size += dataSize;
+          size += 1 * getFieldList().size();
+        }
+        memoizedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code ProjectionMessage.FieldnameMessage}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:ProjectionMessage.FieldnameMessage)
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessageOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ProjectionMessage_FieldnameMessage_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ProjectionMessage_FieldnameMessage_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.Builder.class);
+        }
+
+        // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        public Builder clear() {
+          super.clear();
+          field_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000001);
+          return this;
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ProjectionMessage_FieldnameMessage_descriptor;
+        }
+
+        public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage getDefaultInstanceForType() {
+          return ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.getDefaultInstance();
+        }
+
+        public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage build() {
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage buildPartial() {
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage(this);
+          int from_bitField0_ = bitField0_;
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            field_ = field_.getUnmodifiableView();
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.field_ = field_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) {
+            return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage other) {
+          if (other == ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.getDefaultInstance()) return this;
+          if (!other.field_.isEmpty()) {
+            if (field_.isEmpty()) {
+              field_ = other.field_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureFieldIsMutable();
+              field_.addAll(other.field_);
+            }
+            onChanged();
+          }
+          onChanged();
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private com.google.protobuf.LazyStringList field_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        private void ensureFieldIsMutable() {
+          if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+            field_ = new com.google.protobuf.LazyStringArrayList(field_);
+            bitField0_ |= 0x00000001;
+           }
+        }
+        /**
+         * <code>repeated string field = 1;</code>
+         */
+        public com.google.protobuf.ProtocolStringList
+            getFieldList() {
+          return field_.getUnmodifiableView();
+        }
+        /**
+         * <code>repeated string field = 1;</code>
+         */
+        public int getFieldCount() {
+          return field_.size();
+        }
+        /**
+         * <code>repeated string field = 1;</code>
+         */
+        public java.lang.String getField(int index) {
+          return field_.get(index);
+        }
+        /**
+         * <code>repeated string field = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getFieldBytes(int index) {
+          return field_.getByteString(index);
+        }
+        /**
+         * <code>repeated string field = 1;</code>
+         */
+        public Builder setField(
+            int index, java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureFieldIsMutable();
+          field_.set(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string field = 1;</code>
+         */
+        public Builder addField(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureFieldIsMutable();
+          field_.add(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string field = 1;</code>
+         */
+        public Builder addAllField(
+            java.lang.Iterable<java.lang.String> values) {
+          ensureFieldIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, field_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string field = 1;</code>
+         */
+        public Builder clearField() {
+          field_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated string field = 1;</code>
+         */
+        public Builder addFieldBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+          ensureFieldIsMutable();
+          field_.add(value);
+          onChanged();
+          return this;
+        }
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return this;
+        }
+
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return this;
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:ProjectionMessage.FieldnameMessage)
+      }
+
+      // @@protoc_insertion_point(class_scope:ProjectionMessage.FieldnameMessage)
+      private static final ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage();
+      }
+
+      public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<FieldnameMessage>
+          PARSER = new com.google.protobuf.AbstractParser<FieldnameMessage>() {
+        public FieldnameMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          try {
+            return new FieldnameMessage(input, extensionRegistry);
+          } catch (RuntimeException e) {
+            if (e.getCause() instanceof
+                com.google.protobuf.InvalidProtocolBufferException) {
+              throw (com.google.protobuf.InvalidProtocolBufferException)
+                  e.getCause();
+            }
+            throw e;
+          }
+        }
+      };
+
+      public static com.google.protobuf.Parser<FieldnameMessage> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<FieldnameMessage> getParserForType() {
+        return PARSER;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
+    private int submessageCase_ = 0;
+    private java.lang.Object submessage_;
+    public enum SubmessageCase
+        implements com.google.protobuf.Internal.EnumLite {
+      FIELD(1),
+      OP(2),
+      SUBMESSAGE_NOT_SET(0);
+      private int value = 0;
+      private SubmessageCase(int value) {
+        this.value = value;
+      }
+      public static SubmessageCase valueOf(int value) {
+        switch (value) {
+          case 1: return FIELD;
+          case 2: return OP;
+          case 0: return SUBMESSAGE_NOT_SET;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public SubmessageCase
+    getSubmessageCase() {
+      return SubmessageCase.valueOf(
+          submessageCase_);
+    }
+
+    public static final int FIELD_FIELD_NUMBER = 1;
+    /**
+     * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage getField() {
+      if (submessageCase_ == 1) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) submessage_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.getDefaultInstance();
+    }
+    /**
+     * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessageOrBuilder getFieldOrBuilder() {
+      if (submessageCase_ == 1) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) submessage_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.getDefaultInstance();
+    }
+
+    public static final int OP_FIELD_NUMBER = 2;
+    /**
+     * <code>optional .ProjectionMessage.Operation op = 2;</code>
+     */
+    public int getOpValue() {
+      if (submessageCase_ == 2) {
+        return (java.lang.Integer) submessage_;
+      }
+      return 0;
+    }
+    /**
+     * <code>optional .ProjectionMessage.Operation op = 2;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation getOp() {
+      if (submessageCase_ == 2) {
+        ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation result =  ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation.valueOf((java.lang.Integer) submessage_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation.UNRECOGNIZED : result;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation.COUNT;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (submessageCase_ == 1) {
+        output.writeMessage(1, (ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) submessage_);
+      }
+      if (submessageCase_ == 2) {
+        output.writeEnum(2, ((java.lang.Integer) submessage_));
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (submessageCase_ == 1) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, (ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) submessage_);
+      }
+      if (submessageCase_ == 2) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, ((java.lang.Integer) submessage_));
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ProjectionMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ProjectionMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ProjectionMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ProjectionMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        submessageCase_ = 0;
+        submessage_ = null;
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ProjectionMessage_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage(this);
+        if (submessageCase_ == 1) {
+          if (fieldBuilder_ == null) {
+            result.submessage_ = submessage_;
+          } else {
+            result.submessage_ = fieldBuilder_.build();
+          }
+        }
+        if (submessageCase_ == 2) {
+          result.submessage_ = submessage_;
+        }
+        result.submessageCase_ = submessageCase_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.getDefaultInstance()) return this;
+        switch (other.getSubmessageCase()) {
+          case FIELD: {
+            mergeField(other.getField());
+            break;
+          }
+          case OP: {
+            setOpValue(other.getOpValue());
+            break;
+          }
+          case SUBMESSAGE_NOT_SET: {
+            break;
+          }
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int submessageCase_ = 0;
+      private java.lang.Object submessage_;
+      public SubmessageCase
+          getSubmessageCase() {
+        return SubmessageCase.valueOf(
+            submessageCase_);
+      }
+
+      public Builder clearSubmessage() {
+        submessageCase_ = 0;
+        submessage_ = null;
+        onChanged();
+        return this;
+      }
+
+
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessageOrBuilder> fieldBuilder_;
+      /**
+       * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage getField() {
+        if (fieldBuilder_ == null) {
+          if (submessageCase_ == 1) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) submessage_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.getDefaultInstance();
+        } else {
+          if (submessageCase_ == 1) {
+            return fieldBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+       */
+      public Builder setField(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage value) {
+        if (fieldBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          submessage_ = value;
+          onChanged();
+        } else {
+          fieldBuilder_.setMessage(value);
+        }
+        submessageCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+       */
+      public Builder setField(
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.Builder builderForValue) {
+        if (fieldBuilder_ == null) {
+          submessage_ = builderForValue.build();
+          onChanged();
+        } else {
+          fieldBuilder_.setMessage(builderForValue.build());
+        }
+        submessageCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+       */
+      public Builder mergeField(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage value) {
+        if (fieldBuilder_ == null) {
+          if (submessageCase_ == 1 &&
+              submessage_ != ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.getDefaultInstance()) {
+            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) submessage_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            submessage_ = value;
+          }
+          onChanged();
+        } else {
+          if (submessageCase_ == 1) {
+            fieldBuilder_.mergeFrom(value);
+          }
+          fieldBuilder_.setMessage(value);
+        }
+        submessageCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+       */
+      public Builder clearField() {
+        if (fieldBuilder_ == null) {
+          if (submessageCase_ == 1) {
+            submessageCase_ = 0;
+            submessage_ = null;
+            onChanged();
+          }
+        } else {
+          if (submessageCase_ == 1) {
+            submessageCase_ = 0;
+            submessage_ = null;
+          }
+          fieldBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.Builder getFieldBuilder() {
+        return getFieldFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessageOrBuilder getFieldOrBuilder() {
+        if ((submessageCase_ == 1) && (fieldBuilder_ != null)) {
+          return fieldBuilder_.getMessageOrBuilder();
+        } else {
+          if (submessageCase_ == 1) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) submessage_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .ProjectionMessage.FieldnameMessage field = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessageOrBuilder> 
+          getFieldFieldBuilder() {
+        if (fieldBuilder_ == null) {
+          if (!(submessageCase_ == 1)) {
+            submessage_ = ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.getDefaultInstance();
+          }
+          fieldBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.FieldnameMessage) submessage_,
+                  getParentForChildren(),
+                  isClean());
+          submessage_ = null;
+        }
+        submessageCase_ = 1;
+        onChanged();;
+        return fieldBuilder_;
+      }
+
+      /**
+       * <code>optional .ProjectionMessage.Operation op = 2;</code>
+       */
+      public int getOpValue() {
+        if (submessageCase_ == 2) {
+          return ((java.lang.Integer) submessage_).intValue();
+        }
+        return 0;
+      }
+      /**
+       * <code>optional .ProjectionMessage.Operation op = 2;</code>
+       */
+      public Builder setOpValue(int value) {
+        submessageCase_ = 2;
+        submessage_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .ProjectionMessage.Operation op = 2;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation getOp() {
+        if (submessageCase_ == 2) {
+          ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation result =  ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation.valueOf((java.lang.Integer) submessage_);
+          return result == null ? ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation.UNRECOGNIZED : result;
+        }
+        return ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation.COUNT;
+      }
+      /**
+       * <code>optional .ProjectionMessage.Operation op = 2;</code>
+       */
+      public Builder setOp(ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage.Operation value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        submessageCase_ = 2;
+        submessage_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .ProjectionMessage.Operation op = 2;</code>
+       */
+      public Builder clearOp() {
+        if (submessageCase_ == 2) {
+          submessageCase_ = 0;
+          submessage_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ProjectionMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:ProjectionMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage();
+    }
+
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ProjectionMessage>
+        PARSER = new com.google.protobuf.AbstractParser<ProjectionMessage>() {
+      public ProjectionMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new ProjectionMessage(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProjectionMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProjectionMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.ProjectionMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface FromMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:FromMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    java.lang.String getEntity();
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getEntityBytes();
+
+    /**
+     * <code>optional string index = 2;</code>
+     */
+    java.lang.String getIndex();
+    /**
+     * <code>optional string index = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getIndexBytes();
+
+    /**
+     * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage getExpression();
+    /**
+     * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder();
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.SourceCase getSourceCase();
+  }
+  /**
+   * Protobuf type {@code FromMessage}
+   */
+  public  static final class FromMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:FromMessage)
+      FromMessageOrBuilder {
+    // Use FromMessage.newBuilder() to construct.
+    private FromMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private FromMessage() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private FromMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+              sourceCase_ = 1;
+              source_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+              sourceCase_ = 2;
+              source_ = s;
+              break;
+            }
+            case 26: {
+              ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder subBuilder = null;
+              if (sourceCase_ == 3) {
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage) source_).toBuilder();
+              }
+              source_ =
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage) source_);
+                source_ = subBuilder.buildPartial();
+              }
+              sourceCase_ = 3;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_FromMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_FromMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.Builder.class);
+    }
+
+    private int sourceCase_ = 0;
+    private java.lang.Object source_;
+    public enum SourceCase
+        implements com.google.protobuf.Internal.EnumLite {
+      ENTITY(1),
+      INDEX(2),
+      EXPRESSION(3),
+      SOURCE_NOT_SET(0);
+      private int value = 0;
+      private SourceCase(int value) {
+        this.value = value;
+      }
+      public static SourceCase valueOf(int value) {
+        switch (value) {
+          case 1: return ENTITY;
+          case 2: return INDEX;
+          case 3: return EXPRESSION;
+          case 0: return SOURCE_NOT_SET;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public SourceCase
+    getSourceCase() {
+      return SourceCase.valueOf(
+          sourceCase_);
+    }
+
+    public static final int ENTITY_FIELD_NUMBER = 1;
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    public java.lang.String getEntity() {
+      java.lang.Object ref = "";
+      if (sourceCase_ == 1) {
+        ref = source_;
+      }
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (sourceCase_ == 1) {
+          source_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEntityBytes() {
+      java.lang.Object ref = "";
+      if (sourceCase_ == 1) {
+        ref = source_;
+      }
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        if (sourceCase_ == 1) {
+          source_ = b;
+        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int INDEX_FIELD_NUMBER = 2;
+    /**
+     * <code>optional string index = 2;</code>
+     */
+    public java.lang.String getIndex() {
+      java.lang.Object ref = "";
+      if (sourceCase_ == 2) {
+        ref = source_;
+      }
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (sourceCase_ == 2) {
+          source_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string index = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIndexBytes() {
+      java.lang.Object ref = "";
+      if (sourceCase_ == 2) {
+        ref = source_;
+      }
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        if (sourceCase_ == 2) {
+          source_ = b;
+        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int EXPRESSION_FIELD_NUMBER = 3;
+    /**
+     * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage getExpression() {
+      if (sourceCase_ == 3) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage) source_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.getDefaultInstance();
+    }
+    /**
+     * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder() {
+      if (sourceCase_ == 3) {
+         return (ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage) source_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.getDefaultInstance();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (sourceCase_ == 1) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 1, source_);
+      }
+      if (sourceCase_ == 2) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 2, source_);
+      }
+      if (sourceCase_ == 3) {
+        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage) source_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (sourceCase_ == 1) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, source_);
+      }
+      if (sourceCase_ == 2) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, source_);
+      }
+      if (sourceCase_ == 3) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage) source_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code FromMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:FromMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.FromMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_FromMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_FromMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        sourceCase_ = 0;
+        source_ = null;
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_FromMessage_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage(this);
+        if (sourceCase_ == 1) {
+          result.source_ = source_;
+        }
+        if (sourceCase_ == 2) {
+          result.source_ = source_;
+        }
+        if (sourceCase_ == 3) {
+          if (expressionBuilder_ == null) {
+            result.source_ = source_;
+          } else {
+            result.source_ = expressionBuilder_.build();
+          }
+        }
+        result.sourceCase_ = sourceCase_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage.getDefaultInstance()) return this;
+        switch (other.getSourceCase()) {
+          case ENTITY: {
+            sourceCase_ = 1;
+            source_ = other.source_;
+            onChanged();
+            break;
+          }
+          case INDEX: {
+            sourceCase_ = 2;
+            source_ = other.source_;
+            onChanged();
+            break;
+          }
+          case EXPRESSION: {
+            mergeExpression(other.getExpression());
+            break;
+          }
+          case SOURCE_NOT_SET: {
+            break;
+          }
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int sourceCase_ = 0;
+      private java.lang.Object source_;
+      public SourceCase
+          getSourceCase() {
+        return SourceCase.valueOf(
+            sourceCase_);
+      }
+
+      public Builder clearSource() {
+        sourceCase_ = 0;
+        source_ = null;
+        onChanged();
+        return this;
+      }
+
+
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public java.lang.String getEntity() {
+        java.lang.Object ref = "";
+        if (sourceCase_ == 1) {
+          ref = source_;
+        }
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (sourceCase_ == 1) {
+            source_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEntityBytes() {
+        java.lang.Object ref = "";
+        if (sourceCase_ == 1) {
+          ref = source_;
+        }
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          if (sourceCase_ == 1) {
+            source_ = b;
+          }
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public Builder setEntity(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  sourceCase_ = 1;
+        source_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public Builder clearEntity() {
+        if (sourceCase_ == 1) {
+          sourceCase_ = 0;
+          source_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public Builder setEntityBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        sourceCase_ = 1;
+        source_ = value;
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>optional string index = 2;</code>
+       */
+      public java.lang.String getIndex() {
+        java.lang.Object ref = "";
+        if (sourceCase_ == 2) {
+          ref = source_;
+        }
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (sourceCase_ == 2) {
+            source_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string index = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIndexBytes() {
+        java.lang.Object ref = "";
+        if (sourceCase_ == 2) {
+          ref = source_;
+        }
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          if (sourceCase_ == 2) {
+            source_ = b;
+          }
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string index = 2;</code>
+       */
+      public Builder setIndex(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  sourceCase_ = 2;
+        source_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string index = 2;</code>
+       */
+      public Builder clearIndex() {
+        if (sourceCase_ == 2) {
+          sourceCase_ = 0;
+          source_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <code>optional string index = 2;</code>
+       */
+      public Builder setIndexBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        sourceCase_ = 2;
+        source_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder> expressionBuilder_;
+      /**
+       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage getExpression() {
+        if (expressionBuilder_ == null) {
+          if (sourceCase_ == 3) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage) source_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.getDefaultInstance();
+        } else {
+          if (sourceCase_ == 3) {
+            return expressionBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       */
+      public Builder setExpression(ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage value) {
+        if (expressionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          source_ = value;
+          onChanged();
+        } else {
+          expressionBuilder_.setMessage(value);
+        }
+        sourceCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       */
+      public Builder setExpression(
+          ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder builderForValue) {
+        if (expressionBuilder_ == null) {
+          source_ = builderForValue.build();
+          onChanged();
+        } else {
+          expressionBuilder_.setMessage(builderForValue.build());
+        }
+        sourceCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       */
+      public Builder mergeExpression(ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage value) {
+        if (expressionBuilder_ == null) {
+          if (sourceCase_ == 3 &&
+              source_ != ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.getDefaultInstance()) {
+            source_ = ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage) source_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            source_ = value;
+          }
+          onChanged();
+        } else {
+          if (sourceCase_ == 3) {
+            expressionBuilder_.mergeFrom(value);
+          }
+          expressionBuilder_.setMessage(value);
+        }
+        sourceCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       */
+      public Builder clearExpression() {
+        if (expressionBuilder_ == null) {
+          if (sourceCase_ == 3) {
+            sourceCase_ = 0;
+            source_ = null;
+            onChanged();
+          }
+        } else {
+          if (sourceCase_ == 3) {
+            sourceCase_ = 0;
+            source_ = null;
+          }
+          expressionBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder getExpressionBuilder() {
+        return getExpressionFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder() {
+        if ((sourceCase_ == 3) && (expressionBuilder_ != null)) {
+          return expressionBuilder_.getMessageOrBuilder();
+        } else {
+          if (sourceCase_ == 3) {
+            return (ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage) source_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder> 
+          getExpressionFieldBuilder() {
+        if (expressionBuilder_ == null) {
+          if (!(sourceCase_ == 3)) {
+            source_ = ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.getDefaultInstance();
+          }
+          expressionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.Grpc.SubExpressionQueryMessage) source_,
+                  getParentForChildren(),
+                  isClean());
+          source_ = null;
+        }
+        sourceCase_ = 3;
+        onChanged();;
+        return expressionBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:FromMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:FromMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage();
+    }
+
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<FromMessage>
+        PARSER = new com.google.protobuf.AbstractParser<FromMessage>() {
+      public FromMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new FromMessage(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<FromMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<FromMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface NearestNeighbourQueryMessageOrBuilder extends
       // @@protoc_insertion_point(interface_extends:NearestNeighbourQueryMessage)
       com.google.protobuf.MessageOrBuilder {
@@ -22997,25 +18595,44 @@ public final class Grpc {
     ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getQueryOrBuilder();
 
     /**
-     * <code>optional .DistanceMessage distance = 3;</code>
+     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     */
+    boolean hasWeights();
+    /**
+     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getWeights();
+    /**
+     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     */
+    ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getWeightsOrBuilder();
+
+    /**
+     * <code>optional .DistanceMessage distance = 4;</code>
      */
     boolean hasDistance();
     /**
-     * <code>optional .DistanceMessage distance = 3;</code>
+     * <code>optional .DistanceMessage distance = 4;</code>
      */
     ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage getDistance();
     /**
-     * <code>optional .DistanceMessage distance = 3;</code>
+     * <code>optional .DistanceMessage distance = 4;</code>
      */
     ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessageOrBuilder getDistanceOrBuilder();
 
     /**
-     * <code>optional int32 k = 4;</code>
+     * <code>optional int32 k = 5;</code>
      */
     int getK();
 
     /**
-     * <code>optional bool indexOnly = 5;</code>
+     * <code>map&lt;string, string&gt; options = 6;</code>
+     */
+    java.util.Map<java.lang.String, java.lang.String>
+    getOptions();
+
+    /**
+     * <code>optional bool indexOnly = 7;</code>
      *
      * <pre>
      *specifies whether only the candidates from the index search are returned and no exact distance computation is performed
@@ -23024,25 +18641,15 @@ public final class Grpc {
     boolean getIndexOnly();
 
     /**
-     * <code>map&lt;string, string&gt; options = 6;</code>
-     *
-     * <pre>
-     *for possible options see each index structure
-     * </pre>
-     */
-    java.util.Map<java.lang.String, java.lang.String>
-    getOptions();
-
-    /**
-     * <code>repeated int32 partitions = 7;</code>
+     * <code>repeated int32 partitions = 8;</code>
      */
     java.util.List<java.lang.Integer> getPartitionsList();
     /**
-     * <code>repeated int32 partitions = 7;</code>
+     * <code>repeated int32 partitions = 8;</code>
      */
     int getPartitionsCount();
     /**
-     * <code>repeated int32 partitions = 7;</code>
+     * <code>repeated int32 partitions = 8;</code>
      */
     int getPartitions(int index);
   }
@@ -23108,6 +18715,19 @@ public final class Grpc {
               break;
             }
             case 26: {
+              ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder subBuilder = null;
+              if (weights_ != null) {
+                subBuilder = weights_.toBuilder();
+              }
+              weights_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(weights_);
+                weights_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 34: {
               ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage.Builder subBuilder = null;
               if (distance_ != null) {
                 subBuilder = distance_.toBuilder();
@@ -23120,14 +18740,9 @@ public final class Grpc {
 
               break;
             }
-            case 32: {
-
-              k_ = input.readInt32();
-              break;
-            }
             case 40: {
 
-              indexOnly_ = input.readBool();
+              k_ = input.readInt32();
               break;
             }
             case 50: {
@@ -23143,19 +18758,24 @@ public final class Grpc {
               break;
             }
             case 56: {
-              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+
+              indexOnly_ = input.readBool();
+              break;
+            }
+            case 64: {
+              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
                 partitions_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000040;
+                mutable_bitField0_ |= 0x00000080;
               }
               partitions_.add(input.readInt32());
               break;
             }
-            case 58: {
+            case 66: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040) && input.getBytesUntilLimit() > 0) {
+              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080) && input.getBytesUntilLimit() > 0) {
                 partitions_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000040;
+                mutable_bitField0_ |= 0x00000080;
               }
               while (input.getBytesUntilLimit() > 0) {
                 partitions_.add(input.readInt32());
@@ -23172,7 +18792,7 @@ public final class Grpc {
             new com.google.protobuf.InvalidProtocolBufferException(
                 e.getMessage()).setUnfinishedMessage(this));
       } finally {
-        if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+        if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
           partitions_ = java.util.Collections.unmodifiableList(partitions_);
         }
         makeExtensionsImmutable();
@@ -23257,47 +18877,55 @@ public final class Grpc {
       return getQuery();
     }
 
-    public static final int DISTANCE_FIELD_NUMBER = 3;
+    public static final int WEIGHTS_FIELD_NUMBER = 3;
+    private ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage weights_;
+    /**
+     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     */
+    public boolean hasWeights() {
+      return weights_ != null;
+    }
+    /**
+     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getWeights() {
+      return weights_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance() : weights_;
+    }
+    /**
+     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getWeightsOrBuilder() {
+      return getWeights();
+    }
+
+    public static final int DISTANCE_FIELD_NUMBER = 4;
     private ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage distance_;
     /**
-     * <code>optional .DistanceMessage distance = 3;</code>
+     * <code>optional .DistanceMessage distance = 4;</code>
      */
     public boolean hasDistance() {
       return distance_ != null;
     }
     /**
-     * <code>optional .DistanceMessage distance = 3;</code>
+     * <code>optional .DistanceMessage distance = 4;</code>
      */
     public ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage getDistance() {
       return distance_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage.getDefaultInstance() : distance_;
     }
     /**
-     * <code>optional .DistanceMessage distance = 3;</code>
+     * <code>optional .DistanceMessage distance = 4;</code>
      */
     public ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessageOrBuilder getDistanceOrBuilder() {
       return getDistance();
     }
 
-    public static final int K_FIELD_NUMBER = 4;
+    public static final int K_FIELD_NUMBER = 5;
     private int k_;
     /**
-     * <code>optional int32 k = 4;</code>
+     * <code>optional int32 k = 5;</code>
      */
     public int getK() {
       return k_;
-    }
-
-    public static final int INDEXONLY_FIELD_NUMBER = 5;
-    private boolean indexOnly_;
-    /**
-     * <code>optional bool indexOnly = 5;</code>
-     *
-     * <pre>
-     *specifies whether only the candidates from the index search are returned and no exact distance computation is performed
-     * </pre>
-     */
-    public boolean getIndexOnly() {
-      return indexOnly_;
     }
 
     public static final int OPTIONS_FIELD_NUMBER = 6;
@@ -23324,33 +18952,42 @@ public final class Grpc {
     }
     /**
      * <code>map&lt;string, string&gt; options = 6;</code>
-     *
-     * <pre>
-     *for possible options see each index structure
-     * </pre>
      */
 
     public java.util.Map<java.lang.String, java.lang.String> getOptions() {
       return internalGetOptions().getMap();
     }
 
-    public static final int PARTITIONS_FIELD_NUMBER = 7;
+    public static final int INDEXONLY_FIELD_NUMBER = 7;
+    private boolean indexOnly_;
+    /**
+     * <code>optional bool indexOnly = 7;</code>
+     *
+     * <pre>
+     *specifies whether only the candidates from the index search are returned and no exact distance computation is performed
+     * </pre>
+     */
+    public boolean getIndexOnly() {
+      return indexOnly_;
+    }
+
+    public static final int PARTITIONS_FIELD_NUMBER = 8;
     private java.util.List<java.lang.Integer> partitions_;
     /**
-     * <code>repeated int32 partitions = 7;</code>
+     * <code>repeated int32 partitions = 8;</code>
      */
     public java.util.List<java.lang.Integer>
         getPartitionsList() {
       return partitions_;
     }
     /**
-     * <code>repeated int32 partitions = 7;</code>
+     * <code>repeated int32 partitions = 8;</code>
      */
     public int getPartitionsCount() {
       return partitions_.size();
     }
     /**
-     * <code>repeated int32 partitions = 7;</code>
+     * <code>repeated int32 partitions = 8;</code>
      */
     public int getPartitions(int index) {
       return partitions_.get(index);
@@ -23376,14 +19013,14 @@ public final class Grpc {
       if (query_ != null) {
         output.writeMessage(2, getQuery());
       }
+      if (weights_ != null) {
+        output.writeMessage(3, getWeights());
+      }
       if (distance_ != null) {
-        output.writeMessage(3, getDistance());
+        output.writeMessage(4, getDistance());
       }
       if (k_ != 0) {
-        output.writeInt32(4, k_);
-      }
-      if (indexOnly_ != false) {
-        output.writeBool(5, indexOnly_);
+        output.writeInt32(5, k_);
       }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetOptions().getMap().entrySet()) {
@@ -23394,8 +19031,11 @@ public final class Grpc {
             .build();
         output.writeMessage(6, options);
       }
+      if (indexOnly_ != false) {
+        output.writeBool(7, indexOnly_);
+      }
       if (getPartitionsList().size() > 0) {
-        output.writeRawVarint32(58);
+        output.writeRawVarint32(66);
         output.writeRawVarint32(partitionsMemoizedSerializedSize);
       }
       for (int i = 0; i < partitions_.size(); i++) {
@@ -23415,17 +19055,17 @@ public final class Grpc {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getQuery());
       }
+      if (weights_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getWeights());
+      }
       if (distance_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getDistance());
+          .computeMessageSize(4, getDistance());
       }
       if (k_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, k_);
-      }
-      if (indexOnly_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(5, indexOnly_);
+          .computeInt32Size(5, k_);
       }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetOptions().getMap().entrySet()) {
@@ -23436,6 +19076,10 @@ public final class Grpc {
             .build();
         size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(6, options);
+      }
+      if (indexOnly_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(7, indexOnly_);
       }
       {
         int dataSize = 0;
@@ -23592,6 +19236,12 @@ public final class Grpc {
           query_ = null;
           queryBuilder_ = null;
         }
+        if (weightsBuilder_ == null) {
+          weights_ = null;
+        } else {
+          weights_ = null;
+          weightsBuilder_ = null;
+        }
         if (distanceBuilder_ == null) {
           distance_ = null;
         } else {
@@ -23600,11 +19250,11 @@ public final class Grpc {
         }
         k_ = 0;
 
+        internalGetMutableOptions().clear();
         indexOnly_ = false;
 
-        internalGetMutableOptions().clear();
         partitions_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -23635,18 +19285,23 @@ public final class Grpc {
         } else {
           result.query_ = queryBuilder_.build();
         }
+        if (weightsBuilder_ == null) {
+          result.weights_ = weights_;
+        } else {
+          result.weights_ = weightsBuilder_.build();
+        }
         if (distanceBuilder_ == null) {
           result.distance_ = distance_;
         } else {
           result.distance_ = distanceBuilder_.build();
         }
         result.k_ = k_;
-        result.indexOnly_ = indexOnly_;
         result.options_ = internalGetOptions();
         result.options_.makeImmutable();
-        if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        result.indexOnly_ = indexOnly_;
+        if (((bitField0_ & 0x00000080) == 0x00000080)) {
           partitions_ = java.util.Collections.unmodifiableList(partitions_);
-          bitField0_ = (bitField0_ & ~0x00000040);
+          bitField0_ = (bitField0_ & ~0x00000080);
         }
         result.partitions_ = partitions_;
         result.bitField0_ = to_bitField0_;
@@ -23672,21 +19327,24 @@ public final class Grpc {
         if (other.hasQuery()) {
           mergeQuery(other.getQuery());
         }
+        if (other.hasWeights()) {
+          mergeWeights(other.getWeights());
+        }
         if (other.hasDistance()) {
           mergeDistance(other.getDistance());
         }
         if (other.getK() != 0) {
           setK(other.getK());
         }
+        internalGetMutableOptions().mergeFrom(
+            other.internalGetOptions());
         if (other.getIndexOnly() != false) {
           setIndexOnly(other.getIndexOnly());
         }
-        internalGetMutableOptions().mergeFrom(
-            other.internalGetOptions());
         if (!other.partitions_.isEmpty()) {
           if (partitions_.isEmpty()) {
             partitions_ = other.partitions_;
-            bitField0_ = (bitField0_ & ~0x00000040);
+            bitField0_ = (bitField0_ & ~0x00000080);
           } else {
             ensurePartitionsIsMutable();
             partitions_.addAll(other.partitions_);
@@ -23906,17 +19564,134 @@ public final class Grpc {
         return queryBuilder_;
       }
 
+      private ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage weights_ = null;
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder> weightsBuilder_;
+      /**
+       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       */
+      public boolean hasWeights() {
+        return weightsBuilder_ != null || weights_ != null;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage getWeights() {
+        if (weightsBuilder_ == null) {
+          return weights_ == null ? ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance() : weights_;
+        } else {
+          return weightsBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       */
+      public Builder setWeights(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage value) {
+        if (weightsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          weights_ = value;
+          onChanged();
+        } else {
+          weightsBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       */
+      public Builder setWeights(
+          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder builderForValue) {
+        if (weightsBuilder_ == null) {
+          weights_ = builderForValue.build();
+          onChanged();
+        } else {
+          weightsBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       */
+      public Builder mergeWeights(ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage value) {
+        if (weightsBuilder_ == null) {
+          if (weights_ != null) {
+            weights_ =
+              ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.newBuilder(weights_).mergeFrom(value).buildPartial();
+          } else {
+            weights_ = value;
+          }
+          onChanged();
+        } else {
+          weightsBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       */
+      public Builder clearWeights() {
+        if (weightsBuilder_ == null) {
+          weights_ = null;
+          onChanged();
+        } else {
+          weights_ = null;
+          weightsBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder getWeightsBuilder() {
+        
+        onChanged();
+        return getWeightsFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder getWeightsOrBuilder() {
+        if (weightsBuilder_ != null) {
+          return weightsBuilder_.getMessageOrBuilder();
+        } else {
+          return weights_ == null ?
+              ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.getDefaultInstance() : weights_;
+        }
+      }
+      /**
+       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder> 
+          getWeightsFieldBuilder() {
+        if (weightsBuilder_ == null) {
+          weightsBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessageOrBuilder>(
+                  getWeights(),
+                  getParentForChildren(),
+                  isClean());
+          weights_ = null;
+        }
+        return weightsBuilder_;
+      }
+
       private ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage distance_ = null;
       private com.google.protobuf.SingleFieldBuilder<
           ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage, ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessageOrBuilder> distanceBuilder_;
       /**
-       * <code>optional .DistanceMessage distance = 3;</code>
+       * <code>optional .DistanceMessage distance = 4;</code>
        */
       public boolean hasDistance() {
         return distanceBuilder_ != null || distance_ != null;
       }
       /**
-       * <code>optional .DistanceMessage distance = 3;</code>
+       * <code>optional .DistanceMessage distance = 4;</code>
        */
       public ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage getDistance() {
         if (distanceBuilder_ == null) {
@@ -23926,7 +19701,7 @@ public final class Grpc {
         }
       }
       /**
-       * <code>optional .DistanceMessage distance = 3;</code>
+       * <code>optional .DistanceMessage distance = 4;</code>
        */
       public Builder setDistance(ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage value) {
         if (distanceBuilder_ == null) {
@@ -23942,7 +19717,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>optional .DistanceMessage distance = 3;</code>
+       * <code>optional .DistanceMessage distance = 4;</code>
        */
       public Builder setDistance(
           ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage.Builder builderForValue) {
@@ -23956,7 +19731,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>optional .DistanceMessage distance = 3;</code>
+       * <code>optional .DistanceMessage distance = 4;</code>
        */
       public Builder mergeDistance(ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage value) {
         if (distanceBuilder_ == null) {
@@ -23974,7 +19749,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>optional .DistanceMessage distance = 3;</code>
+       * <code>optional .DistanceMessage distance = 4;</code>
        */
       public Builder clearDistance() {
         if (distanceBuilder_ == null) {
@@ -23988,7 +19763,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>optional .DistanceMessage distance = 3;</code>
+       * <code>optional .DistanceMessage distance = 4;</code>
        */
       public ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage.Builder getDistanceBuilder() {
         
@@ -23996,7 +19771,7 @@ public final class Grpc {
         return getDistanceFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .DistanceMessage distance = 3;</code>
+       * <code>optional .DistanceMessage distance = 4;</code>
        */
       public ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessageOrBuilder getDistanceOrBuilder() {
         if (distanceBuilder_ != null) {
@@ -24007,7 +19782,7 @@ public final class Grpc {
         }
       }
       /**
-       * <code>optional .DistanceMessage distance = 3;</code>
+       * <code>optional .DistanceMessage distance = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage, ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessageOrBuilder> 
@@ -24025,13 +19800,13 @@ public final class Grpc {
 
       private int k_ ;
       /**
-       * <code>optional int32 k = 4;</code>
+       * <code>optional int32 k = 5;</code>
        */
       public int getK() {
         return k_;
       }
       /**
-       * <code>optional int32 k = 4;</code>
+       * <code>optional int32 k = 5;</code>
        */
       public Builder setK(int value) {
         
@@ -24040,49 +19815,11 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>optional int32 k = 4;</code>
+       * <code>optional int32 k = 5;</code>
        */
       public Builder clearK() {
         
         k_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private boolean indexOnly_ ;
-      /**
-       * <code>optional bool indexOnly = 5;</code>
-       *
-       * <pre>
-       *specifies whether only the candidates from the index search are returned and no exact distance computation is performed
-       * </pre>
-       */
-      public boolean getIndexOnly() {
-        return indexOnly_;
-      }
-      /**
-       * <code>optional bool indexOnly = 5;</code>
-       *
-       * <pre>
-       *specifies whether only the candidates from the index search are returned and no exact distance computation is performed
-       * </pre>
-       */
-      public Builder setIndexOnly(boolean value) {
-        
-        indexOnly_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool indexOnly = 5;</code>
-       *
-       * <pre>
-       *specifies whether only the candidates from the index search are returned and no exact distance computation is performed
-       * </pre>
-       */
-      public Builder clearIndexOnly() {
-        
-        indexOnly_ = false;
         onChanged();
         return this;
       }
@@ -24111,20 +19848,12 @@ public final class Grpc {
       }
       /**
        * <code>map&lt;string, string&gt; options = 6;</code>
-       *
-       * <pre>
-       *for possible options see each index structure
-       * </pre>
        */
       public java.util.Map<java.lang.String, java.lang.String> getOptions() {
         return internalGetOptions().getMap();
       }
       /**
        * <code>map&lt;string, string&gt; options = 6;</code>
-       *
-       * <pre>
-       *for possible options see each index structure
-       * </pre>
        */
       public java.util.Map<java.lang.String, java.lang.String>
       getMutableOptions() {
@@ -24132,10 +19861,6 @@ public final class Grpc {
       }
       /**
        * <code>map&lt;string, string&gt; options = 6;</code>
-       *
-       * <pre>
-       *for possible options see each index structure
-       * </pre>
        */
       public Builder putAllOptions(
           java.util.Map<java.lang.String, java.lang.String> values) {
@@ -24143,34 +19868,72 @@ public final class Grpc {
         return this;
       }
 
+      private boolean indexOnly_ ;
+      /**
+       * <code>optional bool indexOnly = 7;</code>
+       *
+       * <pre>
+       *specifies whether only the candidates from the index search are returned and no exact distance computation is performed
+       * </pre>
+       */
+      public boolean getIndexOnly() {
+        return indexOnly_;
+      }
+      /**
+       * <code>optional bool indexOnly = 7;</code>
+       *
+       * <pre>
+       *specifies whether only the candidates from the index search are returned and no exact distance computation is performed
+       * </pre>
+       */
+      public Builder setIndexOnly(boolean value) {
+        
+        indexOnly_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool indexOnly = 7;</code>
+       *
+       * <pre>
+       *specifies whether only the candidates from the index search are returned and no exact distance computation is performed
+       * </pre>
+       */
+      public Builder clearIndexOnly() {
+        
+        indexOnly_ = false;
+        onChanged();
+        return this;
+      }
+
       private java.util.List<java.lang.Integer> partitions_ = java.util.Collections.emptyList();
       private void ensurePartitionsIsMutable() {
-        if (!((bitField0_ & 0x00000040) == 0x00000040)) {
+        if (!((bitField0_ & 0x00000080) == 0x00000080)) {
           partitions_ = new java.util.ArrayList<java.lang.Integer>(partitions_);
-          bitField0_ |= 0x00000040;
+          bitField0_ |= 0x00000080;
          }
       }
       /**
-       * <code>repeated int32 partitions = 7;</code>
+       * <code>repeated int32 partitions = 8;</code>
        */
       public java.util.List<java.lang.Integer>
           getPartitionsList() {
         return java.util.Collections.unmodifiableList(partitions_);
       }
       /**
-       * <code>repeated int32 partitions = 7;</code>
+       * <code>repeated int32 partitions = 8;</code>
        */
       public int getPartitionsCount() {
         return partitions_.size();
       }
       /**
-       * <code>repeated int32 partitions = 7;</code>
+       * <code>repeated int32 partitions = 8;</code>
        */
       public int getPartitions(int index) {
         return partitions_.get(index);
       }
       /**
-       * <code>repeated int32 partitions = 7;</code>
+       * <code>repeated int32 partitions = 8;</code>
        */
       public Builder setPartitions(
           int index, int value) {
@@ -24180,7 +19943,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated int32 partitions = 7;</code>
+       * <code>repeated int32 partitions = 8;</code>
        */
       public Builder addPartitions(int value) {
         ensurePartitionsIsMutable();
@@ -24189,7 +19952,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated int32 partitions = 7;</code>
+       * <code>repeated int32 partitions = 8;</code>
        */
       public Builder addAllPartitions(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -24200,11 +19963,11 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated int32 partitions = 7;</code>
+       * <code>repeated int32 partitions = 8;</code>
        */
       public Builder clearPartitions() {
         partitions_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ = (bitField0_ & ~0x00000080);
         onChanged();
         return this;
       }
@@ -25060,28 +20823,28 @@ public final class Grpc {
 
       /**
        * <code>optional string field = 1;</code>
-       *
-       * <pre>
-       *if field ends on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
-       * </pre>
        */
       java.lang.String getField();
       /**
        * <code>optional string field = 1;</code>
-       *
-       * <pre>
-       *if field ends on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
-       * </pre>
        */
       com.google.protobuf.ByteString
           getFieldBytes();
 
       /**
        * <code>optional string value = 2;</code>
+       *
+       * <pre>
+       *if value starts on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
+       * </pre>
        */
       java.lang.String getValue();
       /**
        * <code>optional string value = 2;</code>
+       *
+       * <pre>
+       *if value starts on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
+       * </pre>
        */
       com.google.protobuf.ByteString
           getValueBytes();
@@ -25166,10 +20929,6 @@ public final class Grpc {
       private volatile java.lang.Object field_;
       /**
        * <code>optional string field = 1;</code>
-       *
-       * <pre>
-       *if field ends on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
-       * </pre>
        */
       public java.lang.String getField() {
         java.lang.Object ref = field_;
@@ -25185,10 +20944,6 @@ public final class Grpc {
       }
       /**
        * <code>optional string field = 1;</code>
-       *
-       * <pre>
-       *if field ends on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
-       * </pre>
        */
       public com.google.protobuf.ByteString
           getFieldBytes() {
@@ -25208,6 +20963,10 @@ public final class Grpc {
       private volatile java.lang.Object value_;
       /**
        * <code>optional string value = 2;</code>
+       *
+       * <pre>
+       *if value starts on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
+       * </pre>
        */
       public java.lang.String getValue() {
         java.lang.Object ref = value_;
@@ -25223,6 +20982,10 @@ public final class Grpc {
       }
       /**
        * <code>optional string value = 2;</code>
+       *
+       * <pre>
+       *if value starts on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
+       * </pre>
        */
       public com.google.protobuf.ByteString
           getValueBytes() {
@@ -25460,10 +21223,6 @@ public final class Grpc {
         private java.lang.Object field_ = "";
         /**
          * <code>optional string field = 1;</code>
-         *
-         * <pre>
-         *if field ends on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
-         * </pre>
          */
         public java.lang.String getField() {
           java.lang.Object ref = field_;
@@ -25479,10 +21238,6 @@ public final class Grpc {
         }
         /**
          * <code>optional string field = 1;</code>
-         *
-         * <pre>
-         *if field ends on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
-         * </pre>
          */
         public com.google.protobuf.ByteString
             getFieldBytes() {
@@ -25499,10 +21254,6 @@ public final class Grpc {
         }
         /**
          * <code>optional string field = 1;</code>
-         *
-         * <pre>
-         *if field ends on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
-         * </pre>
          */
         public Builder setField(
             java.lang.String value) {
@@ -25516,10 +21267,6 @@ public final class Grpc {
         }
         /**
          * <code>optional string field = 1;</code>
-         *
-         * <pre>
-         *if field ends on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
-         * </pre>
          */
         public Builder clearField() {
           
@@ -25529,10 +21276,6 @@ public final class Grpc {
         }
         /**
          * <code>optional string field = 1;</code>
-         *
-         * <pre>
-         *if field ends on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
-         * </pre>
          */
         public Builder setFieldBytes(
             com.google.protobuf.ByteString value) {
@@ -25549,6 +21292,10 @@ public final class Grpc {
         private java.lang.Object value_ = "";
         /**
          * <code>optional string value = 2;</code>
+         *
+         * <pre>
+         *if value starts on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
+         * </pre>
          */
         public java.lang.String getValue() {
           java.lang.Object ref = value_;
@@ -25564,6 +21311,10 @@ public final class Grpc {
         }
         /**
          * <code>optional string value = 2;</code>
+         *
+         * <pre>
+         *if value starts on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
+         * </pre>
          */
         public com.google.protobuf.ByteString
             getValueBytes() {
@@ -25580,6 +21331,10 @@ public final class Grpc {
         }
         /**
          * <code>optional string value = 2;</code>
+         *
+         * <pre>
+         *if value starts on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
+         * </pre>
          */
         public Builder setValue(
             java.lang.String value) {
@@ -25593,6 +21348,10 @@ public final class Grpc {
         }
         /**
          * <code>optional string value = 2;</code>
+         *
+         * <pre>
+         *if value starts on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
+         * </pre>
          */
         public Builder clearValue() {
           
@@ -25602,6 +21361,10 @@ public final class Grpc {
         }
         /**
          * <code>optional string value = 2;</code>
+         *
+         * <pre>
+         *if value starts on certain operators (e.g., != or IN), then the operation used in query is adapted, otherwise equality is used
+         * </pre>
          */
         public Builder setValueBytes(
             com.google.protobuf.ByteString value) {
@@ -27204,6 +22967,875 @@ public final class Grpc {
     }
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ExternalHandlerQueryMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ExternalHandlerQueryMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional string queryid = 1;</code>
+     */
+    java.lang.String getQueryid();
+    /**
+     * <code>optional string queryid = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getQueryidBytes();
+
+    /**
+     * <code>optional string entity = 2;</code>
+     */
+    java.lang.String getEntity();
+    /**
+     * <code>optional string entity = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getEntityBytes();
+
+    /**
+     * <code>optional string handler = 3;</code>
+     */
+    java.lang.String getHandler();
+    /**
+     * <code>optional string handler = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getHandlerBytes();
+
+    /**
+     * <code>map&lt;string, string&gt; params = 4;</code>
+     */
+    java.util.Map<java.lang.String, java.lang.String>
+    getParams();
+  }
+  /**
+   * Protobuf type {@code ExternalHandlerQueryMessage}
+   */
+  public  static final class ExternalHandlerQueryMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:ExternalHandlerQueryMessage)
+      ExternalHandlerQueryMessageOrBuilder {
+    // Use ExternalHandlerQueryMessage.newBuilder() to construct.
+    private ExternalHandlerQueryMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private ExternalHandlerQueryMessage() {
+      queryid_ = "";
+      entity_ = "";
+      handler_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private ExternalHandlerQueryMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              queryid_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              entity_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              handler_ = s;
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                params_ = com.google.protobuf.MapField.newMapField(
+                    ParamsDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000008;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+              params = input.readMessage(
+                  ParamsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              params_.getMutableMap().put(params.getKey(), params.getValue());
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_descriptor;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 4:
+          return internalGetParams();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int QUERYID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object queryid_;
+    /**
+     * <code>optional string queryid = 1;</code>
+     */
+    public java.lang.String getQueryid() {
+      java.lang.Object ref = queryid_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        queryid_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string queryid = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getQueryidBytes() {
+      java.lang.Object ref = queryid_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        queryid_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ENTITY_FIELD_NUMBER = 2;
+    private volatile java.lang.Object entity_;
+    /**
+     * <code>optional string entity = 2;</code>
+     */
+    public java.lang.String getEntity() {
+      java.lang.Object ref = entity_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        entity_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string entity = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEntityBytes() {
+      java.lang.Object ref = entity_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        entity_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int HANDLER_FIELD_NUMBER = 3;
+    private volatile java.lang.Object handler_;
+    /**
+     * <code>optional string handler = 3;</code>
+     */
+    public java.lang.String getHandler() {
+      java.lang.Object ref = handler_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        handler_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string handler = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getHandlerBytes() {
+      java.lang.Object ref = handler_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        handler_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PARAMS_FIELD_NUMBER = 4;
+    private static final class ParamsDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, java.lang.String> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, java.lang.String>newDefaultInstance(
+                  ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "");
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.String> params_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetParams() {
+      if (params_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            ParamsDefaultEntryHolder.defaultEntry);
+     }
+      return params_;
+    }
+    /**
+     * <code>map&lt;string, string&gt; params = 4;</code>
+     */
+
+    public java.util.Map<java.lang.String, java.lang.String> getParams() {
+      return internalGetParams().getMap();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getQueryidBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
+      }
+      if (!getEntityBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 2, entity_);
+      }
+      if (!getHandlerBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 3, handler_);
+      }
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+           : internalGetParams().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+        params = ParamsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        output.writeMessage(4, params);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getQueryidBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, queryid_);
+      }
+      if (!getEntityBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, entity_);
+      }
+      if (!getHandlerBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(3, handler_);
+      }
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+           : internalGetParams().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+        params = ParamsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(4, params);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ExternalHandlerQueryMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ExternalHandlerQueryMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_descriptor;
+      }
+
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 4:
+            return internalGetParams();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 4:
+            return internalGetMutableParams();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        queryid_ = "";
+
+        entity_ = "";
+
+        handler_ = "";
+
+        internalGetMutableParams().clear();
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_ExternalHandlerQueryMessage_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        result.queryid_ = queryid_;
+        result.entity_ = entity_;
+        result.handler_ = handler_;
+        result.params_ = internalGetParams();
+        result.params_.makeImmutable();
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage.getDefaultInstance()) return this;
+        if (!other.getQueryid().isEmpty()) {
+          queryid_ = other.queryid_;
+          onChanged();
+        }
+        if (!other.getEntity().isEmpty()) {
+          entity_ = other.entity_;
+          onChanged();
+        }
+        if (!other.getHandler().isEmpty()) {
+          handler_ = other.handler_;
+          onChanged();
+        }
+        internalGetMutableParams().mergeFrom(
+            other.internalGetParams());
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object queryid_ = "";
+      /**
+       * <code>optional string queryid = 1;</code>
+       */
+      public java.lang.String getQueryid() {
+        java.lang.Object ref = queryid_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          queryid_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string queryid = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getQueryidBytes() {
+        java.lang.Object ref = queryid_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          queryid_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string queryid = 1;</code>
+       */
+      public Builder setQueryid(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        queryid_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string queryid = 1;</code>
+       */
+      public Builder clearQueryid() {
+        
+        queryid_ = getDefaultInstance().getQueryid();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string queryid = 1;</code>
+       */
+      public Builder setQueryidBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        queryid_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object entity_ = "";
+      /**
+       * <code>optional string entity = 2;</code>
+       */
+      public java.lang.String getEntity() {
+        java.lang.Object ref = entity_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          entity_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string entity = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEntityBytes() {
+        java.lang.Object ref = entity_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          entity_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string entity = 2;</code>
+       */
+      public Builder setEntity(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        entity_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string entity = 2;</code>
+       */
+      public Builder clearEntity() {
+        
+        entity_ = getDefaultInstance().getEntity();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string entity = 2;</code>
+       */
+      public Builder setEntityBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        entity_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object handler_ = "";
+      /**
+       * <code>optional string handler = 3;</code>
+       */
+      public java.lang.String getHandler() {
+        java.lang.Object ref = handler_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          handler_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string handler = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getHandlerBytes() {
+        java.lang.Object ref = handler_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          handler_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string handler = 3;</code>
+       */
+      public Builder setHandler(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        handler_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string handler = 3;</code>
+       */
+      public Builder clearHandler() {
+        
+        handler_ = getDefaultInstance().getHandler();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string handler = 3;</code>
+       */
+      public Builder setHandlerBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        handler_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, java.lang.String> params_;
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetParams() {
+        if (params_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              ParamsDefaultEntryHolder.defaultEntry);
+       }
+        return params_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetMutableParams() {
+        onChanged();;
+        if (params_ == null) {
+          params_ = com.google.protobuf.MapField.newMapField(
+              ParamsDefaultEntryHolder.defaultEntry);
+        }
+        if (!params_.isMutable()) {
+          params_ = params_.copy();
+        }
+        return params_;
+      }
+      /**
+       * <code>map&lt;string, string&gt; params = 4;</code>
+       */
+      public java.util.Map<java.lang.String, java.lang.String> getParams() {
+        return internalGetParams().getMap();
+      }
+      /**
+       * <code>map&lt;string, string&gt; params = 4;</code>
+       */
+      public java.util.Map<java.lang.String, java.lang.String>
+      getMutableParams() {
+        return internalGetMutableParams().getMutableMap();
+      }
+      /**
+       * <code>map&lt;string, string&gt; params = 4;</code>
+       */
+      public Builder putAllParams(
+          java.util.Map<java.lang.String, java.lang.String> values) {
+        getMutableParams().putAll(values);
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ExternalHandlerQueryMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:ExternalHandlerQueryMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage();
+    }
+
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ExternalHandlerQueryMessage>
+        PARSER = new com.google.protobuf.AbstractParser<ExternalHandlerQueryMessage>() {
+      public ExternalHandlerQueryMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new ExternalHandlerQueryMessage(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<ExternalHandlerQueryMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ExternalHandlerQueryMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.ExternalHandlerQueryMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -29773,8 +26405,8 @@ public final class Grpc {
 
   }
 
-  public interface CompoundQueryResponseInfoMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:CompoundQueryResponseInfoMessage)
+  public interface QueryResultsMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:QueryResultsMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -29791,41 +26423,41 @@ public final class Grpc {
     ch.unibas.dmi.dbis.adam.http.Grpc.AckMessageOrBuilder getAckOrBuilder();
 
     /**
-     * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+     * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> 
+    java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage> 
         getResponsesList();
     /**
-     * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+     * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage getResponses(int index);
+    ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage getResponses(int index);
     /**
-     * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+     * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
     int getResponsesCount();
     /**
-     * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+     * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessageOrBuilder> 
+    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessageOrBuilder> 
         getResponsesOrBuilderList();
     /**
-     * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+     * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessageOrBuilder getResponsesOrBuilder(
+    ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessageOrBuilder getResponsesOrBuilder(
         int index);
   }
   /**
-   * Protobuf type {@code CompoundQueryResponseInfoMessage}
+   * Protobuf type {@code QueryResultsMessage}
    */
-  public  static final class CompoundQueryResponseInfoMessage extends
+  public  static final class QueryResultsMessage extends
       com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:CompoundQueryResponseInfoMessage)
-      CompoundQueryResponseInfoMessageOrBuilder {
-    // Use CompoundQueryResponseInfoMessage.newBuilder() to construct.
-    private CompoundQueryResponseInfoMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:QueryResultsMessage)
+      QueryResultsMessageOrBuilder {
+    // Use QueryResultsMessage.newBuilder() to construct.
+    private QueryResultsMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
     }
-    private CompoundQueryResponseInfoMessage() {
+    private QueryResultsMessage() {
       responses_ = java.util.Collections.emptyList();
     }
 
@@ -29834,7 +26466,7 @@ public final class Grpc {
     getUnknownFields() {
       return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
     }
-    private CompoundQueryResponseInfoMessage(
+    private QueryResultsMessage(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
       this();
@@ -29868,10 +26500,10 @@ public final class Grpc {
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                responses_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>();
+                responses_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              responses_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.parser(), extensionRegistry));
+              responses_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.parser(), extensionRegistry));
               break;
             }
           }
@@ -29891,14 +26523,14 @@ public final class Grpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_CompoundQueryResponseInfoMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultsMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_CompoundQueryResponseInfoMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultsMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.Builder.class);
     }
 
     private int bitField0_;
@@ -29924,36 +26556,36 @@ public final class Grpc {
     }
 
     public static final int RESPONSES_FIELD_NUMBER = 2;
-    private java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responses_;
+    private java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage> responses_;
     /**
-     * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+     * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> getResponsesList() {
+    public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage> getResponsesList() {
       return responses_;
     }
     /**
-     * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+     * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessageOrBuilder> 
+    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessageOrBuilder> 
         getResponsesOrBuilderList() {
       return responses_;
     }
     /**
-     * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+     * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
     public int getResponsesCount() {
       return responses_.size();
     }
     /**
-     * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+     * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage getResponses(int index) {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage getResponses(int index) {
       return responses_.get(index);
     }
     /**
-     * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+     * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessageOrBuilder getResponsesOrBuilder(
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessageOrBuilder getResponsesOrBuilder(
         int index) {
       return responses_.get(index);
     }
@@ -29996,53 +26628,53 @@ public final class Grpc {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -30053,7 +26685,7 @@ public final class Grpc {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -30068,25 +26700,25 @@ public final class Grpc {
       return builder;
     }
     /**
-     * Protobuf type {@code CompoundQueryResponseInfoMessage}
+     * Protobuf type {@code QueryResultsMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:CompoundQueryResponseInfoMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessageOrBuilder {
+        // @@protoc_insertion_point(builder_implements:QueryResultsMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_CompoundQueryResponseInfoMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultsMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_CompoundQueryResponseInfoMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultsMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -30120,23 +26752,23 @@ public final class Grpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_CompoundQueryResponseInfoMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultsMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (ackBuilder_ == null) {
@@ -30159,16 +26791,16 @@ public final class Grpc {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.getDefaultInstance()) return this;
         if (other.hasAck()) {
           mergeAck(other.getAck());
         }
@@ -30210,11 +26842,11 @@ public final class Grpc {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -30342,22 +26974,22 @@ public final class Grpc {
         return ackBuilder_;
       }
 
-      private java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responses_ =
+      private java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage> responses_ =
         java.util.Collections.emptyList();
       private void ensureResponsesIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          responses_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>(responses_);
+          responses_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage>(responses_);
           bitField0_ |= 0x00000002;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessageOrBuilder> responsesBuilder_;
+          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessageOrBuilder> responsesBuilder_;
 
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> getResponsesList() {
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage> getResponsesList() {
         if (responsesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(responses_);
         } else {
@@ -30365,7 +26997,7 @@ public final class Grpc {
         }
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public int getResponsesCount() {
         if (responsesBuilder_ == null) {
@@ -30375,9 +27007,9 @@ public final class Grpc {
         }
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage getResponses(int index) {
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage getResponses(int index) {
         if (responsesBuilder_ == null) {
           return responses_.get(index);
         } else {
@@ -30385,10 +27017,10 @@ public final class Grpc {
         }
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder setResponses(
-          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage value) {
         if (responsesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -30402,10 +27034,10 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder setResponses(
-          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder builderForValue) {
         if (responsesBuilder_ == null) {
           ensureResponsesIsMutable();
           responses_.set(index, builderForValue.build());
@@ -30416,9 +27048,9 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public Builder addResponses(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage value) {
+      public Builder addResponses(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage value) {
         if (responsesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -30432,10 +27064,10 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder addResponses(
-          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage value) {
         if (responsesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -30449,10 +27081,10 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder addResponses(
-          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder builderForValue) {
         if (responsesBuilder_ == null) {
           ensureResponsesIsMutable();
           responses_.add(builderForValue.build());
@@ -30463,10 +27095,10 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder addResponses(
-          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder builderForValue) {
         if (responsesBuilder_ == null) {
           ensureResponsesIsMutable();
           responses_.add(index, builderForValue.build());
@@ -30477,10 +27109,10 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder addAllResponses(
-          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> values) {
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage> values) {
         if (responsesBuilder_ == null) {
           ensureResponsesIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -30492,7 +27124,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder clearResponses() {
         if (responsesBuilder_ == null) {
@@ -30505,7 +27137,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder removeResponses(int index) {
         if (responsesBuilder_ == null) {
@@ -30518,16 +27150,16 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder getResponsesBuilder(
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder getResponsesBuilder(
           int index) {
         return getResponsesFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessageOrBuilder getResponsesOrBuilder(
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessageOrBuilder getResponsesOrBuilder(
           int index) {
         if (responsesBuilder_ == null) {
           return responses_.get(index);  } else {
@@ -30535,9 +27167,9 @@ public final class Grpc {
         }
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessageOrBuilder> 
+      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessageOrBuilder> 
            getResponsesOrBuilderList() {
         if (responsesBuilder_ != null) {
           return responsesBuilder_.getMessageOrBuilderList();
@@ -30546,33 +27178,33 @@ public final class Grpc {
         }
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder addResponsesBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder addResponsesBuilder() {
         return getResponsesFieldBuilder().addBuilder(
-            ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance());
+            ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.getDefaultInstance());
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder addResponsesBuilder(
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder addResponsesBuilder(
           int index) {
         return getResponsesFieldBuilder().addBuilder(
-            index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance());
+            index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.getDefaultInstance());
       }
       /**
-       * <code>repeated .QueryResponseInfoMessage responses = 2;</code>
+       * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder> 
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder> 
            getResponsesBuilderList() {
         return getResponsesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessageOrBuilder> 
           getResponsesFieldBuilder() {
         if (responsesBuilder_ == null) {
           responsesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessageOrBuilder>(
                   responses_,
                   ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
@@ -30592,27 +27224,27 @@ public final class Grpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:CompoundQueryResponseInfoMessage)
+      // @@protoc_insertion_point(builder_scope:QueryResultsMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:CompoundQueryResponseInfoMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:QueryResultsMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<CompoundQueryResponseInfoMessage>
-        PARSER = new com.google.protobuf.AbstractParser<CompoundQueryResponseInfoMessage>() {
-      public CompoundQueryResponseInfoMessage parsePartialFrom(
+    private static final com.google.protobuf.Parser<QueryResultsMessage>
+        PARSER = new com.google.protobuf.AbstractParser<QueryResultsMessage>() {
+      public QueryResultsMessage parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         try {
-          return new CompoundQueryResponseInfoMessage(input, extensionRegistry);
+          return new QueryResultsMessage(input, extensionRegistry);
         } catch (RuntimeException e) {
           if (e.getCause() instanceof
               com.google.protobuf.InvalidProtocolBufferException) {
@@ -30624,23 +27256,23 @@ public final class Grpc {
       }
     };
 
-    public static com.google.protobuf.Parser<CompoundQueryResponseInfoMessage> parser() {
+    public static com.google.protobuf.Parser<QueryResultsMessage> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<CompoundQueryResponseInfoMessage> getParserForType() {
+    public com.google.protobuf.Parser<QueryResultsMessage> getParserForType() {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface QueryResponseInfoMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:QueryResponseInfoMessage)
+  public interface QueryResultInfoMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:QueryResultInfoMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -30703,24 +27335,24 @@ public final class Grpc {
         getSourceBytes();
 
     /**
-     * <code>repeated .QueryResultMessage results = 6;</code>
+     * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
      * <pre>
      *result list
      * </pre>
      */
-    java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage> 
+    java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage> 
         getResultsList();
     /**
-     * <code>repeated .QueryResultMessage results = 6;</code>
+     * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
      * <pre>
      *result list
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage getResults(int index);
+    ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage getResults(int index);
     /**
-     * <code>repeated .QueryResultMessage results = 6;</code>
+     * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
      * <pre>
      *result list
@@ -30728,36 +27360,36 @@ public final class Grpc {
      */
     int getResultsCount();
     /**
-     * <code>repeated .QueryResultMessage results = 6;</code>
+     * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
      * <pre>
      *result list
      * </pre>
      */
-    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessageOrBuilder> 
+    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessageOrBuilder> 
         getResultsOrBuilderList();
     /**
-     * <code>repeated .QueryResultMessage results = 6;</code>
+     * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
      * <pre>
      *result list
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessageOrBuilder getResultsOrBuilder(
+    ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessageOrBuilder getResultsOrBuilder(
         int index);
   }
   /**
-   * Protobuf type {@code QueryResponseInfoMessage}
+   * Protobuf type {@code QueryResultInfoMessage}
    */
-  public  static final class QueryResponseInfoMessage extends
+  public  static final class QueryResultInfoMessage extends
       com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:QueryResponseInfoMessage)
-      QueryResponseInfoMessageOrBuilder {
-    // Use QueryResponseInfoMessage.newBuilder() to construct.
-    private QueryResponseInfoMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:QueryResultInfoMessage)
+      QueryResultInfoMessageOrBuilder {
+    // Use QueryResultInfoMessage.newBuilder() to construct.
+    private QueryResultInfoMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
     }
-    private QueryResponseInfoMessage() {
+    private QueryResultInfoMessage() {
       queryid_ = "";
       confidence_ = 0D;
       time_ = 0L;
@@ -30770,7 +27402,7 @@ public final class Grpc {
     getUnknownFields() {
       return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
     }
-    private QueryResponseInfoMessage(
+    private QueryResultInfoMessage(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
       this();
@@ -30826,10 +27458,10 @@ public final class Grpc {
             }
             case 50: {
               if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-                results_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage>();
+                results_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage>();
                 mutable_bitField0_ |= 0x00000020;
               }
-              results_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.parser(), extensionRegistry));
+              results_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.parser(), extensionRegistry));
               break;
             }
           }
@@ -30849,14 +27481,14 @@ public final class Grpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResponseInfoMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultInfoMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResponseInfoMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultInfoMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder.class);
     }
 
     private int bitField0_;
@@ -30984,30 +27616,30 @@ public final class Grpc {
     }
 
     public static final int RESULTS_FIELD_NUMBER = 6;
-    private java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage> results_;
+    private java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage> results_;
     /**
-     * <code>repeated .QueryResultMessage results = 6;</code>
+     * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
      * <pre>
      *result list
      * </pre>
      */
-    public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage> getResultsList() {
+    public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage> getResultsList() {
       return results_;
     }
     /**
-     * <code>repeated .QueryResultMessage results = 6;</code>
+     * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
      * <pre>
      *result list
      * </pre>
      */
-    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessageOrBuilder> 
+    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessageOrBuilder> 
         getResultsOrBuilderList() {
       return results_;
     }
     /**
-     * <code>repeated .QueryResultMessage results = 6;</code>
+     * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
      * <pre>
      *result list
@@ -31017,23 +27649,23 @@ public final class Grpc {
       return results_.size();
     }
     /**
-     * <code>repeated .QueryResultMessage results = 6;</code>
+     * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
      * <pre>
      *result list
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage getResults(int index) {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage getResults(int index) {
       return results_.get(index);
     }
     /**
-     * <code>repeated .QueryResultMessage results = 6;</code>
+     * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
      * <pre>
      *result list
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessageOrBuilder getResultsOrBuilder(
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessageOrBuilder getResultsOrBuilder(
         int index) {
       return results_.get(index);
     }
@@ -31102,53 +27734,53 @@ public final class Grpc {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -31159,7 +27791,7 @@ public final class Grpc {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -31174,25 +27806,25 @@ public final class Grpc {
       return builder;
     }
     /**
-     * Protobuf type {@code QueryResponseInfoMessage}
+     * Protobuf type {@code QueryResultInfoMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:QueryResponseInfoMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessageOrBuilder {
+        // @@protoc_insertion_point(builder_implements:QueryResultInfoMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResponseInfoMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultInfoMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResponseInfoMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultInfoMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -31234,23 +27866,23 @@ public final class Grpc {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResponseInfoMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultInfoMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (ackBuilder_ == null) {
@@ -31277,16 +27909,16 @@ public final class Grpc {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage.getDefaultInstance()) return this;
         if (other.hasAck()) {
           mergeAck(other.getAck());
         }
@@ -31342,11 +27974,11 @@ public final class Grpc {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -31708,26 +28340,26 @@ public final class Grpc {
         return this;
       }
 
-      private java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage> results_ =
+      private java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage> results_ =
         java.util.Collections.emptyList();
       private void ensureResultsIsMutable() {
         if (!((bitField0_ & 0x00000020) == 0x00000020)) {
-          results_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage>(results_);
+          results_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage>(results_);
           bitField0_ |= 0x00000020;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessageOrBuilder> resultsBuilder_;
+          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessageOrBuilder> resultsBuilder_;
 
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage> getResultsList() {
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage> getResultsList() {
         if (resultsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(results_);
         } else {
@@ -31735,7 +28367,7 @@ public final class Grpc {
         }
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
@@ -31749,13 +28381,13 @@ public final class Grpc {
         }
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage getResults(int index) {
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage getResults(int index) {
         if (resultsBuilder_ == null) {
           return results_.get(index);
         } else {
@@ -31763,14 +28395,14 @@ public final class Grpc {
         }
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
       public Builder setResults(
-          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -31784,14 +28416,14 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
       public Builder setResults(
-          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.set(index, builderForValue.build());
@@ -31802,13 +28434,13 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
-      public Builder addResults(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage value) {
+      public Builder addResults(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -31822,14 +28454,14 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
       public Builder addResults(
-          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -31843,14 +28475,14 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
       public Builder addResults(
-          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.add(builderForValue.build());
@@ -31861,14 +28493,14 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
       public Builder addResults(
-          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.add(index, builderForValue.build());
@@ -31879,14 +28511,14 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
       public Builder addAllResults(
-          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage> values) {
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage> values) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -31898,7 +28530,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
@@ -31915,7 +28547,7 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
@@ -31932,24 +28564,24 @@ public final class Grpc {
         return this;
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder getResultsBuilder(
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder getResultsBuilder(
           int index) {
         return getResultsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessageOrBuilder getResultsOrBuilder(
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessageOrBuilder getResultsOrBuilder(
           int index) {
         if (resultsBuilder_ == null) {
           return results_.get(index);  } else {
@@ -31957,13 +28589,13 @@ public final class Grpc {
         }
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
-      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessageOrBuilder> 
+      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessageOrBuilder> 
            getResultsOrBuilderList() {
         if (resultsBuilder_ != null) {
           return resultsBuilder_.getMessageOrBuilderList();
@@ -31972,45 +28604,45 @@ public final class Grpc {
         }
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder addResultsBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder addResultsBuilder() {
         return getResultsFieldBuilder().addBuilder(
-            ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.getDefaultInstance());
+            ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.getDefaultInstance());
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder addResultsBuilder(
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder addResultsBuilder(
           int index) {
         return getResultsFieldBuilder().addBuilder(
-            index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.getDefaultInstance());
+            index, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.getDefaultInstance());
       }
       /**
-       * <code>repeated .QueryResultMessage results = 6;</code>
+       * <code>repeated .QueryResultTupleMessage results = 6;</code>
        *
        * <pre>
        *result list
        * </pre>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder> 
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder> 
            getResultsBuilderList() {
         return getResultsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessageOrBuilder> 
           getResultsFieldBuilder() {
         if (resultsBuilder_ == null) {
           resultsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessageOrBuilder>(
                   results_,
                   ((bitField0_ & 0x00000020) == 0x00000020),
                   getParentForChildren(),
@@ -32030,27 +28662,27 @@ public final class Grpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:QueryResponseInfoMessage)
+      // @@protoc_insertion_point(builder_scope:QueryResultInfoMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:QueryResponseInfoMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:QueryResultInfoMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<QueryResponseInfoMessage>
-        PARSER = new com.google.protobuf.AbstractParser<QueryResponseInfoMessage>() {
-      public QueryResponseInfoMessage parsePartialFrom(
+    private static final com.google.protobuf.Parser<QueryResultInfoMessage>
+        PARSER = new com.google.protobuf.AbstractParser<QueryResultInfoMessage>() {
+      public QueryResultInfoMessage parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         try {
-          return new QueryResponseInfoMessage(input, extensionRegistry);
+          return new QueryResultInfoMessage(input, extensionRegistry);
         } catch (RuntimeException e) {
           if (e.getCause() instanceof
               com.google.protobuf.InvalidProtocolBufferException) {
@@ -32062,49 +28694,43 @@ public final class Grpc {
       }
     };
 
-    public static com.google.protobuf.Parser<QueryResponseInfoMessage> parser() {
+    public static com.google.protobuf.Parser<QueryResultInfoMessage> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<QueryResponseInfoMessage> getParserForType() {
+    public com.google.protobuf.Parser<QueryResultInfoMessage> getParserForType() {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface QueryResultMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:QueryResultMessage)
+  public interface QueryResultTupleMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:QueryResultTupleMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional float distance = 2;</code>
+     * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
      */
-    float getDistance();
-
-    /**
-     * <code>map&lt;string, string&gt; metadata = 3;</code>
-     */
-    java.util.Map<java.lang.String, java.lang.String>
-    getMetadata();
+    java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
+    getData();
   }
   /**
-   * Protobuf type {@code QueryResultMessage}
+   * Protobuf type {@code QueryResultTupleMessage}
    */
-  public  static final class QueryResultMessage extends
+  public  static final class QueryResultTupleMessage extends
       com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:QueryResultMessage)
-      QueryResultMessageOrBuilder {
-    // Use QueryResultMessage.newBuilder() to construct.
-    private QueryResultMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:QueryResultTupleMessage)
+      QueryResultTupleMessageOrBuilder {
+    // Use QueryResultTupleMessage.newBuilder() to construct.
+    private QueryResultTupleMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
     }
-    private QueryResultMessage() {
-      distance_ = 0F;
+    private QueryResultTupleMessage() {
     }
 
     @java.lang.Override
@@ -32112,7 +28738,7 @@ public final class Grpc {
     getUnknownFields() {
       return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
     }
-    private QueryResultMessage(
+    private QueryResultTupleMessage(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
       this();
@@ -32131,21 +28757,16 @@ public final class Grpc {
               }
               break;
             }
-            case 21: {
-
-              distance_ = input.readFloat();
-              break;
-            }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                metadata_ = com.google.protobuf.MapField.newMapField(
-                    MetadataDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000002;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                data_ = com.google.protobuf.MapField.newMapField(
+                    DataDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000001;
               }
-              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-              metadata = input.readMessage(
-                  MetadataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              metadata_.getMutableMap().put(metadata.getKey(), metadata.getValue());
+              com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
+              data = input.readMessage(
+                  DataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              data_.getMutableMap().put(data.getKey(), data.getValue());
               break;
             }
           }
@@ -32162,15 +28783,15 @@ public final class Grpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultTupleMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
-        case 3:
-          return internalGetMetadata();
+        case 1:
+          return internalGetData();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -32178,49 +28799,39 @@ public final class Grpc {
     }
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultTupleMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder.class);
     }
 
-    private int bitField0_;
-    public static final int DISTANCE_FIELD_NUMBER = 2;
-    private float distance_;
-    /**
-     * <code>optional float distance = 2;</code>
-     */
-    public float getDistance() {
-      return distance_;
-    }
-
-    public static final int METADATA_FIELD_NUMBER = 3;
-    private static final class MetadataDefaultEntryHolder {
+    public static final int DATA_FIELD_NUMBER = 1;
+    private static final class DataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
-          java.lang.String, java.lang.String> defaultEntry =
+          java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> defaultEntry =
               com.google.protobuf.MapEntry
-              .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultMessage_MetadataEntry_descriptor, 
+              .<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>newDefaultInstance(
+                  ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultTupleMessage_DataEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "");
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage.getDefaultInstance());
     }
     private com.google.protobuf.MapField<
-        java.lang.String, java.lang.String> metadata_;
-    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-    internalGetMetadata() {
-      if (metadata_ == null) {
+        java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> data_;
+    private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
+    internalGetData() {
+      if (data_ == null) {
         return com.google.protobuf.MapField.emptyMapField(
-            MetadataDefaultEntryHolder.defaultEntry);
+            DataDefaultEntryHolder.defaultEntry);
      }
-      return metadata_;
+      return data_;
     }
     /**
-     * <code>map&lt;string, string&gt; metadata = 3;</code>
+     * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
      */
 
-    public java.util.Map<java.lang.String, java.lang.String> getMetadata() {
-      return internalGetMetadata().getMap();
+    public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> getData() {
+      return internalGetData().getMap();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -32235,17 +28846,14 @@ public final class Grpc {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (distance_ != 0F) {
-        output.writeFloat(2, distance_);
-      }
-      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
-           : internalGetMetadata().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-        metadata = MetadataDefaultEntryHolder.defaultEntry.newBuilderForType()
+      for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> entry
+           : internalGetData().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
+        data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
             .setKey(entry.getKey())
             .setValue(entry.getValue())
             .build();
-        output.writeMessage(3, metadata);
+        output.writeMessage(1, data);
       }
     }
 
@@ -32254,72 +28862,68 @@ public final class Grpc {
       if (size != -1) return size;
 
       size = 0;
-      if (distance_ != 0F) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, distance_);
-      }
-      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
-           : internalGetMetadata().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-        metadata = MetadataDefaultEntryHolder.defaultEntry.newBuilderForType()
+      for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> entry
+           : internalGetData().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
+        data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
             .setKey(entry.getKey())
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(3, metadata);
+            .computeMessageSize(1, data);
       }
       memoizedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -32330,7 +28934,7 @@ public final class Grpc {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -32345,23 +28949,23 @@ public final class Grpc {
       return builder;
     }
     /**
-     * Protobuf type {@code QueryResultMessage}
+     * Protobuf type {@code QueryResultTupleMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:QueryResultMessage)
-        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessageOrBuilder {
+        // @@protoc_insertion_point(builder_implements:QueryResultTupleMessage)
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultTupleMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
       protected com.google.protobuf.MapField internalGetMapField(
           int number) {
         switch (number) {
-          case 3:
-            return internalGetMetadata();
+          case 1:
+            return internalGetData();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -32371,8 +28975,8 @@ public final class Grpc {
       protected com.google.protobuf.MapField internalGetMutableMapField(
           int number) {
         switch (number) {
-          case 3:
-            return internalGetMutableMetadata();
+          case 1:
+            return internalGetMutableData();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -32380,12 +28984,12 @@ public final class Grpc {
       }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultTupleMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.class, ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -32401,57 +29005,49 @@ public final class Grpc {
       }
       public Builder clear() {
         super.clear();
-        distance_ = 0F;
-
-        internalGetMutableMetadata().clear();
+        internalGetMutableData().clear();
         return this;
       }
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.Grpc.internal_static_QueryResultTupleMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage result = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage(this);
         int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        result.distance_ = distance_;
-        result.metadata_ = internalGetMetadata();
-        result.metadata_.makeImmutable();
-        result.bitField0_ = to_bitField0_;
+        result.data_ = internalGetData();
+        result.data_.makeImmutable();
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage.getDefaultInstance()) return this;
-        if (other.getDistance() != 0F) {
-          setDistance(other.getDistance());
-        }
-        internalGetMutableMetadata().mergeFrom(
-            other.internalGetMetadata());
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage.getDefaultInstance()) return this;
+        internalGetMutableData().mergeFrom(
+            other.internalGetData());
         onChanged();
         return this;
       }
@@ -32464,11 +29060,11 @@ public final class Grpc {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -32479,73 +29075,47 @@ public final class Grpc {
       }
       private int bitField0_;
 
-      private float distance_ ;
-      /**
-       * <code>optional float distance = 2;</code>
-       */
-      public float getDistance() {
-        return distance_;
-      }
-      /**
-       * <code>optional float distance = 2;</code>
-       */
-      public Builder setDistance(float value) {
-        
-        distance_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional float distance = 2;</code>
-       */
-      public Builder clearDistance() {
-        
-        distance_ = 0F;
-        onChanged();
-        return this;
-      }
-
       private com.google.protobuf.MapField<
-          java.lang.String, java.lang.String> metadata_;
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetMetadata() {
-        if (metadata_ == null) {
+          java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> data_;
+      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
+      internalGetData() {
+        if (data_ == null) {
           return com.google.protobuf.MapField.emptyMapField(
-              MetadataDefaultEntryHolder.defaultEntry);
+              DataDefaultEntryHolder.defaultEntry);
        }
-        return metadata_;
+        return data_;
       }
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetMutableMetadata() {
+      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
+      internalGetMutableData() {
         onChanged();;
-        if (metadata_ == null) {
-          metadata_ = com.google.protobuf.MapField.newMapField(
-              MetadataDefaultEntryHolder.defaultEntry);
+        if (data_ == null) {
+          data_ = com.google.protobuf.MapField.newMapField(
+              DataDefaultEntryHolder.defaultEntry);
         }
-        if (!metadata_.isMutable()) {
-          metadata_ = metadata_.copy();
+        if (!data_.isMutable()) {
+          data_ = data_.copy();
         }
-        return metadata_;
+        return data_;
       }
       /**
-       * <code>map&lt;string, string&gt; metadata = 3;</code>
+       * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
        */
-      public java.util.Map<java.lang.String, java.lang.String> getMetadata() {
-        return internalGetMetadata().getMap();
+      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> getData() {
+        return internalGetData().getMap();
       }
       /**
-       * <code>map&lt;string, string&gt; metadata = 3;</code>
+       * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
        */
-      public java.util.Map<java.lang.String, java.lang.String>
-      getMutableMetadata() {
-        return internalGetMutableMetadata().getMutableMap();
+      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage>
+      getMutableData() {
+        return internalGetMutableData().getMutableMap();
       }
       /**
-       * <code>map&lt;string, string&gt; metadata = 3;</code>
+       * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
        */
-      public Builder putAllMetadata(
-          java.util.Map<java.lang.String, java.lang.String> values) {
-        getMutableMetadata().putAll(values);
+      public Builder putAllData(
+          java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage> values) {
+        getMutableData().putAll(values);
         return this;
       }
       public final Builder setUnknownFields(
@@ -32559,27 +29129,27 @@ public final class Grpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:QueryResultMessage)
+      // @@protoc_insertion_point(builder_scope:QueryResultTupleMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:QueryResultMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:QueryResultTupleMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<QueryResultMessage>
-        PARSER = new com.google.protobuf.AbstractParser<QueryResultMessage>() {
-      public QueryResultMessage parsePartialFrom(
+    private static final com.google.protobuf.Parser<QueryResultTupleMessage>
+        PARSER = new com.google.protobuf.AbstractParser<QueryResultTupleMessage>() {
+      public QueryResultTupleMessage parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         try {
-          return new QueryResultMessage(input, extensionRegistry);
+          return new QueryResultTupleMessage(input, extensionRegistry);
         } catch (RuntimeException e) {
           if (e.getCause() instanceof
               com.google.protobuf.InvalidProtocolBufferException) {
@@ -32591,16 +29161,16 @@ public final class Grpc {
       }
     };
 
-    public static com.google.protobuf.Parser<QueryResultMessage> parser() {
+    public static com.google.protobuf.Parser<QueryResultTupleMessage> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<QueryResultMessage> getParserForType() {
+    public com.google.protobuf.Parser<QueryResultTupleMessage> getParserForType() {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -32631,6 +29201,11 @@ public final class Grpc {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_IntVectorMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_DataMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_DataMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CreateEntityMessage_descriptor;
   private static
@@ -32672,11 +29247,6 @@ public final class Grpc {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_InsertMessage_TupleInsertMessage_DataEntry_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_InsertDataMessage_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_InsertDataMessage_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_IndexMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -32697,60 +29267,40 @@ public final class Grpc {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_IndexWeightMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_SimpleQueryMessage_descriptor;
+    internal_static_ImportMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_SimpleQueryMessage_fieldAccessorTable;
+      internal_static_ImportMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_SimpleBooleanQueryMessage_descriptor;
+    internal_static_QueryMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_SimpleBooleanQueryMessage_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_SimpleSequentialQueryMessage_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_SimpleSequentialQueryMessage_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_SimpleSpecifiedIndexQueryMessage_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_SimpleSpecifiedIndexQueryMessage_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_SimpleIndexQueryMessage_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_SimpleIndexQueryMessage_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_TimedQueryMessage_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_TimedQueryMessage_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CompoundQueryMessage_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CompoundQueryMessage_fieldAccessorTable;
+      internal_static_QueryMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_ExpressionQueryMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ExpressionQueryMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_ExternalHandlerQueryMessage_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_ExternalHandlerQueryMessage_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_ExternalHandlerQueryMessage_ParamsEntry_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_SubExpressionQueryMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_SubExpressionQueryMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_ProjectionMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_ProjectionMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_ProjectionMessage_FieldnameMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_ProjectionMessage_FieldnameMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_FromMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_FromMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_NearestNeighbourQueryMessage_descriptor;
   private static
@@ -32787,6 +29337,16 @@ public final class Grpc {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_BooleanQueryMessage_JoinMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_ExternalHandlerQueryMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_ExternalHandlerQueryMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_ExternalHandlerQueryMessage_ParamsEntry_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CachedResultsMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -32812,25 +29372,25 @@ public final class Grpc {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_EntityPropertiesMessage_PropertiesEntry_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CompoundQueryResponseInfoMessage_descriptor;
+    internal_static_QueryResultsMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CompoundQueryResponseInfoMessage_fieldAccessorTable;
+      internal_static_QueryResultsMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_QueryResponseInfoMessage_descriptor;
+    internal_static_QueryResultInfoMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_QueryResponseInfoMessage_fieldAccessorTable;
+      internal_static_QueryResultInfoMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_QueryResultMessage_descriptor;
+    internal_static_QueryResultTupleMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_QueryResultMessage_fieldAccessorTable;
+      internal_static_QueryResultTupleMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_QueryResultMessage_MetadataEntry_descriptor;
+    internal_static_QueryResultTupleMessage_DataEntry_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_QueryResultMessage_MetadataEntry_fieldAccessorTable;
+      internal_static_QueryResultTupleMessage_DataEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -32848,176 +29408,148 @@ public final class Grpc {
       "nseVectorMessage\022\022\n\006vector\030\001 \003(\002B\002\020\001\"O\n\023" +
       "SparseVectorMessage\022\022\n\006vector\030\001 \003(\002B\002\020\001\022" +
       "\024\n\010position\030\002 \003(\005B\002\020\001\022\016\n\006length\030\003 \001(\005\"&\n" +
-      "\020IntVectorMessage\022\022\n\006vector\030\001 \003(\005B\002\020\001\"N\n" +
-      "\023CreateEntityMessage\022\016\n\006entity\030\001 \001(\t\022\'\n\006",
-      "fields\030\002 \003(\0132\027.FieldDefinitionMessage\"\360\001" +
-      "\n\026FieldDefinitionMessage\022\014\n\004name\030\001 \001(\t\0224" +
-      "\n\tfieldtype\030\002 \001(\0162!.FieldDefinitionMessa" +
-      "ge.FieldType\022\n\n\002pk\030\003 \001(\010\022\016\n\006unique\030\004 \001(\010" +
-      "\022\017\n\007indexed\030\005 \001(\010\"e\n\tFieldType\022\010\n\004LONG\020\000" +
-      "\022\007\n\003INT\020\001\022\t\n\005FLOAT\020\002\022\n\n\006DOUBLE\020\003\022\n\n\006STRI" +
-      "NG\020\004\022\013\n\007BOOLEAN\020\005\022\013\n\007FEATURE\020\006\022\010\n\004AUTO\020\007" +
-      "\"#\n\021EntityNameMessage\022\016\n\006entity\030\001 \001(\t\"!\n" +
-      "\020IndexNameMessage\022\r\n\005index\030\001 \001(\t\"K\n\031Gene" +
-      "rateRandomDataMessage\022\016\n\006entity\030\001 \001(\t\022\017\n",
-      "\007ntuples\030\002 \001(\005\022\r\n\005ndims\030\003 \001(\005\"\345\001\n\rInsert" +
-      "Message\022\016\n\006entity\030\001 \001(\t\0221\n\006tuples\030\002 \003(\0132" +
-      "!.InsertMessage.TupleInsertMessage\032\220\001\n\022T" +
-      "upleInsertMessage\0229\n\004data\030\001 \003(\0132+.Insert" +
-      "Message.TupleInsertMessage.DataEntry\032?\n\t" +
-      "DataEntry\022\013\n\003key\030\001 \001(\t\022!\n\005value\030\002 \001(\0132\022." +
-      "InsertDataMessage:\0028\001\"\316\001\n\021InsertDataMess" +
-      "age\022\022\n\010longData\030\001 \001(\003H\000\022\021\n\007intData\030\002 \001(\005" +
-      "H\000\022\023\n\tfloatData\030\003 \001(\002H\000\022\024\n\ndoubleData\030\004 " +
-      "\001(\001H\000\022\024\n\nstringData\030\005 \001(\tH\000\022\025\n\013booleanDa",
-      "ta\030\006 \001(\010H\000\022,\n\013featureData\030\007 \001(\0132\025.Featur" +
-      "eVectorMessageH\000B\014\n\ninserttype\"\316\001\n\014Index" +
-      "Message\022\016\n\006entity\030\001 \001(\t\022\016\n\006column\030\002 \001(\t\022" +
-      "\035\n\tindextype\030\003 \001(\0162\n.IndexType\022\"\n\010distan" +
-      "ce\030\004 \001(\0132\020.DistanceMessage\022+\n\007options\030\005 " +
-      "\003(\0132\032.IndexMessage.OptionsEntry\032.\n\014Optio" +
-      "nsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"" +
-      "\321\001\n\022RepartitionMessage\022\r\n\005index\030\001 \001(\t\022\032\n" +
-      "\022numberOfPartitions\030\002 \001(\005\022\017\n\007columns\030\003 \003" +
-      "(\t\0224\n\006option\030\004 \001(\0162$.RepartitionMessage.",
-      "PartitionOptions\"I\n\020PartitionOptions\022\016\n\n" +
-      "CREATE_NEW\020\000\022\024\n\020REPLACE_EXISTING\020\001\022\017\n\013CR" +
-      "EATE_TEMP\020\002\"3\n\022IndexWeightMessage\022\r\n\005ind" +
-      "ex\030\001 \001(\t\022\016\n\006weight\030\002 \001(\002\"\323\001\n\022SimpleQuery" +
-      "Message\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t" +
-      "\022\r\n\005hints\030\003 \003(\t\022*\n\003nnq\030\004 \001(\0132\035.NearestNe" +
-      "ighbourQueryMessage\022 \n\002bq\030\005 \001(\0132\024.Boolea" +
-      "nQueryMessage\022\024\n\014withMetadata\030\006 \001(\010\022\025\n\rr" +
-      "eadFromCache\030\007 \001(\010\022\022\n\nputInCache\030\010 \001(\010\"\211" +
-      "\001\n\031SimpleBooleanQueryMessage\022\017\n\007queryid\030",
-      "\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022 \n\002bq\030\003 \001(\0132\024.Bool" +
-      "eanQueryMessage\022\025\n\rreadFromCache\030\004 \001(\010\022\022" +
-      "\n\nputInCache\030\005 \001(\010\"\316\001\n\034SimpleSequentialQ" +
+      "\020IntVectorMessage\022\022\n\006vector\030\001 \003(\005B\002\020\001\"\306\001" +
+      "\n\013DataMessage\022\022\n\010longData\030\001 \001(\003H\000\022\021\n\007int",
+      "Data\030\002 \001(\005H\000\022\023\n\tfloatData\030\003 \001(\002H\000\022\024\n\ndou" +
+      "bleData\030\004 \001(\001H\000\022\024\n\nstringData\030\005 \001(\tH\000\022\025\n" +
+      "\013booleanData\030\006 \001(\010H\000\022,\n\013featureData\030\007 \001(" +
+      "\0132\025.FeatureVectorMessageH\000B\n\n\010datatype\"N" +
+      "\n\023CreateEntityMessage\022\016\n\006entity\030\001 \001(\t\022\'\n" +
+      "\006fields\030\002 \003(\0132\027.FieldDefinitionMessage\"\360" +
+      "\001\n\026FieldDefinitionMessage\022\014\n\004name\030\001 \001(\t\022" +
+      "4\n\tfieldtype\030\002 \001(\0162!.FieldDefinitionMess" +
+      "age.FieldType\022\n\n\002pk\030\003 \001(\010\022\016\n\006unique\030\004 \001(" +
+      "\010\022\017\n\007indexed\030\005 \001(\010\"e\n\tFieldType\022\010\n\004LONG\020",
+      "\000\022\007\n\003INT\020\001\022\t\n\005FLOAT\020\002\022\n\n\006DOUBLE\020\003\022\n\n\006STR" +
+      "ING\020\004\022\013\n\007BOOLEAN\020\005\022\013\n\007FEATURE\020\006\022\010\n\004AUTO\020" +
+      "\007\"#\n\021EntityNameMessage\022\016\n\006entity\030\001 \001(\t\"!" +
+      "\n\020IndexNameMessage\022\r\n\005index\030\001 \001(\t\"K\n\031Gen" +
+      "erateRandomDataMessage\022\016\n\006entity\030\001 \001(\t\022\017" +
+      "\n\007ntuples\030\002 \001(\005\022\r\n\005ndims\030\003 \001(\005\"\337\001\n\rInser" +
+      "tMessage\022\016\n\006entity\030\001 \001(\t\0221\n\006tuples\030\002 \003(\013" +
+      "2!.InsertMessage.TupleInsertMessage\032\212\001\n\022" +
+      "TupleInsertMessage\0229\n\004data\030\001 \003(\0132+.Inser" +
+      "tMessage.TupleInsertMessage.DataEntry\0329\n",
+      "\tDataEntry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 \001(\0132\014" +
+      ".DataMessage:\0028\001\"\316\001\n\014IndexMessage\022\016\n\006ent" +
+      "ity\030\001 \001(\t\022\016\n\006column\030\002 \001(\t\022\035\n\tindextype\030\003" +
+      " \001(\0162\n.IndexType\022\"\n\010distance\030\004 \001(\0132\020.Dis" +
+      "tanceMessage\022+\n\007options\030\005 \003(\0132\032.IndexMes" +
+      "sage.OptionsEntry\032.\n\014OptionsEntry\022\013\n\003key" +
+      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\322\001\n\022Repartitio" +
+      "nMessage\022\016\n\006entity\030\001 \001(\t\022\032\n\022numberOfPart" +
+      "itions\030\002 \001(\005\022\017\n\007columns\030\003 \003(\t\0224\n\006option\030" +
+      "\004 \001(\0162$.RepartitionMessage.PartitionOpti",
+      "ons\"I\n\020PartitionOptions\022\016\n\nCREATE_NEW\020\000\022" +
+      "\024\n\020REPLACE_EXISTING\020\001\022\017\n\013CREATE_TEMP\020\002\"3" +
+      "\n\022IndexWeightMessage\022\r\n\005index\030\001 \001(\t\022\016\n\006w" +
+      "eight\030\002 \001(\002\"S\n\rImportMessage\022\014\n\004host\030\001 \001" +
+      "(\t\022\020\n\010database\030\002 \001(\t\022\020\n\010username\030\003 \001(\t\022\020" +
+      "\n\010password\030\004 \001(\t\"\243\003\n\014QueryMessage\022\017\n\007que" +
+      "ryid\030\001 \001(\t\022&\n\nprojection\030\002 \001(\0132\022.Project" +
+      "ionMessage\022\032\n\004from\030\003 \001(\0132\014.FromMessage\022 " +
+      "\n\002bq\030\006 \001(\0132\024.BooleanQueryMessage\022*\n\003nnq\030" +
+      "\007 \001(\0132\035.NearestNeighbourQueryMessage\022\r\n\005",
+      "hints\030\010 \003(\t\022\014\n\004time\030\t \001(\003\022\025\n\rreadFromCac" +
+      "he\030\n \001(\010\022\022\n\nputInCache\030\013 \001(\010\0223\n\013informat" +
+      "ion\030\014 \003(\0162\036.QueryMessage.InformationLeve" +
+      "l\"s\n\020InformationLevel\022\031\n\025INFORMATION_FUL" +
+      "L_TREE\020\000\022\036\n\032INFORMATION_LAST_STEP_ONLY\020\001" +
+      "\022$\n INFORMATION_INTERMEDIATE_RESULTS\020\002\"\335" +
+      "\002\n\026ExpressionQueryMessage\022\017\n\007queryid\030\001 \001" +
+      "(\t\022(\n\004left\030\002 \001(\0132\032.SubExpressionQueryMes" +
+      "sage\0224\n\toperation\030\003 \001(\0162!.ExpressionQuer" +
+      "yMessage.Operation\0225\n\005order\030\004 \001(\0162&.Expr",
+      "essionQueryMessage.OperationOrder\022)\n\005rig" +
+      "ht\030\005 \001(\0132\032.SubExpressionQueryMessage\"1\n\t" +
+      "Operation\022\t\n\005UNION\020\000\022\r\n\tINTERSECT\020\001\022\n\n\006E" +
+      "XCEPT\020\002\"=\n\016OperationOrder\022\r\n\tLEFTFIRST\020\000" +
+      "\022\016\n\nRIGHTFIRST\020\001\022\014\n\010PARALLEL\020\002\"\255\001\n\031SubEx" +
+      "pressionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\033\n" +
+      "\002qm\030\002 \001(\0132\r.QueryMessageH\000\022&\n\003eqm\030\003 \001(\0132" +
+      "\027.ExpressionQueryMessageH\000\022,\n\004ehqm\030\004 \001(\013" +
+      "2\034.ExternalHandlerQueryMessageH\000B\014\n\nsubm" +
+      "essage\"\312\001\n\021ProjectionMessage\0224\n\005field\030\001 ",
+      "\001(\0132#.ProjectionMessage.FieldnameMessage" +
+      "H\000\022*\n\002op\030\002 \001(\0162\034.ProjectionMessage.Opera" +
+      "tionH\000\032!\n\020FieldnameMessage\022\r\n\005field\030\001 \003(" +
+      "\t\"\"\n\tOperation\022\t\n\005COUNT\020\000\022\n\n\006EXISTS\020\001B\014\n" +
+      "\nsubmessage\"l\n\013FromMessage\022\020\n\006entity\030\001 \001" +
+      "(\tH\000\022\017\n\005index\030\002 \001(\tH\000\0220\n\nexpression\030\003 \001(" +
+      "\0132\032.SubExpressionQueryMessageH\000B\010\n\006sourc" +
+      "e\"\277\002\n\034NearestNeighbourQueryMessage\022\016\n\006co" +
+      "lumn\030\001 \001(\t\022$\n\005query\030\002 \001(\0132\025.FeatureVecto" +
+      "rMessage\022&\n\007weights\030\003 \001(\0132\025.FeatureVecto",
+      "rMessage\022\"\n\010distance\030\004 \001(\0132\020.DistanceMes" +
+      "sage\022\t\n\001k\030\005 \001(\005\022;\n\007options\030\006 \003(\0132*.Neare" +
+      "stNeighbourQueryMessage.OptionsEntry\022\021\n\t" +
+      "indexOnly\030\007 \001(\010\022\022\n\npartitions\030\010 \003(\005\032.\n\014O" +
+      "ptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:" +
+      "\0028\001\"\305\001\n\017DistanceMessage\0223\n\014distancetype\030" +
+      "\001 \001(\0162\035.DistanceMessage.DistanceType\022.\n\007" +
+      "options\030\002 \003(\0132\035.DistanceMessage.OptionsE" +
+      "ntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005val" +
+      "ue\030\002 \001(\t:\0028\001\"\035\n\014DistanceType\022\r\n\tminkowsk",
+      "i\020\000\"\325\001\n\023BooleanQueryMessage\0220\n\005where\030\001 \003" +
+      "(\0132!.BooleanQueryMessage.WhereMessage\022/\n" +
+      "\005joins\030\002 \003(\0132 .BooleanQueryMessage.JoinM" +
+      "essage\032,\n\014WhereMessage\022\r\n\005field\030\001 \001(\t\022\r\n" +
+      "\005value\030\002 \001(\t\032-\n\013JoinMessage\022\r\n\005table\030\001 \001" +
+      "(\t\022\017\n\007columns\030\002 \003(\t\"\270\001\n\033ExternalHandlerQ" +
       "ueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002" +
-      " \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestNeighbourQuer" +
-      "yMessage\022 \n\002bq\030\004 \001(\0132\024.BooleanQueryMessa" +
-      "ge\022\024\n\014withMetadata\030\005 \001(\010\022\025\n\rreadFromCach" +
-      "e\030\006 \001(\010\022\022\n\nputInCache\030\007 \001(\010\"\321\001\n SimpleSp" +
-      "ecifiedIndexQueryMessage\022\017\n\007queryid\030\001 \001(" +
-      "\t\022\r\n\005index\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestN",
-      "eighbourQueryMessage\022 \n\002bq\030\004 \001(\0132\024.Boole" +
-      "anQueryMessage\022\024\n\014withMetadata\030\005 \001(\010\022\025\n\r" +
-      "readFromCache\030\006 \001(\010\022\022\n\nputInCache\030\007 \001(\010\"" +
-      "\350\001\n\027SimpleIndexQueryMessage\022\017\n\007queryid\030\001" +
-      " \001(\t\022\016\n\006entity\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\0162" +
-      "\n.IndexType\022*\n\003nnq\030\004 \001(\0132\035.NearestNeighb" +
-      "ourQueryMessage\022 \n\002bq\030\005 \001(\0132\024.BooleanQue" +
-      "ryMessage\022\024\n\014withMetadata\030\006 \001(\010\022\025\n\rreadF" +
-      "romCache\030\007 \001(\010\022\022\n\nputInCache\030\010 \001(\010\"\246\001\n\021T" +
-      "imedQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006ent",
-      "ity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.NearestNeighbou" +
-      "rQueryMessage\022 \n\002bq\030\004 \001(\0132\024.BooleanQuery" +
-      "Message\022\014\n\004time\030\005 \001(\003\022\024\n\014withMetadata\030\006 " +
-      "\001(\010\"\367\001\n\024CompoundQueryMessage\022\017\n\007queryid\030" +
-      "\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022*\n\003nnq\030\003 \001(\0132\035.Nea" +
-      "restNeighbourQueryMessage\022 \n\002bq\030\004 \001(\0132\024." +
-      "BooleanQueryMessage\0229\n\025indexFilterExpres" +
-      "sion\030\005 \001(\0132\032.SubExpressionQueryMessage\022\024" +
-      "\n\014withMetadata\030\006 \001(\010\022\037\n\027withIntermediate" +
-      "Results\030\007 \001(\010\"\335\002\n\026ExpressionQueryMessage",
-      "\022\017\n\007queryid\030\001 \001(\t\022(\n\004left\030\002 \001(\0132\032.SubExp" +
-      "ressionQueryMessage\0224\n\toperation\030\003 \001(\0162!" +
-      ".ExpressionQueryMessage.Operation\0225\n\005ord" +
-      "er\030\004 \001(\0162&.ExpressionQueryMessage.Operat" +
-      "ionOrder\022)\n\005right\030\005 \001(\0132\032.SubExpressionQ" +
-      "ueryMessage\"1\n\tOperation\022\t\n\005UNION\020\000\022\r\n\tI" +
-      "NTERSECT\020\001\022\n\n\006EXCEPT\020\002\"=\n\016OperationOrder" +
-      "\022\r\n\tLEFTFIRST\020\000\022\016\n\nRIGHTFIRST\020\001\022\014\n\010PARAL" +
-      "LEL\020\002\"\270\001\n\033ExternalHandlerQueryMessage\022\017\n" +
-      "\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\017\n\007handle",
-      "r\030\003 \001(\t\0228\n\006params\030\004 \003(\0132(.ExternalHandle" +
-      "rQueryMessage.ParamsEntry\032-\n\013ParamsEntry" +
-      "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\311\002\n\031Sub" +
-      "ExpressionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022" +
-      "-\n\004ssqm\030\002 \001(\0132\035.SimpleSequentialQueryMes" +
-      "sageH\000\0222\n\005ssiqm\030\003 \001(\0132!.SimpleSpecifiedI" +
-      "ndexQueryMessageH\000\022(\n\004siqm\030\004 \001(\0132\030.Simpl" +
-      "eIndexQueryMessageH\000\022&\n\003eqm\030\005 \001(\0132\027.Expr" +
-      "essionQueryMessageH\000\022,\n\004ehqm\030\006 \001(\0132\034.Ext" +
-      "ernalHandlerQueryMessageH\000\022*\n\004sbqm\030\007 \001(\013",
-      "2\032.SimpleBooleanQueryMessageH\000B\014\n\nsubmes" +
-      "sage\"\227\002\n\034NearestNeighbourQueryMessage\022\016\n" +
-      "\006column\030\001 \001(\t\022$\n\005query\030\002 \001(\0132\025.FeatureVe" +
-      "ctorMessage\022\"\n\010distance\030\003 \001(\0132\020.Distance" +
-      "Message\022\t\n\001k\030\004 \001(\005\022\021\n\tindexOnly\030\005 \001(\010\022;\n" +
-      "\007options\030\006 \003(\0132*.NearestNeighbourQueryMe" +
-      "ssage.OptionsEntry\022\022\n\npartitions\030\007 \003(\005\032." +
-      "\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001" +
-      "(\t:\0028\001\"\305\001\n\017DistanceMessage\0223\n\014distancety" +
-      "pe\030\001 \001(\0162\035.DistanceMessage.DistanceType\022",
-      ".\n\007options\030\002 \003(\0132\035.DistanceMessage.Optio" +
-      "nsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005" +
-      "value\030\002 \001(\t:\0028\001\"\035\n\014DistanceType\022\r\n\tminko" +
-      "wski\020\000\"\325\001\n\023BooleanQueryMessage\0220\n\005where\030" +
-      "\001 \003(\0132!.BooleanQueryMessage.WhereMessage" +
-      "\022/\n\005joins\030\002 \003(\0132 .BooleanQueryMessage.Jo" +
-      "inMessage\032,\n\014WhereMessage\022\r\n\005field\030\001 \001(\t" +
-      "\022\r\n\005value\030\002 \001(\t\032-\n\013JoinMessage\022\r\n\005table\030" +
-      "\001 \001(\t\022\017\n\007columns\030\002 \003(\t\"\'\n\024CachedResultsM" +
-      "essage\022\017\n\007queryid\030\001 \001(\t\"X\n\nAckMessage\022\036\n",
-      "\004code\030\001 \001(\0162\020.AckMessage.Code\022\017\n\007message" +
-      "\030\002 \001(\t\"\031\n\004Code\022\006\n\002OK\020\000\022\t\n\005ERROR\020\001\"=\n\017Ent" +
-      "itiesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\020" +
-      "\n\010entities\030\002 \003(\t\"\264\001\n\027EntityPropertiesMes" +
-      "sage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\016\n\006entity" +
-      "\030\002 \001(\t\022<\n\nproperties\030\003 \003(\0132(.EntityPrope" +
-      "rtiesMessage.PropertiesEntry\0321\n\017Properti" +
-      "esEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"" +
-      "j\n CompoundQueryResponseInfoMessage\022\030\n\003a" +
-      "ck\030\001 \001(\0132\013.AckMessage\022,\n\tresponses\030\002 \003(\013",
-      "2\031.QueryResponseInfoMessage\"\235\001\n\030QueryRes" +
-      "ponseInfoMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessa" +
-      "ge\022\017\n\007queryid\030\002 \001(\t\022\022\n\nconfidence\030\003 \001(\001\022" +
-      "\014\n\004time\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022$\n\007results" +
-      "\030\006 \003(\0132\023.QueryResultMessage\"\214\001\n\022QueryRes" +
-      "ultMessage\022\020\n\010distance\030\002 \001(\002\0223\n\010metadata" +
-      "\030\003 \003(\0132!.QueryResultMessage.MetadataEntr" +
-      "y\032/\n\rMetadataEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value" +
-      "\030\002 \001(\t:\0028\001*?\n\tIndexType\022\007\n\003ecp\020\000\022\007\n\003lsh\020" +
-      "\001\022\006\n\002pq\020\002\022\006\n\002sh\020\003\022\007\n\003vaf\020\004\022\007\n\003vav\020\0052\204\005\n\016",
-      "AdamDefinition\0223\n\014CreateEntity\022\024.CreateE" +
-      "ntityMessage\032\013.AckMessage\"\000\022/\n\nDropEntit" +
-      "y\022\022.EntityNameMessage\032\013.AckMessage\"\000\022)\n\006" +
-      "Insert\022\016.InsertMessage\032\013.AckMessage\"\000(\001\022" +
-      "%\n\005Index\022\r.IndexMessage\032\013.AckMessage\"\000\0222" +
-      "\n\022GenerateAllIndexes\022\r.IndexMessage\032\013.Ac" +
-      "kMessage\"\000\022-\n\tDropIndex\022\021.IndexNameMessa" +
-      "ge\032\013.AckMessage\"\000\022*\n\005Count\022\022.EntityNameM" +
-      "essage\032\013.AckMessage\"\000\022?\n\022GenerateRandomD" +
-      "ata\022\032.GenerateRandomDataMessage\032\013.AckMes",
-      "sage\"\000\0221\n\014ListEntities\022\r.EmptyMessage\032\020." +
-      "EntitiesMessage\"\000\022E\n\023GetEntityProperties" +
-      "\022\022.EntityNameMessage\032\030.EntityPropertiesM" +
-      "essage\"\000\022:\n\024RepartitionIndexData\022\023.Repar" +
-      "titionMessage\032\013.AckMessage\"\000\0224\n\016SetIndex" +
-      "Weight\022\023.IndexWeightMessage\032\013.AckMessage" +
-      "\"\0002\234\006\n\nAdamSearch\022.\n\nCacheIndex\022\021.IndexN" +
-      "ameMessage\032\013.AckMessage\"\000\0220\n\013CacheEntity" +
-      "\022\022.EntityNameMessage\032\013.AckMessage\"\000\022C\n\017D" +
-      "oStandardQuery\022\023.SimpleQueryMessage\032\031.Qu",
-      "eryResponseInfoMessage\"\000\022O\n\021DoSequential" +
-      "Query\022\035.SimpleSequentialQueryMessage\032\031.Q" +
-      "ueryResponseInfoMessage\"\000\022W\n\025DoSpecified" +
-      "IndexQuery\022!.SimpleSpecifiedIndexQueryMe" +
-      "ssage\032\031.QueryResponseInfoMessage\"\000\022E\n\014Do" +
-      "IndexQuery\022\030.SimpleIndexQueryMessage\032\031.Q" +
-      "ueryResponseInfoMessage\"\000\022H\n\022DoProgressi" +
-      "veQuery\022\023.SimpleQueryMessage\032\031.QueryResp" +
-      "onseInfoMessage\"\0000\001\022J\n\027DoTimedProgressiv" +
-      "eQuery\022\022.TimedQueryMessage\032\031.QueryRespon",
-      "seInfoMessage\"\000\022M\n\017DoCompoundQuery\022\025.Com" +
-      "poundQueryMessage\032!.CompoundQueryRespons" +
-      "eInfoMessage\"\000\022I\n\016DoBooleanQuery\022\032.Simpl" +
-      "eBooleanQueryMessage\032\031.QueryResponseInfo" +
-      "Message\"\000\022F\n\020GetCachedResults\022\025.CachedRe" +
-      "sultsMessage\032\031.QueryResponseInfoMessage\"" +
-      "\000B\036\n\034ch.unibas.dmi.dbis.adam.httpb\006proto" +
-      "3"
+      " \001(\t\022\017\n\007handler\030\003 \001(\t\0228\n\006params\030\004 \003(\0132(." +
+      "ExternalHandlerQueryMessage.ParamsEntry\032" +
+      "-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001",
+      "(\t:\0028\001\"\'\n\024CachedResultsMessage\022\017\n\007queryi" +
+      "d\030\001 \001(\t\"X\n\nAckMessage\022\036\n\004code\030\001 \001(\0162\020.Ac" +
+      "kMessage.Code\022\017\n\007message\030\002 \001(\t\"\031\n\004Code\022\006" +
+      "\n\002OK\020\000\022\t\n\005ERROR\020\001\"=\n\017EntitiesMessage\022\030\n\003" +
+      "ack\030\001 \001(\0132\013.AckMessage\022\020\n\010entities\030\002 \003(\t" +
+      "\"\264\001\n\027EntityPropertiesMessage\022\030\n\003ack\030\001 \001(" +
+      "\0132\013.AckMessage\022\016\n\006entity\030\002 \001(\t\022<\n\nproper" +
+      "ties\030\003 \003(\0132(.EntityPropertiesMessage.Pro" +
+      "pertiesEntry\0321\n\017PropertiesEntry\022\013\n\003key\030\001" +
+      " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"[\n\023QueryResultsM",
+      "essage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022*\n\tresp" +
+      "onses\030\002 \003(\0132\027.QueryResultInfoMessage\"\240\001\n" +
+      "\026QueryResultInfoMessage\022\030\n\003ack\030\001 \001(\0132\013.A" +
+      "ckMessage\022\017\n\007queryid\030\002 \001(\t\022\022\n\nconfidence" +
+      "\030\003 \001(\001\022\014\n\004time\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022)\n\007" +
+      "results\030\006 \003(\0132\030.QueryResultTupleMessage\"" +
+      "\206\001\n\027QueryResultTupleMessage\0220\n\004data\030\001 \003(" +
+      "\0132\".QueryResultTupleMessage.DataEntry\0329\n" +
+      "\tDataEntry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 \001(\0132\014" +
+      ".DataMessage:\0028\001*?\n\tIndexType\022\007\n\003ecp\020\000\022\007",
+      "\n\003lsh\020\001\022\006\n\002pq\020\002\022\006\n\002sh\020\003\022\007\n\003vaf\020\004\022\007\n\003vav\020" +
+      "\0052\356\005\n\016AdamDefinition\0223\n\014CreateEntity\022\024.C" +
+      "reateEntityMessage\032\013.AckMessage\"\000\022/\n\nDro" +
+      "pEntity\022\022.EntityNameMessage\032\013.AckMessage" +
+      "\"\000\022)\n\006Insert\022\016.InsertMessage\032\013.AckMessag" +
+      "e\"\000(\001\022%\n\005Index\022\r.IndexMessage\032\013.AckMessa" +
+      "ge\"\000\0222\n\022GenerateAllIndexes\022\r.IndexMessag" +
+      "e\032\013.AckMessage\"\000\022-\n\tDropIndex\022\021.IndexNam" +
+      "eMessage\032\013.AckMessage\"\000\022*\n\005Count\022\022.Entit" +
+      "yNameMessage\032\013.AckMessage\"\000\022?\n\022GenerateR",
+      "andomData\022\032.GenerateRandomDataMessage\032\013." +
+      "AckMessage\"\000\0221\n\014ListEntities\022\r.EmptyMess" +
+      "age\032\020.EntitiesMessage\"\000\022E\n\023GetEntityProp" +
+      "erties\022\022.EntityNameMessage\032\030.EntityPrope" +
+      "rtiesMessage\"\000\022;\n\025RepartitionEntityData\022" +
+      "\023.RepartitionMessage\032\013.AckMessage\"\000\022:\n\024R" +
+      "epartitionIndexData\022\023.RepartitionMessage" +
+      "\032\013.AckMessage\"\000\0224\n\016SetIndexWeight\022\023.Inde" +
+      "xWeightMessage\032\013.AckMessage\"\000\022+\n\nImportD" +
+      "ata\022\016.ImportMessage\032\013.AckMessage\"\0002\331\002\n\nA",
+      "damSearch\022.\n\nCacheIndex\022\021.IndexNameMessa" +
+      "ge\032\013.AckMessage\"\000\0220\n\013CacheEntity\022\022.Entit" +
+      "yNameMessage\032\013.AckMessage\"\000\0225\n\007Preview\022\022" +
+      ".EntityNameMessage\032\024.QueryResultsMessage" +
+      "\"\000\0220\n\007DoQuery\022\r.QueryMessage\032\024.QueryResu" +
+      "ltsMessage\"\000\022=\n\022DoProgressiveQuery\022\r.Que" +
+      "ryMessage\032\024.QueryResultsMessage\"\0000\001\022A\n\020G" +
+      "etCachedResults\022\025.CachedResultsMessage\032\024" +
+      ".QueryResultsMessage\"\000B\036\n\034ch.unibas.dmi." +
+      "dbis.adam.httpb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -33061,38 +29593,44 @@ public final class Grpc {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_IntVectorMessage_descriptor,
         new java.lang.String[] { "Vector", });
-    internal_static_CreateEntityMessage_descriptor =
+    internal_static_DataMessage_descriptor =
       getDescriptor().getMessageTypes().get(5);
+    internal_static_DataMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_DataMessage_descriptor,
+        new java.lang.String[] { "LongData", "IntData", "FloatData", "DoubleData", "StringData", "BooleanData", "FeatureData", "Datatype", });
+    internal_static_CreateEntityMessage_descriptor =
+      getDescriptor().getMessageTypes().get(6);
     internal_static_CreateEntityMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_CreateEntityMessage_descriptor,
         new java.lang.String[] { "Entity", "Fields", });
     internal_static_FieldDefinitionMessage_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_FieldDefinitionMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_FieldDefinitionMessage_descriptor,
         new java.lang.String[] { "Name", "Fieldtype", "Pk", "Unique", "Indexed", });
     internal_static_EntityNameMessage_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_EntityNameMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EntityNameMessage_descriptor,
         new java.lang.String[] { "Entity", });
     internal_static_IndexNameMessage_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_IndexNameMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_IndexNameMessage_descriptor,
         new java.lang.String[] { "Index", });
     internal_static_GenerateRandomDataMessage_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_GenerateRandomDataMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_GenerateRandomDataMessage_descriptor,
         new java.lang.String[] { "Entity", "Ntuples", "Ndims", });
     internal_static_InsertMessage_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_InsertMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_InsertMessage_descriptor,
@@ -33109,12 +29647,6 @@ public final class Grpc {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_InsertMessage_TupleInsertMessage_DataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_InsertDataMessage_descriptor =
-      getDescriptor().getMessageTypes().get(11);
-    internal_static_InsertDataMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_InsertDataMessage_descriptor,
-        new java.lang.String[] { "LongData", "IntData", "FloatData", "DoubleData", "StringData", "BooleanData", "FeatureData", "Inserttype", });
     internal_static_IndexMessage_descriptor =
       getDescriptor().getMessageTypes().get(12);
     internal_static_IndexMessage_fieldAccessorTable = new
@@ -33132,85 +29664,61 @@ public final class Grpc {
     internal_static_RepartitionMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_RepartitionMessage_descriptor,
-        new java.lang.String[] { "Index", "NumberOfPartitions", "Columns", "Option", });
+        new java.lang.String[] { "Entity", "NumberOfPartitions", "Columns", "Option", });
     internal_static_IndexWeightMessage_descriptor =
       getDescriptor().getMessageTypes().get(14);
     internal_static_IndexWeightMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_IndexWeightMessage_descriptor,
         new java.lang.String[] { "Index", "Weight", });
-    internal_static_SimpleQueryMessage_descriptor =
+    internal_static_ImportMessage_descriptor =
       getDescriptor().getMessageTypes().get(15);
-    internal_static_SimpleQueryMessage_fieldAccessorTable = new
+    internal_static_ImportMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_SimpleQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Entity", "Hints", "Nnq", "Bq", "WithMetadata", "ReadFromCache", "PutInCache", });
-    internal_static_SimpleBooleanQueryMessage_descriptor =
+        internal_static_ImportMessage_descriptor,
+        new java.lang.String[] { "Host", "Database", "Username", "Password", });
+    internal_static_QueryMessage_descriptor =
       getDescriptor().getMessageTypes().get(16);
-    internal_static_SimpleBooleanQueryMessage_fieldAccessorTable = new
+    internal_static_QueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_SimpleBooleanQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Entity", "Bq", "ReadFromCache", "PutInCache", });
-    internal_static_SimpleSequentialQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(17);
-    internal_static_SimpleSequentialQueryMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_SimpleSequentialQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Entity", "Nnq", "Bq", "WithMetadata", "ReadFromCache", "PutInCache", });
-    internal_static_SimpleSpecifiedIndexQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(18);
-    internal_static_SimpleSpecifiedIndexQueryMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_SimpleSpecifiedIndexQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Index", "Nnq", "Bq", "WithMetadata", "ReadFromCache", "PutInCache", });
-    internal_static_SimpleIndexQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(19);
-    internal_static_SimpleIndexQueryMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_SimpleIndexQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Entity", "Indextype", "Nnq", "Bq", "WithMetadata", "ReadFromCache", "PutInCache", });
-    internal_static_TimedQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(20);
-    internal_static_TimedQueryMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_TimedQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Entity", "Nnq", "Bq", "Time", "WithMetadata", });
-    internal_static_CompoundQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(21);
-    internal_static_CompoundQueryMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_CompoundQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Entity", "Nnq", "Bq", "IndexFilterExpression", "WithMetadata", "WithIntermediateResults", });
+        internal_static_QueryMessage_descriptor,
+        new java.lang.String[] { "Queryid", "Projection", "From", "Bq", "Nnq", "Hints", "Time", "ReadFromCache", "PutInCache", "Information", });
     internal_static_ExpressionQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_ExpressionQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ExpressionQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Left", "Operation", "Order", "Right", });
-    internal_static_ExternalHandlerQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(23);
-    internal_static_ExternalHandlerQueryMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_ExternalHandlerQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Entity", "Handler", "Params", });
-    internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor =
-      internal_static_ExternalHandlerQueryMessage_descriptor.getNestedTypes().get(0);
-    internal_static_ExternalHandlerQueryMessage_ParamsEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
     internal_static_SubExpressionQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(24);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_SubExpressionQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SubExpressionQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Ssqm", "Ssiqm", "Siqm", "Eqm", "Ehqm", "Sbqm", "Submessage", });
+        new java.lang.String[] { "Queryid", "Qm", "Eqm", "Ehqm", "Submessage", });
+    internal_static_ProjectionMessage_descriptor =
+      getDescriptor().getMessageTypes().get(19);
+    internal_static_ProjectionMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_ProjectionMessage_descriptor,
+        new java.lang.String[] { "Field", "Op", "Submessage", });
+    internal_static_ProjectionMessage_FieldnameMessage_descriptor =
+      internal_static_ProjectionMessage_descriptor.getNestedTypes().get(0);
+    internal_static_ProjectionMessage_FieldnameMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_ProjectionMessage_FieldnameMessage_descriptor,
+        new java.lang.String[] { "Field", });
+    internal_static_FromMessage_descriptor =
+      getDescriptor().getMessageTypes().get(20);
+    internal_static_FromMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_FromMessage_descriptor,
+        new java.lang.String[] { "Entity", "Index", "Expression", "Source", });
     internal_static_NearestNeighbourQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(25);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_NearestNeighbourQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_NearestNeighbourQueryMessage_descriptor,
-        new java.lang.String[] { "Column", "Query", "Distance", "K", "IndexOnly", "Options", "Partitions", });
+        new java.lang.String[] { "Column", "Query", "Weights", "Distance", "K", "Options", "IndexOnly", "Partitions", });
     internal_static_NearestNeighbourQueryMessage_OptionsEntry_descriptor =
       internal_static_NearestNeighbourQueryMessage_descriptor.getNestedTypes().get(0);
     internal_static_NearestNeighbourQueryMessage_OptionsEntry_fieldAccessorTable = new
@@ -33218,7 +29726,7 @@ public final class Grpc {
         internal_static_NearestNeighbourQueryMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DistanceMessage_descriptor =
-      getDescriptor().getMessageTypes().get(26);
+      getDescriptor().getMessageTypes().get(22);
     internal_static_DistanceMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_DistanceMessage_descriptor,
@@ -33230,7 +29738,7 @@ public final class Grpc {
         internal_static_DistanceMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_BooleanQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(27);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_BooleanQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BooleanQueryMessage_descriptor,
@@ -33247,26 +29755,38 @@ public final class Grpc {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BooleanQueryMessage_JoinMessage_descriptor,
         new java.lang.String[] { "Table", "Columns", });
+    internal_static_ExternalHandlerQueryMessage_descriptor =
+      getDescriptor().getMessageTypes().get(24);
+    internal_static_ExternalHandlerQueryMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_ExternalHandlerQueryMessage_descriptor,
+        new java.lang.String[] { "Queryid", "Entity", "Handler", "Params", });
+    internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor =
+      internal_static_ExternalHandlerQueryMessage_descriptor.getNestedTypes().get(0);
+    internal_static_ExternalHandlerQueryMessage_ParamsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     internal_static_CachedResultsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(28);
+      getDescriptor().getMessageTypes().get(25);
     internal_static_CachedResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_CachedResultsMessage_descriptor,
         new java.lang.String[] { "Queryid", });
     internal_static_AckMessage_descriptor =
-      getDescriptor().getMessageTypes().get(29);
+      getDescriptor().getMessageTypes().get(26);
     internal_static_AckMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_AckMessage_descriptor,
         new java.lang.String[] { "Code", "Message", });
     internal_static_EntitiesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(30);
+      getDescriptor().getMessageTypes().get(27);
     internal_static_EntitiesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EntitiesMessage_descriptor,
         new java.lang.String[] { "Ack", "Entities", });
     internal_static_EntityPropertiesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(31);
+      getDescriptor().getMessageTypes().get(28);
     internal_static_EntityPropertiesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EntityPropertiesMessage_descriptor,
@@ -33277,29 +29797,29 @@ public final class Grpc {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EntityPropertiesMessage_PropertiesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_CompoundQueryResponseInfoMessage_descriptor =
-      getDescriptor().getMessageTypes().get(32);
-    internal_static_CompoundQueryResponseInfoMessage_fieldAccessorTable = new
+    internal_static_QueryResultsMessage_descriptor =
+      getDescriptor().getMessageTypes().get(29);
+    internal_static_QueryResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_CompoundQueryResponseInfoMessage_descriptor,
+        internal_static_QueryResultsMessage_descriptor,
         new java.lang.String[] { "Ack", "Responses", });
-    internal_static_QueryResponseInfoMessage_descriptor =
-      getDescriptor().getMessageTypes().get(33);
-    internal_static_QueryResponseInfoMessage_fieldAccessorTable = new
+    internal_static_QueryResultInfoMessage_descriptor =
+      getDescriptor().getMessageTypes().get(30);
+    internal_static_QueryResultInfoMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_QueryResponseInfoMessage_descriptor,
+        internal_static_QueryResultInfoMessage_descriptor,
         new java.lang.String[] { "Ack", "Queryid", "Confidence", "Time", "Source", "Results", });
-    internal_static_QueryResultMessage_descriptor =
-      getDescriptor().getMessageTypes().get(34);
-    internal_static_QueryResultMessage_fieldAccessorTable = new
+    internal_static_QueryResultTupleMessage_descriptor =
+      getDescriptor().getMessageTypes().get(31);
+    internal_static_QueryResultTupleMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_QueryResultMessage_descriptor,
-        new java.lang.String[] { "Distance", "Metadata", });
-    internal_static_QueryResultMessage_MetadataEntry_descriptor =
-      internal_static_QueryResultMessage_descriptor.getNestedTypes().get(0);
-    internal_static_QueryResultMessage_MetadataEntry_fieldAccessorTable = new
+        internal_static_QueryResultTupleMessage_descriptor,
+        new java.lang.String[] { "Data", });
+    internal_static_QueryResultTupleMessage_DataEntry_descriptor =
+      internal_static_QueryResultTupleMessage_descriptor.getNestedTypes().get(0);
+    internal_static_QueryResultTupleMessage_DataEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_QueryResultMessage_MetadataEntry_descriptor,
+        internal_static_QueryResultTupleMessage_DataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
   }
 

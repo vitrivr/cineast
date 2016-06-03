@@ -3,6 +3,8 @@ package ch.unibas.cs.dbis.cineast.core.db;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
+import ch.unibas.dmi.dbis.adam.http.Grpc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,8 +17,10 @@ import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.Builder;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage;
 
 public class ADAMproWriter extends ProtobufTupleGenerator {
 	
@@ -47,12 +51,12 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		WhereMessage where = WhereMessage.newBuilder().setField(key).setValue(value).build();
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		tmp.add(where);
-		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(this.entityName)
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Grpc.FromMessage.newBuilder().setEntity(this.entityName).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = this.adampro.booleanQuery(qbqm);
-		QueryResponseInfoMessage responce;
+		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
+		QueryResultInfoMessage responce;
 		try {
-			responce = f.get();
+			responce = f.get().getResponses(0);
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

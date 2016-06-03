@@ -113,6 +113,15 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.EntityPropertiesMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage,
+      ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> METHOD_REPARTITION_ENTITY_DATA =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamDefinition", "RepartitionEntityData"),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage,
       ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> METHOD_REPARTITION_INDEX_DATA =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
@@ -128,6 +137,15 @@ public class AdamDefinitionGrpc {
           generateFullMethodName(
               "AdamDefinition", "SetIndexWeight"),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.IndexWeightMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage,
+      ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> METHOD_IMPORT_DATA =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamDefinition", "ImportData"),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.getDefaultInstance()));
 
   public static AdamDefinitionStub newStub(io.grpc.Channel channel) {
@@ -176,10 +194,16 @@ public class AdamDefinitionGrpc {
     public void getEntityProperties(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.EntityPropertiesMessage> responseObserver);
 
+    public void repartitionEntityData(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
+
     public void repartitionIndexData(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
 
     public void setIndexWeight(ch.unibas.dmi.dbis.adam.http.Grpc.IndexWeightMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
+
+    public void importData(ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
   }
 
@@ -203,9 +227,13 @@ public class AdamDefinitionGrpc {
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.EntityPropertiesMessage getEntityProperties(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request);
 
+    public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage repartitionEntityData(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request);
+
     public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage repartitionIndexData(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request);
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage setIndexWeight(ch.unibas.dmi.dbis.adam.http.Grpc.IndexWeightMessage request);
+
+    public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage importData(ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage request);
   }
 
   public static interface AdamDefinitionFutureClient {
@@ -237,11 +265,17 @@ public class AdamDefinitionGrpc {
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.EntityPropertiesMessage> getEntityProperties(
         ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request);
 
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> repartitionEntityData(
+        ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request);
+
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> repartitionIndexData(
         ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> setIndexWeight(
         ch.unibas.dmi.dbis.adam.http.Grpc.IndexWeightMessage request);
+
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> importData(
+        ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage request);
   }
 
   public static class AdamDefinitionStub extends io.grpc.stub.AbstractStub<AdamDefinitionStub>
@@ -332,6 +366,13 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public void repartitionEntityData(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_REPARTITION_ENTITY_DATA, getCallOptions()), request, responseObserver);
+    }
+
+    @java.lang.Override
     public void repartitionIndexData(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver) {
       asyncUnaryCall(
@@ -343,6 +384,13 @@ public class AdamDefinitionGrpc {
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_SET_INDEX_WEIGHT, getCallOptions()), request, responseObserver);
+    }
+
+    @java.lang.Override
+    public void importData(ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_IMPORT_DATA, getCallOptions()), request, responseObserver);
     }
   }
 
@@ -418,6 +466,12 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage repartitionEntityData(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_REPARTITION_ENTITY_DATA, getCallOptions(), request);
+    }
+
+    @java.lang.Override
     public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage repartitionIndexData(ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_REPARTITION_INDEX_DATA, getCallOptions(), request);
@@ -427,6 +481,12 @@ public class AdamDefinitionGrpc {
     public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage setIndexWeight(ch.unibas.dmi.dbis.adam.http.Grpc.IndexWeightMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_SET_INDEX_WEIGHT, getCallOptions(), request);
+    }
+
+    @java.lang.Override
+    public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage importData(ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_IMPORT_DATA, getCallOptions(), request);
     }
   }
 
@@ -511,6 +571,13 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> repartitionEntityData(
+        ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_REPARTITION_ENTITY_DATA, getCallOptions()), request);
+    }
+
+    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> repartitionIndexData(
         ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage request) {
       return futureUnaryCall(
@@ -523,6 +590,13 @@ public class AdamDefinitionGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_SET_INDEX_WEIGHT, getCallOptions()), request);
     }
+
+    @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> importData(
+        ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_IMPORT_DATA, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_ENTITY = 0;
@@ -534,9 +608,11 @@ public class AdamDefinitionGrpc {
   private static final int METHODID_GENERATE_RANDOM_DATA = 6;
   private static final int METHODID_LIST_ENTITIES = 7;
   private static final int METHODID_GET_ENTITY_PROPERTIES = 8;
-  private static final int METHODID_REPARTITION_INDEX_DATA = 9;
-  private static final int METHODID_SET_INDEX_WEIGHT = 10;
-  private static final int METHODID_INSERT = 11;
+  private static final int METHODID_REPARTITION_ENTITY_DATA = 9;
+  private static final int METHODID_REPARTITION_INDEX_DATA = 10;
+  private static final int METHODID_SET_INDEX_WEIGHT = 11;
+  private static final int METHODID_IMPORT_DATA = 12;
+  private static final int METHODID_INSERT = 13;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -590,12 +666,20 @@ public class AdamDefinitionGrpc {
           serviceImpl.getEntityProperties((ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.EntityPropertiesMessage>) responseObserver);
           break;
+        case METHODID_REPARTITION_ENTITY_DATA:
+          serviceImpl.repartitionEntityData((ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
+          break;
         case METHODID_REPARTITION_INDEX_DATA:
           serviceImpl.repartitionIndexData((ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
           break;
         case METHODID_SET_INDEX_WEIGHT:
           serviceImpl.setIndexWeight((ch.unibas.dmi.dbis.adam.http.Grpc.IndexWeightMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
+          break;
+        case METHODID_IMPORT_DATA:
+          serviceImpl.importData((ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
           break;
         default:
@@ -690,6 +774,13 @@ public class AdamDefinitionGrpc {
               ch.unibas.dmi.dbis.adam.http.Grpc.EntityPropertiesMessage>(
                 serviceImpl, METHODID_GET_ENTITY_PROPERTIES)))
         .addMethod(
+          METHOD_REPARTITION_ENTITY_DATA,
+          asyncUnaryCall(
+            new MethodHandlers<
+              ch.unibas.dmi.dbis.adam.http.Grpc.RepartitionMessage,
+              ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>(
+                serviceImpl, METHODID_REPARTITION_ENTITY_DATA)))
+        .addMethod(
           METHOD_REPARTITION_INDEX_DATA,
           asyncUnaryCall(
             new MethodHandlers<
@@ -703,6 +794,13 @@ public class AdamDefinitionGrpc {
               ch.unibas.dmi.dbis.adam.http.Grpc.IndexWeightMessage,
               ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>(
                 serviceImpl, METHODID_SET_INDEX_WEIGHT)))
+        .addMethod(
+          METHOD_IMPORT_DATA,
+          asyncUnaryCall(
+            new MethodHandlers<
+              ch.unibas.dmi.dbis.adam.http.Grpc.ImportMessage,
+              ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>(
+                serviceImpl, METHODID_IMPORT_DATA)))
         .build();
   }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import ch.unibas.dmi.dbis.adam.http.Grpc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,9 +16,12 @@ import com.google.common.util.concurrent.ListenableFuture;
 import ch.unibas.cs.dbis.cineast.core.data.Shot;
 import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
 import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage;
+
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
 
 public class ShotLookup {
@@ -37,30 +41,30 @@ public class ShotLookup {
 		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(shotId).build();
 		//TODO check type as well
 		tmp.add(where);
-		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT)
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = adampro.booleanQuery(qbqm);
-		QueryResponseInfoMessage responce;
+		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
+		QueryResultInfoMessage responce;
 
 		try {
-			responce = f.get();
+			responce = f.get().getResponses(0);
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ShotDescriptor("", "", 0, 0);
 		}
 
-		List<QueryResultMessage> results = responce.getResultsList();
+		List<QueryResultTupleMessage> results = responce.getResultsList();
 		
 		if(results.isEmpty()){//no such video
 			return new ShotDescriptor("", "", 0, 0);
 		}
+
+		QueryResultTupleMessage result = results.get(0);
 		
-		QueryResultMessage result = results.get(0);
+		Map<String, Grpc.DataMessage> map = result.getData();
 		
-		Map<String, String> map = result.getMetadata();
-		
-		ShotDescriptor _return = new ShotDescriptor(map.get("multimediaobject"), map.get("id"), Integer.parseInt(map.get("segmentstart")), Integer.parseInt(map.get("segmentend")));
+		ShotDescriptor _return = new ShotDescriptor(map.get("multimediaobject").getStringData(), map.get("id").getStringData(), map.get("segmentstart").getIntData(), map.get("segmentend").getIntData());
 		
 		LOGGER.debug("lookUpShot done in {}ms", System.currentTimeMillis() - start);
 		return LOGGER.exit(_return);
@@ -88,29 +92,29 @@ public class ShotLookup {
 		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(builder.toString()).build();
 		//TODO check type as well
 		tmp.add(where);
-		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT)
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = adampro.booleanQuery(qbqm);
-		QueryResponseInfoMessage responce;
+		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
+		QueryResultInfoMessage responce;
 		
 		try {
-			responce = f.get();
+			responce = f.get().getResponses(0);
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new HashMap<>();
 		}
 
-		List<QueryResultMessage> results = responce.getResultsList();
+		List<QueryResultTupleMessage> results = responce.getResultsList();
 		
 		if(results.isEmpty()){//no such video
 			return new HashMap<>();
 		}
 		
 		HashMap<String, ShotDescriptor> _return = new HashMap<>();
-		for(QueryResultMessage result : results){
-			Map<String, String> map = result.getMetadata();
-			_return.put(map.get("id"), new ShotDescriptor(map.get("multimediaobject"), map.get("id"), Integer.parseInt(map.get("segmentstart")), Integer.parseInt(map.get("segmentend"))));
+		for(QueryResultTupleMessage result : results){
+			Map<String, Grpc.DataMessage> map = result.getData();
+			_return.put(map.get("id").getStringData(), new ShotDescriptor(map.get("multimediaobject").getStringData(), map.get("id").getStringData(), map.get("segmentstart").getIntData(), map.get("segmentend").getIntData()));
 		}
 		LOGGER.debug("lookUpShot done in {}ms", System.currentTimeMillis() - start);
 		return LOGGER.exit(_return);
@@ -122,27 +126,27 @@ public class ShotLookup {
 		WhereMessage where = WhereMessage.newBuilder().setField("name").setValue(name).build();
 		//TODO check type as well
 		tmp.add(where);
-		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT)
+		QueryMessage qbqm = QueryMessage.getDefaultInstance().newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = adampro.booleanQuery(qbqm);
-		QueryResponseInfoMessage responce;
+		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
+		QueryResultInfoMessage responce;
 		try {
-			responce = f.get();
+			responce = f.get().getResponses(0);
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "";
 		}
 
-		List<QueryResultMessage> results = responce.getResultsList();
+		List<QueryResultTupleMessage> results = responce.getResultsList();
 		
 		if(results.isEmpty()){//no such video
 			return "";
 		}
+
+		QueryResultTupleMessage result = results.get(0);
 		
-		QueryResultMessage result = results.get(0);
-		
-		String id = result.getMetadata().get("id");
+		String id = result.getData().get("id").getStringData();
 		
 		return id;
 
@@ -154,27 +158,27 @@ public class ShotLookup {
 		WhereMessage where = WhereMessage.newBuilder().setField("multimediaobject").setValue(videoId).build();
 		//TODO check type as well
 		tmp.add(where);
-		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT)
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = adampro.booleanQuery(qbqm);
-		QueryResponseInfoMessage responce;
+		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
+		QueryResultInfoMessage responce;
 		try {
-			responce = f.get();
+			responce = f.get().getResponses(0);
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return _return;
 		}
 		
-		List<QueryResultMessage> results = responce.getResultsList();
+		List<QueryResultTupleMessage> results = responce.getResultsList();
 		
-		for(QueryResultMessage result : results){
-			Map<String, String> metadata = result.getMetadata();
+		for(QueryResultTupleMessage result : results){
+			Map<String, Grpc.DataMessage> metadata = result.getData();
 			_return.add(new ShotDescriptor(
-					videoId, 
-					metadata.get("id"), 
-					Integer.parseInt(metadata.get("segmentstart")), 
-					Integer.parseInt(metadata.get("segmentend"))));
+					videoId,
+					metadata.get("id").getStringData(),
+					metadata.get("segmentstart").getIntData(),
+					metadata.get("segmentend").getIntData()));
 		}
 		
 

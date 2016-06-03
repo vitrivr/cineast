@@ -7,7 +7,7 @@ import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
 import ch.unibas.dmi.dbis.adam.http.Grpc;
 import ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.InsertDataMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage.Builder;
 import ch.unibas.dmi.dbis.adam.http.Grpc.IntVectorMessage;
@@ -18,9 +18,9 @@ public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleI
 	private static final Builder builder = Grpc.InsertMessage.TupleInsertMessage.newBuilder();
 	
 	
-	private final InsertDataMessage.Builder insertMessageBuilder = InsertDataMessage.newBuilder();
+	private final DataMessage.Builder insertMessageBuilder = DataMessage.newBuilder();
 	
-	private InsertDataMessage generateInsertMessage(Object o){
+	private DataMessage generateInsertMessage(Object o){
 		synchronized(insertMessageBuilder){
 			insertMessageBuilder.clear();
 			if(o instanceof Long){
@@ -111,7 +111,7 @@ public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleI
 		public TupleInsertMessage getPersistentRepresentation() {
 			synchronized (builder) {
 				builder.clear();			
-				HashMap<String, InsertDataMessage> tmpMap = new HashMap<>();
+				HashMap<String, DataMessage> tmpMap = new HashMap<>();
 				int nameIndex = 0;
 				
 				for(Object o : this.elements){

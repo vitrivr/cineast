@@ -2,6 +2,7 @@ package ch.unibas.cs.dbis.cineast.core.db;
 
 import java.util.concurrent.ExecutionException;
 
+import ch.unibas.dmi.dbis.adam.http.Grpc;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 
@@ -15,9 +16,8 @@ import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.CreateEntityMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -80,18 +80,14 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 		}
 	}
 	
-	public ListenableFuture<QueryResponseInfoMessage> booleanQuery(SimpleBooleanQueryMessage message){
-		SettableFuture<QueryResponseInfoMessage> future = SettableFuture.create();
-		synchronized (this.searchStub) {
-			this.searchStub.doBooleanQuery(message, new LastQueryResponseStreamObserver(future));
-		}
-		return future;
+	public ListenableFuture<QueryResultsMessage> booleanQuery(QueryMessage message){
+		return standardQuery(message);
 	}
 	
-	public ListenableFuture<QueryResponseInfoMessage> standardQuery(SimpleQueryMessage message){
-		SettableFuture<QueryResponseInfoMessage> future = SettableFuture.create();
+	public ListenableFuture<QueryResultsMessage> standardQuery(QueryMessage message){
+		SettableFuture<QueryResultsMessage> future = SettableFuture.create();
 		synchronized (this.searchStub) {
-			this.searchStub.doStandardQuery(message, new LastQueryResponseStreamObserver(future));
+			this.searchStub.doQuery(message, new LastQueryResponseStreamObserver(future));
 		}
 		return future;
 	}
@@ -141,9 +137,9 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 			super(future);
 		}}
 	
-	class LastQueryResponseStreamObserver extends LastObserver<QueryResponseInfoMessage>{
+	class LastQueryResponseStreamObserver extends LastObserver<QueryResultsMessage>{
 
-		LastQueryResponseStreamObserver(SettableFuture<QueryResponseInfoMessage> future) {
+		LastQueryResponseStreamObserver(SettableFuture<QueryResultsMessage> future) {
 			super(future);
 		}}
 	

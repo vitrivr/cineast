@@ -6,14 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import ch.unibas.dmi.dbis.adam.http.Grpc;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
 import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage;
 
 public class VideoLookup{
 	
@@ -24,27 +26,27 @@ public class VideoLookup{
 		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(videoId).build();
 		//TODO check type as well
 		tmp.add(where);
-		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT)
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Grpc.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = this.adampro.booleanQuery(qbqm);
-		QueryResponseInfoMessage responce;
+		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
+		QueryResultInfoMessage responce;
 		try {
-			responce = f.get();
+			responce = f.get().getResponses(0);
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		
-		List<QueryResultMessage> results = responce.getResultsList();
+		List<QueryResultTupleMessage> results = responce.getResultsList();
 		
 		if(results.isEmpty()){//no such video
 			return null;
 		}
+
+		QueryResultTupleMessage result = results.get(0);
 		
-		QueryResultMessage result = results.get(0);
-		
-		return new VideoDescriptor(result.getMetadata());
+		return new VideoDescriptor(result.getData());
 		
 	}
 	
@@ -68,19 +70,19 @@ public class VideoLookup{
 		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(builder.toString()).build();
 		//TODO check type as well
 		tmp.add(where);
-		SimpleBooleanQueryMessage qbqm = SimpleBooleanQueryMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT)
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Grpc.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResponseInfoMessage> f = this.adampro.booleanQuery(qbqm);
-		QueryResponseInfoMessage responce;
+		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
+		QueryResultInfoMessage responce;
 		try {
-			responce = f.get();
+			responce = f.get().getResponses(0);
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null; //TODO
 		}
 		
-		List<QueryResultMessage> results = responce.getResultsList();
+		List<QueryResultTupleMessage> results = responce.getResultsList();
 		
 		if(results.isEmpty()){//no such video
 			return null; //TODO
@@ -88,9 +90,9 @@ public class VideoLookup{
 		
 		HashMap<String, VideoDescriptor> _return = new HashMap<>();
 		
-		for(QueryResultMessage result : results){
-			Map<String, String> meta = result.getMetadata();
-			_return.put(meta.get("id"), new VideoDescriptor(meta));
+		for(QueryResultTupleMessage result : results){
+			Map<String, Grpc.DataMessage> meta = result.getData();
+			_return.put(meta.get("id").getStringData(), new VideoDescriptor(meta));
 		}
 		
 		return _return;
@@ -113,14 +115,14 @@ public static class VideoDescriptor{
 		private final float seconds, fps;
 		private final String name, path;
 		
-		VideoDescriptor(Map<String, String> map){
-			this.videoId = map.get("id");
-			this.name = map.get("name");
-			this.path = map.get("path");
-			this.width = Integer.parseInt(map.get("width"));
-			this.height = Integer.parseInt(map.get("height"));
-			this.framecount = Integer.parseInt(map.get("framecount"));
-			this.seconds = Float.parseFloat(map.get("duration"));
+		VideoDescriptor(Map<String, Grpc.DataMessage> map){
+			this.videoId = map.get("id").getStringData();
+			this.name = map.get("name").getStringData();
+			this.path = map.get("path").getStringData();
+			this.width = map.get("width").getIntData();
+			this.height = map.get("height").getIntData();
+			this.framecount = map.get("framecount").getIntData();
+			this.seconds = map.get("duration").getFloatData();
 			this.fps = this.framecount / this.seconds;
 		}
 

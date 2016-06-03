@@ -40,86 +40,41 @@ public class AdamSearchGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage,
-      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> METHOD_DO_STANDARD_QUERY =
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage,
+      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> METHOD_PREVIEW =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
-              "AdamSearch", "DoStandardQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance()));
+              "AdamSearch", "Preview"),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage,
-      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> METHOD_DO_SEQUENTIAL_QUERY =
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage,
+      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> METHOD_DO_QUERY =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
-              "AdamSearch", "DoSequentialQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance()));
+              "AdamSearch", "DoQuery"),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage,
-      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> METHOD_DO_SPECIFIED_INDEX_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "DoSpecifiedIndexQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage,
-      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> METHOD_DO_INDEX_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "DoIndexQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage,
-      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> METHOD_DO_PROGRESSIVE_QUERY =
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage,
+      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> METHOD_DO_PROGRESSIVE_QUERY =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING,
           generateFullMethodName(
               "AdamSearch", "DoProgressiveQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage,
-      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> METHOD_DO_TIMED_PROGRESSIVE_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "DoTimedProgressiveQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage,
-      ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage> METHOD_DO_COMPOUND_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "DoCompoundQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage,
-      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> METHOD_DO_BOOLEAN_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "DoBooleanQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance()));
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage,
-      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> METHOD_GET_CACHED_RESULTS =
+      ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> METHOD_GET_CACHED_RESULTS =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
               "AdamSearch", "GetCachedResults"),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage.getDefaultInstance()));
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage.getDefaultInstance()));
 
   public static AdamSearchStub newStub(io.grpc.Channel channel) {
     return new AdamSearchStub(channel);
@@ -143,32 +98,17 @@ public class AdamSearchGrpc {
     public void cacheEntity(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> responseObserver);
 
-    public void doStandardQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver);
+    public void preview(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> responseObserver);
 
-    public void doSequentialQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver);
+    public void doQuery(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> responseObserver);
 
-    public void doSpecifiedIndexQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver);
-
-    public void doIndexQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver);
-
-    public void doProgressiveQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver);
-
-    public void doTimedProgressiveQuery(ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver);
-
-    public void doCompoundQuery(ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage> responseObserver);
-
-    public void doBooleanQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver);
+    public void doProgressiveQuery(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> responseObserver);
 
     public void getCachedResults(ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver);
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> responseObserver);
   }
 
   public static interface AdamSearchBlockingClient {
@@ -177,24 +117,14 @@ public class AdamSearchGrpc {
 
     public ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage cacheEntity(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request);
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doStandardQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage request);
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage preview(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request);
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doSequentialQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage request);
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage doQuery(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage request);
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doSpecifiedIndexQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage request);
+    public java.util.Iterator<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> doProgressiveQuery(
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage request);
 
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doIndexQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage request);
-
-    public java.util.Iterator<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doProgressiveQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage request);
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doTimedProgressiveQuery(ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage request);
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage doCompoundQuery(ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage request);
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doBooleanQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage request);
-
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage getCachedResults(ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage request);
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage getCachedResults(ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage request);
   }
 
   public static interface AdamSearchFutureClient {
@@ -205,28 +135,13 @@ public class AdamSearchGrpc {
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage> cacheEntity(
         ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request);
 
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doStandardQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage request);
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> preview(
+        ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request);
 
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doSequentialQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage request);
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> doQuery(
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage request);
 
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doSpecifiedIndexQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doIndexQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doTimedProgressiveQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage> doCompoundQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doBooleanQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> getCachedResults(
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> getCachedResults(
         ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage request);
   }
 
@@ -262,64 +177,29 @@ public class AdamSearchGrpc {
     }
 
     @java.lang.Override
-    public void doStandardQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver) {
+    public void preview(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(METHOD_DO_STANDARD_QUERY, getCallOptions()), request, responseObserver);
+          getChannel().newCall(METHOD_PREVIEW, getCallOptions()), request, responseObserver);
     }
 
     @java.lang.Override
-    public void doSequentialQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver) {
+    public void doQuery(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(METHOD_DO_SEQUENTIAL_QUERY, getCallOptions()), request, responseObserver);
+          getChannel().newCall(METHOD_DO_QUERY, getCallOptions()), request, responseObserver);
     }
 
     @java.lang.Override
-    public void doSpecifiedIndexQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_DO_SPECIFIED_INDEX_QUERY, getCallOptions()), request, responseObserver);
-    }
-
-    @java.lang.Override
-    public void doIndexQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_DO_INDEX_QUERY, getCallOptions()), request, responseObserver);
-    }
-
-    @java.lang.Override
-    public void doProgressiveQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver) {
+    public void doProgressiveQuery(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> responseObserver) {
       asyncServerStreamingCall(
           getChannel().newCall(METHOD_DO_PROGRESSIVE_QUERY, getCallOptions()), request, responseObserver);
     }
 
     @java.lang.Override
-    public void doTimedProgressiveQuery(ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_DO_TIMED_PROGRESSIVE_QUERY, getCallOptions()), request, responseObserver);
-    }
-
-    @java.lang.Override
-    public void doCompoundQuery(ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_DO_COMPOUND_QUERY, getCallOptions()), request, responseObserver);
-    }
-
-    @java.lang.Override
-    public void doBooleanQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_DO_BOOLEAN_QUERY, getCallOptions()), request, responseObserver);
-    }
-
-    @java.lang.Override
     public void getCachedResults(ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage request,
-        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_GET_CACHED_RESULTS, getCallOptions()), request, responseObserver);
     }
@@ -355,56 +235,26 @@ public class AdamSearchGrpc {
     }
 
     @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doStandardQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage request) {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage preview(ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request) {
       return blockingUnaryCall(
-          getChannel(), METHOD_DO_STANDARD_QUERY, getCallOptions(), request);
+          getChannel(), METHOD_PREVIEW, getCallOptions(), request);
     }
 
     @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doSequentialQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage request) {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage doQuery(ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage request) {
       return blockingUnaryCall(
-          getChannel(), METHOD_DO_SEQUENTIAL_QUERY, getCallOptions(), request);
+          getChannel(), METHOD_DO_QUERY, getCallOptions(), request);
     }
 
     @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doSpecifiedIndexQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_DO_SPECIFIED_INDEX_QUERY, getCallOptions(), request);
-    }
-
-    @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doIndexQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_DO_INDEX_QUERY, getCallOptions(), request);
-    }
-
-    @java.lang.Override
-    public java.util.Iterator<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doProgressiveQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage request) {
+    public java.util.Iterator<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> doProgressiveQuery(
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage request) {
       return blockingServerStreamingCall(
           getChannel(), METHOD_DO_PROGRESSIVE_QUERY, getCallOptions(), request);
     }
 
     @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doTimedProgressiveQuery(ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_DO_TIMED_PROGRESSIVE_QUERY, getCallOptions(), request);
-    }
-
-    @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage doCompoundQuery(ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_DO_COMPOUND_QUERY, getCallOptions(), request);
-    }
-
-    @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage doBooleanQuery(ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_DO_BOOLEAN_QUERY, getCallOptions(), request);
-    }
-
-    @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage getCachedResults(ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage request) {
+    public ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage getCachedResults(ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_GET_CACHED_RESULTS, getCallOptions(), request);
     }
@@ -442,56 +292,21 @@ public class AdamSearchGrpc {
     }
 
     @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doStandardQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage request) {
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> preview(
+        ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage request) {
       return futureUnaryCall(
-          getChannel().newCall(METHOD_DO_STANDARD_QUERY, getCallOptions()), request);
+          getChannel().newCall(METHOD_PREVIEW, getCallOptions()), request);
     }
 
     @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doSequentialQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage request) {
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> doQuery(
+        ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage request) {
       return futureUnaryCall(
-          getChannel().newCall(METHOD_DO_SEQUENTIAL_QUERY, getCallOptions()), request);
+          getChannel().newCall(METHOD_DO_QUERY, getCallOptions()), request);
     }
 
     @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doSpecifiedIndexQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_DO_SPECIFIED_INDEX_QUERY, getCallOptions()), request);
-    }
-
-    @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doIndexQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_DO_INDEX_QUERY, getCallOptions()), request);
-    }
-
-    @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doTimedProgressiveQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_DO_TIMED_PROGRESSIVE_QUERY, getCallOptions()), request);
-    }
-
-    @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage> doCompoundQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_DO_COMPOUND_QUERY, getCallOptions()), request);
-    }
-
-    @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> doBooleanQuery(
-        ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_DO_BOOLEAN_QUERY, getCallOptions()), request);
-    }
-
-    @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage> getCachedResults(
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage> getCachedResults(
         ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_GET_CACHED_RESULTS, getCallOptions()), request);
@@ -500,15 +315,10 @@ public class AdamSearchGrpc {
 
   private static final int METHODID_CACHE_INDEX = 0;
   private static final int METHODID_CACHE_ENTITY = 1;
-  private static final int METHODID_DO_STANDARD_QUERY = 2;
-  private static final int METHODID_DO_SEQUENTIAL_QUERY = 3;
-  private static final int METHODID_DO_SPECIFIED_INDEX_QUERY = 4;
-  private static final int METHODID_DO_INDEX_QUERY = 5;
-  private static final int METHODID_DO_PROGRESSIVE_QUERY = 6;
-  private static final int METHODID_DO_TIMED_PROGRESSIVE_QUERY = 7;
-  private static final int METHODID_DO_COMPOUND_QUERY = 8;
-  private static final int METHODID_DO_BOOLEAN_QUERY = 9;
-  private static final int METHODID_GET_CACHED_RESULTS = 10;
+  private static final int METHODID_PREVIEW = 2;
+  private static final int METHODID_DO_QUERY = 3;
+  private static final int METHODID_DO_PROGRESSIVE_QUERY = 4;
+  private static final int METHODID_GET_CACHED_RESULTS = 5;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -534,41 +344,21 @@ public class AdamSearchGrpc {
           serviceImpl.cacheEntity((ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>) responseObserver);
           break;
-        case METHODID_DO_STANDARD_QUERY:
-          serviceImpl.doStandardQuery((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage) request,
-              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>) responseObserver);
+        case METHODID_PREVIEW:
+          serviceImpl.preview((ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage>) responseObserver);
           break;
-        case METHODID_DO_SEQUENTIAL_QUERY:
-          serviceImpl.doSequentialQuery((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage) request,
-              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>) responseObserver);
-          break;
-        case METHODID_DO_SPECIFIED_INDEX_QUERY:
-          serviceImpl.doSpecifiedIndexQuery((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage) request,
-              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>) responseObserver);
-          break;
-        case METHODID_DO_INDEX_QUERY:
-          serviceImpl.doIndexQuery((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage) request,
-              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>) responseObserver);
+        case METHODID_DO_QUERY:
+          serviceImpl.doQuery((ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage>) responseObserver);
           break;
         case METHODID_DO_PROGRESSIVE_QUERY:
-          serviceImpl.doProgressiveQuery((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage) request,
-              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>) responseObserver);
-          break;
-        case METHODID_DO_TIMED_PROGRESSIVE_QUERY:
-          serviceImpl.doTimedProgressiveQuery((ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage) request,
-              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>) responseObserver);
-          break;
-        case METHODID_DO_COMPOUND_QUERY:
-          serviceImpl.doCompoundQuery((ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage) request,
-              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage>) responseObserver);
-          break;
-        case METHODID_DO_BOOLEAN_QUERY:
-          serviceImpl.doBooleanQuery((ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage) request,
-              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>) responseObserver);
+          serviceImpl.doProgressiveQuery((ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage>) responseObserver);
           break;
         case METHODID_GET_CACHED_RESULTS:
           serviceImpl.getCachedResults((ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage) request,
-              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>) responseObserver);
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -603,67 +393,32 @@ public class AdamSearchGrpc {
               ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage>(
                 serviceImpl, METHODID_CACHE_ENTITY)))
         .addMethod(
-          METHOD_DO_STANDARD_QUERY,
+          METHOD_PREVIEW,
           asyncUnaryCall(
             new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage,
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>(
-                serviceImpl, METHODID_DO_STANDARD_QUERY)))
+              ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage,
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage>(
+                serviceImpl, METHODID_PREVIEW)))
         .addMethod(
-          METHOD_DO_SEQUENTIAL_QUERY,
+          METHOD_DO_QUERY,
           asyncUnaryCall(
             new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSequentialQueryMessage,
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>(
-                serviceImpl, METHODID_DO_SEQUENTIAL_QUERY)))
-        .addMethod(
-          METHOD_DO_SPECIFIED_INDEX_QUERY,
-          asyncUnaryCall(
-            new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleSpecifiedIndexQueryMessage,
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>(
-                serviceImpl, METHODID_DO_SPECIFIED_INDEX_QUERY)))
-        .addMethod(
-          METHOD_DO_INDEX_QUERY,
-          asyncUnaryCall(
-            new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleIndexQueryMessage,
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>(
-                serviceImpl, METHODID_DO_INDEX_QUERY)))
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage,
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage>(
+                serviceImpl, METHODID_DO_QUERY)))
         .addMethod(
           METHOD_DO_PROGRESSIVE_QUERY,
           asyncServerStreamingCall(
             new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleQueryMessage,
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>(
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage,
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage>(
                 serviceImpl, METHODID_DO_PROGRESSIVE_QUERY)))
-        .addMethod(
-          METHOD_DO_TIMED_PROGRESSIVE_QUERY,
-          asyncUnaryCall(
-            new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Grpc.TimedQueryMessage,
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>(
-                serviceImpl, METHODID_DO_TIMED_PROGRESSIVE_QUERY)))
-        .addMethod(
-          METHOD_DO_COMPOUND_QUERY,
-          asyncUnaryCall(
-            new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryMessage,
-              ch.unibas.dmi.dbis.adam.http.Grpc.CompoundQueryResponseInfoMessage>(
-                serviceImpl, METHODID_DO_COMPOUND_QUERY)))
-        .addMethod(
-          METHOD_DO_BOOLEAN_QUERY,
-          asyncUnaryCall(
-            new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Grpc.SimpleBooleanQueryMessage,
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>(
-                serviceImpl, METHODID_DO_BOOLEAN_QUERY)))
         .addMethod(
           METHOD_GET_CACHED_RESULTS,
           asyncUnaryCall(
             new MethodHandlers<
               ch.unibas.dmi.dbis.adam.http.Grpc.CachedResultsMessage,
-              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResponseInfoMessage>(
+              ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage>(
                 serviceImpl, METHODID_GET_CACHED_RESULTS)))
         .build();
   }
