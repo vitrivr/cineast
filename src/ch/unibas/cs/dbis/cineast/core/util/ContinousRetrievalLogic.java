@@ -17,7 +17,7 @@ public class ContinousRetrievalLogic {
 		if(retrievers.isEmpty()){
 			return new ArrayList<LongDoublePair>(1);
 		}
-		return ContinousQueryDispatcher.retirieve(qc, retrievers, API.getInitializer(), resultCacheName);
+		return ContinousQueryDispatcher.retrieve(qc, retrievers, API.getInitializer(), resultCacheName);
 	}
 
 	public static List<LongDoublePair> retrieve(long id, String category, String resultCacheName) {
