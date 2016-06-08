@@ -18,7 +18,7 @@ public class ContinousRetrievalLogic {
 		if(retrievers.isEmpty()){
 			return new ArrayList<StringDoublePair>(1);
 		}
-		return ContinousQueryDispatcher.retirieve(qc, retrievers, API.getInitializer(), config);
+		return ContinousQueryDispatcher.retrieve(qc, retrievers, API.getInitializer(), config);
 	}
 
 	public static List<StringDoublePair> retrieve(String id, String category, QueryConfig config) {
@@ -26,7 +26,7 @@ public class ContinousRetrievalLogic {
 		if(retrievers.isEmpty()){
 			return new ArrayList<StringDoublePair>(1);
 		}
-		return ContinousQueryDispatcher.retirieve(id, retrievers, API.getInitializer(), config);
+		return ContinousQueryDispatcher.retrieve(id, retrievers, API.getInitializer(), config);
 	}
 	
 	public static void shutdown(){

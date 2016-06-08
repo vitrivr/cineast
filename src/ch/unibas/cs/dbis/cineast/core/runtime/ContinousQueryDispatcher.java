@@ -55,7 +55,7 @@ public class ContinousQueryDispatcher {
 		
 	}
 	
-	public static List<StringDoublePair> retirieve(QueryContainer query, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, QueryConfig qc){
+	public static List<StringDoublePair> retrieve(QueryContainer query, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, QueryConfig qc){
 		if(executor == null || executor.isShutdown()){
 			init();
 		}
@@ -74,7 +74,7 @@ public class ContinousQueryDispatcher {
 		return handleFutures(futures, retrievers, wheightSum);
 	}
 	
-	public static List<StringDoublePair> retirieve(String shotId, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, QueryConfig qc){
+	public static List<StringDoublePair> retrieve(String shotId, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, QueryConfig qc){
 		if(executor == null || executor.isShutdown()){
 			init();
 		}
