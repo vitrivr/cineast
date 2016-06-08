@@ -2,9 +2,9 @@ package ch.unibas.cs.dbis.cineast.core.features.retriever;
 
 import java.util.List;
 
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
 
 public interface Retriever {

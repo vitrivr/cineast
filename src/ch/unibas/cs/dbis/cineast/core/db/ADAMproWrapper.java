@@ -2,7 +2,6 @@ package ch.unibas.cs.dbis.cineast.core.db;
 
 import java.util.concurrent.ExecutionException;
 
-import ch.unibas.dmi.dbis.adam.http.Grpc;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 
@@ -16,8 +15,8 @@ import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.CreateEntityMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;

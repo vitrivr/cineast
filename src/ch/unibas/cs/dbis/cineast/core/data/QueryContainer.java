@@ -3,7 +3,6 @@ package ch.unibas.cs.dbis.cineast.core.data;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
 import ch.unibas.cs.dbis.cineast.core.util.MathHelper;

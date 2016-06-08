@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.decode.subtitle.cc;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 public class CCSubTitle implements SubTitle {
 

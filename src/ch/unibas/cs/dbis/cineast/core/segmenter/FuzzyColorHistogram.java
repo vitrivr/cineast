@@ -1,7 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.segmenter;
 
-import java.util.List;
-
 import ch.unibas.cs.dbis.cineast.core.color.FuzzyColorHistogramQuantizer;
 import ch.unibas.cs.dbis.cineast.core.data.Histogram;
 

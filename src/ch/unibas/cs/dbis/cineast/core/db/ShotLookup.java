@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import ch.unibas.dmi.dbis.adam.http.Grpc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,14 +14,14 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import ch.unibas.cs.dbis.cineast.core.data.Shot;
 import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
+import ch.unibas.dmi.dbis.adam.http.Grpc;
 import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage;
 import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage;
-
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
+import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage;
 
 public class ShotLookup {
 

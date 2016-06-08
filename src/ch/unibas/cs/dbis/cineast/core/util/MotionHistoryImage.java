@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 
 public class MotionHistoryImage {
 

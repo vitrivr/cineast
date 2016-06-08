@@ -51,7 +51,6 @@ import ch.unibas.cs.dbis.cineast.core.features.MedianFuzzyHistNormalized;
 import ch.unibas.cs.dbis.cineast.core.features.MotionHistogram;
 import ch.unibas.cs.dbis.cineast.core.features.STMP7EH;
 import ch.unibas.cs.dbis.cineast.core.features.SaturationGrid8;
-import ch.unibas.cs.dbis.cineast.core.features.SimplePerceptualHash;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivAverageFuzzyColor;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivMedianFuzzyColor;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogram2;

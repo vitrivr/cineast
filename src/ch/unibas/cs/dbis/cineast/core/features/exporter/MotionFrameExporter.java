@@ -12,8 +12,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
+import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 import georegression.struct.point.Point2D_F32;
