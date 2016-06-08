@@ -270,7 +270,7 @@ public class JSONAPIThread extends Thread {
 					for(JsonValue c : jobj.get("categories").asArray()){
 						String category = c.asString();
 						if(!categoryMap.containsKey(category)){
-							categoryMap.put(category, new ArrayList<>());
+							categoryMap.put(category, new ArrayList<QueryContainer>());
 						}
 						categoryMap.get(category).add(qc);
 					}
