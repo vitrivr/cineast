@@ -8,9 +8,11 @@ import java.net.Socket;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -185,7 +187,7 @@ public class JSONAPIThread extends Thread {
 					}
 					videoids = JSONUtils.printVideosBatched(printer, list, videoids);
 					shotids = JSONUtils.printShotsBatched(printer, list, shotids);
-					JSONUtils.printResultsBatched(printer, list, category, 1);
+					JSONUtils.printResultsBatched(printer, list, category.asString(), 1);
 
 				}
 				
@@ -231,7 +233,7 @@ public class JSONAPIThread extends Thread {
 						
 						videoids = JSONUtils.printVideosBatched(printer, result, videoids);
 						shotids = JSONUtils.printShotsBatched(printer, result, shotids);
-						JSONUtils.printResultsBatched(printer, result, category, index);
+						JSONUtils.printResultsBatched(printer, result, category.asString(), index);
 
 					}
 				}
@@ -239,6 +241,93 @@ public class JSONAPIThread extends Thread {
 				String resultName = DBResultCache.newCachedResult(shotids);
 				JSONUtils.printResultName(printer, resultName);
 
+				break;
+			}
+			
+			case "query":{
+				
+				JsonArray queryArray = clientJSON.get("query").asArray();
+				HashSet<String> shotids = new HashSet<>();
+				HashSet<String> videoids = new HashSet<>();
+
+				String resultCacheName = clientJSON.get("resultname") == null ? null : clientJSON.get("resultname").asString();
+				if(resultCacheName != null && resultCacheName.equalsIgnoreCase("null")){
+					resultCacheName = null;
+				}
+				
+				QueryConfig qconf = null; //TODO
+				
+				DBResultCache.createIfNecessary(resultCacheName);
+				
+				HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
+				
+				for(JsonValue jval : queryArray){
+					JsonObject jobj = jval.asObject();
+					QueryContainer qc = JSONUtils.queryContainerFromJSON(jobj);
+					if(qc.getWeight() == 0f || jobj.get("categories") == null){
+						continue;
+					}
+					for(JsonValue c : jobj.get("categories").asArray()){
+						String category = c.asString();
+						if(!categoryMap.containsKey(category)){
+							categoryMap.put(category, new ArrayList<>());
+						}
+						categoryMap.get(category).add(qc);
+					}
+				}
+				
+				Set<String> categories = categoryMap.keySet();
+				
+				
+				List<StringDoublePair> result;
+				for(String category : categories){
+					TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
+					for(QueryContainer qc : categoryMap.get(category)){
+						
+						float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation 
+						
+						if(qc.hasId()){
+							result = ContinousRetrievalLogic.retrieve(qc.getId(), category, qconf);
+						}else{
+							result = ContinousRetrievalLogic.retrieve(qc, category, qconf);
+						}
+						
+						for (StringDoublePair pair : result) {
+							if (Double.isInfinite(pair.value) || Double.isNaN(pair.value)) {
+								continue;
+							}
+							if (map.contains(pair.key)) {
+								map.put(pair.key, map.get(pair.key) + pair.value * weight);
+								continue;
+							}
+							map.put(pair.key, pair.value * weight);
+						}
+						
+						List<StringDoublePair> list = new ArrayList<>(map.size());
+						String[] keys = (String[]) map.keys();
+						for (String key : keys) {
+							double val = map.get(key);
+							if (val > 0) {
+								list.add(new StringDoublePair(key, val));
+							}
+						}
+
+						Collections.sort(list, StringDoublePair.COMPARATOR);
+
+						int MAX_RESULTS = Config.getRetrieverConfig().getMaxResults();
+
+						if (list.size() > MAX_RESULTS) {
+							list = list.subList(0, MAX_RESULTS);
+						}
+						videoids = JSONUtils.printVideosBatched(printer, list, videoids);
+						shotids = JSONUtils.printShotsBatched(printer, list, shotids);
+						JSONUtils.printResultsBatched(printer, list, category, 1);
+						
+					}
+					
+					
+				}
+				
 				break;
 			}
 			

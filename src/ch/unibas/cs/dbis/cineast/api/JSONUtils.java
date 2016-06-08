@@ -53,7 +53,7 @@ public class JSONUtils {
 		}
 	}
 	
-	public static QueryContainer queryContainerFromJSON(JsonObject jobj){
+	public static QueryContainer queryContainerFromJSON(JsonObject jobj){//TODO improve robustness against wrong data types
 		BufferedImage img = jobj.get("img") == null ? null : WebUtils.dataURLtoBufferedImage(jobj.get("img").asString());
 		QueryContainer qc = new QueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
 		if(jobj.get("subelements") != null){
@@ -84,6 +84,14 @@ public class JSONUtils {
 		
 		qc.setRelativeStart(jobj.get("start") == null ? 0 : jobj.get("start").asFloat());
 		qc.setRelativeEnd(jobj.get("end") == null ? 0 : jobj.get("end").asFloat());
+		
+		if(jobj.get("weight") != null){
+			qc.setWeight(jobj.get("weight").asFloat());
+		}
+		
+		if(jobj.get("id") != null){
+			qc.setId(jobj.get("id").asString());
+		}
 		
 		return qc;
 	}
@@ -140,8 +148,8 @@ public class JSONUtils {
 	 * @param category which category has been used to generate the results
 	 * @param index index of the query (used for multisketch)
 	 */
-	public static void printResultsBatched(PrintStream printer, List<StringDoublePair> resultlist, JsonValue category, int index) {
-		printer.print(JSONEncoder.encodeResultBatched(resultlist, category.asString(), index).toString());
+	public static void printResultsBatched(PrintStream printer, List<StringDoublePair> resultlist, String category, int index) {
+		printer.print(JSONEncoder.encodeResultBatched(resultlist, category, index).toString());
 		printer.println(',');
 	}
 	

@@ -29,4 +29,10 @@ public class MathHelper {
 		return Math.sqrt(dist);
 	}
 	
+	public static float limit(float val, float min, float max){
+		val = val > max ? max : val;
+		val = val < min ? min : val;
+		return val;
+	}
+	
 }

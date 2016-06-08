@@ -3,8 +3,10 @@ package ch.unibas.cs.dbis.cineast.core.data;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
+import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
 import georegression.struct.point.Point2D_F32;
 
 public class QueryContainer implements SegmentContainer {
@@ -14,7 +16,8 @@ public class QueryContainer implements SegmentContainer {
 	private ArrayList<SubtitleItem> subitem = new ArrayList<SubtitleItem>(1);
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 	private ArrayList<String> tags = new ArrayList<>();
-	private float relativeStart = 0, relativeEnd = 0;
+	private float relativeStart = 0, relativeEnd = 0, weight = 1f;
+	private String id = null;
 	
 	public QueryContainer(MultiImage img){
 		this.img = img;
@@ -88,9 +91,17 @@ public class QueryContainer implements SegmentContainer {
 
 	@Override
 	public String getId() {
-		return "";
+		return this.id == null ? "" : this.id;
 	}
 
+	public void setId(String id){
+		this.id = id;
+	}
+	
+	public boolean hasId(){
+		return this.id != null;
+	}
+	
 	@Override
 	public String getSuperId() {
 		return "";
@@ -107,6 +118,21 @@ public class QueryContainer implements SegmentContainer {
 	
 	public void addTag(String tag){
 		this.tags.add(tag);
+	}
+	
+	/**
+	 * weight used for relevance feedback
+	 */
+	public float getWeight(){
+		return this.weight;
+	}
+	
+	public void setWeight(float weight){
+		if(Float.isNaN(weight)){
+			this.weight = 0f;
+			return;
+		}
+		this.weight = MathHelper.limit(weight, -1f, 1f);
 	}
 
 }

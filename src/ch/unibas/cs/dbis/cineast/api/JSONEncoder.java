@@ -21,7 +21,7 @@ public final class JSONEncoder {
 		_return.add("shotid", shotId);
 		_return.add("score", score);
 		_return.add("category", category);
-		_return.add("containerid", containerId);
+		_return.add("containerid", containerId); //TODO remove
 		return _return;
 	}
 	
