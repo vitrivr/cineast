@@ -1,180 +1,198 @@
 package ch.unibas.cs.dbis.cineast.core.descriptor;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
-import boofcv.abst.feature.associate.AssociateDescTo2D;
-import boofcv.abst.feature.associate.AssociateDescription;
-import boofcv.abst.feature.associate.AssociateDescription2D;
-import boofcv.abst.feature.associate.ScoreAssociation;
-import boofcv.abst.feature.associate.WrapAssociateSurfBasic;
-import boofcv.abst.feature.detdesc.DetectDescribePoint;
-import boofcv.abst.feature.detect.interest.ConfigFastHessian;
-import boofcv.abst.feature.detect.interest.ConfigGeneralDetector;
-import boofcv.abst.feature.tracker.DdaManagerDetectDescribePoint;
-import boofcv.abst.feature.tracker.DetectDescribeAssociate;
-import boofcv.abst.feature.tracker.PointTrack;
-import boofcv.abst.feature.tracker.PointTracker;
-import boofcv.alg.descriptor.UtilFeature;
-import boofcv.alg.feature.associate.AssociateSurfBasic;
-import boofcv.alg.filter.derivative.GImageDerivativeOps;
-import boofcv.alg.tracker.klt.PkltConfig;
-import boofcv.factory.feature.associate.FactoryAssociation;
-import boofcv.factory.feature.detdesc.FactoryDetectDescribe;
-import boofcv.factory.feature.tracker.FactoryPointTracker;
-import boofcv.factory.geo.ConfigRansac;
-import boofcv.factory.geo.FactoryMultiViewRobust;
-import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.feature.AssociatedIndex;
-import boofcv.struct.feature.BrightFeature;
-import boofcv.struct.feature.TupleDesc_F64;
-import boofcv.struct.geo.AssociatedPair;
-import boofcv.struct.image.GrayU8;
-
-import org.ddogleg.fitting.modelset.ModelMatcher;
-import org.ddogleg.struct.FastQueue;
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import georegression.struct.homography.Homography2D_F64;
 import georegression.struct.point.Point2D_F32;
 import georegression.struct.point.Point2D_F64;
 import georegression.transform.homography.HomographyPointOps_F64;
-import gnu.trove.map.hash.TLongIntHashMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
+
+import boofcv.abst.filter.derivative.ImageGradient;
+import boofcv.alg.tracker.klt.KltConfig;
+import boofcv.alg.tracker.klt.KltTrackFault;
+import boofcv.alg.tracker.klt.PkltConfig;
+import boofcv.alg.tracker.klt.PyramidKltFeature;
+import boofcv.alg.tracker.klt.PyramidKltTracker;
+import boofcv.alg.transform.pyramid.PyramidOps;
+import boofcv.factory.filter.derivative.FactoryDerivative;
+import boofcv.factory.geo.ConfigRansac;
+import boofcv.factory.geo.FactoryMultiViewRobust;
+import boofcv.factory.tracker.FactoryTrackerAlg;
+import boofcv.factory.transform.pyramid.FactoryPyramid;
+import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.geo.AssociatedPair;
+import boofcv.struct.image.GrayS16;
+import boofcv.struct.image.GrayU8;
+import boofcv.struct.pyramid.PyramidDiscrete;
+
+import org.ddogleg.fitting.modelset.ModelMatcher;
+
+import ch.unibas.cs.dbis.cineast.core.data.Frame;
+import ch.unibas.cs.dbis.cineast.core.data.Pair;
 
 public class PathList {
 
 	private PathList(){}
 	
-	public static ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> getPaths(List<Frame> frames){
-		if(frames.size() < 2){
-			return new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>(1);
+	public static void separateFgBgPaths(LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths,
+										 List<Pair<Integer, LinkedList<Point2D_F32>>> forgroundPaths,
+										 List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){	
+		ModelMatcher<Homography2D_F64,AssociatedPair> robustF = FactoryMultiViewRobust.homographyRansac(null, new ConfigRansac(200,1));
+		if (allPaths == null){
+			return;
 		}
-		
-		MultiImage img = frames.get(0).getImage();
-		int numberOfPointsToTrack = img.getWidth() * img.getHeight() / 100;
-		
-		DetectDescribePoint<GrayU8, BrightFeature> detDesc = FactoryDetectDescribe.surfStable(new ConfigFastHessian(1, 2, 200, 1, 9, 4, 4), null,null, GrayU8.class);
-		ScoreAssociation<BrightFeature> scorer = FactoryAssociation.defaultScore(detDesc.getDescriptionType());
-		AssociateDescription<BrightFeature> associate = FactoryAssociation.greedy( scorer, 2, true);
-		ModelMatcher<Homography2D_F64,AssociatedPair> modelMatcher = FactoryMultiViewRobust.homographyRansac(null,new ConfigRansac(60,3));
-		Homography2D_F64 currentToFirst = new Homography2D_F64(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
-		Homography2D_F64 currentToLast = null;
-		
-		//PkltConfig config = new PkltConfig();
-		//config.templateRadius = 3;
-		//config.pyramidScaling = new int[] { 1, 2, 4, 8 };
-		//PointTracker<GrayU8> tracker = FactoryPointTracker.klt(config, new ConfigGeneralDetector(numberOfPointsToTrack, 3, 1), GrayU8.class, GImageDerivativeOps.getDerivativeType(GrayU8.class));
-		ScoreAssociation<TupleDesc_F64> score = FactoryAssociation.scoreEuclidean(TupleDesc_F64.class, true);
-		AssociateSurfBasic assoc = new AssociateSurfBasic(FactoryAssociation.greedy(score, 5, true));
-		AssociateDescription2D<BrightFeature> generalAssoc = new AssociateDescTo2D<BrightFeature>(new WrapAssociateSurfBasic(assoc));
-		DdaManagerDetectDescribePoint<GrayU8,BrightFeature> manager = new DdaManagerDetectDescribePoint<GrayU8,BrightFeature>(FactoryDetectDescribe.surfStable(new ConfigFastHessian(1, 2, 200, 1, 9, 4, 4), null,null, GrayU8.class));
-		PointTracker<GrayU8> tracker = new DetectDescribeAssociate<GrayU8,BrightFeature>(manager, generalAssoc,true);
-		
-		TLongObjectHashMap<LinkedList<Point2D_F32>> paths = new TLongObjectHashMap<LinkedList<Point2D_F32>>();
-		TLongIntHashMap trackStartFrames = new TLongIntHashMap();
-		ArrayList<PointTrack> tracks = new ArrayList<PointTrack>(numberOfPointsToTrack);
-		ArrayList<PointTrack> inactiveTracks = new ArrayList<PointTrack>(numberOfPointsToTrack);
-		
-		GrayU8 gray = null;
-		GrayU8 grayLast = null;
-		int frameIdx = 0;
-		for(Frame f : frames){
-			gray = ConvertBufferedImage.convertFrom(f.getImage().getBufferedImage(), gray);
+		for(Pair<Integer,ArrayList<AssociatedPair>> pair : allPaths){
+			List<AssociatedPair> inliers = new ArrayList<AssociatedPair>();
+			List<AssociatedPair> outliers = new ArrayList<AssociatedPair>();
 			
-			tracker.process(gray);
-			tracks.clear();
-			if (tracker.getActiveTracks(tracks).size() < (numberOfPointsToTrack * 0.9f)){
-				tracker.spawnTracks();
-			}
-			inactiveTracks.clear();
-			tracker.getInactiveTracks(inactiveTracks);
-			for (PointTrack p : inactiveTracks){
-				tracker.dropTrack(p);
-			}
+			int frameIdx = pair.first;
+			ArrayList<AssociatedPair> matches = pair.second;
 			
-			if (0 == frameIdx){
-				currentToLast = new Homography2D_F64(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
+			Homography2D_F64 curToPrev = new Homography2D_F64(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
+			if(robustF.process(matches)){
+				curToPrev = robustF.getModelParameters();
+				inliers.addAll(robustF.getMatchSet());
+				for (int i = 0,j = 0; i < matches.size(); ++i){
+					if (i == robustF.getInputIndex(j)){
+						if ( j < inliers.size()-1){
+							++j;	
+						}
+					}
+					else{
+						outliers.add(matches.get(i));
+					}
+				}
 			}
 			else{
-				currentToLast = getHomography(gray,grayLast, detDesc, associate, modelMatcher,currentToLast);
-			}
-			currentToFirst = currentToLast.concat(currentToFirst,null);
-			
-			for(PointTrack p : tracks){
-				if(!trackStartFrames.containsKey(p.featureId)){
-					trackStartFrames.put(p.featureId, f.getId());
-				}
-				LinkedList<Point2D_F32> path = paths.get(p.featureId);
-				if(path == null){
-					path = new LinkedList<Point2D_F32>();
-					paths.put(p.featureId, path);
-				}
-				Point2D_F64 transP = HomographyPointOps_F64.transform(currentToFirst, p, null);
-				path.add(new Point2D_F32((float)(transP.x / gray.width), (float)(transP.y / gray.height)));
+				curToPrev = new Homography2D_F64(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
+				inliers.addAll(matches);
 			}
 			
-			frameIdx += 1;
-			grayLast = gray.clone();
-		}
-		
-		long[] keys = paths.keys();
-		ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> pathList = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>(keys.length);
-		for(long key : keys){
-			if(paths.get(key).size() > 1){
-				pathList.add(new Pair<>(trackStartFrames.get(key), paths.get(key)));
+			for (AssociatedPair p : inliers){
+				LinkedList<Point2D_F32> path = new LinkedList<Point2D_F32>();
+				path.add(new Point2D_F32((float)p.p1.x,(float)p.p1.y));
+				path.add(new Point2D_F32((float)p.p2.x,(float)p.p2.y));
+				backgroundPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(frameIdx,path));
 			}
-		}
-		
-		return pathList;
-	}
-		
-	private static Homography2D_F64 getHomography(GrayU8 src, GrayU8 dst,
-			DetectDescribePoint<GrayU8, BrightFeature> detDesc, 
-			AssociateDescription<BrightFeature> associate,
-			ModelMatcher<Homography2D_F64,AssociatedPair> modelMatcher,Homography2D_F64 result){
-		
-		List<Point2D_F64> pointsSrc = new ArrayList<Point2D_F64>();
-		List<Point2D_F64> pointsDst = new ArrayList<Point2D_F64>();
-		
-		FastQueue<BrightFeature> descsSrc = UtilFeature.createQueue(detDesc,100);
-		FastQueue<BrightFeature> descsDst = UtilFeature.createQueue(detDesc,100);
-		
-		describeImage(src,pointsSrc,descsSrc, detDesc);
-		describeImage(dst,pointsDst,descsDst, detDesc);
-		
-		associate.setSource(descsSrc);
-		associate.setDestination(descsDst);
-		associate.associate();
-		
-		FastQueue<AssociatedIndex> matches = associate.getMatches();
-		List<AssociatedPair> pairs = new ArrayList<AssociatedPair>();
- 
-		for( int i = 0; i < matches.size(); i++ ) {
-			AssociatedIndex match = matches.get(i);
-			Point2D_F64 s = pointsSrc.get(match.src);
-			Point2D_F64 d = pointsDst.get(match.dst);
-			if(s.x > src.width * 0.25 && s.x < src.width * 0.75 && s.y > src.height * 0.25 && s.y < src.height * 0.75)
-				continue;
-			pairs.add( new AssociatedPair(s,d,false));
-		}
- 
-		if( !modelMatcher.process(pairs) )
-			return result;
- 
-		return modelMatcher.getModelParameters().copy();		
-	}
-	
-	private static void describeImage(GrayU8 input, List<Point2D_F64> points, FastQueue<BrightFeature> descs, DetectDescribePoint<GrayU8, BrightFeature> detDesc)
-	{
-		detDesc.detect(input);
-		for( int i = 0; i < detDesc.getNumberOfFeatures(); i++ ) {
-			points.add( detDesc.getLocation(i).copy() );
-			descs.grow().setTo(detDesc.getDescription(i));
+			
+			for (AssociatedPair p : outliers){
+				p.p2 = HomographyPointOps_F64.transform(curToPrev, p.p2, p.p2);
+				LinkedList<Point2D_F32> path = new LinkedList<Point2D_F32>();
+				path.add(new Point2D_F32((float)p.p1.x,(float)p.p1.y));
+				path.add(new Point2D_F32((float)p.p2.x,(float)p.p2.y));
+				forgroundPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(frameIdx,path));
+			}
 		}
 	}
 	
+	public static LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> getDensePaths(List<Frame> frames){
+		if(frames.size() < 2){
+			return null;
+		}
+		int samplingInterval = 10;
+		PkltConfig configKlt = new PkltConfig(3, new int[] { 1, 2, 4 });
+		configKlt.config.minDeterminant = 0.001f;
+		ImageGradient<GrayU8, GrayS16> gradient = FactoryDerivative.sobel(GrayU8.class, GrayS16.class);
+		PyramidDiscrete<GrayU8> pyramid = FactoryPyramid.discreteGaussian(configKlt.pyramidScaling,-1,2,true,GrayU8.class);
+		PyramidKltTracker<GrayU8, GrayS16> tracker = FactoryTrackerAlg.kltPyramid(configKlt.config, GrayU8.class, null);
+		
+		GrayS16[] derivX = null;
+		GrayS16[] derivY = null;
+		
+		LinkedList<PyramidKltFeature> tracks = new LinkedList<PyramidKltFeature>();
+		LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> paths = new LinkedList<Pair<Integer,ArrayList<AssociatedPair>>>();
+		
+		GrayU8 gray = null;
+		int frameIdx = 0;
+		for (Frame frame : frames){
+			gray = ConvertBufferedImage.convertFrom(frame.getImage().getBufferedImage(), gray);		
+			ArrayList<AssociatedPair> tracksPairs = new ArrayList<AssociatedPair>();
+			
+			if (frameIdx == 0){
+				tracks = denseSampling(gray, derivX, derivY, samplingInterval, configKlt, gradient, pyramid, tracker);
+			}
+			else{
+				tracks = tracking(gray, derivX, derivY, tracks, tracksPairs, gradient, pyramid, tracker);
+				tracks = denseSampling(gray, derivX, derivY, samplingInterval, configKlt, gradient, pyramid, tracker);
+			}
+			
+			paths.add(new Pair<Integer,ArrayList<AssociatedPair>>(frameIdx,tracksPairs));
+			
+			++frameIdx;
+		}
+		return paths;
+	}
+	
+	public static LinkedList<PyramidKltFeature> denseSampling( GrayU8 image, GrayS16[] derivX, GrayS16[] derivY,
+															int samplingInterval,
+															PkltConfig configKlt,
+															ImageGradient<GrayU8, GrayS16> gradient,
+															PyramidDiscrete<GrayU8> pyramid,
+															PyramidKltTracker<GrayU8, GrayS16> tracker){
+		LinkedList<PyramidKltFeature> tracks = new LinkedList<PyramidKltFeature>();
+		
+		pyramid.process(image);
+		derivX = declareOutput(pyramid, derivX);
+		derivY = declareOutput(pyramid, derivY);
+		PyramidOps.gradient(pyramid, gradient, derivX, derivY);
+		tracker.setImage(pyramid,derivX,derivY);
+		
+		for( int y = 0; y < image.height; y+= samplingInterval ) {
+			for( int x = 0; x < image.width; x+= samplingInterval ) {
+				PyramidKltFeature t = new PyramidKltFeature(configKlt.pyramidScaling.length,configKlt.templateRadius);
+				t.setPosition(x,y);
+				tracker.setDescription(t);
+				tracks.add(t);
+			}
+		}
+		return tracks;
+	}
+	
+	public static LinkedList<PyramidKltFeature> tracking( GrayU8 image, GrayS16[] derivX, GrayS16[] derivY,
+													LinkedList<PyramidKltFeature> tracks,
+													ArrayList<AssociatedPair> tracksPairs,
+													ImageGradient<GrayU8, GrayS16> gradient,
+													PyramidDiscrete<GrayU8> pyramid,
+													PyramidKltTracker<GrayU8, GrayS16> tracker
+													){
+		pyramid.process(image);
+		derivX = declareOutput(pyramid, derivX);
+		derivY = declareOutput(pyramid, derivY);
+		PyramidOps.gradient(pyramid, gradient, derivX, derivY);
+		tracker.setImage(pyramid,derivX,derivY);
+		
+		ListIterator<PyramidKltFeature> listIterator = tracks.listIterator();
+		while( listIterator.hasNext() ) {
+			PyramidKltFeature track = listIterator.next();
+			Point2D_F64 prevP = new Point2D_F64(track.x,track.y);
+			KltTrackFault ret = tracker.track(track);
+			boolean success = false;
+			if( ret == KltTrackFault.SUCCESS ) {
+				if( image.isInBounds((int)track.x,(int)track.y) && tracker.setDescription(track) ) {
+					tracksPairs.add(new AssociatedPair(prevP,new Point2D_F64(track.x,track.y)));
+					success = true;
+				}
+			}
+			if( !success ) {
+				listIterator.remove();
+			}
+		}
+		
+		return tracks;
+	}
+	
+	public static GrayS16[] declareOutput(PyramidDiscrete<GrayU8> pyramid,GrayS16[] deriv) {
+		if( deriv == null ) {
+			deriv = PyramidOps.declareOutput(pyramid, GrayS16.class);
+		}
+		else if( deriv[0].width != pyramid.getLayer(0).width ||
+				deriv[0].height != pyramid.getLayer(0).height )
+		{
+			PyramidOps.reshapeOutput(pyramid,deriv);
+		}
+		return deriv;
+	}	
 }

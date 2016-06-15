@@ -13,6 +13,7 @@ public class QueryContainer implements FrameContainer {
 	private Frame frame;
 	private ArrayList<SubtitleItem> subitem = new ArrayList<SubtitleItem>(1);
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
+	private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 	private ArrayList<String> tags = new ArrayList<>();
 	private float relativeStart = 0, relativeEnd = 0;
 	
@@ -77,6 +78,11 @@ public class QueryContainer implements FrameContainer {
 	@Override
 	public List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths() {
 		return this.paths;
+	}
+	
+	@Override
+	public List<Pair<Integer, LinkedList<Point2D_F32>>> getBgPaths() {
+		return this.bgPaths;
 	}
 
 	@Override

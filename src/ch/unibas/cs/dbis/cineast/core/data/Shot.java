@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import boofcv.struct.geo.AssociatedPair;
 import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
 import ch.unibas.cs.dbis.cineast.core.descriptor.AvgImg;
 import ch.unibas.cs.dbis.cineast.core.descriptor.MedianImg;
@@ -23,6 +24,8 @@ public class Shot implements FrameContainer{
 	private MultiImage avgImg = null, medianImg = null;
 	private Frame mostRepresentative = null;
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = null;
+	private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = null;
+	private LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths = null;
 	private ArrayList<String> tags = new ArrayList<>(1);
 	private final long movieId;
 	private final int movieFrameCount;
@@ -79,10 +82,25 @@ public class Shot implements FrameContainer{
 	public List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths() {
 		synchronized (getPathsLock) {
 			if(this.paths == null){
-				this.paths = PathList.getPaths(frames);
+				this.allPaths = PathList.getDensePaths(frames);
+				this.paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
+				this.bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
+				PathList.separateFgBgPaths(this.allPaths, this.paths, this.bgPaths);
 			}
 		}
 		return this.paths;
+	}
+	
+	public List<Pair<Integer, LinkedList<Point2D_F32>>> getBgPaths() {
+		synchronized (getPathsLock) {
+			if(this.bgPaths == null){
+				this.allPaths = PathList.getDensePaths(frames);
+				this.paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
+				this.bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
+				PathList.separateFgBgPaths(this.allPaths, this.paths, this.bgPaths);
+			}
+		}
+		return this.bgPaths;
 	}
 
 	public void clear(){
