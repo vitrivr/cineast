@@ -41,7 +41,7 @@ public class PathList {
 										 LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths,
 										 List<Pair<Integer, LinkedList<Point2D_F32>>> forgroundPaths,
 										 List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){	
-		ModelMatcher<Homography2D_F64,AssociatedPair> robustF = FactoryMultiViewRobust.homographyRansac(null, new ConfigRansac(200,1));
+		ModelMatcher<Homography2D_F64,AssociatedPair> robustF = FactoryMultiViewRobust.homographyRansac(null, new ConfigRansac(200,3.0f));
 		if (allPaths == null || frames == null || frames.isEmpty()){
 			return;
 		}
@@ -58,7 +58,7 @@ public class PathList {
 			
 			Homography2D_F64 curToPrev = new Homography2D_F64(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
 			if(robustF.process(matches)){
-				curToPrev = robustF.getModelParameters();
+				curToPrev = robustF.getModelParameters().invert(null);
 				inliers.addAll(robustF.getMatchSet());
 				for (int i = 0,j = 0; i < matches.size(); ++i){
 					if (i == robustF.getInputIndex(j)){
@@ -99,7 +99,7 @@ public class PathList {
 		}
 		int samplingInterval = 10;
 		PkltConfig configKlt = new PkltConfig(3, new int[] { 1, 2, 4 });
-		configKlt.config.minDeterminant = 0.001f;
+		configKlt.config.maxPerPixelError = 10;
 		ImageGradient<GrayU8, GrayS16> gradient = FactoryDerivative.sobel(GrayU8.class, GrayS16.class);
 		PyramidDiscrete<GrayU8> pyramid = FactoryPyramid.discreteGaussian(configKlt.pyramidScaling,-1,2,true,GrayU8.class);
 		PyramidKltTracker<GrayU8, GrayS16> tracker = FactoryTrackerAlg.kltPyramid(configKlt.config, GrayU8.class, null);
