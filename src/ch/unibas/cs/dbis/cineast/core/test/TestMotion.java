@@ -157,15 +157,19 @@ public class TestMotion {
 				Pair<Integer, LinkedList<Point2D_F32>> pair = fgPathItor.next();
 				if(pair.first > frameIdx)
 					break;
-				Point2D_F32 p = pair.second.getFirst();
-				VisualizeFeatures.drawPoint(g2, (int)(p.x*width), (int)(p.y*height), 2, Color.red);
+				Point2D_F32 p1 = pair.second.getFirst();
+				Point2D_F32 p2 = pair.second.getLast();
+				VisualizeFeatures.drawPoint(g2, (int)(p1.x*width), (int)(p1.y*height), 2, Color.red);
+				g2.drawLine((int)(p1.x*width), (int)(p1.y*height), (int)(p2.x*width), (int)(p2.y*height));
 			}
 			while(bgPathItor.hasNext()){
 				Pair<Integer, LinkedList<Point2D_F32>> pair = bgPathItor.next();
 				if(pair.first > frameIdx)
 					break;
-				Point2D_F32 p = pair.second.getFirst();
-				VisualizeFeatures.drawPoint(g2, (int)(p.x*width), (int)(p.y*height), 2, Color.green);
+				Point2D_F32 p1 = pair.second.getFirst();
+				Point2D_F32 p2 = pair.second.getLast();
+				VisualizeFeatures.drawPoint(g2, (int)(p1.x*width), (int)(p1.y*height), 2, Color.green);
+				g2.drawLine((int)(p1.x*width), (int)(p1.y*height), (int)(p2.x*width), (int)(p2.y*height));
 			}
 			
 			gui.setBufferedImage(bufferedImage);
