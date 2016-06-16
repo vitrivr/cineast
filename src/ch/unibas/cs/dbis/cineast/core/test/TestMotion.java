@@ -55,7 +55,7 @@ public class TestMotion {
 		ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> forgroundPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 		ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 		
-		PathList.separateFgBgPaths(allPaths, forgroundPaths, backgroundPaths);
+		PathList.separateFgBgPaths(shot.getFrames(), allPaths, forgroundPaths, backgroundPaths);
 		long separateTime = System.currentTimeMillis();
 		LOGGER.info("finished separate bg and fg in {}", formatTime(separateTime - denseTrackingTime));
 		
@@ -140,7 +140,9 @@ public class TestMotion {
 									ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){
 		BufferedImage  bufferedImage = null;
 		bufferedImage = frames.get(0).getImage().getBufferedImage();
-		gui.setPreferredSize(new Dimension(bufferedImage.getWidth(),bufferedImage.getHeight()));
+		int width = bufferedImage.getWidth();
+		int height = bufferedImage.getHeight();
+		gui.setPreferredSize(new Dimension(width,height));
 		ShowImages.showWindow(gui,"visualize", true);
 		
 		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> fgPathItor = forgroundPaths.listIterator();
@@ -156,14 +158,14 @@ public class TestMotion {
 				if(pair.first > frameIdx)
 					break;
 				Point2D_F32 p = pair.second.getFirst();
-				VisualizeFeatures.drawPoint(g2, (int)p.x, (int)p.y, 2, Color.red);
+				VisualizeFeatures.drawPoint(g2, (int)(p.x*width), (int)(p.y*height), 2, Color.red);
 			}
 			while(bgPathItor.hasNext()){
 				Pair<Integer, LinkedList<Point2D_F32>> pair = bgPathItor.next();
 				if(pair.first > frameIdx)
 					break;
 				Point2D_F32 p = pair.second.getFirst();
-				VisualizeFeatures.drawPoint(g2, (int)p.x, (int)p.y, 2, Color.green);
+				VisualizeFeatures.drawPoint(g2, (int)(p.x*width), (int)(p.y*height), 2, Color.green);
 			}
 			
 			gui.setBufferedImage(bufferedImage);

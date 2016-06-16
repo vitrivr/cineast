@@ -85,7 +85,7 @@ public class Shot implements FrameContainer{
 				this.allPaths = PathList.getDensePaths(frames);
 				this.paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 				this.bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
-				PathList.separateFgBgPaths(this.allPaths, this.paths, this.bgPaths);
+				PathList.separateFgBgPaths(frames, this.allPaths, this.paths, this.bgPaths);
 			}
 		}
 		return this.paths;
@@ -97,7 +97,7 @@ public class Shot implements FrameContainer{
 				this.allPaths = PathList.getDensePaths(frames);
 				this.paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 				this.bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
-				PathList.separateFgBgPaths(this.allPaths, this.paths, this.bgPaths);
+				PathList.separateFgBgPaths(frames, this.allPaths, this.paths, this.bgPaths);
 			}
 		}
 		return this.bgPaths;

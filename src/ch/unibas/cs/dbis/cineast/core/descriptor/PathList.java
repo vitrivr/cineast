@@ -37,13 +37,18 @@ public class PathList {
 
 	private PathList(){}
 	
-	public static void separateFgBgPaths(LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths,
+	public static void separateFgBgPaths(List<Frame> frames,
+										 LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths,
 										 List<Pair<Integer, LinkedList<Point2D_F32>>> forgroundPaths,
 										 List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){	
 		ModelMatcher<Homography2D_F64,AssociatedPair> robustF = FactoryMultiViewRobust.homographyRansac(null, new ConfigRansac(200,1));
-		if (allPaths == null){
+		if (allPaths == null || frames == null || frames.isEmpty()){
 			return;
 		}
+		
+		int width = frames.get(0).getImage().getWidth();
+		int height = frames.get(0).getImage().getHeight();
+		
 		for(Pair<Integer,ArrayList<AssociatedPair>> pair : allPaths){
 			List<AssociatedPair> inliers = new ArrayList<AssociatedPair>();
 			List<AssociatedPair> outliers = new ArrayList<AssociatedPair>();
@@ -73,16 +78,16 @@ public class PathList {
 			
 			for (AssociatedPair p : inliers){
 				LinkedList<Point2D_F32> path = new LinkedList<Point2D_F32>();
-				path.add(new Point2D_F32((float)p.p1.x,(float)p.p1.y));
-				path.add(new Point2D_F32((float)p.p2.x,(float)p.p2.y));
+				path.add(new Point2D_F32((float)p.p1.x/(float)width,(float)p.p1.y/(float)height));
+				path.add(new Point2D_F32((float)p.p2.x/(float)width,(float)p.p2.y/(float)height));
 				backgroundPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(frameIdx,path));
 			}
 			
 			for (AssociatedPair p : outliers){
 				p.p2 = HomographyPointOps_F64.transform(curToPrev, p.p2, p.p2);
 				LinkedList<Point2D_F32> path = new LinkedList<Point2D_F32>();
-				path.add(new Point2D_F32((float)p.p1.x,(float)p.p1.y));
-				path.add(new Point2D_F32((float)p.p2.x,(float)p.p2.y));
+				path.add(new Point2D_F32((float)p.p1.x/(float)width,(float)p.p1.y/(float)height));
+				path.add(new Point2D_F32((float)p.p2.x/(float)width,(float)p.p2.y/(float)height));
 				forgroundPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(frameIdx,path));
 			}
 		}
