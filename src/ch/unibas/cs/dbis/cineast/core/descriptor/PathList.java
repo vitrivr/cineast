@@ -98,8 +98,9 @@ public class PathList {
 			return null;
 		}
 		int samplingInterval = 10;
+		int frameInterval = 1;
 		PkltConfig configKlt = new PkltConfig(3, new int[] { 1, 2, 4 });
-		configKlt.config.maxPerPixelError = 10;
+		configKlt.config.maxPerPixelError = 25;
 		ImageGradient<GrayU8, GrayS16> gradient = FactoryDerivative.sobel(GrayU8.class, GrayS16.class);
 		PyramidDiscrete<GrayU8> pyramid = FactoryPyramid.discreteGaussian(configKlt.pyramidScaling,-1,2,true,GrayU8.class);
 		PyramidKltTracker<GrayU8, GrayS16> tracker = FactoryTrackerAlg.kltPyramid(configKlt.config, GrayU8.class, null);
@@ -112,7 +113,16 @@ public class PathList {
 		
 		GrayU8 gray = null;
 		int frameIdx = 0;
+		int cnt = 0;
 		for (Frame frame : frames){
+			++frameIdx;
+			
+			if(cnt >= frameInterval){
+				cnt = 0;
+				continue;
+			}
+			cnt += 1;
+			
 			gray = ConvertBufferedImage.convertFrom(frame.getImage().getBufferedImage(), gray);		
 			ArrayList<AssociatedPair> tracksPairs = new ArrayList<AssociatedPair>();
 			
@@ -125,8 +135,6 @@ public class PathList {
 			}
 			
 			paths.add(new Pair<Integer,ArrayList<AssociatedPair>>(frameIdx,tracksPairs));
-			
-			++frameIdx;
 		}
 		return paths;
 	}
