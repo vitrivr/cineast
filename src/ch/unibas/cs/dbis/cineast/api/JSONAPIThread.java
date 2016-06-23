@@ -304,7 +304,7 @@ public class JSONAPIThread extends Thread {
 						}
 						
 						List<StringDoublePair> list = new ArrayList<>(map.size());
-						String[] keys = (String[]) map.keys();
+						Set<String> keys = map.keySet();
 						for (String key : keys) {
 							double val = map.get(key);
 							if (val > 0) {
