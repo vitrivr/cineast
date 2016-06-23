@@ -55,7 +55,7 @@ public class JSONUtils {
 	
 	public static QueryContainer queryContainerFromJSON(JsonObject jobj){//TODO improve robustness against wrong data types
 		BufferedImage img = jobj.get("img") == null ? null : WebUtils.dataURLtoBufferedImage(jobj.get("img").asString());
-		QueryContainer qc = new QueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
+		QueryContainer qc = img == null ? new QueryContainer(null) : new QueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
 		if(jobj.get("subelements") != null){
 			JsonArray subs = jobj.get("subelements").asArray();
 			for(JsonValue jv : subs){

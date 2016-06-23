@@ -1,7 +1,6 @@
 package ch.unibas.cs.dbis.cineast.core.db;
 
 import java.util.List;
-import java.util.Map;
 
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
@@ -16,6 +15,6 @@ public interface DBSelector {
 	 */
 	List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column, QueryConfig config);
 	
-	List<Map<String, String>> getFeatureVectors(String fieldName, String value);
+	List<float[]> getFeatureVectors(String fieldName, String value, String vectorName);
 	
 }

@@ -63,7 +63,7 @@ public class ADAMproSelector implements DBSelector {
 		return false;
 	}
 
-	public List<Map<String, String>> getFeatureVectors(String fieldName, String value){
+	public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName){
 		WhereMessage where = WhereMessage.newBuilder().setField(fieldName).setValue(value).build();
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		tmp.add(where);
@@ -71,7 +71,7 @@ public class ADAMproSelector implements DBSelector {
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responses;
-		ArrayList<Map<String, String>> _return = new ArrayList<>();
+		ArrayList<float[]> _return = new ArrayList<>();
 		try {
 			responses = f.get().getResponses(0); //only head (end-result) is important
 		} catch (InterruptedException | ExecutionException e) {
@@ -87,13 +87,40 @@ public class ADAMproSelector implements DBSelector {
 		}
 		
 		for(QueryResultTupleMessage result : responses.getResultsList()){
-			Map<String, String> metadata = new HashMap<String, String>();
-
-			for (Map.Entry<String, DataMessage> entry : result.getData().entrySet()) {
-				metadata.put(entry.getKey(), ""); //TODO: adjust data to use
+			
+			Map<String, DataMessage> data = result.getData();
+			
+			if(!data.containsKey(vectorName)){
+				continue;
 			}
-
-			_return.add(metadata);
+			
+			DataMessage dm = data.get(vectorName);
+			
+			FeatureVectorMessage featureData = dm.getFeatureData();
+			
+			if(featureData == FeatureVectorMessage.getDefaultInstance()){
+				continue;
+			}
+			
+			DenseVectorMessage dense = featureData.getDenseVector(); //TODO add correct handling for sparse and int vectors
+			
+			if(dense == DenseVectorMessage.getDefaultInstance()){
+				continue;
+			}
+			
+			List<Float> list = dense.getVectorList();
+			if(list.isEmpty()){
+				continue;
+			}
+			
+			float[] vector = new float[list.size()];
+			int i = 0;
+			for(float x : list){
+				vector[i++] = x;
+			}
+			
+			_return.add(vector);
+			
 		}
 		
 		return _return;
@@ -114,7 +141,7 @@ public class ADAMproSelector implements DBSelector {
 		NearestNeighbourQueryMessage nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
 		QueryMessage sqMessage = sqmBuilder.setProjection(Adam.ProjectionMessage.newBuilder().setField(Adam.ProjectionMessage.FieldnameMessage.newBuilder().addField("adamprodistance").addField("id"))).setFrom(fromBuilder.build()).setNnq(nnqMessage).addAllHints(hints).build();
 		
-		LOGGER.debug(sqMessage);
+		//LOGGER.debug(sqMessage);
 		
 		ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 

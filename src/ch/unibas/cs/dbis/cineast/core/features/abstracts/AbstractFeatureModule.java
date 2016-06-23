@@ -2,7 +2,6 @@ package ch.unibas.cs.dbis.cineast.core.features.abstracts;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
@@ -52,29 +51,19 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
 	@Override
 	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
-		List<Map<String, String>> list = this.selector.getFeatureVectors("id", shotId);
+		List<float[]> list = this.selector.getFeatureVectors("id", shotId, "feature");
 		if(list.isEmpty()){
 			return new ArrayList<>(1);
 		}
 		if(list.size() == 1){
-			String featureString = list.get(0).get("feature");
-			if(featureString == null){
-				return new ArrayList<>(1);
-			}
-			return getSimilar(parseFeatureVectorString(featureString), qc);
+			return getSimilar(list.get(0), qc);
 		}
 		
 		TObjectDoubleMap<String> maxPool = new TObjectDoubleHashMap<>();
-		for(Map<String, String> map : list){
-			if(map == null){
-				continue;
-			}
-			String featureString = map.get("feature");
-			if(featureString == null){
-				continue;
-			}
+		for(float[] vector : list){
 			
-			List<StringDoublePair> similar = getSimilar(parseFeatureVectorString(featureString), qc);
+			
+			List<StringDoublePair> similar = getSimilar(vector, qc);
 			
 			for(StringDoublePair sdp : similar){
 				if(maxPool.containsKey(sdp.key)){
@@ -94,20 +83,6 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 		}
 		
 		return _return;
-	}
-
-	//this will become obsolete with future API change
-	private float[] parseFeatureVectorString(String featureString){
-		String[] stingVector = featureString.split(",");
-		float[] featureVector = new float[stingVector.length];
-		for(int i = 0; i < featureVector.length; ++i){
-			try{
-				featureVector[i] = Float.parseFloat(stingVector[i]);
-			}catch(NumberFormatException e){
-				//ignore
-			}
-		}
-		return featureVector;
 	}
 	
 	/**
