@@ -48,7 +48,7 @@ CREATE INDEX shot_id_index
 CREATE TABLE resultcachenames
 (
   id bigserial NOT NULL,
-  name character varying(50),
+  name character varying(100),
   CONSTRAINT resultcachenames_pkey PRIMARY KEY (id),
   CONSTRAINT resultcachenames_name_key UNIQUE (name)
 )
