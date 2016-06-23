@@ -105,6 +105,10 @@ public class QueryContainer implements FrameContainer {
 	public void addPath(LinkedList<Point2D_F32> path){
 		this.paths.add(new Pair<Integer, LinkedList<Point2D_F32>>(0, path));
 	}
+	
+	public void addBgPath(LinkedList<Point2D_F32> path){
+		this.bgPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(0, path));
+	}
 
 	@Override
 	public List<String> getTags() {
