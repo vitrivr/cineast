@@ -22,7 +22,9 @@ public class WebUtils {
 
 	public static BufferedImage dataURLtoBufferedImage(String dataUrl) {
 
-		dataUrl = dataUrl.replaceAll("\\s+", "");
+		System.out.println(dataUrl);
+		
+		dataUrl = dataUrl.replace(' ', '+');
 
 		if (!dataUrl.startsWith("data:")) {
 			LOGGER.warn("no valid data url");
