@@ -1,7 +1,7 @@
 package ch.unibas.cs.dbis.cineast.core.setup;
 
 import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator.FieldDefinition;
-import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage.FieldType;
+import ch.unibas.dmi.dbis.adam.http.Adam.FieldDefinitionMessage.FieldType;
 
 public class Setup {
 

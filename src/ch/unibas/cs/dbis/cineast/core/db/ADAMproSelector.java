@@ -14,22 +14,22 @@ import com.google.common.util.concurrent.ListenableFuture;
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.dmi.dbis.adam.http.Grpc;
-import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.Code;
-import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.DataMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.DenseVectorMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.DistanceMessage.DistanceType;
-import ch.unibas.dmi.dbis.adam.http.Grpc.FeatureVectorMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.FromMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.NearestNeighbourQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultTupleMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam;
+import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code;
+import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.DataMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType;
+import ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.FromMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage;
 
 public class ADAMproSelector implements DBSelector {
 
@@ -112,7 +112,7 @@ public class ADAMproSelector implements DBSelector {
 		FeatureVectorMessage fvqm = FeatureVectorMessage.newBuilder().setDenseVector(DenseVectorMessage.newBuilder().addAllVector(new FloatArrayIterable(vector))).build();
 		
 		NearestNeighbourQueryMessage nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
-		QueryMessage sqMessage = sqmBuilder.setProjection(Grpc.ProjectionMessage.newBuilder().setField(Grpc.ProjectionMessage.FieldnameMessage.newBuilder().addField("adamprodistance").addField("id"))).setFrom(fromBuilder.build()).setNnq(nnqMessage).addAllHints(hints).build();
+		QueryMessage sqMessage = sqmBuilder.setProjection(Adam.ProjectionMessage.newBuilder().setField(Adam.ProjectionMessage.FieldnameMessage.newBuilder().addField("adamprodistance").addField("id"))).setFrom(fromBuilder.build()).setNnq(nnqMessage).addAllHints(hints).build();
 		
 		LOGGER.debug(sqMessage);
 		

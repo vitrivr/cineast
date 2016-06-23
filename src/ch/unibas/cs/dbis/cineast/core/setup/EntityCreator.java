@@ -6,12 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.db.ADAMproWrapper;
-import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.Code;
-import ch.unibas.dmi.dbis.adam.http.Grpc.CreateEntityMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage.Builder;
-import ch.unibas.dmi.dbis.adam.http.Grpc.FieldDefinitionMessage.FieldType;
+import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.FieldDefinitionMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.FieldDefinitionMessage.FieldType;
 
 public class EntityCreator {
 
@@ -26,7 +24,7 @@ public class EntityCreator {
 	public AckMessage createMultiMediaObjectsEntity(){
 		ArrayList<FieldDefinitionMessage> fields = new ArrayList<>(8);
 		
-		Builder builder = FieldDefinitionMessage.newBuilder();
+		FieldDefinitionMessage.Builder builder = FieldDefinitionMessage.newBuilder();
 		
 		fields.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(true).setIndexed(true).build());
 		fields.add(builder.setName("type").setFieldtype(FieldType.INT).setPk(false).setIndexed(true).build());
@@ -41,7 +39,7 @@ public class EntityCreator {
 		
 		AckMessage ack = adampro.createEntityBlocking(message);
 		
-		if(ack.getCode() == Code.OK){
+		if(ack.getCode() == AckMessage.Code.OK){
 			LOGGER.info("successfully created multimedia object entity");
 		}else{
 			LOGGER.error("error creating multimedia object entity: {}", ack.getMessage());
@@ -56,7 +54,7 @@ public class EntityCreator {
 	public AckMessage createSegmentEntity(){
 		ArrayList<FieldDefinitionMessage> fields = new ArrayList<>(4);
 		
-		Builder builder = FieldDefinitionMessage.newBuilder();
+		FieldDefinitionMessage.Builder builder = FieldDefinitionMessage.newBuilder();
 
 		fields.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(true).setIndexed(true).build());
 		fields.add(builder.setName("multimediaobject").setFieldtype(FieldType.STRING).setPk(false).setIndexed(true).build());
@@ -67,7 +65,7 @@ public class EntityCreator {
 		
 		AckMessage ack = adampro.createEntityBlocking(message);
 		
-		if(ack.getCode() == Code.OK){
+		if(ack.getCode() == AckMessage.Code.OK){
 			LOGGER.info("successfully created segment entity");
 		}else{
 			LOGGER.error("error creating segment entity: {}", ack.getMessage());
@@ -90,7 +88,7 @@ public class EntityCreator {
 	public AckMessage createFeatureEntity(String featurename, boolean unique, String...featrueNames){
 		ArrayList<FieldDefinitionMessage> fields = new ArrayList<>();
 		
-		Builder builder = FieldDefinitionMessage.newBuilder();
+		FieldDefinitionMessage.Builder builder = FieldDefinitionMessage.newBuilder();
 		
 		fields.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(unique).setIndexed(true).build());
 		for(String feature : featrueNames){
@@ -101,7 +99,7 @@ public class EntityCreator {
 		
 		AckMessage ack = adampro.createEntityBlocking(message);
 		
-		if(ack.getCode() == Code.OK){
+		if(ack.getCode() == AckMessage.Code.OK){
 			LOGGER.info("successfully created feature entity {}", featurename);
 		}else{
 			LOGGER.error("error creating feature entity {}: {}", featurename, ack.getMessage());
@@ -114,7 +112,7 @@ public class EntityCreator {
 	public AckMessage createIdEntity(String entityName, FieldDefinition...fields){
 		ArrayList<FieldDefinitionMessage> fieldList = new ArrayList<>();
 		
-		Builder builder = FieldDefinitionMessage.newBuilder();
+		FieldDefinitionMessage.Builder builder = FieldDefinitionMessage.newBuilder();
 		
 		fieldList.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(true).setIndexed(true).build());
 		for(FieldDefinition field : fields){
@@ -125,7 +123,7 @@ public class EntityCreator {
 		
 		AckMessage ack = adampro.createEntityBlocking(message);
 		
-		if(ack.getCode() == Code.OK){
+		if(ack.getCode() == AckMessage.Code.OK){
 			LOGGER.info("successfully created feature entity {}", entityName);
 		}else{
 			LOGGER.error("error creating feature entity {}: {}", entityName, ack.getMessage());

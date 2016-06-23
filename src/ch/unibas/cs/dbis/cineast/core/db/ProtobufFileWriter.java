@@ -5,7 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage;
+
 
 public class ProtobufFileWriter extends ProtobufTupleGenerator {
 
@@ -78,5 +79,7 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
 	public boolean exists(String key, String value) {
 		return false;
 	}
+
+	
 
 }

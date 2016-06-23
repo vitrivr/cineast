@@ -8,17 +8,19 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import ch.unibas.dmi.dbis.adam.http.Grpc;
-import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage.Code;
-import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.BooleanQueryMessage.WhereMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.Builder;
-import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam;
+import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code;
+import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.Builder;
+import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage;
+
+
 
 public class ADAMproWriter extends ProtobufTupleGenerator {
 	
@@ -49,7 +51,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		WhereMessage where = WhereMessage.newBuilder().setField(key).setValue(value).build();
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Grpc.FromMessage.newBuilder().setEntity(this.entityName).build())
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Adam.FromMessage.newBuilder().setEntity(this.entityName).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;

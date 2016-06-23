@@ -1,13 +1,10 @@
 package test;
 
-import ch.unibas.cs.dbis.cineast.core.db.ADAMproWrapper;
 import ch.unibas.cs.dbis.cineast.core.db.ADAMproWriter;
-import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
 import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
-import ch.unibas.dmi.dbis.adam.http.Grpc.AckMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.EntityNameMessage;
-import ch.unibas.dmi.dbis.adam.http.Grpc.InsertMessage.TupleInsertMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage;
+
 
 public class Test {
 
