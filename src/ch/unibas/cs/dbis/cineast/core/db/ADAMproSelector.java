@@ -137,7 +137,6 @@ public class ADAMproSelector implements DBSelector {
 		ArrayList<String> hints = new ArrayList<>(1);
 		hints.add("exact");
 		
-		
 		FeatureVectorMessage fvqm = FeatureVectorMessage.newBuilder().setDenseVector(DenseVectorMessage.newBuilder().addAllVector(new FloatArrayIterable(vector))).build();
 		
 		NearestNeighbourQueryMessage nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
