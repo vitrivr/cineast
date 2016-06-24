@@ -96,17 +96,19 @@ public class ADAMproSelector implements DBSelector {
 			
 			DataMessage dm = data.get(vectorName);
 			
+			if(dm.getDatatypeCase() != DataMessage.DatatypeCase.FEATUREDATA){
+				continue;
+			}
+			
 			FeatureVectorMessage featureData = dm.getFeatureData();
 			
-			if(featureData == FeatureVectorMessage.getDefaultInstance()){
-				continue;
+			
+			if(featureData.getFeatureCase() != FeatureVectorMessage.FeatureCase.DENSEVECTOR){
+				continue; //TODO add correct handling for sparse and int vectors
 			}
 			
-			DenseVectorMessage dense = featureData.getDenseVector(); //TODO add correct handling for sparse and int vectors
+			DenseVectorMessage dense = featureData.getDenseVector(); 
 			
-			if(dense == DenseVectorMessage.getDefaultInstance()){
-				continue;
-			}
 			
 			List<Float> list = dense.getVectorList();
 			if(list.isEmpty()){
@@ -140,8 +142,6 @@ public class ADAMproSelector implements DBSelector {
 		
 		NearestNeighbourQueryMessage nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
 		QueryMessage sqMessage = sqmBuilder.setProjection(Adam.ProjectionMessage.newBuilder().setField(Adam.ProjectionMessage.FieldnameMessage.newBuilder().addField("adamprodistance").addField("id"))).setFrom(fromBuilder.build()).setNnq(nnqMessage).addAllHints(hints).build();
-		
-		//LOGGER.debug(sqMessage);
 		
 		ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 
