@@ -24,7 +24,7 @@ public final class DataMessageConverter {
 
 	private DataMessageConverter(){}
 	
-	public final PrimitiveTypeProvider convert(DataMessage message){
+	public static final PrimitiveTypeProvider convert(DataMessage message){
 		switch(message.getDatatypeCase()){
 		case BOOLEANDATA:
 			return new BooleanTypeProvider(message.getBooleanData());
@@ -136,7 +136,7 @@ public final class DataMessageConverter {
 		
 	}
 	
-	private class NothingProvider implements PrimitiveTypeProvider{
+	private static class NothingProvider implements PrimitiveTypeProvider{
 
 		@Override
 		public ProviderDataType getType() {
