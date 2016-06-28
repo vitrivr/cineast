@@ -2,6 +2,8 @@ package ch.unibas.cs.dbis.cineast.core.db;
 
 import java.util.List;
 
+import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
+import ch.unibas.cs.dbis.cineast.core.data.IntArrayIterable;
 import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.BooleanProviderImpl;
 import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.DoubleProviderImpl;
 import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.FloatArrayProvider;
@@ -55,6 +57,122 @@ public final class DataMessageConverter {
 		default:
 			return new NothingProvider();
 		
+		}
+	}
+	
+	private static final DataMessage.Builder builder = DataMessage.newBuilder();
+	private static final FeatureVectorMessage.Builder vectorBuilder = FeatureVectorMessage.newBuilder();
+	private static final DenseVectorMessage.Builder denseVectorBuilder = DenseVectorMessage.newBuilder();
+	private static final IntVectorMessage.Builder intVectorBuilder = IntVectorMessage.newBuilder();
+	
+	public static DataMessage convert(PrimitiveTypeProvider provider){
+		switch(provider.getType()){
+		case BOOLEAN:
+			return convert(provider.getBoolean());
+		case BYTE:
+			return convert(provider.getByte());
+		case DOUBLE:
+			return convert(provider.getDouble());
+		case FLOAT:
+			return convert(provider.getFloat());
+		case FLOAT_ARRAY:
+			return convert(provider.getFloatArray());
+		case INT:
+			return convert(provider.getInt());
+		case INT_ARRAY:
+			return convert(provider.getIntArray());
+		case LONG:
+			return convert(provider.getLong());
+		case SHORT:
+			return convert(provider.getShort());
+		case STRING:
+			return convert(provider.getString());
+		case UNKNOWN:
+		default:
+			throw new IllegalArgumentException("Cannot convert ProviderDataType " + provider.getType() + " to DataMessage");
+		
+		}
+	}
+	
+	
+
+	public static final DataMessage convert(boolean bool){
+		synchronized (builder) {
+			builder.clear();
+			return builder.setBooleanData(bool).build();
+		}
+	}
+	
+	public static final DataMessage convert(int i){
+		synchronized (builder) {
+			builder.clear();
+			return builder.setIntData(i).build();
+		}
+	}
+	
+	public static DataMessage convert(double d) {
+		synchronized (builder) {
+			builder.clear();
+			return builder.setDoubleData(d).build();
+		}
+	}
+	
+	public static DataMessage convert(float f){
+		synchronized (builder) {
+			builder.clear();
+			return builder.setFloatData(f).build();
+		}
+	}
+	
+	public static DataMessage convert(long l){
+		synchronized (builder) {
+			builder.clear();
+			return builder.setLongData(l).build();
+		}
+	}
+	
+	public static DataMessage convert(String s){
+		synchronized (builder){
+			builder.clear();
+			return builder.setStringData(s).build();
+		}
+	}
+	
+	public static DataMessage convert(float[] vector){
+		if(vector == null){
+			vector = new float[0];
+		}
+		DenseVectorMessage dvmg;
+		synchronized (denseVectorBuilder) {
+			dvmg = denseVectorBuilder.clear().addAllVector(new FloatArrayIterable(vector)).build();
+		}
+		FeatureVectorMessage fvmg;
+		synchronized (vectorBuilder) {
+			vectorBuilder.clear();
+			fvmg = vectorBuilder.setDenseVector(dvmg).build();
+		}
+		synchronized (builder) {
+			builder.clear();
+			return builder.setFeatureData(fvmg).build();
+		}
+	}
+	
+	public static DataMessage convert(int[] vector){
+		if(vector == null){
+			vector = new int[0];
+		}
+		IntVectorMessage ivmg;
+		synchronized (intVectorBuilder) {
+			ivmg = intVectorBuilder.clear().addAllVector(new IntArrayIterable(vector)).build();
+		}
+		FeatureVectorMessage fvmg;
+		synchronized (vectorBuilder) {
+			vectorBuilder.clear();
+			fvmg = vectorBuilder.setIntVector(ivmg).build();
+		}
+		synchronized (builder) {
+			builder.clear();
+			return builder.setFeatureData(fvmg).build();
 		}
 	}
 	
