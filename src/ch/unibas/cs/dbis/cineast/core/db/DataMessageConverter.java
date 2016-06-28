@@ -138,7 +138,7 @@ public final class DataMessageConverter {
 		}
 	}
 	
-	public static DataMessage convert(float[] vector){
+	public static FeatureVectorMessage convertFeatureVectorMessage(float[] vector){
 		if(vector == null){
 			vector = new float[0];
 		}
@@ -146,18 +146,20 @@ public final class DataMessageConverter {
 		synchronized (denseVectorBuilder) {
 			dvmg = denseVectorBuilder.clear().addAllVector(new FloatArrayIterable(vector)).build();
 		}
-		FeatureVectorMessage fvmg;
 		synchronized (vectorBuilder) {
 			vectorBuilder.clear();
-			fvmg = vectorBuilder.setDenseVector(dvmg).build();
-		}
-		synchronized (builder) {
-			builder.clear();
-			return builder.setFeatureData(fvmg).build();
+			return vectorBuilder.setDenseVector(dvmg).build();
 		}
 	}
 	
-	public static DataMessage convert(int[] vector){
+	public static DataMessage convert(float[] vector){
+		synchronized (builder) {
+			builder.clear();
+			return builder.setFeatureData(convertFeatureVectorMessage(vector)).build();
+		}
+	}
+	
+	public static FeatureVectorMessage convertFeatureVectorMessage(int[] vector){
 		if(vector == null){
 			vector = new int[0];
 		}
@@ -165,14 +167,16 @@ public final class DataMessageConverter {
 		synchronized (intVectorBuilder) {
 			ivmg = intVectorBuilder.clear().addAllVector(new IntArrayIterable(vector)).build();
 		}
-		FeatureVectorMessage fvmg;
 		synchronized (vectorBuilder) {
 			vectorBuilder.clear();
-			fvmg = vectorBuilder.setIntVector(ivmg).build();
+			return vectorBuilder.setIntVector(ivmg).build();
 		}
+	}
+	
+	public static DataMessage convert(int[] vector){
 		synchronized (builder) {
 			builder.clear();
-			return builder.setFeatureData(fvmg).build();
+			return builder.setFeatureData(convertFeatureVectorMessage(vector)).build();
 		}
 	}
 	

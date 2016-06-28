@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -13,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
+import ch.unibas.cs.dbis.cineast.core.config.QueryConfig.Distance;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import ch.unibas.dmi.dbis.adam.http.Adam;
@@ -39,35 +40,44 @@ public class ADAMproSelector implements DBSelector {
 	private ADAMproWrapper adampro = new ADAMproWrapper();
 	
 	private FromMessage.Builder fromBuilder = FromMessage.newBuilder();
-	private FromMessage fromMessage;
-	private QueryMessage.Builder sqmBuilder = QueryMessage.newBuilder();
+	private QueryMessage.Builder qmBuilder = QueryMessage.newBuilder();
 	private NearestNeighbourQueryMessage.Builder nnqmBuilder = NearestNeighbourQueryMessage.newBuilder();
 	private BooleanQueryMessage.Builder bqmBuilder = BooleanQueryMessage.newBuilder();
-	private FeatureVectorMessage.Builder fvBuilder = FeatureVectorMessage.newBuilder();
+	private WhereMessage.Builder wmBuilder = WhereMessage.newBuilder();
+	private DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static DistanceMessage minkowski_1;
 	private static ArrayList<String> hints = new ArrayList<>(1);
 	private static ProjectionMessage projectionMessage;
 	
+	private static final DistanceMessage chisquared, correlation, cosine, hamming, jaccard, kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, spannorm;
+	
 	static{
-		
-		HashMap<String, String> tmp = new HashMap<>();
-		tmp.put("norm", "1");
-		
-		minkowski_1 = DistanceMessage.newBuilder().setDistancetype(DistanceType.minkowski).putAllOptions(tmp).build();
 		
 		hints.add("exact");
 		
 		projectionMessage = Adam.ProjectionMessage.newBuilder().setField(
 				Adam.ProjectionMessage.FieldnameMessage.newBuilder().addField("adamprodistance").addField("id")).build();
 		
+		DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
+		
+		chisquared = dmBuilder.clear().setDistancetype(DistanceType.chisquared).build();
+		correlation = dmBuilder.clear().setDistancetype(DistanceType.correlation).build();
+		cosine = dmBuilder.clear().setDistancetype(DistanceType.cosine).build();
+		hamming = dmBuilder.clear().setDistancetype(DistanceType.hamming).build();
+		jaccard = dmBuilder.clear().setDistancetype(DistanceType.jaccard).build();
+		kullbackleibler = dmBuilder.clear().setDistancetype(DistanceType.kullbackleibler).build();
+		chebyshev = dmBuilder.clear().setDistancetype(DistanceType.chebyshev).build();
+		euclidean = dmBuilder.clear().setDistancetype(DistanceType.euclidean).build();
+		squaredeuclidean = dmBuilder.clear().setDistancetype(DistanceType.squaredeuclidean).build();
+		manhattan = dmBuilder.clear().setDistancetype(DistanceType.manhattan).build();
+		spannorm = dmBuilder.clear().setDistancetype(DistanceType.spannorm).build();
+		
 	}
 	
 	@Override
 	public boolean open(String name) {
 		this.fromBuilder.setEntity(name);
-		this.fromMessage = this.fromBuilder.build();
 		return true;
 	}
 
@@ -77,12 +87,122 @@ public class ADAMproSelector implements DBSelector {
 		return false;
 	}
 
-	public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName){
-		WhereMessage where = WhereMessage.newBuilder().setField(fieldName).setValue(value).build();
-		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
+	private QueryMessage buildQueryMessage(ArrayList<String> hints, BooleanQueryMessage bqMessage, ProjectionMessage pMessage, NearestNeighbourQueryMessage nnqMessage){
+		synchronized (qmBuilder) {
+			qmBuilder.clear();
+			qmBuilder.setFrom(fromBuilder);
+			if(hints != null && !hints.isEmpty()){
+				qmBuilder.addAllHints(hints);
+			}
+			if(bqMessage != null){
+				qmBuilder.setBq(bqMessage);
+			}
+			if(pMessage != null){
+				qmBuilder.setProjection(pMessage);
+			}
+			if(nnqMessage != null){
+				qmBuilder.setNnq(nnqMessage);
+			}
+			
+			return qmBuilder.build();
+		}
+	}
+	
+	private BooleanQueryMessage buildBooleanQueryMessage(WhereMessage where, WhereMessage...whereMessages){
+		ArrayList<WhereMessage> tmp = new ArrayList<>(1 + (whereMessages == null ? 0 : whereMessages.length));
 		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(fromBuilder.build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
+		if(whereMessages != null){
+			for(WhereMessage w : whereMessages){
+				tmp.add(w);
+			}
+		}
+		synchronized (bqmBuilder) {
+			bqmBuilder.clear();
+			return bqmBuilder.addAllWhere(tmp).build();
+		}
+	}
+	
+	private WhereMessage buildWhereMessage(String key, String value){
+		synchronized (wmBuilder) {
+			wmBuilder.clear();
+			return wmBuilder.setField(key).setValue(value).build();
+		}
+	}
+	
+	private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column, FeatureVectorMessage fvm, int k, QueryConfig qc){
+		synchronized (nnqmBuilder) {
+			this.nnqmBuilder.clear();
+			nnqmBuilder.setColumn(column).setQuery(fvm).setK(k);
+			nnqmBuilder.setDistance(buildDistanceMessage(qc));
+			if(qc != null){
+				Optional<float[]> weights = qc.getDistanceWeights();
+				if(weights.isPresent()){
+					nnqmBuilder.setWeights(DataMessageConverter.convertFeatureVectorMessage(weights.get()));
+				}
+			}
+			return nnqmBuilder.build();
+		}
+	}
+	
+	private DistanceMessage buildDistanceMessage(QueryConfig qc){
+		if(qc == null){
+			return manhattan;
+		}
+		Optional<Distance> distance = qc.getDistance();
+		if(!distance.isPresent()){
+			return manhattan;
+		}
+		switch(distance.get()){
+		case chebyshev:
+			return chebyshev;
+		case chisquared:
+			return chisquared;
+		case correlation:
+			return correlation;
+		case cosine:
+			return cosine;
+		case euclidean:
+			return euclidean;
+		case hamming:
+			return hamming;
+		case jaccard:
+			return jaccard;
+		case kullbackleibler:
+			return kullbackleibler;
+		case manhattan:
+			return manhattan;
+		case minkowski:{
+			
+			float norm = qc.getNorm().orElse(1f);
+			
+			if(Math.abs(norm - 1f) < 1e6f){
+				return manhattan;
+			}
+			
+			if(Math.abs(norm - 2f) < 1e6f){
+				return euclidean;
+			}
+			
+			HashMap<String, String> tmp = new HashMap<>();
+			tmp.put("norm", Float.toString(norm));
+			
+			synchronized (dmBuilder) {
+				return dmBuilder.clear().setDistancetype(DistanceType.minkowski).putAllOptions(tmp).build();
+			}
+			
+			}
+		case spannorm:
+			return spannorm;
+		case squaredeuclidean:
+			return squaredeuclidean;
+		default:
+			return manhattan;		
+		}
+	}
+	
+	public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName){
+		QueryMessage qbqm = buildQueryMessage(hints, buildBooleanQueryMessage(buildWhereMessage(fieldName, value)), null, null);
+				
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responses;
 		ArrayList<float[]> _return = new ArrayList<>();
@@ -145,26 +265,9 @@ public class ADAMproSelector implements DBSelector {
 	
 	@Override
 	public List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column, QueryConfig config) {
-		FeatureVectorMessage fvqm;
-		synchronized (fvBuilder) {
-			fvBuilder.clear();
-			fvqm = fvBuilder.setDenseVector(DenseVectorMessage.newBuilder().addAllVector(new FloatArrayIterable(vector))).build();
-		}
-		
-		NearestNeighbourQueryMessage nnqMessage;
-		synchronized (nnqmBuilder) {
-			this.nnqmBuilder.clear();
-			nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
-		}
-		QueryMessage sqMessage;
-		synchronized (sqmBuilder) {
-			this.sqmBuilder.clear();
-			sqMessage = sqmBuilder.setProjection(projectionMessage)
-					.setFrom(fromMessage).setNnq(nnqMessage).addAllHints(hints).build();
-		}
-		
+		NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertFeatureVectorMessage(vector), k, config);
+		QueryMessage sqMessage = buildQueryMessage(hints, null, projectionMessage, nnqMessage);
 		ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
-
 		QueryResultInfoMessage response;
 		try {
 			response = future.get().getResponses(0);  //only head (end-result) is important
@@ -194,21 +297,9 @@ public class ADAMproSelector implements DBSelector {
 
 	@Override
 	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
-		WhereMessage where = WhereMessage.newBuilder().setField(fieldName).setValue(value).build();
-		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		tmp.add(where);
-		
-		BooleanQueryMessage bqMessage;
-		synchronized (bqmBuilder) {
-			bqmBuilder.clear();
-			bqMessage = bqmBuilder.addAllWhere(tmp).build();
-		}
-		
-		QueryMessage qbqm;
-		synchronized (sqmBuilder) {
-			this.sqmBuilder.clear();
-			qbqm = this.sqmBuilder.setFrom(fromMessage).setBq(bqMessage).build();
-		}
+		WhereMessage where = buildWhereMessage(fieldName, value);		
+		BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
+		QueryMessage qbqm = buildQueryMessage(hints, bqMessage, null, null);
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;
 		
@@ -247,22 +338,9 @@ public class ADAMproSelector implements DBSelector {
 
 	@Override
 	public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, QueryConfig config) {
-		FeatureVectorMessage fvqm;
-		synchronized (fvBuilder) {
-			fvBuilder.clear();
-			fvqm = fvBuilder.setDenseVector(DenseVectorMessage.newBuilder().addAllVector(new FloatArrayIterable(vector))).build();
-		}
-		
-		NearestNeighbourQueryMessage nnqMessage;
-		synchronized (nnqmBuilder) {
-			this.nnqmBuilder.clear();
-			nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
-		}
-		QueryMessage sqMessage;
-		synchronized (sqmBuilder) {
-			this.sqmBuilder.clear();
-			sqMessage = sqmBuilder.setFrom(fromMessage).setNnq(nnqMessage).addAllHints(hints).build();
-		}
+		NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertFeatureVectorMessage(vector), k, config);
+
+		QueryMessage sqMessage = buildQueryMessage(hints, null, null, nnqMessage);
 		
 		ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 
