@@ -19060,7 +19060,24 @@ public final class Adam {
         getIndexBytes();
 
     /**
-     * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+     * <code>optional .IndexListMessage indexes = 3;</code>
+     *
+     * <pre>
+     *or a list of indexes
+     * </pre>
+     */
+    ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getIndexes();
+    /**
+     * <code>optional .IndexListMessage indexes = 3;</code>
+     *
+     * <pre>
+     *or a list of indexes
+     * </pre>
+     */
+    ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder getIndexesOrBuilder();
+
+    /**
+     * <code>optional .SubExpressionQueryMessage expression = 4;</code>
      *
      * <pre>
      *or an expression
@@ -19068,7 +19085,7 @@ public final class Adam {
      */
     ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getExpression();
     /**
-     * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+     * <code>optional .SubExpressionQueryMessage expression = 4;</code>
      *
      * <pre>
      *or an expression
@@ -19129,8 +19146,22 @@ public final class Adam {
               break;
             }
             case 26: {
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder subBuilder = null;
               if (sourceCase_ == 3) {
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_).toBuilder();
+              }
+              source_ =
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_);
+                source_ = subBuilder.buildPartial();
+              }
+              sourceCase_ = 3;
+              break;
+            }
+            case 34: {
+              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder subBuilder = null;
+              if (sourceCase_ == 4) {
                 subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_).toBuilder();
               }
               source_ =
@@ -19139,7 +19170,7 @@ public final class Adam {
                 subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_);
                 source_ = subBuilder.buildPartial();
               }
-              sourceCase_ = 3;
+              sourceCase_ = 4;
               break;
             }
           }
@@ -19172,7 +19203,8 @@ public final class Adam {
         implements com.google.protobuf.Internal.EnumLite {
       ENTITY(1),
       INDEX(2),
-      EXPRESSION(3),
+      INDEXES(3),
+      EXPRESSION(4),
       SOURCE_NOT_SET(0);
       private int value = 0;
       private SourceCase(int value) {
@@ -19182,7 +19214,8 @@ public final class Adam {
         switch (value) {
           case 1: return ENTITY;
           case 2: return INDEX;
-          case 3: return EXPRESSION;
+          case 3: return INDEXES;
+          case 4: return EXPRESSION;
           case 0: return SOURCE_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
             "Value is undefined for this oneof enum.");
@@ -19301,29 +19334,57 @@ public final class Adam {
       }
     }
 
-    public static final int EXPRESSION_FIELD_NUMBER = 3;
+    public static final int INDEXES_FIELD_NUMBER = 3;
     /**
-     * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+     * <code>optional .IndexListMessage indexes = 3;</code>
+     *
+     * <pre>
+     *or a list of indexes
+     * </pre>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getIndexes() {
+      if (sourceCase_ == 3) {
+         return (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+    }
+    /**
+     * <code>optional .IndexListMessage indexes = 3;</code>
+     *
+     * <pre>
+     *or a list of indexes
+     * </pre>
+     */
+    public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder getIndexesOrBuilder() {
+      if (sourceCase_ == 3) {
+         return (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_;
+      }
+      return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+    }
+
+    public static final int EXPRESSION_FIELD_NUMBER = 4;
+    /**
+     * <code>optional .SubExpressionQueryMessage expression = 4;</code>
      *
      * <pre>
      *or an expression
      * </pre>
      */
     public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getExpression() {
-      if (sourceCase_ == 3) {
+      if (sourceCase_ == 4) {
          return (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_;
       }
       return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
     }
     /**
-     * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+     * <code>optional .SubExpressionQueryMessage expression = 4;</code>
      *
      * <pre>
      *or an expression
      * </pre>
      */
     public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder() {
-      if (sourceCase_ == 3) {
+      if (sourceCase_ == 4) {
          return (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_;
       }
       return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
@@ -19348,7 +19409,10 @@ public final class Adam {
         com.google.protobuf.GeneratedMessage.writeString(output, 2, source_);
       }
       if (sourceCase_ == 3) {
-        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_);
+        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_);
+      }
+      if (sourceCase_ == 4) {
+        output.writeMessage(4, (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_);
       }
     }
 
@@ -19365,7 +19429,11 @@ public final class Adam {
       }
       if (sourceCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_);
+          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_);
+      }
+      if (sourceCase_ == 4) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_);
       }
       memoizedSize = size;
       return size;
@@ -19509,6 +19577,13 @@ public final class Adam {
           result.source_ = source_;
         }
         if (sourceCase_ == 3) {
+          if (indexesBuilder_ == null) {
+            result.source_ = source_;
+          } else {
+            result.source_ = indexesBuilder_.build();
+          }
+        }
+        if (sourceCase_ == 4) {
           if (expressionBuilder_ == null) {
             result.source_ = source_;
           } else {
@@ -19542,6 +19617,10 @@ public final class Adam {
             sourceCase_ = 2;
             source_ = other.source_;
             onChanged();
+            break;
+          }
+          case INDEXES: {
+            mergeIndexes(other.getIndexes());
             break;
           }
           case EXPRESSION: {
@@ -19794,9 +19873,171 @@ public final class Adam {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder> indexesBuilder_;
+      /**
+       * <code>optional .IndexListMessage indexes = 3;</code>
+       *
+       * <pre>
+       *or a list of indexes
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getIndexes() {
+        if (indexesBuilder_ == null) {
+          if (sourceCase_ == 3) {
+            return (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+        } else {
+          if (sourceCase_ == 3) {
+            return indexesBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .IndexListMessage indexes = 3;</code>
+       *
+       * <pre>
+       *or a list of indexes
+       * </pre>
+       */
+      public Builder setIndexes(ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage value) {
+        if (indexesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          source_ = value;
+          onChanged();
+        } else {
+          indexesBuilder_.setMessage(value);
+        }
+        sourceCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .IndexListMessage indexes = 3;</code>
+       *
+       * <pre>
+       *or a list of indexes
+       * </pre>
+       */
+      public Builder setIndexes(
+          ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder builderForValue) {
+        if (indexesBuilder_ == null) {
+          source_ = builderForValue.build();
+          onChanged();
+        } else {
+          indexesBuilder_.setMessage(builderForValue.build());
+        }
+        sourceCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .IndexListMessage indexes = 3;</code>
+       *
+       * <pre>
+       *or a list of indexes
+       * </pre>
+       */
+      public Builder mergeIndexes(ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage value) {
+        if (indexesBuilder_ == null) {
+          if (sourceCase_ == 3 &&
+              source_ != ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance()) {
+            source_ = ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            source_ = value;
+          }
+          onChanged();
+        } else {
+          if (sourceCase_ == 3) {
+            indexesBuilder_.mergeFrom(value);
+          }
+          indexesBuilder_.setMessage(value);
+        }
+        sourceCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .IndexListMessage indexes = 3;</code>
+       *
+       * <pre>
+       *or a list of indexes
+       * </pre>
+       */
+      public Builder clearIndexes() {
+        if (indexesBuilder_ == null) {
+          if (sourceCase_ == 3) {
+            sourceCase_ = 0;
+            source_ = null;
+            onChanged();
+          }
+        } else {
+          if (sourceCase_ == 3) {
+            sourceCase_ = 0;
+            source_ = null;
+          }
+          indexesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .IndexListMessage indexes = 3;</code>
+       *
+       * <pre>
+       *or a list of indexes
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder getIndexesBuilder() {
+        return getIndexesFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .IndexListMessage indexes = 3;</code>
+       *
+       * <pre>
+       *or a list of indexes
+       * </pre>
+       */
+      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder getIndexesOrBuilder() {
+        if ((sourceCase_ == 3) && (indexesBuilder_ != null)) {
+          return indexesBuilder_.getMessageOrBuilder();
+        } else {
+          if (sourceCase_ == 3) {
+            return (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_;
+          }
+          return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .IndexListMessage indexes = 3;</code>
+       *
+       * <pre>
+       *or a list of indexes
+       * </pre>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder> 
+          getIndexesFieldBuilder() {
+        if (indexesBuilder_ == null) {
+          if (!(sourceCase_ == 3)) {
+            source_ = ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+          }
+          indexesBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_,
+                  getParentForChildren(),
+                  isClean());
+          source_ = null;
+        }
+        sourceCase_ = 3;
+        onChanged();;
+        return indexesBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
           ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder> expressionBuilder_;
       /**
-       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       * <code>optional .SubExpressionQueryMessage expression = 4;</code>
        *
        * <pre>
        *or an expression
@@ -19804,19 +20045,19 @@ public final class Adam {
        */
       public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getExpression() {
         if (expressionBuilder_ == null) {
-          if (sourceCase_ == 3) {
+          if (sourceCase_ == 4) {
             return (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_;
           }
           return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
         } else {
-          if (sourceCase_ == 3) {
+          if (sourceCase_ == 4) {
             return expressionBuilder_.getMessage();
           }
           return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       * <code>optional .SubExpressionQueryMessage expression = 4;</code>
        *
        * <pre>
        *or an expression
@@ -19832,11 +20073,11 @@ public final class Adam {
         } else {
           expressionBuilder_.setMessage(value);
         }
-        sourceCase_ = 3;
+        sourceCase_ = 4;
         return this;
       }
       /**
-       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       * <code>optional .SubExpressionQueryMessage expression = 4;</code>
        *
        * <pre>
        *or an expression
@@ -19850,11 +20091,11 @@ public final class Adam {
         } else {
           expressionBuilder_.setMessage(builderForValue.build());
         }
-        sourceCase_ = 3;
+        sourceCase_ = 4;
         return this;
       }
       /**
-       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       * <code>optional .SubExpressionQueryMessage expression = 4;</code>
        *
        * <pre>
        *or an expression
@@ -19862,7 +20103,7 @@ public final class Adam {
        */
       public Builder mergeExpression(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage value) {
         if (expressionBuilder_ == null) {
-          if (sourceCase_ == 3 &&
+          if (sourceCase_ == 4 &&
               source_ != ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance()) {
             source_ = ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_)
                 .mergeFrom(value).buildPartial();
@@ -19871,16 +20112,16 @@ public final class Adam {
           }
           onChanged();
         } else {
-          if (sourceCase_ == 3) {
+          if (sourceCase_ == 4) {
             expressionBuilder_.mergeFrom(value);
           }
           expressionBuilder_.setMessage(value);
         }
-        sourceCase_ = 3;
+        sourceCase_ = 4;
         return this;
       }
       /**
-       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       * <code>optional .SubExpressionQueryMessage expression = 4;</code>
        *
        * <pre>
        *or an expression
@@ -19888,13 +20129,13 @@ public final class Adam {
        */
       public Builder clearExpression() {
         if (expressionBuilder_ == null) {
-          if (sourceCase_ == 3) {
+          if (sourceCase_ == 4) {
             sourceCase_ = 0;
             source_ = null;
             onChanged();
           }
         } else {
-          if (sourceCase_ == 3) {
+          if (sourceCase_ == 4) {
             sourceCase_ = 0;
             source_ = null;
           }
@@ -19903,7 +20144,7 @@ public final class Adam {
         return this;
       }
       /**
-       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       * <code>optional .SubExpressionQueryMessage expression = 4;</code>
        *
        * <pre>
        *or an expression
@@ -19913,24 +20154,24 @@ public final class Adam {
         return getExpressionFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       * <code>optional .SubExpressionQueryMessage expression = 4;</code>
        *
        * <pre>
        *or an expression
        * </pre>
        */
       public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder() {
-        if ((sourceCase_ == 3) && (expressionBuilder_ != null)) {
+        if ((sourceCase_ == 4) && (expressionBuilder_ != null)) {
           return expressionBuilder_.getMessageOrBuilder();
         } else {
-          if (sourceCase_ == 3) {
+          if (sourceCase_ == 4) {
             return (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_;
           }
           return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .SubExpressionQueryMessage expression = 3;</code>
+       * <code>optional .SubExpressionQueryMessage expression = 4;</code>
        *
        * <pre>
        *or an expression
@@ -19940,7 +20181,7 @@ public final class Adam {
           ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder> 
           getExpressionFieldBuilder() {
         if (expressionBuilder_ == null) {
-          if (!(sourceCase_ == 3)) {
+          if (!(sourceCase_ == 4)) {
             source_ = ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
           }
           expressionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -19950,7 +20191,7 @@ public final class Adam {
                   isClean());
           source_ = null;
         }
-        sourceCase_ = 3;
+        sourceCase_ = 4;
         onChanged();;
         return expressionBuilder_;
       }
@@ -20007,6 +20248,507 @@ public final class Adam {
     }
 
     public ch.unibas.dmi.dbis.adam.http.Adam.FromMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface IndexListMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:IndexListMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated string indexes = 1;</code>
+     */
+    com.google.protobuf.ProtocolStringList
+        getIndexesList();
+    /**
+     * <code>repeated string indexes = 1;</code>
+     */
+    int getIndexesCount();
+    /**
+     * <code>repeated string indexes = 1;</code>
+     */
+    java.lang.String getIndexes(int index);
+    /**
+     * <code>repeated string indexes = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIndexesBytes(int index);
+  }
+  /**
+   * Protobuf type {@code IndexListMessage}
+   */
+  public  static final class IndexListMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:IndexListMessage)
+      IndexListMessageOrBuilder {
+    // Use IndexListMessage.newBuilder() to construct.
+    private IndexListMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private IndexListMessage() {
+      indexes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private IndexListMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                indexes_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              indexes_.add(s);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          indexes_ = indexes_.getUnmodifiableView();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexListMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexListMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder.class);
+    }
+
+    public static final int INDEXES_FIELD_NUMBER = 1;
+    private com.google.protobuf.LazyStringList indexes_;
+    /**
+     * <code>repeated string indexes = 1;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getIndexesList() {
+      return indexes_;
+    }
+    /**
+     * <code>repeated string indexes = 1;</code>
+     */
+    public int getIndexesCount() {
+      return indexes_.size();
+    }
+    /**
+     * <code>repeated string indexes = 1;</code>
+     */
+    public java.lang.String getIndexes(int index) {
+      return indexes_.get(index);
+    }
+    /**
+     * <code>repeated string indexes = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIndexesBytes(int index) {
+      return indexes_.getByteString(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < indexes_.size(); i++) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 1, indexes_.getRaw(i));
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      {
+        int dataSize = 0;
+        for (int i = 0; i < indexes_.size(); i++) {
+          dataSize += computeStringSizeNoTag(indexes_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getIndexesList().size();
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code IndexListMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:IndexListMessage)
+        ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexListMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexListMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        indexes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexListMessage_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage build() {
+        ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          indexes_ = indexes_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.indexes_ = indexes_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance()) return this;
+        if (!other.indexes_.isEmpty()) {
+          if (indexes_.isEmpty()) {
+            indexes_ = other.indexes_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureIndexesIsMutable();
+            indexes_.addAll(other.indexes_);
+          }
+          onChanged();
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private com.google.protobuf.LazyStringList indexes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureIndexesIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          indexes_ = new com.google.protobuf.LazyStringArrayList(indexes_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <code>repeated string indexes = 1;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getIndexesList() {
+        return indexes_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string indexes = 1;</code>
+       */
+      public int getIndexesCount() {
+        return indexes_.size();
+      }
+      /**
+       * <code>repeated string indexes = 1;</code>
+       */
+      public java.lang.String getIndexes(int index) {
+        return indexes_.get(index);
+      }
+      /**
+       * <code>repeated string indexes = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIndexesBytes(int index) {
+        return indexes_.getByteString(index);
+      }
+      /**
+       * <code>repeated string indexes = 1;</code>
+       */
+      public Builder setIndexes(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureIndexesIsMutable();
+        indexes_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string indexes = 1;</code>
+       */
+      public Builder addIndexes(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureIndexesIsMutable();
+        indexes_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string indexes = 1;</code>
+       */
+      public Builder addAllIndexes(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureIndexesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, indexes_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string indexes = 1;</code>
+       */
+      public Builder clearIndexes() {
+        indexes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string indexes = 1;</code>
+       */
+      public Builder addIndexesBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureIndexesIsMutable();
+        indexes_.add(value);
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:IndexListMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:IndexListMessage)
+    private static final ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage();
+    }
+
+    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<IndexListMessage>
+        PARSER = new com.google.protobuf.AbstractParser<IndexListMessage>() {
+      public IndexListMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new IndexListMessage(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<IndexListMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<IndexListMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -21899,24 +22641,112 @@ public final class Adam {
     public enum DistanceType
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
-       * <code>minkowski = 0;</code>
+       * <code>chisquared = 0;</code>
+       */
+      chisquared(0, 0),
+      /**
+       * <code>correlation = 1;</code>
+       */
+      correlation(1, 1),
+      /**
+       * <code>cosine = 2;</code>
+       */
+      cosine(2, 2),
+      /**
+       * <code>hamming = 3;</code>
+       */
+      hamming(3, 3),
+      /**
+       * <code>jaccard = 4;</code>
+       */
+      jaccard(4, 4),
+      /**
+       * <code>kullbackleibler = 5;</code>
+       */
+      kullbackleibler(5, 5),
+      /**
+       * <code>chebyshev = 6;</code>
+       */
+      chebyshev(6, 6),
+      /**
+       * <code>euclidean = 7;</code>
+       */
+      euclidean(7, 7),
+      /**
+       * <code>squaredeuclidean = 8;</code>
+       */
+      squaredeuclidean(8, 8),
+      /**
+       * <code>manhattan = 9;</code>
+       */
+      manhattan(9, 9),
+      /**
+       * <code>minkowski = 10;</code>
        *
        * <pre>
        *add option 'norm'
        * </pre>
        */
-      minkowski(0, 0),
+      minkowski(10, 10),
+      /**
+       * <code>spannorm = 11;</code>
+       */
+      spannorm(11, 11),
       UNRECOGNIZED(-1, -1),
       ;
 
       /**
-       * <code>minkowski = 0;</code>
+       * <code>chisquared = 0;</code>
+       */
+      public static final int chisquared_VALUE = 0;
+      /**
+       * <code>correlation = 1;</code>
+       */
+      public static final int correlation_VALUE = 1;
+      /**
+       * <code>cosine = 2;</code>
+       */
+      public static final int cosine_VALUE = 2;
+      /**
+       * <code>hamming = 3;</code>
+       */
+      public static final int hamming_VALUE = 3;
+      /**
+       * <code>jaccard = 4;</code>
+       */
+      public static final int jaccard_VALUE = 4;
+      /**
+       * <code>kullbackleibler = 5;</code>
+       */
+      public static final int kullbackleibler_VALUE = 5;
+      /**
+       * <code>chebyshev = 6;</code>
+       */
+      public static final int chebyshev_VALUE = 6;
+      /**
+       * <code>euclidean = 7;</code>
+       */
+      public static final int euclidean_VALUE = 7;
+      /**
+       * <code>squaredeuclidean = 8;</code>
+       */
+      public static final int squaredeuclidean_VALUE = 8;
+      /**
+       * <code>manhattan = 9;</code>
+       */
+      public static final int manhattan_VALUE = 9;
+      /**
+       * <code>minkowski = 10;</code>
        *
        * <pre>
        *add option 'norm'
        * </pre>
        */
-      public static final int minkowski_VALUE = 0;
+      public static final int minkowski_VALUE = 10;
+      /**
+       * <code>spannorm = 11;</code>
+       */
+      public static final int spannorm_VALUE = 11;
 
 
       public final int getNumber() {
@@ -21929,7 +22759,18 @@ public final class Adam {
 
       public static DistanceType valueOf(int value) {
         switch (value) {
-          case 0: return minkowski;
+          case 0: return chisquared;
+          case 1: return correlation;
+          case 2: return cosine;
+          case 3: return hamming;
+          case 4: return jaccard;
+          case 5: return kullbackleibler;
+          case 6: return chebyshev;
+          case 7: return euclidean;
+          case 8: return squaredeuclidean;
+          case 9: return manhattan;
+          case 10: return minkowski;
+          case 11: return spannorm;
           default: return null;
         }
       }
@@ -22043,7 +22884,7 @@ public final class Adam {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (distancetype_ != ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType.minkowski.getNumber()) {
+      if (distancetype_ != ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType.chisquared.getNumber()) {
         output.writeEnum(1, distancetype_);
       }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
@@ -22062,7 +22903,7 @@ public final class Adam {
       if (size != -1) return size;
 
       size = 0;
-      if (distancetype_ != ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType.minkowski.getNumber()) {
+      if (distancetype_ != ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType.chisquared.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, distancetype_);
       }
@@ -31385,6 +32226,11 @@ public final class Adam {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_FromMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_IndexListMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_IndexListMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_NearestNeighbourQueryMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -31564,86 +32410,92 @@ public final class Adam {
       "\030\002 \001(\0162\034.ProjectionMessage.OperationH\000\032!" +
       "\n\020FieldnameMessage\022\r\n\005field\030\001 \003(\t\"\"\n\tOpe",
       "ration\022\t\n\005COUNT\020\000\022\n\n\006EXISTS\020\001B\014\n\nsubmess" +
-      "age\"l\n\013FromMessage\022\020\n\006entity\030\001 \001(\tH\000\022\017\n\005" +
-      "index\030\002 \001(\tH\000\0220\n\nexpression\030\003 \001(\0132\032.SubE" +
-      "xpressionQueryMessageH\000B\010\n\006source\"\277\002\n\034Ne" +
-      "arestNeighbourQueryMessage\022\016\n\006column\030\001 \001" +
-      "(\t\022$\n\005query\030\002 \001(\0132\025.FeatureVectorMessage" +
-      "\022&\n\007weights\030\003 \001(\0132\025.FeatureVectorMessage" +
-      "\022\"\n\010distance\030\004 \001(\0132\020.DistanceMessage\022\t\n\001" +
-      "k\030\005 \001(\005\022;\n\007options\030\006 \003(\0132*.NearestNeighb" +
-      "ourQueryMessage.OptionsEntry\022\021\n\tindexOnl",
-      "y\030\007 \001(\010\022\022\n\npartitions\030\010 \003(\005\032.\n\014OptionsEn" +
-      "try\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\305\001\n\017" +
-      "DistanceMessage\0223\n\014distancetype\030\001 \001(\0162\035." +
-      "DistanceMessage.DistanceType\022.\n\007options\030" +
-      "\002 \003(\0132\035.DistanceMessage.OptionsEntry\032.\n\014" +
-      "OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t" +
-      ":\0028\001\"\035\n\014DistanceType\022\r\n\tminkowski\020\000\"\325\001\n\023" +
-      "BooleanQueryMessage\0220\n\005where\030\001 \003(\0132!.Boo" +
-      "leanQueryMessage.WhereMessage\022/\n\005joins\030\002" +
-      " \003(\0132 .BooleanQueryMessage.JoinMessage\032,",
-      "\n\014WhereMessage\022\r\n\005field\030\001 \001(\t\022\r\n\005value\030\002" +
-      " \001(\t\032-\n\013JoinMessage\022\r\n\005table\030\001 \001(\t\022\017\n\007co" +
-      "lumns\030\002 \003(\t\"\270\001\n\033ExternalHandlerQueryMess" +
-      "age\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\017\n\007" +
-      "handler\030\003 \001(\t\0228\n\006params\030\004 \003(\0132(.External" +
-      "HandlerQueryMessage.ParamsEntry\032-\n\013Param" +
-      "sEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\'" +
-      "\n\024CachedResultsMessage\022\017\n\007queryid\030\001 \001(\t\"" +
-      "X\n\nAckMessage\022\036\n\004code\030\001 \001(\0162\020.AckMessage" +
-      ".Code\022\017\n\007message\030\002 \001(\t\"\031\n\004Code\022\006\n\002OK\020\000\022\t",
-      "\n\005ERROR\020\001\"=\n\017EntitiesMessage\022\030\n\003ack\030\001 \001(" +
-      "\0132\013.AckMessage\022\020\n\010entities\030\002 \003(\t\"\264\001\n\027Ent" +
-      "ityPropertiesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckM" +
-      "essage\022\016\n\006entity\030\002 \001(\t\022<\n\nproperties\030\003 \003" +
-      "(\0132(.EntityPropertiesMessage.PropertiesE" +
-      "ntry\0321\n\017PropertiesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005" +
-      "value\030\002 \001(\t:\0028\001\"[\n\023QueryResultsMessage\022\030" +
-      "\n\003ack\030\001 \001(\0132\013.AckMessage\022*\n\tresponses\030\002 " +
-      "\003(\0132\027.QueryResultInfoMessage\"\240\001\n\026QueryRe" +
-      "sultInfoMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessag",
-      "e\022\017\n\007queryid\030\002 \001(\t\022\022\n\nconfidence\030\003 \001(\001\022\014" +
-      "\n\004time\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022)\n\007results\030" +
-      "\006 \003(\0132\030.QueryResultTupleMessage\"\206\001\n\027Quer" +
-      "yResultTupleMessage\0220\n\004data\030\001 \003(\0132\".Quer" +
-      "yResultTupleMessage.DataEntry\0329\n\tDataEnt" +
-      "ry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 \001(\0132\014.DataMes" +
-      "sage:\0028\001*G\n\tIndexType\022\007\n\003ecp\020\000\022\007\n\003lsh\020\001\022" +
-      "\006\n\002mi\020\002\022\006\n\002pq\020\003\022\006\n\002sh\020\004\022\007\n\003vaf\020\005\022\007\n\003vav\020" +
-      "\0062\220\007\n\016AdamDefinition\0223\n\014CreateEntity\022\024.C" +
-      "reateEntityMessage\032\013.AckMessage\"\000\022*\n\005Cou",
-      "nt\022\022.EntityNameMessage\032\013.AckMessage\"\000\022/\n" +
-      "\nDropEntity\022\022.EntityNameMessage\032\013.AckMes" +
-      "sage\"\000\022)\n\006Insert\022\016.InsertMessage\032\013.AckMe" +
-      "ssage\"\000(\001\022%\n\005Index\022\r.IndexMessage\032\013.AckM" +
-      "essage\"\000\0222\n\022GenerateAllIndexes\022\r.IndexMe" +
-      "ssage\032\013.AckMessage\"\000\022-\n\tDropIndex\022\021.Inde" +
-      "xNameMessage\032\013.AckMessage\"\000\022?\n\022GenerateR" +
-      "andomData\022\032.GenerateRandomDataMessage\032\013." +
-      "AckMessage\"\000\0221\n\014ListEntities\022\r.EmptyMess" +
-      "age\032\020.EntitiesMessage\"\000\022E\n\023GetEntityProp",
-      "erties\022\022.EntityNameMessage\032\030.EntityPrope" +
-      "rtiesMessage\"\000\022;\n\025RepartitionEntityData\022" +
-      "\023.RepartitionMessage\032\013.AckMessage\"\000\022:\n\024R" +
-      "epartitionIndexData\022\023.RepartitionMessage" +
-      "\032\013.AckMessage\"\000\022>\n\035BenchmarkAndUpdateSca" +
-      "nWeights\022\016.WeightMessage\032\013.AckMessage\"\000\022" +
-      "5\n\020ResetScanWeights\022\022.EntityNameMessage\032" +
-      "\013.AckMessage\"\000\022.\n\rSetScanWeight\022\016.Weight" +
-      "Message\032\013.AckMessage\"\000\022/\n\016SparsifyEntity" +
-      "\022\016.WeightMessage\032\013.AckMessage\"\000\022+\n\nImpor",
-      "tData\022\016.ImportMessage\032\013.AckMessage\"\0002\331\002\n" +
-      "\nAdamSearch\022.\n\nCacheIndex\022\021.IndexNameMes" +
-      "sage\032\013.AckMessage\"\000\0220\n\013CacheEntity\022\022.Ent" +
-      "ityNameMessage\032\013.AckMessage\"\000\0225\n\007Preview" +
-      "\022\022.EntityNameMessage\032\024.QueryResultsMessa" +
-      "ge\"\000\0220\n\007DoQuery\022\r.QueryMessage\032\024.QueryRe" +
-      "sultsMessage\"\000\022=\n\022DoProgressiveQuery\022\r.Q" +
-      "ueryMessage\032\024.QueryResultsMessage\"\0000\001\022A\n" +
-      "\020GetCachedResults\022\025.CachedResultsMessage" +
-      "\032\024.QueryResultsMessage\"\000B\036\n\034ch.unibas.dm",
-      "i.dbis.adam.httpb\006proto3"
+      "age\"\222\001\n\013FromMessage\022\020\n\006entity\030\001 \001(\tH\000\022\017\n" +
+      "\005index\030\002 \001(\tH\000\022$\n\007indexes\030\003 \001(\0132\021.IndexL" +
+      "istMessageH\000\0220\n\nexpression\030\004 \001(\0132\032.SubEx" +
+      "pressionQueryMessageH\000B\010\n\006source\"#\n\020Inde" +
+      "xListMessage\022\017\n\007indexes\030\001 \003(\t\"\277\002\n\034Neares" +
+      "tNeighbourQueryMessage\022\016\n\006column\030\001 \001(\t\022$" +
+      "\n\005query\030\002 \001(\0132\025.FeatureVectorMessage\022&\n\007" +
+      "weights\030\003 \001(\0132\025.FeatureVectorMessage\022\"\n\010" +
+      "distance\030\004 \001(\0132\020.DistanceMessage\022\t\n\001k\030\005 ",
+      "\001(\005\022;\n\007options\030\006 \003(\0132*.NearestNeighbourQ" +
+      "ueryMessage.OptionsEntry\022\021\n\tindexOnly\030\007 " +
+      "\001(\010\022\022\n\npartitions\030\010 \003(\005\032.\n\014OptionsEntry\022" +
+      "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\363\002\n\017Dist" +
+      "anceMessage\0223\n\014distancetype\030\001 \001(\0162\035.Dist" +
+      "anceMessage.DistanceType\022.\n\007options\030\002 \003(" +
+      "\0132\035.DistanceMessage.OptionsEntry\032.\n\014Opti" +
+      "onsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001" +
+      "\"\312\001\n\014DistanceType\022\016\n\nchisquared\020\000\022\017\n\013cor" +
+      "relation\020\001\022\n\n\006cosine\020\002\022\013\n\007hamming\020\003\022\013\n\007j",
+      "accard\020\004\022\023\n\017kullbackleibler\020\005\022\r\n\tchebysh" +
+      "ev\020\006\022\r\n\teuclidean\020\007\022\024\n\020squaredeuclidean\020" +
+      "\010\022\r\n\tmanhattan\020\t\022\r\n\tminkowski\020\n\022\014\n\010spann" +
+      "orm\020\013\"\325\001\n\023BooleanQueryMessage\0220\n\005where\030\001" +
+      " \003(\0132!.BooleanQueryMessage.WhereMessage\022" +
+      "/\n\005joins\030\002 \003(\0132 .BooleanQueryMessage.Joi" +
+      "nMessage\032,\n\014WhereMessage\022\r\n\005field\030\001 \001(\t\022" +
+      "\r\n\005value\030\002 \001(\t\032-\n\013JoinMessage\022\r\n\005table\030\001" +
+      " \001(\t\022\017\n\007columns\030\002 \003(\t\"\270\001\n\033ExternalHandle" +
+      "rQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity",
+      "\030\002 \001(\t\022\017\n\007handler\030\003 \001(\t\0228\n\006params\030\004 \003(\0132" +
+      "(.ExternalHandlerQueryMessage.ParamsEntr" +
+      "y\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
+      " \001(\t:\0028\001\"\'\n\024CachedResultsMessage\022\017\n\007quer" +
+      "yid\030\001 \001(\t\"X\n\nAckMessage\022\036\n\004code\030\001 \001(\0162\020." +
+      "AckMessage.Code\022\017\n\007message\030\002 \001(\t\"\031\n\004Code" +
+      "\022\006\n\002OK\020\000\022\t\n\005ERROR\020\001\"=\n\017EntitiesMessage\022\030" +
+      "\n\003ack\030\001 \001(\0132\013.AckMessage\022\020\n\010entities\030\002 \003" +
+      "(\t\"\264\001\n\027EntityPropertiesMessage\022\030\n\003ack\030\001 " +
+      "\001(\0132\013.AckMessage\022\016\n\006entity\030\002 \001(\t\022<\n\nprop",
+      "erties\030\003 \003(\0132(.EntityPropertiesMessage.P" +
+      "ropertiesEntry\0321\n\017PropertiesEntry\022\013\n\003key" +
+      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"[\n\023QueryResult" +
+      "sMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022*\n\tre" +
+      "sponses\030\002 \003(\0132\027.QueryResultInfoMessage\"\240" +
+      "\001\n\026QueryResultInfoMessage\022\030\n\003ack\030\001 \001(\0132\013" +
+      ".AckMessage\022\017\n\007queryid\030\002 \001(\t\022\022\n\nconfiden" +
+      "ce\030\003 \001(\001\022\014\n\004time\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022)" +
+      "\n\007results\030\006 \003(\0132\030.QueryResultTupleMessag" +
+      "e\"\206\001\n\027QueryResultTupleMessage\0220\n\004data\030\001 ",
+      "\003(\0132\".QueryResultTupleMessage.DataEntry\032" +
+      "9\n\tDataEntry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 \001(\013" +
+      "2\014.DataMessage:\0028\001*G\n\tIndexType\022\007\n\003ecp\020\000" +
+      "\022\007\n\003lsh\020\001\022\006\n\002mi\020\002\022\006\n\002pq\020\003\022\006\n\002sh\020\004\022\007\n\003vaf" +
+      "\020\005\022\007\n\003vav\020\0062\220\007\n\016AdamDefinition\0223\n\014Create" +
+      "Entity\022\024.CreateEntityMessage\032\013.AckMessag" +
+      "e\"\000\022*\n\005Count\022\022.EntityNameMessage\032\013.AckMe" +
+      "ssage\"\000\022/\n\nDropEntity\022\022.EntityNameMessag" +
+      "e\032\013.AckMessage\"\000\022)\n\006Insert\022\016.InsertMessa" +
+      "ge\032\013.AckMessage\"\000(\001\022%\n\005Index\022\r.IndexMess",
+      "age\032\013.AckMessage\"\000\0222\n\022GenerateAllIndexes" +
+      "\022\r.IndexMessage\032\013.AckMessage\"\000\022-\n\tDropIn" +
+      "dex\022\021.IndexNameMessage\032\013.AckMessage\"\000\022?\n" +
+      "\022GenerateRandomData\022\032.GenerateRandomData" +
+      "Message\032\013.AckMessage\"\000\0221\n\014ListEntities\022\r" +
+      ".EmptyMessage\032\020.EntitiesMessage\"\000\022E\n\023Get" +
+      "EntityProperties\022\022.EntityNameMessage\032\030.E" +
+      "ntityPropertiesMessage\"\000\022;\n\025RepartitionE" +
+      "ntityData\022\023.RepartitionMessage\032\013.AckMess" +
+      "age\"\000\022:\n\024RepartitionIndexData\022\023.Repartit",
+      "ionMessage\032\013.AckMessage\"\000\022>\n\035BenchmarkAn" +
+      "dUpdateScanWeights\022\016.WeightMessage\032\013.Ack" +
+      "Message\"\000\0225\n\020ResetScanWeights\022\022.EntityNa" +
+      "meMessage\032\013.AckMessage\"\000\022.\n\rSetScanWeigh" +
+      "t\022\016.WeightMessage\032\013.AckMessage\"\000\022/\n\016Spar" +
+      "sifyEntity\022\016.WeightMessage\032\013.AckMessage\"" +
+      "\000\022+\n\nImportData\022\016.ImportMessage\032\013.AckMes" +
+      "sage\"\0002\331\002\n\nAdamSearch\022.\n\nCacheIndex\022\021.In" +
+      "dexNameMessage\032\013.AckMessage\"\000\0220\n\013CacheEn" +
+      "tity\022\022.EntityNameMessage\032\013.AckMessage\"\000\022",
+      "5\n\007Preview\022\022.EntityNameMessage\032\024.QueryRe" +
+      "sultsMessage\"\000\0220\n\007DoQuery\022\r.QueryMessage" +
+      "\032\024.QueryResultsMessage\"\000\022=\n\022DoProgressiv" +
+      "eQuery\022\r.QueryMessage\032\024.QueryResultsMess" +
+      "age\"\0000\001\022A\n\020GetCachedResults\022\025.CachedResu" +
+      "ltsMessage\032\024.QueryResultsMessage\"\000B\036\n\034ch" +
+      ".unibas.dmi.dbis.adam.httpb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -31818,9 +32670,15 @@ public final class Adam {
     internal_static_FromMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_FromMessage_descriptor,
-        new java.lang.String[] { "Entity", "Index", "Expression", "Source", });
-    internal_static_NearestNeighbourQueryMessage_descriptor =
+        new java.lang.String[] { "Entity", "Index", "Indexes", "Expression", "Source", });
+    internal_static_IndexListMessage_descriptor =
       getDescriptor().getMessageTypes().get(22);
+    internal_static_IndexListMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_IndexListMessage_descriptor,
+        new java.lang.String[] { "Indexes", });
+    internal_static_NearestNeighbourQueryMessage_descriptor =
+      getDescriptor().getMessageTypes().get(23);
     internal_static_NearestNeighbourQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_NearestNeighbourQueryMessage_descriptor,
@@ -31832,7 +32690,7 @@ public final class Adam {
         internal_static_NearestNeighbourQueryMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DistanceMessage_descriptor =
-      getDescriptor().getMessageTypes().get(23);
+      getDescriptor().getMessageTypes().get(24);
     internal_static_DistanceMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_DistanceMessage_descriptor,
@@ -31844,7 +32702,7 @@ public final class Adam {
         internal_static_DistanceMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_BooleanQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(24);
+      getDescriptor().getMessageTypes().get(25);
     internal_static_BooleanQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BooleanQueryMessage_descriptor,
@@ -31862,7 +32720,7 @@ public final class Adam {
         internal_static_BooleanQueryMessage_JoinMessage_descriptor,
         new java.lang.String[] { "Table", "Columns", });
     internal_static_ExternalHandlerQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(25);
+      getDescriptor().getMessageTypes().get(26);
     internal_static_ExternalHandlerQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ExternalHandlerQueryMessage_descriptor,
@@ -31874,25 +32732,25 @@ public final class Adam {
         internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_CachedResultsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(26);
+      getDescriptor().getMessageTypes().get(27);
     internal_static_CachedResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_CachedResultsMessage_descriptor,
         new java.lang.String[] { "Queryid", });
     internal_static_AckMessage_descriptor =
-      getDescriptor().getMessageTypes().get(27);
+      getDescriptor().getMessageTypes().get(28);
     internal_static_AckMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_AckMessage_descriptor,
         new java.lang.String[] { "Code", "Message", });
     internal_static_EntitiesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(28);
+      getDescriptor().getMessageTypes().get(29);
     internal_static_EntitiesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EntitiesMessage_descriptor,
         new java.lang.String[] { "Ack", "Entities", });
     internal_static_EntityPropertiesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(29);
+      getDescriptor().getMessageTypes().get(30);
     internal_static_EntityPropertiesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EntityPropertiesMessage_descriptor,
@@ -31904,19 +32762,19 @@ public final class Adam {
         internal_static_EntityPropertiesMessage_PropertiesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_QueryResultsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(30);
+      getDescriptor().getMessageTypes().get(31);
     internal_static_QueryResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_QueryResultsMessage_descriptor,
         new java.lang.String[] { "Ack", "Responses", });
     internal_static_QueryResultInfoMessage_descriptor =
-      getDescriptor().getMessageTypes().get(31);
+      getDescriptor().getMessageTypes().get(32);
     internal_static_QueryResultInfoMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_QueryResultInfoMessage_descriptor,
         new java.lang.String[] { "Ack", "Queryid", "Confidence", "Time", "Source", "Results", });
     internal_static_QueryResultTupleMessage_descriptor =
-      getDescriptor().getMessageTypes().get(32);
+      getDescriptor().getMessageTypes().get(33);
     internal_static_QueryResultTupleMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_QueryResultTupleMessage_descriptor,
