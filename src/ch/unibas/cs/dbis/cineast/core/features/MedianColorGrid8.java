@@ -87,7 +87,7 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
 		Pair<FloatVector, float[]> p = partition(sc.getMedianImg());
-		return getSimilar(p.first.toArray(null), qc);
+		return getSimilar(p.first.toArray(null), new QueryConfig(qc).setDistanceWeights(p.second));
 	}
 
 }

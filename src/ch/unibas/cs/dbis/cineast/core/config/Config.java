@@ -27,6 +27,7 @@ public class Config {
 	private static ExtractorConfig extractorConfig = new ExtractorConfig();
 	private static ImageCacheConfig imageCacheConfig = new ImageCacheConfig();
 	private static RetrieverConfig retrieverConfig = new RetrieverConfig();
+	private static QueryConfig queryConfig = new QueryConfig();
 	
 	static{
 		
@@ -183,5 +184,9 @@ public class Config {
 	
 	public static DatabaseConfig getDatabaseConfig(){
 		return databaseConfig;
+	}
+	
+	public static QueryConfig getQueryConfig(){
+		return queryConfig;
 	}
 }

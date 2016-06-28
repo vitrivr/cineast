@@ -17,6 +17,7 @@ import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig.Distance;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import ch.unibas.dmi.dbis.adam.http.Adam;
 import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage;
 import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code;
@@ -204,23 +205,28 @@ public class ADAMproSelector implements DBSelector {
 		QueryMessage qbqm = buildQueryMessage(hints, buildBooleanQueryMessage(buildWhereMessage(fieldName, value)), null, null);
 				
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
-		QueryResultInfoMessage responses;
 		ArrayList<float[]> _return = new ArrayList<>();
+		QueryResultsMessage r;
 		try {
-			responses = f.get().getResponses(0); //only head (end-result) is important
+			r = f.get();
 		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return _return;
+			LOGGER.error(LogHelper.getStackTrace(e));
+			return new ArrayList<>(1);
 		}
 		
-		AckMessage ack = responses.getAck();
+		if(r.getResponsesCount() == 0){
+			return new ArrayList<>(1);
+		}
+		
+		QueryResultInfoMessage response = r.getResponses(0);  //only head (end-result) is important
+		
+		AckMessage ack = response.getAck();
 		if(ack.getCode() != Code.OK){
 			LOGGER.error("error in getFeatureVectors ({}) : {}", ack.getCode(), ack.getMessage());
 			return _return;
 		}
 		
-		for(QueryResultTupleMessage result : responses.getResultsList()){
+		for(QueryResultTupleMessage result : response.getResultsList()){
 			
 			Map<String, DataMessage> data = result.getData();
 			
@@ -268,14 +274,21 @@ public class ADAMproSelector implements DBSelector {
 		NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertFeatureVectorMessage(vector), k, config);
 		QueryMessage sqMessage = buildQueryMessage(hints, null, projectionMessage, nnqMessage);
 		ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
-		QueryResultInfoMessage response;
+		
+		QueryResultsMessage result;
 		try {
-			response = future.get().getResponses(0);  //only head (end-result) is important
+			result = future.get();
 		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(LogHelper.getStackTrace(e));
 			return new ArrayList<>(1);
 		}
+		
+		if(result.getResponsesCount() == 0){
+			return new ArrayList<>(1);
+		}
+		
+		QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
+		
 		ArrayList<StringDoublePair> _return = new ArrayList<>(k);
 
 		AckMessage ack = response.getAck();
@@ -301,18 +314,21 @@ public class ADAMproSelector implements DBSelector {
 		BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
 		QueryMessage qbqm = buildQueryMessage(hints, bqMessage, null, null);
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
-		QueryResultInfoMessage responce;
-		
-		
+		QueryResultsMessage result;
 		try {
-			responce = f.get().getResponses(0);
+			result = f.get();
 		} catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace();
+			LOGGER.error(LogHelper.getStackTrace(e));
 			return new ArrayList<>(1);
-			
 		}
 		
-		List<QueryResultTupleMessage> resultList = responce.getResultsList();
+		if(result.getResponsesCount() == 0){
+			return new ArrayList<>(1);
+		}
+		
+		QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
+		
+		List<QueryResultTupleMessage> resultList = response.getResultsList();
 		if(resultList.isEmpty()){
 			return new ArrayList<>(1);
 		}
@@ -344,14 +360,20 @@ public class ADAMproSelector implements DBSelector {
 		
 		ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 
-		QueryResultInfoMessage response;
+		QueryResultsMessage result;
 		try {
-			response = future.get().getResponses(0);  //only head (end-result) is important
+			result = future.get();
 		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(LogHelper.getStackTrace(e));
 			return new ArrayList<>(1);
 		}
+		
+		if(result.getResponsesCount() == 0){
+			return new ArrayList<>(1);
+		}
+		
+		QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
+		
 		ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(k);
 
 		AckMessage ack = response.getAck();

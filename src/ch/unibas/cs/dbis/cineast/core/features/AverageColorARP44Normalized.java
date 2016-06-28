@@ -28,7 +28,7 @@ public class AverageColorARP44Normalized extends AbstractFeatureModule {
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
 		Pair<FloatVector, float[]> p = ARPartioner.partitionImage(ImageHistogramEqualizer.getEqualized(sc.getAvgImg()), 4, 4);
-		return getSimilar(p.first.toArray(null), qc);
+		return getSimilar(p.first.toArray(null), new QueryConfig(qc).setDistanceWeights(p.second));
 	}
 
 

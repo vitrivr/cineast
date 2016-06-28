@@ -30,7 +30,7 @@ public class MedianColorGrid8Normalized extends MedianColorGrid8 {
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
 		Pair<FloatVector, float[]> p = partition(ImageHistogramEqualizer.getEqualized(sc.getMedianImg()));
-		return getSimilar(p.first.toArray(null), qc);
+		return getSimilar(p.first.toArray(null), new QueryConfig(qc).setDistanceWeights(p.second));
 	}
 
 }
