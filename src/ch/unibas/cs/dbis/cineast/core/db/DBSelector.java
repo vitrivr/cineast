@@ -17,6 +17,8 @@ public interface DBSelector {
 	 */
 	List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column, QueryConfig config);
 	
+	List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, QueryConfig config);
+	
 	List<float[]> getFeatureVectors(String fieldName, String value, String vectorName);
 	
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);

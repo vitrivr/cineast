@@ -43,6 +43,7 @@ public class ADAMproSelector implements DBSelector {
 	private QueryMessage.Builder sqmBuilder = QueryMessage.newBuilder();
 	private NearestNeighbourQueryMessage.Builder nnqmBuilder = NearestNeighbourQueryMessage.newBuilder();
 	private BooleanQueryMessage.Builder bqmBuilder = BooleanQueryMessage.newBuilder();
+	private FeatureVectorMessage.Builder fvBuilder = FeatureVectorMessage.newBuilder();
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static DistanceMessage minkowski_1;
@@ -144,7 +145,11 @@ public class ADAMproSelector implements DBSelector {
 	
 	@Override
 	public List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column, QueryConfig config) {
-		FeatureVectorMessage fvqm = FeatureVectorMessage.newBuilder().setDenseVector(DenseVectorMessage.newBuilder().addAllVector(new FloatArrayIterable(vector))).build();
+		FeatureVectorMessage fvqm;
+		synchronized (fvBuilder) {
+			fvBuilder.clear();
+			fvqm = fvBuilder.setDenseVector(DenseVectorMessage.newBuilder().addAllVector(new FloatArrayIterable(vector))).build();
+		}
 		
 		NearestNeighbourQueryMessage nnqMessage;
 		synchronized (nnqmBuilder) {
@@ -238,6 +243,56 @@ public class ADAMproSelector implements DBSelector {
 	protected void finalize() throws Throwable {
 		this.close();
 		super.finalize();
+	}
+
+	@Override
+	public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, QueryConfig config) {
+		FeatureVectorMessage fvqm;
+		synchronized (fvBuilder) {
+			fvBuilder.clear();
+			fvqm = fvBuilder.setDenseVector(DenseVectorMessage.newBuilder().addAllVector(new FloatArrayIterable(vector))).build();
+		}
+		
+		NearestNeighbourQueryMessage nnqMessage;
+		synchronized (nnqmBuilder) {
+			this.nnqmBuilder.clear();
+			nnqMessage = nnqmBuilder.setColumn(column).setQuery(fvqm).setK(k).setDistance(minkowski_1).build();
+		}
+		QueryMessage sqMessage;
+		synchronized (sqmBuilder) {
+			this.sqmBuilder.clear();
+			sqMessage = sqmBuilder.setFrom(fromMessage).setNnq(nnqMessage).addAllHints(hints).build();
+		}
+		
+		ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
+
+		QueryResultInfoMessage response;
+		try {
+			response = future.get().getResponses(0);  //only head (end-result) is important
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ArrayList<>(1);
+		}
+		ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(k);
+
+		AckMessage ack = response.getAck();
+		if(ack.getCode() != Code.OK){
+			LOGGER.error("error in getNearestNeighbourRows ({}) : {}", ack.getCode(), ack.getMessage());
+			return _return;
+		}
+		
+		for(QueryResultTupleMessage resultMessage : response.getResultsList()){
+			Map<String, DataMessage> data = resultMessage.getData();
+			Set<String> keys = data.keySet();
+			HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
+			for(String key : keys){
+				map.put(key, DataMessageConverter.convert(data.get(key)));
+			}
+			_return.add(map);
+		}
+		
+		return _return;
 	}
 
 }
