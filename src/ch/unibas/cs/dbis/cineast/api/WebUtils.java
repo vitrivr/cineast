@@ -21,8 +21,6 @@ public class WebUtils {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static BufferedImage dataURLtoBufferedImage(String dataUrl) {
-
-		System.out.println(dataUrl);
 		
 		dataUrl = dataUrl.replace(' ', '+');
 
