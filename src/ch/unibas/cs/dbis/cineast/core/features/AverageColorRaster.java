@@ -3,6 +3,7 @@ package ch.unibas.cs.dbis.cineast.core.features;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,13 +12,15 @@ import ch.unibas.cs.dbis.cineast.core.color.ColorConverter;
 import ch.unibas.cs.dbis.cineast.core.color.FuzzyColorHistogramQuantizer;
 import ch.unibas.cs.dbis.cineast.core.color.FuzzyColorHistogramQuantizer.Color;
 import ch.unibas.cs.dbis.cineast.core.color.ReadableLabContainer;
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
 import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
+import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
+import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -35,7 +38,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	@Override
 	public void init(PersistencyWriter<?> phandler) {
 		super.init(phandler);
-		this.phandler.setFieldNames("id", "raster", "hist");
+		this.phandler.setFieldNames("id", "hist", "raster");
 	}
 
 	protected static int get(Color c){
@@ -84,43 +87,12 @@ public class AverageColorRaster extends AbstractFeatureModule {
 		return get(Math.round(f));
 	}
 	
-
-	@Override
-	public void processShot(SegmentContainer shot) {
-		LOGGER.entry();
-		if (!phandler.idExists(shot.getId())) {
-			MultiImage avg = shot.getAvgImg();
-			int[] colors = avg.getColors();
-			ArrayList<Integer> ints = new ArrayList<>(colors.length);
-			for(int i : colors){
-				ints.add(i);
-			}
-			ArrayList<LinkedList<Integer>> partitions = GridPartitioner.partition(ints, avg.getWidth(), avg.getHeight(), 8, 8);
-			
-			float[] raster = new float[64];
-			float[] hist = new float[15];
-			
-			for(int i = 0; i < 64; ++i){
-				LinkedList<Integer> list = partitions.get(i);
-				int col = ColorUtils.getAvg(list);
-				ReadableLabContainer lab = ColorConverter.cachedRGBtoLab(col);
-				raster[i] = get(FuzzyColorHistogramQuantizer.quantize(lab));
-				hist[(int)raster[i]]++;
-			}
-			
-			persist(shot.getId(), new FloatVectorImpl(hist), new FloatVectorImpl(raster));
-			
-		}
-		LOGGER.exit();
-	}
-	
-	protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {//FIXME currently only one vector is supported
-		PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2);
-		this.phandler.persist(tuple);
+	MultiImage getMultiImage(SegmentContainer shot){
+		return shot.getAvgImg();
 	}
 
-	private FloatVector buildQueryVector(SegmentContainer qc) {
-		MultiImage avg = qc.getAvgImg();
+	Pair<float[], float[]> computeRaster(SegmentContainer shot){
+		MultiImage avg = getMultiImage(shot);
 		int[] colors = avg.getColors();
 		ArrayList<Integer> ints = new ArrayList<>(colors.length);
 		for(int i : colors){
@@ -128,19 +100,37 @@ public class AverageColorRaster extends AbstractFeatureModule {
 		}
 		ArrayList<LinkedList<Integer>> partitions = GridPartitioner.partition(ints, avg.getWidth(), avg.getHeight(), 8, 8);
 		
-		float[] queryraster = new float[64];
+		float[] raster = new float[64];
 		float[] hist = new float[15];
 		
 		for(int i = 0; i < 64; ++i){
 			LinkedList<Integer> list = partitions.get(i);
 			int col = ColorUtils.getAvg(list);
 			ReadableLabContainer lab = ColorConverter.cachedRGBtoLab(col);
-			queryraster[i] = get(FuzzyColorHistogramQuantizer.quantize(lab));
-			hist[(int)queryraster[i]]++;
+			raster[i] = get(FuzzyColorHistogramQuantizer.quantize(lab));
+			hist[(int)raster[i]]++;
 		}
-
-		return new FloatVectorImpl(hist);
+		return new Pair<float[], float[]>(hist, raster);
 	}
+	
+	@Override
+	public void processShot(SegmentContainer shot) {
+		LOGGER.entry();
+		if (!phandler.idExists(shot.getId())) {
+			
+			Pair<float[], float[]> pair = computeRaster(shot);
+			
+			persist(shot.getId(), new FloatVectorImpl(pair.first), new FloatVectorImpl(pair.second));
+			
+		}
+		LOGGER.exit();
+	}
+	
+	protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {
+		PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2);
+		this.phandler.persist(tuple);
+	}
+
 	
 	protected static double register(float[] query, float[] db){
 		double best = 0;
@@ -219,50 +209,38 @@ public class AverageColorRaster extends AbstractFeatureModule {
 		return 0;
 	}
 
-//	@Override
-//	public List<LongDoublePair> getSimilar(long shotId) {
-//		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
-//		
-//		ResultSet rset = this.selector.select("WITH q AS (SELECT hist, raster FROM features.AverageColorRaster WHERE shotid = " + shotId + ") SELECT shotid, AverageColorRaster.raster, q.raster as queryraster FROM features.AverageColorRaster, q USING DISTANCE MINKOWSKI(2)(q.hist, AverageColorRaster.hist) ORDER USING DISTANCE LIMIT " + limit);
-//		ArrayList<LongDoublePair> result = new ArrayList<>(limit);
-//		if(rset != null){
-//			try {
-//				while(rset.next()){
-//					long id = rset.getLong(2);
-//					String rasterFromDB = rset.getString(3);
-//					float[] raster = stringToFloatArray(rasterFromDB);
-//					
-//					rasterFromDB = rset.getString(4);
-//					float[] queryraster = stringToFloatArray(rasterFromDB);
-//					
-//					result.add(new LongDoublePair(id, register(queryraster, raster)));
-//				}
-//			} catch (SQLException e) {
-//				LOGGER.fatal(LogHelper.SQL_MARKER, LogHelper.getStackTrace(e));
-//			}
-//		}
-//		return result;
-//	}
-	
-	protected float[] stringToFloatArray(String feature){
-		String[] rasterString = feature.split(",");
-		float[] raster = new float[64];
-		for(int i = 0; i < rasterString.length; ++i){
-			raster[i] = Float.parseFloat(rasterString[i].replace('<', ' ').replace('>', ' ').trim());
-		}
-		return raster;
-	}
 
+	private List<StringDoublePair> getSimilar(float[] raster, float[] hist, QueryConfig qc){//TODO
+		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
+		
+		List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getNearestNeighbourRows(limit, hist, "hist", qc);
+		
+		ArrayList<StringDoublePair> _return = new ArrayList<>(rows.size());
+		for(Map<String, PrimitiveTypeProvider> map : rows){
+			_return.add(new StringDoublePair(map.get("id").getString(), register(raster, map.get("raster").getFloatArray())));
+		}
+		return _return;
+		
+	}
+	
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Pair<float[], float[]> pair = computeRaster(sc);
+		
+		return getSimilar(pair.second, pair.first, qc);
 	}
 
 	@Override
 	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", shotId);
+		
+		if(rows.isEmpty()){
+			return new ArrayList<>(1);
+		}
+		Map<String, PrimitiveTypeProvider> map = rows.get(0);
+		
+		return getSimilar(map.get("raster").getFloatArray(), map.get("hist").getFloatArray(), qc);
 	}
 
 }

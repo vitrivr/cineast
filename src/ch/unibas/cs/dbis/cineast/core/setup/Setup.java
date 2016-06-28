@@ -20,7 +20,7 @@ public class Setup {
 		ec.createFeatureEntity("features_AverageColorCLDNormalized", true);
 		ec.createFeatureEntity("features_AverageColorGrid8", true);
 		ec.createFeatureEntity("features_AverageColorGrid8Normalized", true);
-		ec.createFeatureEntity("features_AverageColorRaster", true, "raster", "hist");
+		ec.createFeatureEntity("features_AverageColorRaster", true, "hist", "raster");
 		ec.createFeatureEntity("features_AverageFuzzyHist", true);
 		ec.createFeatureEntity("features_AverageFuzzyHistNormalized", true);
 		ec.createFeatureEntity("features_ChromaGrid8", true);
@@ -40,7 +40,7 @@ public class Setup {
 		ec.createFeatureEntity("features_MedianColorARP44Normalized", true);
 		ec.createFeatureEntity("features_MedianColorGrid8", true);
 		ec.createFeatureEntity("features_MedianColorGrid8Normalized", true);
-		ec.createFeatureEntity("features_MedianColorRaster", true, "raster", "hist");
+		ec.createFeatureEntity("features_MedianColorRaster", true, "hist", "raster");
 		ec.createFeatureEntity("features_MedianFuzzyHist", true);
 		ec.createFeatureEntity("features_MedianFuzzyHistNormalized", true);
 		ec.createFeatureEntity("features_MotionHistogram", true);

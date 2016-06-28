@@ -26,6 +26,7 @@ import ch.unibas.cs.dbis.cineast.core.features.AverageColor;
 import ch.unibas.cs.dbis.cineast.core.features.AverageColorARP44;
 import ch.unibas.cs.dbis.cineast.core.features.AverageColorCLD;
 import ch.unibas.cs.dbis.cineast.core.features.AverageColorGrid8;
+import ch.unibas.cs.dbis.cineast.core.features.AverageColorRaster;
 import ch.unibas.cs.dbis.cineast.core.features.AverageFuzzyHist;
 import ch.unibas.cs.dbis.cineast.core.features.CLD;
 import ch.unibas.cs.dbis.cineast.core.features.ChromaGrid8;
@@ -41,6 +42,7 @@ import ch.unibas.cs.dbis.cineast.core.features.HueValueVarianceGrid8;
 import ch.unibas.cs.dbis.cineast.core.features.MedianColor;
 import ch.unibas.cs.dbis.cineast.core.features.MedianColorARP44;
 import ch.unibas.cs.dbis.cineast.core.features.MedianColorGrid8;
+import ch.unibas.cs.dbis.cineast.core.features.MedianColorRaster;
 import ch.unibas.cs.dbis.cineast.core.features.MedianFuzzyHist;
 import ch.unibas.cs.dbis.cineast.core.features.MotionHistogram;
 import ch.unibas.cs.dbis.cineast.core.features.MotionSum;
@@ -190,6 +192,8 @@ public class API {
 			_return.put(new CLD(),						1.3);
 			_return.put(new HueValueVarianceGrid8(),	0.85);
 			_return.put(new MedianColorGrid8(),			1.7);
+			_return.put(new AverageColorRaster(),		1.0);
+			_return.put(new MedianColorRaster(),		1.0);
 			return _return;
 		}
 		case "edge":{
