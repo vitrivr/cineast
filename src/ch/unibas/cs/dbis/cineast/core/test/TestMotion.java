@@ -52,21 +52,21 @@ public class TestMotion {
 		long denseTrackingTime = System.currentTimeMillis();
 		LOGGER.info("finished denseTracking in {}", formatTime(denseTrackingTime - decodeTime));
 		
-		ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> forgroundPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
+		ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 		ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 		
-		PathList.separateFgBgPaths(shot.getFrames(), allPaths, forgroundPaths, backgroundPaths);
+		PathList.separateFgBgPaths(shot.getFrames(), allPaths, foregroundPaths, backgroundPaths);
 		long separateTime = System.currentTimeMillis();
 		LOGGER.info("finished separate bg and fg in {}", formatTime(separateTime - denseTrackingTime));
 		
-		Pair<List<Double>, ArrayList<ArrayList<Float>>> foregroundPair = getSubDivHist(1, forgroundPaths);
+		Pair<List<Double>, ArrayList<ArrayList<Float>>> foregroundPair = getSubDivHist(1, foregroundPaths);
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> backgroundPair = getSubDivHist(1, backgroundPaths);
 		System.out.println(foregroundPair.second);
 		System.out.println(backgroundPair.second);
 		long getHistTime = System.currentTimeMillis();
 		LOGGER.info("finished getHist bg and fg in {}", formatTime(getHistTime - separateTime));
 		
-		visualize(shot.getFrames(),forgroundPaths,backgroundPaths);
+		visualize(shot.getFrames(),foregroundPaths,backgroundPaths);
 		
 	}
 	
@@ -136,7 +136,7 @@ public class TestMotion {
 	}
 	
 	private static void visualize(List<Frame> frames,
-									ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> forgroundPaths,
+									ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 									ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){
 		BufferedImage  bufferedImage = null;
 		bufferedImage = frames.get(0).getImage().getBufferedImage();
@@ -145,7 +145,7 @@ public class TestMotion {
 		gui.setPreferredSize(new Dimension(width,height));
 		ShowImages.showWindow(gui,"visualize", true);
 		
-		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> fgPathItor = forgroundPaths.listIterator();
+		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> fgPathItor = foregroundPaths.listIterator();
 		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> bgPathItor = backgroundPaths.listIterator();
 		
 		for (int frameIdx = 0; frameIdx < frames.size(); ++frameIdx){

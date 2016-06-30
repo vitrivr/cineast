@@ -39,7 +39,7 @@ public class PathList {
 	
 	public static void separateFgBgPaths(List<Frame> frames,
 										 LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths,
-										 List<Pair<Integer, LinkedList<Point2D_F32>>> forgroundPaths,
+										 List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 										 List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){	
 		ModelMatcher<Homography2D_F64,AssociatedPair> robustF = FactoryMultiViewRobust.homographyRansac(null, new ConfigRansac(200,3.0f));
 		if (allPaths == null || frames == null || frames.isEmpty()){
@@ -88,7 +88,7 @@ public class PathList {
 				LinkedList<Point2D_F32> path = new LinkedList<Point2D_F32>();
 				path.add(new Point2D_F32((float)p.p1.x/(float)width,(float)p.p1.y/(float)height));
 				path.add(new Point2D_F32((float)p.p2.x/(float)width,(float)p.p2.y/(float)height));
-				forgroundPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(frameIdx,path));
+				foregroundPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(frameIdx,path));
 			}
 		}
 	}
