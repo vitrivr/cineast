@@ -61,7 +61,7 @@ public class SubtitleFulltextSearch extends AbstractFeatureModule {
 				+ "WHERE q.query @@ tsv "
 				+ "ORDER BY rank DESC "
 				+ "LIMIT " + limit + ") "
-				+ "SELECT shotid, rank "
+				+ "SELECT 1 - rank, shotid "
 				+ "FROM ranked, q "
 				+ "ORDER BY ranked DESC";
 		}else{
@@ -77,7 +77,7 @@ public class SubtitleFulltextSearch extends AbstractFeatureModule {
 				+ "AND shotid = c.filter "
 				+ "ORDER BY rank DESC "
 				+ "LIMIT " + limit + ") "
-				+ "SELECT shotid, rank "
+				+ "SELECT 1 - rank, shotid "
 				+ "FROM ranked, q "
 				+ "ORDER BY ranked DESC";
 		}

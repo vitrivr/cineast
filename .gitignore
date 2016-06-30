@@ -16,3 +16,7 @@ bin
 .project
 .classpath
 .settings/
+thumbnails/
+.idea/
+queryImages/
+representative_frames/

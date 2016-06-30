@@ -71,7 +71,7 @@ public class SubtitleWordSearch implements Retriever {
 					+ "WHERE q.query @@ tsv "
 					+ "ORDER BY rank DESC "
 					+ "LIMIT " + limit + ") "
-					+ "SELECT shotid, rank "
+					+ "SELECT 1 - rank, shotid "
 					+ "FROM ranked, q "
 					+ "ORDER BY ranked DESC";
 		}else{
@@ -87,7 +87,7 @@ public class SubtitleWordSearch implements Retriever {
 					+ "AND shotid = c.filter "
 					+ "ORDER BY rank DESC "
 					+ "LIMIT " + limit + ") "
-					+ "SELECT shotid, rank "
+					+ "SELECT 1 - rank, shotid "
 					+ "FROM ranked, q "
 					+ "ORDER BY ranked DESC";
 		}
