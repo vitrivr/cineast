@@ -1,5 +1,7 @@
 package ch.unibas.cs.dbis.cineast.core.descriptor;
 
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,8 +11,11 @@ import georegression.struct.homography.Homography2D_F64;
 import georegression.struct.point.Point2D_F32;
 import georegression.struct.point.Point2D_F64;
 import georegression.transform.homography.HomographyPointOps_F64;
-
+import boofcv.abst.distort.FDistort;
 import boofcv.abst.filter.derivative.ImageGradient;
+import boofcv.alg.filter.binary.BinaryImageOps;
+import boofcv.alg.filter.binary.ThresholdImageOps;
+import boofcv.alg.misc.PixelMath;
 import boofcv.alg.tracker.klt.KltConfig;
 import boofcv.alg.tracker.klt.KltTrackFault;
 import boofcv.alg.tracker.klt.PkltConfig;
@@ -22,6 +27,7 @@ import boofcv.factory.geo.ConfigRansac;
 import boofcv.factory.geo.FactoryMultiViewRobust;
 import boofcv.factory.tracker.FactoryTrackerAlg;
 import boofcv.factory.transform.pyramid.FactoryPyramid;
+import boofcv.gui.image.ShowImages;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.geo.AssociatedPair;
 import boofcv.struct.image.GrayS16;
@@ -36,6 +42,76 @@ import ch.unibas.cs.dbis.cineast.core.data.Pair;
 public class PathList {
 
 	private PathList(){}
+	
+	static int samplingInterval = 10;
+	static int frameInterval = 1;
+	
+	public static LinkedList<GrayU8> getFgMasks(List<Frame> frames,
+												List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths){
+		if(frames==null || frames.isEmpty() || foregroundPaths == null){
+			return null;
+		}
+		
+		LinkedList<GrayU8> masks = new LinkedList<GrayU8>();
+	
+		BufferedImage bufferedImage = null;
+		bufferedImage = frames.get(0).getImage().getBufferedImage();
+		int width = bufferedImage.getWidth();
+		int height = bufferedImage.getHeight();
+		
+		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> fgPathItor = foregroundPaths.listIterator();
+		
+		int cnt = 0;
+		for (int frameIdx = 0; frameIdx < frames.size(); ++frameIdx) {
+			if(cnt >= frameInterval){
+				cnt = 0;
+				continue;
+			}
+			cnt += 1;
+			
+			Frame frame = frames.get(frameIdx);
+			bufferedImage = frame.getImage().getBufferedImage();
+			GrayU8 mask = new GrayU8(width/samplingInterval,height/samplingInterval);
+
+			while (fgPathItor.hasNext()) {
+				Pair<Integer, LinkedList<Point2D_F32>> pair = fgPathItor.next();
+				if (pair.first > frameIdx)
+					break;
+				Point2D_F32 p1 = pair.second.getFirst();
+				int x = (int)(p1.x*width/samplingInterval);
+				int y = (int)(p1.y*height/samplingInterval);
+				if (mask.isInBounds(x, y)){
+					mask.set(x, y, 1);
+				}
+			}
+
+			GrayU8 erodedMask = new GrayU8(width/samplingInterval,height/samplingInterval);;
+			BinaryImageOps.erode4(mask,1,erodedMask);
+			GrayU8 dilatedMask = new GrayU8(width/samplingInterval,height/samplingInterval);;
+			BinaryImageOps.dilate8(erodedMask,1,dilatedMask);
+			
+			GrayU8 OriginalSizeMask = new GrayU8(width,height);
+			new FDistort(dilatedMask, OriginalSizeMask).scaleExt().apply();
+			
+			GrayU8 OSErodedMask = new GrayU8(width,height);
+			BinaryImageOps.dilate8(OriginalSizeMask,4,OSErodedMask);
+			GrayU8 OSDilatedMask = new GrayU8(width,height);
+			BinaryImageOps.erode8(OSErodedMask, 4, OSDilatedMask);
+			
+			//showBineryImage(OSDilatedMask);
+			
+			masks.add(OSDilatedMask);
+			
+		}
+		
+		return masks;
+	}
+	
+	public static void showBineryImage(GrayU8 image){
+		PixelMath.multiply(image,255,image);
+		BufferedImage out = ConvertBufferedImage.convertTo(image,null);
+		ShowImages.showWindow(out,"Output");
+	}
 	
 	public static void separateFgBgPaths(List<Frame> frames,
 										 LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths,
@@ -97,8 +173,7 @@ public class PathList {
 		if(frames.size() < 2){
 			return null;
 		}
-		int samplingInterval = 10;
-		int frameInterval = 1;
+
 		PkltConfig configKlt = new PkltConfig(3, new int[] { 1, 2, 4 });
 		configKlt.config.maxPerPixelError = 25;
 		ImageGradient<GrayU8, GrayS16> gradient = FactoryDerivative.sobel(GrayU8.class, GrayS16.class);

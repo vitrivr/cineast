@@ -19,6 +19,7 @@ import boofcv.gui.feature.VisualizeFeatures;
 import boofcv.gui.image.ImagePanel;
 import boofcv.gui.image.ShowImages;
 import boofcv.struct.geo.AssociatedPair;
+import boofcv.struct.image.GrayU8;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.Shot;
@@ -65,6 +66,10 @@ public class TestMotion {
 		System.out.println(backgroundPair.second);
 		long getHistTime = System.currentTimeMillis();
 		LOGGER.info("finished getHist bg and fg in {}", formatTime(getHistTime - separateTime));
+		
+		LinkedList<GrayU8> masks = PathList.getFgMasks(shot.getFrames(), foregroundPaths);
+		long getFgMasksTime = System.currentTimeMillis();
+		LOGGER.info("finished getFgMasks in {}", formatTime(getFgMasksTime - getHistTime));
 		
 		visualize(shot.getFrames(),foregroundPaths,backgroundPaths);
 		
