@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import boofcv.gui.feature.VisualizeFeatures;
 import boofcv.gui.image.ImagePanel;
 import boofcv.gui.image.ShowImages;
+import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.geo.AssociatedPair;
 import boofcv.struct.image.GrayU8;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
@@ -62,7 +63,11 @@ public class TestMotion {
 		
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> foregroundPair = getSubDivHist(1, foregroundPaths);
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> backgroundPair = getSubDivHist(1, backgroundPaths);
+		System.out.println(foregroundPair.first.get(0));
+		System.out.println(foregroundPair.first.get(0)/shot.getFrames().size());
 		System.out.println(foregroundPair.second);
+		System.out.println(backgroundPair.first.get(0));
+		System.out.println(backgroundPair.first.get(0)/shot.getFrames().size());
 		System.out.println(backgroundPair.second);
 		long getHistTime = System.currentTimeMillis();
 		LOGGER.info("finished getHist bg and fg in {}", formatTime(getHistTime - separateTime));
@@ -71,7 +76,7 @@ public class TestMotion {
 		long getFgMasksTime = System.currentTimeMillis();
 		LOGGER.info("finished getFgMasks in {}", formatTime(getFgMasksTime - getHistTime));
 		
-		visualize(shot.getFrames(),foregroundPaths,backgroundPaths);
+		visualize(shot.getFrames(),foregroundPaths,backgroundPaths,masks);
 		
 	}
 	
@@ -142,21 +147,37 @@ public class TestMotion {
 	
 	private static void visualize(List<Frame> frames,
 									ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
-									ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){
-		BufferedImage  bufferedImage = null;
-		bufferedImage = frames.get(0).getImage().getBufferedImage();
-		int width = bufferedImage.getWidth();
-		int height = bufferedImage.getHeight();
-		gui.setPreferredSize(new Dimension(width,height));
+									ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths,
+									LinkedList<GrayU8> masks){
+		BufferedImage bufferedImage = null;
+		BufferedImage track = null;
+		BufferedImage mask = null;
+		
+		track = frames.get(0).getImage().getBufferedImage();
+		int width = track.getWidth();
+		int height = track.getHeight();
+		int imageType = track.getType();
+		bufferedImage = new BufferedImage(width*2,height, imageType);
+		gui.setPreferredSize(new Dimension(width*2,height));
 		ShowImages.showWindow(gui,"visualize", true);
 		
 		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> fgPathItor = foregroundPaths.listIterator();
 		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> bgPathItor = backgroundPaths.listIterator();
 		
+		ListIterator<GrayU8> maskIter = masks.listIterator();
+		
+		int cnt = 0;
 		for (int frameIdx = 0; frameIdx < frames.size(); ++frameIdx){
+			if(cnt >= PathList.frameInterval){
+				cnt = 0;
+				continue;
+			}
+			cnt += 1;
+			
 			Frame frame = frames.get(frameIdx);
-			bufferedImage = frame.getImage().getBufferedImage();
+			track = frame.getImage().getBufferedImage();
 			Graphics2D g2 = bufferedImage.createGraphics();
+			g2.drawImage(track,null,0,0);
 			
 			while(fgPathItor.hasNext()){
 				Pair<Integer, LinkedList<Point2D_F32>> pair = fgPathItor.next();
@@ -177,8 +198,20 @@ public class TestMotion {
 				g2.drawLine((int)(p1.x*width), (int)(p1.y*height), (int)(p2.x*width), (int)(p2.y*height));
 			}
 			
+			if(maskIter.hasNext()){
+				mask = ConvertBufferedImage.convertTo(maskIter.next(),null);
+				g2.drawImage(mask,null,width,0);
+			}
+			
 			gui.setBufferedImage(bufferedImage);
 			gui.repaint();
+			
+			try{
+			    Thread thread = Thread.currentThread();
+			    thread.sleep(100);
+			}catch (InterruptedException e) {
+			    e.printStackTrace();
+			}
 		}
 	}
 	

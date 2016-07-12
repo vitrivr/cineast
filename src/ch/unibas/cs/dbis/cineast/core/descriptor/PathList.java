@@ -15,6 +15,7 @@ import boofcv.abst.distort.FDistort;
 import boofcv.abst.filter.derivative.ImageGradient;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.ThresholdImageOps;
+import boofcv.alg.filter.blur.GBlurImageOps;
 import boofcv.alg.misc.PixelMath;
 import boofcv.alg.tracker.klt.KltConfig;
 import boofcv.alg.tracker.klt.KltTrackFault;
@@ -43,8 +44,8 @@ public class PathList {
 
 	private PathList(){}
 	
-	static int samplingInterval = 10;
-	static int frameInterval = 1;
+	public static int samplingInterval = 10;
+	public static int frameInterval = 1;
 	
 	public static LinkedList<GrayU8> getFgMasks(List<Frame> frames,
 												List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths){
@@ -85,6 +86,10 @@ public class PathList {
 				}
 			}
 
+			PixelMath.multiply(mask,128.0,mask);
+			GBlurImageOps.gaussian(mask,mask,-1,2,null);
+			ThresholdImageOps.threshold(mask, mask, 32, false);
+			
 			GrayU8 erodedMask = new GrayU8(width/samplingInterval,height/samplingInterval);;
 			BinaryImageOps.erode4(mask,1,erodedMask);
 			GrayU8 dilatedMask = new GrayU8(width/samplingInterval,height/samplingInterval);;
@@ -98,10 +103,14 @@ public class PathList {
 			GrayU8 OSDilatedMask = new GrayU8(width,height);
 			BinaryImageOps.erode8(OSErodedMask, 4, OSDilatedMask);
 			
-			//showBineryImage(OSDilatedMask);
+			PixelMath.multiply(OSDilatedMask,128.0,OSDilatedMask);
+			GBlurImageOps.gaussian(OSDilatedMask,OSDilatedMask,-1,10,null);
+			ThresholdImageOps.threshold(OSDilatedMask, OSDilatedMask, 32, false);
 			
+			PixelMath.multiply(OSDilatedMask,255,OSDilatedMask);
 			masks.add(OSDilatedMask);
 			
+			//showBineryImage(OSDilatedMask);
 		}
 		
 		return masks;
