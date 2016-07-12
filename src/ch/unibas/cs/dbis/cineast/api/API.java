@@ -218,21 +218,21 @@ public class API {
 			_return.put(new SubDivMotionHistogram3(),			1.0);
 			_return.put(new SubDivMotionHistogram4(),			1.0);
 			_return.put(new SubDivMotionHistogram5(),			1.0);
-			_return.put(new MotionSum(),						1.0);
-			_return.put(new SubDivMotionSum2(),					1.0);
-			_return.put(new SubDivMotionSum3(),					1.0);
-			_return.put(new SubDivMotionSum4(),					1.0);
-			_return.put(new SubDivMotionSum5(),					1.0);
+			_return.put(new MotionSum(),						0.0);
+			_return.put(new SubDivMotionSum2(),					0.0);
+			_return.put(new SubDivMotionSum3(),					0.0);
+			_return.put(new SubDivMotionSum4(),					0.0);
+			_return.put(new SubDivMotionSum5(),					0.0);
 			_return.put(new MotionHistogramBackground(),		1.0);
 			_return.put(new SubDivMotionHistogramBackground2(),	1.0);
 			_return.put(new SubDivMotionHistogramBackground3(),	1.0);
 			_return.put(new SubDivMotionHistogramBackground4(),	1.0);
 			_return.put(new SubDivMotionHistogramBackground5(),	1.0);
-			_return.put(new MotionSumBackground(),				1.0);
-			_return.put(new SubDivMotionSumBackground2(),		1.0);
-			_return.put(new SubDivMotionSumBackground3(),		1.0);
-			_return.put(new SubDivMotionSumBackground4(),		1.0);
-			_return.put(new SubDivMotionSumBackground5(),		1.0);
+			_return.put(new MotionSumBackground(),				0.0);
+			_return.put(new SubDivMotionSumBackground2(),		0.0);
+			_return.put(new SubDivMotionSumBackground3(),		0.0);
+			_return.put(new SubDivMotionSumBackground4(),		0.0);
+			_return.put(new SubDivMotionSumBackground5(),		0.0);
 			return _return;
 		}
 		
