@@ -1,7 +1,7 @@
 package ch.unibas.cs.dbis.cineast.core.runtime;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -27,13 +27,13 @@ public class ShotDispatcher implements Runnable {
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private ArrayList<Extractor> extractors;
+	private List<Extractor> extractors;
 	private LinkedBlockingQueue<SegmentContainer> shotQueue = new LinkedBlockingQueue<SegmentContainer>(Config.getExtractorConfig().getShotQueueSize());
 	private ExecutorService executor;
 	private ShotProviderThread providerThread;
 	private ExtractorInitializer initializer;
 	
-	public ShotDispatcher(ArrayList<Extractor> extractorList, ExtractorInitializer initializer, ShotProvider provider){
+	public ShotDispatcher(List<Extractor> extractorList, ExtractorInitializer initializer, ShotProvider provider){
 		this.extractors = extractorList;
 		Collections.shuffle(this.extractors);
 		LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(TASK_QUEUE_SIZE);
