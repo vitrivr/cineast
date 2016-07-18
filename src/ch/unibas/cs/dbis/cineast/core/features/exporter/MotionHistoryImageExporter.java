@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
@@ -18,7 +19,7 @@ import ch.unibas.cs.dbis.cineast.core.util.MotionHistoryImage;
 
 public class MotionHistoryImageExporter implements Extractor {
 
-	private File folder = new File("MotionHistoryImages");
+	private File folder = new File(Config.getExtractorConfig().getOutputLocation(), "MotionHistoryImages");
 	private String format = "png";
 	
 	private static final Logger LOGGER = LogManager.getLogger();

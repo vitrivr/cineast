@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
@@ -16,7 +17,7 @@ import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 public class FrameExporter implements Extractor {
 
-	private File folder = new File("exportedFrames");
+	private File folder = new File(Config.getExtractorConfig().getOutputLocation(), "exportedFrames");
 	private int offset;
 	private String format = "png";
 	

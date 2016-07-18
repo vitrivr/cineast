@@ -5,12 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage;
 
 
 public class ProtobufFileWriter extends ProtobufTupleGenerator {
 
-	private static File baseFolder = new File("proto");
+	private static File baseFolder = new File(Config.getExtractorConfig().getOutputLocation(), "proto");
 		
 	private FileOutputStream out;
 	

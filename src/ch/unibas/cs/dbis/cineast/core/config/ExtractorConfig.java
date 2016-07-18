@@ -1,5 +1,7 @@
 package ch.unibas.cs.dbis.cineast.core.config;
 
+import java.io.File;
+
 import com.eclipsesource.json.JsonObject;
 
 public final class ExtractorConfig {
@@ -7,19 +9,22 @@ public final class ExtractorConfig {
 	private final int shotQueueSize;
 	private final int threadPoolSize;
 	private final int taskQueueSize;
+	private final File outputLocation;
 	
 	public static final int DEFAULT_SHOT_QUEUE_SIZE = 5;
 	public static final int DEFAULT_THREAD_POOL_SIZE = 4;
 	public static final int DEFAULT_TASK_QUEUE_SIZE = 10;
+	public static final File DEFAULT_OUTPUT_LOCATION = new File(".");
 	
 	public ExtractorConfig(){
-		this(DEFAULT_SHOT_QUEUE_SIZE, DEFAULT_THREAD_POOL_SIZE, DEFAULT_TASK_QUEUE_SIZE);
+		this(DEFAULT_SHOT_QUEUE_SIZE, DEFAULT_THREAD_POOL_SIZE, DEFAULT_TASK_QUEUE_SIZE, DEFAULT_OUTPUT_LOCATION);
 	}
 	
-	public ExtractorConfig(int shotQueueSize, int threadPoolSize, int taskQueueSize){
+	public ExtractorConfig(int shotQueueSize, int threadPoolSize, int taskQueueSize, File outputLocation){
 		this.shotQueueSize = shotQueueSize;
 		this.threadPoolSize = threadPoolSize;
 		this.taskQueueSize = taskQueueSize;
+		this.outputLocation = outputLocation;
 	}
 	
 	
@@ -35,6 +40,9 @@ public final class ExtractorConfig {
 		return this.taskQueueSize;
 	}
 	
+	public File getOutputLocation(){
+		return this.outputLocation;
+	}
 	
 	/**
 	 * 
@@ -44,11 +52,12 @@ public final class ExtractorConfig {
 	 * 	"shotQueueSize" : (int)
 	 * 	"threadPoolSize" : (int)
 	 * 	"taskQueueSize" : (int)
+	 *  "outputLocation": (String)
 	 * }
 	 * </pre>
 	 * 
 	 * @throws NullPointerException in case the provided JsonObject is null
-	 * @throws IllegalArgumentException if any of the specified values is not a positive integer
+	 * @throws IllegalArgumentException if any of the specified values is not of the expected type
 	 * 
 	 */
 	public static ExtractorConfig parse(JsonObject obj){
@@ -95,7 +104,31 @@ public final class ExtractorConfig {
 			}
 		}
 		
-		return new ExtractorConfig(shotQueueSize, threadPoolSize, taskQueueSize);
+		File outputLocation = DEFAULT_OUTPUT_LOCATION;
+		if(obj.get("outputLocation") != null){
+			String outputLocationSring = "";
+			try{
+				outputLocationSring = obj.get("outputLocation").asString();
+				File f = new File(outputLocationSring);
+				if(f.exists()){
+					if(!f.isDirectory()){
+						throw new IllegalArgumentException("outputLocation: '" + outputLocationSring + "' is not a directory");
+					}
+					if(!f.canWrite()){
+						throw new IllegalArgumentException("outputLocation: '" + outputLocationSring + "' is not writeable");
+					}
+				}else if(!f.mkdirs()){
+					throw new IllegalArgumentException("outputLocation: '" + outputLocationSring + "' can not be created");
+				}
+				outputLocation = f;
+			}catch(UnsupportedOperationException notAString){
+				throw new IllegalArgumentException("'outputLocation' was not a string in extractor configuration");
+			}catch(SecurityException e){
+				throw new IllegalArgumentException("outputLocation: '" + outputLocationSring + "' can not be accessed");
+			}
+		}
+		
+		return new ExtractorConfig(shotQueueSize, threadPoolSize, taskQueueSize, outputLocation);
 		
 	}
 }

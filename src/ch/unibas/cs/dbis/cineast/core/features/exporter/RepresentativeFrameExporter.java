@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
@@ -16,7 +17,7 @@ import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 public class RepresentativeFrameExporter implements Extractor {
 
 	private PersistencyWriter phandler;
-	private final File folder = new File("representative_frames");
+	private final File folder = new File(Config.getExtractorConfig().getOutputLocation(), "representative_frames");
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Override

@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
@@ -22,7 +23,7 @@ public class ShotThumbNails implements Extractor {
 	@Override
 	public void init(PersistencyWriter<?> phandler) {
 		phandler.close(); //not needed
-		this.folder = new File("thumbnails");
+		this.folder = new File(Config.getExtractorConfig().getOutputLocation(), "thumbnails");
 		if(!this.folder.exists()){
 			this.folder.mkdirs();
 		}

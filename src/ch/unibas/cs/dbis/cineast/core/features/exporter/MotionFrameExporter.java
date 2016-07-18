@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
@@ -20,7 +21,7 @@ import georegression.struct.point.Point2D_F32;
 
 public class MotionFrameExporter implements Extractor {
 
-private static File folder = new File("debug2");
+private static File folder = new File(Config.getExtractorConfig().getOutputLocation(), "motionframes");
 	
 	@Override
 	public void init(PersistencyWriter<?> phandler) {

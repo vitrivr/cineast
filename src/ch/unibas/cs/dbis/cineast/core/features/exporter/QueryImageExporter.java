@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
 import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
@@ -23,7 +24,7 @@ import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 
 public class QueryImageExporter implements Retriever {
 
-	private File folder = new File("queryImages");
+	private File folder = new File(Config.getExtractorConfig().getOutputLocation(), "queryImages");
 	private DateFormat df = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss-SSS");
 	private static final Logger LOGGER = LogManager.getLogger();
 	
