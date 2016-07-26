@@ -16,7 +16,6 @@ import com.eclipsesource.json.JsonValue;
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
-import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
 import ch.unibas.cs.dbis.cineast.core.decode.video.JLibAVVideoDecoder;
 import ch.unibas.cs.dbis.cineast.core.decode.video.VideoDecoder;

@@ -17,7 +17,7 @@ import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 public class RepresentativeFrameExporter implements Extractor {
 
 	private PersistencyWriter phandler;
-	private final File folder = new File(Config.getExtractorConfig().getOutputLocation(), "representative_frames");
+	private File folder;
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Override
@@ -25,6 +25,7 @@ public class RepresentativeFrameExporter implements Extractor {
 		this.phandler = phandler;
 		this.phandler.open("cineast_representativeframes");
 		this.phandler.setFieldNames("id", "frame");
+		this.folder = new File(Config.getExtractorConfig().getOutputLocation(), "representative_frames");
 		this.folder.mkdirs();
 	}
 
