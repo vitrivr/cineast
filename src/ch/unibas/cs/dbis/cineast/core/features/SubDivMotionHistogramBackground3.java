@@ -52,7 +52,7 @@ public class SubDivMotionHistogramBackground3 extends SubDivMotionHistogram {
 		}
 		FloatVectorImpl fv = new FloatVectorImpl(tmp);
 		
-		ResultSet rset = this.selector.select("SELECT * FROM features.SubDivMotionHistogramBackground3 USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hists) ORDER USING DISTANCE LIMIT " + limit);
+		ResultSet rset = this.selector.select("SELECT * FROM features.SubDivMotionHistogramBackground3 WHERE features.SubDivMotionHistogramBackground3.sums != \'<0,0,0,0,0,0,0,0,0>\' USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hists) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
 	}
 
