@@ -17,7 +17,7 @@ import ch.unibas.cs.dbis.cineast.core.data.Shot;
 import ch.unibas.cs.dbis.cineast.core.decode.video.JLibAVVideoDecoder;
 import ch.unibas.cs.dbis.cineast.core.decode.video.VideoDecoder;
 import ch.unibas.cs.dbis.cineast.core.descriptor.PathList;
-import ch.unibas.cs.dbis.cineast.core.util.Histogram;
+import ch.unibas.cs.dbis.cineast.core.util.MotionHistogramUtil;
 import ch.unibas.cs.dbis.cineast.core.util.VisualizationUtil;
 import ch.unibas.cs.dbis.cineast.core.util.MaskGenerator;
 import georegression.struct.point.Point2D_F32;
@@ -52,8 +52,8 @@ public class TestMotion {
 		long separateTime = System.currentTimeMillis();
 		LOGGER.info("finished separate bg and fg in {}", formatTime(separateTime - denseTrackingTime));
 		
-		Pair<List<Double>, ArrayList<ArrayList<Float>>> foregroundPair = Histogram.getSubDivHist(1, foregroundPaths);
-		Pair<List<Double>, ArrayList<ArrayList<Float>>> backgroundPair = Histogram.getSubDivHist(1, backgroundPaths);
+		Pair<List<Double>, ArrayList<ArrayList<Float>>> foregroundPair = MotionHistogramUtil.getSubDivHist(1, foregroundPaths);
+		Pair<List<Double>, ArrayList<ArrayList<Float>>> backgroundPair = MotionHistogramUtil.getSubDivHist(1, backgroundPaths);
 		System.out.println(foregroundPair.first.get(0));
 		System.out.println(foregroundPair.first.get(0)/shot.getFrames().size());
 		System.out.println(foregroundPair.second);
@@ -68,7 +68,7 @@ public class TestMotion {
 		LOGGER.info("finished getFgMasks in {}", formatTime(getFgMasksTime - getHistTime));
 		
 		VisualizationUtil.visualize(shot.getFrames(),foregroundPaths,backgroundPaths,masks);
-		
+		System.exit(0);
 	}
 	
 	private static Shot decodeVideo(VideoDecoder videoDecoder){

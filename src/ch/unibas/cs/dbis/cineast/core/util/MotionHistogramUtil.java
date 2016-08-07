@@ -8,9 +8,9 @@ import java.util.List;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import georegression.struct.point.Point2D_F32;
 
-public class Histogram {
+public class MotionHistogramUtil {
 	
-	private Histogram(){}
+	private MotionHistogramUtil(){}
 	
 	public static Pair<List<Double>, ArrayList<ArrayList<Float>>> getSubDivHist(
 			int subdiv, List<Pair<Integer, LinkedList<Point2D_F32>>> list) {
