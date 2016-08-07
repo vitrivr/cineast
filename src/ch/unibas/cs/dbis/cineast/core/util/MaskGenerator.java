@@ -34,16 +34,18 @@ public class MaskGenerator {
 		ArrayList<GrayU8> masksScaled = generateScaledMasksFromPath(frames, foregroundPaths);
 
 		ArrayList<GrayU8> masksScaledSmoothed1 = createNewMasks(masksScaled);
-		smoothMasks(masksScaled, masksScaledSmoothed1, 3, 3, 64, 16);
+		smoothMasks(masksScaled, masksScaledSmoothed1, 4, 2, 64, 26);
 		
 		ArrayList<GrayU8> masks = scaleUpMasks(masksScaledSmoothed1, frames.get(0).getImage().getBufferedImage().getWidth(), frames.get(0).getImage().getBufferedImage().getHeight());
 		
 		ArrayList<GrayU8> masksSmoothed1 = createNewMasks(masks);
-		smoothMasks(masks, masksSmoothed1, 2, 2, 64, 8);
+		smoothMasks(masks, masksSmoothed1, 5, 2, 64, 10);
+		ArrayList<GrayU8> masksSmoothed2 = createNewMasks(masks);
+		smoothMasks(masksSmoothed1, masksSmoothed2, 5, 2, 64, 10);
 		
-		multiply3D(masksSmoothed1,masksSmoothed1,255);
+		multiply3D(masksSmoothed2,masksSmoothed2,255);
 		
-		return masksSmoothed1;
+		return masksSmoothed2;
 	}
 	
 	public static ArrayList<GrayU8> generateScaledMasksFromPath(List<Frame> frames,
@@ -88,7 +90,8 @@ public class MaskGenerator {
 		return masks;
 	}
 	
-	public static ArrayList<GrayU8> smoothMasks(ArrayList<GrayU8> input, ArrayList<GrayU8> output, int spatialRadius, int temporalRadius, double multipyFactor, int threshold){
+	public static ArrayList<GrayU8> smoothMasks(ArrayList<GrayU8> input, ArrayList<GrayU8> output,
+			int spatialRadius, int temporalRadius, double multipyFactor, int threshold){
 		
 		if(input == null || input.isEmpty()){
 			return input;
@@ -107,7 +110,8 @@ public class MaskGenerator {
 		return output;
 	}
 	
-	public static ArrayList<GrayU8> gaussianFilter3D(ArrayList<GrayU8> input, ArrayList<GrayU8> output, int spatialRadius, int temporalRadius) {
+	public static ArrayList<GrayU8> gaussianFilter3D(ArrayList<GrayU8> input, ArrayList<GrayU8> output,
+			int spatialRadius, int temporalRadius) {
 		
 		ArrayList<GrayU8> spatialResult = createNewMasks(input);
 		gaussianFilterSpatial(input, spatialResult, spatialRadius);
