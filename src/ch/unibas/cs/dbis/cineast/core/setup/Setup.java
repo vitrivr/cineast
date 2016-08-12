@@ -1,7 +1,7 @@
 package ch.unibas.cs.dbis.cineast.core.setup;
 
 import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator.AttributeDefinition;
-import ch.unibas.dmi.dbis.adam.http.Adam.AttributeType;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType;
 
 public class Setup {
 

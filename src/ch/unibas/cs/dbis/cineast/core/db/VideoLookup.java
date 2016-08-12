@@ -9,13 +9,13 @@ import java.util.concurrent.ExecutionException;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
-import ch.unibas.dmi.dbis.adam.http.Adam;
-import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage;
 
 public class VideoLookup{
 	
@@ -26,7 +26,7 @@ public class VideoLookup{
 		WhereMessage where = WhereMessage.newBuilder().setAttribute("id").setValue(videoId).build();
 		//TODO check type as well
 		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Adam.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;
@@ -70,7 +70,7 @@ public class VideoLookup{
 		WhereMessage where = WhereMessage.newBuilder().setAttribute("id").setValue(builder.toString()).build();
 		//TODO check type as well
 		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Adam.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;
@@ -91,7 +91,7 @@ public class VideoLookup{
 		HashMap<String, VideoDescriptor> _return = new HashMap<>();
 		
 		for(QueryResultTupleMessage result : results){
-			Map<String, Adam.DataMessage> meta = result.getData();
+			Map<String, AdamGrpc.DataMessage> meta = result.getData();
 			_return.put(meta.get("id").getStringData(), new VideoDescriptor(meta));
 		}
 		
@@ -115,7 +115,7 @@ public static class VideoDescriptor{
 		private final float seconds, fps;
 		private final String name, path;
 		
-		VideoDescriptor(Map<String, Adam.DataMessage> map){
+		VideoDescriptor(Map<String, AdamGrpc.DataMessage> map){
 			this.videoId = map.get("id").getStringData();
 			this.name = map.get("name").getStringData();
 			this.path = map.get("path").getStringData();

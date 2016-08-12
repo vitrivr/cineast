@@ -4,18 +4,18 @@ import java.util.HashMap;
 
 import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
 import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
-import ch.unibas.dmi.dbis.adam.http.Adam;
-import ch.unibas.dmi.dbis.adam.http.Adam.DataMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder;
-import ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage;
 
 public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleInsertMessage> {
 
 	protected String[] names; 
-	private static final Builder builder = Adam.InsertMessage.TupleInsertMessage.newBuilder();
+	private static final Builder builder = AdamGrpc.InsertMessage.TupleInsertMessage.newBuilder();
 	
 	
 	private final DataMessage.Builder insertMessageBuilder = DataMessage.newBuilder();

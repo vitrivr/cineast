@@ -7,12 +7,12 @@ import com.google.common.util.concurrent.SettableFuture;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
-import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage;
 import ch.unibas.dmi.dbis.adam.http.AdamDefinitionGrpc;
 import ch.unibas.dmi.dbis.adam.http.AdamDefinitionGrpc.AdamDefinitionStub;
 import ch.unibas.dmi.dbis.adam.http.AdamSearchGrpc;

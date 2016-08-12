@@ -1,6 +1,6 @@
 package ch.unibas.cs.dbis.cineast.core.db;
 
-import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage;
 
 public class InsertMessageTuple extends PersistentTuple<InsertMessage> {
 

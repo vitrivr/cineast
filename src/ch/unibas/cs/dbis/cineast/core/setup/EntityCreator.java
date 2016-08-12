@@ -6,10 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.db.ADAMproWrapper;
-import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.AttributeType;
-import ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage;
 
 public class EntityCreator {
 

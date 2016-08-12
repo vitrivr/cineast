@@ -18,23 +18,23 @@ import ch.unibas.cs.dbis.cineast.core.config.QueryConfig.Distance;
 import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
 import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
-import ch.unibas.dmi.dbis.adam.http.Adam;
-import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code;
-import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.DataMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType;
-import ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.FromMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage;
 
 public class ADAMproSelector implements DBSelector {
 
@@ -57,8 +57,8 @@ public class ADAMproSelector implements DBSelector {
 		
 		hints.add("exact");
 		
-		projectionMessage = Adam.ProjectionMessage.newBuilder().setAttributes(
-				Adam.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("adamprodistance").addAttribute("id")).build();
+		projectionMessage = AdamGrpc.ProjectionMessage.newBuilder().setAttributes(
+				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("adamprodistance").addAttribute("id")).build();
 		
 		DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
 		

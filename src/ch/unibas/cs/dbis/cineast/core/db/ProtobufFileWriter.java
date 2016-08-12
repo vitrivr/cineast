@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage;
 
 
 public class ProtobufFileWriter extends ProtobufTupleGenerator {

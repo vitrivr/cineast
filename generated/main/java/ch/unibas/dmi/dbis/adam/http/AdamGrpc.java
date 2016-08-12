@@ -3,8 +3,8 @@
 
 package ch.unibas.dmi.dbis.adam.http;
 
-public final class Adam {
-  private Adam() {}
+public final class AdamGrpc {
+  private AdamGrpc() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
@@ -135,7 +135,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.getDescriptor().getEnumTypes().get(0);
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.getDescriptor().getEnumTypes().get(0);
     }
 
     private static final AttributeType[] VALUES = values();
@@ -272,7 +272,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.getDescriptor().getEnumTypes().get(1);
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.getDescriptor().getEnumTypes().get(1);
     }
 
     private static final IndexType[] VALUES = values();
@@ -373,7 +373,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.getDescriptor().getEnumTypes().get(2);
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.getDescriptor().getEnumTypes().get(2);
     }
 
     private static final HandlerType[] VALUES = values();
@@ -456,14 +456,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EmptyMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EmptyMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EmptyMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EmptyMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage.Builder.class);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -490,53 +490,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -547,7 +547,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -567,20 +567,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:EmptyMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EmptyMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EmptyMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EmptyMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EmptyMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -601,38 +601,38 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EmptyMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EmptyMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage(this);
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage.getDefaultInstance()) return this;
         onChanged();
         return this;
       }
@@ -645,11 +645,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -673,12 +673,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:EmptyMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -710,7 +710,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.EmptyMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EmptyMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -723,31 +723,31 @@ public final class Adam {
     /**
      * <code>optional .DenseVectorMessage denseVector = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage getDenseVector();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage getDenseVector();
     /**
      * <code>optional .DenseVectorMessage denseVector = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessageOrBuilder getDenseVectorOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessageOrBuilder getDenseVectorOrBuilder();
 
     /**
      * <code>optional .SparseVectorMessage sparseVector = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage getSparseVector();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage getSparseVector();
     /**
      * <code>optional .SparseVectorMessage sparseVector = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessageOrBuilder getSparseVectorOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessageOrBuilder getSparseVectorOrBuilder();
 
     /**
      * <code>optional .IntVectorMessage intVector = 3;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage getIntVector();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage getIntVector();
     /**
      * <code>optional .IntVectorMessage intVector = 3;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessageOrBuilder getIntVectorOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessageOrBuilder getIntVectorOrBuilder();
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.FeatureCase getFeatureCase();
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.FeatureCase getFeatureCase();
   }
   /**
    * Protobuf type {@code FeatureVectorMessage}
@@ -788,42 +788,42 @@ public final class Adam {
               break;
             }
             case 10: {
-              ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.Builder subBuilder = null;
               if (featureCase_ == 1) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) feature_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) feature_).toBuilder();
               }
               feature_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) feature_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) feature_);
                 feature_ = subBuilder.buildPartial();
               }
               featureCase_ = 1;
               break;
             }
             case 18: {
-              ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.Builder subBuilder = null;
               if (featureCase_ == 2) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) feature_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) feature_).toBuilder();
               }
               feature_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) feature_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) feature_);
                 feature_ = subBuilder.buildPartial();
               }
               featureCase_ = 2;
               break;
             }
             case 26: {
-              ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.Builder subBuilder = null;
               if (featureCase_ == 3) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) feature_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) feature_).toBuilder();
               }
               feature_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) feature_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) feature_);
                 feature_ = subBuilder.buildPartial();
               }
               featureCase_ = 3;
@@ -843,14 +843,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_FeatureVectorMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_FeatureVectorMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_FeatureVectorMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_FeatureVectorMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder.class);
     }
 
     private int featureCase_ = 0;
@@ -890,60 +890,60 @@ public final class Adam {
     /**
      * <code>optional .DenseVectorMessage denseVector = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage getDenseVector() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage getDenseVector() {
       if (featureCase_ == 1) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) feature_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) feature_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.getDefaultInstance();
     }
     /**
      * <code>optional .DenseVectorMessage denseVector = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessageOrBuilder getDenseVectorOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessageOrBuilder getDenseVectorOrBuilder() {
       if (featureCase_ == 1) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) feature_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) feature_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.getDefaultInstance();
     }
 
     public static final int SPARSEVECTOR_FIELD_NUMBER = 2;
     /**
      * <code>optional .SparseVectorMessage sparseVector = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage getSparseVector() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage getSparseVector() {
       if (featureCase_ == 2) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) feature_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) feature_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.getDefaultInstance();
     }
     /**
      * <code>optional .SparseVectorMessage sparseVector = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessageOrBuilder getSparseVectorOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessageOrBuilder getSparseVectorOrBuilder() {
       if (featureCase_ == 2) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) feature_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) feature_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.getDefaultInstance();
     }
 
     public static final int INTVECTOR_FIELD_NUMBER = 3;
     /**
      * <code>optional .IntVectorMessage intVector = 3;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage getIntVector() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage getIntVector() {
       if (featureCase_ == 3) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) feature_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) feature_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.getDefaultInstance();
     }
     /**
      * <code>optional .IntVectorMessage intVector = 3;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessageOrBuilder getIntVectorOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessageOrBuilder getIntVectorOrBuilder() {
       if (featureCase_ == 3) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) feature_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) feature_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -959,13 +959,13 @@ public final class Adam {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (featureCase_ == 1) {
-        output.writeMessage(1, (ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) feature_);
+        output.writeMessage(1, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) feature_);
       }
       if (featureCase_ == 2) {
-        output.writeMessage(2, (ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) feature_);
+        output.writeMessage(2, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) feature_);
       }
       if (featureCase_ == 3) {
-        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) feature_);
+        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) feature_);
       }
     }
 
@@ -976,68 +976,68 @@ public final class Adam {
       size = 0;
       if (featureCase_ == 1) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, (ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) feature_);
+          .computeMessageSize(1, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) feature_);
       }
       if (featureCase_ == 2) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, (ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) feature_);
+          .computeMessageSize(2, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) feature_);
       }
       if (featureCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) feature_);
+          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) feature_);
       }
       memoizedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1048,7 +1048,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -1068,20 +1068,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:FeatureVectorMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_FeatureVectorMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_FeatureVectorMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_FeatureVectorMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_FeatureVectorMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1104,23 +1104,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_FeatureVectorMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_FeatureVectorMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage(this);
         if (featureCase_ == 1) {
           if (denseVectorBuilder_ == null) {
             result.feature_ = feature_;
@@ -1148,16 +1148,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance()) return this;
         switch (other.getFeatureCase()) {
           case DENSEVECTOR: {
             mergeDenseVector(other.getDenseVector());
@@ -1187,11 +1187,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -1217,27 +1217,27 @@ public final class Adam {
 
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessageOrBuilder> denseVectorBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessageOrBuilder> denseVectorBuilder_;
       /**
        * <code>optional .DenseVectorMessage denseVector = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage getDenseVector() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage getDenseVector() {
         if (denseVectorBuilder_ == null) {
           if (featureCase_ == 1) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) feature_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) feature_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.getDefaultInstance();
         } else {
           if (featureCase_ == 1) {
             return denseVectorBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .DenseVectorMessage denseVector = 1;</code>
        */
-      public Builder setDenseVector(ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage value) {
+      public Builder setDenseVector(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage value) {
         if (denseVectorBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1254,7 +1254,7 @@ public final class Adam {
        * <code>optional .DenseVectorMessage denseVector = 1;</code>
        */
       public Builder setDenseVector(
-          ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.Builder builderForValue) {
         if (denseVectorBuilder_ == null) {
           feature_ = builderForValue.build();
           onChanged();
@@ -1267,11 +1267,11 @@ public final class Adam {
       /**
        * <code>optional .DenseVectorMessage denseVector = 1;</code>
        */
-      public Builder mergeDenseVector(ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage value) {
+      public Builder mergeDenseVector(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage value) {
         if (denseVectorBuilder_ == null) {
           if (featureCase_ == 1 &&
-              feature_ != ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.getDefaultInstance()) {
-            feature_ = ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) feature_)
+              feature_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.getDefaultInstance()) {
+            feature_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) feature_)
                 .mergeFrom(value).buildPartial();
           } else {
             feature_ = value;
@@ -1308,35 +1308,35 @@ public final class Adam {
       /**
        * <code>optional .DenseVectorMessage denseVector = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.Builder getDenseVectorBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.Builder getDenseVectorBuilder() {
         return getDenseVectorFieldBuilder().getBuilder();
       }
       /**
        * <code>optional .DenseVectorMessage denseVector = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessageOrBuilder getDenseVectorOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessageOrBuilder getDenseVectorOrBuilder() {
         if ((featureCase_ == 1) && (denseVectorBuilder_ != null)) {
           return denseVectorBuilder_.getMessageOrBuilder();
         } else {
           if (featureCase_ == 1) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) feature_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) feature_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .DenseVectorMessage denseVector = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessageOrBuilder> 
           getDenseVectorFieldBuilder() {
         if (denseVectorBuilder_ == null) {
           if (!(featureCase_ == 1)) {
-            feature_ = ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.getDefaultInstance();
+            feature_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.getDefaultInstance();
           }
           denseVectorBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) feature_,
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) feature_,
                   getParentForChildren(),
                   isClean());
           feature_ = null;
@@ -1347,27 +1347,27 @@ public final class Adam {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessageOrBuilder> sparseVectorBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessageOrBuilder> sparseVectorBuilder_;
       /**
        * <code>optional .SparseVectorMessage sparseVector = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage getSparseVector() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage getSparseVector() {
         if (sparseVectorBuilder_ == null) {
           if (featureCase_ == 2) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) feature_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) feature_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.getDefaultInstance();
         } else {
           if (featureCase_ == 2) {
             return sparseVectorBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .SparseVectorMessage sparseVector = 2;</code>
        */
-      public Builder setSparseVector(ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage value) {
+      public Builder setSparseVector(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage value) {
         if (sparseVectorBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1384,7 +1384,7 @@ public final class Adam {
        * <code>optional .SparseVectorMessage sparseVector = 2;</code>
        */
       public Builder setSparseVector(
-          ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.Builder builderForValue) {
         if (sparseVectorBuilder_ == null) {
           feature_ = builderForValue.build();
           onChanged();
@@ -1397,11 +1397,11 @@ public final class Adam {
       /**
        * <code>optional .SparseVectorMessage sparseVector = 2;</code>
        */
-      public Builder mergeSparseVector(ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage value) {
+      public Builder mergeSparseVector(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage value) {
         if (sparseVectorBuilder_ == null) {
           if (featureCase_ == 2 &&
-              feature_ != ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.getDefaultInstance()) {
-            feature_ = ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) feature_)
+              feature_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.getDefaultInstance()) {
+            feature_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) feature_)
                 .mergeFrom(value).buildPartial();
           } else {
             feature_ = value;
@@ -1438,35 +1438,35 @@ public final class Adam {
       /**
        * <code>optional .SparseVectorMessage sparseVector = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.Builder getSparseVectorBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.Builder getSparseVectorBuilder() {
         return getSparseVectorFieldBuilder().getBuilder();
       }
       /**
        * <code>optional .SparseVectorMessage sparseVector = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessageOrBuilder getSparseVectorOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessageOrBuilder getSparseVectorOrBuilder() {
         if ((featureCase_ == 2) && (sparseVectorBuilder_ != null)) {
           return sparseVectorBuilder_.getMessageOrBuilder();
         } else {
           if (featureCase_ == 2) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) feature_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) feature_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .SparseVectorMessage sparseVector = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessageOrBuilder> 
           getSparseVectorFieldBuilder() {
         if (sparseVectorBuilder_ == null) {
           if (!(featureCase_ == 2)) {
-            feature_ = ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.getDefaultInstance();
+            feature_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.getDefaultInstance();
           }
           sparseVectorBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) feature_,
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) feature_,
                   getParentForChildren(),
                   isClean());
           feature_ = null;
@@ -1477,27 +1477,27 @@ public final class Adam {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessageOrBuilder> intVectorBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessageOrBuilder> intVectorBuilder_;
       /**
        * <code>optional .IntVectorMessage intVector = 3;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage getIntVector() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage getIntVector() {
         if (intVectorBuilder_ == null) {
           if (featureCase_ == 3) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) feature_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) feature_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.getDefaultInstance();
         } else {
           if (featureCase_ == 3) {
             return intVectorBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .IntVectorMessage intVector = 3;</code>
        */
-      public Builder setIntVector(ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage value) {
+      public Builder setIntVector(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage value) {
         if (intVectorBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1514,7 +1514,7 @@ public final class Adam {
        * <code>optional .IntVectorMessage intVector = 3;</code>
        */
       public Builder setIntVector(
-          ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.Builder builderForValue) {
         if (intVectorBuilder_ == null) {
           feature_ = builderForValue.build();
           onChanged();
@@ -1527,11 +1527,11 @@ public final class Adam {
       /**
        * <code>optional .IntVectorMessage intVector = 3;</code>
        */
-      public Builder mergeIntVector(ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage value) {
+      public Builder mergeIntVector(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage value) {
         if (intVectorBuilder_ == null) {
           if (featureCase_ == 3 &&
-              feature_ != ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.getDefaultInstance()) {
-            feature_ = ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) feature_)
+              feature_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.getDefaultInstance()) {
+            feature_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) feature_)
                 .mergeFrom(value).buildPartial();
           } else {
             feature_ = value;
@@ -1568,35 +1568,35 @@ public final class Adam {
       /**
        * <code>optional .IntVectorMessage intVector = 3;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.Builder getIntVectorBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.Builder getIntVectorBuilder() {
         return getIntVectorFieldBuilder().getBuilder();
       }
       /**
        * <code>optional .IntVectorMessage intVector = 3;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessageOrBuilder getIntVectorOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessageOrBuilder getIntVectorOrBuilder() {
         if ((featureCase_ == 3) && (intVectorBuilder_ != null)) {
           return intVectorBuilder_.getMessageOrBuilder();
         } else {
           if (featureCase_ == 3) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) feature_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) feature_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .IntVectorMessage intVector = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessageOrBuilder> 
           getIntVectorFieldBuilder() {
         if (intVectorBuilder_ == null) {
           if (!(featureCase_ == 3)) {
-            feature_ = ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.getDefaultInstance();
+            feature_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.getDefaultInstance();
           }
           intVectorBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) feature_,
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) feature_,
                   getParentForChildren(),
                   isClean());
           feature_ = null;
@@ -1620,12 +1620,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:FeatureVectorMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1657,7 +1657,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1757,14 +1757,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DenseVectorMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DenseVectorMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DenseVectorMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DenseVectorMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.Builder.class);
     }
 
     public static final int VECTOR_FIELD_NUMBER = 1;
@@ -1833,53 +1833,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1890,7 +1890,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -1910,20 +1910,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:DenseVectorMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DenseVectorMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DenseVectorMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DenseVectorMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DenseVectorMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1946,23 +1946,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DenseVectorMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DenseVectorMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage(this);
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           vector_ = java.util.Collections.unmodifiableList(vector_);
@@ -1974,16 +1974,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage.getDefaultInstance()) return this;
         if (!other.vector_.isEmpty()) {
           if (vector_.isEmpty()) {
             vector_ = other.vector_;
@@ -2006,11 +2006,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -2101,12 +2101,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:DenseVectorMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2138,7 +2138,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2287,14 +2287,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SparseVectorMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SparseVectorMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SparseVectorMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SparseVectorMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.Builder.class);
     }
 
     private int bitField0_;
@@ -2424,53 +2424,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2481,7 +2481,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -2501,20 +2501,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:SparseVectorMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SparseVectorMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SparseVectorMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SparseVectorMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SparseVectorMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2541,23 +2541,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SparseVectorMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SparseVectorMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -2577,16 +2577,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage.getDefaultInstance()) return this;
         if (!other.vector_.isEmpty()) {
           if (vector_.isEmpty()) {
             vector_ = other.vector_;
@@ -2622,11 +2622,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -2809,12 +2809,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:SparseVectorMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2846,7 +2846,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2946,14 +2946,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IntVectorMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IntVectorMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IntVectorMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IntVectorMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.Builder.class);
     }
 
     public static final int VECTOR_FIELD_NUMBER = 1;
@@ -3025,53 +3025,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3082,7 +3082,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -3102,20 +3102,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:IntVectorMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IntVectorMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IntVectorMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IntVectorMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IntVectorMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3138,23 +3138,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IntVectorMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IntVectorMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage(this);
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           vector_ = java.util.Collections.unmodifiableList(vector_);
@@ -3166,16 +3166,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage.getDefaultInstance()) return this;
         if (!other.vector_.isEmpty()) {
           if (vector_.isEmpty()) {
             vector_ = other.vector_;
@@ -3198,11 +3198,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -3293,12 +3293,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:IntVectorMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -3330,7 +3330,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -3378,13 +3378,13 @@ public final class Adam {
     /**
      * <code>optional .FeatureVectorMessage featureData = 7;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getFeatureData();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getFeatureData();
     /**
      * <code>optional .FeatureVectorMessage featureData = 7;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder();
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.DataMessage.DatatypeCase getDatatypeCase();
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage.DatatypeCase getDatatypeCase();
   }
   /**
    * Protobuf type {@code DataMessage}
@@ -3456,14 +3456,14 @@ public final class Adam {
               break;
             }
             case 58: {
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder subBuilder = null;
               if (datatypeCase_ == 7) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) datatype_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) datatype_).toBuilder();
               }
               datatype_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) datatype_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) datatype_);
                 datatype_ = subBuilder.buildPartial();
               }
               datatypeCase_ = 7;
@@ -3483,14 +3483,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DataMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DataMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DataMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DataMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.DataMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage.Builder.class);
     }
 
     private int datatypeCase_ = 0;
@@ -3636,20 +3636,20 @@ public final class Adam {
     /**
      * <code>optional .FeatureVectorMessage featureData = 7;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getFeatureData() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getFeatureData() {
       if (datatypeCase_ == 7) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) datatype_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) datatype_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
     }
     /**
      * <code>optional .FeatureVectorMessage featureData = 7;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
       if (datatypeCase_ == 7) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) datatype_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) datatype_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -3688,7 +3688,7 @@ public final class Adam {
             6, (boolean)((java.lang.Boolean) datatype_));
       }
       if (datatypeCase_ == 7) {
-        output.writeMessage(7, (ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) datatype_);
+        output.writeMessage(7, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) datatype_);
       }
     }
 
@@ -3727,60 +3727,60 @@ public final class Adam {
       }
       if (datatypeCase_ == 7) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, (ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) datatype_);
+          .computeMessageSize(7, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) datatype_);
       }
       memoizedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3791,7 +3791,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.DataMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -3811,20 +3811,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:DataMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.DataMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DataMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DataMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DataMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DataMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.DataMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.DataMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3847,23 +3847,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DataMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DataMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.DataMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.DataMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.DataMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.DataMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.DataMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.DataMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.DataMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage(this);
         if (datatypeCase_ == 1) {
           result.datatype_ = datatype_;
         }
@@ -3895,16 +3895,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.DataMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.DataMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.DataMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.DataMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage.getDefaultInstance()) return this;
         switch (other.getDatatypeCase()) {
           case LONGDATA: {
             setLongData(other.getLongData());
@@ -3952,11 +3952,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.DataMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.DataMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4212,27 +4212,27 @@ public final class Adam {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder> featureDataBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder> featureDataBuilder_;
       /**
        * <code>optional .FeatureVectorMessage featureData = 7;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getFeatureData() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getFeatureData() {
         if (featureDataBuilder_ == null) {
           if (datatypeCase_ == 7) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) datatype_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) datatype_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
         } else {
           if (datatypeCase_ == 7) {
             return featureDataBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .FeatureVectorMessage featureData = 7;</code>
        */
-      public Builder setFeatureData(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage value) {
+      public Builder setFeatureData(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage value) {
         if (featureDataBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -4249,7 +4249,7 @@ public final class Adam {
        * <code>optional .FeatureVectorMessage featureData = 7;</code>
        */
       public Builder setFeatureData(
-          ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder builderForValue) {
         if (featureDataBuilder_ == null) {
           datatype_ = builderForValue.build();
           onChanged();
@@ -4262,11 +4262,11 @@ public final class Adam {
       /**
        * <code>optional .FeatureVectorMessage featureData = 7;</code>
        */
-      public Builder mergeFeatureData(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage value) {
+      public Builder mergeFeatureData(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage value) {
         if (featureDataBuilder_ == null) {
           if (datatypeCase_ == 7 &&
-              datatype_ != ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance()) {
-            datatype_ = ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) datatype_)
+              datatype_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance()) {
+            datatype_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) datatype_)
                 .mergeFrom(value).buildPartial();
           } else {
             datatype_ = value;
@@ -4303,35 +4303,35 @@ public final class Adam {
       /**
        * <code>optional .FeatureVectorMessage featureData = 7;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder getFeatureDataBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder getFeatureDataBuilder() {
         return getFeatureDataFieldBuilder().getBuilder();
       }
       /**
        * <code>optional .FeatureVectorMessage featureData = 7;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
         if ((datatypeCase_ == 7) && (featureDataBuilder_ != null)) {
           return featureDataBuilder_.getMessageOrBuilder();
         } else {
           if (datatypeCase_ == 7) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) datatype_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) datatype_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .FeatureVectorMessage featureData = 7;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder> 
           getFeatureDataFieldBuilder() {
         if (featureDataBuilder_ == null) {
           if (!(datatypeCase_ == 7)) {
-            datatype_ = ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance();
+            datatype_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
           }
           featureDataBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage) datatype_,
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage) datatype_,
                   getParentForChildren(),
                   isClean());
           datatype_ = null;
@@ -4355,12 +4355,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:DataMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.DataMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.DataMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DataMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -4392,7 +4392,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.DataMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -4415,12 +4415,12 @@ public final class Adam {
     /**
      * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
      */
-    java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage> 
+    java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage> 
         getAttributesList();
     /**
      * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage getAttributes(int index);
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage getAttributes(int index);
     /**
      * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
      */
@@ -4428,12 +4428,12 @@ public final class Adam {
     /**
      * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
      */
-    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessageOrBuilder> 
+    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessageOrBuilder> 
         getAttributesOrBuilderList();
     /**
      * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessageOrBuilder getAttributesOrBuilder(
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessageOrBuilder getAttributesOrBuilder(
         int index);
   }
   /**
@@ -4484,10 +4484,10 @@ public final class Adam {
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                attributes_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage>();
+                attributes_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              attributes_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.parser(), extensionRegistry));
+              attributes_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.parser(), extensionRegistry));
               break;
             }
           }
@@ -4507,14 +4507,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_CreateEntityMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_CreateEntityMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_CreateEntityMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_CreateEntityMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage.Builder.class);
     }
 
     private int bitField0_;
@@ -4553,17 +4553,17 @@ public final class Adam {
     }
 
     public static final int ATTRIBUTES_FIELD_NUMBER = 2;
-    private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage> attributes_;
+    private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage> attributes_;
     /**
      * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
      */
-    public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage> getAttributesList() {
+    public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage> getAttributesList() {
       return attributes_;
     }
     /**
      * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
      */
-    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessageOrBuilder> 
+    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessageOrBuilder> 
         getAttributesOrBuilderList() {
       return attributes_;
     }
@@ -4576,13 +4576,13 @@ public final class Adam {
     /**
      * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage getAttributes(int index) {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage getAttributes(int index) {
       return attributes_.get(index);
     }
     /**
      * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessageOrBuilder getAttributesOrBuilder(
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessageOrBuilder getAttributesOrBuilder(
         int index) {
       return attributes_.get(index);
     }
@@ -4624,53 +4624,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -4681,7 +4681,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -4701,20 +4701,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:CreateEntityMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_CreateEntityMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_CreateEntityMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_CreateEntityMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_CreateEntityMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4744,23 +4744,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_CreateEntityMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_CreateEntityMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.entity_ = entity_;
@@ -4779,16 +4779,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage.getDefaultInstance()) return this;
         if (!other.getEntity().isEmpty()) {
           entity_ = other.entity_;
           onChanged();
@@ -4831,11 +4831,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4915,22 +4915,22 @@ public final class Adam {
         return this;
       }
 
-      private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage> attributes_ =
+      private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage> attributes_ =
         java.util.Collections.emptyList();
       private void ensureAttributesIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          attributes_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage>(attributes_);
+          attributes_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage>(attributes_);
           bitField0_ |= 0x00000002;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessageOrBuilder> attributesBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessageOrBuilder> attributesBuilder_;
 
       /**
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage> getAttributesList() {
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage> getAttributesList() {
         if (attributesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(attributes_);
         } else {
@@ -4950,7 +4950,7 @@ public final class Adam {
       /**
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage getAttributes(int index) {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage getAttributes(int index) {
         if (attributesBuilder_ == null) {
           return attributes_.get(index);
         } else {
@@ -4961,7 +4961,7 @@ public final class Adam {
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
       public Builder setAttributes(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage value) {
         if (attributesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -4978,7 +4978,7 @@ public final class Adam {
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
       public Builder setAttributes(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder builderForValue) {
         if (attributesBuilder_ == null) {
           ensureAttributesIsMutable();
           attributes_.set(index, builderForValue.build());
@@ -4991,7 +4991,7 @@ public final class Adam {
       /**
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
-      public Builder addAttributes(ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage value) {
+      public Builder addAttributes(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage value) {
         if (attributesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -5008,7 +5008,7 @@ public final class Adam {
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
       public Builder addAttributes(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage value) {
         if (attributesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -5025,7 +5025,7 @@ public final class Adam {
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
       public Builder addAttributes(
-          ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder builderForValue) {
         if (attributesBuilder_ == null) {
           ensureAttributesIsMutable();
           attributes_.add(builderForValue.build());
@@ -5039,7 +5039,7 @@ public final class Adam {
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
       public Builder addAttributes(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder builderForValue) {
         if (attributesBuilder_ == null) {
           ensureAttributesIsMutable();
           attributes_.add(index, builderForValue.build());
@@ -5053,7 +5053,7 @@ public final class Adam {
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
       public Builder addAllAttributes(
-          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage> values) {
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage> values) {
         if (attributesBuilder_ == null) {
           ensureAttributesIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -5093,14 +5093,14 @@ public final class Adam {
       /**
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder getAttributesBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder getAttributesBuilder(
           int index) {
         return getAttributesFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessageOrBuilder getAttributesOrBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessageOrBuilder getAttributesOrBuilder(
           int index) {
         if (attributesBuilder_ == null) {
           return attributes_.get(index);  } else {
@@ -5110,7 +5110,7 @@ public final class Adam {
       /**
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
-      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessageOrBuilder> 
+      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessageOrBuilder> 
            getAttributesOrBuilderList() {
         if (attributesBuilder_ != null) {
           return attributesBuilder_.getMessageOrBuilderList();
@@ -5121,31 +5121,31 @@ public final class Adam {
       /**
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder addAttributesBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder addAttributesBuilder() {
         return getAttributesFieldBuilder().addBuilder(
-            ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.getDefaultInstance());
+            ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder addAttributesBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder addAttributesBuilder(
           int index) {
         return getAttributesFieldBuilder().addBuilder(
-            index, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.getDefaultInstance());
+            index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .AttributeDefinitionMessage attributes = 2;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder> 
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder> 
            getAttributesBuilderList() {
         return getAttributesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessageOrBuilder> 
           getAttributesFieldBuilder() {
         if (attributesBuilder_ == null) {
           attributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessageOrBuilder>(
                   attributes_,
                   ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
@@ -5169,12 +5169,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:CreateEntityMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -5206,7 +5206,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.CreateEntityMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -5233,7 +5233,7 @@ public final class Adam {
     /**
      * <code>optional .AttributeType attributetype = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AttributeType getAttributetype();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType getAttributetype();
 
     /**
      * <code>optional bool pk = 3;</code>
@@ -5257,7 +5257,7 @@ public final class Adam {
     /**
      * <code>optional .HandlerType handler = 6;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.HandlerType getHandler();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType getHandler();
   }
   /**
    * Protobuf type {@code AttributeDefinitionMessage}
@@ -5350,14 +5350,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_AttributeDefinitionMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_AttributeDefinitionMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_AttributeDefinitionMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_AttributeDefinitionMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder.class);
     }
 
     public static final int NAME_FIELD_NUMBER = 1;
@@ -5405,9 +5405,9 @@ public final class Adam {
     /**
      * <code>optional .AttributeType attributetype = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AttributeType getAttributetype() {
-      ch.unibas.dmi.dbis.adam.http.Adam.AttributeType result = ch.unibas.dmi.dbis.adam.http.Adam.AttributeType.valueOf(attributetype_);
-      return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.AttributeType.UNRECOGNIZED : result;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType getAttributetype() {
+      ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType.valueOf(attributetype_);
+      return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType.UNRECOGNIZED : result;
     }
 
     public static final int PK_FIELD_NUMBER = 3;
@@ -5448,9 +5448,9 @@ public final class Adam {
     /**
      * <code>optional .HandlerType handler = 6;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.HandlerType getHandler() {
-      ch.unibas.dmi.dbis.adam.http.Adam.HandlerType result = ch.unibas.dmi.dbis.adam.http.Adam.HandlerType.valueOf(handler_);
-      return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.HandlerType.UNRECOGNIZED : result;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType getHandler() {
+      ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType.valueOf(handler_);
+      return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -5468,7 +5468,7 @@ public final class Adam {
       if (!getNameBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessage.writeString(output, 1, name_);
       }
-      if (attributetype_ != ch.unibas.dmi.dbis.adam.http.Adam.AttributeType.LONG.getNumber()) {
+      if (attributetype_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType.LONG.getNumber()) {
         output.writeEnum(2, attributetype_);
       }
       if (pk_ != false) {
@@ -5480,7 +5480,7 @@ public final class Adam {
       if (indexed_ != false) {
         output.writeBool(5, indexed_);
       }
-      if (handler_ != ch.unibas.dmi.dbis.adam.http.Adam.HandlerType.relational.getNumber()) {
+      if (handler_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType.relational.getNumber()) {
         output.writeEnum(6, handler_);
       }
     }
@@ -5493,7 +5493,7 @@ public final class Adam {
       if (!getNameBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessage.computeStringSize(1, name_);
       }
-      if (attributetype_ != ch.unibas.dmi.dbis.adam.http.Adam.AttributeType.LONG.getNumber()) {
+      if (attributetype_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType.LONG.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(2, attributetype_);
       }
@@ -5509,7 +5509,7 @@ public final class Adam {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(5, indexed_);
       }
-      if (handler_ != ch.unibas.dmi.dbis.adam.http.Adam.HandlerType.relational.getNumber()) {
+      if (handler_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType.relational.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(6, handler_);
       }
@@ -5518,53 +5518,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -5575,7 +5575,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -5595,20 +5595,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:AttributeDefinitionMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_AttributeDefinitionMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_AttributeDefinitionMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_AttributeDefinitionMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_AttributeDefinitionMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -5641,23 +5641,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_AttributeDefinitionMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_AttributeDefinitionMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage(this);
         result.name_ = name_;
         result.attributetype_ = attributetype_;
         result.pk_ = pk_;
@@ -5669,16 +5669,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage.getDefaultInstance()) return this;
         if (!other.getName().isEmpty()) {
           name_ = other.name_;
           onChanged();
@@ -5710,11 +5710,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -5811,14 +5811,14 @@ public final class Adam {
       /**
        * <code>optional .AttributeType attributetype = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AttributeType getAttributetype() {
-        ch.unibas.dmi.dbis.adam.http.Adam.AttributeType result = ch.unibas.dmi.dbis.adam.http.Adam.AttributeType.valueOf(attributetype_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.AttributeType.UNRECOGNIZED : result;
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType getAttributetype() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType.valueOf(attributetype_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType.UNRECOGNIZED : result;
       }
       /**
        * <code>optional .AttributeType attributetype = 2;</code>
        */
-      public Builder setAttributetype(ch.unibas.dmi.dbis.adam.http.Adam.AttributeType value) {
+      public Builder setAttributetype(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -5933,14 +5933,14 @@ public final class Adam {
       /**
        * <code>optional .HandlerType handler = 6;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.HandlerType getHandler() {
-        ch.unibas.dmi.dbis.adam.http.Adam.HandlerType result = ch.unibas.dmi.dbis.adam.http.Adam.HandlerType.valueOf(handler_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.HandlerType.UNRECOGNIZED : result;
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType getHandler() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType.valueOf(handler_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType.UNRECOGNIZED : result;
       }
       /**
        * <code>optional .HandlerType handler = 6;</code>
        */
-      public Builder setHandler(ch.unibas.dmi.dbis.adam.http.Adam.HandlerType value) {
+      public Builder setHandler(ch.unibas.dmi.dbis.adam.http.AdamGrpc.HandlerType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -5973,12 +5973,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:AttributeDefinitionMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -6010,7 +6010,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AttributeDefinitionMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -6089,14 +6089,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityNameMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityNameMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityNameMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityNameMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage.Builder.class);
     }
 
     public static final int ENTITY_FIELD_NUMBER = 1;
@@ -6163,53 +6163,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -6220,7 +6220,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -6240,20 +6240,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:EntityNameMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityNameMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityNameMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityNameMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityNameMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -6276,39 +6276,39 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityNameMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityNameMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage(this);
         result.entity_ = entity_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage.getDefaultInstance()) return this;
         if (!other.getEntity().isEmpty()) {
           entity_ = other.entity_;
           onChanged();
@@ -6325,11 +6325,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -6422,12 +6422,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:EntityNameMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -6459,7 +6459,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityNameMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -6538,14 +6538,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexNameMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexNameMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexNameMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexNameMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage.Builder.class);
     }
 
     public static final int INDEX_FIELD_NUMBER = 1;
@@ -6612,53 +6612,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -6669,7 +6669,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -6689,20 +6689,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:IndexNameMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexNameMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexNameMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexNameMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexNameMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -6725,39 +6725,39 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexNameMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexNameMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage(this);
         result.index_ = index_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage.getDefaultInstance()) return this;
         if (!other.getIndex().isEmpty()) {
           index_ = other.index_;
           onChanged();
@@ -6774,11 +6774,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -6871,12 +6871,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:IndexNameMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -6908,7 +6908,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexNameMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -7016,7 +7016,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_GenerateRandomDataMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_GenerateRandomDataMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -7032,9 +7032,9 @@ public final class Adam {
     }
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_GenerateRandomDataMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_GenerateRandomDataMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage.Builder.class);
     }
 
     private int bitField0_;
@@ -7087,7 +7087,7 @@ public final class Adam {
           java.lang.String, java.lang.String> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.adam.http.Adam.internal_static_GenerateRandomDataMessage_OptionsEntry_descriptor, 
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_GenerateRandomDataMessage_OptionsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -7167,53 +7167,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -7224,7 +7224,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -7244,10 +7244,10 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:GenerateRandomDataMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_GenerateRandomDataMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_GenerateRandomDataMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -7274,12 +7274,12 @@ public final class Adam {
       }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_GenerateRandomDataMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_GenerateRandomDataMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -7305,23 +7305,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_GenerateRandomDataMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_GenerateRandomDataMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.entity_ = entity_;
@@ -7334,16 +7334,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage.getDefaultInstance()) return this;
         if (!other.getEntity().isEmpty()) {
           entity_ = other.entity_;
           onChanged();
@@ -7365,11 +7365,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -7533,12 +7533,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:GenerateRandomDataMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -7570,7 +7570,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.GenerateRandomDataMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -7593,12 +7593,12 @@ public final class Adam {
     /**
      * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
      */
-    java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage> 
+    java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage> 
         getTuplesList();
     /**
      * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage getTuples(int index);
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage getTuples(int index);
     /**
      * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
      */
@@ -7606,12 +7606,12 @@ public final class Adam {
     /**
      * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
      */
-    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessageOrBuilder> 
+    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessageOrBuilder> 
         getTuplesOrBuilderList();
     /**
      * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessageOrBuilder getTuplesOrBuilder(
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessageOrBuilder getTuplesOrBuilder(
         int index);
   }
   /**
@@ -7662,10 +7662,10 @@ public final class Adam {
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                tuples_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage>();
+                tuples_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              tuples_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.parser(), extensionRegistry));
+              tuples_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.parser(), extensionRegistry));
               break;
             }
           }
@@ -7685,14 +7685,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.Builder.class);
     }
 
     public interface TupleInsertMessageOrBuilder extends
@@ -7702,7 +7702,7 @@ public final class Adam {
       /**
        * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
        */
-      java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+      java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
       getData();
     }
     /**
@@ -7749,7 +7749,7 @@ public final class Adam {
                       DataDefaultEntryHolder.defaultEntry);
                   mutable_bitField0_ |= 0x00000001;
                 }
-                com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+                com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
                 data = input.readMessage(
                     DataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
                 data_.getMutableMap().put(data.getKey(), data.getValue());
@@ -7769,7 +7769,7 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_TupleInsertMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_TupleInsertMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -7785,26 +7785,26 @@ public final class Adam {
       }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_TupleInsertMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_TupleInsertMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder.class);
       }
 
       public static final int DATA_FIELD_NUMBER = 1;
       private static final class DataDefaultEntryHolder {
         static final com.google.protobuf.MapEntry<
-            java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> defaultEntry =
+            java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> defaultEntry =
                 com.google.protobuf.MapEntry
-                .<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>newDefaultInstance(
-                    ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_TupleInsertMessage_DataEntry_descriptor, 
+                .<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>newDefaultInstance(
+                    ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_TupleInsertMessage_DataEntry_descriptor, 
                     com.google.protobuf.WireFormat.FieldType.STRING,
                     "",
                     com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                    ch.unibas.dmi.dbis.adam.http.Adam.DataMessage.getDefaultInstance());
+                    ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage.getDefaultInstance());
       }
       private com.google.protobuf.MapField<
-          java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> data_;
-      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+          java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> data_;
+      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
       internalGetData() {
         if (data_ == null) {
           return com.google.protobuf.MapField.emptyMapField(
@@ -7816,7 +7816,7 @@ public final class Adam {
        * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
        */
 
-      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> getData() {
+      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> getData() {
         return internalGetData().getMap();
       }
 
@@ -7832,9 +7832,9 @@ public final class Adam {
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
-        for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> entry
+        for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> entry
              : internalGetData().getMap().entrySet()) {
-          com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+          com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
           data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
               .setKey(entry.getKey())
               .setValue(entry.getValue())
@@ -7848,9 +7848,9 @@ public final class Adam {
         if (size != -1) return size;
 
         size = 0;
-        for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> entry
+        for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> entry
              : internalGetData().getMap().entrySet()) {
-          com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+          com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
           data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
               .setKey(entry.getKey())
               .setValue(entry.getValue())
@@ -7863,53 +7863,53 @@ public final class Adam {
       }
 
       private static final long serialVersionUID = 0L;
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parseFrom(byte[] data)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parseFrom(java.io.InputStream input)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseFrom(input, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parseDelimitedFrom(java.io.InputStream input)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parseDelimitedFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -7920,7 +7920,7 @@ public final class Adam {
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
-      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage prototype) {
+      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
       public Builder toBuilder() {
@@ -7940,10 +7940,10 @@ public final class Adam {
       public static final class Builder extends
           com.google.protobuf.GeneratedMessage.Builder<Builder> implements
           // @@protoc_insertion_point(builder_implements:InsertMessage.TupleInsertMessage)
-          ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessageOrBuilder {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessageOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_TupleInsertMessage_descriptor;
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_TupleInsertMessage_descriptor;
         }
 
         @SuppressWarnings({"rawtypes"})
@@ -7970,12 +7970,12 @@ public final class Adam {
         }
         protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_TupleInsertMessage_fieldAccessorTable
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_TupleInsertMessage_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
-                  ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder.class);
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder.class);
         }
 
-        // Construct using ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.newBuilder()
+        // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -7997,23 +7997,23 @@ public final class Adam {
 
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_TupleInsertMessage_descriptor;
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_TupleInsertMessage_descriptor;
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage getDefaultInstanceForType() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.getDefaultInstance();
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage getDefaultInstanceForType() {
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.getDefaultInstance();
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage build() {
-          ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage result = buildPartial();
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage build() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
           return result;
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage buildPartial() {
-          ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage(this);
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage buildPartial() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage(this);
           int from_bitField0_ = bitField0_;
           result.data_ = internalGetData();
           result.data_.makeImmutable();
@@ -8022,16 +8022,16 @@ public final class Adam {
         }
 
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage) {
-            return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage)other);
+          if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage) {
+            return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
 
-        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage other) {
-          if (other == ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.getDefaultInstance()) return this;
+        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage other) {
+          if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.getDefaultInstance()) return this;
           internalGetMutableData().mergeFrom(
               other.internalGetData());
           onChanged();
@@ -8046,11 +8046,11 @@ public final class Adam {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage parsedMessage = null;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage parsedMessage = null;
           try {
             parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage) e.getUnfinishedMessage();
+            parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage) e.getUnfinishedMessage();
             throw e;
           } finally {
             if (parsedMessage != null) {
@@ -8062,8 +8062,8 @@ public final class Adam {
         private int bitField0_;
 
         private com.google.protobuf.MapField<
-            java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> data_;
-        private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+            java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> data_;
+        private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
         internalGetData() {
           if (data_ == null) {
             return com.google.protobuf.MapField.emptyMapField(
@@ -8071,7 +8071,7 @@ public final class Adam {
          }
           return data_;
         }
-        private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+        private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
         internalGetMutableData() {
           onChanged();;
           if (data_ == null) {
@@ -8086,13 +8086,13 @@ public final class Adam {
         /**
          * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
          */
-        public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> getData() {
+        public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> getData() {
           return internalGetData().getMap();
         }
         /**
          * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
          */
-        public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+        public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
         getMutableData() {
           return internalGetMutableData().getMutableMap();
         }
@@ -8100,7 +8100,7 @@ public final class Adam {
          * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
          */
         public Builder putAllData(
-            java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> values) {
+            java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> values) {
           getMutableData().putAll(values);
           return this;
         }
@@ -8119,12 +8119,12 @@ public final class Adam {
       }
 
       // @@protoc_insertion_point(class_scope:InsertMessage.TupleInsertMessage)
-      private static final ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage DEFAULT_INSTANCE;
+      private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage DEFAULT_INSTANCE;
       static {
-        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage();
+        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage();
       }
 
-      public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage getDefaultInstance() {
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage getDefaultInstance() {
         return DEFAULT_INSTANCE;
       }
 
@@ -8156,7 +8156,7 @@ public final class Adam {
         return PARSER;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage getDefaultInstanceForType() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
       }
 
@@ -8198,17 +8198,17 @@ public final class Adam {
     }
 
     public static final int TUPLES_FIELD_NUMBER = 2;
-    private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage> tuples_;
+    private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage> tuples_;
     /**
      * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
      */
-    public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage> getTuplesList() {
+    public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage> getTuplesList() {
       return tuples_;
     }
     /**
      * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
      */
-    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessageOrBuilder> 
+    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessageOrBuilder> 
         getTuplesOrBuilderList() {
       return tuples_;
     }
@@ -8221,13 +8221,13 @@ public final class Adam {
     /**
      * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage getTuples(int index) {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage getTuples(int index) {
       return tuples_.get(index);
     }
     /**
      * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessageOrBuilder getTuplesOrBuilder(
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessageOrBuilder getTuplesOrBuilder(
         int index) {
       return tuples_.get(index);
     }
@@ -8269,53 +8269,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -8326,7 +8326,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -8346,20 +8346,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:InsertMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.InsertMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -8389,23 +8389,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_InsertMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_InsertMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.entity_ = entity_;
@@ -8424,16 +8424,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.getDefaultInstance()) return this;
         if (!other.getEntity().isEmpty()) {
           entity_ = other.entity_;
           onChanged();
@@ -8476,11 +8476,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -8560,22 +8560,22 @@ public final class Adam {
         return this;
       }
 
-      private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage> tuples_ =
+      private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage> tuples_ =
         java.util.Collections.emptyList();
       private void ensureTuplesIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          tuples_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage>(tuples_);
+          tuples_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage>(tuples_);
           bitField0_ |= 0x00000002;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessageOrBuilder> tuplesBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessageOrBuilder> tuplesBuilder_;
 
       /**
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage> getTuplesList() {
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage> getTuplesList() {
         if (tuplesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(tuples_);
         } else {
@@ -8595,7 +8595,7 @@ public final class Adam {
       /**
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage getTuples(int index) {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage getTuples(int index) {
         if (tuplesBuilder_ == null) {
           return tuples_.get(index);
         } else {
@@ -8606,7 +8606,7 @@ public final class Adam {
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
       public Builder setTuples(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage value) {
         if (tuplesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -8623,7 +8623,7 @@ public final class Adam {
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
       public Builder setTuples(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder builderForValue) {
         if (tuplesBuilder_ == null) {
           ensureTuplesIsMutable();
           tuples_.set(index, builderForValue.build());
@@ -8636,7 +8636,7 @@ public final class Adam {
       /**
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
-      public Builder addTuples(ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage value) {
+      public Builder addTuples(ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage value) {
         if (tuplesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -8653,7 +8653,7 @@ public final class Adam {
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
       public Builder addTuples(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage value) {
         if (tuplesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -8670,7 +8670,7 @@ public final class Adam {
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
       public Builder addTuples(
-          ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder builderForValue) {
         if (tuplesBuilder_ == null) {
           ensureTuplesIsMutable();
           tuples_.add(builderForValue.build());
@@ -8684,7 +8684,7 @@ public final class Adam {
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
       public Builder addTuples(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder builderForValue) {
         if (tuplesBuilder_ == null) {
           ensureTuplesIsMutable();
           tuples_.add(index, builderForValue.build());
@@ -8698,7 +8698,7 @@ public final class Adam {
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
       public Builder addAllTuples(
-          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage> values) {
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage> values) {
         if (tuplesBuilder_ == null) {
           ensureTuplesIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -8738,14 +8738,14 @@ public final class Adam {
       /**
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder getTuplesBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder getTuplesBuilder(
           int index) {
         return getTuplesFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessageOrBuilder getTuplesOrBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessageOrBuilder getTuplesOrBuilder(
           int index) {
         if (tuplesBuilder_ == null) {
           return tuples_.get(index);  } else {
@@ -8755,7 +8755,7 @@ public final class Adam {
       /**
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
-      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessageOrBuilder> 
+      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessageOrBuilder> 
            getTuplesOrBuilderList() {
         if (tuplesBuilder_ != null) {
           return tuplesBuilder_.getMessageOrBuilderList();
@@ -8766,31 +8766,31 @@ public final class Adam {
       /**
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder addTuplesBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder addTuplesBuilder() {
         return getTuplesFieldBuilder().addBuilder(
-            ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.getDefaultInstance());
+            ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder addTuplesBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder addTuplesBuilder(
           int index) {
         return getTuplesFieldBuilder().addBuilder(
-            index, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.getDefaultInstance());
+            index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .InsertMessage.TupleInsertMessage tuples = 2;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder> 
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder> 
            getTuplesBuilderList() {
         return getTuplesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessageOrBuilder> 
           getTuplesFieldBuilder() {
         if (tuplesBuilder_ == null) {
           tuplesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessageOrBuilder>(
                   tuples_,
                   ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
@@ -8814,12 +8814,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:InsertMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -8851,7 +8851,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -8888,7 +8888,7 @@ public final class Adam {
     /**
      * <code>optional .IndexType indextype = 3;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.IndexType getIndextype();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType getIndextype();
 
     /**
      * <code>optional .DistanceMessage distance = 4;</code>
@@ -8897,11 +8897,11 @@ public final class Adam {
     /**
      * <code>optional .DistanceMessage distance = 4;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage getDistance();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage getDistance();
     /**
      * <code>optional .DistanceMessage distance = 4;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder getDistanceOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder getDistanceOrBuilder();
 
     /**
      * <code>map&lt;string, string&gt; options = 5;</code>
@@ -8973,11 +8973,11 @@ public final class Adam {
               break;
             }
             case 34: {
-              ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder subBuilder = null;
               if (distance_ != null) {
                 subBuilder = distance_.toBuilder();
               }
-              distance_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.parser(), extensionRegistry);
+              distance_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(distance_);
                 distance_ = subBuilder.buildPartial();
@@ -9011,7 +9011,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -9027,9 +9027,9 @@ public final class Adam {
     }
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage.Builder.class);
     }
 
     private int bitField0_;
@@ -9112,13 +9112,13 @@ public final class Adam {
     /**
      * <code>optional .IndexType indextype = 3;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.IndexType getIndextype() {
-      ch.unibas.dmi.dbis.adam.http.Adam.IndexType result = ch.unibas.dmi.dbis.adam.http.Adam.IndexType.valueOf(indextype_);
-      return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.IndexType.UNRECOGNIZED : result;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType getIndextype() {
+      ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.valueOf(indextype_);
+      return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.UNRECOGNIZED : result;
     }
 
     public static final int DISTANCE_FIELD_NUMBER = 4;
-    private ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage distance_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage distance_;
     /**
      * <code>optional .DistanceMessage distance = 4;</code>
      */
@@ -9128,13 +9128,13 @@ public final class Adam {
     /**
      * <code>optional .DistanceMessage distance = 4;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage getDistance() {
-      return distance_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.getDefaultInstance() : distance_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage getDistance() {
+      return distance_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.getDefaultInstance() : distance_;
     }
     /**
      * <code>optional .DistanceMessage distance = 4;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder getDistanceOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder getDistanceOrBuilder() {
       return getDistance();
     }
 
@@ -9144,7 +9144,7 @@ public final class Adam {
           java.lang.String, java.lang.String> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexMessage_OptionsEntry_descriptor, 
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexMessage_OptionsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -9190,7 +9190,7 @@ public final class Adam {
       if (!getAttributeBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessage.writeString(output, 2, attribute_);
       }
-      if (indextype_ != ch.unibas.dmi.dbis.adam.http.Adam.IndexType.ecp.getNumber()) {
+      if (indextype_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.ecp.getNumber()) {
         output.writeEnum(3, indextype_);
       }
       if (distance_ != null) {
@@ -9218,7 +9218,7 @@ public final class Adam {
       if (!getAttributeBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessage.computeStringSize(2, attribute_);
       }
-      if (indextype_ != ch.unibas.dmi.dbis.adam.http.Adam.IndexType.ecp.getNumber()) {
+      if (indextype_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.ecp.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(3, indextype_);
       }
@@ -9241,53 +9241,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -9298,7 +9298,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -9318,10 +9318,10 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:IndexMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -9348,12 +9348,12 @@ public final class Adam {
       }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -9387,23 +9387,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.entity_ = entity_;
@@ -9422,16 +9422,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage.getDefaultInstance()) return this;
         if (!other.getEntity().isEmpty()) {
           entity_ = other.entity_;
           onChanged();
@@ -9460,11 +9460,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -9631,14 +9631,14 @@ public final class Adam {
       /**
        * <code>optional .IndexType indextype = 3;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexType getIndextype() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexType result = ch.unibas.dmi.dbis.adam.http.Adam.IndexType.valueOf(indextype_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.IndexType.UNRECOGNIZED : result;
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType getIndextype() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.valueOf(indextype_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.UNRECOGNIZED : result;
       }
       /**
        * <code>optional .IndexType indextype = 3;</code>
        */
-      public Builder setIndextype(ch.unibas.dmi.dbis.adam.http.Adam.IndexType value) {
+      public Builder setIndextype(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -9657,9 +9657,9 @@ public final class Adam {
         return this;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage distance_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage distance_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder> distanceBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder> distanceBuilder_;
       /**
        * <code>optional .DistanceMessage distance = 4;</code>
        */
@@ -9669,9 +9669,9 @@ public final class Adam {
       /**
        * <code>optional .DistanceMessage distance = 4;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage getDistance() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage getDistance() {
         if (distanceBuilder_ == null) {
-          return distance_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.getDefaultInstance() : distance_;
+          return distance_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.getDefaultInstance() : distance_;
         } else {
           return distanceBuilder_.getMessage();
         }
@@ -9679,7 +9679,7 @@ public final class Adam {
       /**
        * <code>optional .DistanceMessage distance = 4;</code>
        */
-      public Builder setDistance(ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage value) {
+      public Builder setDistance(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage value) {
         if (distanceBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9696,7 +9696,7 @@ public final class Adam {
        * <code>optional .DistanceMessage distance = 4;</code>
        */
       public Builder setDistance(
-          ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder builderForValue) {
         if (distanceBuilder_ == null) {
           distance_ = builderForValue.build();
           onChanged();
@@ -9709,11 +9709,11 @@ public final class Adam {
       /**
        * <code>optional .DistanceMessage distance = 4;</code>
        */
-      public Builder mergeDistance(ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage value) {
+      public Builder mergeDistance(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage value) {
         if (distanceBuilder_ == null) {
           if (distance_ != null) {
             distance_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.newBuilder(distance_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.newBuilder(distance_).mergeFrom(value).buildPartial();
           } else {
             distance_ = value;
           }
@@ -9741,7 +9741,7 @@ public final class Adam {
       /**
        * <code>optional .DistanceMessage distance = 4;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder getDistanceBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder getDistanceBuilder() {
         
         onChanged();
         return getDistanceFieldBuilder().getBuilder();
@@ -9749,23 +9749,23 @@ public final class Adam {
       /**
        * <code>optional .DistanceMessage distance = 4;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder getDistanceOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder getDistanceOrBuilder() {
         if (distanceBuilder_ != null) {
           return distanceBuilder_.getMessageOrBuilder();
         } else {
           return distance_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.getDefaultInstance() : distance_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.getDefaultInstance() : distance_;
         }
       }
       /**
        * <code>optional .DistanceMessage distance = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder> 
           getDistanceFieldBuilder() {
         if (distanceBuilder_ == null) {
           distanceBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder>(
                   getDistance(),
                   getParentForChildren(),
                   isClean());
@@ -9844,12 +9844,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:IndexMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -9881,7 +9881,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -9940,7 +9940,7 @@ public final class Adam {
     /**
      * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions getOption();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions getOption();
 
     /**
      * <code>optional .RepartitionMessage.Partitioner partitioner = 5;</code>
@@ -9949,7 +9949,7 @@ public final class Adam {
     /**
      * <code>optional .RepartitionMessage.Partitioner partitioner = 5;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner getPartitioner();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner getPartitioner();
 
     /**
      * <code>map&lt;string, string&gt; options = 6;</code>
@@ -10065,7 +10065,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_RepartitionMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_RepartitionMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -10081,9 +10081,9 @@ public final class Adam {
     }
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_RepartitionMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_RepartitionMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Builder.class);
     }
 
     /**
@@ -10159,7 +10159,7 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.getDescriptor().getEnumTypes().get(0);
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final PartitionOptions[] VALUES = values();
@@ -10264,7 +10264,7 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.getDescriptor().getEnumTypes().get(1);
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.getDescriptor().getEnumTypes().get(1);
       }
 
       private static final Partitioner[] VALUES = values();
@@ -10384,9 +10384,9 @@ public final class Adam {
     /**
      * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions getOption() {
-      ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions result = ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions.valueOf(option_);
-      return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions.UNRECOGNIZED : result;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions getOption() {
+      ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions.valueOf(option_);
+      return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions.UNRECOGNIZED : result;
     }
 
     public static final int PARTITIONER_FIELD_NUMBER = 5;
@@ -10400,9 +10400,9 @@ public final class Adam {
     /**
      * <code>optional .RepartitionMessage.Partitioner partitioner = 5;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner getPartitioner() {
-      ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner result = ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner.valueOf(partitioner_);
-      return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner.UNRECOGNIZED : result;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner getPartitioner() {
+      ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner.valueOf(partitioner_);
+      return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner.UNRECOGNIZED : result;
     }
 
     public static final int OPTIONS_FIELD_NUMBER = 6;
@@ -10411,7 +10411,7 @@ public final class Adam {
           java.lang.String, java.lang.String> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.adam.http.Adam.internal_static_RepartitionMessage_OptionsEntry_descriptor, 
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_RepartitionMessage_OptionsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -10460,10 +10460,10 @@ public final class Adam {
       for (int i = 0; i < attributes_.size(); i++) {
         com.google.protobuf.GeneratedMessage.writeString(output, 3, attributes_.getRaw(i));
       }
-      if (option_ != ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions.CREATE_NEW.getNumber()) {
+      if (option_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions.CREATE_NEW.getNumber()) {
         output.writeEnum(4, option_);
       }
-      if (partitioner_ != ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner.SPARK.getNumber()) {
+      if (partitioner_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner.SPARK.getNumber()) {
         output.writeEnum(5, partitioner_);
       }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
@@ -10497,11 +10497,11 @@ public final class Adam {
         size += dataSize;
         size += 1 * getAttributesList().size();
       }
-      if (option_ != ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions.CREATE_NEW.getNumber()) {
+      if (option_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions.CREATE_NEW.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, option_);
       }
-      if (partitioner_ != ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner.SPARK.getNumber()) {
+      if (partitioner_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner.SPARK.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(5, partitioner_);
       }
@@ -10520,53 +10520,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -10577,7 +10577,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -10597,10 +10597,10 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:RepartitionMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_RepartitionMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_RepartitionMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -10627,12 +10627,12 @@ public final class Adam {
       }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_RepartitionMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_RepartitionMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -10664,23 +10664,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_RepartitionMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_RepartitionMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.entity_ = entity_;
@@ -10700,16 +10700,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.getDefaultInstance()) return this;
         if (!other.getEntity().isEmpty()) {
           entity_ = other.entity_;
           onChanged();
@@ -10747,11 +10747,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -10989,14 +10989,14 @@ public final class Adam {
       /**
        * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions getOption() {
-        ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions result = ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions.valueOf(option_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions.UNRECOGNIZED : result;
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions getOption() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions.valueOf(option_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions.UNRECOGNIZED : result;
       }
       /**
        * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
        */
-      public Builder setOption(ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.PartitionOptions value) {
+      public Builder setOption(ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.PartitionOptions value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -11033,14 +11033,14 @@ public final class Adam {
       /**
        * <code>optional .RepartitionMessage.Partitioner partitioner = 5;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner getPartitioner() {
-        ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner result = ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner.valueOf(partitioner_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner.UNRECOGNIZED : result;
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner getPartitioner() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner.valueOf(partitioner_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner.UNRECOGNIZED : result;
       }
       /**
        * <code>optional .RepartitionMessage.Partitioner partitioner = 5;</code>
        */
-      public Builder setPartitioner(ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.Partitioner value) {
+      public Builder setPartitioner(ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage.Partitioner value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -11129,12 +11129,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:RepartitionMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -11166,7 +11166,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.RepartitionMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -11273,14 +11273,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_UpdateWeightsMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_UpdateWeightsMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_UpdateWeightsMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_UpdateWeightsMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage.Builder.class);
     }
 
     public static final int ENTITY_FIELD_NUMBER = 1;
@@ -11403,53 +11403,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -11460,7 +11460,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -11480,20 +11480,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:UpdateWeightsMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_UpdateWeightsMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_UpdateWeightsMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_UpdateWeightsMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_UpdateWeightsMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -11520,23 +11520,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_UpdateWeightsMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_UpdateWeightsMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage(this);
         result.entity_ = entity_;
         result.attribute_ = attribute_;
         result.benchmark_ = benchmark_;
@@ -11545,16 +11545,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage.getDefaultInstance()) return this;
         if (!other.getEntity().isEmpty()) {
           entity_ = other.entity_;
           onChanged();
@@ -11578,11 +11578,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -11770,12 +11770,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:UpdateWeightsMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -11807,7 +11807,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.UpdateWeightsMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -11922,14 +11922,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_WeightMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_WeightMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_WeightMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_WeightMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage.Builder.class);
     }
 
     public static final int ENTITY_FIELD_NUMBER = 1;
@@ -12060,53 +12060,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -12117,7 +12117,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -12137,20 +12137,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:WeightMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.WeightMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_WeightMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_WeightMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_WeightMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_WeightMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -12177,23 +12177,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_WeightMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_WeightMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage(this);
         result.entity_ = entity_;
         result.attribute_ = attribute_;
         result.weight_ = weight_;
@@ -12202,16 +12202,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage.getDefaultInstance()) return this;
         if (!other.getEntity().isEmpty()) {
           entity_ = other.entity_;
           onChanged();
@@ -12235,11 +12235,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -12447,12 +12447,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:WeightMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -12484,7 +12484,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.WeightMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -12580,14 +12580,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SparsifyEntityMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SparsifyEntityMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SparsifyEntityMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SparsifyEntityMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage.Builder.class);
     }
 
     public static final int ENTITY_FIELD_NUMBER = 1;
@@ -12694,53 +12694,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -12751,7 +12751,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -12771,20 +12771,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:SparsifyEntityMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SparsifyEntityMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SparsifyEntityMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SparsifyEntityMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SparsifyEntityMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -12809,23 +12809,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SparsifyEntityMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SparsifyEntityMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage(this);
         result.entity_ = entity_;
         result.attribute_ = attribute_;
         onBuilt();
@@ -12833,16 +12833,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage.getDefaultInstance()) return this;
         if (!other.getEntity().isEmpty()) {
           entity_ = other.entity_;
           onChanged();
@@ -12863,11 +12863,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -13029,12 +13029,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:SparsifyEntityMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -13066,7 +13066,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparsifyEntityMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -13204,14 +13204,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ImportMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ImportMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ImportMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ImportMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage.Builder.class);
     }
 
     public static final int HOST_FIELD_NUMBER = 1;
@@ -13406,53 +13406,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -13463,7 +13463,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -13483,20 +13483,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:ImportMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.ImportMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ImportMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ImportMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ImportMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ImportMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -13525,23 +13525,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ImportMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ImportMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage(this);
         result.host_ = host_;
         result.database_ = database_;
         result.username_ = username_;
@@ -13551,16 +13551,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage.getDefaultInstance()) return this;
         if (!other.getHost().isEmpty()) {
           host_ = other.host_;
           onChanged();
@@ -13589,11 +13589,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -13913,12 +13913,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:ImportMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -13950,7 +13950,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ImportMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -13993,7 +13993,7 @@ public final class Adam {
      *SELECT ...
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage getProjection();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage getProjection();
     /**
      * <code>optional .ProjectionMessage projection = 2;</code>
      *
@@ -14001,7 +14001,7 @@ public final class Adam {
      *SELECT ...
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessageOrBuilder getProjectionOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessageOrBuilder getProjectionOrBuilder();
 
     /**
      * <code>optional .FromMessage from = 3;</code>
@@ -14018,7 +14018,7 @@ public final class Adam {
      *FROM ...
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.FromMessage getFrom();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage getFrom();
     /**
      * <code>optional .FromMessage from = 3;</code>
      *
@@ -14026,7 +14026,7 @@ public final class Adam {
      *FROM ...
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.FromMessageOrBuilder getFromOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessageOrBuilder getFromOrBuilder();
 
     /**
      * <code>optional .BooleanQueryMessage bq = 6;</code>
@@ -14043,7 +14043,7 @@ public final class Adam {
      *WHERE ...
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage getBq();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage getBq();
     /**
      * <code>optional .BooleanQueryMessage bq = 6;</code>
      *
@@ -14051,7 +14051,7 @@ public final class Adam {
      *WHERE ...
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessageOrBuilder getBqOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessageOrBuilder getBqOrBuilder();
 
     /**
      * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
@@ -14068,7 +14068,7 @@ public final class Adam {
      *USING DISTANCE ...
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage getNnq();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage getNnq();
     /**
      * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
      *
@@ -14076,7 +14076,7 @@ public final class Adam {
      *USING DISTANCE ...
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder();
 
     /**
      * <code>repeated string hints = 8;</code>
@@ -14156,7 +14156,7 @@ public final class Adam {
     /**
      * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
      */
-    java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel> getInformationList();
+    java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel> getInformationList();
     /**
      * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
      */
@@ -14164,7 +14164,7 @@ public final class Adam {
     /**
      * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel getInformation(int index);
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel getInformation(int index);
     /**
      * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
      */
@@ -14227,11 +14227,11 @@ public final class Adam {
               break;
             }
             case 18: {
-              ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Builder subBuilder = null;
               if (projection_ != null) {
                 subBuilder = projection_.toBuilder();
               }
-              projection_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.parser(), extensionRegistry);
+              projection_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(projection_);
                 projection_ = subBuilder.buildPartial();
@@ -14240,11 +14240,11 @@ public final class Adam {
               break;
             }
             case 26: {
-              ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.Builder subBuilder = null;
               if (from_ != null) {
                 subBuilder = from_.toBuilder();
               }
-              from_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.parser(), extensionRegistry);
+              from_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(from_);
                 from_ = subBuilder.buildPartial();
@@ -14253,11 +14253,11 @@ public final class Adam {
               break;
             }
             case 50: {
-              ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.Builder subBuilder = null;
               if (bq_ != null) {
                 subBuilder = bq_.toBuilder();
               }
-              bq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.parser(), extensionRegistry);
+              bq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(bq_);
                 bq_ = subBuilder.buildPartial();
@@ -14266,11 +14266,11 @@ public final class Adam {
               break;
             }
             case 58: {
-              ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.Builder subBuilder = null;
               if (nnq_ != null) {
                 subBuilder = nnq_.toBuilder();
               }
-              nnq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.parser(), extensionRegistry);
+              nnq_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(nnq_);
                 nnq_ = subBuilder.buildPartial();
@@ -14350,14 +14350,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.Builder.class);
     }
 
     /**
@@ -14497,7 +14497,7 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.getDescriptor().getEnumTypes().get(0);
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final InformationLevel[] VALUES = values();
@@ -14569,7 +14569,7 @@ public final class Adam {
     }
 
     public static final int PROJECTION_FIELD_NUMBER = 2;
-    private ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage projection_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage projection_;
     /**
      * <code>optional .ProjectionMessage projection = 2;</code>
      *
@@ -14587,8 +14587,8 @@ public final class Adam {
      *SELECT ...
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage getProjection() {
-      return projection_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.getDefaultInstance() : projection_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage getProjection() {
+      return projection_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.getDefaultInstance() : projection_;
     }
     /**
      * <code>optional .ProjectionMessage projection = 2;</code>
@@ -14597,12 +14597,12 @@ public final class Adam {
      *SELECT ...
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessageOrBuilder getProjectionOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessageOrBuilder getProjectionOrBuilder() {
       return getProjection();
     }
 
     public static final int FROM_FIELD_NUMBER = 3;
-    private ch.unibas.dmi.dbis.adam.http.Adam.FromMessage from_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage from_;
     /**
      * <code>optional .FromMessage from = 3;</code>
      *
@@ -14620,8 +14620,8 @@ public final class Adam {
      *FROM ...
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.FromMessage getFrom() {
-      return from_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.getDefaultInstance() : from_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage getFrom() {
+      return from_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.getDefaultInstance() : from_;
     }
     /**
      * <code>optional .FromMessage from = 3;</code>
@@ -14630,12 +14630,12 @@ public final class Adam {
      *FROM ...
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.FromMessageOrBuilder getFromOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessageOrBuilder getFromOrBuilder() {
       return getFrom();
     }
 
     public static final int BQ_FIELD_NUMBER = 6;
-    private ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage bq_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage bq_;
     /**
      * <code>optional .BooleanQueryMessage bq = 6;</code>
      *
@@ -14653,8 +14653,8 @@ public final class Adam {
      *WHERE ...
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage getBq() {
-      return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.getDefaultInstance() : bq_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage getBq() {
+      return bq_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.getDefaultInstance() : bq_;
     }
     /**
      * <code>optional .BooleanQueryMessage bq = 6;</code>
@@ -14663,12 +14663,12 @@ public final class Adam {
      *WHERE ...
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessageOrBuilder getBqOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
       return getBq();
     }
 
     public static final int NNQ_FIELD_NUMBER = 7;
-    private ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage nnq_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage nnq_;
     /**
      * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
      *
@@ -14686,8 +14686,8 @@ public final class Adam {
      *USING DISTANCE ...
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage getNnq() {
-      return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage getNnq() {
+      return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
     }
     /**
      * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
@@ -14696,7 +14696,7 @@ public final class Adam {
      *USING DISTANCE ...
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
       return getNnq();
     }
 
@@ -14804,20 +14804,20 @@ public final class Adam {
     public static final int INFORMATION_FIELD_NUMBER = 13;
     private java.util.List<java.lang.Integer> information_;
     private static final com.google.protobuf.Internal.ListAdapter.Converter<
-        java.lang.Integer, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel> information_converter_ =
+        java.lang.Integer, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel> information_converter_ =
             new com.google.protobuf.Internal.ListAdapter.Converter<
-                java.lang.Integer, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel>() {
-              public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel convert(java.lang.Integer from) {
-                ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel result = ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel.valueOf(from);
-                return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel.UNRECOGNIZED : result;
+                java.lang.Integer, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel>() {
+              public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel convert(java.lang.Integer from) {
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel.valueOf(from);
+                return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel.UNRECOGNIZED : result;
               }
             };
     /**
      * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
      */
-    public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel> getInformationList() {
+    public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel> getInformationList() {
       return new com.google.protobuf.Internal.ListAdapter<
-          java.lang.Integer, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel>(information_, information_converter_);
+          java.lang.Integer, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel>(information_, information_converter_);
     }
     /**
      * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
@@ -14828,7 +14828,7 @@ public final class Adam {
     /**
      * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel getInformation(int index) {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel getInformation(int index) {
       return information_converter_.convert(information_.get(index));
     }
     /**
@@ -14963,53 +14963,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -15020,7 +15020,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -15040,20 +15040,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:QueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -15112,23 +15112,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.queryid_ = queryid_;
@@ -15172,16 +15172,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.getDefaultInstance()) return this;
         if (!other.getQueryid().isEmpty()) {
           queryid_ = other.queryid_;
           onChanged();
@@ -15242,11 +15242,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -15346,9 +15346,9 @@ public final class Adam {
         return this;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage projection_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage projection_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessageOrBuilder> projectionBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessageOrBuilder> projectionBuilder_;
       /**
        * <code>optional .ProjectionMessage projection = 2;</code>
        *
@@ -15366,9 +15366,9 @@ public final class Adam {
        *SELECT ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage getProjection() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage getProjection() {
         if (projectionBuilder_ == null) {
-          return projection_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.getDefaultInstance() : projection_;
+          return projection_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.getDefaultInstance() : projection_;
         } else {
           return projectionBuilder_.getMessage();
         }
@@ -15380,7 +15380,7 @@ public final class Adam {
        *SELECT ...
        * </pre>
        */
-      public Builder setProjection(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage value) {
+      public Builder setProjection(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage value) {
         if (projectionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -15401,7 +15401,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setProjection(
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Builder builderForValue) {
         if (projectionBuilder_ == null) {
           projection_ = builderForValue.build();
           onChanged();
@@ -15418,11 +15418,11 @@ public final class Adam {
        *SELECT ...
        * </pre>
        */
-      public Builder mergeProjection(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage value) {
+      public Builder mergeProjection(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage value) {
         if (projectionBuilder_ == null) {
           if (projection_ != null) {
             projection_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.newBuilder(projection_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.newBuilder(projection_).mergeFrom(value).buildPartial();
           } else {
             projection_ = value;
           }
@@ -15458,7 +15458,7 @@ public final class Adam {
        *SELECT ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Builder getProjectionBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Builder getProjectionBuilder() {
         
         onChanged();
         return getProjectionFieldBuilder().getBuilder();
@@ -15470,12 +15470,12 @@ public final class Adam {
        *SELECT ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessageOrBuilder getProjectionOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessageOrBuilder getProjectionOrBuilder() {
         if (projectionBuilder_ != null) {
           return projectionBuilder_.getMessageOrBuilder();
         } else {
           return projection_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.getDefaultInstance() : projection_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.getDefaultInstance() : projection_;
         }
       }
       /**
@@ -15486,11 +15486,11 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessageOrBuilder> 
           getProjectionFieldBuilder() {
         if (projectionBuilder_ == null) {
           projectionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessageOrBuilder>(
                   getProjection(),
                   getParentForChildren(),
                   isClean());
@@ -15499,9 +15499,9 @@ public final class Adam {
         return projectionBuilder_;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.FromMessage from_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage from_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.FromMessage, ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FromMessageOrBuilder> fromBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessageOrBuilder> fromBuilder_;
       /**
        * <code>optional .FromMessage from = 3;</code>
        *
@@ -15519,9 +15519,9 @@ public final class Adam {
        *FROM ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FromMessage getFrom() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage getFrom() {
         if (fromBuilder_ == null) {
-          return from_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.getDefaultInstance() : from_;
+          return from_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.getDefaultInstance() : from_;
         } else {
           return fromBuilder_.getMessage();
         }
@@ -15533,7 +15533,7 @@ public final class Adam {
        *FROM ...
        * </pre>
        */
-      public Builder setFrom(ch.unibas.dmi.dbis.adam.http.Adam.FromMessage value) {
+      public Builder setFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage value) {
         if (fromBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -15554,7 +15554,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setFrom(
-          ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.Builder builderForValue) {
         if (fromBuilder_ == null) {
           from_ = builderForValue.build();
           onChanged();
@@ -15571,11 +15571,11 @@ public final class Adam {
        *FROM ...
        * </pre>
        */
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.FromMessage value) {
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage value) {
         if (fromBuilder_ == null) {
           if (from_ != null) {
             from_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.newBuilder(from_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.newBuilder(from_).mergeFrom(value).buildPartial();
           } else {
             from_ = value;
           }
@@ -15611,7 +15611,7 @@ public final class Adam {
        *FROM ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.Builder getFromBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.Builder getFromBuilder() {
         
         onChanged();
         return getFromFieldBuilder().getBuilder();
@@ -15623,12 +15623,12 @@ public final class Adam {
        *FROM ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FromMessageOrBuilder getFromOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessageOrBuilder getFromOrBuilder() {
         if (fromBuilder_ != null) {
           return fromBuilder_.getMessageOrBuilder();
         } else {
           return from_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.getDefaultInstance() : from_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.getDefaultInstance() : from_;
         }
       }
       /**
@@ -15639,11 +15639,11 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.FromMessage, ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FromMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessageOrBuilder> 
           getFromFieldBuilder() {
         if (fromBuilder_ == null) {
           fromBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.FromMessage, ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FromMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessageOrBuilder>(
                   getFrom(),
                   getParentForChildren(),
                   isClean());
@@ -15652,9 +15652,9 @@ public final class Adam {
         return fromBuilder_;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage bq_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage bq_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessageOrBuilder> bqBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessageOrBuilder> bqBuilder_;
       /**
        * <code>optional .BooleanQueryMessage bq = 6;</code>
        *
@@ -15672,9 +15672,9 @@ public final class Adam {
        *WHERE ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage getBq() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage getBq() {
         if (bqBuilder_ == null) {
-          return bq_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.getDefaultInstance() : bq_;
+          return bq_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.getDefaultInstance() : bq_;
         } else {
           return bqBuilder_.getMessage();
         }
@@ -15686,7 +15686,7 @@ public final class Adam {
        *WHERE ...
        * </pre>
        */
-      public Builder setBq(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage value) {
+      public Builder setBq(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage value) {
         if (bqBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -15707,7 +15707,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setBq(
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.Builder builderForValue) {
         if (bqBuilder_ == null) {
           bq_ = builderForValue.build();
           onChanged();
@@ -15724,11 +15724,11 @@ public final class Adam {
        *WHERE ...
        * </pre>
        */
-      public Builder mergeBq(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage value) {
+      public Builder mergeBq(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage value) {
         if (bqBuilder_ == null) {
           if (bq_ != null) {
             bq_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.newBuilder(bq_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.newBuilder(bq_).mergeFrom(value).buildPartial();
           } else {
             bq_ = value;
           }
@@ -15764,7 +15764,7 @@ public final class Adam {
        *WHERE ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.Builder getBqBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.Builder getBqBuilder() {
         
         onChanged();
         return getBqFieldBuilder().getBuilder();
@@ -15776,12 +15776,12 @@ public final class Adam {
        *WHERE ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessageOrBuilder getBqOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessageOrBuilder getBqOrBuilder() {
         if (bqBuilder_ != null) {
           return bqBuilder_.getMessageOrBuilder();
         } else {
           return bq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.getDefaultInstance() : bq_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.getDefaultInstance() : bq_;
         }
       }
       /**
@@ -15792,11 +15792,11 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessageOrBuilder> 
           getBqFieldBuilder() {
         if (bqBuilder_ == null) {
           bqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessageOrBuilder>(
                   getBq(),
                   getParentForChildren(),
                   isClean());
@@ -15805,9 +15805,9 @@ public final class Adam {
         return bqBuilder_;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage nnq_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage nnq_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessageOrBuilder> nnqBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessageOrBuilder> nnqBuilder_;
       /**
        * <code>optional .NearestNeighbourQueryMessage nnq = 7;</code>
        *
@@ -15825,9 +15825,9 @@ public final class Adam {
        *USING DISTANCE ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage getNnq() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage getNnq() {
         if (nnqBuilder_ == null) {
-          return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
+          return nnq_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
         } else {
           return nnqBuilder_.getMessage();
         }
@@ -15839,7 +15839,7 @@ public final class Adam {
        *USING DISTANCE ...
        * </pre>
        */
-      public Builder setNnq(ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage value) {
+      public Builder setNnq(ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage value) {
         if (nnqBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -15860,7 +15860,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setNnq(
-          ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.Builder builderForValue) {
         if (nnqBuilder_ == null) {
           nnq_ = builderForValue.build();
           onChanged();
@@ -15877,11 +15877,11 @@ public final class Adam {
        *USING DISTANCE ...
        * </pre>
        */
-      public Builder mergeNnq(ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage value) {
+      public Builder mergeNnq(ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage value) {
         if (nnqBuilder_ == null) {
           if (nnq_ != null) {
             nnq_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.newBuilder(nnq_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.newBuilder(nnq_).mergeFrom(value).buildPartial();
           } else {
             nnq_ = value;
           }
@@ -15917,7 +15917,7 @@ public final class Adam {
        *USING DISTANCE ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.Builder getNnqBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.Builder getNnqBuilder() {
         
         onChanged();
         return getNnqFieldBuilder().getBuilder();
@@ -15929,12 +15929,12 @@ public final class Adam {
        *USING DISTANCE ...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
         if (nnqBuilder_ != null) {
           return nnqBuilder_.getMessageOrBuilder();
         } else {
           return nnq_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
         }
       }
       /**
@@ -15945,11 +15945,11 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessageOrBuilder> 
           getNnqFieldBuilder() {
         if (nnqBuilder_ == null) {
           nnqBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessageOrBuilder>(
                   getNnq(),
                   getParentForChildren(),
                   isClean());
@@ -16257,9 +16257,9 @@ public final class Adam {
       /**
        * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel> getInformationList() {
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel> getInformationList() {
         return new com.google.protobuf.Internal.ListAdapter<
-            java.lang.Integer, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel>(information_, information_converter_);
+            java.lang.Integer, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel>(information_, information_converter_);
       }
       /**
        * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
@@ -16270,14 +16270,14 @@ public final class Adam {
       /**
        * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel getInformation(int index) {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel getInformation(int index) {
         return information_converter_.convert(information_.get(index));
       }
       /**
        * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
        */
       public Builder setInformation(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -16289,7 +16289,7 @@ public final class Adam {
       /**
        * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
        */
-      public Builder addInformation(ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel value) {
+      public Builder addInformation(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -16302,9 +16302,9 @@ public final class Adam {
        * <code>repeated .QueryMessage.InformationLevel information = 13;</code>
        */
       public Builder addAllInformation(
-          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel> values) {
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel> values) {
         ensureInformationIsMutable();
-        for (ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.InformationLevel value : values) {
+        for (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.InformationLevel value : values) {
           information_.add(value.getNumber());
         }
         onChanged();
@@ -16378,12 +16378,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:QueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -16415,7 +16415,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -16442,11 +16442,11 @@ public final class Adam {
     /**
      * <code>optional .SubExpressionQueryMessage left = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getLeft();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getLeft();
     /**
      * <code>optional .SubExpressionQueryMessage left = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getLeftOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder getLeftOrBuilder();
 
     /**
      * <code>optional .ExpressionQueryMessage.Operation operation = 3;</code>
@@ -16455,7 +16455,7 @@ public final class Adam {
     /**
      * <code>optional .ExpressionQueryMessage.Operation operation = 3;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation getOperation();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation getOperation();
 
     /**
      * <code>optional .ExpressionQueryMessage.OperationOrder order = 4;</code>
@@ -16464,7 +16464,7 @@ public final class Adam {
     /**
      * <code>optional .ExpressionQueryMessage.OperationOrder order = 4;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder getOrder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder getOrder();
 
     /**
      * <code>optional .SubExpressionQueryMessage right = 5;</code>
@@ -16473,11 +16473,11 @@ public final class Adam {
     /**
      * <code>optional .SubExpressionQueryMessage right = 5;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getRight();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getRight();
     /**
      * <code>optional .SubExpressionQueryMessage right = 5;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getRightOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder getRightOrBuilder();
   }
   /**
    * Protobuf type {@code ExpressionQueryMessage}
@@ -16527,11 +16527,11 @@ public final class Adam {
               break;
             }
             case 18: {
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder subBuilder = null;
               if (left_ != null) {
                 subBuilder = left_.toBuilder();
               }
-              left_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.parser(), extensionRegistry);
+              left_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(left_);
                 left_ = subBuilder.buildPartial();
@@ -16552,11 +16552,11 @@ public final class Adam {
               break;
             }
             case 42: {
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder subBuilder = null;
               if (right_ != null) {
                 subBuilder = right_.toBuilder();
               }
-              right_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.parser(), extensionRegistry);
+              right_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(right_);
                 right_ = subBuilder.buildPartial();
@@ -16578,14 +16578,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExpressionQueryMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExpressionQueryMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExpressionQueryMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExpressionQueryMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Builder.class);
     }
 
     /**
@@ -16661,7 +16661,7 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDescriptor().getEnumTypes().get(0);
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final Operation[] VALUES = values();
@@ -16762,7 +16762,7 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDescriptor().getEnumTypes().get(1);
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDescriptor().getEnumTypes().get(1);
       }
 
       private static final OperationOrder[] VALUES = values();
@@ -16825,7 +16825,7 @@ public final class Adam {
     }
 
     public static final int LEFT_FIELD_NUMBER = 2;
-    private ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage left_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage left_;
     /**
      * <code>optional .SubExpressionQueryMessage left = 2;</code>
      */
@@ -16835,13 +16835,13 @@ public final class Adam {
     /**
      * <code>optional .SubExpressionQueryMessage left = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getLeft() {
-      return left_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance() : left_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getLeft() {
+      return left_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance() : left_;
     }
     /**
      * <code>optional .SubExpressionQueryMessage left = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getLeftOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder getLeftOrBuilder() {
       return getLeft();
     }
 
@@ -16856,9 +16856,9 @@ public final class Adam {
     /**
      * <code>optional .ExpressionQueryMessage.Operation operation = 3;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation getOperation() {
-      ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation result = ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation.valueOf(operation_);
-      return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation.UNRECOGNIZED : result;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation getOperation() {
+      ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation.valueOf(operation_);
+      return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation.UNRECOGNIZED : result;
     }
 
     public static final int ORDER_FIELD_NUMBER = 4;
@@ -16872,13 +16872,13 @@ public final class Adam {
     /**
      * <code>optional .ExpressionQueryMessage.OperationOrder order = 4;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder getOrder() {
-      ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder result = ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder.valueOf(order_);
-      return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder.UNRECOGNIZED : result;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder getOrder() {
+      ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder.valueOf(order_);
+      return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder.UNRECOGNIZED : result;
     }
 
     public static final int RIGHT_FIELD_NUMBER = 5;
-    private ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage right_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage right_;
     /**
      * <code>optional .SubExpressionQueryMessage right = 5;</code>
      */
@@ -16888,13 +16888,13 @@ public final class Adam {
     /**
      * <code>optional .SubExpressionQueryMessage right = 5;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getRight() {
-      return right_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance() : right_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getRight() {
+      return right_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance() : right_;
     }
     /**
      * <code>optional .SubExpressionQueryMessage right = 5;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getRightOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder getRightOrBuilder() {
       return getRight();
     }
 
@@ -16916,10 +16916,10 @@ public final class Adam {
       if (left_ != null) {
         output.writeMessage(2, getLeft());
       }
-      if (operation_ != ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation.UNION.getNumber()) {
+      if (operation_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation.UNION.getNumber()) {
         output.writeEnum(3, operation_);
       }
-      if (order_ != ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder.LEFTFIRST.getNumber()) {
+      if (order_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder.LEFTFIRST.getNumber()) {
         output.writeEnum(4, order_);
       }
       if (right_ != null) {
@@ -16939,11 +16939,11 @@ public final class Adam {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getLeft());
       }
-      if (operation_ != ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation.UNION.getNumber()) {
+      if (operation_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation.UNION.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(3, operation_);
       }
-      if (order_ != ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder.LEFTFIRST.getNumber()) {
+      if (order_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder.LEFTFIRST.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, order_);
       }
@@ -16956,53 +16956,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -17013,7 +17013,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -17033,20 +17033,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:ExpressionQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExpressionQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExpressionQueryMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExpressionQueryMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExpressionQueryMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -17085,23 +17085,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExpressionQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExpressionQueryMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage(this);
         result.queryid_ = queryid_;
         if (leftBuilder_ == null) {
           result.left_ = left_;
@@ -17120,16 +17120,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDefaultInstance()) return this;
         if (!other.getQueryid().isEmpty()) {
           queryid_ = other.queryid_;
           onChanged();
@@ -17158,11 +17158,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -17241,9 +17241,9 @@ public final class Adam {
         return this;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage left_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage left_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder> leftBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder> leftBuilder_;
       /**
        * <code>optional .SubExpressionQueryMessage left = 2;</code>
        */
@@ -17253,9 +17253,9 @@ public final class Adam {
       /**
        * <code>optional .SubExpressionQueryMessage left = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getLeft() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getLeft() {
         if (leftBuilder_ == null) {
-          return left_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance() : left_;
+          return left_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance() : left_;
         } else {
           return leftBuilder_.getMessage();
         }
@@ -17263,7 +17263,7 @@ public final class Adam {
       /**
        * <code>optional .SubExpressionQueryMessage left = 2;</code>
        */
-      public Builder setLeft(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage value) {
+      public Builder setLeft(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage value) {
         if (leftBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -17280,7 +17280,7 @@ public final class Adam {
        * <code>optional .SubExpressionQueryMessage left = 2;</code>
        */
       public Builder setLeft(
-          ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder builderForValue) {
         if (leftBuilder_ == null) {
           left_ = builderForValue.build();
           onChanged();
@@ -17293,11 +17293,11 @@ public final class Adam {
       /**
        * <code>optional .SubExpressionQueryMessage left = 2;</code>
        */
-      public Builder mergeLeft(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage value) {
+      public Builder mergeLeft(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage value) {
         if (leftBuilder_ == null) {
           if (left_ != null) {
             left_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.newBuilder(left_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.newBuilder(left_).mergeFrom(value).buildPartial();
           } else {
             left_ = value;
           }
@@ -17325,7 +17325,7 @@ public final class Adam {
       /**
        * <code>optional .SubExpressionQueryMessage left = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder getLeftBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder getLeftBuilder() {
         
         onChanged();
         return getLeftFieldBuilder().getBuilder();
@@ -17333,23 +17333,23 @@ public final class Adam {
       /**
        * <code>optional .SubExpressionQueryMessage left = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getLeftOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder getLeftOrBuilder() {
         if (leftBuilder_ != null) {
           return leftBuilder_.getMessageOrBuilder();
         } else {
           return left_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance() : left_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance() : left_;
         }
       }
       /**
        * <code>optional .SubExpressionQueryMessage left = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder> 
           getLeftFieldBuilder() {
         if (leftBuilder_ == null) {
           leftBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder>(
                   getLeft(),
                   getParentForChildren(),
                   isClean());
@@ -17376,14 +17376,14 @@ public final class Adam {
       /**
        * <code>optional .ExpressionQueryMessage.Operation operation = 3;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation getOperation() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation result = ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation.valueOf(operation_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation.UNRECOGNIZED : result;
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation getOperation() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation.valueOf(operation_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation.UNRECOGNIZED : result;
       }
       /**
        * <code>optional .ExpressionQueryMessage.Operation operation = 3;</code>
        */
-      public Builder setOperation(ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Operation value) {
+      public Builder setOperation(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Operation value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -17420,14 +17420,14 @@ public final class Adam {
       /**
        * <code>optional .ExpressionQueryMessage.OperationOrder order = 4;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder getOrder() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder result = ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder.valueOf(order_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder.UNRECOGNIZED : result;
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder getOrder() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder.valueOf(order_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder.UNRECOGNIZED : result;
       }
       /**
        * <code>optional .ExpressionQueryMessage.OperationOrder order = 4;</code>
        */
-      public Builder setOrder(ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.OperationOrder value) {
+      public Builder setOrder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.OperationOrder value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -17446,9 +17446,9 @@ public final class Adam {
         return this;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage right_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage right_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder> rightBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder> rightBuilder_;
       /**
        * <code>optional .SubExpressionQueryMessage right = 5;</code>
        */
@@ -17458,9 +17458,9 @@ public final class Adam {
       /**
        * <code>optional .SubExpressionQueryMessage right = 5;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getRight() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getRight() {
         if (rightBuilder_ == null) {
-          return right_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance() : right_;
+          return right_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance() : right_;
         } else {
           return rightBuilder_.getMessage();
         }
@@ -17468,7 +17468,7 @@ public final class Adam {
       /**
        * <code>optional .SubExpressionQueryMessage right = 5;</code>
        */
-      public Builder setRight(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage value) {
+      public Builder setRight(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage value) {
         if (rightBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -17485,7 +17485,7 @@ public final class Adam {
        * <code>optional .SubExpressionQueryMessage right = 5;</code>
        */
       public Builder setRight(
-          ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder builderForValue) {
         if (rightBuilder_ == null) {
           right_ = builderForValue.build();
           onChanged();
@@ -17498,11 +17498,11 @@ public final class Adam {
       /**
        * <code>optional .SubExpressionQueryMessage right = 5;</code>
        */
-      public Builder mergeRight(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage value) {
+      public Builder mergeRight(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage value) {
         if (rightBuilder_ == null) {
           if (right_ != null) {
             right_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.newBuilder(right_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.newBuilder(right_).mergeFrom(value).buildPartial();
           } else {
             right_ = value;
           }
@@ -17530,7 +17530,7 @@ public final class Adam {
       /**
        * <code>optional .SubExpressionQueryMessage right = 5;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder getRightBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder getRightBuilder() {
         
         onChanged();
         return getRightFieldBuilder().getBuilder();
@@ -17538,23 +17538,23 @@ public final class Adam {
       /**
        * <code>optional .SubExpressionQueryMessage right = 5;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getRightOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder getRightOrBuilder() {
         if (rightBuilder_ != null) {
           return rightBuilder_.getMessageOrBuilder();
         } else {
           return right_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance() : right_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance() : right_;
         }
       }
       /**
        * <code>optional .SubExpressionQueryMessage right = 5;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder> 
           getRightFieldBuilder() {
         if (rightBuilder_ == null) {
           rightBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder>(
                   getRight(),
                   getParentForChildren(),
                   isClean());
@@ -17577,12 +17577,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:ExpressionQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -17614,7 +17614,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -17637,31 +17637,31 @@ public final class Adam {
     /**
      * <code>optional .QueryMessage qm = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage getQm();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage getQm();
     /**
      * <code>optional .QueryMessage qm = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.QueryMessageOrBuilder getQmOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessageOrBuilder getQmOrBuilder();
 
     /**
      * <code>optional .ExpressionQueryMessage eqm = 3;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage getEqm();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage getEqm();
     /**
      * <code>optional .ExpressionQueryMessage eqm = 3;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessageOrBuilder getEqmOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessageOrBuilder getEqmOrBuilder();
 
     /**
      * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage getEhqm();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage getEhqm();
     /**
      * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessageOrBuilder getEhqmOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessageOrBuilder getEhqmOrBuilder();
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.SubmessageCase getSubmessageCase();
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.SubmessageCase getSubmessageCase();
   }
   /**
    * Protobuf type {@code SubExpressionQueryMessage}
@@ -17709,42 +17709,42 @@ public final class Adam {
               break;
             }
             case 18: {
-              ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.Builder subBuilder = null;
               if (submessageCase_ == 2) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) submessage_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) submessage_).toBuilder();
               }
               submessage_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) submessage_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) submessage_);
                 submessage_ = subBuilder.buildPartial();
               }
               submessageCase_ = 2;
               break;
             }
             case 26: {
-              ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Builder subBuilder = null;
               if (submessageCase_ == 3) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) submessage_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) submessage_).toBuilder();
               }
               submessage_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) submessage_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) submessage_);
                 submessage_ = subBuilder.buildPartial();
               }
               submessageCase_ = 3;
               break;
             }
             case 34: {
-              ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.Builder subBuilder = null;
               if (submessageCase_ == 4) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) submessage_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) submessage_).toBuilder();
               }
               submessage_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) submessage_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) submessage_);
                 submessage_ = subBuilder.buildPartial();
               }
               submessageCase_ = 4;
@@ -17764,14 +17764,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SubExpressionQueryMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SubExpressionQueryMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SubExpressionQueryMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SubExpressionQueryMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder.class);
     }
 
     private int submessageCase_ = 0;
@@ -17845,60 +17845,60 @@ public final class Adam {
     /**
      * <code>optional .QueryMessage qm = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage getQm() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage getQm() {
       if (submessageCase_ == 2) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) submessage_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) submessage_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.getDefaultInstance();
     }
     /**
      * <code>optional .QueryMessage qm = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessageOrBuilder getQmOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessageOrBuilder getQmOrBuilder() {
       if (submessageCase_ == 2) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) submessage_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) submessage_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.getDefaultInstance();
     }
 
     public static final int EQM_FIELD_NUMBER = 3;
     /**
      * <code>optional .ExpressionQueryMessage eqm = 3;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage getEqm() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage getEqm() {
       if (submessageCase_ == 3) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) submessage_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) submessage_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDefaultInstance();
     }
     /**
      * <code>optional .ExpressionQueryMessage eqm = 3;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessageOrBuilder getEqmOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessageOrBuilder getEqmOrBuilder() {
       if (submessageCase_ == 3) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) submessage_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) submessage_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDefaultInstance();
     }
 
     public static final int EHQM_FIELD_NUMBER = 4;
     /**
      * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage getEhqm() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage getEhqm() {
       if (submessageCase_ == 4) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) submessage_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) submessage_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.getDefaultInstance();
     }
     /**
      * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessageOrBuilder getEhqmOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessageOrBuilder getEhqmOrBuilder() {
       if (submessageCase_ == 4) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) submessage_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) submessage_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -17917,13 +17917,13 @@ public final class Adam {
         com.google.protobuf.GeneratedMessage.writeString(output, 1, queryid_);
       }
       if (submessageCase_ == 2) {
-        output.writeMessage(2, (ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) submessage_);
+        output.writeMessage(2, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) submessage_);
       }
       if (submessageCase_ == 3) {
-        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) submessage_);
+        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) submessage_);
       }
       if (submessageCase_ == 4) {
-        output.writeMessage(4, (ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) submessage_);
+        output.writeMessage(4, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) submessage_);
       }
     }
 
@@ -17937,68 +17937,68 @@ public final class Adam {
       }
       if (submessageCase_ == 2) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, (ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) submessage_);
+          .computeMessageSize(2, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) submessage_);
       }
       if (submessageCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) submessage_);
+          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) submessage_);
       }
       if (submessageCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, (ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) submessage_);
+          .computeMessageSize(4, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) submessage_);
       }
       memoizedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -18009,7 +18009,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -18029,20 +18029,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:SubExpressionQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SubExpressionQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SubExpressionQueryMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SubExpressionQueryMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SubExpressionQueryMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -18067,23 +18067,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_SubExpressionQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_SubExpressionQueryMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage(this);
         result.queryid_ = queryid_;
         if (submessageCase_ == 2) {
           if (qmBuilder_ == null) {
@@ -18112,16 +18112,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance()) return this;
         if (!other.getQueryid().isEmpty()) {
           queryid_ = other.queryid_;
           onChanged();
@@ -18155,11 +18155,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -18254,27 +18254,27 @@ public final class Adam {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessageOrBuilder> qmBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessageOrBuilder> qmBuilder_;
       /**
        * <code>optional .QueryMessage qm = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage getQm() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage getQm() {
         if (qmBuilder_ == null) {
           if (submessageCase_ == 2) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) submessage_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) submessage_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.getDefaultInstance();
         } else {
           if (submessageCase_ == 2) {
             return qmBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .QueryMessage qm = 2;</code>
        */
-      public Builder setQm(ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage value) {
+      public Builder setQm(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage value) {
         if (qmBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -18291,7 +18291,7 @@ public final class Adam {
        * <code>optional .QueryMessage qm = 2;</code>
        */
       public Builder setQm(
-          ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.Builder builderForValue) {
         if (qmBuilder_ == null) {
           submessage_ = builderForValue.build();
           onChanged();
@@ -18304,11 +18304,11 @@ public final class Adam {
       /**
        * <code>optional .QueryMessage qm = 2;</code>
        */
-      public Builder mergeQm(ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage value) {
+      public Builder mergeQm(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage value) {
         if (qmBuilder_ == null) {
           if (submessageCase_ == 2 &&
-              submessage_ != ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.getDefaultInstance()) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) submessage_)
+              submessage_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.getDefaultInstance()) {
+            submessage_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) submessage_)
                 .mergeFrom(value).buildPartial();
           } else {
             submessage_ = value;
@@ -18345,35 +18345,35 @@ public final class Adam {
       /**
        * <code>optional .QueryMessage qm = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.Builder getQmBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.Builder getQmBuilder() {
         return getQmFieldBuilder().getBuilder();
       }
       /**
        * <code>optional .QueryMessage qm = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryMessageOrBuilder getQmOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessageOrBuilder getQmOrBuilder() {
         if ((submessageCase_ == 2) && (qmBuilder_ != null)) {
           return qmBuilder_.getMessageOrBuilder();
         } else {
           if (submessageCase_ == 2) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) submessage_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) submessage_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .QueryMessage qm = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessageOrBuilder> 
           getQmFieldBuilder() {
         if (qmBuilder_ == null) {
           if (!(submessageCase_ == 2)) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.getDefaultInstance();
+            submessage_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.getDefaultInstance();
           }
           qmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.QueryMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage) submessage_,
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage) submessage_,
                   getParentForChildren(),
                   isClean());
           submessage_ = null;
@@ -18384,27 +18384,27 @@ public final class Adam {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessageOrBuilder> eqmBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessageOrBuilder> eqmBuilder_;
       /**
        * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage getEqm() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage getEqm() {
         if (eqmBuilder_ == null) {
           if (submessageCase_ == 3) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) submessage_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) submessage_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDefaultInstance();
         } else {
           if (submessageCase_ == 3) {
             return eqmBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
-      public Builder setEqm(ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage value) {
+      public Builder setEqm(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage value) {
         if (eqmBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -18421,7 +18421,7 @@ public final class Adam {
        * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
       public Builder setEqm(
-          ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Builder builderForValue) {
         if (eqmBuilder_ == null) {
           submessage_ = builderForValue.build();
           onChanged();
@@ -18434,11 +18434,11 @@ public final class Adam {
       /**
        * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
-      public Builder mergeEqm(ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage value) {
+      public Builder mergeEqm(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage value) {
         if (eqmBuilder_ == null) {
           if (submessageCase_ == 3 &&
-              submessage_ != ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDefaultInstance()) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) submessage_)
+              submessage_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDefaultInstance()) {
+            submessage_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) submessage_)
                 .mergeFrom(value).buildPartial();
           } else {
             submessage_ = value;
@@ -18475,35 +18475,35 @@ public final class Adam {
       /**
        * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Builder getEqmBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Builder getEqmBuilder() {
         return getEqmFieldBuilder().getBuilder();
       }
       /**
        * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessageOrBuilder getEqmOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessageOrBuilder getEqmOrBuilder() {
         if ((submessageCase_ == 3) && (eqmBuilder_ != null)) {
           return eqmBuilder_.getMessageOrBuilder();
         } else {
           if (submessageCase_ == 3) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) submessage_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) submessage_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .ExpressionQueryMessage eqm = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessageOrBuilder> 
           getEqmFieldBuilder() {
         if (eqmBuilder_ == null) {
           if (!(submessageCase_ == 3)) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.getDefaultInstance();
+            submessage_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.getDefaultInstance();
           }
           eqmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Adam.ExpressionQueryMessage) submessage_,
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExpressionQueryMessage) submessage_,
                   getParentForChildren(),
                   isClean());
           submessage_ = null;
@@ -18514,27 +18514,27 @@ public final class Adam {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessageOrBuilder> ehqmBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessageOrBuilder> ehqmBuilder_;
       /**
        * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage getEhqm() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage getEhqm() {
         if (ehqmBuilder_ == null) {
           if (submessageCase_ == 4) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) submessage_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) submessage_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.getDefaultInstance();
         } else {
           if (submessageCase_ == 4) {
             return ehqmBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
-      public Builder setEhqm(ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage value) {
+      public Builder setEhqm(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage value) {
         if (ehqmBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -18551,7 +18551,7 @@ public final class Adam {
        * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
       public Builder setEhqm(
-          ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.Builder builderForValue) {
         if (ehqmBuilder_ == null) {
           submessage_ = builderForValue.build();
           onChanged();
@@ -18564,11 +18564,11 @@ public final class Adam {
       /**
        * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
-      public Builder mergeEhqm(ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage value) {
+      public Builder mergeEhqm(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage value) {
         if (ehqmBuilder_ == null) {
           if (submessageCase_ == 4 &&
-              submessage_ != ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.getDefaultInstance()) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) submessage_)
+              submessage_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.getDefaultInstance()) {
+            submessage_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) submessage_)
                 .mergeFrom(value).buildPartial();
           } else {
             submessage_ = value;
@@ -18605,35 +18605,35 @@ public final class Adam {
       /**
        * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.Builder getEhqmBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.Builder getEhqmBuilder() {
         return getEhqmFieldBuilder().getBuilder();
       }
       /**
        * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessageOrBuilder getEhqmOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessageOrBuilder getEhqmOrBuilder() {
         if ((submessageCase_ == 4) && (ehqmBuilder_ != null)) {
           return ehqmBuilder_.getMessageOrBuilder();
         } else {
           if (submessageCase_ == 4) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) submessage_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) submessage_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.getDefaultInstance();
         }
       }
       /**
        * <code>optional .ExternalHandlerQueryMessage ehqm = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessageOrBuilder> 
           getEhqmFieldBuilder() {
         if (ehqmBuilder_ == null) {
           if (!(submessageCase_ == 4)) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.getDefaultInstance();
+            submessage_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.getDefaultInstance();
           }
           ehqmBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) submessage_,
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) submessage_,
                   getParentForChildren(),
                   isClean());
           submessage_ = null;
@@ -18657,12 +18657,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:SubExpressionQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -18694,7 +18694,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -18711,7 +18711,7 @@ public final class Adam {
      *either attributes are specified...
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage getAttributes();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage getAttributes();
     /**
      * <code>optional .ProjectionMessage.AttributeNameMessage attributes = 1;</code>
      *
@@ -18719,7 +18719,7 @@ public final class Adam {
      *either attributes are specified...
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessageOrBuilder getAttributesOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessageOrBuilder getAttributesOrBuilder();
 
     /**
      * <code>optional .ProjectionMessage.Operation op = 2;</code>
@@ -18736,9 +18736,9 @@ public final class Adam {
      *...or an operation
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation getOp();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation getOp();
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.SubmessageCase getSubmessageCase();
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.SubmessageCase getSubmessageCase();
   }
   /**
    * Protobuf type {@code ProjectionMessage}
@@ -18779,14 +18779,14 @@ public final class Adam {
               break;
             }
             case 10: {
-              ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.Builder subBuilder = null;
               if (submessageCase_ == 1) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) submessage_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) submessage_).toBuilder();
               }
               submessage_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) submessage_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) submessage_);
                 submessage_ = subBuilder.buildPartial();
               }
               submessageCase_ = 1;
@@ -18812,14 +18812,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ProjectionMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ProjectionMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ProjectionMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ProjectionMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Builder.class);
     }
 
     /**
@@ -18886,7 +18886,7 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.getDescriptor().getEnumTypes().get(0);
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final Operation[] VALUES = values();
@@ -19002,14 +19002,14 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ProjectionMessage_AttributeNameMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ProjectionMessage_AttributeNameMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ProjectionMessage_AttributeNameMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ProjectionMessage_AttributeNameMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.Builder.class);
       }
 
       public static final int ATTRIBUTE_FIELD_NUMBER = 1;
@@ -19076,53 +19076,53 @@ public final class Adam {
       }
 
       private static final long serialVersionUID = 0L;
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parseFrom(byte[] data)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parseFrom(java.io.InputStream input)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseFrom(input, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parseDelimitedFrom(java.io.InputStream input)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parseDelimitedFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -19133,7 +19133,7 @@ public final class Adam {
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
-      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage prototype) {
+      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
       public Builder toBuilder() {
@@ -19153,20 +19153,20 @@ public final class Adam {
       public static final class Builder extends
           com.google.protobuf.GeneratedMessage.Builder<Builder> implements
           // @@protoc_insertion_point(builder_implements:ProjectionMessage.AttributeNameMessage)
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessageOrBuilder {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessageOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ProjectionMessage_AttributeNameMessage_descriptor;
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ProjectionMessage_AttributeNameMessage_descriptor;
         }
 
         protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ProjectionMessage_AttributeNameMessage_fieldAccessorTable
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ProjectionMessage_AttributeNameMessage_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
-                  ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.Builder.class);
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.Builder.class);
         }
 
-        // Construct using ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.newBuilder()
+        // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -19189,23 +19189,23 @@ public final class Adam {
 
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ProjectionMessage_AttributeNameMessage_descriptor;
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ProjectionMessage_AttributeNameMessage_descriptor;
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage getDefaultInstanceForType() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage getDefaultInstanceForType() {
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage build() {
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage result = buildPartial();
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage build() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
           return result;
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage buildPartial() {
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage(this);
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage buildPartial() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage(this);
           int from_bitField0_ = bitField0_;
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             attribute_ = attribute_.getUnmodifiableView();
@@ -19217,16 +19217,16 @@ public final class Adam {
         }
 
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) {
-            return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage)other);
+          if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) {
+            return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
 
-        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage other) {
-          if (other == ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.getDefaultInstance()) return this;
+        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage other) {
+          if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.getDefaultInstance()) return this;
           if (!other.attribute_.isEmpty()) {
             if (attribute_.isEmpty()) {
               attribute_ = other.attribute_;
@@ -19249,11 +19249,11 @@ public final class Adam {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage parsedMessage = null;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage parsedMessage = null;
           try {
             parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) e.getUnfinishedMessage();
+            parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) e.getUnfinishedMessage();
             throw e;
           } finally {
             if (parsedMessage != null) {
@@ -19372,12 +19372,12 @@ public final class Adam {
       }
 
       // @@protoc_insertion_point(class_scope:ProjectionMessage.AttributeNameMessage)
-      private static final ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage DEFAULT_INSTANCE;
+      private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage DEFAULT_INSTANCE;
       static {
-        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage();
+        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage();
       }
 
-      public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage getDefaultInstance() {
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage getDefaultInstance() {
         return DEFAULT_INSTANCE;
       }
 
@@ -19409,7 +19409,7 @@ public final class Adam {
         return PARSER;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage getDefaultInstanceForType() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
       }
 
@@ -19454,11 +19454,11 @@ public final class Adam {
      *either attributes are specified...
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage getAttributes() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage getAttributes() {
       if (submessageCase_ == 1) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) submessage_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) submessage_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
     }
     /**
      * <code>optional .ProjectionMessage.AttributeNameMessage attributes = 1;</code>
@@ -19467,11 +19467,11 @@ public final class Adam {
      *either attributes are specified...
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessageOrBuilder getAttributesOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessageOrBuilder getAttributesOrBuilder() {
       if (submessageCase_ == 1) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) submessage_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) submessage_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
     }
 
     public static final int OP_FIELD_NUMBER = 2;
@@ -19495,12 +19495,12 @@ public final class Adam {
      *...or an operation
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation getOp() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation getOp() {
       if (submessageCase_ == 2) {
-        ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation result =  ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation.valueOf((java.lang.Integer) submessage_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation.UNRECOGNIZED : result;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation result =  ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation.valueOf((java.lang.Integer) submessage_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation.UNRECOGNIZED : result;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation.COUNT;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation.COUNT;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -19516,7 +19516,7 @@ public final class Adam {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (submessageCase_ == 1) {
-        output.writeMessage(1, (ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) submessage_);
+        output.writeMessage(1, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) submessage_);
       }
       if (submessageCase_ == 2) {
         output.writeEnum(2, ((java.lang.Integer) submessage_));
@@ -19530,7 +19530,7 @@ public final class Adam {
       size = 0;
       if (submessageCase_ == 1) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, (ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) submessage_);
+          .computeMessageSize(1, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) submessage_);
       }
       if (submessageCase_ == 2) {
         size += com.google.protobuf.CodedOutputStream
@@ -19541,53 +19541,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -19598,7 +19598,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -19618,20 +19618,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:ProjectionMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ProjectionMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ProjectionMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ProjectionMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ProjectionMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -19654,23 +19654,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ProjectionMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ProjectionMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage(this);
         if (submessageCase_ == 1) {
           if (attributesBuilder_ == null) {
             result.submessage_ = submessage_;
@@ -19687,16 +19687,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.getDefaultInstance()) return this;
         switch (other.getSubmessageCase()) {
           case ATTRIBUTES: {
             mergeAttributes(other.getAttributes());
@@ -19722,11 +19722,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -19752,7 +19752,7 @@ public final class Adam {
 
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessageOrBuilder> attributesBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessageOrBuilder> attributesBuilder_;
       /**
        * <code>optional .ProjectionMessage.AttributeNameMessage attributes = 1;</code>
        *
@@ -19760,17 +19760,17 @@ public final class Adam {
        *either attributes are specified...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage getAttributes() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage getAttributes() {
         if (attributesBuilder_ == null) {
           if (submessageCase_ == 1) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) submessage_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) submessage_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
         } else {
           if (submessageCase_ == 1) {
             return attributesBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
         }
       }
       /**
@@ -19780,7 +19780,7 @@ public final class Adam {
        *either attributes are specified...
        * </pre>
        */
-      public Builder setAttributes(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage value) {
+      public Builder setAttributes(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage value) {
         if (attributesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -19801,7 +19801,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setAttributes(
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.Builder builderForValue) {
         if (attributesBuilder_ == null) {
           submessage_ = builderForValue.build();
           onChanged();
@@ -19818,11 +19818,11 @@ public final class Adam {
        *either attributes are specified...
        * </pre>
        */
-      public Builder mergeAttributes(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage value) {
+      public Builder mergeAttributes(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage value) {
         if (attributesBuilder_ == null) {
           if (submessageCase_ == 1 &&
-              submessage_ != ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.getDefaultInstance()) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) submessage_)
+              submessage_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.getDefaultInstance()) {
+            submessage_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) submessage_)
                 .mergeFrom(value).buildPartial();
           } else {
             submessage_ = value;
@@ -19867,7 +19867,7 @@ public final class Adam {
        *either attributes are specified...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.Builder getAttributesBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.Builder getAttributesBuilder() {
         return getAttributesFieldBuilder().getBuilder();
       }
       /**
@@ -19877,14 +19877,14 @@ public final class Adam {
        *either attributes are specified...
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessageOrBuilder getAttributesOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessageOrBuilder getAttributesOrBuilder() {
         if ((submessageCase_ == 1) && (attributesBuilder_ != null)) {
           return attributesBuilder_.getMessageOrBuilder();
         } else {
           if (submessageCase_ == 1) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) submessage_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) submessage_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
         }
       }
       /**
@@ -19895,15 +19895,15 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessageOrBuilder> 
           getAttributesFieldBuilder() {
         if (attributesBuilder_ == null) {
           if (!(submessageCase_ == 1)) {
-            submessage_ = ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
+            submessage_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.getDefaultInstance();
           }
           attributesBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.AttributeNameMessage) submessage_,
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.AttributeNameMessage) submessage_,
                   getParentForChildren(),
                   isClean());
           submessage_ = null;
@@ -19946,12 +19946,12 @@ public final class Adam {
        *...or an operation
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation getOp() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation getOp() {
         if (submessageCase_ == 2) {
-          ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation result =  ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation.valueOf((java.lang.Integer) submessage_);
-          return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation.UNRECOGNIZED : result;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation result =  ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation.valueOf((java.lang.Integer) submessage_);
+          return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation.UNRECOGNIZED : result;
         }
-        return ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation.COUNT;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation.COUNT;
       }
       /**
        * <code>optional .ProjectionMessage.Operation op = 2;</code>
@@ -19960,7 +19960,7 @@ public final class Adam {
        *...or an operation
        * </pre>
        */
-      public Builder setOp(ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage.Operation value) {
+      public Builder setOp(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage.Operation value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -19999,12 +19999,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:ProjectionMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -20036,7 +20036,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.ProjectionMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ProjectionMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -20089,7 +20089,7 @@ public final class Adam {
      *or a list of indexes
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getIndexes();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage getIndexes();
     /**
      * <code>optional .IndexListMessage indexes = 3;</code>
      *
@@ -20097,7 +20097,7 @@ public final class Adam {
      *or a list of indexes
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder getIndexesOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessageOrBuilder getIndexesOrBuilder();
 
     /**
      * <code>optional .SubExpressionQueryMessage expression = 4;</code>
@@ -20106,7 +20106,7 @@ public final class Adam {
      *or an expression
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getExpression();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getExpression();
     /**
      * <code>optional .SubExpressionQueryMessage expression = 4;</code>
      *
@@ -20114,9 +20114,9 @@ public final class Adam {
      *or an expression
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder();
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.SourceCase getSourceCase();
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.SourceCase getSourceCase();
   }
   /**
    * Protobuf type {@code FromMessage}
@@ -20169,28 +20169,28 @@ public final class Adam {
               break;
             }
             case 26: {
-              ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.Builder subBuilder = null;
               if (sourceCase_ == 3) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) source_).toBuilder();
               }
               source_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) source_);
                 source_ = subBuilder.buildPartial();
               }
               sourceCase_ = 3;
               break;
             }
             case 34: {
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder subBuilder = null;
               if (sourceCase_ == 4) {
-                subBuilder = ((ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_).toBuilder();
+                subBuilder = ((ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) source_).toBuilder();
               }
               source_ =
-                  input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.parser(), extensionRegistry);
+                  input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_);
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) source_);
                 source_ = subBuilder.buildPartial();
               }
               sourceCase_ = 4;
@@ -20210,14 +20210,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_FromMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_FromMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_FromMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_FromMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.Builder.class);
     }
 
     private int sourceCase_ = 0;
@@ -20365,11 +20365,11 @@ public final class Adam {
      *or a list of indexes
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getIndexes() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage getIndexes() {
       if (sourceCase_ == 3) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) source_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.getDefaultInstance();
     }
     /**
      * <code>optional .IndexListMessage indexes = 3;</code>
@@ -20378,11 +20378,11 @@ public final class Adam {
      *or a list of indexes
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder getIndexesOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessageOrBuilder getIndexesOrBuilder() {
       if (sourceCase_ == 3) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) source_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.getDefaultInstance();
     }
 
     public static final int EXPRESSION_FIELD_NUMBER = 4;
@@ -20393,11 +20393,11 @@ public final class Adam {
      *or an expression
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getExpression() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getExpression() {
       if (sourceCase_ == 4) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) source_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance();
     }
     /**
      * <code>optional .SubExpressionQueryMessage expression = 4;</code>
@@ -20406,11 +20406,11 @@ public final class Adam {
      *or an expression
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder() {
       if (sourceCase_ == 4) {
-         return (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_;
+         return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) source_;
       }
-      return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -20432,10 +20432,10 @@ public final class Adam {
         com.google.protobuf.GeneratedMessage.writeString(output, 2, source_);
       }
       if (sourceCase_ == 3) {
-        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_);
+        output.writeMessage(3, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) source_);
       }
       if (sourceCase_ == 4) {
-        output.writeMessage(4, (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_);
+        output.writeMessage(4, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) source_);
       }
     }
 
@@ -20452,64 +20452,64 @@ public final class Adam {
       }
       if (sourceCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_);
+          .computeMessageSize(3, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) source_);
       }
       if (sourceCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_);
+          .computeMessageSize(4, (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) source_);
       }
       memoizedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -20520,7 +20520,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.FromMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -20540,20 +20540,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:FromMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.FromMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_FromMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_FromMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_FromMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_FromMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -20576,23 +20576,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_FromMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_FromMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.FromMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.FromMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.FromMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.FromMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.FromMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.FromMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage(this);
         if (sourceCase_ == 1) {
           result.source_ = source_;
         }
@@ -20619,16 +20619,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.FromMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.FromMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.FromMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.FromMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage.getDefaultInstance()) return this;
         switch (other.getSourceCase()) {
           case ENTITY: {
             sourceCase_ = 1;
@@ -20666,11 +20666,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.FromMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.FromMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -20896,7 +20896,7 @@ public final class Adam {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder> indexesBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessageOrBuilder> indexesBuilder_;
       /**
        * <code>optional .IndexListMessage indexes = 3;</code>
        *
@@ -20904,17 +20904,17 @@ public final class Adam {
        *or a list of indexes
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getIndexes() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage getIndexes() {
         if (indexesBuilder_ == null) {
           if (sourceCase_ == 3) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) source_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.getDefaultInstance();
         } else {
           if (sourceCase_ == 3) {
             return indexesBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.getDefaultInstance();
         }
       }
       /**
@@ -20924,7 +20924,7 @@ public final class Adam {
        *or a list of indexes
        * </pre>
        */
-      public Builder setIndexes(ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage value) {
+      public Builder setIndexes(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage value) {
         if (indexesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -20945,7 +20945,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setIndexes(
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.Builder builderForValue) {
         if (indexesBuilder_ == null) {
           source_ = builderForValue.build();
           onChanged();
@@ -20962,11 +20962,11 @@ public final class Adam {
        *or a list of indexes
        * </pre>
        */
-      public Builder mergeIndexes(ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage value) {
+      public Builder mergeIndexes(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage value) {
         if (indexesBuilder_ == null) {
           if (sourceCase_ == 3 &&
-              source_ != ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance()) {
-            source_ = ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_)
+              source_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.getDefaultInstance()) {
+            source_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) source_)
                 .mergeFrom(value).buildPartial();
           } else {
             source_ = value;
@@ -21011,7 +21011,7 @@ public final class Adam {
        *or a list of indexes
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder getIndexesBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.Builder getIndexesBuilder() {
         return getIndexesFieldBuilder().getBuilder();
       }
       /**
@@ -21021,14 +21021,14 @@ public final class Adam {
        *or a list of indexes
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder getIndexesOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessageOrBuilder getIndexesOrBuilder() {
         if ((sourceCase_ == 3) && (indexesBuilder_ != null)) {
           return indexesBuilder_.getMessageOrBuilder();
         } else {
           if (sourceCase_ == 3) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) source_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.getDefaultInstance();
         }
       }
       /**
@@ -21039,15 +21039,15 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessageOrBuilder> 
           getIndexesFieldBuilder() {
         if (indexesBuilder_ == null) {
           if (!(sourceCase_ == 3)) {
-            source_ = ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+            source_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.getDefaultInstance();
           }
           indexesBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) source_,
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) source_,
                   getParentForChildren(),
                   isClean());
           source_ = null;
@@ -21058,7 +21058,7 @@ public final class Adam {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder> expressionBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder> expressionBuilder_;
       /**
        * <code>optional .SubExpressionQueryMessage expression = 4;</code>
        *
@@ -21066,17 +21066,17 @@ public final class Adam {
        *or an expression
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage getExpression() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage getExpression() {
         if (expressionBuilder_ == null) {
           if (sourceCase_ == 4) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) source_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance();
         } else {
           if (sourceCase_ == 4) {
             return expressionBuilder_.getMessage();
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance();
         }
       }
       /**
@@ -21086,7 +21086,7 @@ public final class Adam {
        *or an expression
        * </pre>
        */
-      public Builder setExpression(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage value) {
+      public Builder setExpression(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage value) {
         if (expressionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -21107,7 +21107,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setExpression(
-          ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder builderForValue) {
         if (expressionBuilder_ == null) {
           source_ = builderForValue.build();
           onChanged();
@@ -21124,11 +21124,11 @@ public final class Adam {
        *or an expression
        * </pre>
        */
-      public Builder mergeExpression(ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage value) {
+      public Builder mergeExpression(ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage value) {
         if (expressionBuilder_ == null) {
           if (sourceCase_ == 4 &&
-              source_ != ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance()) {
-            source_ = ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_)
+              source_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance()) {
+            source_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.newBuilder((ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) source_)
                 .mergeFrom(value).buildPartial();
           } else {
             source_ = value;
@@ -21173,7 +21173,7 @@ public final class Adam {
        *or an expression
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder getExpressionBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder getExpressionBuilder() {
         return getExpressionFieldBuilder().getBuilder();
       }
       /**
@@ -21183,14 +21183,14 @@ public final class Adam {
        *or an expression
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder getExpressionOrBuilder() {
         if ((sourceCase_ == 4) && (expressionBuilder_ != null)) {
           return expressionBuilder_.getMessageOrBuilder();
         } else {
           if (sourceCase_ == 4) {
-            return (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_;
+            return (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) source_;
           }
-          return ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance();
         }
       }
       /**
@@ -21201,15 +21201,15 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder> 
           getExpressionFieldBuilder() {
         if (expressionBuilder_ == null) {
           if (!(sourceCase_ == 4)) {
-            source_ = ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.getDefaultInstance();
+            source_ = ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.getDefaultInstance();
           }
           expressionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessageOrBuilder>(
-                  (ch.unibas.dmi.dbis.adam.http.Adam.SubExpressionQueryMessage) source_,
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessageOrBuilder>(
+                  (ch.unibas.dmi.dbis.adam.http.AdamGrpc.SubExpressionQueryMessage) source_,
                   getParentForChildren(),
                   isClean());
           source_ = null;
@@ -21233,12 +21233,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:FromMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.FromMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.FromMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.FromMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -21270,7 +21270,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.FromMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -21364,14 +21364,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexListMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexListMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexListMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexListMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.Builder.class);
     }
 
     public static final int INDEXES_FIELD_NUMBER = 1;
@@ -21438,53 +21438,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -21495,7 +21495,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -21515,20 +21515,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:IndexListMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexListMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexListMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexListMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexListMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -21551,23 +21551,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexListMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexListMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage(this);
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           indexes_ = indexes_.getUnmodifiableView();
@@ -21579,16 +21579,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage.getDefaultInstance()) return this;
         if (!other.indexes_.isEmpty()) {
           if (indexes_.isEmpty()) {
             indexes_ = other.indexes_;
@@ -21611,11 +21611,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -21734,12 +21734,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:IndexListMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -21771,7 +21771,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.IndexListMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexListMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -21814,7 +21814,7 @@ public final class Adam {
      *query vector
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getQuery();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getQuery();
     /**
      * <code>optional .FeatureVectorMessage query = 2;</code>
      *
@@ -21822,7 +21822,7 @@ public final class Adam {
      *query vector
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder getQueryOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder getQueryOrBuilder();
 
     /**
      * <code>optional .FeatureVectorMessage weights = 3;</code>
@@ -21839,7 +21839,7 @@ public final class Adam {
      *weights vector; the weights are element-wise multiplied when computing the distance
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getWeights();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getWeights();
     /**
      * <code>optional .FeatureVectorMessage weights = 3;</code>
      *
@@ -21847,7 +21847,7 @@ public final class Adam {
      *weights vector; the weights are element-wise multiplied when computing the distance
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder getWeightsOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder getWeightsOrBuilder();
 
     /**
      * <code>optional .DistanceMessage distance = 4;</code>
@@ -21864,7 +21864,7 @@ public final class Adam {
      *distance function to use
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage getDistance();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage getDistance();
     /**
      * <code>optional .DistanceMessage distance = 4;</code>
      *
@@ -21872,7 +21872,7 @@ public final class Adam {
      *distance function to use
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder getDistanceOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder getDistanceOrBuilder();
 
     /**
      * <code>optional int32 k = 5;</code>
@@ -21979,11 +21979,11 @@ public final class Adam {
               break;
             }
             case 18: {
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder subBuilder = null;
               if (query_ != null) {
                 subBuilder = query_.toBuilder();
               }
-              query_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.parser(), extensionRegistry);
+              query_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(query_);
                 query_ = subBuilder.buildPartial();
@@ -21992,11 +21992,11 @@ public final class Adam {
               break;
             }
             case 26: {
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder subBuilder = null;
               if (weights_ != null) {
                 subBuilder = weights_.toBuilder();
               }
-              weights_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.parser(), extensionRegistry);
+              weights_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(weights_);
                 weights_ = subBuilder.buildPartial();
@@ -22005,11 +22005,11 @@ public final class Adam {
               break;
             }
             case 34: {
-              ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder subBuilder = null;
               if (distance_ != null) {
                 subBuilder = distance_.toBuilder();
               }
-              distance_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.parser(), extensionRegistry);
+              distance_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(distance_);
                 distance_ = subBuilder.buildPartial();
@@ -22077,7 +22077,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_NearestNeighbourQueryMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_NearestNeighbourQueryMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -22093,9 +22093,9 @@ public final class Adam {
     }
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_NearestNeighbourQueryMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_NearestNeighbourQueryMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.Builder.class);
     }
 
     private int bitField0_;
@@ -22142,7 +22142,7 @@ public final class Adam {
     }
 
     public static final int QUERY_FIELD_NUMBER = 2;
-    private ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage query_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage query_;
     /**
      * <code>optional .FeatureVectorMessage query = 2;</code>
      *
@@ -22160,8 +22160,8 @@ public final class Adam {
      *query vector
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getQuery() {
-      return query_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance() : query_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getQuery() {
+      return query_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : query_;
     }
     /**
      * <code>optional .FeatureVectorMessage query = 2;</code>
@@ -22170,12 +22170,12 @@ public final class Adam {
      *query vector
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder getQueryOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder getQueryOrBuilder() {
       return getQuery();
     }
 
     public static final int WEIGHTS_FIELD_NUMBER = 3;
-    private ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage weights_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage weights_;
     /**
      * <code>optional .FeatureVectorMessage weights = 3;</code>
      *
@@ -22193,8 +22193,8 @@ public final class Adam {
      *weights vector; the weights are element-wise multiplied when computing the distance
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getWeights() {
-      return weights_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance() : weights_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getWeights() {
+      return weights_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : weights_;
     }
     /**
      * <code>optional .FeatureVectorMessage weights = 3;</code>
@@ -22203,12 +22203,12 @@ public final class Adam {
      *weights vector; the weights are element-wise multiplied when computing the distance
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder getWeightsOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder getWeightsOrBuilder() {
       return getWeights();
     }
 
     public static final int DISTANCE_FIELD_NUMBER = 4;
-    private ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage distance_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage distance_;
     /**
      * <code>optional .DistanceMessage distance = 4;</code>
      *
@@ -22226,8 +22226,8 @@ public final class Adam {
      *distance function to use
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage getDistance() {
-      return distance_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.getDefaultInstance() : distance_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage getDistance() {
+      return distance_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.getDefaultInstance() : distance_;
     }
     /**
      * <code>optional .DistanceMessage distance = 4;</code>
@@ -22236,7 +22236,7 @@ public final class Adam {
      *distance function to use
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder getDistanceOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder getDistanceOrBuilder() {
       return getDistance();
     }
 
@@ -22259,7 +22259,7 @@ public final class Adam {
           java.lang.String, java.lang.String> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.adam.http.Adam.internal_static_NearestNeighbourQueryMessage_OptionsEntry_descriptor, 
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_NearestNeighbourQueryMessage_OptionsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -22444,53 +22444,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -22501,7 +22501,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -22521,10 +22521,10 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:NearestNeighbourQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_NearestNeighbourQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_NearestNeighbourQueryMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -22551,12 +22551,12 @@ public final class Adam {
       }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_NearestNeighbourQueryMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_NearestNeighbourQueryMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -22604,23 +22604,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_NearestNeighbourQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_NearestNeighbourQueryMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.attribute_ = attribute_;
@@ -22654,16 +22654,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage.getDefaultInstance()) return this;
         if (!other.getAttribute().isEmpty()) {
           attribute_ = other.attribute_;
           onChanged();
@@ -22707,11 +22707,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -22811,9 +22811,9 @@ public final class Adam {
         return this;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage query_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage query_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder> queryBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder> queryBuilder_;
       /**
        * <code>optional .FeatureVectorMessage query = 2;</code>
        *
@@ -22831,9 +22831,9 @@ public final class Adam {
        *query vector
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getQuery() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getQuery() {
         if (queryBuilder_ == null) {
-          return query_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance() : query_;
+          return query_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : query_;
         } else {
           return queryBuilder_.getMessage();
         }
@@ -22845,7 +22845,7 @@ public final class Adam {
        *query vector
        * </pre>
        */
-      public Builder setQuery(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage value) {
+      public Builder setQuery(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage value) {
         if (queryBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -22866,7 +22866,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setQuery(
-          ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder builderForValue) {
         if (queryBuilder_ == null) {
           query_ = builderForValue.build();
           onChanged();
@@ -22883,11 +22883,11 @@ public final class Adam {
        *query vector
        * </pre>
        */
-      public Builder mergeQuery(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage value) {
+      public Builder mergeQuery(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage value) {
         if (queryBuilder_ == null) {
           if (query_ != null) {
             query_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.newBuilder(query_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.newBuilder(query_).mergeFrom(value).buildPartial();
           } else {
             query_ = value;
           }
@@ -22923,7 +22923,7 @@ public final class Adam {
        *query vector
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder getQueryBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder getQueryBuilder() {
         
         onChanged();
         return getQueryFieldBuilder().getBuilder();
@@ -22935,12 +22935,12 @@ public final class Adam {
        *query vector
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder getQueryOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder getQueryOrBuilder() {
         if (queryBuilder_ != null) {
           return queryBuilder_.getMessageOrBuilder();
         } else {
           return query_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance() : query_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : query_;
         }
       }
       /**
@@ -22951,11 +22951,11 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder> 
           getQueryFieldBuilder() {
         if (queryBuilder_ == null) {
           queryBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder>(
                   getQuery(),
                   getParentForChildren(),
                   isClean());
@@ -22964,9 +22964,9 @@ public final class Adam {
         return queryBuilder_;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage weights_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage weights_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder> weightsBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder> weightsBuilder_;
       /**
        * <code>optional .FeatureVectorMessage weights = 3;</code>
        *
@@ -22984,9 +22984,9 @@ public final class Adam {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage getWeights() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage getWeights() {
         if (weightsBuilder_ == null) {
-          return weights_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance() : weights_;
+          return weights_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : weights_;
         } else {
           return weightsBuilder_.getMessage();
         }
@@ -22998,7 +22998,7 @@ public final class Adam {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        */
-      public Builder setWeights(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage value) {
+      public Builder setWeights(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage value) {
         if (weightsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -23019,7 +23019,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setWeights(
-          ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder builderForValue) {
         if (weightsBuilder_ == null) {
           weights_ = builderForValue.build();
           onChanged();
@@ -23036,11 +23036,11 @@ public final class Adam {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        */
-      public Builder mergeWeights(ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage value) {
+      public Builder mergeWeights(ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage value) {
         if (weightsBuilder_ == null) {
           if (weights_ != null) {
             weights_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.newBuilder(weights_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.newBuilder(weights_).mergeFrom(value).buildPartial();
           } else {
             weights_ = value;
           }
@@ -23076,7 +23076,7 @@ public final class Adam {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder getWeightsBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder getWeightsBuilder() {
         
         onChanged();
         return getWeightsFieldBuilder().getBuilder();
@@ -23088,12 +23088,12 @@ public final class Adam {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder getWeightsOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder getWeightsOrBuilder() {
         if (weightsBuilder_ != null) {
           return weightsBuilder_.getMessageOrBuilder();
         } else {
           return weights_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.getDefaultInstance() : weights_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : weights_;
         }
       }
       /**
@@ -23104,11 +23104,11 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder> 
           getWeightsFieldBuilder() {
         if (weightsBuilder_ == null) {
           weightsBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessageOrBuilder>(
                   getWeights(),
                   getParentForChildren(),
                   isClean());
@@ -23117,9 +23117,9 @@ public final class Adam {
         return weightsBuilder_;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage distance_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage distance_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder> distanceBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder> distanceBuilder_;
       /**
        * <code>optional .DistanceMessage distance = 4;</code>
        *
@@ -23137,9 +23137,9 @@ public final class Adam {
        *distance function to use
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage getDistance() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage getDistance() {
         if (distanceBuilder_ == null) {
-          return distance_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.getDefaultInstance() : distance_;
+          return distance_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.getDefaultInstance() : distance_;
         } else {
           return distanceBuilder_.getMessage();
         }
@@ -23151,7 +23151,7 @@ public final class Adam {
        *distance function to use
        * </pre>
        */
-      public Builder setDistance(ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage value) {
+      public Builder setDistance(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage value) {
         if (distanceBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -23172,7 +23172,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setDistance(
-          ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder builderForValue) {
         if (distanceBuilder_ == null) {
           distance_ = builderForValue.build();
           onChanged();
@@ -23189,11 +23189,11 @@ public final class Adam {
        *distance function to use
        * </pre>
        */
-      public Builder mergeDistance(ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage value) {
+      public Builder mergeDistance(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage value) {
         if (distanceBuilder_ == null) {
           if (distance_ != null) {
             distance_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.newBuilder(distance_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.newBuilder(distance_).mergeFrom(value).buildPartial();
           } else {
             distance_ = value;
           }
@@ -23229,7 +23229,7 @@ public final class Adam {
        *distance function to use
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder getDistanceBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder getDistanceBuilder() {
         
         onChanged();
         return getDistanceFieldBuilder().getBuilder();
@@ -23241,12 +23241,12 @@ public final class Adam {
        *distance function to use
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder getDistanceOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder getDistanceOrBuilder() {
         if (distanceBuilder_ != null) {
           return distanceBuilder_.getMessageOrBuilder();
         } else {
           return distance_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.getDefaultInstance() : distance_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.getDefaultInstance() : distance_;
         }
       }
       /**
@@ -23257,11 +23257,11 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder> 
           getDistanceFieldBuilder() {
         if (distanceBuilder_ == null) {
           distanceBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder>(
                   getDistance(),
                   getParentForChildren(),
                   isClean());
@@ -23519,12 +23519,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:NearestNeighbourQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -23556,7 +23556,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.NearestNeighbourQueryMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.NearestNeighbourQueryMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -23573,7 +23573,7 @@ public final class Adam {
     /**
      * <code>optional .DistanceMessage.DistanceType distancetype = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType getDistancetype();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType getDistancetype();
 
     /**
      * <code>map&lt;string, string&gt; options = 2;</code>
@@ -23652,7 +23652,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DistanceMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DistanceMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -23668,9 +23668,9 @@ public final class Adam {
     }
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DistanceMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DistanceMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder.class);
     }
 
     /**
@@ -23835,7 +23835,7 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.getDescriptor().getEnumTypes().get(0);
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final DistanceType[] VALUES = values();
@@ -23875,9 +23875,9 @@ public final class Adam {
     /**
      * <code>optional .DistanceMessage.DistanceType distancetype = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType getDistancetype() {
-      ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType result = ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType.valueOf(distancetype_);
-      return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType.UNRECOGNIZED : result;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType getDistancetype() {
+      ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType.valueOf(distancetype_);
+      return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType.UNRECOGNIZED : result;
     }
 
     public static final int OPTIONS_FIELD_NUMBER = 2;
@@ -23886,7 +23886,7 @@ public final class Adam {
           java.lang.String, java.lang.String> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DistanceMessage_OptionsEntry_descriptor, 
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DistanceMessage_OptionsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -23922,7 +23922,7 @@ public final class Adam {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (distancetype_ != ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType.chisquared.getNumber()) {
+      if (distancetype_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType.chisquared.getNumber()) {
         output.writeEnum(1, distancetype_);
       }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
@@ -23941,7 +23941,7 @@ public final class Adam {
       if (size != -1) return size;
 
       size = 0;
-      if (distancetype_ != ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType.chisquared.getNumber()) {
+      if (distancetype_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType.chisquared.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, distancetype_);
       }
@@ -23960,53 +23960,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -24017,7 +24017,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -24037,10 +24037,10 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:DistanceMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DistanceMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DistanceMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -24067,12 +24067,12 @@ public final class Adam {
       }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DistanceMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DistanceMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -24096,23 +24096,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_DistanceMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_DistanceMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.distancetype_ = distancetype_;
@@ -24124,16 +24124,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.getDefaultInstance()) return this;
         if (other.distancetype_ != 0) {
           setDistancetypeValue(other.getDistancetypeValue());
         }
@@ -24151,11 +24151,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -24184,14 +24184,14 @@ public final class Adam {
       /**
        * <code>optional .DistanceMessage.DistanceType distancetype = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType getDistancetype() {
-        ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType result = ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType.valueOf(distancetype_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType.UNRECOGNIZED : result;
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType getDistancetype() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType.valueOf(distancetype_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType.UNRECOGNIZED : result;
       }
       /**
        * <code>optional .DistanceMessage.DistanceType distancetype = 1;</code>
        */
-      public Builder setDistancetype(ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage.DistanceType value) {
+      public Builder setDistancetype(ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage.DistanceType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -24268,12 +24268,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:DistanceMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -24305,7 +24305,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.DistanceMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.DistanceMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -24322,7 +24322,7 @@ public final class Adam {
      *Boolean query parameters
      * </pre>
      */
-    java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage> 
+    java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage> 
         getWhereList();
     /**
      * <code>repeated .BooleanQueryMessage.WhereMessage where = 1;</code>
@@ -24331,7 +24331,7 @@ public final class Adam {
      *Boolean query parameters
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage getWhere(int index);
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage getWhere(int index);
     /**
      * <code>repeated .BooleanQueryMessage.WhereMessage where = 1;</code>
      *
@@ -24347,7 +24347,7 @@ public final class Adam {
      *Boolean query parameters
      * </pre>
      */
-    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessageOrBuilder> 
+    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessageOrBuilder> 
         getWhereOrBuilderList();
     /**
      * <code>repeated .BooleanQueryMessage.WhereMessage where = 1;</code>
@@ -24356,7 +24356,7 @@ public final class Adam {
      *Boolean query parameters
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessageOrBuilder getWhereOrBuilder(
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessageOrBuilder getWhereOrBuilder(
         int index);
   }
   /**
@@ -24400,10 +24400,10 @@ public final class Adam {
             }
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                where_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage>();
+                where_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage>();
                 mutable_bitField0_ |= 0x00000001;
               }
-              where_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.parser(), extensionRegistry));
+              where_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.parser(), extensionRegistry));
               break;
             }
           }
@@ -24423,14 +24423,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.Builder.class);
     }
 
     public interface WhereMessageOrBuilder extends
@@ -24533,14 +24533,14 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_WhereMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_WhereMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_WhereMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_WhereMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder.class);
       }
 
       public static final int ATTRIBUTE_FIELD_NUMBER = 1;
@@ -24657,53 +24657,53 @@ public final class Adam {
       }
 
       private static final long serialVersionUID = 0L;
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parseFrom(byte[] data)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parseFrom(java.io.InputStream input)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseFrom(input, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parseDelimitedFrom(java.io.InputStream input)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parseDelimitedFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -24714,7 +24714,7 @@ public final class Adam {
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
-      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage prototype) {
+      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
       public Builder toBuilder() {
@@ -24734,20 +24734,20 @@ public final class Adam {
       public static final class Builder extends
           com.google.protobuf.GeneratedMessage.Builder<Builder> implements
           // @@protoc_insertion_point(builder_implements:BooleanQueryMessage.WhereMessage)
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessageOrBuilder {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessageOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_WhereMessage_descriptor;
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_WhereMessage_descriptor;
         }
 
         protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_WhereMessage_fieldAccessorTable
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_WhereMessage_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
-                  ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder.class);
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder.class);
         }
 
-        // Construct using ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.newBuilder()
+        // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -24772,23 +24772,23 @@ public final class Adam {
 
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_WhereMessage_descriptor;
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_WhereMessage_descriptor;
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage getDefaultInstanceForType() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.getDefaultInstance();
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage getDefaultInstanceForType() {
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.getDefaultInstance();
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage build() {
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage result = buildPartial();
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage build() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
           return result;
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage buildPartial() {
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage(this);
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage buildPartial() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage(this);
           result.attribute_ = attribute_;
           result.value_ = value_;
           onBuilt();
@@ -24796,16 +24796,16 @@ public final class Adam {
         }
 
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage) {
-            return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage)other);
+          if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage) {
+            return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
 
-        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage other) {
-          if (other == ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.getDefaultInstance()) return this;
+        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage other) {
+          if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.getDefaultInstance()) return this;
           if (!other.getAttribute().isEmpty()) {
             attribute_ = other.attribute_;
             onChanged();
@@ -24826,11 +24826,11 @@ public final class Adam {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage parsedMessage = null;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage parsedMessage = null;
           try {
             parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage) e.getUnfinishedMessage();
+            parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage) e.getUnfinishedMessage();
             throw e;
           } finally {
             if (parsedMessage != null) {
@@ -25017,12 +25017,12 @@ public final class Adam {
       }
 
       // @@protoc_insertion_point(class_scope:BooleanQueryMessage.WhereMessage)
-      private static final ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage DEFAULT_INSTANCE;
+      private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage DEFAULT_INSTANCE;
       static {
-        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage();
+        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage();
       }
 
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage getDefaultInstance() {
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage getDefaultInstance() {
         return DEFAULT_INSTANCE;
       }
 
@@ -25054,7 +25054,7 @@ public final class Adam {
         return PARSER;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage getDefaultInstanceForType() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
       }
 
@@ -25165,14 +25165,14 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_JoinMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_JoinMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_JoinMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_JoinMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage.Builder.class);
       }
 
       private int bitField0_;
@@ -25280,53 +25280,53 @@ public final class Adam {
       }
 
       private static final long serialVersionUID = 0L;
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parseFrom(byte[] data)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parseFrom(java.io.InputStream input)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseFrom(input, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parseDelimitedFrom(java.io.InputStream input)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parseDelimitedFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -25337,7 +25337,7 @@ public final class Adam {
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
-      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage prototype) {
+      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
       public Builder toBuilder() {
@@ -25357,20 +25357,20 @@ public final class Adam {
       public static final class Builder extends
           com.google.protobuf.GeneratedMessage.Builder<Builder> implements
           // @@protoc_insertion_point(builder_implements:BooleanQueryMessage.JoinMessage)
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessageOrBuilder {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessageOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_JoinMessage_descriptor;
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_JoinMessage_descriptor;
         }
 
         protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_JoinMessage_fieldAccessorTable
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_JoinMessage_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
-                  ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage.Builder.class);
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage.Builder.class);
         }
 
-        // Construct using ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage.newBuilder()
+        // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -25395,23 +25395,23 @@ public final class Adam {
 
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_JoinMessage_descriptor;
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_JoinMessage_descriptor;
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage getDefaultInstanceForType() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage.getDefaultInstance();
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage getDefaultInstanceForType() {
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage.getDefaultInstance();
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage build() {
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage result = buildPartial();
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage build() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
           return result;
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage buildPartial() {
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage(this);
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage buildPartial() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage(this);
           int from_bitField0_ = bitField0_;
           int to_bitField0_ = 0;
           result.table_ = table_;
@@ -25426,16 +25426,16 @@ public final class Adam {
         }
 
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage) {
-            return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage)other);
+          if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage) {
+            return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
 
-        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage other) {
-          if (other == ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage.getDefaultInstance()) return this;
+        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage other) {
+          if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage.getDefaultInstance()) return this;
           if (!other.getTable().isEmpty()) {
             table_ = other.table_;
             onChanged();
@@ -25462,11 +25462,11 @@ public final class Adam {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage parsedMessage = null;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage parsedMessage = null;
           try {
             parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage) e.getUnfinishedMessage();
+            parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage) e.getUnfinishedMessage();
             throw e;
           } finally {
             if (parsedMessage != null) {
@@ -25654,12 +25654,12 @@ public final class Adam {
       }
 
       // @@protoc_insertion_point(class_scope:BooleanQueryMessage.JoinMessage)
-      private static final ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage DEFAULT_INSTANCE;
+      private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage DEFAULT_INSTANCE;
       static {
-        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage();
+        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage();
       }
 
-      public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage getDefaultInstance() {
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage getDefaultInstance() {
         return DEFAULT_INSTANCE;
       }
 
@@ -25691,14 +25691,14 @@ public final class Adam {
         return PARSER;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.JoinMessage getDefaultInstanceForType() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.JoinMessage getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
       }
 
     }
 
     public static final int WHERE_FIELD_NUMBER = 1;
-    private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage> where_;
+    private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage> where_;
     /**
      * <code>repeated .BooleanQueryMessage.WhereMessage where = 1;</code>
      *
@@ -25706,7 +25706,7 @@ public final class Adam {
      *Boolean query parameters
      * </pre>
      */
-    public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage> getWhereList() {
+    public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage> getWhereList() {
       return where_;
     }
     /**
@@ -25716,7 +25716,7 @@ public final class Adam {
      *Boolean query parameters
      * </pre>
      */
-    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessageOrBuilder> 
+    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessageOrBuilder> 
         getWhereOrBuilderList() {
       return where_;
     }
@@ -25737,7 +25737,7 @@ public final class Adam {
      *Boolean query parameters
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage getWhere(int index) {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage getWhere(int index) {
       return where_.get(index);
     }
     /**
@@ -25747,7 +25747,7 @@ public final class Adam {
      *Boolean query parameters
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessageOrBuilder getWhereOrBuilder(
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessageOrBuilder getWhereOrBuilder(
         int index) {
       return where_.get(index);
     }
@@ -25783,53 +25783,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -25840,7 +25840,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -25860,20 +25860,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:BooleanQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -25901,23 +25901,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_BooleanQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_BooleanQueryMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage(this);
         int from_bitField0_ = bitField0_;
         if (whereBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -25933,16 +25933,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.getDefaultInstance()) return this;
         if (whereBuilder_ == null) {
           if (!other.where_.isEmpty()) {
             if (where_.isEmpty()) {
@@ -25981,11 +25981,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -25996,17 +25996,17 @@ public final class Adam {
       }
       private int bitField0_;
 
-      private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage> where_ =
+      private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage> where_ =
         java.util.Collections.emptyList();
       private void ensureWhereIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          where_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage>(where_);
+          where_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage>(where_);
           bitField0_ |= 0x00000001;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessageOrBuilder> whereBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessageOrBuilder> whereBuilder_;
 
       /**
        * <code>repeated .BooleanQueryMessage.WhereMessage where = 1;</code>
@@ -26015,7 +26015,7 @@ public final class Adam {
        *Boolean query parameters
        * </pre>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage> getWhereList() {
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage> getWhereList() {
         if (whereBuilder_ == null) {
           return java.util.Collections.unmodifiableList(where_);
         } else {
@@ -26043,7 +26043,7 @@ public final class Adam {
        *Boolean query parameters
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage getWhere(int index) {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage getWhere(int index) {
         if (whereBuilder_ == null) {
           return where_.get(index);
         } else {
@@ -26058,7 +26058,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setWhere(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage value) {
         if (whereBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -26079,7 +26079,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setWhere(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder builderForValue) {
         if (whereBuilder_ == null) {
           ensureWhereIsMutable();
           where_.set(index, builderForValue.build());
@@ -26096,7 +26096,7 @@ public final class Adam {
        *Boolean query parameters
        * </pre>
        */
-      public Builder addWhere(ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage value) {
+      public Builder addWhere(ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage value) {
         if (whereBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -26117,7 +26117,7 @@ public final class Adam {
        * </pre>
        */
       public Builder addWhere(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage value) {
         if (whereBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -26138,7 +26138,7 @@ public final class Adam {
        * </pre>
        */
       public Builder addWhere(
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder builderForValue) {
         if (whereBuilder_ == null) {
           ensureWhereIsMutable();
           where_.add(builderForValue.build());
@@ -26156,7 +26156,7 @@ public final class Adam {
        * </pre>
        */
       public Builder addWhere(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder builderForValue) {
         if (whereBuilder_ == null) {
           ensureWhereIsMutable();
           where_.add(index, builderForValue.build());
@@ -26174,7 +26174,7 @@ public final class Adam {
        * </pre>
        */
       public Builder addAllWhere(
-          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage> values) {
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage> values) {
         if (whereBuilder_ == null) {
           ensureWhereIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -26226,7 +26226,7 @@ public final class Adam {
        *Boolean query parameters
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder getWhereBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder getWhereBuilder(
           int index) {
         return getWhereFieldBuilder().getBuilder(index);
       }
@@ -26237,7 +26237,7 @@ public final class Adam {
        *Boolean query parameters
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessageOrBuilder getWhereOrBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessageOrBuilder getWhereOrBuilder(
           int index) {
         if (whereBuilder_ == null) {
           return where_.get(index);  } else {
@@ -26251,7 +26251,7 @@ public final class Adam {
        *Boolean query parameters
        * </pre>
        */
-      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessageOrBuilder> 
+      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessageOrBuilder> 
            getWhereOrBuilderList() {
         if (whereBuilder_ != null) {
           return whereBuilder_.getMessageOrBuilderList();
@@ -26266,9 +26266,9 @@ public final class Adam {
        *Boolean query parameters
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder addWhereBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder addWhereBuilder() {
         return getWhereFieldBuilder().addBuilder(
-            ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.getDefaultInstance());
+            ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .BooleanQueryMessage.WhereMessage where = 1;</code>
@@ -26277,10 +26277,10 @@ public final class Adam {
        *Boolean query parameters
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder addWhereBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder addWhereBuilder(
           int index) {
         return getWhereFieldBuilder().addBuilder(
-            index, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.getDefaultInstance());
+            index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .BooleanQueryMessage.WhereMessage where = 1;</code>
@@ -26289,16 +26289,16 @@ public final class Adam {
        *Boolean query parameters
        * </pre>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder> 
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder> 
            getWhereBuilderList() {
         return getWhereFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessageOrBuilder> 
           getWhereFieldBuilder() {
         if (whereBuilder_ == null) {
           whereBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessageOrBuilder>(
                   where_,
                   ((bitField0_ & 0x00000001) == 0x00000001),
                   getParentForChildren(),
@@ -26322,12 +26322,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:BooleanQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -26359,7 +26359,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -26490,7 +26490,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExternalHandlerQueryMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExternalHandlerQueryMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -26506,9 +26506,9 @@ public final class Adam {
     }
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExternalHandlerQueryMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExternalHandlerQueryMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.Builder.class);
     }
 
     private int bitField0_;
@@ -26620,7 +26620,7 @@ public final class Adam {
           java.lang.String, java.lang.String> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor, 
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -26705,53 +26705,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -26762,7 +26762,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -26782,10 +26782,10 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:ExternalHandlerQueryMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExternalHandlerQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExternalHandlerQueryMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -26812,12 +26812,12 @@ public final class Adam {
       }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExternalHandlerQueryMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExternalHandlerQueryMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -26845,23 +26845,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExternalHandlerQueryMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExternalHandlerQueryMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.queryid_ = queryid_;
@@ -26875,16 +26875,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage.getDefaultInstance()) return this;
         if (!other.getQueryid().isEmpty()) {
           queryid_ = other.queryid_;
           onChanged();
@@ -26911,11 +26911,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -27191,12 +27191,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:ExternalHandlerQueryMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -27228,7 +27228,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.ExternalHandlerQueryMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExternalHandlerQueryMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -27307,14 +27307,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_CachedResultsMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_CachedResultsMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_CachedResultsMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_CachedResultsMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage.Builder.class);
     }
 
     public static final int QUERYID_FIELD_NUMBER = 1;
@@ -27381,53 +27381,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -27438,7 +27438,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -27458,20 +27458,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:CachedResultsMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_CachedResultsMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_CachedResultsMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_CachedResultsMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_CachedResultsMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -27494,39 +27494,39 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_CachedResultsMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_CachedResultsMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage(this);
         result.queryid_ = queryid_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage.getDefaultInstance()) return this;
         if (!other.getQueryid().isEmpty()) {
           queryid_ = other.queryid_;
           onChanged();
@@ -27543,11 +27543,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -27640,12 +27640,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:CachedResultsMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -27677,7 +27677,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.CachedResultsMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.CachedResultsMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -27694,7 +27694,7 @@ public final class Adam {
     /**
      * <code>optional .AckMessage.Code code = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code getCode();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code getCode();
 
     /**
      * <code>optional string message = 2;</code>
@@ -27776,14 +27776,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_AckMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_AckMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_AckMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_AckMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder.class);
     }
 
     /**
@@ -27850,7 +27850,7 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDescriptor().getEnumTypes().get(0);
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final Code[] VALUES = values();
@@ -27889,9 +27889,9 @@ public final class Adam {
     /**
      * <code>optional .AckMessage.Code code = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code getCode() {
-      ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code result = ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code.valueOf(code_);
-      return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code.UNRECOGNIZED : result;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code getCode() {
+      ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code.valueOf(code_);
+      return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code.UNRECOGNIZED : result;
     }
 
     public static final int MESSAGE_FIELD_NUMBER = 2;
@@ -27940,7 +27940,7 @@ public final class Adam {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (code_ != ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code.OK.getNumber()) {
+      if (code_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code.OK.getNumber()) {
         output.writeEnum(1, code_);
       }
       if (!getMessageBytes().isEmpty()) {
@@ -27953,7 +27953,7 @@ public final class Adam {
       if (size != -1) return size;
 
       size = 0;
-      if (code_ != ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code.OK.getNumber()) {
+      if (code_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code.OK.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, code_);
       }
@@ -27965,53 +27965,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -28022,7 +28022,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -28046,20 +28046,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:AckMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_AckMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_AckMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_AckMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_AckMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -28084,23 +28084,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_AckMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_AckMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.AckMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.AckMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.AckMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage(this);
         result.code_ = code_;
         result.message_ = message_;
         onBuilt();
@@ -28108,16 +28108,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.AckMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.AckMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance()) return this;
         if (other.code_ != 0) {
           setCodeValue(other.getCodeValue());
         }
@@ -28137,11 +28137,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.AckMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.AckMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -28169,14 +28169,14 @@ public final class Adam {
       /**
        * <code>optional .AckMessage.Code code = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code getCode() {
-        ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code result = ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code.valueOf(code_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code.UNRECOGNIZED : result;
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code getCode() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code.valueOf(code_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code.UNRECOGNIZED : result;
       }
       /**
        * <code>optional .AckMessage.Code code = 1;</code>
        */
-      public Builder setCode(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code value) {
+      public Builder setCode(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -28278,12 +28278,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:AckMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.AckMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.AckMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -28315,7 +28315,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -28332,11 +28332,11 @@ public final class Adam {
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck();
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder();
 
     /**
      * <code>repeated string entities = 2;</code>
@@ -28397,11 +28397,11 @@ public final class Adam {
               break;
             }
             case 10: {
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder subBuilder = null;
               if (ack_ != null) {
                 subBuilder = ack_.toBuilder();
               }
-              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.parser(), extensionRegistry);
+              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(ack_);
                 ack_ = subBuilder.buildPartial();
@@ -28435,19 +28435,19 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntitiesMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntitiesMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntitiesMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntitiesMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage.Builder.class);
     }
 
     private int bitField0_;
     public static final int ACK_FIELD_NUMBER = 1;
-    private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_;
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
@@ -28457,13 +28457,13 @@ public final class Adam {
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
-      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
+      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
     }
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
       return getAck();
     }
 
@@ -28538,53 +28538,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -28595,7 +28595,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -28615,20 +28615,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:EntitiesMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntitiesMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntitiesMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntitiesMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntitiesMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -28657,23 +28657,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntitiesMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntitiesMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (ackBuilder_ == null) {
@@ -28692,16 +28692,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage.getDefaultInstance()) return this;
         if (other.hasAck()) {
           mergeAck(other.getAck());
         }
@@ -28727,11 +28727,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -28742,9 +28742,9 @@ public final class Adam {
       }
       private int bitField0_;
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> ackBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> ackBuilder_;
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
@@ -28754,9 +28754,9 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
         if (ackBuilder_ == null) {
-          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         } else {
           return ackBuilder_.getMessage();
         }
@@ -28764,7 +28764,7 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public Builder setAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder setAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -28781,7 +28781,7 @@ public final class Adam {
        * <code>optional .AckMessage ack = 1;</code>
        */
       public Builder setAck(
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder builderForValue) {
         if (ackBuilder_ == null) {
           ack_ = builderForValue.build();
           onChanged();
@@ -28794,11 +28794,11 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (ack_ != null) {
             ack_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
           } else {
             ack_ = value;
           }
@@ -28826,7 +28826,7 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder getAckBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder getAckBuilder() {
         
         onChanged();
         return getAckFieldBuilder().getBuilder();
@@ -28834,23 +28834,23 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
         if (ackBuilder_ != null) {
           return ackBuilder_.getMessageOrBuilder();
         } else {
           return ack_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         }
       }
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> 
           getAckFieldBuilder() {
         if (ackBuilder_ == null) {
           ackBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder>(
                   getAck(),
                   getParentForChildren(),
                   isClean());
@@ -28967,12 +28967,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:EntitiesMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -29004,7 +29004,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.EntitiesMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntitiesMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -29021,11 +29021,11 @@ public final class Adam {
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck();
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder();
 
     /**
      * <code>optional bool exists = 2;</code>
@@ -29072,11 +29072,11 @@ public final class Adam {
               break;
             }
             case 10: {
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder subBuilder = null;
               if (ack_ != null) {
                 subBuilder = ack_.toBuilder();
               }
-              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.parser(), extensionRegistry);
+              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(ack_);
                 ack_ = subBuilder.buildPartial();
@@ -29103,18 +29103,18 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExistsMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExistsMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExistsMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExistsMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage.Builder.class);
     }
 
     public static final int ACK_FIELD_NUMBER = 1;
-    private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_;
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
@@ -29124,13 +29124,13 @@ public final class Adam {
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
-      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
+      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
     }
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
       return getAck();
     }
 
@@ -29181,53 +29181,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -29238,7 +29238,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -29258,20 +29258,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:ExistsMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExistsMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExistsMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExistsMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExistsMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -29300,23 +29300,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_ExistsMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_ExistsMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage(this);
         if (ackBuilder_ == null) {
           result.ack_ = ack_;
         } else {
@@ -29328,16 +29328,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage.getDefaultInstance()) return this;
         if (other.hasAck()) {
           mergeAck(other.getAck());
         }
@@ -29356,11 +29356,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -29370,9 +29370,9 @@ public final class Adam {
         return this;
       }
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> ackBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> ackBuilder_;
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
@@ -29382,9 +29382,9 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
         if (ackBuilder_ == null) {
-          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         } else {
           return ackBuilder_.getMessage();
         }
@@ -29392,7 +29392,7 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public Builder setAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder setAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -29409,7 +29409,7 @@ public final class Adam {
        * <code>optional .AckMessage ack = 1;</code>
        */
       public Builder setAck(
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder builderForValue) {
         if (ackBuilder_ == null) {
           ack_ = builderForValue.build();
           onChanged();
@@ -29422,11 +29422,11 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (ack_ != null) {
             ack_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
           } else {
             ack_ = value;
           }
@@ -29454,7 +29454,7 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder getAckBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder getAckBuilder() {
         
         onChanged();
         return getAckFieldBuilder().getBuilder();
@@ -29462,23 +29462,23 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
         if (ackBuilder_ != null) {
           return ackBuilder_.getMessageOrBuilder();
         } else {
           return ack_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         }
       }
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> 
           getAckFieldBuilder() {
         if (ackBuilder_ == null) {
           ackBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder>(
                   getAck(),
                   getParentForChildren(),
                   isClean());
@@ -29527,12 +29527,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:ExistsMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -29564,7 +29564,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.ExistsMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -29581,21 +29581,21 @@ public final class Adam {
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck();
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder();
 
     /**
      * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
      */
-    java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage> 
+    java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage> 
         getIndexesList();
     /**
      * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage getIndexes(int index);
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage getIndexes(int index);
     /**
      * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
      */
@@ -29603,12 +29603,12 @@ public final class Adam {
     /**
      * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
      */
-    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessageOrBuilder> 
+    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessageOrBuilder> 
         getIndexesOrBuilderList();
     /**
      * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessageOrBuilder getIndexesOrBuilder(
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessageOrBuilder getIndexesOrBuilder(
         int index);
   }
   /**
@@ -29651,11 +29651,11 @@ public final class Adam {
               break;
             }
             case 10: {
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder subBuilder = null;
               if (ack_ != null) {
                 subBuilder = ack_.toBuilder();
               }
-              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.parser(), extensionRegistry);
+              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(ack_);
                 ack_ = subBuilder.buildPartial();
@@ -29665,10 +29665,10 @@ public final class Adam {
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                indexes_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage>();
+                indexes_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              indexes_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.parser(), extensionRegistry));
+              indexes_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.parser(), extensionRegistry));
               break;
             }
           }
@@ -29688,14 +29688,14 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexesMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexesMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexesMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexesMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.Builder.class);
     }
 
     public interface IndexMessageOrBuilder extends
@@ -29729,7 +29729,7 @@ public final class Adam {
       /**
        * <code>optional .IndexType indextype = 3;</code>
        */
-      ch.unibas.dmi.dbis.adam.http.Adam.IndexType getIndextype();
+      ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType getIndextype();
     }
     /**
      * Protobuf type {@code IndexesMessage.IndexMessage}
@@ -29804,14 +29804,14 @@ public final class Adam {
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexesMessage_IndexMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexesMessage_IndexMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexesMessage_IndexMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexesMessage_IndexMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder.class);
       }
 
       public static final int INDEX_FIELD_NUMBER = 1;
@@ -29893,9 +29893,9 @@ public final class Adam {
       /**
        * <code>optional .IndexType indextype = 3;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexType getIndextype() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexType result = ch.unibas.dmi.dbis.adam.http.Adam.IndexType.valueOf(indextype_);
-        return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.IndexType.UNRECOGNIZED : result;
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType getIndextype() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.valueOf(indextype_);
+        return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.UNRECOGNIZED : result;
       }
 
       private byte memoizedIsInitialized = -1;
@@ -29916,7 +29916,7 @@ public final class Adam {
         if (!getAttributeBytes().isEmpty()) {
           com.google.protobuf.GeneratedMessage.writeString(output, 2, attribute_);
         }
-        if (indextype_ != ch.unibas.dmi.dbis.adam.http.Adam.IndexType.ecp.getNumber()) {
+        if (indextype_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.ecp.getNumber()) {
           output.writeEnum(3, indextype_);
         }
       }
@@ -29932,7 +29932,7 @@ public final class Adam {
         if (!getAttributeBytes().isEmpty()) {
           size += com.google.protobuf.GeneratedMessage.computeStringSize(2, attribute_);
         }
-        if (indextype_ != ch.unibas.dmi.dbis.adam.http.Adam.IndexType.ecp.getNumber()) {
+        if (indextype_ != ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.ecp.getNumber()) {
           size += com.google.protobuf.CodedOutputStream
             .computeEnumSize(3, indextype_);
         }
@@ -29941,53 +29941,53 @@ public final class Adam {
       }
 
       private static final long serialVersionUID = 0L;
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parseFrom(byte[] data)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parseFrom(java.io.InputStream input)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseFrom(input, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parseDelimitedFrom(java.io.InputStream input)
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parseDelimitedFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return PARSER.parseDelimitedFrom(input, extensionRegistry);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return PARSER.parseFrom(input);
       }
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parseFrom(
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -29998,7 +29998,7 @@ public final class Adam {
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
-      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage prototype) {
+      public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
       public Builder toBuilder() {
@@ -30018,20 +30018,20 @@ public final class Adam {
       public static final class Builder extends
           com.google.protobuf.GeneratedMessage.Builder<Builder> implements
           // @@protoc_insertion_point(builder_implements:IndexesMessage.IndexMessage)
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessageOrBuilder {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessageOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexesMessage_IndexMessage_descriptor;
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexesMessage_IndexMessage_descriptor;
         }
 
         protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexesMessage_IndexMessage_fieldAccessorTable
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexesMessage_IndexMessage_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
-                  ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder.class);
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder.class);
         }
 
-        // Construct using ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.newBuilder()
+        // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -30058,23 +30058,23 @@ public final class Adam {
 
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexesMessage_IndexMessage_descriptor;
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexesMessage_IndexMessage_descriptor;
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage getDefaultInstanceForType() {
-          return ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.getDefaultInstance();
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage getDefaultInstanceForType() {
+          return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.getDefaultInstance();
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage build() {
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage result = buildPartial();
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage build() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
           return result;
         }
 
-        public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage buildPartial() {
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage(this);
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage buildPartial() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage(this);
           result.index_ = index_;
           result.attribute_ = attribute_;
           result.indextype_ = indextype_;
@@ -30083,16 +30083,16 @@ public final class Adam {
         }
 
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage) {
-            return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage)other);
+          if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage) {
+            return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
 
-        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage other) {
-          if (other == ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.getDefaultInstance()) return this;
+        public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage other) {
+          if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.getDefaultInstance()) return this;
           if (!other.getIndex().isEmpty()) {
             index_ = other.index_;
             onChanged();
@@ -30116,11 +30116,11 @@ public final class Adam {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage parsedMessage = null;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage parsedMessage = null;
           try {
             parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage) e.getUnfinishedMessage();
+            parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage) e.getUnfinishedMessage();
             throw e;
           } finally {
             if (parsedMessage != null) {
@@ -30286,14 +30286,14 @@ public final class Adam {
         /**
          * <code>optional .IndexType indextype = 3;</code>
          */
-        public ch.unibas.dmi.dbis.adam.http.Adam.IndexType getIndextype() {
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexType result = ch.unibas.dmi.dbis.adam.http.Adam.IndexType.valueOf(indextype_);
-          return result == null ? ch.unibas.dmi.dbis.adam.http.Adam.IndexType.UNRECOGNIZED : result;
+        public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType getIndextype() {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType result = ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.valueOf(indextype_);
+          return result == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType.UNRECOGNIZED : result;
         }
         /**
          * <code>optional .IndexType indextype = 3;</code>
          */
-        public Builder setIndextype(ch.unibas.dmi.dbis.adam.http.Adam.IndexType value) {
+        public Builder setIndextype(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexType value) {
           if (value == null) {
             throw new NullPointerException();
           }
@@ -30326,12 +30326,12 @@ public final class Adam {
       }
 
       // @@protoc_insertion_point(class_scope:IndexesMessage.IndexMessage)
-      private static final ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage DEFAULT_INSTANCE;
+      private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage DEFAULT_INSTANCE;
       static {
-        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage();
+        DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage();
       }
 
-      public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage getDefaultInstance() {
+      public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage getDefaultInstance() {
         return DEFAULT_INSTANCE;
       }
 
@@ -30363,7 +30363,7 @@ public final class Adam {
         return PARSER;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage getDefaultInstanceForType() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
       }
 
@@ -30371,7 +30371,7 @@ public final class Adam {
 
     private int bitField0_;
     public static final int ACK_FIELD_NUMBER = 1;
-    private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_;
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
@@ -30381,28 +30381,28 @@ public final class Adam {
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
-      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
+      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
     }
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
       return getAck();
     }
 
     public static final int INDEXES_FIELD_NUMBER = 2;
-    private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage> indexes_;
+    private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage> indexes_;
     /**
      * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
      */
-    public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage> getIndexesList() {
+    public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage> getIndexesList() {
       return indexes_;
     }
     /**
      * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
      */
-    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessageOrBuilder> 
+    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessageOrBuilder> 
         getIndexesOrBuilderList() {
       return indexes_;
     }
@@ -30415,13 +30415,13 @@ public final class Adam {
     /**
      * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage getIndexes(int index) {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage getIndexes(int index) {
       return indexes_.get(index);
     }
     /**
      * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessageOrBuilder getIndexesOrBuilder(
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessageOrBuilder getIndexesOrBuilder(
         int index) {
       return indexes_.get(index);
     }
@@ -30464,53 +30464,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -30521,7 +30521,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -30541,20 +30541,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:IndexesMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexesMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexesMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexesMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexesMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -30588,23 +30588,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_IndexesMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_IndexesMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (ackBuilder_ == null) {
@@ -30627,16 +30627,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.getDefaultInstance()) return this;
         if (other.hasAck()) {
           mergeAck(other.getAck());
         }
@@ -30678,11 +30678,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -30693,9 +30693,9 @@ public final class Adam {
       }
       private int bitField0_;
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> ackBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> ackBuilder_;
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
@@ -30705,9 +30705,9 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
         if (ackBuilder_ == null) {
-          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         } else {
           return ackBuilder_.getMessage();
         }
@@ -30715,7 +30715,7 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public Builder setAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder setAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -30732,7 +30732,7 @@ public final class Adam {
        * <code>optional .AckMessage ack = 1;</code>
        */
       public Builder setAck(
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder builderForValue) {
         if (ackBuilder_ == null) {
           ack_ = builderForValue.build();
           onChanged();
@@ -30745,11 +30745,11 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (ack_ != null) {
             ack_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
           } else {
             ack_ = value;
           }
@@ -30777,7 +30777,7 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder getAckBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder getAckBuilder() {
         
         onChanged();
         return getAckFieldBuilder().getBuilder();
@@ -30785,23 +30785,23 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
         if (ackBuilder_ != null) {
           return ackBuilder_.getMessageOrBuilder();
         } else {
           return ack_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         }
       }
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> 
           getAckFieldBuilder() {
         if (ackBuilder_ == null) {
           ackBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder>(
                   getAck(),
                   getParentForChildren(),
                   isClean());
@@ -30810,22 +30810,22 @@ public final class Adam {
         return ackBuilder_;
       }
 
-      private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage> indexes_ =
+      private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage> indexes_ =
         java.util.Collections.emptyList();
       private void ensureIndexesIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          indexes_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage>(indexes_);
+          indexes_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage>(indexes_);
           bitField0_ |= 0x00000002;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessageOrBuilder> indexesBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessageOrBuilder> indexesBuilder_;
 
       /**
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage> getIndexesList() {
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage> getIndexesList() {
         if (indexesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(indexes_);
         } else {
@@ -30845,7 +30845,7 @@ public final class Adam {
       /**
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage getIndexes(int index) {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage getIndexes(int index) {
         if (indexesBuilder_ == null) {
           return indexes_.get(index);
         } else {
@@ -30856,7 +30856,7 @@ public final class Adam {
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
       public Builder setIndexes(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage value) {
         if (indexesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -30873,7 +30873,7 @@ public final class Adam {
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
       public Builder setIndexes(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder builderForValue) {
         if (indexesBuilder_ == null) {
           ensureIndexesIsMutable();
           indexes_.set(index, builderForValue.build());
@@ -30886,7 +30886,7 @@ public final class Adam {
       /**
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
-      public Builder addIndexes(ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage value) {
+      public Builder addIndexes(ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage value) {
         if (indexesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -30903,7 +30903,7 @@ public final class Adam {
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
       public Builder addIndexes(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage value) {
         if (indexesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -30920,7 +30920,7 @@ public final class Adam {
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
       public Builder addIndexes(
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder builderForValue) {
         if (indexesBuilder_ == null) {
           ensureIndexesIsMutable();
           indexes_.add(builderForValue.build());
@@ -30934,7 +30934,7 @@ public final class Adam {
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
       public Builder addIndexes(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder builderForValue) {
         if (indexesBuilder_ == null) {
           ensureIndexesIsMutable();
           indexes_.add(index, builderForValue.build());
@@ -30948,7 +30948,7 @@ public final class Adam {
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
       public Builder addAllIndexes(
-          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage> values) {
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage> values) {
         if (indexesBuilder_ == null) {
           ensureIndexesIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -30988,14 +30988,14 @@ public final class Adam {
       /**
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder getIndexesBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder getIndexesBuilder(
           int index) {
         return getIndexesFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessageOrBuilder getIndexesOrBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessageOrBuilder getIndexesOrBuilder(
           int index) {
         if (indexesBuilder_ == null) {
           return indexes_.get(index);  } else {
@@ -31005,7 +31005,7 @@ public final class Adam {
       /**
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
-      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessageOrBuilder> 
+      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessageOrBuilder> 
            getIndexesOrBuilderList() {
         if (indexesBuilder_ != null) {
           return indexesBuilder_.getMessageOrBuilderList();
@@ -31016,31 +31016,31 @@ public final class Adam {
       /**
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder addIndexesBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder addIndexesBuilder() {
         return getIndexesFieldBuilder().addBuilder(
-            ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.getDefaultInstance());
+            ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder addIndexesBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder addIndexesBuilder(
           int index) {
         return getIndexesFieldBuilder().addBuilder(
-            index, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.getDefaultInstance());
+            index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .IndexesMessage.IndexMessage indexes = 2;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder> 
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder> 
            getIndexesBuilderList() {
         return getIndexesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessageOrBuilder> 
           getIndexesFieldBuilder() {
         if (indexesBuilder_ == null) {
           indexesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.IndexMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage.IndexMessageOrBuilder>(
                   indexes_,
                   ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
@@ -31064,12 +31064,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:IndexesMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -31101,7 +31101,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.IndexesMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -31118,11 +31118,11 @@ public final class Adam {
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck();
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder();
 
     /**
      * <code>optional string entity = 2;</code>
@@ -31180,11 +31180,11 @@ public final class Adam {
               break;
             }
             case 10: {
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder subBuilder = null;
               if (ack_ != null) {
                 subBuilder = ack_.toBuilder();
               }
-              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.parser(), extensionRegistry);
+              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(ack_);
                 ack_ = subBuilder.buildPartial();
@@ -31224,7 +31224,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityPropertiesMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityPropertiesMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -31240,14 +31240,14 @@ public final class Adam {
     }
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityPropertiesMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityPropertiesMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage.Builder.class);
     }
 
     private int bitField0_;
     public static final int ACK_FIELD_NUMBER = 1;
-    private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_;
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
@@ -31257,13 +31257,13 @@ public final class Adam {
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
-      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
+      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
     }
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
       return getAck();
     }
 
@@ -31307,7 +31307,7 @@ public final class Adam {
           java.lang.String, java.lang.String> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, java.lang.String>newDefaultInstance(
-                  ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityPropertiesMessage_PropertiesEntry_descriptor, 
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityPropertiesMessage_PropertiesEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -31387,53 +31387,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -31444,7 +31444,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -31464,10 +31464,10 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:EntityPropertiesMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityPropertiesMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityPropertiesMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -31494,12 +31494,12 @@ public final class Adam {
       }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityPropertiesMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityPropertiesMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -31529,23 +31529,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_EntityPropertiesMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_EntityPropertiesMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (ackBuilder_ == null) {
@@ -31562,16 +31562,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage.getDefaultInstance()) return this;
         if (other.hasAck()) {
           mergeAck(other.getAck());
         }
@@ -31593,11 +31593,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -31608,9 +31608,9 @@ public final class Adam {
       }
       private int bitField0_;
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> ackBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> ackBuilder_;
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
@@ -31620,9 +31620,9 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
         if (ackBuilder_ == null) {
-          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         } else {
           return ackBuilder_.getMessage();
         }
@@ -31630,7 +31630,7 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public Builder setAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder setAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -31647,7 +31647,7 @@ public final class Adam {
        * <code>optional .AckMessage ack = 1;</code>
        */
       public Builder setAck(
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder builderForValue) {
         if (ackBuilder_ == null) {
           ack_ = builderForValue.build();
           onChanged();
@@ -31660,11 +31660,11 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (ack_ != null) {
             ack_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
           } else {
             ack_ = value;
           }
@@ -31692,7 +31692,7 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder getAckBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder getAckBuilder() {
         
         onChanged();
         return getAckFieldBuilder().getBuilder();
@@ -31700,23 +31700,23 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
         if (ackBuilder_ != null) {
           return ackBuilder_.getMessageOrBuilder();
         } else {
           return ack_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         }
       }
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> 
           getAckFieldBuilder() {
         if (ackBuilder_ == null) {
           ackBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder>(
                   getAck(),
                   getParentForChildren(),
                   isClean());
@@ -31852,12 +31852,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:EntityPropertiesMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -31889,7 +31889,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.EntityPropertiesMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.EntityPropertiesMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -31906,21 +31906,21 @@ public final class Adam {
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck();
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder();
 
     /**
      * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage> 
+    java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage> 
         getResponsesList();
     /**
      * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage getResponses(int index);
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage getResponses(int index);
     /**
      * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
@@ -31928,12 +31928,12 @@ public final class Adam {
     /**
      * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessageOrBuilder> 
+    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessageOrBuilder> 
         getResponsesOrBuilderList();
     /**
      * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessageOrBuilder getResponsesOrBuilder(
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessageOrBuilder getResponsesOrBuilder(
         int index);
   }
   /**
@@ -31976,11 +31976,11 @@ public final class Adam {
               break;
             }
             case 10: {
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder subBuilder = null;
               if (ack_ != null) {
                 subBuilder = ack_.toBuilder();
               }
-              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.parser(), extensionRegistry);
+              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(ack_);
                 ack_ = subBuilder.buildPartial();
@@ -31990,10 +31990,10 @@ public final class Adam {
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                responses_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage>();
+                responses_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              responses_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.parser(), extensionRegistry));
+              responses_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.parser(), extensionRegistry));
               break;
             }
           }
@@ -32013,19 +32013,19 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultsMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultsMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultsMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultsMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage.Builder.class);
     }
 
     private int bitField0_;
     public static final int ACK_FIELD_NUMBER = 1;
-    private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_;
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
@@ -32035,28 +32035,28 @@ public final class Adam {
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
-      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
+      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
     }
     /**
      * <code>optional .AckMessage ack = 1;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
       return getAck();
     }
 
     public static final int RESPONSES_FIELD_NUMBER = 2;
-    private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage> responses_;
+    private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage> responses_;
     /**
      * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage> getResponsesList() {
+    public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage> getResponsesList() {
       return responses_;
     }
     /**
      * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessageOrBuilder> 
+    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessageOrBuilder> 
         getResponsesOrBuilderList() {
       return responses_;
     }
@@ -32069,13 +32069,13 @@ public final class Adam {
     /**
      * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage getResponses(int index) {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage getResponses(int index) {
       return responses_.get(index);
     }
     /**
      * <code>repeated .QueryResultInfoMessage responses = 2;</code>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessageOrBuilder getResponsesOrBuilder(
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessageOrBuilder getResponsesOrBuilder(
         int index) {
       return responses_.get(index);
     }
@@ -32118,53 +32118,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -32175,7 +32175,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -32195,20 +32195,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:QueryResultsMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultsMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultsMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultsMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultsMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -32242,23 +32242,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultsMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultsMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (ackBuilder_ == null) {
@@ -32281,16 +32281,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage.getDefaultInstance()) return this;
         if (other.hasAck()) {
           mergeAck(other.getAck());
         }
@@ -32332,11 +32332,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -32347,9 +32347,9 @@ public final class Adam {
       }
       private int bitField0_;
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> ackBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> ackBuilder_;
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
@@ -32359,9 +32359,9 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
         if (ackBuilder_ == null) {
-          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         } else {
           return ackBuilder_.getMessage();
         }
@@ -32369,7 +32369,7 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public Builder setAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder setAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -32386,7 +32386,7 @@ public final class Adam {
        * <code>optional .AckMessage ack = 1;</code>
        */
       public Builder setAck(
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder builderForValue) {
         if (ackBuilder_ == null) {
           ack_ = builderForValue.build();
           onChanged();
@@ -32399,11 +32399,11 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (ack_ != null) {
             ack_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
           } else {
             ack_ = value;
           }
@@ -32431,7 +32431,7 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder getAckBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder getAckBuilder() {
         
         onChanged();
         return getAckFieldBuilder().getBuilder();
@@ -32439,23 +32439,23 @@ public final class Adam {
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
         if (ackBuilder_ != null) {
           return ackBuilder_.getMessageOrBuilder();
         } else {
           return ack_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         }
       }
       /**
        * <code>optional .AckMessage ack = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> 
           getAckFieldBuilder() {
         if (ackBuilder_ == null) {
           ackBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder>(
                   getAck(),
                   getParentForChildren(),
                   isClean());
@@ -32464,22 +32464,22 @@ public final class Adam {
         return ackBuilder_;
       }
 
-      private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage> responses_ =
+      private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage> responses_ =
         java.util.Collections.emptyList();
       private void ensureResponsesIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          responses_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage>(responses_);
+          responses_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage>(responses_);
           bitField0_ |= 0x00000002;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessageOrBuilder> responsesBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessageOrBuilder> responsesBuilder_;
 
       /**
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage> getResponsesList() {
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage> getResponsesList() {
         if (responsesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(responses_);
         } else {
@@ -32499,7 +32499,7 @@ public final class Adam {
       /**
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage getResponses(int index) {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage getResponses(int index) {
         if (responsesBuilder_ == null) {
           return responses_.get(index);
         } else {
@@ -32510,7 +32510,7 @@ public final class Adam {
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder setResponses(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage value) {
         if (responsesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -32527,7 +32527,7 @@ public final class Adam {
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder setResponses(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder builderForValue) {
         if (responsesBuilder_ == null) {
           ensureResponsesIsMutable();
           responses_.set(index, builderForValue.build());
@@ -32540,7 +32540,7 @@ public final class Adam {
       /**
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public Builder addResponses(ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage value) {
+      public Builder addResponses(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage value) {
         if (responsesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -32557,7 +32557,7 @@ public final class Adam {
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder addResponses(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage value) {
         if (responsesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -32574,7 +32574,7 @@ public final class Adam {
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder addResponses(
-          ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder builderForValue) {
         if (responsesBuilder_ == null) {
           ensureResponsesIsMutable();
           responses_.add(builderForValue.build());
@@ -32588,7 +32588,7 @@ public final class Adam {
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder addResponses(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder builderForValue) {
         if (responsesBuilder_ == null) {
           ensureResponsesIsMutable();
           responses_.add(index, builderForValue.build());
@@ -32602,7 +32602,7 @@ public final class Adam {
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
       public Builder addAllResponses(
-          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage> values) {
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage> values) {
         if (responsesBuilder_ == null) {
           ensureResponsesIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -32642,14 +32642,14 @@ public final class Adam {
       /**
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder getResponsesBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder getResponsesBuilder(
           int index) {
         return getResponsesFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessageOrBuilder getResponsesOrBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessageOrBuilder getResponsesOrBuilder(
           int index) {
         if (responsesBuilder_ == null) {
           return responses_.get(index);  } else {
@@ -32659,7 +32659,7 @@ public final class Adam {
       /**
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessageOrBuilder> 
+      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessageOrBuilder> 
            getResponsesOrBuilderList() {
         if (responsesBuilder_ != null) {
           return responsesBuilder_.getMessageOrBuilderList();
@@ -32670,31 +32670,31 @@ public final class Adam {
       /**
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder addResponsesBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder addResponsesBuilder() {
         return getResponsesFieldBuilder().addBuilder(
-            ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.getDefaultInstance());
+            ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder addResponsesBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder addResponsesBuilder(
           int index) {
         return getResponsesFieldBuilder().addBuilder(
-            index, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.getDefaultInstance());
+            index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .QueryResultInfoMessage responses = 2;</code>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder> 
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder> 
            getResponsesBuilderList() {
         return getResponsesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessageOrBuilder> 
           getResponsesFieldBuilder() {
         if (responsesBuilder_ == null) {
           responsesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessageOrBuilder>(
                   responses_,
                   ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
@@ -32718,12 +32718,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:QueryResultsMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -32755,7 +32755,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -32780,7 +32780,7 @@ public final class Adam {
      *acknowledgement message returning status of query
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck();
     /**
      * <code>optional .AckMessage ack = 1;</code>
      *
@@ -32788,7 +32788,7 @@ public final class Adam {
      *acknowledgement message returning status of query
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder();
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder();
 
     /**
      * <code>optional string queryid = 2;</code>
@@ -32851,7 +32851,7 @@ public final class Adam {
      *result list
      * </pre>
      */
-    java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage> 
+    java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage> 
         getResultsList();
     /**
      * <code>repeated .QueryResultTupleMessage results = 6;</code>
@@ -32860,7 +32860,7 @@ public final class Adam {
      *result list
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage getResults(int index);
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage getResults(int index);
     /**
      * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
@@ -32876,7 +32876,7 @@ public final class Adam {
      *result list
      * </pre>
      */
-    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessageOrBuilder> 
+    java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessageOrBuilder> 
         getResultsOrBuilderList();
     /**
      * <code>repeated .QueryResultTupleMessage results = 6;</code>
@@ -32885,7 +32885,7 @@ public final class Adam {
      *result list
      * </pre>
      */
-    ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessageOrBuilder getResultsOrBuilder(
+    ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessageOrBuilder getResultsOrBuilder(
         int index);
   }
   /**
@@ -32932,11 +32932,11 @@ public final class Adam {
               break;
             }
             case 10: {
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder subBuilder = null;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder subBuilder = null;
               if (ack_ != null) {
                 subBuilder = ack_.toBuilder();
               }
-              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.parser(), extensionRegistry);
+              ack_ = input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(ack_);
                 ack_ = subBuilder.buildPartial();
@@ -32968,10 +32968,10 @@ public final class Adam {
             }
             case 50: {
               if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-                results_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage>();
+                results_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage>();
                 mutable_bitField0_ |= 0x00000020;
               }
-              results_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.parser(), extensionRegistry));
+              results_.add(input.readMessage(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.parser(), extensionRegistry));
               break;
             }
           }
@@ -32991,19 +32991,19 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultInfoMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultInfoMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultInfoMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultInfoMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder.class);
     }
 
     private int bitField0_;
     public static final int ACK_FIELD_NUMBER = 1;
-    private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_;
+    private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_;
     /**
      * <code>optional .AckMessage ack = 1;</code>
      *
@@ -33021,8 +33021,8 @@ public final class Adam {
      *acknowledgement message returning status of query
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
-      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
+      return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
     }
     /**
      * <code>optional .AckMessage ack = 1;</code>
@@ -33031,7 +33031,7 @@ public final class Adam {
      *acknowledgement message returning status of query
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
       return getAck();
     }
 
@@ -33146,7 +33146,7 @@ public final class Adam {
     }
 
     public static final int RESULTS_FIELD_NUMBER = 6;
-    private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage> results_;
+    private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage> results_;
     /**
      * <code>repeated .QueryResultTupleMessage results = 6;</code>
      *
@@ -33154,7 +33154,7 @@ public final class Adam {
      *result list
      * </pre>
      */
-    public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage> getResultsList() {
+    public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage> getResultsList() {
       return results_;
     }
     /**
@@ -33164,7 +33164,7 @@ public final class Adam {
      *result list
      * </pre>
      */
-    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessageOrBuilder> 
+    public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessageOrBuilder> 
         getResultsOrBuilderList() {
       return results_;
     }
@@ -33185,7 +33185,7 @@ public final class Adam {
      *result list
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage getResults(int index) {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage getResults(int index) {
       return results_.get(index);
     }
     /**
@@ -33195,7 +33195,7 @@ public final class Adam {
      *result list
      * </pre>
      */
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessageOrBuilder getResultsOrBuilder(
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessageOrBuilder getResultsOrBuilder(
         int index) {
       return results_.get(index);
     }
@@ -33264,53 +33264,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -33321,7 +33321,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -33341,20 +33341,20 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:QueryResultInfoMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultInfoMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultInfoMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultInfoMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultInfoMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -33396,23 +33396,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultInfoMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultInfoMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (ackBuilder_ == null) {
@@ -33439,16 +33439,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage.getDefaultInstance()) return this;
         if (other.hasAck()) {
           mergeAck(other.getAck());
         }
@@ -33504,11 +33504,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -33519,9 +33519,9 @@ public final class Adam {
       }
       private int bitField0_;
 
-      private ch.unibas.dmi.dbis.adam.http.Adam.AckMessage ack_ = null;
+      private ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage ack_ = null;
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> ackBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> ackBuilder_;
       /**
        * <code>optional .AckMessage ack = 1;</code>
        *
@@ -33539,9 +33539,9 @@ public final class Adam {
        *acknowledgement message returning status of query
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage getAck() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage getAck() {
         if (ackBuilder_ == null) {
-          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+          return ack_ == null ? ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         } else {
           return ackBuilder_.getMessage();
         }
@@ -33553,7 +33553,7 @@ public final class Adam {
        *acknowledgement message returning status of query
        * </pre>
        */
-      public Builder setAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder setAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -33574,7 +33574,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setAck(
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder builderForValue) {
         if (ackBuilder_ == null) {
           ack_ = builderForValue.build();
           onChanged();
@@ -33591,11 +33591,11 @@ public final class Adam {
        *acknowledgement message returning status of query
        * </pre>
        */
-      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage value) {
+      public Builder mergeAck(ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage value) {
         if (ackBuilder_ == null) {
           if (ack_ != null) {
             ack_ =
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
           } else {
             ack_ = value;
           }
@@ -33631,7 +33631,7 @@ public final class Adam {
        *acknowledgement message returning status of query
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder getAckBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder getAckBuilder() {
         
         onChanged();
         return getAckFieldBuilder().getBuilder();
@@ -33643,12 +33643,12 @@ public final class Adam {
        *acknowledgement message returning status of query
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder getAckOrBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
         if (ackBuilder_ != null) {
           return ackBuilder_.getMessageOrBuilder();
         } else {
           return ack_ == null ?
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance() : ack_;
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
         }
       }
       /**
@@ -33659,11 +33659,11 @@ public final class Adam {
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder> 
           getAckFieldBuilder() {
         if (ackBuilder_ == null) {
           ackBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.AckMessage, ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.AckMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessageOrBuilder>(
                   getAck(),
                   getParentForChildren(),
                   isClean());
@@ -33926,17 +33926,17 @@ public final class Adam {
         return this;
       }
 
-      private java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage> results_ =
+      private java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage> results_ =
         java.util.Collections.emptyList();
       private void ensureResultsIsMutable() {
         if (!((bitField0_ & 0x00000020) == 0x00000020)) {
-          results_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage>(results_);
+          results_ = new java.util.ArrayList<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage>(results_);
           bitField0_ |= 0x00000020;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessageOrBuilder> resultsBuilder_;
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessageOrBuilder> resultsBuilder_;
 
       /**
        * <code>repeated .QueryResultTupleMessage results = 6;</code>
@@ -33945,7 +33945,7 @@ public final class Adam {
        *result list
        * </pre>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage> getResultsList() {
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage> getResultsList() {
         if (resultsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(results_);
         } else {
@@ -33973,7 +33973,7 @@ public final class Adam {
        *result list
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage getResults(int index) {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage getResults(int index) {
         if (resultsBuilder_ == null) {
           return results_.get(index);
         } else {
@@ -33988,7 +33988,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setResults(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -34009,7 +34009,7 @@ public final class Adam {
        * </pre>
        */
       public Builder setResults(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.set(index, builderForValue.build());
@@ -34026,7 +34026,7 @@ public final class Adam {
        *result list
        * </pre>
        */
-      public Builder addResults(ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage value) {
+      public Builder addResults(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -34047,7 +34047,7 @@ public final class Adam {
        * </pre>
        */
       public Builder addResults(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage value) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -34068,7 +34068,7 @@ public final class Adam {
        * </pre>
        */
       public Builder addResults(
-          ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder builderForValue) {
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.add(builderForValue.build());
@@ -34086,7 +34086,7 @@ public final class Adam {
        * </pre>
        */
       public Builder addResults(
-          int index, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder builderForValue) {
+          int index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.add(index, builderForValue.build());
@@ -34104,7 +34104,7 @@ public final class Adam {
        * </pre>
        */
       public Builder addAllResults(
-          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage> values) {
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage> values) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -34156,7 +34156,7 @@ public final class Adam {
        *result list
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder getResultsBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder getResultsBuilder(
           int index) {
         return getResultsFieldBuilder().getBuilder(index);
       }
@@ -34167,7 +34167,7 @@ public final class Adam {
        *result list
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessageOrBuilder getResultsOrBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessageOrBuilder getResultsOrBuilder(
           int index) {
         if (resultsBuilder_ == null) {
           return results_.get(index);  } else {
@@ -34181,7 +34181,7 @@ public final class Adam {
        *result list
        * </pre>
        */
-      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessageOrBuilder> 
+      public java.util.List<? extends ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessageOrBuilder> 
            getResultsOrBuilderList() {
         if (resultsBuilder_ != null) {
           return resultsBuilder_.getMessageOrBuilderList();
@@ -34196,9 +34196,9 @@ public final class Adam {
        *result list
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder addResultsBuilder() {
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder addResultsBuilder() {
         return getResultsFieldBuilder().addBuilder(
-            ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.getDefaultInstance());
+            ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .QueryResultTupleMessage results = 6;</code>
@@ -34207,10 +34207,10 @@ public final class Adam {
        *result list
        * </pre>
        */
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder addResultsBuilder(
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder addResultsBuilder(
           int index) {
         return getResultsFieldBuilder().addBuilder(
-            index, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.getDefaultInstance());
+            index, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.getDefaultInstance());
       }
       /**
        * <code>repeated .QueryResultTupleMessage results = 6;</code>
@@ -34219,16 +34219,16 @@ public final class Adam {
        *result list
        * </pre>
        */
-      public java.util.List<ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder> 
+      public java.util.List<ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder> 
            getResultsBuilderList() {
         return getResultsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessageOrBuilder> 
+          ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessageOrBuilder> 
           getResultsFieldBuilder() {
         if (resultsBuilder_ == null) {
           resultsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessageOrBuilder>(
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessageOrBuilder>(
                   results_,
                   ((bitField0_ & 0x00000020) == 0x00000020),
                   getParentForChildren(),
@@ -34252,12 +34252,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:QueryResultInfoMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -34289,7 +34289,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -34302,7 +34302,7 @@ public final class Adam {
     /**
      * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
      */
-    java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+    java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
     getData();
   }
   /**
@@ -34349,7 +34349,7 @@ public final class Adam {
                     DataDefaultEntryHolder.defaultEntry);
                 mutable_bitField0_ |= 0x00000001;
               }
-              com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+              com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
               data = input.readMessage(
                   DataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
               data_.getMutableMap().put(data.getKey(), data.getValue());
@@ -34369,7 +34369,7 @@ public final class Adam {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultTupleMessage_descriptor;
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultTupleMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -34385,26 +34385,26 @@ public final class Adam {
     }
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultTupleMessage_fieldAccessorTable
+      return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultTupleMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder.class);
+              ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder.class);
     }
 
     public static final int DATA_FIELD_NUMBER = 1;
     private static final class DataDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
-          java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> defaultEntry =
+          java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> defaultEntry =
               com.google.protobuf.MapEntry
-              .<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>newDefaultInstance(
-                  ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultTupleMessage_DataEntry_descriptor, 
+              .<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>newDefaultInstance(
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultTupleMessage_DataEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                  ch.unibas.dmi.dbis.adam.http.Adam.DataMessage.getDefaultInstance());
+                  ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage.getDefaultInstance());
     }
     private com.google.protobuf.MapField<
-        java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> data_;
-    private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+        java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> data_;
+    private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
     internalGetData() {
       if (data_ == null) {
         return com.google.protobuf.MapField.emptyMapField(
@@ -34416,7 +34416,7 @@ public final class Adam {
      * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
      */
 
-    public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> getData() {
+    public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> getData() {
       return internalGetData().getMap();
     }
 
@@ -34432,9 +34432,9 @@ public final class Adam {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> entry
+      for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> entry
            : internalGetData().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+        com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
         data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
             .setKey(entry.getKey())
             .setValue(entry.getValue())
@@ -34448,9 +34448,9 @@ public final class Adam {
       if (size != -1) return size;
 
       size = 0;
-      for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> entry
+      for (java.util.Map.Entry<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> entry
            : internalGetData().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+        com.google.protobuf.MapEntry<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
         data = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
             .setKey(entry.getKey())
             .setValue(entry.getValue())
@@ -34463,53 +34463,53 @@ public final class Adam {
     }
 
     private static final long serialVersionUID = 0L;
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parseFrom(byte[] data)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parseFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parseDelimitedFrom(java.io.InputStream input)
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parseDelimitedFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parseFrom(
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -34520,7 +34520,7 @@ public final class Adam {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage prototype) {
+    public static Builder newBuilder(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -34540,10 +34540,10 @@ public final class Adam {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:QueryResultTupleMessage)
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessageOrBuilder {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultTupleMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultTupleMessage_descriptor;
       }
 
       @SuppressWarnings({"rawtypes"})
@@ -34570,12 +34570,12 @@ public final class Adam {
       }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultTupleMessage_fieldAccessorTable
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultTupleMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.class, ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.Builder.class);
+                ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.class, ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.Builder.class);
       }
 
-      // Construct using ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.newBuilder()
+      // Construct using ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -34597,23 +34597,23 @@ public final class Adam {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.internal_static_QueryResultTupleMessage_descriptor;
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.internal_static_QueryResultTupleMessage_descriptor;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage getDefaultInstanceForType() {
-        return ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.getDefaultInstance();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.getDefaultInstance();
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage build() {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage result = buildPartial();
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage build() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage buildPartial() {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage result = new ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage(this);
+      public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage buildPartial() {
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage result = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage(this);
         int from_bitField0_ = bitField0_;
         result.data_ = internalGetData();
         result.data_.makeImmutable();
@@ -34622,16 +34622,16 @@ public final class Adam {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage) {
-          return mergeFrom((ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage)other);
+        if (other instanceof ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage) {
+          return mergeFrom((ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage other) {
-        if (other == ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage other) {
+        if (other == ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage.getDefaultInstance()) return this;
         internalGetMutableData().mergeFrom(
             other.internalGetData());
         onChanged();
@@ -34646,11 +34646,11 @@ public final class Adam {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage parsedMessage = null;
+        ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage) e.getUnfinishedMessage();
+          parsedMessage = (ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -34662,8 +34662,8 @@ public final class Adam {
       private int bitField0_;
 
       private com.google.protobuf.MapField<
-          java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> data_;
-      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+          java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> data_;
+      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
       internalGetData() {
         if (data_ == null) {
           return com.google.protobuf.MapField.emptyMapField(
@@ -34671,7 +34671,7 @@ public final class Adam {
        }
         return data_;
       }
-      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+      private com.google.protobuf.MapField<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
       internalGetMutableData() {
         onChanged();;
         if (data_ == null) {
@@ -34686,13 +34686,13 @@ public final class Adam {
       /**
        * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
        */
-      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> getData() {
+      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> getData() {
         return internalGetData().getMap();
       }
       /**
        * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
        */
-      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage>
+      public java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage>
       getMutableData() {
         return internalGetMutableData().getMutableMap();
       }
@@ -34700,7 +34700,7 @@ public final class Adam {
        * <code>map&lt;string, .DataMessage&gt; data = 1;</code>
        */
       public Builder putAllData(
-          java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.Adam.DataMessage> values) {
+          java.util.Map<java.lang.String, ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage> values) {
         getMutableData().putAll(values);
         return this;
       }
@@ -34719,12 +34719,12 @@ public final class Adam {
     }
 
     // @@protoc_insertion_point(class_scope:QueryResultTupleMessage)
-    private static final ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage DEFAULT_INSTANCE;
+    private static final ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage();
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage();
     }
 
-    public static ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage getDefaultInstance() {
+    public static ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -34756,7 +34756,7 @@ public final class Adam {
       return PARSER;
     }
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage getDefaultInstanceForType() {
+    public ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -35210,8 +35210,8 @@ public final class Adam {
       "yResultsMessage\"\000\022=\n\022DoProgressiveQuery\022" +
       "\r.QueryMessage\032\024.QueryResultsMessage\"\0000\001" +
       "\022A\n\020GetCachedResults\022\025.CachedResultsMess" +
-      "age\032\024.QueryResultsMessage\"\000B$\n\034ch.unibas" +
-      ".dmi.dbis.adam.httpB\004Adamb\006proto3"
+      "age\032\024.QueryResultsMessage\"\000B(\n\034ch.unibas" +
+      ".dmi.dbis.adam.httpB\010AdamGrpcb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

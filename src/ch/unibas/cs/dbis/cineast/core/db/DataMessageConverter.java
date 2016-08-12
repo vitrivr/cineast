@@ -16,11 +16,11 @@ import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.LongProviderImpl;
 import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.ProviderDataType;
 import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.StringProviderImpl;
-import ch.unibas.dmi.dbis.adam.http.Adam.DataMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.DenseVectorMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.FeatureVectorMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.IntVectorMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.SparseVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.DataMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.DenseVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.FeatureVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.IntVectorMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.SparseVectorMessage;
 
 public final class DataMessageConverter {
 

@@ -14,14 +14,14 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import ch.unibas.cs.dbis.cineast.core.data.Shot;
 import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
-import ch.unibas.dmi.dbis.adam.http.Adam;
-import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.FromMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultTupleMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.FromMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage;
 
 public class ShotLookup {
 
@@ -61,7 +61,7 @@ public class ShotLookup {
 
 		QueryResultTupleMessage result = results.get(0);
 		
-		Map<String, Adam.DataMessage> map = result.getData();
+		Map<String, AdamGrpc.DataMessage> map = result.getData();
 		
 		ShotDescriptor _return = new ShotDescriptor(map.get("multimediaobject").getStringData(), map.get("id").getStringData(), map.get("segmentstart").getIntData(), map.get("segmentend").getIntData());
 		
@@ -112,7 +112,7 @@ public class ShotLookup {
 		
 		HashMap<String, ShotDescriptor> _return = new HashMap<>();
 		for(QueryResultTupleMessage result : results){
-			Map<String, Adam.DataMessage> map = result.getData();
+			Map<String, AdamGrpc.DataMessage> map = result.getData();
 			_return.put(map.get("id").getStringData(), new ShotDescriptor(map.get("multimediaobject").getStringData(), map.get("id").getStringData(), map.get("segmentstart").getIntData(), map.get("segmentend").getIntData()));
 		}
 		LOGGER.debug("lookUpShot done in {}ms", System.currentTimeMillis() - start);
@@ -172,7 +172,7 @@ public class ShotLookup {
 		List<QueryResultTupleMessage> results = responce.getResultsList();
 		
 		for(QueryResultTupleMessage result : results){
-			Map<String, Adam.DataMessage> metadata = result.getData();
+			Map<String, AdamGrpc.DataMessage> metadata = result.getData();
 			_return.add(new ShotDescriptor(
 					videoId,
 					metadata.get("id").getStringData(),

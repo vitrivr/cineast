@@ -8,17 +8,17 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import ch.unibas.dmi.dbis.adam.http.Adam;
-import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.Code;
-import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.BooleanQueryMessage.WhereMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.Builder;
-import ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage.TupleInsertMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.QueryResultsMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.Builder;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage;
+import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage;
 
 
 
@@ -51,7 +51,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		WhereMessage where = WhereMessage.newBuilder().setAttribute(key).setValue(value).build();
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Adam.FromMessage.newBuilder().setEntity(this.entityName).build())
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(this.entityName).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;
