@@ -37,7 +37,7 @@ public class ShotLookup {
 		LOGGER.entry();
 		long start = System.currentTimeMillis();
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(shotId).build();
+		WhereMessage where = WhereMessage.newBuilder().setAttribute("id").setValue(shotId).build();
 		//TODO check type as well
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())
@@ -88,7 +88,7 @@ public class ShotLookup {
 		builder.append("'");
 		builder.append(ids[ids.length - 1]);
 		builder.append("')");
-		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(builder.toString()).build();
+		WhereMessage where = WhereMessage.newBuilder().setAttribute("id").setValue(builder.toString()).build();
 		//TODO check type as well
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())
@@ -122,10 +122,10 @@ public class ShotLookup {
 	
 	public String lookUpVideoid(String name){ //TODO move to VideoLookup
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		WhereMessage where = WhereMessage.newBuilder().setField("name").setValue(name).build();
+		WhereMessage where = WhereMessage.newBuilder().setAttribute("name").setValue(name).build();
 		//TODO check type as well
 		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.getDefaultInstance().newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
+		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
 				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;
@@ -154,7 +154,7 @@ public class ShotLookup {
 	public List<ShotDescriptor> lookUpVideo(String videoId){
 		LinkedList<ShotDescriptor> _return = new LinkedList<ShotLookup.ShotDescriptor>();
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		WhereMessage where = WhereMessage.newBuilder().setField("multimediaobject").setValue(videoId).build();
+		WhereMessage where = WhereMessage.newBuilder().setAttribute("multimediaobject").setValue(videoId).build();
 		//TODO check type as well
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())

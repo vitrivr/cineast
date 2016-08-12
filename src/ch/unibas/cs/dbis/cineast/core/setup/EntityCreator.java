@@ -7,9 +7,9 @@ import org.apache.logging.log4j.Logger;
 
 import ch.unibas.cs.dbis.cineast.core.db.ADAMproWrapper;
 import ch.unibas.dmi.dbis.adam.http.Adam.AckMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.AttributeDefinitionMessage;
+import ch.unibas.dmi.dbis.adam.http.Adam.AttributeType;
 import ch.unibas.dmi.dbis.adam.http.Adam.CreateEntityMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.FieldDefinitionMessage;
-import ch.unibas.dmi.dbis.adam.http.Adam.FieldDefinitionMessage.FieldType;
 
 public class EntityCreator {
 
@@ -22,20 +22,20 @@ public class EntityCreator {
 	 * Initialises the main entity holding information about mutlimedia objects
 	 */
 	public AckMessage createMultiMediaObjectsEntity(){
-		ArrayList<FieldDefinitionMessage> fields = new ArrayList<>(8);
+		ArrayList<AttributeDefinitionMessage> attributes = new ArrayList<>(8);
 		
-		FieldDefinitionMessage.Builder builder = FieldDefinitionMessage.newBuilder();
+		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 		
-		fields.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(true).setIndexed(true).build());
-		fields.add(builder.setName("type").setFieldtype(FieldType.INT).setPk(false).setIndexed(true).build());
-		fields.add(builder.setName("name").setFieldtype(FieldType.STRING).setPk(false).setIndexed(false).build());
-		fields.add(builder.setName("path").setFieldtype(FieldType.STRING).setPk(false).setIndexed(false).build());
-		fields.add(builder.setName("width").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
-		fields.add(builder.setName("height").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
-		fields.add(builder.setName("framecount").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
-		fields.add(builder.setName("duration").setFieldtype(FieldType.FLOAT).setPk(false).setIndexed(false).build());
+		attributes.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).setIndexed(true).build());
+		attributes.add(builder.setName("type").setAttributetype(AttributeType.INT).setPk(false).setIndexed(true).build());
+		attributes.add(builder.setName("name").setAttributetype(AttributeType.STRING).setPk(false).setIndexed(false).build());
+		attributes.add(builder.setName("path").setAttributetype(AttributeType.STRING).setPk(false).setIndexed(false).build());
+		attributes.add(builder.setName("width").setAttributetype(AttributeType.INT).setPk(false).setIndexed(false).build());
+		attributes.add(builder.setName("height").setAttributetype(AttributeType.INT).setPk(false).setIndexed(false).build());
+		attributes.add(builder.setName("framecount").setAttributetype(AttributeType.INT).setPk(false).setIndexed(false).build());
+		attributes.add(builder.setName("duration").setAttributetype(AttributeType.FLOAT).setPk(false).setIndexed(false).build());
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_MULTIMEDIAOBJECT).addAllFields(fields).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_MULTIMEDIAOBJECT).addAllAttributes(attributes).build();
 		
 		AckMessage ack = adampro.createEntityBlocking(message);
 		
@@ -52,16 +52,16 @@ public class EntityCreator {
 	 * Initialises the entity responsible for holding information about segments of a mutlimedia object
 	 */
 	public AckMessage createSegmentEntity(){
-		ArrayList<FieldDefinitionMessage> fields = new ArrayList<>(4);
+		ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
 		
-		FieldDefinitionMessage.Builder builder = FieldDefinitionMessage.newBuilder();
+		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-		fields.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(true).setIndexed(true).build());
-		fields.add(builder.setName("multimediaobject").setFieldtype(FieldType.STRING).setPk(false).setIndexed(true).build());
-		fields.add(builder.setName("segmentstart").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
-		fields.add(builder.setName("segmentend").setFieldtype(FieldType.INT).setPk(false).setIndexed(false).build());
+		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).setIndexed(true).build());
+		fields.add(builder.setName("multimediaobject").setAttributetype(AttributeType.STRING).setPk(false).setIndexed(true).build());
+		fields.add(builder.setName("segmentstart").setAttributetype(AttributeType.INT).setPk(false).setIndexed(false).build());
+		fields.add(builder.setName("segmentend").setAttributetype(AttributeType.INT).setPk(false).setIndexed(false).build());
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_SEGMENT).addAllFields(fields).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_SEGMENT).addAllAttributes(fields).build();
 		
 		AckMessage ack = adampro.createEntityBlocking(message);
 		
@@ -86,16 +86,16 @@ public class EntityCreator {
 	}
 	
 	public AckMessage createFeatureEntity(String featurename, boolean unique, String...featrueNames){
-		ArrayList<FieldDefinitionMessage> fields = new ArrayList<>();
+		ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>();
 		
-		FieldDefinitionMessage.Builder builder = FieldDefinitionMessage.newBuilder();
+		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 		
-		fields.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(unique).setIndexed(true).build());
+		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(unique).setIndexed(true).build());
 		for(String feature : featrueNames){
-			fields.add(builder.setName(feature).setFieldtype(FieldType.FEATURE).setPk(false).setIndexed(false).build());
+			fields.add(builder.setName(feature).setAttributetype(AttributeType.FEATURE).setPk(false).setIndexed(false).build());
 		}
 		
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllFields(fields).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllAttributes(fields).build();
 		
 		AckMessage ack = adampro.createEntityBlocking(message);
 		
@@ -109,17 +109,17 @@ public class EntityCreator {
  
 	}
 	
-	public AckMessage createIdEntity(String entityName, FieldDefinition...fields){
-		ArrayList<FieldDefinitionMessage> fieldList = new ArrayList<>();
+	public AckMessage createIdEntity(String entityName, AttributeDefinition...attributes){
+		ArrayList<AttributeDefinitionMessage> fieldList = new ArrayList<>();
 		
-		FieldDefinitionMessage.Builder builder = FieldDefinitionMessage.newBuilder();
+		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 		
-		fieldList.add(builder.setName("id").setFieldtype(FieldType.STRING).setPk(true).setIndexed(true).build());
-		for(FieldDefinition field : fields){
-			fieldList.add(builder.setName(field.name).setFieldtype(field.type).setPk(false).setIndexed(false).build());
+		fieldList.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).setIndexed(true).build());
+		for(AttributeDefinition attribute : attributes){
+			fieldList.add(builder.setName(attribute.name).setAttributetype(attribute.type).setPk(false).setIndexed(false).build());
 		}
 		
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(entityName.toLowerCase()).addAllFields(fieldList).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(entityName.toLowerCase()).addAllAttributes(fieldList).build();
 		
 		AckMessage ack = adampro.createEntityBlocking(message);
 		
@@ -136,11 +136,11 @@ public class EntityCreator {
 		this.adampro.close();
 	}
 	
-	public static class FieldDefinition{
+	public static class AttributeDefinition{
 		private final String name;
-		private final FieldType type;
+		private final AttributeType type;
 		
-		public FieldDefinition(String name, FieldType type){
+		public AttributeDefinition(String name, AttributeType type){
 			this.name = name;
 			this.type = type;
 		}

@@ -48,7 +48,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 
 	@Override
 	public boolean exists(String key, String value) { //TODO reduce the number of new objects created
-		WhereMessage where = WhereMessage.newBuilder().setField(key).setValue(value).build();
+		WhereMessage where = WhereMessage.newBuilder().setAttribute(key).setValue(value).build();
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Adam.FromMessage.newBuilder().setEntity(this.entityName).build())

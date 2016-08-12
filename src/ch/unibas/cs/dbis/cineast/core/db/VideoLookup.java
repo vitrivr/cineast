@@ -23,7 +23,7 @@ public class VideoLookup{
 	
 	public VideoDescriptor lookUpVideo(String videoId){
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(videoId).build();
+		WhereMessage where = WhereMessage.newBuilder().setAttribute("id").setValue(videoId).build();
 		//TODO check type as well
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Adam.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
@@ -67,7 +67,7 @@ public class VideoLookup{
 		builder.append(videoIds[videoIds.length - 1]);
 		builder.append("')");
 		
-		WhereMessage where = WhereMessage.newBuilder().setField("id").setValue(builder.toString()).build();
+		WhereMessage where = WhereMessage.newBuilder().setAttribute("id").setValue(builder.toString()).build();
 		//TODO check type as well
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(Adam.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())

@@ -1,7 +1,7 @@
 package ch.unibas.cs.dbis.cineast.core.setup;
 
-import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator.FieldDefinition;
-import ch.unibas.dmi.dbis.adam.http.Adam.FieldDefinitionMessage.FieldType;
+import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator.AttributeDefinition;
+import ch.unibas.dmi.dbis.adam.http.Adam.AttributeType;
 
 public class Setup {
 
@@ -11,7 +11,7 @@ public class Setup {
 		ec.createMultiMediaObjectsEntity();
 		ec.createSegmentEntity();
 		
-		ec.createIdEntity("cineast_representativeframes", new FieldDefinition("frame", FieldType.INT));
+		ec.createIdEntity("cineast_representativeframes", new AttributeDefinition("frame", AttributeType.INT));
 		
 		ec.createFeatureEntity("features_AverageColor", true);
 		ec.createFeatureEntity("features_AverageColorARP44", true);

@@ -49,6 +49,15 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage,
+      ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage> METHOD_EXISTS_ENTITY =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamDefinition", "ExistsEntity"),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage,
       ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> METHOD_INSERT =
       io.grpc.MethodDescriptor.create(
@@ -76,6 +85,15 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage,
+      ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage> METHOD_EXISTS_INDEX =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamDefinition", "ExistsIndex"),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage,
       ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> METHOD_DROP_INDEX =
       io.grpc.MethodDescriptor.create(
@@ -84,6 +102,15 @@ public class AdamDefinitionGrpc {
               "AdamDefinition", "DropIndex"),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage,
+      ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage> METHOD_LIST_INDEXES =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamDefinition", "ListIndexes"),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage,
       ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> METHOD_GENERATE_RANDOM_DATA =
@@ -130,13 +157,13 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage,
-      ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> METHOD_BENCHMARK_AND_UPDATE_SCAN_WEIGHTS =
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage,
+      ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> METHOD_ADJUST_SCAN_WEIGHTS =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
-              "AdamDefinition", "BenchmarkAndUpdateScanWeights"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage.getDefaultInstance()),
+              "AdamDefinition", "AdjustScanWeights"),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage,
@@ -157,13 +184,13 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage,
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage,
       ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> METHOD_SPARSIFY_ENTITY =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
               "AdamDefinition", "SparsifyEntity"),
-          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(ch.unibas.dmi.dbis.adam.http.Adam.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage,
@@ -200,6 +227,9 @@ public class AdamDefinitionGrpc {
     public void dropEntity(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver);
 
+    public void existsEntity(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage> responseObserver);
+
     public io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage> insert(
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver);
 
@@ -209,8 +239,14 @@ public class AdamDefinitionGrpc {
     public void generateAllIndexes(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver);
 
+    public void existsIndex(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage> responseObserver);
+
     public void dropIndex(ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver);
+
+    public void listIndexes(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage> responseObserver);
 
     public void generateRandomData(ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver);
@@ -227,7 +263,7 @@ public class AdamDefinitionGrpc {
     public void repartitionIndexData(ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver);
 
-    public void benchmarkAndUpdateScanWeights(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request,
+    public void adjustScanWeights(ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver);
 
     public void resetScanWeights(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request,
@@ -236,7 +272,7 @@ public class AdamDefinitionGrpc {
     public void setScanWeight(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver);
 
-    public void sparsifyEntity(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request,
+    public void sparsifyEntity(ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver);
 
     public void importData(ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage request,
@@ -251,11 +287,17 @@ public class AdamDefinitionGrpc {
 
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage dropEntity(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request);
 
+    public ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage existsEntity(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request);
+
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage index(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request);
 
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage generateAllIndexes(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request);
 
+    public ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage existsIndex(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request);
+
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage dropIndex(ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage request);
+
+    public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage listIndexes(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request);
 
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage generateRandomData(ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage request);
 
@@ -267,13 +309,13 @@ public class AdamDefinitionGrpc {
 
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage repartitionIndexData(ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage request);
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage benchmarkAndUpdateScanWeights(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request);
+    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage adjustScanWeights(ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage request);
 
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage resetScanWeights(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request);
 
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage setScanWeight(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request);
 
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage sparsifyEntity(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request);
+    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage sparsifyEntity(ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage request);
 
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage importData(ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage request);
   }
@@ -289,14 +331,23 @@ public class AdamDefinitionGrpc {
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> dropEntity(
         ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request);
 
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage> existsEntity(
+        ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request);
+
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> index(
         ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> generateAllIndexes(
         ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request);
 
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage> existsIndex(
+        ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request);
+
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> dropIndex(
         ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage request);
+
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage> listIndexes(
+        ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> generateRandomData(
         ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage request);
@@ -313,8 +364,8 @@ public class AdamDefinitionGrpc {
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> repartitionIndexData(
         ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage request);
 
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> benchmarkAndUpdateScanWeights(
-        ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request);
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> adjustScanWeights(
+        ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> resetScanWeights(
         ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request);
@@ -323,7 +374,7 @@ public class AdamDefinitionGrpc {
         ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> sparsifyEntity(
-        ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request);
+        ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> importData(
         ch.unibas.dmi.dbis.adam.http.Adam.ImportMessage request);
@@ -368,6 +419,13 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public void existsEntity(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_EXISTS_ENTITY, getCallOptions()), request, responseObserver);
+    }
+
+    @java.lang.Override
     public io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.InsertMessage> insert(
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver) {
       return asyncClientStreamingCall(
@@ -389,10 +447,24 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public void existsIndex(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_EXISTS_INDEX, getCallOptions()), request, responseObserver);
+    }
+
+    @java.lang.Override
     public void dropIndex(ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_DROP_INDEX, getCallOptions()), request, responseObserver);
+    }
+
+    @java.lang.Override
+    public void listIndexes(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_LIST_INDEXES, getCallOptions()), request, responseObserver);
     }
 
     @java.lang.Override
@@ -431,10 +503,10 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public void benchmarkAndUpdateScanWeights(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request,
+    public void adjustScanWeights(ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(METHOD_BENCHMARK_AND_UPDATE_SCAN_WEIGHTS, getCallOptions()), request, responseObserver);
+          getChannel().newCall(METHOD_ADJUST_SCAN_WEIGHTS, getCallOptions()), request, responseObserver);
     }
 
     @java.lang.Override
@@ -452,7 +524,7 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public void sparsifyEntity(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request,
+    public void sparsifyEntity(ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_SPARSIFY_ENTITY, getCallOptions()), request, responseObserver);
@@ -502,6 +574,12 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage existsEntity(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_EXISTS_ENTITY, getCallOptions(), request);
+    }
+
+    @java.lang.Override
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage index(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_INDEX, getCallOptions(), request);
@@ -514,9 +592,21 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage existsIndex(ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_EXISTS_INDEX, getCallOptions(), request);
+    }
+
+    @java.lang.Override
     public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage dropIndex(ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_DROP_INDEX, getCallOptions(), request);
+    }
+
+    @java.lang.Override
+    public ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage listIndexes(ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_LIST_INDEXES, getCallOptions(), request);
     }
 
     @java.lang.Override
@@ -550,9 +640,9 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage benchmarkAndUpdateScanWeights(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request) {
+    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage adjustScanWeights(ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage request) {
       return blockingUnaryCall(
-          getChannel(), METHOD_BENCHMARK_AND_UPDATE_SCAN_WEIGHTS, getCallOptions(), request);
+          getChannel(), METHOD_ADJUST_SCAN_WEIGHTS, getCallOptions(), request);
     }
 
     @java.lang.Override
@@ -568,7 +658,7 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage sparsifyEntity(ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request) {
+    public ch.unibas.dmi.dbis.adam.http.Adam.AckMessage sparsifyEntity(ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_SPARSIFY_ENTITY, getCallOptions(), request);
     }
@@ -619,6 +709,13 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage> existsEntity(
+        ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_EXISTS_ENTITY, getCallOptions()), request);
+    }
+
+    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> index(
         ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request) {
       return futureUnaryCall(
@@ -633,10 +730,24 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage> existsIndex(
+        ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_EXISTS_INDEX, getCallOptions()), request);
+    }
+
+    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> dropIndex(
         ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_DROP_INDEX, getCallOptions()), request);
+    }
+
+    @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage> listIndexes(
+        ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_LIST_INDEXES, getCallOptions()), request);
     }
 
     @java.lang.Override
@@ -675,10 +786,10 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> benchmarkAndUpdateScanWeights(
-        ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request) {
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> adjustScanWeights(
+        ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage request) {
       return futureUnaryCall(
-          getChannel().newCall(METHOD_BENCHMARK_AND_UPDATE_SCAN_WEIGHTS, getCallOptions()), request);
+          getChannel().newCall(METHOD_ADJUST_SCAN_WEIGHTS, getCallOptions()), request);
     }
 
     @java.lang.Override
@@ -697,7 +808,7 @@ public class AdamDefinitionGrpc {
 
     @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage> sparsifyEntity(
-        ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage request) {
+        ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_SPARSIFY_ENTITY, getCallOptions()), request);
     }
@@ -713,20 +824,23 @@ public class AdamDefinitionGrpc {
   private static final int METHODID_CREATE_ENTITY = 0;
   private static final int METHODID_COUNT = 1;
   private static final int METHODID_DROP_ENTITY = 2;
-  private static final int METHODID_INDEX = 3;
-  private static final int METHODID_GENERATE_ALL_INDEXES = 4;
-  private static final int METHODID_DROP_INDEX = 5;
-  private static final int METHODID_GENERATE_RANDOM_DATA = 6;
-  private static final int METHODID_LIST_ENTITIES = 7;
-  private static final int METHODID_GET_ENTITY_PROPERTIES = 8;
-  private static final int METHODID_REPARTITION_ENTITY_DATA = 9;
-  private static final int METHODID_REPARTITION_INDEX_DATA = 10;
-  private static final int METHODID_BENCHMARK_AND_UPDATE_SCAN_WEIGHTS = 11;
-  private static final int METHODID_RESET_SCAN_WEIGHTS = 12;
-  private static final int METHODID_SET_SCAN_WEIGHT = 13;
-  private static final int METHODID_SPARSIFY_ENTITY = 14;
-  private static final int METHODID_IMPORT_DATA = 15;
-  private static final int METHODID_INSERT = 16;
+  private static final int METHODID_EXISTS_ENTITY = 3;
+  private static final int METHODID_INDEX = 4;
+  private static final int METHODID_GENERATE_ALL_INDEXES = 5;
+  private static final int METHODID_EXISTS_INDEX = 6;
+  private static final int METHODID_DROP_INDEX = 7;
+  private static final int METHODID_LIST_INDEXES = 8;
+  private static final int METHODID_GENERATE_RANDOM_DATA = 9;
+  private static final int METHODID_LIST_ENTITIES = 10;
+  private static final int METHODID_GET_ENTITY_PROPERTIES = 11;
+  private static final int METHODID_REPARTITION_ENTITY_DATA = 12;
+  private static final int METHODID_REPARTITION_INDEX_DATA = 13;
+  private static final int METHODID_ADJUST_SCAN_WEIGHTS = 14;
+  private static final int METHODID_RESET_SCAN_WEIGHTS = 15;
+  private static final int METHODID_SET_SCAN_WEIGHT = 16;
+  private static final int METHODID_SPARSIFY_ENTITY = 17;
+  private static final int METHODID_IMPORT_DATA = 18;
+  private static final int METHODID_INSERT = 19;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -756,6 +870,10 @@ public class AdamDefinitionGrpc {
           serviceImpl.dropEntity((ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>) responseObserver);
           break;
+        case METHODID_EXISTS_ENTITY:
+          serviceImpl.existsEntity((ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage>) responseObserver);
+          break;
         case METHODID_INDEX:
           serviceImpl.index((ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>) responseObserver);
@@ -764,9 +882,17 @@ public class AdamDefinitionGrpc {
           serviceImpl.generateAllIndexes((ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>) responseObserver);
           break;
+        case METHODID_EXISTS_INDEX:
+          serviceImpl.existsIndex((ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage>) responseObserver);
+          break;
         case METHODID_DROP_INDEX:
           serviceImpl.dropIndex((ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>) responseObserver);
+          break;
+        case METHODID_LIST_INDEXES:
+          serviceImpl.listIndexes((ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage>) responseObserver);
           break;
         case METHODID_GENERATE_RANDOM_DATA:
           serviceImpl.generateRandomData((ch.unibas.dmi.dbis.adam.http.Adam.GenerateRandomDataMessage) request,
@@ -788,8 +914,8 @@ public class AdamDefinitionGrpc {
           serviceImpl.repartitionIndexData((ch.unibas.dmi.dbis.adam.http.Adam.RepartitionMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>) responseObserver);
           break;
-        case METHODID_BENCHMARK_AND_UPDATE_SCAN_WEIGHTS:
-          serviceImpl.benchmarkAndUpdateScanWeights((ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage) request,
+        case METHODID_ADJUST_SCAN_WEIGHTS:
+          serviceImpl.adjustScanWeights((ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>) responseObserver);
           break;
         case METHODID_RESET_SCAN_WEIGHTS:
@@ -801,7 +927,7 @@ public class AdamDefinitionGrpc {
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>) responseObserver);
           break;
         case METHODID_SPARSIFY_ENTITY:
-          serviceImpl.sparsifyEntity((ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage) request,
+          serviceImpl.sparsifyEntity((ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>) responseObserver);
           break;
         case METHODID_IMPORT_DATA:
@@ -851,6 +977,13 @@ public class AdamDefinitionGrpc {
               ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>(
                 serviceImpl, METHODID_DROP_ENTITY)))
         .addMethod(
+          METHOD_EXISTS_ENTITY,
+          asyncUnaryCall(
+            new MethodHandlers<
+              ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage,
+              ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage>(
+                serviceImpl, METHODID_EXISTS_ENTITY)))
+        .addMethod(
           METHOD_INSERT,
           asyncClientStreamingCall(
             new MethodHandlers<
@@ -872,12 +1005,26 @@ public class AdamDefinitionGrpc {
               ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>(
                 serviceImpl, METHODID_GENERATE_ALL_INDEXES)))
         .addMethod(
+          METHOD_EXISTS_INDEX,
+          asyncUnaryCall(
+            new MethodHandlers<
+              ch.unibas.dmi.dbis.adam.http.Adam.IndexMessage,
+              ch.unibas.dmi.dbis.adam.http.Adam.ExistsMessage>(
+                serviceImpl, METHODID_EXISTS_INDEX)))
+        .addMethod(
           METHOD_DROP_INDEX,
           asyncUnaryCall(
             new MethodHandlers<
               ch.unibas.dmi.dbis.adam.http.Adam.IndexNameMessage,
               ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>(
                 serviceImpl, METHODID_DROP_INDEX)))
+        .addMethod(
+          METHOD_LIST_INDEXES,
+          asyncUnaryCall(
+            new MethodHandlers<
+              ch.unibas.dmi.dbis.adam.http.Adam.EntityNameMessage,
+              ch.unibas.dmi.dbis.adam.http.Adam.IndexesMessage>(
+                serviceImpl, METHODID_LIST_INDEXES)))
         .addMethod(
           METHOD_GENERATE_RANDOM_DATA,
           asyncUnaryCall(
@@ -914,12 +1061,12 @@ public class AdamDefinitionGrpc {
               ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>(
                 serviceImpl, METHODID_REPARTITION_INDEX_DATA)))
         .addMethod(
-          METHOD_BENCHMARK_AND_UPDATE_SCAN_WEIGHTS,
+          METHOD_ADJUST_SCAN_WEIGHTS,
           asyncUnaryCall(
             new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage,
+              ch.unibas.dmi.dbis.adam.http.Adam.UpdateWeightsMessage,
               ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>(
-                serviceImpl, METHODID_BENCHMARK_AND_UPDATE_SCAN_WEIGHTS)))
+                serviceImpl, METHODID_ADJUST_SCAN_WEIGHTS)))
         .addMethod(
           METHOD_RESET_SCAN_WEIGHTS,
           asyncUnaryCall(
@@ -938,7 +1085,7 @@ public class AdamDefinitionGrpc {
           METHOD_SPARSIFY_ENTITY,
           asyncUnaryCall(
             new MethodHandlers<
-              ch.unibas.dmi.dbis.adam.http.Adam.WeightMessage,
+              ch.unibas.dmi.dbis.adam.http.Adam.SparsifyEntityMessage,
               ch.unibas.dmi.dbis.adam.http.Adam.AckMessage>(
                 serviceImpl, METHODID_SPARSIFY_ENTITY)))
         .addMethod(

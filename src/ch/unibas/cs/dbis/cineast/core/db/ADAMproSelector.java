@@ -57,8 +57,8 @@ public class ADAMproSelector implements DBSelector {
 		
 		hints.add("exact");
 		
-		projectionMessage = Adam.ProjectionMessage.newBuilder().setField(
-				Adam.ProjectionMessage.FieldnameMessage.newBuilder().addField("adamprodistance").addField("id")).build();
+		projectionMessage = Adam.ProjectionMessage.newBuilder().setAttributes(
+				Adam.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("adamprodistance").addAttribute("id")).build();
 		
 		DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
 		
@@ -126,14 +126,14 @@ public class ADAMproSelector implements DBSelector {
 	private WhereMessage buildWhereMessage(String key, String value){
 		synchronized (wmBuilder) {
 			wmBuilder.clear();
-			return wmBuilder.setField(key).setValue(value).build();
+			return wmBuilder.setAttribute(key).setValue(value).build();
 		}
 	}
 	
 	private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column, FeatureVectorMessage fvm, int k, QueryConfig qc){
 		synchronized (nnqmBuilder) {
 			this.nnqmBuilder.clear();
-			nnqmBuilder.setColumn(column).setQuery(fvm).setK(k);
+			nnqmBuilder.setAttribute(column).setQuery(fvm).setK(k);
 			nnqmBuilder.setDistance(buildDistanceMessage(qc));
 			if(qc != null){
 				Optional<float[]> weights = qc.getDistanceWeights();
