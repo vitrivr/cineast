@@ -48,9 +48,9 @@ public class PathList {
 	public static int frameInterval = 1;
 	
 	public static double backwardTrackingDistanceThreshold = 5.0;
-	public static double successTrackingRatioThreshold = 0.65;
+	public static double successTrackingRatioThreshold = 0.50;
 	public static double ransacInlierRatioThreshold = 0.65;
-	public static double successFrameSRatioThreshold = 0.65;
+	public static double successFrameSRatioThreshold = 0.70;
 	
 	public static void showBineryImage(GrayU8 image){
 		PixelMath.multiply(image,255,image);
@@ -225,14 +225,14 @@ public class PathList {
 			boolean success = false;
 			if( ret == KltTrackFault.SUCCESS && image.isInBounds((int)track.x,(int)track.y) && trackerForeward.setDescription(track)) {
 				Point2D_F64 pointCur = new Point2D_F64(track.x,track.y);
-				//ret = trackerBackward.track(track);
-				//if( ret == KltTrackFault.SUCCESS && image.isInBounds((int)track.x,(int)track.y) ) {
-					//Point2D_F64 pointCurBack = new Point2D_F64(track.x,track.y);
-					//if(normalizedDistance(pointPrev,pointCurBack) < backwardTrackingDistanceThreshold){
+				ret = trackerBackward.track(track);
+				if( ret == KltTrackFault.SUCCESS && image.isInBounds((int)track.x,(int)track.y) ) {
+					Point2D_F64 pointCurBack = new Point2D_F64(track.x,track.y);
+					if(normalizedDistance(pointPrev,pointCurBack) < backwardTrackingDistanceThreshold){
 						tracksPairs.add(new AssociatedPair(pointPrev,pointCur));
 						success = true;
-					//}
-				//}
+					}
+				}
 			}
 			if( !success ) {
 				listIterator.remove();
