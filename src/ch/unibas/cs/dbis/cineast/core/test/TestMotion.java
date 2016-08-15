@@ -63,11 +63,15 @@ public class TestMotion {
 		long getHistTime = System.currentTimeMillis();
 		LOGGER.info("finished getHist bg and fg in {}", formatTime(getHistTime - separateTime));
 		
-		ArrayList<GrayU8> masks = MaskGenerator.getFgMasks(shot.getFrames(), foregroundPaths);
+		ArrayList<GrayU8> masks = MaskGenerator.getFgMasksByNN(shot.getFrames(), foregroundPaths, backgroundPaths);
 		long getFgMasksTime = System.currentTimeMillis();
 		LOGGER.info("finished getFgMasks in {}", formatTime(getFgMasksTime - getHistTime));
 		
-		VisualizationUtil.visualize(shot.getFrames(),foregroundPaths,backgroundPaths,masks);
+		ArrayList<GrayU8> masks2 = MaskGenerator.getFgMasksByFilter(shot.getFrames(), foregroundPaths, backgroundPaths);
+		long getFgMasksTime2 = System.currentTimeMillis();
+		LOGGER.info("finished getFgMasks in {}", formatTime(getFgMasksTime2 - getFgMasksTime));
+		
+		VisualizationUtil.visualize(shot.getFrames(),foregroundPaths,backgroundPaths,masks,masks2);
 		System.exit(0);
 	}
 	

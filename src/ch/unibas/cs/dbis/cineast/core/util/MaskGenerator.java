@@ -19,18 +19,23 @@ import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.descriptor.PathList;
 import georegression.struct.point.Point2D_F32;
+import org.ddogleg.nn.FactoryNearestNeighbor;
+import org.ddogleg.nn.NearestNeighbor;
+import org.ddogleg.nn.NnData;
+import org.ddogleg.struct.FastQueue;
 
 public class MaskGenerator {
 
 	private MaskGenerator(){}
-	
-	public static ArrayList<GrayU8> getFgMasks(List<Frame> frames,
-			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths) {
-		
+
+	public static ArrayList<GrayU8> getFgMasksByFilter(List<Frame> frames,
+			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
+			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths) {
+
 		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
 			return null;
 		}
-
+		
 		ArrayList<GrayU8> masksScaled = generateScaledMasksFromPath(frames, foregroundPaths);
 
 		ArrayList<GrayU8> masksScaledSmoothed1 = createNewMasks(masksScaled);
@@ -46,6 +51,101 @@ public class MaskGenerator {
 		multiply3D(masksSmoothed2,masksSmoothed2,255);
 		
 		return masksSmoothed2;
+	}
+	
+	public static ArrayList<GrayU8> getFgMasksByNN(List<Frame> frames,
+			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
+			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths) {
+
+		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
+			return null;
+		}
+
+		ArrayList<GrayU8> masks = generateMasksFromPath(frames, foregroundPaths, backgroundPaths);
+				
+		ArrayList<GrayU8> masksSmoothed1 = createNewMasks(masks);
+		smoothMasks(masks, masksSmoothed1, 21, 2, 64, 26);
+		ArrayList<GrayU8> masksSmoothed2 = createNewMasks(masks);
+		smoothMasks(masksSmoothed1, masksSmoothed2, 11, 2, 64, 26);
+		
+		multiply3D(masksSmoothed2,masksSmoothed2,255);
+		
+		return masksSmoothed2;
+	}
+	
+	public static ArrayList<GrayU8> generateMasksFromPath(List<Frame> frames,
+			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
+			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){
+		
+		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
+			return null;
+		}
+
+		ArrayList<GrayU8> masks = new ArrayList<GrayU8>();
+
+		int width = frames.get(0).getImage().getBufferedImage().getWidth();
+		int height = frames.get(0).getImage().getBufferedImage().getHeight();
+
+		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> fgPathItor = foregroundPaths.listIterator();
+		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> bgPathItor = backgroundPaths.listIterator();
+
+		int cnt = 0;
+		for (int frameIdx = 0; frameIdx < frames.size(); ++frameIdx) {
+			if (cnt >= PathList.frameInterval) {
+				cnt = 0;
+				continue;
+			}
+			cnt += 1;
+			
+			GrayU8 mask = new GrayU8(width, height);
+			
+			NearestNeighbor<Integer> nn = FactoryNearestNeighbor.kdtree();
+			LinkedList<double[]> nnPoints = new LinkedList<double[]>();
+			LinkedList<Integer> nnData = new LinkedList<Integer>();
+			
+			while (fgPathItor.hasNext()) {
+				Pair<Integer, LinkedList<Point2D_F32>> pair = fgPathItor.next();
+				if (pair.first > frameIdx)
+					break;
+				Point2D_F32 p = pair.second.getFirst();
+				double[] point = {p.x * width, p.y * height};
+				nnPoints.add(point);
+				nnData.add(1);
+			}
+			
+			while (bgPathItor.hasNext()) {
+				Pair<Integer, LinkedList<Point2D_F32>> pair = bgPathItor.next();
+				if (pair.first > frameIdx)
+					break;
+				Point2D_F32 p = pair.second.getFirst();
+				double[] point = {p.x * width, p.y * height};
+				nnPoints.add(point);
+				nnData.add(0);
+			}
+			
+			nn.init(2);
+			nn.setPoints(nnPoints, nnData);
+			
+			for(int x = 0; x < width; ++x){
+				for(int y = 0; y < height; ++y){
+					double[] point = {x, y};
+					FastQueue<NnData<Integer>> results = new FastQueue(3,NnData.class,true);
+					nn.findNearest(point, -1, 3, results);
+					int sum = 0;
+					for(NnData<Integer> r : results.toList()){
+						sum += r.data.intValue();
+					}
+					int value = sum > results.size()/2 ? 1 : 0;
+					mask.set(x, y, value);
+				}
+			}
+			
+			//showBineryImage(mask);
+			masks.add(mask);
+		}
+		
+		return masks;
+		
 	}
 	
 	public static ArrayList<GrayU8> generateScaledMasksFromPath(List<Frame> frames,

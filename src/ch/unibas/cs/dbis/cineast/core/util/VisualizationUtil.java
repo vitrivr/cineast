@@ -26,7 +26,7 @@ public class VisualizationUtil {
 	public static ImagePanel gui = new ImagePanel();
 	
 	public static void visualize(List<Frame> frames, ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
-			ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths, ArrayList<GrayU8> masks) {
+			ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths, ArrayList<GrayU8> masks,ArrayList<GrayU8> masks2) {
 		BufferedImage bufferedImage = null;
 		BufferedImage track = null;
 		BufferedImage mask = null;
@@ -35,14 +35,15 @@ public class VisualizationUtil {
 		int width = track.getWidth();
 		int height = track.getHeight();
 		int imageType = track.getType();
-		bufferedImage = new BufferedImage(width * 2, height, imageType);
-		gui.setPreferredSize(new Dimension(width * 2, height));
+		bufferedImage = new BufferedImage(width * 3, height, imageType);
+		gui.setPreferredSize(new Dimension(width * 3, height));
 		ShowImages.showWindow(gui, "visualize", true);
 
 		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> fgPathItor = foregroundPaths.listIterator();
 		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> bgPathItor = backgroundPaths.listIterator();
 
 		ListIterator<GrayU8> maskIter = masks.listIterator();
+		ListIterator<GrayU8> maskIter2 = masks2.listIterator();
 
 		int cnt = 0;
 		for (int frameIdx = 0; frameIdx < frames.size(); ++frameIdx) {
@@ -80,17 +81,23 @@ public class VisualizationUtil {
 				mask = ConvertBufferedImage.convertTo(maskIter.next(), null);
 				g2.drawImage(mask, null, width, 0);
 			}
+			
+			if (maskIter.hasNext()) {
+				mask = ConvertBufferedImage.convertTo(maskIter2.next(), null);
+				g2.drawImage(mask, null, width*2, 0);
+			}
 
 			gui.setBufferedImage(bufferedImage);
 			gui.repaint();
 
 			try {
 				Thread thread = Thread.currentThread();
-				thread.sleep(200);
+				thread.sleep(250);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+		
 	}
 	
 }
