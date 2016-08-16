@@ -44,8 +44,8 @@ public class PathList {
 
 	private PathList(){}
 	
-	public static int samplingInterval = 10;
-	public static int frameInterval = 1;
+	public static int samplingInterval = 15;
+	public static int frameInterval = 2;
 	
 	public static double backwardTrackingDistanceThreshold = 5.0;
 	public static double successTrackingRatioThreshold = 0.50;
