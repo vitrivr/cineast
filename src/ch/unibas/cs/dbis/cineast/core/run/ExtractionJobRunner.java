@@ -17,7 +17,6 @@ import ch.unibas.cs.dbis.cineast.core.config.Config;
 import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
 import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
 import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
-import ch.unibas.cs.dbis.cineast.core.decode.video.JLibAVVideoDecoder;
 import ch.unibas.cs.dbis.cineast.core.decode.video.VideoDecoder;
 import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
@@ -395,7 +394,7 @@ public class ExtractionJobRunner implements Runnable{
 		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
 		writer.open("cineast_multimediaobject");
 
-		VideoDecoder vd = new JLibAVVideoDecoder(this.inputFile); //TODO change decoder based on config
+		VideoDecoder vd = Config.getDecoderConfig().newVideoDecoder(this.inputFile);
 			
 		PersistentTuple tuple = writer.generateTuple(inputId, 0, inputName, inputFile.getAbsolutePath(), vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
 		writer.persist(tuple);
