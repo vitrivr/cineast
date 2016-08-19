@@ -21,51 +21,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.ADAMproSelector;
-import org.vitrivr.cineast.core.features.AverageColor;
-import org.vitrivr.cineast.core.features.AverageColorARP44;
-import org.vitrivr.cineast.core.features.AverageColorCLD;
-import org.vitrivr.cineast.core.features.AverageColorGrid8;
-import org.vitrivr.cineast.core.features.AverageColorRaster;
-import org.vitrivr.cineast.core.features.AverageFuzzyHist;
-import org.vitrivr.cineast.core.features.CLD;
-import org.vitrivr.cineast.core.features.ChromaGrid8;
-import org.vitrivr.cineast.core.features.DominantColors;
-import org.vitrivr.cineast.core.features.DominantEdgeGrid16;
-import org.vitrivr.cineast.core.features.DominantEdgeGrid8;
-import org.vitrivr.cineast.core.features.EHD;
-import org.vitrivr.cineast.core.features.EdgeARP88;
-import org.vitrivr.cineast.core.features.EdgeARP88Full;
-import org.vitrivr.cineast.core.features.EdgeGrid16;
-import org.vitrivr.cineast.core.features.EdgeGrid16Full;
-import org.vitrivr.cineast.core.features.HueValueVarianceGrid8;
-import org.vitrivr.cineast.core.features.MedianColor;
-import org.vitrivr.cineast.core.features.MedianColorARP44;
-import org.vitrivr.cineast.core.features.MedianColorGrid8;
-import org.vitrivr.cineast.core.features.MedianColorRaster;
-import org.vitrivr.cineast.core.features.MedianFuzzyHist;
-import org.vitrivr.cineast.core.features.MotionHistogram;
-import org.vitrivr.cineast.core.features.MotionSum;
-import org.vitrivr.cineast.core.features.SaturationGrid8;
-import org.vitrivr.cineast.core.features.SubDivAverageFuzzyColor;
-import org.vitrivr.cineast.core.features.SubDivMedianFuzzyColor;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram2;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram3;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram4;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram5;
-import org.vitrivr.cineast.core.features.SubDivMotionSum2;
-import org.vitrivr.cineast.core.features.SubDivMotionSum3;
-import org.vitrivr.cineast.core.features.SubDivMotionSum4;
-import org.vitrivr.cineast.core.features.SubDivMotionSum5;
-import org.vitrivr.cineast.core.features.SubtitleFulltextSearch;
-import org.vitrivr.cineast.core.features.SubtitleWordSearch;
-import org.vitrivr.cineast.core.features.exporter.QueryImageExporter;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.run.ExtractionJobRunner;
 import org.vitrivr.cineast.core.run.FeatureExtractionRunner;
 import org.vitrivr.cineast.core.util.LogHelper;
-
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 /**
  * Entry point. 
@@ -165,115 +125,6 @@ public class API {
 		return initializer;
 	}
 	
-	public static TObjectDoubleHashMap<Retriever> getRetrieversByCategory(String category){
-		
-		String c = category.toLowerCase();
-		TObjectDoubleHashMap<Retriever> _return = new TObjectDoubleHashMap<Retriever>();
-		
-		switch(c){
-		case "globalcolor":{
-			_return.put(new AverageColor(),				2.3);
-			_return.put(new DominantColors(),			1.0);
-			_return.put(new MedianColor(),				1.2);
-			_return.put(new QueryImageExporter(), 		0.001);
-			return _return;
-		}
-		case "localcolor":{
-			_return.put(new AverageFuzzyHist(),			0.7);
-			_return.put(new MedianFuzzyHist(),			1.3);
-			_return.put(new AverageColorARP44(),		0.5);
-			_return.put(new MedianColorARP44(),			0.85);
-			_return.put(new SubDivAverageFuzzyColor(),	0.5);
-			_return.put(new SubDivMedianFuzzyColor(),	0.85);
-			_return.put(new AverageColorGrid8(),		1.8);
-			_return.put(new ChromaGrid8(),				0.95);
-			_return.put(new SaturationGrid8(),			0.65);
-			_return.put(new AverageColorCLD(),			1.4);
-			_return.put(new CLD(),						1.3);
-			_return.put(new HueValueVarianceGrid8(),	0.85);
-			_return.put(new MedianColorGrid8(),			1.7);
-			_return.put(new AverageColorRaster(),		1.0);
-			_return.put(new MedianColorRaster(),		1.0);
-			return _return;
-		}
-		case "edge":{
-			_return.put(new EdgeARP88(),				0.85);
-			_return.put(new EdgeGrid16(),				1.15);
-			_return.put(new EdgeARP88Full(),			0.85);
-			_return.put(new EdgeGrid16Full(),			0.85);
-			_return.put(new EHD(),						0.7);
-			_return.put(new DominantEdgeGrid16(),		1.4);
-			_return.put(new DominantEdgeGrid8(),		1.4);
-			return _return;
-		}
-		case "motion":{
-			_return.put(new MotionHistogram(),			1.0);
-			_return.put(new SubDivMotionHistogram2(),	1.0);
-			_return.put(new SubDivMotionHistogram3(),	1.0);
-			_return.put(new SubDivMotionHistogram4(),	1.0);
-			_return.put(new SubDivMotionHistogram5(),	1.0);
-			_return.put(new MotionSum(),				1.0);
-			_return.put(new SubDivMotionSum2(),			1.0);
-			_return.put(new SubDivMotionSum3(),			1.0);
-			_return.put(new SubDivMotionSum4(),			1.0);
-			_return.put(new SubDivMotionSum5(),			1.0);
-			return _return;
-		}
-		
-		case "meta":{
-			_return.put(new SubtitleWordSearch(), 1.0);
-			_return.put(new SubtitleFulltextSearch(), 1.0);
-			return _return;
-		}
-		case "all":{
-			_return.put(new AverageColor(),				2.3 * 2);
-			_return.put(new DominantColors(),			1.0 * 2);
-			_return.put(new MedianColor(),				1.2 * 2);
-			
-			_return.put(new AverageFuzzyHist(),			0.7 * 6);
-			_return.put(new MedianFuzzyHist(),			1.3 * 6);
-			_return.put(new AverageColorARP44(),		0.5 * 6);
-			_return.put(new MedianColorARP44(),			0.85 * 6);
-			_return.put(new SubDivAverageFuzzyColor(),	0.5 * 6);
-			_return.put(new SubDivMedianFuzzyColor(),	0.85 * 6);
-			_return.put(new AverageColorGrid8(),		1.8 * 6);
-			_return.put(new ChromaGrid8(),				0.95 * 6);
-			_return.put(new SaturationGrid8(),			0.65 * 6);
-			_return.put(new AverageColorCLD(),			1.4 * 6);
-			_return.put(new CLD(),						1.3 * 6);
-			_return.put(new HueValueVarianceGrid8(),	0.85 * 6);
-			_return.put(new MedianColorGrid8(),			1.7 * 6);
-			
-			_return.put(new EdgeARP88(),				0.85 * 3);
-			_return.put(new EdgeGrid16(),				1.15 * 3);
-			_return.put(new EdgeARP88Full(),			0.85 * 3);
-			_return.put(new EdgeGrid16Full(),			0.85 * 3);
-			_return.put(new EHD(),						0.7 * 3);
-			_return.put(new DominantEdgeGrid16(),		1.4 * 3);
-			_return.put(new DominantEdgeGrid8(),		1.4 * 3);
-			
-			_return.put(new MotionHistogram(),			1.0);
-			_return.put(new SubDivMotionHistogram2(),	1.0);
-			_return.put(new SubDivMotionHistogram3(),	1.0);
-			_return.put(new SubDivMotionHistogram4(),	1.0);
-			_return.put(new SubDivMotionHistogram5(),	1.0);
-			_return.put(new MotionSum(),				1.0);
-			_return.put(new SubDivMotionSum2(),			1.0);
-			_return.put(new SubDivMotionSum3(),			1.0);
-			_return.put(new SubDivMotionSum4(),			1.0);
-			_return.put(new SubDivMotionSum5(),			1.0);
-			
-//			_return.put(new SubtitleWordSearch(), 1.0);
-//			_return.put(new SubtitleFulltextSearch(), 1.0);
-//			_return.put(new RelativePosition(), 1.0);
-			return _return;
-		}
-		}
-		
-		return _return;
-		
-	}
-
 	private static final class APICLIThread extends Thread{
 		
 		@Override

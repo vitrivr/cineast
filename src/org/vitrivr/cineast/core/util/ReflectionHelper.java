@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 import com.eclipsesource.json.JsonObject;
 
@@ -14,8 +15,8 @@ public class ReflectionHelper {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private static final String FEATURE_MODULE_PACKAGE = "org.vitrivr.cineast.core.features";
-	private static final String EXPORTER_PACKAGE = "org.vitrivr.cineast.core.features.exporter";
+	public static final String FEATURE_MODULE_PACKAGE = "org.vitrivr.cineast.core.features";
+	public static final String EXPORTER_PACKAGE = "org.vitrivr.cineast.core.features.exporter";
 	
 	/**
 	 * creates a new instance of an exporter as specified by the provided json.
@@ -32,13 +33,27 @@ public class ReflectionHelper {
 	}
 	
 	/**
-	 * creates a new instance of an exporter as specified by the provided json.
+	 * creates a new instance of an {@link AbstractFeatureModule} as specified by the provided json.
 	 * @param json see {@link #instanciateFromJson(JsonObject, Class, String)}}
 	 * @return an instance of the requested class or null in case of error
 	 */
 	public static final AbstractFeatureModule newFeatureModule(JsonObject json){
 		try {
 			return instanciateFromJson(json, AbstractFeatureModule.class, FEATURE_MODULE_PACKAGE);
+		} catch (IllegalArgumentException | InstantiationException | ClassNotFoundException e) {
+			LOGGER.error(LogHelper.getStackTrace(e));
+		}
+		return null;
+	}
+	
+	/**
+	 * creates a new instance of a {@link Retriever}} as specified by the provided json.
+	 * @param json see {@link #instanciateFromJson(JsonObject, Class, String)}}
+	 * @return an instance of the requested class or null in case of error
+	 */
+	public static final Retriever newRetriever(JsonObject json){
+		try {
+			return instanciateFromJson(json, Retriever.class, FEATURE_MODULE_PACKAGE);
 		} catch (IllegalArgumentException | InstantiationException | ClassNotFoundException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
 		}
@@ -54,7 +69,7 @@ public class ReflectionHelper {
 		return cls;
 	}
 	
-	private static <T> T instanciate(Class<? extends T> cl, Object... args) {
+	public static <T> T instanciate(Class<? extends T> cl, Object... args) {
 		try {
 			Constructor<? extends T> con = cl.getConstructor(getClassArray(args));
 			return con.newInstance(args);
@@ -82,13 +97,39 @@ public class ReflectionHelper {
 	 * @param json
 	 * @param expectedSuperClass
 	 * @param expectedPackage
-	 * @return
 	 * @throws IllegalArgumentException in case neither 'name' nor 'class' is specified
 	 * @throws InstantiationException in case instantiation fails or the requested class does not match the expected super class
 	 * @throws ClassNotFoundException in case the class to instantiate was not found
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T instanciateFromJson(JsonObject json, Class<T> expectedSuperClass, String expectedPackage) throws IllegalArgumentException, InstantiationException, ClassNotFoundException{
+		
+		Class<T> targetClass = getClassFromJson(json, expectedSuperClass, expectedPackage);
+		
+		if(targetClass == null){
+			throw new ClassNotFoundException("No class found matching specification in " + json.toString());
+		}
+		
+		T instance = null;
+		if(json.get("config") == null){
+			instance = instanciate(targetClass);
+		}else{
+			try{
+				instance = instanciate(targetClass, json.get("config").asObject());
+			}catch(UnsupportedOperationException notAnObject){
+				LOGGER.warn("'config' was not an object during class instanciation in instanciateFromJson");
+			}
+		}
+		
+		if(instance == null){
+			throw new InstantiationException();
+		}
+		
+		return instance;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> getClassFromJson(JsonObject json, Class<T> expectedSuperClass, String expectedPackage) throws IllegalArgumentException, ClassNotFoundException, InstantiationException{
 		if(json.get("name") == null && json.get("class") == null ){
 			throw new IllegalArgumentException("Either 'name' or 'class' needs to be specified in json");
 		}
@@ -109,7 +150,11 @@ public class ReflectionHelper {
 			}
 		}
 		
-		if(targetClass == null && json.get("class") != null){
+		if(targetClass != null){
+			return targetClass;
+		}
+		
+		if(json.get("class") != null){
 			try{
 				classPath = json.get("class").asString();
 			}catch(UnsupportedOperationException notAString){
@@ -126,26 +171,7 @@ public class ReflectionHelper {
 			}
 		}
 		
-		if(targetClass == null){
-			throw new ClassNotFoundException("Class '" + classPath + "' was not found");
-		}
-		
-		T instance = null;
-		if(json.get("config") == null){
-			instance = instanciate(targetClass);
-		}else{
-			try{
-				instance = instanciate(targetClass, json.get("config").asObject());
-			}catch(UnsupportedOperationException notAnObject){
-				LOGGER.warn("'config' was not an object during class instanciation in instanciateFromJson");
-			}
-		}
-		
-		if(instance == null){
-			throw new InstantiationException();
-		}
-		
-		return instance;
+		return targetClass;
 		
 	}
 	

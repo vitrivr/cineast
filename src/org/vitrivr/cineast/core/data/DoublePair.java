@@ -10,4 +10,8 @@ public class DoublePair<T> {
 		this.value = v;
 	}
 	
+	public static <V> DoublePair<V> pair(V key, double value){
+		return new DoublePair<V>(key, value);
+	}
+	
 }
