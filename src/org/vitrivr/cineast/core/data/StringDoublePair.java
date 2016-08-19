@@ -2,19 +2,15 @@ package org.vitrivr.cineast.core.data;
 
 import java.util.Comparator;
 
-public class StringDoublePair {
+public class StringDoublePair extends DoublePair<String> {
 	
 	@Override
 	public String toString() {
 		return "StringDoublePair(" + key + ", " + value + ")";
 	}
 
-	public String key;
-	public double value;
-	
 	public StringDoublePair(String k, double v){
-		this.key = k;
-		this.value = v;
+		super(k, v);
 	}
 	
 	public static final Comparator<StringDoublePair> COMPARATOR = new Comparator<StringDoublePair>(){
