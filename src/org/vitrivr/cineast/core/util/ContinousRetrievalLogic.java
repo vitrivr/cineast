@@ -1,14 +1,15 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.api.API;
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
-import ch.unibas.cs.dbis.cineast.core.runtime.ContinousQueryDispatcher;
+import org.vitrivr.cineast.api.API;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.runtime.ContinousQueryDispatcher;
+
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 public class ContinousRetrievalLogic {

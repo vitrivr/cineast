@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.decode.video;
+package org.vitrivr.cineast.core.decode.video;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -25,8 +25,7 @@ import org.jcodec.containers.mp4.MP4Packet;
 import org.jcodec.containers.mp4.boxes.SampleEntry;
 import org.jcodec.containers.mp4.demuxer.AbstractMP4DemuxerTrack;
 import org.jcodec.containers.mp4.demuxer.MP4Demuxer;
-
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * This class is copied from JCodec ( www.jcodec.org ) and modified.

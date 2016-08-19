@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.decode.subtitle;
+package org.vitrivr.cineast.core.decode.subtitle;
 
 
 

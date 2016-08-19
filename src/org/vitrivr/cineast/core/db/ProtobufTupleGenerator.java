@@ -1,15 +1,15 @@
-package ch.unibas.cs.dbis.cineast.core.db;
+package org.vitrivr.cineast.core.db;
 
 import java.util.HashMap;
 
-import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
-import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.adam.grpc.AdamGrpc;
 import org.vitrivr.adam.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DenseVectorMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.FeatureVectorMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage.Builder;
+import org.vitrivr.cineast.core.data.FloatArrayIterable;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.adam.grpc.AdamGrpc.IntVectorMessage;
 
 public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleInsertMessage> {

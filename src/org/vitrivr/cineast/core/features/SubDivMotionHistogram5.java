@@ -1,16 +1,16 @@
-package ch.unibas.cs.dbis.cineast.core.features;
+package org.vitrivr.cineast.core.features;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.features.abstracts.SubDivMotionHistogram;
-import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.FloatVector;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
+import org.vitrivr.cineast.core.util.MathHelper;
 
 public class SubDivMotionHistogram5 extends SubDivMotionHistogram {
 

@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.data.providers;
+package org.vitrivr.cineast.core.data.providers;
 
 import java.util.List;
 

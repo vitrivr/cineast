@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.api;
+package org.vitrivr.cineast.api;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,23 +16,23 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.db.ADAMproSelector;
+import org.vitrivr.cineast.core.db.DBResultCache;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.ShotLookup;
+import org.vitrivr.cineast.core.db.VideoLookup;
+import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.db.ADAMproSelector;
-import ch.unibas.cs.dbis.cineast.core.db.DBResultCache;
-import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
-import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
-import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
-import ch.unibas.cs.dbis.cineast.core.db.VideoLookup;
-import ch.unibas.cs.dbis.cineast.core.util.ContinousRetrievalLogic;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 /**

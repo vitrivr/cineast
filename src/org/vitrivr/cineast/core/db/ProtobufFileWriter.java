@@ -1,12 +1,12 @@
-package ch.unibas.cs.dbis.cineast.core.db;
+package org.vitrivr.cineast.core.db;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import ch.unibas.cs.dbis.cineast.core.config.Config;
 import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
+import org.vitrivr.cineast.core.config.Config;
 
 
 public class ProtobufFileWriter extends ProtobufTupleGenerator {

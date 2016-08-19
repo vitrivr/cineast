@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.decode.video;
+package org.vitrivr.cineast.core.decode.video;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -27,11 +27,10 @@ import org.libav.data.IFrameConsumer;
 import org.libav.swscale.ScaleContextWrapper;
 import org.libav.swscale.bridge.SWScaleLibrary;
 import org.libav.video.VideoFrameDecoder;
-
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImageFactory;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 public class JLibAVVideoDecoder implements VideoDecoder {
 

@@ -1,6 +1,6 @@
-package ch.unibas.cs.dbis.cineast.core.decode.video;
+package org.vitrivr.cineast.core.decode.video;
 
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.Frame;
 
 public interface VideoDecoder {
 

@@ -1,8 +1,8 @@
-package ch.unibas.cs.dbis.cineast.core.data.providers;
+package org.vitrivr.cineast.core.data.providers;
 
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 
 public interface SubtitleItemProvider {
 

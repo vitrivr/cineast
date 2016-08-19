@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,9 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
-import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.data.FloatVector;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 
 public strictfp class KMeansPP {
 

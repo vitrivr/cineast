@@ -1,6 +1,6 @@
-package ch.unibas.cs.dbis.cineast.core.decode.subtitle.srt;
+package org.vitrivr.cineast.core.decode.subtitle.srt;
 
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.AbstractSubtitleItem;
+import org.vitrivr.cineast.core.decode.subtitle.AbstractSubtitleItem;
 
 public class SRTSubtitleItem extends AbstractSubtitleItem {
 

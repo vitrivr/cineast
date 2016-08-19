@@ -1,18 +1,19 @@
-package ch.unibas.cs.dbis.cineast.core.features.abstracts;
+package org.vitrivr.cineast.core.features.abstracts;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
-import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
-import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
-import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
-import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
-import ch.unibas.cs.dbis.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.util.MathHelper;
+
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 

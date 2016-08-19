@@ -1,12 +1,12 @@
-package ch.unibas.cs.dbis.cineast.core.config;
+package org.vitrivr.cineast.core.config;
 
 import java.io.File;
 
-import com.eclipsesource.json.JsonObject;
+import org.vitrivr.cineast.core.decode.video.JCodecVideoDecoder;
+import org.vitrivr.cineast.core.decode.video.JLibAVVideoDecoder;
+import org.vitrivr.cineast.core.decode.video.VideoDecoder;
 
-import ch.unibas.cs.dbis.cineast.core.decode.video.JCodecVideoDecoder;
-import ch.unibas.cs.dbis.cineast.core.decode.video.JLibAVVideoDecoder;
-import ch.unibas.cs.dbis.cineast.core.decode.video.VideoDecoder;
+import com.eclipsesource.json.JsonObject;
 
 public final class DecoderConfig { 
 

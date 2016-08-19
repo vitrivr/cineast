@@ -1,15 +1,14 @@
-package ch.unibas.cs.dbis.cineast.core.setup;
+package org.vitrivr.cineast.core.setup;
 
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.db.ADAMproWrapper;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.AttributeDefinitionMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage;
+import org.vitrivr.cineast.core.db.ADAMproWrapper;
 
 public class EntityCreator {
 

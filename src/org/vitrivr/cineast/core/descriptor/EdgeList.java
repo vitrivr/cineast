@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.descriptor;
+package org.vitrivr.cineast.core.descriptor;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.MultiImage;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -20,8 +22,6 @@ import boofcv.factory.feature.detect.edge.FactoryEdgeDetectors;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayS16;
 import boofcv.struct.image.GrayU8;
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
 
 public class EdgeList {
 

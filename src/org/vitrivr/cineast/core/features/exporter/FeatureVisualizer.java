@@ -1,8 +1,8 @@
-package ch.unibas.cs.dbis.cineast.core.features.exporter;
+package org.vitrivr.cineast.core.features.exporter;
 
 import java.awt.image.BufferedImage;
 
-import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
+import org.vitrivr.cineast.core.data.FloatVector;
 
 public interface FeatureVisualizer {
 

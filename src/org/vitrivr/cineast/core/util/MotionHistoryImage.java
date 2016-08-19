@@ -1,11 +1,11 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import java.util.ArrayList;
 
-import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.color.ReadableRGBContainer;
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.SegmentContainer;
 
 public class MotionHistoryImage {
 

@@ -1,9 +1,10 @@
-package ch.unibas.cs.dbis.cineast.core.data.providers;
+package org.vitrivr.cineast.core.data.providers;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.Pair;
+
 import georegression.struct.point.Point2D_F32;
 
 

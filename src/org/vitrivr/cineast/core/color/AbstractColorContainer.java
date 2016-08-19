@@ -1,6 +1,6 @@
-package ch.unibas.cs.dbis.cineast.core.color;
+package org.vitrivr.cineast.core.color;
 
-import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 
 public abstract class AbstractColorContainer<T extends AbstractColorContainer<?>> implements ReadableFloatVector, Comparable<T>{
 

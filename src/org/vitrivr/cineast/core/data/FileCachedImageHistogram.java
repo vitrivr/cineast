@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.data;
+package org.vitrivr.cineast.core.data;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,8 +6,7 @@ import java.io.RandomAccessFile;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 public class FileCachedImageHistogram {
 	

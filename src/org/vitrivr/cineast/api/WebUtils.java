@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.api;
+package org.vitrivr.cineast.api;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -10,8 +10,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 public class WebUtils {
 

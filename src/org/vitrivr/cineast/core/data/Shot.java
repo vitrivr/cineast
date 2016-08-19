@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.data;
+package org.vitrivr.cineast.core.data;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
+import org.vitrivr.cineast.core.descriptor.AvgImg;
+import org.vitrivr.cineast.core.descriptor.MedianImg;
+import org.vitrivr.cineast.core.descriptor.MostRepresentative;
+import org.vitrivr.cineast.core.descriptor.PathList;
 
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
-import ch.unibas.cs.dbis.cineast.core.descriptor.AvgImg;
-import ch.unibas.cs.dbis.cineast.core.descriptor.MedianImg;
-import ch.unibas.cs.dbis.cineast.core.descriptor.MostRepresentative;
-import ch.unibas.cs.dbis.cineast.core.descriptor.PathList;
 import georegression.struct.point.Point2D_F32;
 
 public class Shot implements SegmentContainer{

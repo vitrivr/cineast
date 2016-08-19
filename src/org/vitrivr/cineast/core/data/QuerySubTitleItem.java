@@ -1,7 +1,7 @@
-package ch.unibas.cs.dbis.cineast.core.data;
+package org.vitrivr.cineast.core.data;
 
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
+import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 
 public class QuerySubTitleItem implements SubtitleItem {
 

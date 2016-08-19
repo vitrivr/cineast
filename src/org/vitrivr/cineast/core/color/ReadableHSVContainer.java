@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.color;
+package org.vitrivr.cineast.core.color;
 
 import java.util.ArrayList;
 import java.util.List;

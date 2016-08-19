@@ -1,16 +1,15 @@
-package ch.unibas.cs.dbis.cineast.core.runtime;
+package org.vitrivr.cineast.core.runtime;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
-import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 public class RetrievalTask implements Callable<Pair<Retriever, List<StringDoublePair>>> {
 

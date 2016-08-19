@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.runtime;
+package org.vitrivr.cineast.core.runtime;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,15 +16,15 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.LimitedQueue;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
+import org.vitrivr.cineast.core.util.LogHelper;
 
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.LimitedQueue;
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
-import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.features.retriever.Retriever;
-import ch.unibas.cs.dbis.cineast.core.features.retriever.RetrieverInitializer;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 public class QueryDispatcher implements Callable<List<StringDoublePair>> {

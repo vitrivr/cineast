@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.data;
+package org.vitrivr.cineast.core.data;
 
 
 public class Frame {

@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.features.extractor;
+package org.vitrivr.cineast.core.features.extractor;
 
 public interface ExtractorInitializer {
 

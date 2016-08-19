@@ -1,8 +1,12 @@
-package ch.unibas.cs.dbis.cineast.core.descriptor;
+package org.vitrivr.cineast.core.descriptor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.Pair;
 
 import boofcv.abst.feature.detect.interest.ConfigGeneralDetector;
 import boofcv.abst.feature.tracker.PointTrack;
@@ -12,9 +16,6 @@ import boofcv.alg.tracker.klt.PkltConfig;
 import boofcv.factory.feature.tracker.FactoryPointTracker;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayU8;
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import georegression.struct.point.Point2D_F32;
 import gnu.trove.map.hash.TLongIntHashMap;
 import gnu.trove.map.hash.TLongObjectHashMap;

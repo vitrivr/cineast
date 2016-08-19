@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.features.exporter;
+package org.vitrivr.cineast.core.features.exporter;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -8,12 +8,11 @@ import javax.imageio.ImageIO;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
-import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
-import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 public class ShotDescriptorExporter implements Extractor {
 

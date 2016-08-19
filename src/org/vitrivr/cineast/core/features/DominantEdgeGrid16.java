@@ -1,21 +1,21 @@
-package ch.unibas.cs.dbis.cineast.core.features;
+package org.vitrivr.cineast.core.features;
 
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.FloatVector;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.descriptor.EdgeList;
+import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
 import boofcv.alg.feature.detect.edge.EdgeContour;
 import boofcv.alg.feature.detect.edge.EdgeSegment;
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.descriptor.EdgeList;
-import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
 import georegression.struct.point.Point2D_I32;
 
 public class DominantEdgeGrid16 extends AbstractFeatureModule {

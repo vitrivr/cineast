@@ -1,13 +1,13 @@
-package ch.unibas.cs.dbis.cineast.api;
+package org.vitrivr.cineast.api;
 
 import java.util.List;
 
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.VideoLookup.VideoDescriptor;
+
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
-import ch.unibas.cs.dbis.cineast.core.db.VideoLookup.VideoDescriptor;
 
 public final class JSONEncoder {
 

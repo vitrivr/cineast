@@ -1,11 +1,10 @@
-package ch.unibas.cs.dbis.cineast.core.descriptor;
+package org.vitrivr.cineast.core.descriptor;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
-import ch.unibas.cs.dbis.cineast.core.data.Shot;
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.Shot;
 
 public class MostRepresentative {
 

@@ -1,13 +1,13 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.color.LabContainer;
-import ch.unibas.cs.dbis.cineast.core.color.RGBContainer;
-import ch.unibas.cs.dbis.cineast.core.color.ReadableLabContainer;
-import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
-import ch.unibas.cs.dbis.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.color.LabContainer;
+import org.vitrivr.cineast.core.color.RGBContainer;
+import org.vitrivr.cineast.core.color.ReadableLabContainer;
+import org.vitrivr.cineast.core.color.ReadableRGBContainer;
+import org.vitrivr.cineast.core.data.FloatVector;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 
 public class ColorUtils {
 	private ColorUtils(){}

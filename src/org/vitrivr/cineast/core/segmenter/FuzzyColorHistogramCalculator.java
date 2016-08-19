@@ -1,12 +1,12 @@
-package ch.unibas.cs.dbis.cineast.core.segmenter;
+package org.vitrivr.cineast.core.segmenter;
 
 import java.awt.image.BufferedImage;
 
-import ch.unibas.cs.dbis.cineast.core.color.ColorConverter;
-import ch.unibas.cs.dbis.cineast.core.color.FuzzyColorHistogramQuantizer;
-import ch.unibas.cs.dbis.cineast.core.color.ReadableLabContainer;
-import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.color.ColorConverter;
+import org.vitrivr.cineast.core.color.FuzzyColorHistogramQuantizer;
+import org.vitrivr.cineast.core.color.ReadableLabContainer;
+import org.vitrivr.cineast.core.color.ReadableRGBContainer;
+import org.vitrivr.cineast.core.data.Frame;
 
 public class FuzzyColorHistogramCalculator {
 

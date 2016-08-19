@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.api;
+package org.vitrivr.cineast.api;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -12,22 +12,22 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.QuerySubTitleItem;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.db.ShotLookup;
+import org.vitrivr.cineast.core.db.VideoLookup;
+import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.VideoLookup.VideoDescriptor;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import ch.unibas.cs.dbis.cineast.core.data.MultiImageFactory;
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
-import ch.unibas.cs.dbis.cineast.core.data.QueryContainer;
-import ch.unibas.cs.dbis.cineast.core.data.QuerySubTitleItem;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.db.ShotLookup;
-import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
-import ch.unibas.cs.dbis.cineast.core.db.VideoLookup;
-import ch.unibas.cs.dbis.cineast.core.db.VideoLookup.VideoDescriptor;
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import georegression.struct.point.Point2D_F32;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 

@@ -1,11 +1,11 @@
-package ch.unibas.cs.dbis.cineast.core.db;
+package org.vitrivr.cineast.core.db;
 
 import java.util.List;
 import java.util.Map;
 
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 
 public interface DBSelector {
 

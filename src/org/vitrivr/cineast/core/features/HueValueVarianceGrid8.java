@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.features;
+package org.vitrivr.cineast.core.features;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,22 +7,21 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.color.ColorConverter;
-import ch.unibas.cs.dbis.cineast.core.color.HSVContainer;
-import ch.unibas.cs.dbis.cineast.core.color.RGBContainer;
-import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
-import ch.unibas.cs.dbis.cineast.core.data.StatElement;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
-import ch.unibas.cs.dbis.cineast.core.util.GridPartitioner;
+import org.vitrivr.cineast.core.color.ColorConverter;
+import org.vitrivr.cineast.core.color.HSVContainer;
+import org.vitrivr.cineast.core.color.RGBContainer;
+import org.vitrivr.cineast.core.color.ReadableRGBContainer;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.FloatVector;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.StatElement;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.util.GridPartitioner;
 
 public class HueValueVarianceGrid8 extends AbstractFeatureModule {
 

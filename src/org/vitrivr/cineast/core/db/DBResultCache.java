@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.db;
+package org.vitrivr.cineast.core.db;
 
 import java.sql.Connection;
 import java.text.DateFormat;
@@ -9,8 +9,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.Config;
 
 public final class DBResultCache {
 

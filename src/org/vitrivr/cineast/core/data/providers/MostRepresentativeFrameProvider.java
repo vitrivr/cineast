@@ -1,6 +1,6 @@
-package ch.unibas.cs.dbis.cineast.core.data.providers;
+package org.vitrivr.cineast.core.data.providers;
 
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.Frame;
 
 public interface MostRepresentativeFrameProvider {
 

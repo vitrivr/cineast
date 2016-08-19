@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.db;
+package org.vitrivr.cineast.core.db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,11 +12,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import ch.unibas.cs.dbis.cineast.core.data.Shot;
-import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
 import org.vitrivr.adam.grpc.AdamGrpc;
 import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.cineast.core.data.Shot;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.adam.grpc.AdamGrpc.FromMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;

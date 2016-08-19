@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import gnu.trove.stack.array.TDoubleArrayStack;
 

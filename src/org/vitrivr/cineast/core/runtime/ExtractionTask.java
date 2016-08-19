@@ -1,11 +1,10 @@
-package ch.unibas.cs.dbis.cineast.core.runtime;
+package org.vitrivr.cineast.core.runtime;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
-import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
-import ch.unibas.cs.dbis.cineast.core.util.DecodingError;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.util.DecodingError;
 
 class ExtractionTask implements Runnable {
 

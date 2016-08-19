@@ -1,22 +1,21 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
 
 import com.eclipsesource.json.JsonObject;
-
-import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
-import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
 
 public class ReflectionHelper {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private static final String FEATURE_MODULE_PACKAGE = "ch.unibas.cs.dbis.cineast.core.features";
-	private static final String EXPORTER_PACKAGE = "ch.unibas.cs.dbis.cineast.core.features.exporter";
+	private static final String FEATURE_MODULE_PACKAGE = "org.vitrivr.cineast.core.features";
+	private static final String EXPORTER_PACKAGE = "org.vitrivr.cineast.core.features.exporter";
 	
 	/**
 	 * creates a new instance of an exporter as specified by the provided json.

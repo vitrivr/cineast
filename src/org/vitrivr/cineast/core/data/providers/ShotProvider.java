@@ -1,6 +1,6 @@
-package ch.unibas.cs.dbis.cineast.core.data.providers;
+package org.vitrivr.cineast.core.data.providers;
 
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.SegmentContainer;
 
 public interface ShotProvider {
 

@@ -1,9 +1,9 @@
-package ch.unibas.cs.dbis.cineast.core.runtime;
+package org.vitrivr.cineast.core.runtime;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
-import ch.unibas.cs.dbis.cineast.core.data.providers.ShotProvider;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.providers.ShotProvider;
 
 class ShotProviderThread extends Thread {
 

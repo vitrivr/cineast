@@ -1,10 +1,10 @@
-package ch.unibas.cs.dbis.cineast.core.config;
+package org.vitrivr.cineast.core.config;
+
+import org.vitrivr.cineast.core.db.ADAMproWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.ProtobufFileWriter;
 
 import com.eclipsesource.json.JsonObject;
-
-import ch.unibas.cs.dbis.cineast.core.db.ADAMproWriter;
-import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
-import ch.unibas.cs.dbis.cineast.core.db.ProtobufFileWriter;
 
 public final class DatabaseConfig {
 	

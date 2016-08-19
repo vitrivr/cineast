@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.run;
+package org.vitrivr.cineast.core.run;
 
 import java.io.File;
 import java.io.FileReader;
@@ -8,23 +8,22 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.decode.video.VideoDecoder;
+import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
+import org.vitrivr.cineast.core.runtime.ShotDispatcher;
+import org.vitrivr.cineast.core.segmenter.ShotSegmenter;
+import org.vitrivr.cineast.core.util.FileUtil;
+import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
-import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
-import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
-import ch.unibas.cs.dbis.cineast.core.decode.video.VideoDecoder;
-import ch.unibas.cs.dbis.cineast.core.features.abstracts.AbstractFeatureModule;
-import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
-import ch.unibas.cs.dbis.cineast.core.features.extractor.ExtractorInitializer;
-import ch.unibas.cs.dbis.cineast.core.runtime.ShotDispatcher;
-import ch.unibas.cs.dbis.cineast.core.segmenter.ShotSegmenter;
-import ch.unibas.cs.dbis.cineast.core.util.FileUtil;
-import ch.unibas.cs.dbis.cineast.core.util.ReflectionHelper;
 
 public class ExtractionJobRunner implements Runnable{
 

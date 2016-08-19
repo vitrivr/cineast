@@ -1,17 +1,17 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.color.ColorConverter;
-import ch.unibas.cs.dbis.cineast.core.color.ReadableLabContainer;
-import ch.unibas.cs.dbis.cineast.core.color.ReadableRGBContainer;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVector;
-import ch.unibas.cs.dbis.cineast.core.data.FloatVectorImpl;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
-import ch.unibas.cs.dbis.cineast.core.data.StatElement;
+import org.vitrivr.cineast.core.color.ColorConverter;
+import org.vitrivr.cineast.core.color.ReadableLabContainer;
+import org.vitrivr.cineast.core.color.ReadableRGBContainer;
+import org.vitrivr.cineast.core.data.FloatVector;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.StatElement;
 
 public final class ARPartioner {
 

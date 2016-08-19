@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.decode.subtitle.cc;
+package org.vitrivr.cineast.core.decode.subtitle.cc;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,10 +11,10 @@ import java.text.SimpleDateFormat;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
+import org.vitrivr.cineast.core.util.LogHelper;
 
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 public class CCSubTitle implements SubTitle {

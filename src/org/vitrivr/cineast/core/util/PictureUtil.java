@@ -1,11 +1,10 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import org.jcodec.common.model.ColorSpace;
 import org.jcodec.common.model.Picture;
 import org.jcodec.scale.ColorUtil;
 import org.jcodec.scale.Transform;
-
-import ch.unibas.cs.dbis.cineast.core.color.RGBContainer;
+import org.vitrivr.cineast.core.color.RGBContainer;
 
 public class PictureUtil {
 

@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.decode.subtitle.srt;
+package org.vitrivr.cineast.core.decode.subtitle.srt;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,9 +9,8 @@ import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 public class SRTSubTitle implements SubTitle {
 

@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.db;
+package org.vitrivr.cineast.core.db;
 
 import java.util.LinkedList;
 import java.util.List;

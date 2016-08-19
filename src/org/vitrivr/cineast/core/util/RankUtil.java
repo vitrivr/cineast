@@ -1,8 +1,8 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
+import org.vitrivr.cineast.core.data.LongDoublePair;
 
 public class RankUtil {
 

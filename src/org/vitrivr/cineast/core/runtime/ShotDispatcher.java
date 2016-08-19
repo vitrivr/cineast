@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.runtime;
+package org.vitrivr.cineast.core.runtime;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,15 +10,14 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.LimitedQueue;
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
-import ch.unibas.cs.dbis.cineast.core.data.providers.ShotProvider;
-import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
-import ch.unibas.cs.dbis.cineast.core.features.extractor.ExtractorInitializer;
-import ch.unibas.cs.dbis.cineast.core.util.DecodingError;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.LimitedQueue;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.providers.ShotProvider;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
+import org.vitrivr.cineast.core.util.DecodingError;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 public class ShotDispatcher implements Runnable {
 

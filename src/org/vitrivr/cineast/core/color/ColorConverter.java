@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.color;
+package org.vitrivr.cineast.core.color;
 
 import gnu.trove.TCollections;
 import gnu.trove.map.TIntObjectMap;

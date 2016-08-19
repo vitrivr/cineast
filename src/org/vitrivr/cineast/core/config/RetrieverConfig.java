@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.config;
+package org.vitrivr.cineast.core.config;
 
 import com.eclipsesource.json.JsonObject;
 

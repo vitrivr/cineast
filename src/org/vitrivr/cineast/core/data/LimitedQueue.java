@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.data;
+package org.vitrivr.cineast.core.data;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

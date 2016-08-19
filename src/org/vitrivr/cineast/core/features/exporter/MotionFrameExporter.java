@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.features.exporter;
+package org.vitrivr.cineast.core.features.exporter;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -11,12 +11,13 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.Pair;
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
-import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
-import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+
 import georegression.struct.point.Point2D_F32;
 
 public class MotionFrameExporter implements Extractor {

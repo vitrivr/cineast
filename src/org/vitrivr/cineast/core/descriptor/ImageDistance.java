@@ -1,7 +1,7 @@
-package ch.unibas.cs.dbis.cineast.core.descriptor;
+package org.vitrivr.cineast.core.descriptor;
 
-import ch.unibas.cs.dbis.cineast.core.color.RGBContainer;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.color.RGBContainer;
+import org.vitrivr.cineast.core.data.MultiImage;
 
 public class ImageDistance {
 

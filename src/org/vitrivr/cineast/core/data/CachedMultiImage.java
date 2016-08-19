@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.data;
+package org.vitrivr.cineast.core.data;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -13,9 +13,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.util.LogHelper;
 
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import net.coobird.thumbnailator.Thumbnails;
 
 public class CachedMultiImage implements MultiImage {

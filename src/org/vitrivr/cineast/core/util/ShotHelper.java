@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,9 +7,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.Shot;
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.Shot;
 
 public class ShotHelper {
 

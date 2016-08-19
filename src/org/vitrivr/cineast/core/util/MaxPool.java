@@ -1,10 +1,11 @@
-package ch.unibas.cs.dbis.cineast.core.util;
+package org.vitrivr.cineast.core.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
+import org.vitrivr.cineast.core.data.LongDoublePair;
+
 import gnu.trove.iterator.TLongDoubleIterator;
 import gnu.trove.map.hash.TLongDoubleHashMap;
 

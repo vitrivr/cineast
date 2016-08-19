@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.decode.video;
+package org.vitrivr.cineast.core.decode.video;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,11 +10,10 @@ import org.jcodec.api.JCodecException;
 import org.jcodec.common.FileChannelWrapper;
 import org.jcodec.common.NIOUtils;
 import org.jcodec.common.model.Picture;
-
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImageFactory;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
-import ch.unibas.cs.dbis.cineast.core.util.PictureUtil;
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.PictureUtil;
 
 
 public class JCodecVideoDecoder implements VideoDecoder {

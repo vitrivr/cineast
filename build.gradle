@@ -71,7 +71,7 @@ sourceSets {
 
 jar {
 	manifest { 
-		attributes 'Main-Class': 'ch.unibas.cs.dbis.cineast.api.API'
+		attributes 'Main-Class': 'org.vitrivr.cineast.api.API'
 	}  
 
 	from {

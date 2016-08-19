@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.db;
+package org.vitrivr.cineast.core.db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,11 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig.Distance;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import ch.unibas.cs.dbis.cineast.core.util.LogHelper;
 import org.vitrivr.adam.grpc.AdamGrpc;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage.Code;
@@ -27,6 +22,11 @@ import org.vitrivr.adam.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DenseVectorMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DistanceMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DistanceMessage.DistanceType;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.QueryConfig.Distance;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.adam.grpc.AdamGrpc.FeatureVectorMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.FromMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.NearestNeighbourQueryMessage;

@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.features.retriever;
+package org.vitrivr.cineast.core.features.retriever;
 
 public interface RetrieverInitializer {
 

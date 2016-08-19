@@ -1,7 +1,7 @@
-package ch.unibas.cs.dbis.cineast.core.decode.subtitle.cc;
+package org.vitrivr.cineast.core.decode.subtitle.cc;
 
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.AbstractSubtitleItem;
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
+import org.vitrivr.cineast.core.decode.subtitle.AbstractSubtitleItem;
+import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 
 public class CCSubTitleItem extends AbstractSubtitleItem {
 

@@ -1,26 +1,26 @@
-package ch.unibas.cs.dbis.cineast.core.db;
+package org.vitrivr.cineast.core.db;
 
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.data.FloatArrayIterable;
-import ch.unibas.cs.dbis.cineast.core.data.IntArrayIterable;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.BooleanProviderImpl;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.DoubleProviderImpl;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.FloatArrayProvider;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.FloatArrayProviderImpl;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.FloatProviderImpl;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.IntArrayProvider;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.IntArrayProviderImpl;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.IntProviderImpl;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.LongProviderImpl;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.ProviderDataType;
-import ch.unibas.cs.dbis.cineast.core.data.providers.primitive.StringProviderImpl;
 import org.vitrivr.adam.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DenseVectorMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.FeatureVectorMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.IntVectorMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.SparseVectorMessage;
+import org.vitrivr.cineast.core.data.FloatArrayIterable;
+import org.vitrivr.cineast.core.data.IntArrayIterable;
+import org.vitrivr.cineast.core.data.providers.primitive.BooleanProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.DoubleProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.IntArrayProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.IntArrayProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.IntProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.LongProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.data.providers.primitive.StringProviderImpl;
 
 public final class DataMessageConverter {
 

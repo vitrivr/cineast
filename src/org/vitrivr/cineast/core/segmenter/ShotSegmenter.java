@@ -1,20 +1,20 @@
-package ch.unibas.cs.dbis.cineast.core.segmenter;
+package org.vitrivr.cineast.core.segmenter;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.Histogram;
-import ch.unibas.cs.dbis.cineast.core.data.Shot;
-import ch.unibas.cs.dbis.cineast.core.data.providers.ShotProvider;
-import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
-import ch.unibas.cs.dbis.cineast.core.db.PersistentTuple;
-import ch.unibas.cs.dbis.cineast.core.db.ShotLookup.ShotDescriptor;
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubTitle;
-import ch.unibas.cs.dbis.cineast.core.decode.subtitle.SubtitleItem;
-import ch.unibas.cs.dbis.cineast.core.decode.video.VideoDecoder;
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.Histogram;
+import org.vitrivr.cineast.core.data.Shot;
+import org.vitrivr.cineast.core.data.providers.ShotProvider;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
+import org.vitrivr.cineast.core.decode.video.VideoDecoder;
 
 public class ShotSegmenter implements ShotProvider{
 	

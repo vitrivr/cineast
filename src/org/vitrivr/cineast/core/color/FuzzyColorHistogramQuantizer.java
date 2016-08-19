@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.color;
+package org.vitrivr.cineast.core.color;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,16 +1,15 @@
-package ch.unibas.cs.dbis.cineast.core.descriptor;
+package org.vitrivr.cineast.core.descriptor;
 
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import ch.unibas.cs.dbis.cineast.core.color.RGBContainer;
-import ch.unibas.cs.dbis.cineast.core.data.Frame;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImage;
-import ch.unibas.cs.dbis.cineast.core.data.MultiImageFactory;
-import ch.unibas.cs.dbis.cineast.core.util.DecodingError;
-import ch.unibas.cs.dbis.cineast.core.util.TimeHelper;
+import org.vitrivr.cineast.core.color.RGBContainer;
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.util.DecodingError;
+import org.vitrivr.cineast.core.util.TimeHelper;
 
 public class AvgImg {
 

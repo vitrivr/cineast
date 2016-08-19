@@ -1,13 +1,14 @@
-package ch.unibas.cs.dbis.cineast.core.features.retriever;
+package org.vitrivr.cineast.core.features.retriever;
 
 import java.util.HashMap;
 import java.util.List;
 
-import ch.unibas.cs.dbis.cineast.core.config.QueryConfig;
-import ch.unibas.cs.dbis.cineast.core.data.LongDoublePair;
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
-import ch.unibas.cs.dbis.cineast.core.data.StringDoublePair;
-import ch.unibas.cs.dbis.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.LongDoublePair;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.db.DBSelector;
+
 import gnu.trove.map.hash.TLongObjectHashMap;
 
 public class CachedRetriever implements Retriever {

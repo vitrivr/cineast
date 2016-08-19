@@ -1,7 +1,7 @@
-package ch.unibas.cs.dbis.cineast.core.setup;
+package org.vitrivr.cineast.core.setup;
 
-import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator.AttributeDefinition;
 import org.vitrivr.adam.grpc.AdamGrpc.AttributeType;
+import org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition;
 
 public class Setup {
 

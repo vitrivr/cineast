@@ -1,12 +1,10 @@
-package ch.unibas.cs.dbis.cineast.core.db;
+package org.vitrivr.cineast.core.db;
 
 import java.util.concurrent.ExecutionException;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 
-import ch.unibas.cs.dbis.cineast.core.config.Config;
-import ch.unibas.cs.dbis.cineast.core.config.DatabaseConfig;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage;
@@ -17,6 +15,9 @@ import org.vitrivr.adam.grpc.AdamDefinitionGrpc;
 import org.vitrivr.adam.grpc.AdamDefinitionGrpc.AdamDefinitionStub;
 import org.vitrivr.adam.grpc.AdamSearchGrpc;
 import org.vitrivr.adam.grpc.AdamSearchGrpc.AdamSearchStub;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
+
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;

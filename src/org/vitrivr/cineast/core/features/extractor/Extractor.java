@@ -1,7 +1,7 @@
-package ch.unibas.cs.dbis.cineast.core.features.extractor;
+package org.vitrivr.cineast.core.features.extractor;
 
-import ch.unibas.cs.dbis.cineast.core.data.SegmentContainer;
-import ch.unibas.cs.dbis.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 
 public interface Extractor {
 
