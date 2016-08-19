@@ -8,17 +8,17 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.AckMessage.Code;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.Builder;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.InsertMessage.TupleInsertMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage;
+import org.vitrivr.adam.grpc.AdamGrpc;
+import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.AckMessage.Code;
+import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.Builder;
+import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
 
 
 

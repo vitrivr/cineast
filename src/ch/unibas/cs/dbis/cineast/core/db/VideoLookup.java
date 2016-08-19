@@ -9,13 +9,13 @@ import java.util.concurrent.ExecutionException;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import ch.unibas.cs.dbis.cineast.core.setup.EntityCreator;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultInfoMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultTupleMessage;
-import ch.unibas.dmi.dbis.adam.http.AdamGrpc.QueryResultsMessage;
+import org.vitrivr.adam.grpc.AdamGrpc;
+import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultTupleMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
 
 public class VideoLookup{
 	
