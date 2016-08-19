@@ -15,7 +15,6 @@ import org.vitrivr.cineast.core.db.ShotLookup;
 import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.srt.SRTSubTitle;
-import org.vitrivr.cineast.core.decode.video.JLibAVVideoDecoder;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
 import org.vitrivr.cineast.core.features.AverageColor;
 import org.vitrivr.cineast.core.features.AverageColorARP44;
@@ -62,7 +61,7 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.runtime.ShotDispatcher;
 import org.vitrivr.cineast.core.segmenter.ShotSegmenter;
-
+@Deprecated
 public class FeatureExtractionRunner {
 
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -85,7 +84,7 @@ public class FeatureExtractionRunner {
 		PersistencyWriter<?> writer = Config.getDatabaseConfig().newWriter();
 		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
 
-		VideoDecoder vd = new JLibAVVideoDecoder(videoFile);
+		VideoDecoder vd = Config.getDecoderConfig().newVideoDecoder(videoFile);
 
 		LOGGER.debug("Total frames: {}", vd.getTotalFrameCount());
 		LOGGER.debug("frames per second: {}", vd.getFPS());
