@@ -7,18 +7,24 @@ import java.util.List;
 import java.util.ListIterator;
 
 import boofcv.abst.distort.FDistort;
+import boofcv.alg.filter.binary.BinaryImageOps;
+import boofcv.alg.filter.binary.Contour;
 import boofcv.alg.filter.binary.ThresholdImageOps;
 import boofcv.alg.filter.blur.GBlurImageOps;
 import boofcv.alg.misc.PixelMath;
 import boofcv.factory.filter.kernel.FactoryKernelGaussian;
 import boofcv.gui.image.ShowImages;
 import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.ConnectRule;
+import boofcv.struct.ImageRectangle;
 import boofcv.struct.convolve.Kernel1D_I32;
 import boofcv.struct.image.GrayU8;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
 import ch.unibas.cs.dbis.cineast.core.descriptor.PathList;
 import georegression.struct.point.Point2D_F32;
+import georegression.struct.point.Point2D_I32;
+
 import org.ddogleg.nn.FactoryNearestNeighbor;
 import org.ddogleg.nn.NearestNeighbor;
 import org.ddogleg.nn.NnData;
@@ -28,6 +34,52 @@ public class MaskGenerator {
 
 	private MaskGenerator(){}
 
+	public static ArrayList<ImageRectangle> getFgBoundingBox(List<Frame> frames,
+			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
+			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){
+		
+		ArrayList<ImageRectangle> rects = new ArrayList<ImageRectangle>();
+		ArrayList<GrayU8> masks = getFgMasksByNN(frames, foregroundPaths, backgroundPaths);
+		
+		for(GrayU8 mask : masks){
+			ImageRectangle rect = getLargestBoundingBox(mask);
+			rects.add(rect);			
+		}
+		
+		return rects;
+	}
+	
+	public static ImageRectangle getLargestBoundingBox(GrayU8 mask){		
+		
+		List<ImageRectangle> rects =  getBoundingBox(mask);
+		ImageRectangle largest = new ImageRectangle(0,0,0,0);
+		for(ImageRectangle rect : rects){
+			if(rect.getWidth() * rect.getHeight() > largest.getWidth() * largest.getHeight()){
+				largest = rect;
+			}
+		}
+		return largest;
+	}
+	
+	public static List<ImageRectangle> getBoundingBox(GrayU8 mask){
+		
+		List<Contour> contours =  BinaryImageOps.contour(mask,ConnectRule.FOUR,null);
+		List<ImageRectangle> rects = new ArrayList<ImageRectangle>();
+		
+		for(Contour contour : contours){
+			ImageRectangle rect = new ImageRectangle(mask.width,mask.height,0,0);
+			for (Point2D_I32 p : contour.external){
+				if (p.x < rect.x0) rect.x0 = p.x;
+				if (p.y < rect.y0) rect.y0 = p.y;
+				if (p.x > rect.x1) rect.x1 = p.x;
+				if (p.y > rect.y1) rect.y1 = p.y;
+			}
+			rects.add(rect);
+		}
+		
+		return rects;
+	}
+	
 	public static ArrayList<GrayU8> getFgMasksByFilter(List<Frame> frames,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths) {
@@ -48,7 +100,7 @@ public class MaskGenerator {
 		ArrayList<GrayU8> masksSmoothed2 = createNewMasks(masks);
 		smoothMasks(masksSmoothed1, masksSmoothed2, 5, 2, 64, 10);
 		
-		multiply3D(masksSmoothed2,masksSmoothed2,255);
+		//multiply3D(masksSmoothed2,masksSmoothed2,255);
 		
 		return masksSmoothed2;
 	}
@@ -68,7 +120,7 @@ public class MaskGenerator {
 		ArrayList<GrayU8> masksSmoothed2 = createNewMasks(masks);
 		smoothMasks(masksSmoothed1, masksSmoothed2, 11, 2, 64, 26);
 		
-		multiply3D(masksSmoothed2,masksSmoothed2,255);
+		//multiply3D(masksSmoothed2,masksSmoothed2,255);
 		
 		return masksSmoothed2;
 	}
@@ -129,8 +181,8 @@ public class MaskGenerator {
 			for(int x = 0; x < width; ++x){
 				for(int y = 0; y < height; ++y){
 					double[] point = {x, y};
-					FastQueue<NnData<Integer>> results = new FastQueue(3,NnData.class,true);
-					nn.findNearest(point, -1, 3, results);
+					FastQueue<NnData<Integer>> results = new FastQueue(5,NnData.class,true);
+					nn.findNearest(point, -1, 5, results);
 					int sum = 0;
 					for(NnData<Integer> r : results.toList()){
 						sum += r.data.intValue();

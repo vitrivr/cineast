@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import boofcv.struct.ImageRectangle;
 import boofcv.struct.geo.AssociatedPair;
 import boofcv.struct.image.GrayU8;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
@@ -65,13 +66,17 @@ public class TestMotion {
 		
 		ArrayList<GrayU8> masks = MaskGenerator.getFgMasksByNN(shot.getFrames(), foregroundPaths, backgroundPaths);
 		long getFgMasksTime = System.currentTimeMillis();
-		LOGGER.info("finished getFgMasks in {}", formatTime(getFgMasksTime - getHistTime));
+		LOGGER.info("finished getFgMasksByNN in {}", formatTime(getFgMasksTime - getHistTime));
 		
 		ArrayList<GrayU8> masks2 = MaskGenerator.getFgMasksByFilter(shot.getFrames(), foregroundPaths, backgroundPaths);
 		long getFgMasksTime2 = System.currentTimeMillis();
-		LOGGER.info("finished getFgMasks in {}", formatTime(getFgMasksTime2 - getFgMasksTime));
+		LOGGER.info("finished getFgMasksByFilter in {}", formatTime(getFgMasksTime2 - getFgMasksTime));
 		
-		VisualizationUtil.visualize(shot.getFrames(),foregroundPaths,backgroundPaths,masks,masks2);
+		ArrayList<ImageRectangle> rects = MaskGenerator.getFgBoundingBox(shot.getFrames(), foregroundPaths, backgroundPaths);
+		long getFgBoundingBoxTime = System.currentTimeMillis();
+		LOGGER.info("finished getFgBoundingBox in {}", formatTime(getFgBoundingBoxTime - getFgMasksTime2));
+		
+		VisualizationUtil.visualize(shot.getFrames(),foregroundPaths,backgroundPaths,masks,masks2,rects);
 		System.exit(0);
 	}
 	

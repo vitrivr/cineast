@@ -9,10 +9,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import boofcv.alg.misc.PixelMath;
 import boofcv.gui.feature.VisualizeFeatures;
 import boofcv.gui.image.ImagePanel;
 import boofcv.gui.image.ShowImages;
 import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.ImageRectangle;
 import boofcv.struct.image.GrayU8;
 import ch.unibas.cs.dbis.cineast.core.data.Frame;
 import ch.unibas.cs.dbis.cineast.core.data.Pair;
@@ -25,8 +27,11 @@ public class VisualizationUtil {
 	
 	public static ImagePanel gui = new ImagePanel();
 	
-	public static void visualize(List<Frame> frames, ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
-			ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths, ArrayList<GrayU8> masks,ArrayList<GrayU8> masks2) {
+	public static void visualize(List<Frame> frames, 
+			ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
+			ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths,
+			ArrayList<GrayU8> masks,ArrayList<GrayU8> masks2,
+			ArrayList<ImageRectangle> rects) {
 		BufferedImage bufferedImage = null;
 		BufferedImage track = null;
 		BufferedImage mask = null;
@@ -35,8 +40,8 @@ public class VisualizationUtil {
 		int width = track.getWidth();
 		int height = track.getHeight();
 		int imageType = track.getType();
-		bufferedImage = new BufferedImage(width * 3, height, imageType);
-		gui.setPreferredSize(new Dimension(width * 3, height));
+		bufferedImage = new BufferedImage(width * 2, height * 2, imageType);
+		gui.setPreferredSize(new Dimension(width * 2, height * 2));
 		ShowImages.showWindow(gui, "visualize", true);
 
 		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> fgPathItor = foregroundPaths.listIterator();
@@ -44,6 +49,8 @@ public class VisualizationUtil {
 
 		ListIterator<GrayU8> maskIter = masks.listIterator();
 		ListIterator<GrayU8> maskIter2 = masks2.listIterator();
+		
+		ListIterator<ImageRectangle> rectIter = rects.listIterator();
 
 		int cnt = 0;
 		for (int frameIdx = 0; frameIdx < frames.size(); ++frameIdx) {
@@ -57,7 +64,6 @@ public class VisualizationUtil {
 			track = frame.getImage().getBufferedImage();
 			Graphics2D g2 = bufferedImage.createGraphics();
 			g2.drawImage(track, null, 0, 0);
-
 			while (fgPathItor.hasNext()) {
 				Pair<Integer, LinkedList<Point2D_F32>> pair = fgPathItor.next();
 				if (pair.first > frameIdx)
@@ -78,15 +84,25 @@ public class VisualizationUtil {
 			}
 
 			if (maskIter.hasNext()) {
-				mask = ConvertBufferedImage.convertTo(maskIter.next(), null);
-				g2.drawImage(mask, null, width, 0);
+				GrayU8 m = maskIter.next();
+				PixelMath.multiply(m,255,m);
+				mask = ConvertBufferedImage.convertTo(m, null);
+				g2.drawImage(mask, null, 0, height);
 			}
 			
-			if (maskIter.hasNext()) {
-				mask = ConvertBufferedImage.convertTo(maskIter2.next(), null);
-				g2.drawImage(mask, null, width*2, 0);
+			if (maskIter2.hasNext()) {
+				GrayU8 m = maskIter2.next();
+				PixelMath.multiply(m,255,m);
+				mask = ConvertBufferedImage.convertTo(m, null);
+				g2.drawImage(mask, null, width, height);
 			}
 
+			if (rectIter.hasNext()) {
+				g2.drawImage(track, null, width, 0);
+				ImageRectangle rect = rectIter.next();
+				g2.drawRect(rect.getX0() + width, rect.getY0(), rect.getWidth(), rect.getHeight());
+			}
+			
 			gui.setBufferedImage(bufferedImage);
 			gui.repaint();
 
