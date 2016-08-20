@@ -53,7 +53,7 @@ public class MotionHistogram extends SubDivMotionHistogram {
 
 		FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
 		
-		ResultSet rset = this.selector.select("SELECT * FROM features.MotionHistogram WHERE features.MotionHistogram.sum != 0 USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
+		ResultSet rset = this.selector.select("SELECT * FROM features.MotionHistogram USING DISTANCE MINKOWSKI(2)(\'" + fv.toFeatureString() + "\', hist) ORDER USING DISTANCE LIMIT " + limit);
 		return manageResultSet(rset);
 	}
 
