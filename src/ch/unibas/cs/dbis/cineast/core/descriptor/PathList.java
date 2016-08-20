@@ -1,6 +1,5 @@
 package ch.unibas.cs.dbis.cineast.core.descriptor;
 
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -11,13 +10,8 @@ import georegression.struct.homography.Homography2D_F64;
 import georegression.struct.point.Point2D_F32;
 import georegression.struct.point.Point2D_F64;
 import georegression.transform.homography.HomographyPointOps_F64;
-import boofcv.abst.distort.FDistort;
 import boofcv.abst.filter.derivative.ImageGradient;
-import boofcv.alg.filter.binary.BinaryImageOps;
-import boofcv.alg.filter.binary.ThresholdImageOps;
-import boofcv.alg.filter.blur.GBlurImageOps;
 import boofcv.alg.misc.PixelMath;
-import boofcv.alg.tracker.klt.KltConfig;
 import boofcv.alg.tracker.klt.KltTrackFault;
 import boofcv.alg.tracker.klt.PkltConfig;
 import boofcv.alg.tracker.klt.PyramidKltFeature;
