@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.playground;
 import org.bytedeco.javacpp.tensorflow;
+import org.vitrivr.cineast.playground.label.LabelProvider;
+import org.vitrivr.cineast.playground.label.VGGLabelProvider;
+
 import static org.bytedeco.javacpp.tensorflow.DT_STRING;
 
 import javax.imageio.ImageIO;
@@ -17,6 +20,9 @@ public class VGG {
 
     /** Short demo-class while we are in the process of integrating into the main- codebase */
     public static void main(String[] args){
+
+        LabelProvider labeler = new VGGLabelProvider(new File("src/resources/caffe/synset.txt"));
+
         //Load Graph
         final tensorflow.Session session = new tensorflow.Session(new tensorflow.SessionOptions());
         tensorflow.GraphDef def = new tensorflow.GraphDef();
@@ -71,7 +77,7 @@ public class VGG {
         FloatBuffer output = outputs.get(0).createBuffer();
         for (int k=0; k < output.limit(); ++k){
             if(output.get(k)>0.01){
-                System.out.println("prediction for: "+k+"=" + output.get(k));
+                System.out.println("Probability for "+labeler.getLabel(k)+": " + output.get(k));
             }
         }
     }
