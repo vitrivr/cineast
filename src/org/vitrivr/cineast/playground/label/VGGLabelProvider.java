@@ -28,4 +28,8 @@ public class VGGLabelProvider implements LabelProvider{
     public String getLabel(int index) {
         return labels[index];
     }
+
+    public String[] getLabels() {
+        return labels;
+    }
 }
