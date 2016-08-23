@@ -57,6 +57,7 @@ dependencies {
     compile group: 'org.bytedeco', name: 'javacpp', version: '1.2.3'
     compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.8.0-1.2'
     compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.8.0-1.2', classifier: osdetector.classifier
+    compile group: 'net.coobird', name: 'thumbnailator', version: '[0.4, 0.5)'
 }
 
 sourceSets {

@@ -1,9 +1,8 @@
 package org.vitrivr.cineast.playground;
+
 import org.bytedeco.javacpp.tensorflow;
 import org.vitrivr.cineast.playground.label.LabelProvider;
 import org.vitrivr.cineast.playground.label.VGGLabelProvider;
-
-import static org.bytedeco.javacpp.tensorflow.DT_STRING;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -14,12 +13,12 @@ import java.nio.FloatBuffer;
 
 
 /**
+ * Short demo-class while we are in the process of integrating into the main- codebase
  * Created by silvan on 22.08.16.
  */
 public class VGG {
 
-    /** Short demo-class while we are in the process of integrating into the main- codebase */
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         LabelProvider labeler = new VGGLabelProvider(new File("src/resources/caffe/synset.txt"));
 
@@ -43,31 +42,30 @@ public class VGG {
             e.printStackTrace();
         }
         System.out.println("Loaded picture");
+        BufferedImage cropped = ImageCropper.scaleImage(im, 224, 224);
+        System.out.println("Cropped picture");
 
         tensorflow.Tensor inputs = new tensorflow.Tensor(
-                tensorflow.DT_FLOAT, new tensorflow.TensorShape(1,224, 224, 3));
+                tensorflow.DT_FLOAT, new tensorflow.TensorShape(1, 224, 224, 3));
 
+        //For some weird reason the nn wants to have height*width.
         FloatBuffer fb = inputs.createBuffer();
-
-        System.out.println(inputs.tensor_data().toString());
-        float[] data = new float[224*224*3];
-        for(int x = 0; x<224; x++){
-            for(int y = 0; y<224; y++){
-                Color c = new Color(im.getRGB(x,y));
-                data[x*(224*3)+y*3+0] = c.getRed();
-                data[x*(224*3)+y*3+1] = c.getGreen();
-                data[x*(224*3)+y*3+2] = c.getBlue();
+        float[] data = new float[224 * 224 * 3];
+        for (int x = 0; x < 224; x++) {
+            for (int y = 0; y < 224; y++) {
+                Color c = new Color(cropped.getRGB(y, x));
+                data[x * (224 * 3) + y * 3] = (float)c.getRed()/255f;
+                data[x * (224 * 3) + y * 3 + 1] = (float)c.getGreen()/255f;
+                data[x * (224 * 3) + y * 3 + 2] = (float)c.getBlue()/255f;
             }
         }
         fb.put(data);
-        System.out.println(fb.get(0));
-        System.out.println(inputs.tensor_data().toString());
 
         tensorflow.TensorVector outputs = new tensorflow.TensorVector();
         outputs.resize(0);
 
         System.out.println("Running Session");
-        s = session.Run(new tensorflow.StringTensorPairVector(new String[] {"images"}, new tensorflow.Tensor[] {inputs}),
+        s = session.Run(new tensorflow.StringTensorPairVector(new String[]{"images"}, new tensorflow.Tensor[]{inputs}),
                 new tensorflow.StringVector("prob"), new tensorflow.StringVector(), outputs);
         if (!s.ok()) {
             throw new RuntimeException(s.error_message().getString());
@@ -75,9 +73,9 @@ public class VGG {
         System.out.println("Done!");
 
         FloatBuffer output = outputs.get(0).createBuffer();
-        for (int k=0; k < output.limit(); ++k){
-            if(output.get(k)>0.01){
-                System.out.println("Probability for "+labeler.getLabel(k)+": " + output.get(k));
+        for (int k = 0; k < output.limit(); ++k) {
+            if (output.get(k) >= 0.05) {
+                System.out.println("Probability for "+k+", " + labeler.getLabel(k) + ": " + output.get(k));
             }
         }
     }

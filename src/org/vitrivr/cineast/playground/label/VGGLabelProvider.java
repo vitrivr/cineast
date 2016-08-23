@@ -17,7 +17,6 @@ public class VGGLabelProvider implements LabelProvider{
             String line = null;
             while((line=br.readLine())!=null){
                 ll.add(line.substring(line.indexOf(" "), line.length()));
-                System.out.println("Parsed label: "+ll.getLast());
             }
             this.labels = ll.toArray(new String[ll.size()]);
         } catch (IOException e) {
