@@ -98,7 +98,7 @@ class VGG16Model implements TensorFlowModel {
             _return[i] = res.get(i);
         }
 
-        LOGGER.debug("Image classified by VGG16 in {}", TimeHelper.toc());
+        LOGGER.debug("Image classified by VGG16 in {} msec", TimeHelper.toc());
         return LOGGER.exit(_return);
     }
 

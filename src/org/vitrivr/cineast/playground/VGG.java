@@ -28,7 +28,7 @@ public class VGG {
     public static void main(String[] args) throws IOException {
 
         NeuralNet nn = TensorFlowNet.getCurrentImpl();
-        float[] probs = nn.classify(ImageIO.read(new File("src/resources/cat.jpg")));
+        float[] probs = nn.classify(ImageIO.read(new File("src/resources/kit_fox.jpg")));
         String[] labels = nn.getLabels();
         for (int i = 0; i < probs.length; i++) {
             if (probs[i] > 0.05) {
@@ -56,6 +56,12 @@ class nn_feature extends AbstractFeatureModule {
     //TODO Create table with Labels here? Or load them from files permanently?
     protected nn_feature(float maxDist, NeuralNet net) {
         super("features_neuralnet", maxDist);
+        // Is this the way to got? this.selector.open("");
+        //Probably more along the lines of
+        /* ADAMproSelector ap = new ADAMproSelector();
+        ap.open("features_neuralnet_labels");
+        But this violates seperation of concerns since this module should not know about a specific implementation of the DB-Selector
+        */
         this.net = net;
     }
 
