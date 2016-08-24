@@ -13,17 +13,17 @@ import java.io.File;
 import java.nio.FloatBuffer;
 
 /**
- * Stub for the VGG-16 model as provided by https://github.com/ry/tensorflow-vgg16
+ * VGG-16 model as provided by https://github.com/ry/tensorflow-vgg16
  * <p>
- * Be careful when creating multiple tf-instances since the tensorflow-javabinding is singleton
+ * Be careful when creating multiple tf-instances since the models are quite big
  * <p>
  * Created by silvan on 23.08.16.
  */
-public class VGG16Model implements TensorFlowModel {
+class VGG16Model implements TensorFlowModel {
 
     private VGGLabelProvider labelProvider;
     private static final Logger LOGGER = LogManager.getLogger();
-    private final tensorflow.Session session;
+    private final tensorflow.Session session = new tensorflow.Session(new tensorflow.SessionOptions());
 
     /**
      * TODO Does this work inside the jar
@@ -31,10 +31,24 @@ public class VGG16Model implements TensorFlowModel {
      * @param model  Where is the tf-graph
      * @param labels Where are the labels
      */
-    public VGG16Model(String model, File labels) {
+    VGG16Model(String model, File labels) {
         LOGGER.entry();
+        loadGraph(model);
+        labelProvider = new VGGLabelProvider(labels);
+        LOGGER.exit();
+    }
+
+    /**
+     * If labels are already inside the DB
+     */
+    VGG16Model(String model) {
+        //TODO Init LabelProvider with Models from DB
+        loadGraph(model);
+        throw new UnsupportedOperationException();
+    }
+
+    private void loadGraph(String model) {
         TimeHelper.tic();
-        session = new tensorflow.Session(new tensorflow.SessionOptions());
         tensorflow.GraphDef def = new tensorflow.GraphDef();
         tensorflow.ReadBinaryProto(tensorflow.Env.Default(),
                 model, def);
@@ -44,9 +58,6 @@ public class VGG16Model implements TensorFlowModel {
             throw new RuntimeException(s.error_message().getString());
         }
         LOGGER.debug("Loaded Graph in {}", TimeHelper.toc());
-
-        labelProvider = new VGGLabelProvider(labels);
-        LOGGER.exit();
     }
 
     @Override
@@ -54,7 +65,7 @@ public class VGG16Model implements TensorFlowModel {
         LOGGER.entry();
         TimeHelper.tic();
         //crop
-        BufferedImage cropped = ImageCropper.scaleImage(img, 224, 224);
+        BufferedImage cropped = ImageCropper.scaleAndCropImage(img, 224, 224);
 
         //fill first layer
         tensorflow.Tensor inputs = new tensorflow.Tensor(
@@ -62,12 +73,12 @@ public class VGG16Model implements TensorFlowModel {
         //For some weird reason the nn wants to have height*width.
         FloatBuffer fb = inputs.createBuffer();
         float[] data = new float[224 * 224 * 3];
-        for (int x = 0; x < 224; x++) {
-            for (int y = 0; y < 224; y++) {
-                Color c = new Color(cropped.getRGB(y, x));
-                data[x * (224 * 3) + y * 3] = (float) c.getRed() / 255f;
-                data[x * (224 * 3) + y * 3 + 1] = (float) c.getGreen() / 255f;
-                data[x * (224 * 3) + y * 3 + 2] = (float) c.getBlue() / 255f;
+        for (int y = 0; y < 224; y++) {
+            for (int x = 0; x < 224; x++) {
+                Color c = new Color(cropped.getRGB(x, y));
+                data[y * (224 * 3) + x * 3] = (float) c.getRed() / 255f;
+                data[y * (224 * 3) + x * 3 + 1] = (float) c.getGreen() / 255f;
+                data[y * (224 * 3) + x * 3 + 2] = (float) c.getBlue() / 255f;
             }
         }
         fb.put(data);
@@ -81,9 +92,9 @@ public class VGG16Model implements TensorFlowModel {
             throw new RuntimeException(s.error_message().getString());
         }
         FloatBuffer res = outputs.get(0).createBuffer();
-        //Magic Number
+        //Magic Number because VGG=1k labels
         float[] _return = new float[1000];
-        for(int i=0;i<res.limit();i++){
+        for (int i = 0; i < res.limit(); i++) {
             _return[i] = res.get(i);
         }
 

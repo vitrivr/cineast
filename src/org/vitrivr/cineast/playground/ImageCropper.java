@@ -18,7 +18,7 @@ public class ImageCropper {
      * First scales the image to whichever is smaller, x or y
      * then crops the image by cutting off from the center
      */
-    public static BufferedImage scaleImage(BufferedImage img, int x, int y) {
+    public static BufferedImage scaleAndCropImage(BufferedImage img, int x, int y) {
         try {
             return Thumbnails.of(img).size(x, y).crop(Positions.CENTER).asBufferedImage();
         } catch (IOException e) {
