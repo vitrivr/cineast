@@ -44,6 +44,12 @@ protected PersistencyWriter phandler;
 	}
 	
 	@Override
+	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public void finish() {
 		if(this.phandler != null){
 			this.phandler.close();

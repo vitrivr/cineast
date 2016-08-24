@@ -51,10 +51,4 @@ public class SubDivMotionHistogram3 extends SubDivMotionHistogram {
 		return getSimilar(fv.toArray(null), qc);
 	}
 
-	@Override
-	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

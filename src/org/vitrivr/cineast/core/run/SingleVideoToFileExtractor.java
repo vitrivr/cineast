@@ -55,6 +55,16 @@ import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.runtime.ShotDispatcher;
 import org.vitrivr.cineast.core.segmenter.ShotSegmenter;
 
+import ch.unibas.cs.dbis.cineast.core.features.ForegroundBoundingBox;
+
+import ch.unibas.cs.dbis.cineast.core.features.MotionHistogramBackground;
+
+import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogramBackground2;
+import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogramBackground3;
+import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogramBackground4;
+import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogramBackground5;
+
+
 public class SingleVideoToFileExtractor {
 
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -213,8 +223,14 @@ public class SingleVideoToFileExtractor {
 		featureList.add(new SubDivMotionHistogram3());
 		featureList.add(new SubDivMotionHistogram4());
 		featureList.add(new SubDivMotionHistogram5());
+		featureList.add(new MotionHistogramBackground());
+		featureList.add(new SubDivMotionHistogramBackground2());
+		featureList.add(new SubDivMotionHistogramBackground3());
+		featureList.add(new SubDivMotionHistogramBackground4());
+		featureList.add(new SubDivMotionHistogramBackground5());
 		featureList.add(new DominantEdgeGrid16());
 		featureList.add(new DominantEdgeGrid8());
+		featureList.add(new ForegroundBoundingBox());
 		
 		return featureList;
 	}

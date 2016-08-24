@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.features;
+package ch.unibas.cs.dbis.cineast.core.features;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,20 +12,20 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
 import org.vitrivr.cineast.core.util.MathHelper;
 
-public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
+public class SubDivMotionHistogramBackground3 extends SubDivMotionHistogram {
 
-	public SubDivMotionHistogram2() {
-		super("features_SubDivMotionHistogram2", MathHelper.SQRT2 * 4);
+	public SubDivMotionHistogramBackground3() {
+		super("features_SubDivMotionHistogramBackground3", MathHelper.SQRT2 * 9);
 	}
 
 	@Override
 	public void processShot(SegmentContainer shot) {
 		if(!phandler.idExists(shot.getId())){
-			
-			Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, shot.getPaths());
+		
+			Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(3, shot.getBgPaths());
 			
 			FloatVector sum = new FloatVectorImpl(pair.first);
-			ArrayList<Float> tmp = new ArrayList<Float>(2 * 2 * 8);
+			ArrayList<Float> tmp = new ArrayList<Float>(3 * 3 * 8);
 			for(List<Float> l : pair.second){
 				for(float f : l){
 					tmp.add(f);
@@ -39,17 +39,15 @@ public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, sc.getPaths());
-		ArrayList<Float> tmp = new ArrayList<Float>(2 * 2 * 8);
-		for(List<Float> l : pair.second){
-			for(float f : l){
+		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(3, sc.getBgPaths());
+
+		ArrayList<Float> tmp = new ArrayList<Float>(3 * 3 * 8);
+		for (List<Float> l : pair.second) {
+			for (float f : l) {
 				tmp.add(f);
 			}
 		}
 		FloatVectorImpl fv = new FloatVectorImpl(tmp);
 		return getSimilar(fv.toArray(null), qc);
 	}
-
-	
-
 }
