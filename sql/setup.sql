@@ -48,7 +48,7 @@ CREATE INDEX shot_id_index
 CREATE TABLE resultcachenames
 (
   id bigserial NOT NULL,
-  name character varying(50),
+  name character varying(100),
   CONSTRAINT resultcachenames_pkey PRIMARY KEY (id),
   CONSTRAINT resultcachenames_name_key UNIQUE (name)
 )
@@ -825,6 +825,28 @@ CREATE INDEX motionhistogram_shotid_idx
   USING btree
   (shotid);
   
+CREATE TABLE features.motionhistogrambackground
+(
+  shotid bigint NOT NULL,
+  sum real,
+  hist feature,
+  CONSTRAINT motionhistogrambackground_pkey PRIMARY KEY (shotid),
+  CONSTRAINT motionhistogrambackground_shotid_fkey FOREIGN KEY (shotid)
+      REFERENCES shots (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE features.motionhistogrambackground
+  OWNER TO cineast;
+
+
+CREATE INDEX motionhistogrambackground_shotid_idx
+  ON features.motionhistogrambackground
+  USING btree
+  (shotid);   
+  
 CREATE TABLE features.saturationandchroma
 (
   shotid bigint NOT NULL,
@@ -1023,7 +1045,91 @@ CREATE INDEX subdivmotionhistogram5_shotid_idx
   ON features.subdivmotionhistogram5
   USING btree
   (shotid);
+
+CREATE TABLE features.subdivmotionhistogrambackground2
+(
+  shotid bigint NOT NULL,
+  sums feature,
+  hists feature,
+  CONSTRAINT subdivmotionhistogrambackground2_pkey PRIMARY KEY (shotid),
+  CONSTRAINT subdivmotionhistogrambackground2_shotid_fkey FOREIGN KEY (shotid)
+      REFERENCES shots (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE features.subdivmotionhistogrambackground2
+  OWNER TO cineast;
+
+CREATE INDEX subdivmotionhistogrambackground2_shotid_idx
+  ON features.subdivmotionhistogrambackground2
+  USING btree
+  (shotid);
+
+CREATE TABLE features.subdivmotionhistogrambackground3
+(
+  shotid bigint NOT NULL,
+  sums feature,
+  hists feature,
+  CONSTRAINT subdivmotionhistogrambackground3_pkey PRIMARY KEY (shotid),
+  CONSTRAINT subdivmotionhistogrambackground3_shotid_fkey FOREIGN KEY (shotid)
+      REFERENCES shots (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE features.subdivmotionhistogrambackground3
+  OWNER TO cineast;
+
+CREATE INDEX subdivmotionhistogrambackground3_shotid_idx
+  ON features.subdivmotionhistogrambackground3
+  USING btree
+  (shotid);
+
+CREATE TABLE features.subdivmotionhistogrambackground4
+(
+  shotid bigint NOT NULL,
+  sums feature NOT NULL,
+  hists feature,
+  CONSTRAINT subdivmotionhistogrambackground4_pkey PRIMARY KEY (shotid),
+  CONSTRAINT subdivmotionhistogrambackground4_shotid_fkey FOREIGN KEY (shotid)
+      REFERENCES shots (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE features.subdivmotionhistogrambackground4
+  OWNER TO cineast;
+
+CREATE INDEX subdivmotionhistogrambackground4_shotid_idx
+  ON features.subdivmotionhistogrambackground4
+  USING btree
+  (shotid);
   
+CREATE TABLE features.subdivmotionhistogrambackground5
+(
+  shotid bigint NOT NULL,
+  sums feature NOT NULL,
+  hists feature,
+  CONSTRAINT subdivmotionhistogrambackground5_pkey PRIMARY KEY (shotid),
+  CONSTRAINT subdivmotionhistogrambackground5_shotid_fkey FOREIGN KEY (shotid)
+      REFERENCES shots (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE features.subdivmotionhistogrambackground5
+  OWNER TO cineast;
+
+CREATE INDEX subdivmotionhistogrambackground5_shotid_idx
+  ON features.subdivmotionhistogrambackground5
+  USING btree
+  (shotid);
+    
 
 CREATE TABLE features.surf
 (
@@ -1060,5 +1166,26 @@ ALTER TABLE features.surffull
 
 CREATE INDEX surffull_shotid_idx
   ON features.surffull
+  USING btree
+  (shotid);
+  
+CREATE TABLE features.foregroundboundingbox
+(
+  shotid bigint NOT NULL,
+  frameidx bigint NOT NULL,
+  bbox feature,
+  CONSTRAINT foregroundboundingbox_pkey PRIMARY KEY (shotid,frameidx),
+  CONSTRAINT foregroundboundingbox_shotid_fkey FOREIGN KEY (shotid)
+      REFERENCES shots (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE features.foregroundboundingbox
+  OWNER TO cineast;
+
+CREATE INDEX foregroundboundingbox_shotid_idx
+  ON features.foregroundboundingbox
   USING btree
   (shotid);

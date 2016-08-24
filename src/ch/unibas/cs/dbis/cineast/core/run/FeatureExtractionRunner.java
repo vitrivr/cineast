@@ -41,6 +41,7 @@ import ch.unibas.cs.dbis.cineast.core.features.EdgeARP88;
 import ch.unibas.cs.dbis.cineast.core.features.EdgeARP88Full;
 import ch.unibas.cs.dbis.cineast.core.features.EdgeGrid16;
 import ch.unibas.cs.dbis.cineast.core.features.EdgeGrid16Full;
+import ch.unibas.cs.dbis.cineast.core.features.ForegroundBoundingBox;
 import ch.unibas.cs.dbis.cineast.core.features.HueValueVarianceGrid8;
 import ch.unibas.cs.dbis.cineast.core.features.MedianColor;
 import ch.unibas.cs.dbis.cineast.core.features.MedianColorARP44;
@@ -51,6 +52,7 @@ import ch.unibas.cs.dbis.cineast.core.features.MedianColorRaster;
 import ch.unibas.cs.dbis.cineast.core.features.MedianFuzzyHist;
 import ch.unibas.cs.dbis.cineast.core.features.MedianFuzzyHistNormalized;
 import ch.unibas.cs.dbis.cineast.core.features.MotionHistogram;
+import ch.unibas.cs.dbis.cineast.core.features.MotionHistogramBackground;
 import ch.unibas.cs.dbis.cineast.core.features.STMP7EH;
 import ch.unibas.cs.dbis.cineast.core.features.SaturationGrid8;
 import ch.unibas.cs.dbis.cineast.core.features.SimplePerceptualHash;
@@ -60,6 +62,10 @@ import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogram2;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogram3;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogram4;
 import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogram5;
+import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogramBackground2;
+import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogramBackground3;
+import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogramBackground4;
+import ch.unibas.cs.dbis.cineast.core.features.SubDivMotionHistogramBackground5;
 import ch.unibas.cs.dbis.cineast.core.features.exporter.RepresentativeFrameExporter;
 import ch.unibas.cs.dbis.cineast.core.features.exporter.ShotThumbNails;
 import ch.unibas.cs.dbis.cineast.core.features.extractor.Extractor;
@@ -162,8 +168,14 @@ public class FeatureExtractionRunner {
 		featureList.add(new SubDivMotionHistogram3());
 		featureList.add(new SubDivMotionHistogram4());
 		featureList.add(new SubDivMotionHistogram5());
+		featureList.add(new MotionHistogramBackground());
+		featureList.add(new SubDivMotionHistogramBackground2());
+		featureList.add(new SubDivMotionHistogramBackground3());
+		featureList.add(new SubDivMotionHistogramBackground4());
+		featureList.add(new SubDivMotionHistogramBackground5());
 		featureList.add(new DominantEdgeGrid16());
 		featureList.add(new DominantEdgeGrid8());
+		featureList.add(new ForegroundBoundingBox());
 
 		
 		ExtractorInitializer initializer = new ExtractorInitializer() {
@@ -324,6 +336,7 @@ public class FeatureExtractionRunner {
 		featureList.add(new MedianFuzzyHist());
 		featureList.add(new MedianFuzzyHistNormalized());
 		featureList.add(new MotionHistogram());
+		featureList.add(new MotionHistogramBackground());
 		featureList.add(new SaturationGrid8());
 		featureList.add(new SimplePerceptualHash());
 		featureList.add(new STMP7EH());
@@ -333,8 +346,13 @@ public class FeatureExtractionRunner {
 		featureList.add(new SubDivMotionHistogram3());
 		featureList.add(new SubDivMotionHistogram4());
 		featureList.add(new SubDivMotionHistogram5());
+		featureList.add(new SubDivMotionHistogramBackground2());
+		featureList.add(new SubDivMotionHistogramBackground3());
+		featureList.add(new SubDivMotionHistogramBackground4());
+		featureList.add(new SubDivMotionHistogramBackground5());
 		featureList.add(new RepresentativeFrameExporter());
 		featureList.add(new ShotThumbNails());
+		featureList.add(new ForegroundBoundingBox());
 
 		ExtractorInitializer initializer = new ExtractorInitializer() {
 

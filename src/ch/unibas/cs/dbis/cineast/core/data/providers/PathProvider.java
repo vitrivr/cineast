@@ -11,4 +11,6 @@ public interface PathProvider {
 
 	List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths();
 	
+	List<Pair<Integer, LinkedList<Point2D_F32>>> getBgPaths();
+	
 }
