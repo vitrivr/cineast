@@ -46,3 +46,4 @@ CREATE VA ON features.subdivmotionhistogrambackground5 (sums) USING EQUIFREQUENT
 CREATE VA ON features.subdivmotionhistogrambackground5 (hists) USING EQUIFREQUENT MARKS;
 CREATE VA ON features.surf (surf) USING EQUIFREQUENT MARKS;
 CREATE VA ON features.surffull (surf) USING EQUIFREQUENT MARKS;
+CREATE VA ON features.foregroundboundingbox (bbox) USING EQUIFREQUENT MARKS;

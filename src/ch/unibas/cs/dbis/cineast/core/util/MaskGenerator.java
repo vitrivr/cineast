@@ -34,9 +34,48 @@ public class MaskGenerator {
 
 	private MaskGenerator(){}
 
+	public static ArrayList<Pair<Long,ArrayList<Float>>> getNormalizedBbox(List<Frame> frames,
+			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
+			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){
+		
+		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
+			return null;
+		}
+		
+		ArrayList<Pair<Long,ArrayList<Float>>> bboxWithIdx = new ArrayList<Pair<Long,ArrayList<Float>>>();
+		
+		ArrayList<ImageRectangle> rects = MaskGenerator.getFgBoundingBox(frames, foregroundPaths, backgroundPaths);
+		
+		int width = frames.get(0).getImage().getWidth();
+		int height = frames.get(0).getImage().getHeight();
+		
+		long frameIdx = 0;
+		
+		for(ImageRectangle rect : rects){
+			ArrayList<Float> bbox = normalize(rect, width, height);
+			bboxWithIdx.add(new Pair<Long,ArrayList<Float>>(frameIdx, bbox));
+			frameIdx += PathList.frameInterval;
+		}
+		
+		return bboxWithIdx;
+	}
+	
+	public static ArrayList<Float> normalize(ImageRectangle rect, int width, int height){
+		ArrayList<Float> norm = new ArrayList<Float>();
+		norm.add((float)rect.x0 / (float)width);
+		norm.add((float)rect.x1 / (float)width);
+		norm.add((float)rect.y0 / (float)height);
+		norm.add((float)rect.y1 / (float)height);
+		return norm;
+	}
+	
 	public static ArrayList<ImageRectangle> getFgBoundingBox(List<Frame> frames,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){
+		
+		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
+			return null;
+		}
 		
 		ArrayList<ImageRectangle> rects = new ArrayList<ImageRectangle>();
 		ArrayList<GrayU8> masks = getFgMasksByNN(frames, foregroundPaths, backgroundPaths);

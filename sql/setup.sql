@@ -1168,3 +1168,24 @@ CREATE INDEX surffull_shotid_idx
   ON features.surffull
   USING btree
   (shotid);
+  
+CREATE TABLE features.foregroundboundingbox
+(
+  shotid bigint NOT NULL,
+  frameidx bigint NOT NULL,
+  bbox feature,
+  CONSTRAINT foregroundboundingbox_pkey PRIMARY KEY (shotid,frameidx),
+  CONSTRAINT foregroundboundingbox_shotid_fkey FOREIGN KEY (shotid)
+      REFERENCES shots (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE features.foregroundboundingbox
+  OWNER TO cineast;
+
+CREATE INDEX foregroundboundingbox_shotid_idx
+  ON features.foregroundboundingbox
+  USING btree
+  (shotid);

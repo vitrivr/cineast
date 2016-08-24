@@ -41,6 +41,7 @@ import ch.unibas.cs.dbis.cineast.core.features.EdgeARP88;
 import ch.unibas.cs.dbis.cineast.core.features.EdgeARP88Full;
 import ch.unibas.cs.dbis.cineast.core.features.EdgeGrid16;
 import ch.unibas.cs.dbis.cineast.core.features.EdgeGrid16Full;
+import ch.unibas.cs.dbis.cineast.core.features.ForegroundBoundingBox;
 import ch.unibas.cs.dbis.cineast.core.features.HueValueVarianceGrid8;
 import ch.unibas.cs.dbis.cineast.core.features.MedianColor;
 import ch.unibas.cs.dbis.cineast.core.features.MedianColorARP44;
@@ -174,6 +175,7 @@ public class FeatureExtractionRunner {
 		featureList.add(new SubDivMotionHistogramBackground5());
 		featureList.add(new DominantEdgeGrid16());
 		featureList.add(new DominantEdgeGrid8());
+		featureList.add(new ForegroundBoundingBox());
 
 		
 		ExtractorInitializer initializer = new ExtractorInitializer() {
@@ -350,6 +352,7 @@ public class FeatureExtractionRunner {
 		featureList.add(new SubDivMotionHistogramBackground5());
 		featureList.add(new RepresentativeFrameExporter());
 		featureList.add(new ShotThumbNails());
+		featureList.add(new ForegroundBoundingBox());
 
 		ExtractorInitializer initializer = new ExtractorInitializer() {
 
