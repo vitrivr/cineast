@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.LinkedList;
 
-public class VGGLabelProvider implements LabelProvider{
+/**
+ * Provides Labels for .txt files with format n... $LABEL
+ */
+public class SynLabelProvider implements LabelProvider{
 
     private String[] labels;
 
-    public VGGLabelProvider(File labels){
+    public SynLabelProvider(File labels){
         try {
             BufferedReader br = Files.newBufferedReader(labels.toPath());
             LinkedList<String> ll = new LinkedList();

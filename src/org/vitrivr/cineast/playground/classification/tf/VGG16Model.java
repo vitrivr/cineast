@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacpp.tensorflow;
 import org.vitrivr.cineast.core.util.TimeHelper;
 import org.vitrivr.cineast.playground.ImageCropper;
-import org.vitrivr.cineast.playground.label.VGGLabelProvider;
+import org.vitrivr.cineast.playground.label.SynLabelProvider;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -21,7 +21,7 @@ import java.nio.FloatBuffer;
  */
 class VGG16Model implements TensorFlowModel {
 
-    private VGGLabelProvider labelProvider;
+    private SynLabelProvider labelProvider;
     private static final Logger LOGGER = LogManager.getLogger();
     private final tensorflow.Session session = new tensorflow.Session(new tensorflow.SessionOptions());
 
@@ -34,7 +34,7 @@ class VGG16Model implements TensorFlowModel {
     VGG16Model(String model, File labels) {
         LOGGER.entry();
         loadGraph(model);
-        labelProvider = new VGGLabelProvider(labels);
+        labelProvider = new SynLabelProvider(labels);
         LOGGER.exit();
     }
 
