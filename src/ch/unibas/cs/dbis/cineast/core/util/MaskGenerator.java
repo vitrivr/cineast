@@ -62,10 +62,10 @@ public class MaskGenerator {
 	
 	public static ArrayList<Float> normalize(ImageRectangle rect, int width, int height){
 		ArrayList<Float> norm = new ArrayList<Float>();
-		norm.add((float)rect.x0 / (float)width);
-		norm.add((float)rect.x1 / (float)width);
-		norm.add((float)rect.y0 / (float)height);
-		norm.add((float)rect.y1 / (float)height);
+		norm.add((float)rect.getX0() / (float)width);
+		norm.add((float)rect.getY0() / (float)height);
+		norm.add((float)rect.getWidth() / (float)width);
+		norm.add((float)rect.getHeight() / (float)height);
 		return norm;
 	}
 	
