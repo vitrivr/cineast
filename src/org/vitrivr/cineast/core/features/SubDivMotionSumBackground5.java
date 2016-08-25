@@ -10,11 +10,11 @@ import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.MotionHistogramCalculator;
 
-public class SubDivMotionSum5 extends MotionHistogramCalculator {
+public class SubDivMotionSumBackground5 extends MotionHistogramCalculator {
 
 	
-	public SubDivMotionSum5() {
-		super("features_SubDivMotionHistogram5", 2500);
+	public SubDivMotionSumBackground5() {
+		super("features.SubDivMotionHistogramBackground5", 2500);
 	}
 
 	@Override

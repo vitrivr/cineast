@@ -12,17 +12,17 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
 import org.vitrivr.cineast.core.util.MathHelper;
 
-public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
+public class SubDivMotionHistogramBackground2 extends SubDivMotionHistogram {
 
-	public SubDivMotionHistogram2() {
-		super("features_SubDivMotionHistogram2", MathHelper.SQRT2 * 4);
+	public SubDivMotionHistogramBackground2() {
+		super("features_SubDivMotionHistogramBackground2", MathHelper.SQRT2 * 4);
 	}
 
 	@Override
 	public void processShot(SegmentContainer shot) {
 		if(!phandler.idExists(shot.getId())){
 			
-			Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, shot.getPaths());
+			Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, shot.getBgPaths());
 			
 			FloatVector sum = new FloatVectorImpl(pair.first);
 			ArrayList<Float> tmp = new ArrayList<Float>(2 * 2 * 8);
@@ -39,7 +39,7 @@ public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, sc.getPaths());
+		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, sc.getBgPaths());
 		ArrayList<Float> tmp = new ArrayList<Float>(2 * 2 * 8);
 		for(List<Float> l : pair.second){
 			for(float f : l){
@@ -51,5 +51,4 @@ public class SubDivMotionHistogram2 extends SubDivMotionHistogram {
 	}
 
 	
-
 }

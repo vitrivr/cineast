@@ -34,6 +34,7 @@ import org.vitrivr.cineast.core.features.EdgeARP88;
 import org.vitrivr.cineast.core.features.EdgeARP88Full;
 import org.vitrivr.cineast.core.features.EdgeGrid16;
 import org.vitrivr.cineast.core.features.EdgeGrid16Full;
+import org.vitrivr.cineast.core.features.ForegroundBoundingBox;
 import org.vitrivr.cineast.core.features.HueValueVarianceGrid8;
 import org.vitrivr.cineast.core.features.MedianColor;
 import org.vitrivr.cineast.core.features.MedianColorARP44;
@@ -41,6 +42,7 @@ import org.vitrivr.cineast.core.features.MedianColorGrid8;
 import org.vitrivr.cineast.core.features.MedianColorRaster;
 import org.vitrivr.cineast.core.features.MedianFuzzyHist;
 import org.vitrivr.cineast.core.features.MotionHistogram;
+import org.vitrivr.cineast.core.features.MotionHistogramBackground;
 import org.vitrivr.cineast.core.features.SaturationGrid8;
 import org.vitrivr.cineast.core.features.SubDivAverageFuzzyColor;
 import org.vitrivr.cineast.core.features.SubDivMedianFuzzyColor;
@@ -48,12 +50,17 @@ import org.vitrivr.cineast.core.features.SubDivMotionHistogram2;
 import org.vitrivr.cineast.core.features.SubDivMotionHistogram3;
 import org.vitrivr.cineast.core.features.SubDivMotionHistogram4;
 import org.vitrivr.cineast.core.features.SubDivMotionHistogram5;
+import org.vitrivr.cineast.core.features.SubDivMotionHistogramBackground2;
+import org.vitrivr.cineast.core.features.SubDivMotionHistogramBackground3;
+import org.vitrivr.cineast.core.features.SubDivMotionHistogramBackground4;
+import org.vitrivr.cineast.core.features.SubDivMotionHistogramBackground5;
 import org.vitrivr.cineast.core.features.SubtitleFulltextSearch;
 import org.vitrivr.cineast.core.features.exporter.ShotThumbNails;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.runtime.ShotDispatcher;
 import org.vitrivr.cineast.core.segmenter.ShotSegmenter;
+
 
 public class SingleVideoToFileExtractor {
 
@@ -213,8 +220,14 @@ public class SingleVideoToFileExtractor {
 		featureList.add(new SubDivMotionHistogram3());
 		featureList.add(new SubDivMotionHistogram4());
 		featureList.add(new SubDivMotionHistogram5());
+		featureList.add(new MotionHistogramBackground());
+		featureList.add(new SubDivMotionHistogramBackground2());
+		featureList.add(new SubDivMotionHistogramBackground3());
+		featureList.add(new SubDivMotionHistogramBackground4());
+		featureList.add(new SubDivMotionHistogramBackground5());
 		featureList.add(new DominantEdgeGrid16());
 		featureList.add(new DominantEdgeGrid8());
+		featureList.add(new ForegroundBoundingBox());
 		
 		return featureList;
 	}

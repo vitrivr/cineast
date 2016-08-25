@@ -5,11 +5,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.util.MathHelper;
 
 import georegression.struct.point.Point2D_F32;
 
@@ -18,7 +20,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	protected DBSelector selector;
 	protected final float maxDist;
 	protected final String tableName;
-	private static Logger LOGGER = LogManager.getLogger();
+	
 
 
 	protected MotionHistogramCalculator(String tableName, float maxDist){
@@ -95,6 +97,24 @@ public abstract class MotionHistogramCalculator implements Retriever {
 
 		return new Pair<List<Double>, ArrayList<ArrayList<Float>>>(sumList,
 				histList);
+	}
+	
+	protected List<StringDoublePair> getSimilar(float[] vector, QueryConfig qc) {
+		List<StringDoublePair> distances = this.selector.getNearestNeighbours(Config.getRetrieverConfig().getMaxResultsPerModule(), vector, "sums", qc);
+		for(StringDoublePair sdp : distances){
+			double dist = sdp.value;
+			sdp.value = MathHelper.getScore(dist, maxDist);
+		}
+		return distances;
+	}
+	
+	@Override
+	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
+		List<float[]> list = this.selector.getFeatureVectors("id", shotId, "feature");
+		if(list.isEmpty()){
+			return new ArrayList<>(1);
+		}
+		return getSimilar(list.get(0), qc);
 	}
 	
 	@Override

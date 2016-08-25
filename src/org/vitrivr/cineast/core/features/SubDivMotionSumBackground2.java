@@ -10,18 +10,17 @@ import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.MotionHistogramCalculator;
 
-public class SubDivMotionSum5 extends MotionHistogramCalculator {
+public class SubDivMotionSumBackground2 extends MotionHistogramCalculator {
 
-	
-	public SubDivMotionSum5() {
-		super("features_SubDivMotionHistogram5", 2500);
+	public SubDivMotionSumBackground2() {
+		super("features_SubDivMotionHistogramBackground2", 400);
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {		
-		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(5, sc.getBgPaths());
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, sc.getBgPaths());
+
 		FloatVectorImpl fv = new FloatVectorImpl(pair.first);
 		return getSimilar(fv.toArray(null), qc);
 	}
-
 }

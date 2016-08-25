@@ -52,6 +52,13 @@ public class Setup {
 		ec.createFeatureEntity("features_SubDivMotionHistogram3", true, "hist", "sums");
 		ec.createFeatureEntity("features_SubDivMotionHistogram4", true, "hist", "sums");
 		ec.createFeatureEntity("features_SubDivMotionHistogram5", true, "hist", "sums");
+		ec.createFeatureEntity("features_SubDivMotionHistogramBackground2", true, "hist", "sums");
+		ec.createFeatureEntity("features_SubDivMotionHistogramBackground3", true, "hist", "sums");
+		ec.createFeatureEntity("features_SubDivMotionHistogramBackground4", true, "hist", "sums");
+		ec.createFeatureEntity("features_SubDivMotionHistogramBackground5", true, "hist", "sums");
+
+		ec.createFeatureEntity("features_MotionHistogramBackground", true, new AttributeDefinition("sum", AttributeType.FLOAT), new AttributeDefinition("hist", AttributeType.FEATURE));
+		ec.createFeatureEntity("features_ForegroundBoundingBox", false, new AttributeDefinition("frame", AttributeType.LONG), new AttributeDefinition("bbox", AttributeType.FEATURE));
 
 	}
 
