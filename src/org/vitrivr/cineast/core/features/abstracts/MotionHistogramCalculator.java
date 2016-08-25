@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
@@ -22,7 +20,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	protected DBSelector selector;
 	protected final float maxDist;
 	protected final String tableName;
-	private static Logger LOGGER = LogManager.getLogger();
+	
 
 
 	protected MotionHistogramCalculator(String tableName, float maxDist){
@@ -112,8 +110,11 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	
 	@Override
 	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+		List<float[]> list = this.selector.getFeatureVectors("id", shotId, "feature");
+		if(list.isEmpty()){
+			return new ArrayList<>(1);
+		}
+		return getSimilar(list.get(0), qc);
 	}
 	
 	@Override

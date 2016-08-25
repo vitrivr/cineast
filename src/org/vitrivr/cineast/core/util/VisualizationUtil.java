@@ -108,8 +108,7 @@ public class VisualizationUtil {
 			gui.repaint();
 
 			try {
-				Thread thread = Thread.currentThread();
-				thread.sleep(250);
+				Thread.sleep(250);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
