@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.features;
+package org.vitrivr.cineast.core.features;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +13,8 @@ import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.util.MaskGenerator;
 import org.vitrivr.cineast.core.util.TimeHelper;
-
-import ch.unibas.cs.dbis.cineast.core.util.MaskGenerator;
 
 public class ForegroundBoundingBox  extends AbstractFeatureModule {
 

@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.test;
+package org.vitrivr.cineast.test;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,13 +14,13 @@ import org.vitrivr.cineast.core.data.Shot;
 import org.vitrivr.cineast.core.decode.video.JLibAVVideoDecoder;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
 import org.vitrivr.cineast.core.descriptor.PathList;
+import org.vitrivr.cineast.core.util.MaskGenerator;
+import org.vitrivr.cineast.core.util.MotionHistogramUtil;
+import org.vitrivr.cineast.core.util.VisualizationUtil;
 
 import boofcv.struct.ImageRectangle;
 import boofcv.struct.geo.AssociatedPair;
 import boofcv.struct.image.GrayU8;
-import ch.unibas.cs.dbis.cineast.core.util.MaskGenerator;
-import ch.unibas.cs.dbis.cineast.core.util.MotionHistogramUtil;
-import ch.unibas.cs.dbis.cineast.core.util.VisualizationUtil;
 import georegression.struct.point.Point2D_F32;
 
 

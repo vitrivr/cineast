@@ -108,6 +108,31 @@ public class EntityCreator {
  
 	}
 	
+	public AckMessage createFeatureEntity(String featurename, boolean unique, AttributeDefinition... attributes) {
+		ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>();
+
+		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
+
+		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(unique).setIndexed(true).build());
+		
+		for(AttributeDefinition attribute : attributes){
+			fields.add(builder.setName(attribute.name).setAttributetype(attribute.type).setPk(false).setIndexed(false).build());
+		}
+		
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllAttributes(fields).build();
+		
+		AckMessage ack = adampro.createEntityBlocking(message);
+		
+		if(ack.getCode() == AckMessage.Code.OK){
+			LOGGER.info("successfully created feature entity {}", featurename);
+		}else{
+			LOGGER.error("error creating feature entity {}: {}", featurename, ack.getMessage());
+		}
+		
+		return ack;
+		
+	}
+	
 	public AckMessage createIdEntity(String entityName, AttributeDefinition...attributes){
 		ArrayList<AttributeDefinitionMessage> fieldList = new ArrayList<>();
 		

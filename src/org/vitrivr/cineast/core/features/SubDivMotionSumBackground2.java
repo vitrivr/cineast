@@ -1,4 +1,4 @@
-package ch.unibas.cs.dbis.cineast.core.features;
+package org.vitrivr.cineast.core.features;
 
 import java.util.ArrayList;
 import java.util.List;
