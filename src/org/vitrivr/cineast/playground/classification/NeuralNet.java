@@ -20,7 +20,12 @@ public interface NeuralNet {
     float[] classify(BufferedImage img);
 
     /**
-     * Get the labels for the final layer
+     * Get human-readable labels for the final layer
      */
     String[] getLabels();
+
+    /**
+     * Get wordnet labels for the final layer
+     */
+    String[] getSynSetLabels();
 }

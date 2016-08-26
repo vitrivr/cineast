@@ -1,22 +1,20 @@
 package org.vitrivr.cineast.playground.classification.tf;
 
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.playground.classification.NeuralNet;
+import org.vitrivr.cineast.playground.classification.NeuralNetFactory;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 /**
  * TensorFlow-NN Abstraction Layer
  * <p>
  * Created by silvan on 23.08.16.
  */
-public class TensorFlowNet implements NeuralNet {
+public class TensorFlowNet implements NeuralNet, NeuralNetFactory {
 
     private TensorFlowModel model;
 
-    /**
-     * @param model The Model which the Tensorflow-NN will perform the classifcation on.
-     */
     public TensorFlowNet(TensorFlowModel model) {
         this.model = model;
     }
@@ -31,19 +29,32 @@ public class TensorFlowNet implements NeuralNet {
         return model.getLabels();
     }
 
-    /**
-     * @return Current Version of a TensorFlowNet
-     */
+    @Override
+    public String[] getSynSetLabels() {
+        return model.getSynSetLabels();
+    }
+
     public static TensorFlowNet getCurrentImpl() {
         return VGG16();
+    }
+
+    /**
+     * Casts the Config-nn to a TF-Net
+     */
+    public static TensorFlowNet getConfigImpl() {
+        return (TensorFlowNet) Config.getNeuralNetConfig().getNeuralNetFactory();
     }
 
     /**
      * The VGG16-Tensorflow Model
      */
     public static TensorFlowNet VGG16() {
-        //TODO Hardcoded values
-        TensorFlowModel vgg = new VGG16Model("src/resources/vgg16/vgg16.tfmodel", new File("src/resources/vgg16/synset.txt"));
+        TensorFlowModel vgg = new VGG16Model();
         return new TensorFlowNet(vgg);
+    }
+
+    @Override
+    public NeuralNet generate() {
+        return getCurrentImpl();
     }
 }

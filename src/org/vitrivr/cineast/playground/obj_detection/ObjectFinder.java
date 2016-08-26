@@ -1,7 +1,8 @@
 package org.vitrivr.cineast.playground.obj_detection;
 
+import net.coobird.thumbnailator.Thumbnails;
 import org.vitrivr.cineast.playground.classification.NeuralNet;
-import org.vitrivr.cineast.playground.classification.NeuralNetFactory;
+import org.vitrivr.cineast.playground.classification.NeuralNetFactoryImpl;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,7 +25,10 @@ public class ObjectFinder {
     private NeuralNet net;
 
     public static void main(String[] args) throws IOException {
-        ObjectFinder obj = new ObjectFinder(ImageIO.read(new File("src/resources/cat.jpg")), NeuralNetFactory.generateTensorflowNet());
+        if(!new File("src/resources/finder").exists()){
+            new File("src/resources/finder").mkdirs();
+        }
+        ObjectFinder obj = new ObjectFinder(ImageIO.read(new File("src/resources/bbb-splash.png")), NeuralNetFactoryImpl.generateTensorflowNet());
         obj.showHeatMap();
     }
 
@@ -46,41 +50,48 @@ public class ObjectFinder {
         int desiredIdx = getMax(res);
         float desiredVal = res[desiredIdx];
         System.out.println("Desired Label: "+net.getLabels()[desiredIdx]);
-        BufferedImage heatmap = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage greyHeatmap = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
-        BufferedImage classes = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Color[] cols = new Color[]{Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.gray, Color.green, Color.red, Color.yellow, Color.BLACK, Color.MAGENTA, Color.LIGHT_GRAY};
-        int colindex = 0;
+        BufferedImage greyClasses = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Color[] cols = new Color[]{Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.gray, Color.green, Color.red, Color.yellow, Color.BLACK, Color.MAGENTA, Color.LIGHT_GRAY, Color.ORANGE, Color.PINK};
+        int colindex = 1;
         Map<Integer, Integer> labelMap = new HashMap<Integer, Integer>();
 
-        int move = 100;
+        int move = 300;
         for (int x = 0; x < img.getWidth(); x += move) {
             for (int y = 0; y < img.getHeight(); y += move) {
                 BufferedImage grey = this.addGreyRectangle(img, x-move, y-move, move*3, move*3);
-                float[] probs = net.classify(grey);
+                ImageIO.write(grey,"png",new File("src/resources/finder/zzgrey_"+x+"_"+y+".png"));
+                BufferedImage cropped = Thumbnails.of(img).sourceRegion(x, y, move, move).size(move, move).asBufferedImage();
+                ImageIO.write(cropped, "png", new File("src/resources/finder/zzcropped_"+x+"_"+y+".png"));
 
-                //Math.max because hiding some areas might provide even better classification results
-                Color desired = new Color(Math.min(probs[desiredIdx]/desiredVal,1), 0, 0);
-                int leader = getMax(probs);
+                float[] greyprobs = net.classify(grey);
+                //Math.min because hiding some areas might provide even better classification results
+                Color desired = new Color(1 - Math.min(greyprobs[desiredIdx]/desiredVal,1), 0, 0);
+                int leader = getMax(greyprobs);
 
-                System.out.println(x+", "+y+", "+ probs[desiredIdx]+" Classified: "+net.getLabels()[leader] +" with prob: " +probs[leader]);
-                //draw heatmap
+                System.out.println(x+", "+y+", "+ greyprobs[desiredIdx]+" Classified: "+net.getLabels()[leader] +" with prob: " +greyprobs[leader]);
+                //draw greyHeatmap
                 for (int i = 0; i < move; i++) {
                     for (int j = 0; j < move; j++) {
-                        if (x+ i >= heatmap.getWidth() || y+ j >= heatmap.getHeight()) continue;
-                        heatmap.setRGB(x + i, y + j, desired.getRGB());
+                        if (x+ i >= greyHeatmap.getWidth() || y+ j >= greyHeatmap.getHeight()) continue;
+                        greyHeatmap.setRGB(x + i, y + j, desired.getRGB());
                         if(!labelMap.containsKey(leader)){
-                            colindex++;
-                            labelMap.put(leader, cols[colindex].getRGB());
+                            if(greyprobs[leader]<0.1){
+                                labelMap.put(leader, Color.BLACK.getRGB());
+                            }else{
+                                labelMap.put(leader, cols[colindex].getRGB());
+                                colindex++;
+                            }
                             System.out.println(colindex+" | "+net.getLabels()[leader]);
                         }
-                        classes.setRGB(x+i, y+j, labelMap.get(leader));
+                        greyClasses.setRGB(x+i, y+j, labelMap.get(leader));
                     }
                 }
             }
         }
-        ImageIO.write(heatmap, "png", new File("src/resources/finder/heatmap.png"));
-        ImageIO.write(classes, "png", new File("src/resources/finder/labels.png"));
+        ImageIO.write(greyHeatmap, "png", new File("src/resources/finder/greyHeatmap.png"));
+        ImageIO.write(greyClasses, "png", new File("src/resources/finder/labels.png"));
     }
 
     /**

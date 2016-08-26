@@ -1,21 +1,11 @@
 package org.vitrivr.cineast.playground.classification.tf;
 
-import java.awt.image.BufferedImage;
+import org.vitrivr.cineast.playground.classification.NeuralNet;
 
 /**
- * Interface which TFModels should implement. Work in progress.
+ * Interface which TFModels should implement in addition to being neuralnets. Work in progress.
  * <p>
  * Created by silvan on 23.08.16.
  */
-public interface TensorFlowModel {
-
-    /**
-     * Return prob-Vector
-     */
-    float[] classify(BufferedImage img);
-
-    /**
-     * Return layers
-     */
-    String[] getLabels();
+interface TensorFlowModel extends NeuralNet {
 }
