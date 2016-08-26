@@ -1,39 +1,27 @@
 package org.vitrivr.cineast.api;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.Reader;
-import java.net.Socket;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.ADAMproSelector;
-import org.vitrivr.cineast.core.db.DBResultCache;
-import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.ShotLookup;
-import org.vitrivr.cineast.core.db.VideoLookup;
+import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.net.Socket;
+import java.sql.ResultSet;
+import java.util.*;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,
@@ -379,6 +367,30 @@ public class JSONAPIThread extends Thread {
 				sl.close();
 				
 				LOGGER.debug("Context API call ending");
+				break;
+			}
+			case "getConcepts":{
+				LOGGER.debug("Concepts API call starting");
+				//DBSelector selector = Config.getDatabaseConfig().newSelector();
+				String[] concepts = new String[]{"fruit, cars"};	//TODO Select distinct concepts from the concept-table
+				JsonArray jsonConcepts = new JsonArray();
+				for(String c: concepts){
+					jsonConcepts.add(c);
+				}
+				_return.set("concepts", jsonConcepts);
+				//selector.close()
+				LOGGER.debug("Concepts API call ending");
+				break;
+			}
+			case "getLabels":{
+				//TODO garter snake & grass snake are the same thing... How does that work out in the end?
+				String[] labels = new String[]{"mayan dog, egyptian dog, garter snake, grass snake"};	//TODO Select labels
+				JsonArray jsonLabels = new JsonArray();
+				for(String c: labels){
+					jsonLabels.add(c);
+				}
+				_return.set("labels", jsonLabels);
+				//selector.close();
 				break;
 			}
 
