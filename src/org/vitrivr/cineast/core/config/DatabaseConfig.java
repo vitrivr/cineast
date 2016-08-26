@@ -1,10 +1,7 @@
 package org.vitrivr.cineast.core.config;
 
-import org.vitrivr.cineast.core.db.ADAMproWriter;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
-import org.vitrivr.cineast.core.db.ProtobufFileWriter;
-
 import com.eclipsesource.json.JsonObject;
+import org.vitrivr.cineast.core.db.*;
 
 public final class DatabaseConfig {
 	
@@ -12,9 +9,14 @@ public final class DatabaseConfig {
 	private final int port;
 	private final boolean plaintext;
 	private final Writer writer;
+	private final Selector selector;
 	
 	public static enum Writer{
 		PROTO,
+		ADAMPRO
+	}
+
+	public static enum Selector{
 		ADAMPRO
 	}
 	
@@ -22,9 +24,10 @@ public final class DatabaseConfig {
 	public static final int DEFAULT_PORT = 5890;
 	public static final boolean DEFAULT_PLAINTEXT = false;
 	public static final Writer DEFAULT_WRITER = Writer.ADAMPRO;
+	public static final Selector DEFAULT_SELECTOR = Selector.ADAMPRO;
 	
 	
-	public DatabaseConfig(String host, int port, boolean plaintext, Writer writer){
+	public DatabaseConfig(String host, int port, boolean plaintext, Writer writer, Selector selector){
 		if(host == null){
 			throw new NullPointerException("Database location cannot be null");
 		}
@@ -36,10 +39,11 @@ public final class DatabaseConfig {
 		this.port = port;
 		this.plaintext = plaintext;
 		this.writer = writer;
+		this.selector = selector;
 	}
 	
 	public DatabaseConfig(){
-		this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_PLAINTEXT, DEFAULT_WRITER);
+		this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_PLAINTEXT, DEFAULT_WRITER, DEFAULT_SELECTOR);
 	}
 	
 	
@@ -68,6 +72,15 @@ public final class DatabaseConfig {
 		default:
 			throw new IllegalStateException("no factory for writer " + this.writer);
 			
+		}
+	}
+
+	public DBSelector newSelector(){
+		switch(this.selector){
+			case ADAMPRO:
+				return new ADAMproSelector();
+			default:
+				throw new IllegalStateException("no factor for selector "+this.selector);
 		}
 	}
 	
@@ -129,8 +142,21 @@ public final class DatabaseConfig {
 				throw new IllegalArgumentException("'" + writerName + "' is not a valid value for 'writer'");
 			}
 		}
+
+		Selector selector = DEFAULT_SELECTOR;
+		if(obj.get("selector") != null){
+			String selectorName = "";
+			try{
+				selectorName = obj.get("selector").asString();
+				selector = Selector.valueOf(selectorName);
+			} catch(UnsupportedOperationException notastring){
+				throw new IllegalArgumentException("'selector' was not a string in database configuration");
+			} catch(IllegalArgumentException notawriter){
+				throw new IllegalArgumentException("'" + selectorName + "' is not a valid value for 'writer'");
+			}
+		}
 		
-		return new DatabaseConfig(host, port, plaintext, writer);
+		return new DatabaseConfig(host, port, plaintext, writer, selector);
 		
 	}
 }
