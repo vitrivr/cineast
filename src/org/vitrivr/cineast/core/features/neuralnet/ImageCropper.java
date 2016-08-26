@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.playground;
+package org.vitrivr.cineast.core.features.neuralnet;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;

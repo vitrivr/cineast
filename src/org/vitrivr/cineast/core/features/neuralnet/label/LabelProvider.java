@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.playground.label;
+package org.vitrivr.cineast.core.features.neuralnet.label;
 
 /**
  * Simple Interface for Label providers

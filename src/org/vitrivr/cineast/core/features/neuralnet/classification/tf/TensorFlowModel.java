@@ -1,6 +1,6 @@
-package org.vitrivr.cineast.playground.classification.tf;
+package org.vitrivr.cineast.core.features.neuralnet.classification.tf;
 
-import org.vitrivr.cineast.playground.classification.NeuralNet;
+import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 
 /**
  * Interface which TFModels should implement in addition to being neuralnets. Work in progress.

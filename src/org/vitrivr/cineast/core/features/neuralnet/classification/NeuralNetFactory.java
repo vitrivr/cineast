@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.playground.classification;
+package org.vitrivr.cineast.core.features.neuralnet.classification;
 
 /**
  * NN-Factory for People who want to write their own Implementation

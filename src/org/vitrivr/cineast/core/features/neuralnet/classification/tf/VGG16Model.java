@@ -1,12 +1,12 @@
-package org.vitrivr.cineast.playground.classification.tf;
+package org.vitrivr.cineast.core.features.neuralnet.classification.tf;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacpp.tensorflow;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.util.TimeHelper;
-import org.vitrivr.cineast.playground.ImageCropper;
-import org.vitrivr.cineast.playground.label.SynLabelProvider;
+import org.vitrivr.cineast.core.features.neuralnet.ImageCropper;
+import org.vitrivr.cineast.core.features.neuralnet.label.SynLabelProvider;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

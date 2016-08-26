@@ -1,8 +1,8 @@
-package org.vitrivr.cineast.playground.obj_detection;
+package org.vitrivr.cineast.core.features.neuralnet.obj_detection;
 
 import net.coobird.thumbnailator.Thumbnails;
-import org.vitrivr.cineast.playground.classification.NeuralNet;
-import org.vitrivr.cineast.playground.classification.NeuralNetFactoryImpl;
+import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
+import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactoryImpl;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

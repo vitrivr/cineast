@@ -1,8 +1,8 @@
-package org.vitrivr.cineast.playground.classification.tf;
+package org.vitrivr.cineast.core.features.neuralnet.classification.tf;
 
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.playground.classification.NeuralNet;
-import org.vitrivr.cineast.playground.classification.NeuralNetFactory;
+import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
+import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactory;
 
 import java.awt.image.BufferedImage;
 

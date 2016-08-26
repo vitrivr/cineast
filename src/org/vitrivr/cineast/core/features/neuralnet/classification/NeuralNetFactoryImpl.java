@@ -1,7 +1,7 @@
-package org.vitrivr.cineast.playground.classification;
+package org.vitrivr.cineast.core.features.neuralnet.classification;
 
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.playground.classification.tf.TensorFlowNet;
+import org.vitrivr.cineast.core.features.neuralnet.classification.tf.TensorFlowNet;
 
 /**
  * Factory for getting neural nets

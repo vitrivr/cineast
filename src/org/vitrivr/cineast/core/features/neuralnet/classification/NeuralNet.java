@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.playground.classification;
+package org.vitrivr.cineast.core.features.neuralnet.classification;
 
 import java.awt.image.BufferedImage;
 
