@@ -49,11 +49,11 @@ public class ObjectFinder {
         BufferedImage heatmap = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
         BufferedImage classes = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Color[] cols = new Color[]{Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.gray, Color.green, Color.red, Color.yellow};
+        Color[] cols = new Color[]{Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.gray, Color.green, Color.red, Color.yellow, Color.BLACK, Color.MAGENTA, Color.LIGHT_GRAY};
         int colindex = 0;
         Map<Integer, Integer> labelMap = new HashMap<Integer, Integer>();
 
-        int move = 40;
+        int move = 100;
         for (int x = 0; x < img.getWidth(); x += move) {
             for (int y = 0; y < img.getHeight(); y += move) {
                 BufferedImage grey = this.addGreyRectangle(img, x-move, y-move, move*3, move*3);

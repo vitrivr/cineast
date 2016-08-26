@@ -23,12 +23,12 @@ import java.util.List;
  * Short demo-class while we are in the process of integrating into the main- codebase
  * Created by silvan on 22.08.16.
  */
-public class VGG {
+public class NN_demo {
 
     public static void main(String[] args) throws IOException {
 
         NeuralNet nn = TensorFlowNet.getCurrentImpl();
-        float[] probs = nn.classify(ImageIO.read(new File("src/resources/kit_fox.jpg")));
+        float[] probs = nn.classify(ImageIO.read(new File("src/resources/cat.jpg")));
         String[] labels = nn.getLabels();
         for (int i = 0; i < probs.length; i++) {
             if (probs[i] > 0.05) {
