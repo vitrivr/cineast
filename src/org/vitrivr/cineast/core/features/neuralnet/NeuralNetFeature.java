@@ -157,9 +157,9 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         //TODO Check for label input and then decide what to do
         String[] labels = new String[1];    //Mocklabels
 
-        if(true){
-            for(String label: labels){
-                //TODO Handle labels
+        if(!sc.getTags().isEmpty()){
+            for(String label: sc.getTags()){
+                LOGGER.debug("Looking for tag: "+label);
             }
         }else{
             //TODO Can we just take the most representative frame from the sc? Is that the query image?
@@ -172,9 +172,6 @@ public class NeuralNetFeature extends AbstractFeatureModule {
                 }
             }
         }
-
-        //TODO SegmentContainer has tags??
-        sc.getTags();
 
         //TODO How do we calculate score?
         LOGGER.debug("NeuralNetFeature.getSimilar() done in {}",
