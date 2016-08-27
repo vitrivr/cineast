@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features.neuralnet.label;
 
+import java.util.List;
+
 /**
  * Simple Interface for Label providers
  * <p>
@@ -7,12 +9,19 @@ package org.vitrivr.cineast.core.features.neuralnet.label;
  * Created by silvan on 23.08.16.
  */
 public interface LabelProvider {
+    /**
+     * Get human-readable labels per index
+     */
+    List<List<String>> getAllLabels();
 
     /**
-     * Returns a human-readable label associated with the given Index
-     *
-     * @param index Should be within [0 ... #classes-1]
+     * Get wordnet labels from this label provider
      */
-    String getLabel(int index);
+    String[] getSynSetLabels();
+
+    /**
+     * Get all human-readable labels this labelprovider associates with wordnet-index i
+     */
+    String[] getLabels(String i);
 }
 

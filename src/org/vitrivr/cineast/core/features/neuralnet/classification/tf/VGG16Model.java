@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.nio.FloatBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * VGG-16 model as provided by https://github.com/ry/tensorflow-vgg16
@@ -138,12 +139,17 @@ class VGG16Model implements TensorFlowModel {
     }
 
     @Override
-    public String[] getLabels() {
-        return labelProvider.getLabels();
+    public List<java.util.List<String>> getAllLabels() {
+        return labelProvider.getAllLabels();
     }
 
     @Override
     public String[] getSynSetLabels() {
-        return labelProvider.getSynLabels();
+        return labelProvider.getSynSetLabels();
+    }
+
+    @Override
+    public String[] getLabels(String i) {
+        return labelProvider.getLabels(i);
     }
 }

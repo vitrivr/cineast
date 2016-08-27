@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features.neuralnet.classification;
 
+import org.vitrivr.cineast.core.features.neuralnet.label.LabelProvider;
+
 import java.awt.image.BufferedImage;
 
 /**
@@ -10,22 +12,12 @@ import java.awt.image.BufferedImage;
  * <p>
  * Created by silvan on 23.08.16.
  */
-public interface NeuralNet {
+public interface NeuralNet extends LabelProvider {
 
     /**
      * Classify the given image to a vector of probabilities. No constraints are placed on the BufferedImage
      *
-     * @return a vector of probabilities. Labels for indicies should be provided with getLabels()
+     * @return a vector of probabilities. Labels for indicies should be provided with getAllLabels()
      */
     float[] classify(BufferedImage img);
-
-    /**
-     * Get human-readable labels for the final layer
-     */
-    String[] getLabels();
-
-    /**
-     * Get wordnet labels for the final layer
-     */
-    String[] getSynSetLabels();
 }

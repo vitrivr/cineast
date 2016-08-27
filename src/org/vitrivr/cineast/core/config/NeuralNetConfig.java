@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.config;
 import com.eclipsesource.json.JsonObject;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactory;
-import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactoryImpl;
+import org.vitrivr.cineast.core.features.neuralnet.classification.CineastNetFactory;
 
 /**
  * Config for neural nets
@@ -24,7 +24,7 @@ public class NeuralNetConfig {
     public static final String DEFAULT_LABEL_PATH = "";
     public static final String DEFAULT_CONCEPT_PATH = "src/resources/classes.csv";
     //Do this last. This might depend on defaults if poorly implemented
-    public static final NeuralNetFactory DEFAULT_NEURAL_NET_FACTORY = new NeuralNetFactoryImpl();
+    public static final NeuralNetFactory DEFAULT_NEURAL_NET_FACTORY = new CineastNetFactory();
 
     NeuralNetConfig() {
         this(DEFAULT_MODEL_PATH, DEFAULT_CUTOFF, DEFAULT_NEURAL_NET_FACTORY, DEFAULT_LABEL_PATH, DEFAULT_CONCEPT_PATH);

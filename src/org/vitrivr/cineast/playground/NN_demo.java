@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.features.neuralnet.classification.tf.TensorFlowN
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -18,10 +19,11 @@ public class NN_demo {
 
         NeuralNet nn = TensorFlowNet.getCurrentImpl();
         float[] probs = nn.classify(ImageIO.read(new File("src/resources/cat.jpg")));
-        String[] labels = nn.getLabels();
+        List<List<String>> labels = nn.getAllLabels();
         for (int i = 0; i < probs.length; i++) {
             if (probs[i] > 0.05) {
-                System.out.println("Probability for " + labels[i] + "=" + probs[i]);
+                //Wow, Java 8 added a built-in functionality for converting a list to a string.
+                System.out.println("Probability for " + String.join(", ", labels.get(i)) + "=" + probs[i]);
             }
         }
     }

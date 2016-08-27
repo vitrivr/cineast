@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.features.neuralnet.classification.tf.TensorFlowN
  * <p>
  * Created by silvan on 24.08.16.
  */
-public class NeuralNetFactoryImpl implements NeuralNetFactory {
+public class CineastNetFactory implements NeuralNetFactory {
 
     /**
      * Get current Implementation of a TF-Net
@@ -21,11 +21,12 @@ public class NeuralNetFactoryImpl implements NeuralNetFactory {
      * This method will always return a valid neural net.
      */
     public static NeuralNet generateConfigNet() {
-        return Config.getNeuralNetConfig().getNeuralNetFactory().generate();
+        return Config.getNeuralNetConfig().getNeuralNetFactory().get();
+
     }
 
     @Override
-    public NeuralNet generate() {
+    public NeuralNet get() {
         return generateConfigNet();
     }
 }

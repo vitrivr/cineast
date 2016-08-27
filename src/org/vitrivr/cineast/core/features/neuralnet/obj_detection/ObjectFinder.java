@@ -2,7 +2,7 @@ package org.vitrivr.cineast.core.features.neuralnet.obj_detection;
 
 import net.coobird.thumbnailator.Thumbnails;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
-import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactoryImpl;
+import org.vitrivr.cineast.core.features.neuralnet.classification.CineastNetFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -28,7 +28,7 @@ public class ObjectFinder {
         if(!new File("src/resources/finder").exists()){
             new File("src/resources/finder").mkdirs();
         }
-        ObjectFinder obj = new ObjectFinder(ImageIO.read(new File("src/resources/bbb-splash.png")), NeuralNetFactoryImpl.generateTensorflowNet());
+        ObjectFinder obj = new ObjectFinder(ImageIO.read(new File("src/resources/bbb-splash.png")), CineastNetFactory.generateTensorflowNet());
         obj.showHeatMap();
     }
 
@@ -44,12 +44,12 @@ public class ObjectFinder {
         float[] res = net.classify(img);
         for(int i = 0; i<res.length; i++){
             if(res[i]>0.05){
-                System.out.println(net.getLabels()[i]+" "+res[i]);
+                //System.out.println(net.getAllLabels()[i]+" "+res[i]);
             }
         }
         int desiredIdx = getMax(res);
         float desiredVal = res[desiredIdx];
-        System.out.println("Desired Label: "+net.getLabels()[desiredIdx]);
+        //System.out.println("Desired Label: "+net.getAllLabels()[desiredIdx]);
         BufferedImage greyHeatmap = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
         BufferedImage greyClasses = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -70,7 +70,7 @@ public class ObjectFinder {
                 Color desired = new Color(1 - Math.min(greyprobs[desiredIdx]/desiredVal,1), 0, 0);
                 int leader = getMax(greyprobs);
 
-                System.out.println(x+", "+y+", "+ greyprobs[desiredIdx]+" Classified: "+net.getLabels()[leader] +" with prob: " +greyprobs[leader]);
+                //System.out.println(x+", "+y+", "+ greyprobs[desiredIdx]+" Classified: "+net.getAllLabels()[leader] +" with prob: " +greyprobs[leader]);
                 //draw greyHeatmap
                 for (int i = 0; i < move; i++) {
                     for (int j = 0; j < move; j++) {
@@ -83,7 +83,7 @@ public class ObjectFinder {
                                 labelMap.put(leader, cols[colindex].getRGB());
                                 colindex++;
                             }
-                            System.out.println(colindex+" | "+net.getLabels()[leader]);
+                            //System.out.println(colindex+" | "+net.getAllLabels()[leader]);
                         }
                         greyClasses.setRGB(x+i, y+j, labelMap.get(leader));
                     }
