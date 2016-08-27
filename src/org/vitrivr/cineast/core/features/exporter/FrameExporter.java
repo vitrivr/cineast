@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -32,8 +32,7 @@ public class FrameExporter implements Extractor {
 	}
 	
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		phandler.close();
+	public void init(PersistencyWriterSupplier phandlerSupply) {
 		if(!this.folder.exists()){
 			this.folder.mkdirs();
 		}

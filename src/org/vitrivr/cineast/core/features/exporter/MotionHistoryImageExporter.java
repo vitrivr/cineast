@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MotionHistoryImage;
@@ -24,8 +24,7 @@ public class MotionHistoryImageExporter implements Extractor {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		phandler.close();
+	public void init(PersistencyWriterSupplier phandlerSupply) {
 		if(!this.folder.exists()){
 			this.folder.mkdirs();
 		}

@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.ProtobufFileWriter;
 import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
@@ -66,11 +68,21 @@ public class SingleVideoToFileExtractor {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
+	
+	
 	private static ExtractorInitializer initializer = new ExtractorInitializer() {
 
+		private PersistencyWriterSupplier supply = new PersistencyWriterSupplier() {
+			
+			@Override
+			public PersistencyWriter<?> get() {
+				return new ProtobufFileWriter();
+			}
+		};
+		
 		@Override
 		public void initialize(Extractor e) {
-			e.init(new ProtobufFileWriter());
+			e.init(supply);
 		}
 		
 	};

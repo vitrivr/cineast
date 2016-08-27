@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -53,8 +53,8 @@ public class SubtitleFulltextSearch extends AbstractFeatureModule {
 	}
 
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		super.init(phandler);
+	public void init(PersistencyWriterSupplier supply) {
+		super.init(supply);
 		this.phandler.setFieldNames("id", "text");
 	}
 	

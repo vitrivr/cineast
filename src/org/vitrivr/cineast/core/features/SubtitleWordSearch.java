@@ -8,6 +8,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 public class SubtitleWordSearch implements Retriever {
@@ -17,8 +18,8 @@ public class SubtitleWordSearch implements Retriever {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
-	public void init(DBSelector selector) {
-		this.selector = selector;
+	public void init(DBSelectorSupplier supply) {
+		this.selector = supply.get();
 	}
 
 //	@Override

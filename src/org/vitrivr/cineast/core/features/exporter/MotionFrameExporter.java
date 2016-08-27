@@ -15,7 +15,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 
 import georegression.struct.point.Point2D_F32;
@@ -25,8 +25,7 @@ public class MotionFrameExporter implements Extractor {
 private static File folder = new File(Config.getExtractorConfig().getOutputLocation(), "motionframes");
 	
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		phandler.close();
+	public void init(PersistencyWriterSupplier phandlerSupply) {
 		if(!folder.exists()){
 			folder.mkdirs();
 		}

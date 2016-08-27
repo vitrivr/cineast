@@ -17,7 +17,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -28,8 +28,7 @@ public class QueryImageExporter implements Retriever {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
-	public void init(DBSelector selector) {
-		selector.close();
+	public void init(DBSelectorSupplier supply) {
 		if(!this.folder.exists() || !this.folder.isDirectory()) {
 			this.folder.mkdirs();
 		}

@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 
 public class RepresentativeFrameExporter implements Extractor {
@@ -20,8 +21,8 @@ public class RepresentativeFrameExporter implements Extractor {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		this.phandler = phandler;
+	public void init(PersistencyWriterSupplier supply) {
+		this.phandler = supply.get();
 		this.phandler.open("cineast_representativeframes");
 		this.phandler.setFieldNames("id", "frame");
 		this.folder = new File(Config.getExtractorConfig().getOutputLocation(), "representative_frames");
