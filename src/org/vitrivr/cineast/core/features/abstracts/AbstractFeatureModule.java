@@ -1,21 +1,18 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import gnu.trove.map.TObjectDoubleMap;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
-import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.MathHelper;
 
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
@@ -32,14 +29,14 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 	}
 	
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		this.phandler = phandler;
+	public void init(PersistencyWriterSupplier phandlerSupply) {
+		this.phandler = phandlerSupply.get();
 		this.phandler.open(this.tableName);
 	}
 	
 	@Override
-	public void init(DBSelector selector) {
-		this.selector = selector;
+	public void init(DBSelectorSupplier selectorSupply) {
+		this.selector = selectorSupply.get();
 		this.selector.open(this.tableName);
 	}
 

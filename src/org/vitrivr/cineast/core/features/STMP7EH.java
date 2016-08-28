@@ -11,15 +11,15 @@ import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StatElement;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 
 public class STMP7EH extends EHD {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		this.phandler = phandler;
+	public void init(PersistencyWriterSupplier supply) {
+		this.phandler = supply.get();
 		this.phandler.open("features_STMP7EH");
 	}
 	

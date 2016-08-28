@@ -5,11 +5,11 @@ import java.util.List;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 
 public interface Retriever {
 
-	void init(DBSelector selector);
+	void init(DBSelectorSupplier selectorSupply);
 
 	List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc);
 		

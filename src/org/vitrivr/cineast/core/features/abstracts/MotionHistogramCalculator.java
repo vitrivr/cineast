@@ -10,6 +10,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.MathHelper;
 
@@ -29,8 +30,8 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	}
 	
 	@Override
-	public void init(DBSelector selector) {
-		this.selector = selector;
+	public void init(DBSelectorSupplier supply) {
+		this.selector = supply.get();
 		this.selector.open(tableName);
 	}
 

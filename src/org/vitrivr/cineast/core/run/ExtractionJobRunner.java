@@ -389,7 +389,7 @@ public class ExtractionJobRunner implements Runnable{
 			return;
 		}
 		
-		PersistencyWriter<?> writer = Config.getDatabaseConfig().newWriter();
+		PersistencyWriter<?> writer = Config.getDatabaseConfig().getWriterSupplier().get();
 		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
 		writer.open("cineast_multimediaobject");
 
@@ -400,14 +400,14 @@ public class ExtractionJobRunner implements Runnable{
 		
 		List<ShotDescriptor> knownShots = null; //TODO
 		
-		ShotSegmenter segmenter = new ShotSegmenter(vd, inputId, Config.getDatabaseConfig().newWriter(), knownShots);
+		ShotSegmenter segmenter = new ShotSegmenter(vd, inputId, Config.getDatabaseConfig().getWriterSupplier().get(), knownShots);
 		
 		
 		ExtractorInitializer initializer = new ExtractorInitializer() {
 
 			@Override
 			public void initialize(Extractor e) {
-				e.init(Config.getDatabaseConfig().newWriter());
+				e.init(Config.getDatabaseConfig().getWriterSupplier());
 			}
 		};
 

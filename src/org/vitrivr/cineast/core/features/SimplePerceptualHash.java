@@ -10,12 +10,12 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ColorUtils;
 import org.vitrivr.cineast.core.util.GridPartitioner;
-
+//FIXME incomplete logic
 public class SimplePerceptualHash extends AbstractFeatureModule {
 
 	public SimplePerceptualHash() {
@@ -90,8 +90,8 @@ public class SimplePerceptualHash extends AbstractFeatureModule {
 	}
 
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		super.init(phandler);
+	public void init(PersistencyWriterSupplier supply) {
+		super.init(supply);
 		this.phandler.setFieldNames("id", "hash");
 	}
 

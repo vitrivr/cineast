@@ -9,9 +9,7 @@ import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
-import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactory;
@@ -25,11 +23,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Please use setup as an entrypoint
+ */
 public class NeuralNetFeature extends AbstractFeatureModule {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private final NeuralNet net;
+    private NeuralNet net;
     private PersistencyWriter<?> classificationWriter;
     private PersistencyWriter<?> classWriter;
     private DBSelector classificationSelector;
@@ -39,26 +40,33 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     private static final String classTableName = "features_neuralnet_classlabels";
 
     //TODO What is maxDist here?
+
+    /**
+     * Careful: This constructor does not initalize the neural net
+     */
     protected NeuralNetFeature(float maxDist) {
-        super("", maxDist);
-        //TODO This is a very unclean of telling the user that this constructor is not supported
-        throw new UnsupportedOperationException();
-        //this(maxDist, Config.getNeuralNetConfig().getNeuralNetFactory().get());
+        super(fullVectorTableName, maxDist);
     }
 
-    protected NeuralNetFeature(float maxDist, NeuralNetFactory factory, Supplier<DBSelector> selectorSupplier){
-        this(maxDist, factory.get(), selectorSupplier);
+    protected NeuralNetFeature(float maxDist, NeuralNetFactory factory){
+        this(maxDist, factory.get());
     }
 
-    private NeuralNetFeature(float maxDist, NeuralNet net, Supplier<DBSelector> selectorSupplier) {
+    private NeuralNetFeature(float maxDist, NeuralNet net) {
         super(fullVectorTableName, maxDist);
         this.net = net;
+    }
+
+    @Override
+    public void init(DBSelectorSupplier selectorSupplier){
+        super.init(selectorSupplier);
         this.classificationSelector = selectorSupplier.get();
         this.classSelector = selectorSupplier.get();
 
         this.classificationSelector.open(generatedLabelsTableName);
         this.classSelector.open(classTableName);
     }
+
 
     /**
      * Create tables that aren't created by super.
@@ -72,24 +80,54 @@ public class NeuralNetFeature extends AbstractFeatureModule {
      * Table 2 is only touched for API-Calls about available labels and at init-time - not during extraction
      * Table 2: objectid | label or concept
      */
-    private void createTables(Supplier<EntityCreator> ecSupplier) {
-        //create tables
+    public void init(Supplier<EntityCreator> ecSupplier){
         //TODO Check if entity exists
         EntityCreator ec = ecSupplier.get();
-        //TODO Set pk / Create idx
-        ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("shotid", AdamGrpc.AttributeType.LONG), new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT));
+        //TODO Set pk / Create idx -> Logic in the ecCreator
+        //TODO Shotid is a string here is that correct?
+        AdamGrpc.AttributeDefinitionMessage.Builder attrBuilder = AdamGrpc.AttributeDefinitionMessage.newBuilder();
+        ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("shotid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.DOUBLE));
         ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("label", AdamGrpc.AttributeType.STRING));
     }
 
+    @Override
+    public void init(PersistencyWriterSupplier phandlerSupply) {
+        super.init(phandlerSupply);
+        classificationWriter = phandlerSupply.get();
+        classificationWriter.open(generatedLabelsTableName);
+        classWriter = phandlerSupply.get();
+        classWriter.open(classTableName);
+    }
+
+    @Override
+    public void finish(){
+        super.finish();
+        if(this.classificationWriter!= null){
+            this.classificationWriter.close();
+            this.classificationWriter = null;
+        }
+        if(this.classWriter!=null){
+            this.classWriter.close();
+            this.classWriter = null;
+        }
+        if(this.classificationSelector!=null){
+            this.classificationSelector.close();
+            this.classificationSelector = null;
+        }
+        if(this.classSelector!=null){
+            this.classSelector.close();
+            this.classSelector = null;
+        }
+    }
+
     /**
+     * TODO This only calls init with the ecSupplier because we expect the other inits to have been called.
      * Creates entities and fills both class and concept-tables.
      */
-    public void setup(Supplier<EntityCreator> ecSupplier, Supplier<PersistencyWriter<?>> phSupplier) {
-        createTables(ecSupplier);
-        init(phSupplier.get());
+    public void setup(Supplier<EntityCreator> ecSupplier, String conceptsPath) {
+        init(ecSupplier);
 
-        //TODO This also violates the concept of a self-contained module
-        ConceptReader cr = new ConceptReader(Config.getNeuralNetConfig().getConceptsPath());
+        ConceptReader cr = new ConceptReader(conceptsPath);
 
         //Fill Concept map
         for(Map.Entry<String, String[]> entry : cr.getConceptMap().entrySet()) {
@@ -110,28 +148,15 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         }
     }
 
-    @Override
-    public void init(PersistencyWriter<?> ph){
-        //TODO This is also not very clean...
-        throw new UnsupportedOperationException();
-    }
-
     /**
-     * Call init for extraction-jobs. Setup should only be called once (although it hopefully handles the case where entities already exist)
-     *
-     * The handler is passed right through to super. Then our own handlers are opened
+     * Set neuralNet to specified net if you have called the default constructor
      */
-    public void init(Supplier<PersistencyWriter<?>> phSupply) {
-        super.init(phSupply.get());
-        classificationWriter = Config.getDatabaseConfig().newWriter();
-        classificationWriter.open(generatedLabelsTableName);
-        classWriter = Config.getDatabaseConfig().newWriter();
-        classWriter.open(classTableName);
+    public void setNeuralNet(NeuralNet net){
+        this.net = net;
     }
 
     /**
-     * Classifies an Image with a neural net
-     *
+     * Classifies an Image with the given neural net
      * @return A float array containing the probabilities given by the neural net.
      */
     private float[] classifyImage(BufferedImage img) {
@@ -162,9 +187,10 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     }
 
     /**
+     *
+     * TODO How do we calculate score?
      * Checks if labels have been specified. If no labels have been specified, takes the queryimage.
      * Might perform knn on the 1k-vector in the future.
-     * It's not clear yet how we calculate the score of an image
      * It's also not clear yet if we could combine labels and input image??
      */
     @Override
@@ -184,8 +210,11 @@ public class NeuralNetFeature extends AbstractFeatureModule {
                 }
             }
             for(String wnLabel : wnLabels){
-                _return.add(null);
-                //TODO Perform lookup for wnLabels
+                for(Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", wnLabel)){
+                    //TODO Duplicates?
+                    LOGGER.debug("Found hit for query: "+row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
+                    _return.add(new StringDoublePair(row.get("shotid").getString(),row.get("probability").getDouble()));
+                }
             }
         }else{
             //TODO Can we just take the most representative frame from the sc? Is that the query image?
@@ -194,16 +223,18 @@ public class NeuralNetFeature extends AbstractFeatureModule {
             for(int i = 0; i<res.length; i++){
                 if(res[i]>Config.getNeuralNetConfig().getCutoff()){
                     //Matching! Wub wub
-                    //TODO Compare to DB using classified labels -> BooleanQuerySelector in Ap-impl
-                    _return.add(null);
+
+                    for(Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", net.getSynSetLabels()[i])){
+                        //TODO Duplicates?
+                        LOGGER.debug("Found hit for query: "+row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
+                        _return.add(new StringDoublePair(row.get("shotid").getString(),row.get("probability").getDouble()));
+                    }
                 }
             }
         }
+        //TODO Currently returns mock-result until we get data in the DB
         _return = new ArrayList<StringDoublePair>();
-        //stub
         _return.add(new StringDoublePair("125", 0.5));
-
-        //TODO How do we calculate score?
         LOGGER.debug("NeuralNetFeature.getSimilar() done in {}",
                 TimeHelper.toc());
         return LOGGER.exit(_return);

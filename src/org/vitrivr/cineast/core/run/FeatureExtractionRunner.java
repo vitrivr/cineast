@@ -81,7 +81,7 @@ public class FeatureExtractionRunner {
 			return;
 		}
 		
-		PersistencyWriter<?> writer = Config.getDatabaseConfig().newWriter();
+		PersistencyWriter<?> writer = Config.getDatabaseConfig().getWriterSupplier().get();
 		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
 
 		VideoDecoder vd = Config.getDecoderConfig().newVideoDecoder(videoFile);
@@ -114,7 +114,7 @@ public class FeatureExtractionRunner {
 		
 		}
 
-		ShotSegmenter segmenter = new ShotSegmenter(vd, id, Config.getDatabaseConfig().newWriter(), knownShots);
+		ShotSegmenter segmenter = new ShotSegmenter(vd, id, Config.getDatabaseConfig().getWriterSupplier().get(), knownShots);
 		
 		File parentFolder = videoFile.getParentFile();
 
@@ -180,7 +180,7 @@ public class FeatureExtractionRunner {
 
 			@Override
 			public void initialize(Extractor e) {
-				e.init(Config.getDatabaseConfig().newWriter());
+				e.init(Config.getDatabaseConfig().getWriterSupplier());
 			}
 		};
 

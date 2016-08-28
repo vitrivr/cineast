@@ -20,7 +20,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.run.ExtractionJobRunner;
@@ -38,7 +37,7 @@ public class API {
 
 		@Override
 		public void initialize(Retriever r) {
-			r.init(new ADAMproSelector());
+			r.init(Config.getDatabaseConfig().getSelectorSupplier());
 
 		}
 	};

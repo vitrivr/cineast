@@ -9,8 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.FuzzyColorHistogramQuantizer;
-import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.color.FuzzyColorHistogramQuantizer.Color;
+import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
@@ -20,7 +20,7 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ColorUtils;
@@ -35,8 +35,8 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	}
 	
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		super.init(phandler);
+	public void init(PersistencyWriterSupplier supply) {
+		super.init(supply);
 		this.phandler.setFieldNames("id", "hist", "raster");
 	}
 

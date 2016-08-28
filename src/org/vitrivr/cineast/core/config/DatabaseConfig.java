@@ -1,7 +1,14 @@
 package org.vitrivr.cineast.core.config;
 
+import org.vitrivr.cineast.core.db.ADAMproSelector;
+import org.vitrivr.cineast.core.db.ADAMproWriter;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.ProtobufFileWriter;
+
 import com.eclipsesource.json.JsonObject;
-import org.vitrivr.cineast.core.db.*;
 
 public final class DatabaseConfig {
 	
@@ -11,11 +18,36 @@ public final class DatabaseConfig {
 	private final Writer writer;
 	private final Selector selector;
 	
+	private static final PersistencyWriterSupplier ADAMPRO_WRITER_SUPPLY = new PersistencyWriterSupplier() {
+		
+		@Override
+		public PersistencyWriter<?> get() {
+			return new ADAMproWriter();
+		}
+	};
+	
+	private static final PersistencyWriterSupplier PROTO_WRITER_SUPPLY = new PersistencyWriterSupplier() {
+		
+		@Override
+		public PersistencyWriter<?> get() {
+			return new ProtobufFileWriter();
+		}
+	}; 
+	
+	private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = new DBSelectorSupplier(){
+
+		@Override
+		public DBSelector get() {
+			return new ADAMproSelector();
+		}
+		
+	};
+	
 	public static enum Writer{
 		PROTO,
 		ADAMPRO
 	}
-
+	
 	public static enum Selector{
 		ADAMPRO
 	}
@@ -63,24 +95,29 @@ public final class DatabaseConfig {
 		return this.writer;
 	}
 	
-	public PersistencyWriter<?> newWriter(){
+	public Selector getSelector(){
+		return this.selector;
+	}
+	
+	public PersistencyWriterSupplier getWriterSupplier(){
 		switch(this.writer){
 		case ADAMPRO:
-			return new ADAMproWriter();
+			return ADAMPRO_WRITER_SUPPLY;
 		case PROTO:
-			return new ProtobufFileWriter();
+			return PROTO_WRITER_SUPPLY;
 		default:
-			throw new IllegalStateException("no factory for writer " + this.writer);
+			throw new IllegalStateException("no supplier for writer " + this.writer);
 			
 		}
 	}
-
-	public DBSelector newSelector(){
+	
+	public DBSelectorSupplier getSelectorSupplier(){
 		switch(this.selector){
-			case ADAMPRO:
-				return new ADAMproSelector();
-			default:
-				throw new IllegalStateException("no factor for selector "+this.selector);
+		case ADAMPRO:
+			return ADAMPRO_SELECTOR_SUPPLY;
+		default:
+			throw new IllegalStateException("no supplier for selector " + this.selector);
+			
 		}
 	}
 	
@@ -142,7 +179,7 @@ public final class DatabaseConfig {
 				throw new IllegalArgumentException("'" + writerName + "' is not a valid value for 'writer'");
 			}
 		}
-
+		
 		Selector selector = DEFAULT_SELECTOR;
 		if(obj.get("selector") != null){
 			String selectorName = "";
@@ -152,7 +189,7 @@ public final class DatabaseConfig {
 			} catch(UnsupportedOperationException notastring){
 				throw new IllegalArgumentException("'selector' was not a string in database configuration");
 			} catch(IllegalArgumentException notawriter){
-				throw new IllegalArgumentException("'" + selectorName + "' is not a valid value for 'writer'");
+				throw new IllegalArgumentException("'" + selectorName + "' is not a valid value for 'selector'");
 			}
 		}
 		

@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -20,8 +20,7 @@ public class ShotThumbNails implements Extractor {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		phandler.close(); //not needed
+	public void init(PersistencyWriterSupplier supply) {
 		this.folder = new File(Config.getExtractorConfig().getOutputLocation(), "thumbnails");
 		if(!this.folder.exists()){
 			this.folder.mkdirs();
