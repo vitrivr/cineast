@@ -24,4 +24,6 @@ public interface DBSelector {
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
 
     List<PrimitiveTypeProvider> getAll(String label);
+
+	boolean existsEntity(String name);
 }

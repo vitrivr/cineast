@@ -1,26 +1,19 @@
 package org.vitrivr.cineast.core.db;
 
-import java.util.concurrent.ExecutionException;
-
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
-
-import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 import org.vitrivr.adam.grpc.AdamDefinitionGrpc;
 import org.vitrivr.adam.grpc.AdamDefinitionGrpc.AdamDefinitionStub;
+import org.vitrivr.adam.grpc.AdamGrpc.*;
 import org.vitrivr.adam.grpc.AdamSearchGrpc;
 import org.vitrivr.adam.grpc.AdamSearchGrpc.AdamSearchStub;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.stub.StreamObserver;
+import java.util.concurrent.ExecutionException;
 
 public class ADAMproWrapper { //TODO generate interrupted ackmessage
 
@@ -68,6 +61,17 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 			return null;
 		}
 	}
+
+	public boolean existsEntity(String eName) {
+		SettableFuture<ExistsMessage> future = SettableFuture.create();
+		this.definitionStub.existsEntity(EntityNameMessage.getDefaultInstance().toBuilder().clear().setEntity(eName).build(), new LastObserver(future));
+		try{
+			return future.get().getExists();
+		}catch(InterruptedException | ExecutionException e){
+			e.printStackTrace();
+			return false;
+		}
+	}
 	
 	public AckMessage dropEntityBlocking(EntityNameMessage message){
 		SettableFuture<AckMessage> future = SettableFuture.create();
@@ -101,8 +105,8 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 		this.close();
 		super.finalize();
 	}
-	
-	class LastObserver<T> implements StreamObserver<T>{
+
+    class LastObserver<T> implements StreamObserver<T>{
 
 		private final SettableFuture<T> future;
 		private T last = null;

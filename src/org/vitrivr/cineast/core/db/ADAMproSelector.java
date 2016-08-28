@@ -317,6 +317,11 @@ public class ADAMproSelector implements DBSelector {
 		return _return;
 	}
 
+	@Override
+	public boolean existsEntity(String eName) {
+		return this.adampro.existsEntity(eName);
+	}
+
 	/**
 	 * Executes a bqm and returns the resulting tuples
 	 * @return an empty ArrayList if an error happens. Else just the list of rows
