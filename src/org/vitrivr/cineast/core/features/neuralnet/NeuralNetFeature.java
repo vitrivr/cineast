@@ -3,7 +3,6 @@ package org.vitrivr.cineast.core.features.neuralnet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adam.grpc.AdamGrpc;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.SegmentContainer;
@@ -38,6 +37,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     private static final String fullVectorTableName = "features_neuralnet_fullvector";
     private static final String generatedLabelsTableName = "features_neuralnet_labels";
     private static final String classTableName = "features_neuralnet_classlabels";
+    private float cutoff = 0.2f;
 
     //TODO What is maxDist here?
 
@@ -55,6 +55,10 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     private NeuralNetFeature(float maxDist, NeuralNet net) {
         super(fullVectorTableName, maxDist);
         this.net = net;
+    }
+
+    public void setCutoff(float cutoff){
+        this.cutoff = cutoff;
     }
 
     public static String getClassTableName() {
@@ -84,14 +88,20 @@ public class NeuralNetFeature extends AbstractFeatureModule {
      * Table 2 is only touched for API-Calls about available labels and at init-time - not during extraction
      * Table 2: objectid | label or concept
      */
-    public void init(Supplier<EntityCreator> ecSupplier){
-        //TODO Check if entity exists
+    public void init(Supplier<EntityCreator> ecSupplier, DBSelectorSupplier selectorSupplier){
+        DBSelector sel = selectorSupplier.get();
         EntityCreator ec = ecSupplier.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
-        //TODO Shotid is a string here is that correct?
         AdamGrpc.AttributeDefinitionMessage.Builder attrBuilder = AdamGrpc.AttributeDefinitionMessage.newBuilder();
-        ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("shotid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.DOUBLE));
-        ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("label", AdamGrpc.AttributeType.STRING));
+        if(!sel.existsEntity(generatedLabelsTableName)){
+            //TODO Shotid is a string here is that correct?
+            ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("shotid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.DOUBLE));
+        }
+        if(!sel.existsEntity(classTableName)){
+            ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("label", AdamGrpc.AttributeType.STRING));
+        }
+        sel.close();
+        ec.close();
     }
 
     @Override
@@ -125,11 +135,11 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     }
 
     /**
-     * TODO This only calls init with the ecSupplier because we expect the other inits to have been called.
+     * This only calls init with the ecSupplier because we expect the other inits to have been called.
      * Creates entities and fills both class and concept-tables.
      */
-    public void setup(Supplier<EntityCreator> ecSupplier, String conceptsPath) {
-        init(ecSupplier);
+    public void setup(Supplier<EntityCreator> ecSupplier, String conceptsPath, DBSelectorSupplier selectorSupplier) {
+        init(ecSupplier, selectorSupplier);
 
         ConceptReader cr = new ConceptReader(conceptsPath);
 
@@ -178,8 +188,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
 
             //Persist best matches
             for (int i = 0; i < probs.length; i++) {
-                //TODO Config Dependency
-                if (probs[i] > Config.getNeuralNetConfig().getCutoff()) {
+                if (probs[i] > cutoff) {
                     PersistentTuple tuple = classificationWriter.generateTuple(shot.getId(), net.getSynSetLabels()[i], probs[i]);
                     classificationWriter.persist(tuple);
                 }
@@ -214,9 +223,10 @@ public class NeuralNetFeature extends AbstractFeatureModule {
                     wnLabels.add(row.get("label").getString());
                 }
             }
+
+            //TODO Eliminate Duplicates from wnLabels
             for(String wnLabel : wnLabels){
                 for(Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", wnLabel)){
-                    //TODO Duplicates?
                     LOGGER.debug("Found hit for query: "+row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
                     _return.add(new StringDoublePair(row.get("shotid").getString(),row.get("probability").getDouble()));
                 }
@@ -226,8 +236,8 @@ public class NeuralNetFeature extends AbstractFeatureModule {
             float[] res = classifyImage(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
 
             for(int i = 0; i<res.length; i++){
-                //TODO Config dependency. This should be in queryConfig probably
-                if(res[i]>Config.getNeuralNetConfig().getCutoff()){
+                //TODO This cutoff should be in queryConfig probably
+                if(res[i]>cutoff){
                     //Matching! Wub wub
 
                     for(Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", net.getSynSetLabels()[i])){
