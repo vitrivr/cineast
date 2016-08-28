@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.db;
 
-import java.util.List;
-import java.util.Map;
-
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+
+import java.util.List;
+import java.util.Map;
 
 public interface DBSelector {
 
@@ -22,5 +22,6 @@ public interface DBSelector {
 	List<float[]> getFeatureVectors(String fieldName, String value, String vectorName);
 	
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
-	
+
+    List<PrimitiveTypeProvider> getAll(String label);
 }

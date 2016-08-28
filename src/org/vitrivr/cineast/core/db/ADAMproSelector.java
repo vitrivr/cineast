@@ -1,40 +1,21 @@
 package org.vitrivr.cineast.core.db;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-
+import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.google.common.util.concurrent.ListenableFuture;
-
 import org.vitrivr.adam.grpc.AdamGrpc;
-import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.*;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage.Code;
-import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.DataMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.DenseVectorMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.DistanceMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DistanceMessage.DistanceType;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.adam.grpc.AdamGrpc.FeatureVectorMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.FromMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.NearestNeighbourQueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.ProjectionMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultTupleMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
+
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class ADAMproSelector implements DBSelector {
 
@@ -312,25 +293,55 @@ public class ADAMproSelector implements DBSelector {
 	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
 		WhereMessage where = buildWhereMessage(fieldName, value);		
 		BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
-		QueryMessage qbqm = buildQueryMessage(hints, bqMessage, null, null);
+		return executeBooleanQuery(bqMessage);
+	}
+
+	/**
+	 * SELECT label FROM ...
+	 * Be careful with the size of the resulting List :)
+	 */
+	@Override
+	public List<PrimitiveTypeProvider> getAll(String label) {
+		BooleanQueryMessage bqm;
+		synchronized (bqmBuilder){
+			bqmBuilder.clear();
+			bqm = bqmBuilder.build();
+		}
+		List<Map<String, PrimitiveTypeProvider>> resultList = executeBooleanQuery(bqm);
+
+		List<PrimitiveTypeProvider> _return = new ArrayList(resultList.size());
+		for(Map<String, PrimitiveTypeProvider> row : resultList){
+			_return.add(row.get(label));
+		}
+
+		return _return;
+	}
+
+	/**
+	 * Executes a bqm and returns the resulting tuples
+	 * @return an empty ArrayList if an error happens. Else just the list of rows
+	 */
+	private List<Map<String, PrimitiveTypeProvider>> executeBooleanQuery(BooleanQueryMessage bqm) {
+		QueryMessage qbqm = buildQueryMessage(hints, bqm, null, null);
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
+
 		QueryResultsMessage result;
 		try {
 			result = f.get();
 		} catch (InterruptedException | ExecutionException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
-		
+
 		if(result.getResponsesCount() == 0){
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
-		
+
 		QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
-		
+
 		List<QueryResultTupleMessage> resultList = response.getResultsList();
 		if(resultList.isEmpty()){
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
 		ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(resultList.size());
 		for(QueryResultTupleMessage resultMessage : resultList){
@@ -342,7 +353,6 @@ public class ADAMproSelector implements DBSelector {
 			}
 			_return.add(map);
 		}
-		
 		return _return;
 	}
 
