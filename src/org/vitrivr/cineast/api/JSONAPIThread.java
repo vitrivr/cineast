@@ -10,8 +10,10 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -369,28 +371,29 @@ public class JSONAPIThread extends Thread {
 				LOGGER.debug("Context API call ending");
 				break;
 			}
-			case "getConcepts":{
-				LOGGER.debug("Concepts API call starting");
-				//DBSelector selector = Config.getDatabaseConfig().newSelector();
-				String[] concepts = new String[]{"fruit, cars"};	//TODO Select distinct concepts from the concept-table
+			case "getLabels":{
+				LOGGER.debug("Label API call starting");
+				DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+				selector.open(NeuralNetFeature.getClassTableName());
+
 				JsonArray jsonConcepts = new JsonArray();
+				List<PrimitiveTypeProvider> queryRes = selector.getAll("label");
+				Set<String> labels = new HashSet(queryRes.size());
+				//Eliminate Duplicates
+				for(PrimitiveTypeProvider el : queryRes){
+					LOGGER.debug("Found label: "+el.getString());
+					labels.add(el.getString());
+				}
+				for(String el : labels){
+					jsonConcepts.add(el);
+				}
+				String[] concepts = new String[]{"fruit, cars"};	//TODO Mock-labels while we wait for DB-Filling
 				for(String c: concepts){
 					jsonConcepts.add(c);
 				}
 				_return.set("concepts", jsonConcepts);
-				//selector.close()
+				selector.close();
 				LOGGER.debug("Concepts API call ending");
-				break;
-			}
-			case "getLabels":{
-				//TODO garter snake & grass snake are the same thing... How does that work out in the end?
-				String[] labels = new String[]{"mayan dog, egyptian dog, garter snake, grass snake"};	//TODO Select labels
-				JsonArray jsonLabels = new JsonArray();
-				for(String c: labels){
-					jsonLabels.add(c);
-				}
-				_return.set("labels", jsonLabels);
-				//selector.close();
 				break;
 			}
 

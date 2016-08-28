@@ -57,6 +57,10 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         this.net = net;
     }
 
+    public static String getClassTableName() {
+        return classTableName;
+    }
+
     @Override
     public void init(DBSelectorSupplier selectorSupplier){
         super.init(selectorSupplier);
@@ -174,6 +178,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
 
             //Persist best matches
             for (int i = 0; i < probs.length; i++) {
+                //TODO Config Dependency
                 if (probs[i] > Config.getNeuralNetConfig().getCutoff()) {
                     PersistentTuple tuple = classificationWriter.generateTuple(shot.getId(), net.getSynSetLabels()[i], probs[i]);
                     classificationWriter.persist(tuple);
@@ -221,6 +226,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
             float[] res = classifyImage(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
 
             for(int i = 0; i<res.length; i++){
+                //TODO Config dependency. This should be in queryConfig probably
                 if(res[i]>Config.getNeuralNetConfig().getCutoff()){
                     //Matching! Wub wub
 
