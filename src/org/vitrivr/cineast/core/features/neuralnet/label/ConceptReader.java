@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +18,7 @@ import java.util.Map;
 public class ConceptReader {
 
     /**
-     * Maps a concept onto labels
+     * Maps a human-readable concept onto wordnet-labels
      */
     Map<String, String[]> conceptMap = new HashMap();
 
@@ -37,13 +36,16 @@ public class ConceptReader {
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String line = null;
+            //Skip header
+            br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
-                String[] concepts = new String[data.length-2];
-                for(int i = 2; i<data.length; i++){
-                    concepts[i] = data[i];
+                String[] concepts = data[2].split(" ");
+                if(concepts==null){
+                    System.out.println(line+" Concepts null");
+                    concepts = new String[0];
                 }
-                conceptMap.put(data[1],Arrays.copyOfRange(data,2,data.length));
+                conceptMap.put(data[1],concepts);
             }
         } catch (IOException e) {
             throw new RuntimeException("Couldn't get labels", e);
