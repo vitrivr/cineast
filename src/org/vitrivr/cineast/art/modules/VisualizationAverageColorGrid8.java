@@ -3,6 +3,7 @@ package org.vitrivr.cineast.art.modules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
+import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.ADAMproSelector;
@@ -87,5 +88,10 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
     types.add(VisualizationType.VISUALIZATION_SHOT);
     types.add(VisualizationType.VISUALIZATION_VIDEO);
     return types;
+  }
+
+  @Override
+  public VisualizationResult getResultType() {
+    return VisualizationResult.IMAGE;
   }
 }

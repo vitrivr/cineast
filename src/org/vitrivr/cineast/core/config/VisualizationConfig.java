@@ -40,8 +40,16 @@ public final class VisualizationConfig {
 		DEFAULT_VISUALIZATION_CATEGORIES.put("featureRevert", list);
 	}
 
+	public VisualizationConfig(){
+		this(DEFAULT_VISUALIZATION_CATEGORIES);
+	}
+
 	public VisualizationConfig(HashMap<String, List<Class<? extends Visualization>>> visualizationCategories){
 		this.visualizationCategories = visualizationCategories;
+	}
+
+	public boolean isValidVisualization(Class className){
+		return visualizations.contains(className);
 	}
 	
 	public List<Class<? extends Visualization>> getVisualizationsByCategory(String category){
