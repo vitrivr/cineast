@@ -5,6 +5,14 @@ Cineast is written in Java and uses [ADAM](https://github.com/dbisUnibas/ADAM) a
 ## building Cineast
 Cineast can be built using [Gradle](http://gradle.org/).
 
+Use
+
+ ./gradlew deploy
+
+This will create the cineast.jar file which can be found in build/libs. Edit the cineast.properties file and point it to the location where you set up ADAM. The freshly created jar file can be started with:
+
+java -jar cineast.jar 
+
 Cineast has the following dependencies:
 
 * [BoofCV](https://github.com/lessthanoptimal/BoofCV)
