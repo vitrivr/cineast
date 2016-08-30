@@ -58,7 +58,7 @@ public class ADAMproSelector implements DBSelector {
 		hints.add("exact");
 		
 		projectionMessage = AdamGrpc.ProjectionMessage.newBuilder().setAttributes(
-				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("adamprodistance").addAttribute("id")).build();
+				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("ap_distance").addAttribute("id")).build();
 		
 		DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
 		
