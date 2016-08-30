@@ -14,6 +14,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -394,6 +395,41 @@ public class JSONAPIThread extends Thread {
 				_return.set("concepts", jsonConcepts);
 				selector.close();
 				LOGGER.debug("Concepts API call ending");
+				break;
+			}
+
+			case "getMovies":{
+				DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+				selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
+				List<PrimitiveTypeProvider> ids = selector.getAll("id");
+				Set<String> uniqueIds = new HashSet();
+				for(PrimitiveTypeProvider l: ids){
+					uniqueIds.add(l.getString());
+				}
+
+				JsonArray movies = new JsonArray();
+				for(String s: uniqueIds){
+					movies.add(s);
+				}
+
+				_return.set("movies", movies);
+				selector.close();
+				break;
+			}
+
+			case "getShots":{
+				String movieId = clientJSON.get("movieId").toString();
+				//TODO: implement getShots
+				break;
+			}
+
+			case "getVisualizations":{
+				//TODO: implement getVisualizations
+				break;
+			}
+
+			case "getArt":{
+				//TODO: implement getArt
 				break;
 			}
 
