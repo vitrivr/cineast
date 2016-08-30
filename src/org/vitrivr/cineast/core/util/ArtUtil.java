@@ -19,23 +19,36 @@ import java.util.*;
 public class ArtUtil {
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public static String pixelsToImage(int[] pixels, int sizeX, int sizeY){
-    if(sizeX * sizeY != pixels.length/3){
+  public static String pixelsToImage(int[] pixels, int sizeX, int sizeY, boolean isRgb){
+    int pixelSize = 3;
+    if(isRgb){
+      pixelSize = 1;
+    }
+    if(sizeX * sizeY != pixels.length/pixelSize){
       LOGGER.error("Not matching number of available pixels and images size!");
     }
     BufferedImage image = new BufferedImage(sizeX, sizeY, BufferedImage.TYPE_INT_RGB);
 
     for(int y=0;y<sizeY;y++){
       for(int x=0;x<sizeX;x++){
-        int pos = (y*sizeX+x)*3;
-        image.setRGB(x, y, new Color(pixels[pos], pixels[pos+1], pixels[pos+2]).getRGB());
+        int pos = (y*sizeX+x)*pixelSize;
+        if(isRgb){
+          image.setRGB(x, y, pixels[pos]);
+        }
+        else {
+          image.setRGB(x, y, new Color(pixels[pos], pixels[pos + 1], pixels[pos + 2]).getRGB());
+        }
       }
     }
 
     return WebUtils.BufferedImageToDataURL(image, "png");
   }
 
-  public static int[] scalePixels(int[] pixels, int multiplier, int sizeX, int sizeY){
+  public static int[] scalePixels(int[] pixels, int multiplier, int sizeX, int sizeY, boolean isRgb){
+    int pixelSize = 3;
+    if(isRgb){
+      pixelSize = 1;
+    }
     if(multiplier < 1){
       return pixels;
     }
@@ -44,9 +57,9 @@ public class ArtUtil {
       for(int y=0;y<sizeY;y++){
         for(int a=x*multiplier;a<(x+1)*multiplier;a++){
           for(int b=y*multiplier;b<(y+1)*multiplier;b++){
-            newpixels[(b*sizeX*multiplier + a)*3] = pixels[(y*sizeX+x)*3];
-            newpixels[(b*sizeX*multiplier + a)*3 + 1] = pixels[(y*sizeX+x)*3 + 1];
-            newpixels[(b*sizeX*multiplier + a)*3 + 2] = pixels[(y*sizeX+x)*3 + 2];
+            for(int i=0;i<pixelSize;i++) {
+              newpixels[(b * sizeX * multiplier + a) * pixelSize + i] = pixels[(y * sizeX + x) * pixelSize + i];
+            }
           }
         }
       }

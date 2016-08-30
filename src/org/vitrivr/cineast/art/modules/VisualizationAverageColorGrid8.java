@@ -22,8 +22,6 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
     super("features_AverageColorGrid8");
   }
 
-  private static final Logger LOGGER = LogManager.getLogger();
-
   //Test main function
   public static void main(String[] args) {
     VisualizationAverageColorGrid8 module = new VisualizationAverageColorGrid8();
@@ -67,9 +65,9 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
       pixels[i] = pixels[i]/shots.size();
     }
 
-    pixels = ArtUtil.scalePixels(pixels, scale, 8, 8);
+    pixels = ArtUtil.scalePixels(pixels, scale, 8, 8, false);
 
-    return ArtUtil.pixelsToImage(pixels, 8*scale, 8*scale);
+    return ArtUtil.pixelsToImage(pixels, 8*scale, 8*scale, false);
   }
 
   @Override
@@ -79,7 +77,7 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
 
   public String visualizeShot(String shotId, int scale){
     DBSelector selector = selectors.get(tableName);
-    return ArtUtil.pixelsToImage(ArtUtil.scalePixels(ArtUtil.shotToRGB(shotId, selector, 8, 8), scale, 8, 8), 8*scale, 8*scale);
+    return ArtUtil.pixelsToImage(ArtUtil.scalePixels(ArtUtil.shotToRGB(shotId, selector, 8, 8), scale, 8, 8, false), 8*scale, 8*scale, false);
   }
 
   @Override

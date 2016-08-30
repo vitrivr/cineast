@@ -6,6 +6,7 @@ import com.eclipsesource.json.JsonValue;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.jcodec.common.logging.Logger;
 import org.vitrivr.cineast.art.modules.VisualizationAverageColorGrid8;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorGrid8;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
 import org.vitrivr.cineast.core.data.DoublePair;
 import org.vitrivr.cineast.core.features.*;
@@ -26,6 +27,7 @@ public final class VisualizationConfig {
 	static{
 		//add all visualizations
 		visualizations.add(VisualizationAverageColorGrid8.class);
+		visualizations.add(VisualizationMedianColorGrid8.class);
 
 
 		//add all categories with their containing visualizations
@@ -33,9 +35,15 @@ public final class VisualizationConfig {
 
 		list = new ArrayList<>(1);
 		list.add(VisualizationAverageColorGrid8.class);
+		list.add(VisualizationMedianColorGrid8.class);
 		DEFAULT_VISUALIZATION_CATEGORIES.put("shots", list);
 
 		list = new ArrayList<>(1);
+		list.add(VisualizationAverageColorGrid8.class);
+		DEFAULT_VISUALIZATION_CATEGORIES.put("videos", list);
+
+		list = new ArrayList<>(1);
+		list.add(VisualizationAverageColorGrid8.class);
 		list.add(VisualizationAverageColorGrid8.class);
 		DEFAULT_VISUALIZATION_CATEGORIES.put("featureRevert", list);
 	}
