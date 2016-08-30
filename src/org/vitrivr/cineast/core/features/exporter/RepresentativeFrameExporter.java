@@ -2,17 +2,21 @@ package org.vitrivr.cineast.core.features.exporter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import javax.imageio.ImageIO;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.adam.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition;
 
 public class RepresentativeFrameExporter implements Extractor {
 
@@ -50,6 +54,11 @@ public class RepresentativeFrameExporter implements Extractor {
 	@Override
 	public void finish() {
 		this.phandler.close();
+	}
+
+	@Override
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().createIdEntity("cineast_representativeframes", new AttributeDefinition("frame", AttributeType.INT));
 	}
 
 }

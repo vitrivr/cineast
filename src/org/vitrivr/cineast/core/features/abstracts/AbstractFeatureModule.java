@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features.abstracts;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -14,14 +15,13 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.MathHelper;
 
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 public abstract class AbstractFeatureModule implements Extractor, Retriever {
-
-//	private static Logger LOGGER = LogManager.getLogger();
 	
 	protected PersistencyWriter<?> phandler;
 	protected DBSelector selector;
@@ -116,6 +116,12 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 			this.selector.close();
 			this.selector = null;
 		}
+	}
+
+	@Override
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().createFeatureEntity(this.tableName, true);
+		
 	}
 
 }
