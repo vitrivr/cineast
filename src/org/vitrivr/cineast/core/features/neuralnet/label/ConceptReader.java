@@ -39,6 +39,10 @@ public class ConceptReader {
             //Skip header
             br.readLine();
             while ((line = br.readLine()) != null) {
+
+                //TODO Maybe exclude the following concepts:
+                //bird, machine, adult, vehicle, animal, plant, food, fish, flower, tool, tree, object, dog, bush, Tree (big/small???), Fish (big/small???), flower with stem...,
+                //vessel, Bush(b/s???), vegetable, fruit, person, grass, furniture, standing bird, cloth, building
                 String[] data = line.split(",");
                 String[] concepts = data[2].split(" ");
                 if(concepts==null){
