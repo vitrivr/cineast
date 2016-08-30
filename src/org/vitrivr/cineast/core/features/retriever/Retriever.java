@@ -6,8 +6,9 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.PersistentOperator;
 
-public interface Retriever {
+public interface Retriever extends PersistentOperator {
 
 	void init(DBSelectorSupplier selectorSupply);
 

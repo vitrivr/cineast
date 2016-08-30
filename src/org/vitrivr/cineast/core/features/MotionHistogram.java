@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
@@ -11,12 +12,13 @@ import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.MathHelper;
 
 public class MotionHistogram extends SubDivMotionHistogram {
 
 	public MotionHistogram() {
-		super("features_motionhistogram", MathHelper.SQRT2);
+		super("features_motionhistogram", "feature", MathHelper.SQRT2);
 	}
 	
 
@@ -46,10 +48,11 @@ public class MotionHistogram extends SubDivMotionHistogram {
 		return getSimilar(fv.toArray(null), qc);
 	}
 
+
 	@Override
-	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().createFeatureEntity("features_MotionHistogram", true);
+		
 	}
 	
 }

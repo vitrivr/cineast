@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.imageio.ImageIO;
 
@@ -19,6 +20,7 @@ import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 public class QueryImageExporter implements Retriever {
@@ -54,5 +56,7 @@ public class QueryImageExporter implements Retriever {
 		return new LinkedList<StringDoublePair>();
 	}
 
+	@Override
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {}
 
 }

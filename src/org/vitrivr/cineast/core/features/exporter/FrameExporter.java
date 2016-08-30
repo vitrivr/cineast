@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features.exporter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import javax.imageio.ImageIO;
 
@@ -12,6 +13,7 @@ import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 public class FrameExporter implements Extractor {
@@ -53,5 +55,8 @@ public class FrameExporter implements Extractor {
 
 	@Override
 	public void finish() {}
+
+	@Override
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {}
 
 }

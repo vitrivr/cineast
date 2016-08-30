@@ -2,9 +2,11 @@ package org.vitrivr.cineast.core.features;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.adam.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
@@ -13,6 +15,8 @@ import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition;
 import org.vitrivr.cineast.core.util.MaskGenerator;
 import org.vitrivr.cineast.core.util.TimeHelper;
 
@@ -52,5 +56,10 @@ public class ForegroundBoundingBox  extends AbstractFeatureModule {
 	protected void persist(String shotId, long frameIdx, FloatVector fs) {
 		PersistentTuple tuple = this.phandler.generateTuple(shotId, frameIdx, arrayCache = fs.toArray(arrayCache));
 		this.phandler.persist(tuple);
+	}
+	
+	@Override
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().createFeatureEntity("features_ForegroundBoundingBox", false, new AttributeDefinition("frame", AttributeType.LONG), new AttributeDefinition("bbox", AttributeType.FEATURE));
 	}
 }

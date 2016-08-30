@@ -2,7 +2,9 @@ package org.vitrivr.cineast.core.features;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
+import org.vitrivr.adam.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
@@ -11,14 +13,14 @@ import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
+import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition;
 import org.vitrivr.cineast.core.util.MathHelper;
-
-
 
 public class MotionHistogramBackground extends SubDivMotionHistogram {
 
 	public MotionHistogramBackground() {
-		super("features_MotionHistogramBackground", MathHelper.SQRT2);
+		super("features_MotionHistogramBackground", "feature", MathHelper.SQRT2);
 	}
 	
 	@Override
@@ -48,8 +50,9 @@ public class MotionHistogramBackground extends SubDivMotionHistogram {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().createFeatureEntity("features_MotionHistogramBackground", true, new AttributeDefinition("sum", AttributeType.FLOAT), new AttributeDefinition("hist", AttributeType.FEATURE));
 	}
+
+	
 }
