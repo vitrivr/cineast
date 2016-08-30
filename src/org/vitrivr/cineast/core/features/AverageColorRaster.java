@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.ColorUtils;
 import org.vitrivr.cineast.core.util.GridPartitioner;
 
@@ -240,6 +242,11 @@ public class AverageColorRaster extends AbstractFeatureModule {
 		Map<String, PrimitiveTypeProvider> map = rows.get(0);
 		
 		return getSimilar(map.get("raster").getFloatArray(), map.get("hist").getFloatArray(), qc);
+	}
+
+	@Override
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().createFeatureEntity(this.tableName, true, "hist", "raster");
 	}
 
 }

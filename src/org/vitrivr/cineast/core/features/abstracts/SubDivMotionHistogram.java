@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -10,14 +11,15 @@ import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.MathHelper;
 
 public abstract class SubDivMotionHistogram extends MotionHistogramCalculator implements Extractor {
 
 protected PersistencyWriter phandler;
 	
-	protected SubDivMotionHistogram(String tableName, double maxDist){
-		super(tableName, (float)maxDist);
+	protected SubDivMotionHistogram(String tableName, String fieldName, double maxDist){
+		super(tableName, fieldName, (float)maxDist);
 	}
 
 	@Override
@@ -44,11 +46,7 @@ protected PersistencyWriter phandler;
 		return distances;
 	}
 	
-	@Override
-	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	
 	@Override
 	public void finish() {

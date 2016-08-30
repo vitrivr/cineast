@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.imageio.ImageIO;
 
@@ -17,6 +18,7 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 
 import georegression.struct.point.Point2D_F32;
 
@@ -86,5 +88,8 @@ private static File folder = new File(Config.getExtractorConfig().getOutputLocat
 	
 	@Override
 	public void finish() {}
+	
+	@Override
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {}
 
 }
