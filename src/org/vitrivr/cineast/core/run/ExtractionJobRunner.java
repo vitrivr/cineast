@@ -15,7 +15,6 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
 import org.vitrivr.cineast.core.decode.shotboundary.ShotBoundaryDecoder;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.runtime.ShotDispatcher;
@@ -171,9 +170,9 @@ public class ExtractionJobRunner implements Runnable{
 		for(JsonValue jval : inputArray){
 			try{
 				JsonObject jobj = jval.asObject();
-				AbstractFeatureModule module = ReflectionHelper.newFeatureModule(jobj);
-				if(module != null){
-					this.extractors.add(module);
+				Extractor e = ReflectionHelper.newExtractor(jobj);
+				if(e != null){
+					this.extractors.add(e);
 				}
 			}catch(UnsupportedOperationException notAnObject){
 				LOGGER.warn("Could not parse job config entry in 'input.features[]': entry is not a valid json object, skipping");
