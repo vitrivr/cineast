@@ -39,7 +39,7 @@ public class ADAMproSelector implements DBSelector {
 		hints.add("exact");
 		
 		projectionMessage = AdamGrpc.ProjectionMessage.newBuilder().setAttributes(
-				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("adamprodistance").addAttribute("id")).build();
+				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("ap_distance").addAttribute("id")).build();
 		
 		DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
 		
@@ -283,7 +283,7 @@ public class ADAMproSelector implements DBSelector {
 			if(id == null){
 				continue;
 			}
-			_return.add(new StringDoublePair(id, msg.getData().get("adamprodistance").getFloatData()));
+			_return.add(new StringDoublePair(id, msg.getData().get("ap_distance").getFloatData()));
 		}
 		
 		return _return;

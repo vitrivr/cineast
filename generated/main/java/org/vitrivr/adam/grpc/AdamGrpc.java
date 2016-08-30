@@ -14189,7 +14189,7 @@ public final class AdamGrpc {
     private QueryMessage() {
       queryid_ = "";
       hints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      useFallback_ = false;
+      useFallback_ = true;
       time_ = 0L;
       readFromCache_ = false;
       putInCache_ = false;
