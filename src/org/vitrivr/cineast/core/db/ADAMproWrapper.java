@@ -2,21 +2,21 @@ package org.vitrivr.cineast.core.db;
 
 import java.util.concurrent.ExecutionException;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.SettableFuture;
-
+import org.vitrivr.adam.grpc.AdamDefinitionGrpc;
+import org.vitrivr.adam.grpc.AdamDefinitionGrpc.AdamDefinitionStub;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
-import org.vitrivr.adam.grpc.AdamDefinitionGrpc;
-import org.vitrivr.adam.grpc.AdamDefinitionGrpc.AdamDefinitionStub;
 import org.vitrivr.adam.grpc.AdamSearchGrpc;
 import org.vitrivr.adam.grpc.AdamSearchGrpc.AdamSearchStub;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;

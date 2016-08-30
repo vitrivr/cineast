@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -11,7 +10,6 @@ import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.MathHelper;
 
 public abstract class SubDivMotionHistogram extends MotionHistogramCalculator implements Extractor {

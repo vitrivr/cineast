@@ -9,25 +9,24 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.google.common.util.concurrent.ListenableFuture;
-
 import org.vitrivr.adam.grpc.AdamGrpc;
 import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.cineast.core.data.Shot;
-import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.adam.grpc.AdamGrpc.FromMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultTupleMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
+import org.vitrivr.cineast.core.data.Shot;
+import org.vitrivr.cineast.core.setup.EntityCreator;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 public class ShotLookup {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private ADAMproWrapper adampro = new ADAMproWrapper();
+	private ADAMproWrapper adampro = new ADAMproWrapper(); //FIXME use abstaction layer!
 	
 	public void close(){
 		this.adampro.close();
