@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.features.neuralnet.classification;
 
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.features.neuralnet.classification.tf.TensorFlowNet;
 
 /**
@@ -21,7 +20,7 @@ public class CineastNetFactory implements NeuralNetFactory {
      * This method will always return a valid neural net.
      */
     public static NeuralNet generateConfigNet() {
-        return Config.getNeuralNetConfig().getNeuralNetFactory().get();
+        return TensorFlowNet.getCurrentImpl();
 
     }
 

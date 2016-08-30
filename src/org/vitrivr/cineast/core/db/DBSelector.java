@@ -23,7 +23,10 @@ public interface DBSelector {
 	
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
 
-    List<PrimitiveTypeProvider> getAll(String label);
+	/**
+	 * SELECT column from the table. Be careful with large entities
+	 */
+    List<PrimitiveTypeProvider> getAll(String column);
 
 	boolean existsEntity(String name);
 }
