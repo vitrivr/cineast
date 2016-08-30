@@ -6,7 +6,6 @@ import com.eclipsesource.json.JsonValue;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.config.Config;
@@ -422,8 +421,15 @@ public class JSONAPIThread extends Thread {
 			}
 
 			case "getShots":{
-				String movieId = clientJSON.get("movieId").toString();
-				//TODO: implement getShots
+				String movieId = clientJSON.get("movieId").asString();
+				DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+				selector.open(EntityCreator.CINEAST_SEGMENT);
+				List<Map<String, PrimitiveTypeProvider>> shots = selector.getRows("multimediaobject", movieId);
+				JsonArray list = new JsonArray();
+				for (Map<String, PrimitiveTypeProvider> shot : shots) {
+					list.add(shot.get("id").getString());
+				}
+				_return.set("shots", list);
 				break;
 			}
 
@@ -436,7 +442,6 @@ public class JSONAPIThread extends Thread {
 					element.add("displayName", obj.getDisplayName());
 
 					JsonArray types = new JsonArray();
-					LOGGER.info("I have " + obj.getVisualizations().size() + " visualization types in an object!");
 					for(VisualizationType t: obj.getVisualizations()){
 						types.add(t.toString());
 					}
@@ -448,12 +453,46 @@ public class JSONAPIThread extends Thread {
 			}
 
 			case "getVisualizationCategories":{
-				//TODO: implement getVisualizationsCategories
+				JsonArray visual = new JsonArray();
+				for(String el: Config.getVisualizationConfig().getVisualizationCategories()){
+					visual.add(el);
+				}
+				_return.set("visualizationCategories", visual);
 				break;
 			}
 
 			case "getArt":{
-				//TODO: implement getArt
+				VisualizationType visualizationType = VisualizationType.valueOf(clientJSON.get("visualizationType").asString());
+				Class<?> visualizationClass;
+				try {
+					visualizationClass = Class.forName(clientJSON.get("visualization").asString());
+				} catch (ClassNotFoundException e){
+					_return.add("visualizationError", "Invalid visualizationClass!");
+					break;
+				}
+				if(!Config.getVisualizationConfig().isValidVisualization(visualizationClass)){
+					_return.add("visualizationError", "Invalid visualizationClass!");
+					break;
+				}
+				Visualization visualization = (Visualization)visualizationClass.newInstance();
+				String result = new String();
+				visualization.init(Config.getDatabaseConfig().getSelectorSupplier());
+				switch(visualizationType){
+					case VISUALIZATION_SHOT:
+						String shotId = clientJSON.get("shotId").asString();
+						result = visualization.visualizeShot(shotId);
+						break;
+					case VISUALIZATION_VIDEO:
+						String movieId = clientJSON.get("movieId").asString();
+						result = visualization.visualizeVideo(movieId);
+						break;
+					default:
+						LOGGER.error("Missing VisualizationType in API implementation!");
+						break;
+				}
+				_return.add("resultData", result);
+				_return.add("resultType", visualization.getResultType().toString());
+				visualization.finish();
 				break;
 			}
 

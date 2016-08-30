@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.art.modules.visualization.Visualization;
 
 import java.io.*;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class Config {
     private static RetrieverConfig retrieverConfig = new RetrieverConfig();
     private static QueryConfig queryConfig = new QueryConfig();
     private static NeuralNetConfig neuralNetConfig = new NeuralNetConfig();
+    private static VisualizationConfig visualizationConfig = new VisualizationConfig();
 
     static {
 
@@ -195,5 +197,9 @@ public class Config {
 
     public static NeuralNetConfig getNeuralNetConfig() {
         return neuralNetConfig;
+    }
+
+    public static VisualizationConfig getVisualizationConfig() {
+        return visualizationConfig;
     }
 }
