@@ -77,6 +77,8 @@ public class NeuralNetFeature extends AbstractFeatureModule {
 
 
     /**
+     * TODO This method needs heavy refactoring because creating entities this way is not really pretty, we're relying on the AdamGRPC
+     *
      * Create tables that aren't created by super.
      *
      * Currently Objectid is a string. That is because we get a unique id which has the shape n+....
@@ -88,21 +90,21 @@ public class NeuralNetFeature extends AbstractFeatureModule {
      * Table 2 is only touched for API-Calls about available labels and at init-time - not during extraction
      * Table 2: objectid | label or concept
      */
-    public void init(Supplier<EntityCreator> ecSupplier, DBSelectorSupplier selectorSupplier){
-        DBSelector sel = selectorSupplier.get();
-        EntityCreator ec = ecSupplier.get();
+    @Override
+    public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+        EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
         AdamGrpc.AttributeDefinitionMessage.Builder attrBuilder = AdamGrpc.AttributeDefinitionMessage.newBuilder();
-        if(!sel.existsEntity(generatedLabelsTableName)){
+        if(!ec.existsEntity(generatedLabelsTableName)){
             //TODO Shotid is a string here is that correct?
             ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("shotid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.DOUBLE));
         }
-        if(!sel.existsEntity(classTableName)){
+        if(!ec.existsEntity(classTableName)){
             ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("label", AdamGrpc.AttributeType.STRING));
         }
-        sel.close();
         ec.close();
     }
+
 
     @Override
     public void init(PersistencyWriterSupplier phandlerSupply) {
@@ -135,12 +137,9 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     }
 
     /**
-     * This only calls init with the ecSupplier because we expect the other inits to have been called.
-     * Creates entities and fills both class and concept-tables.
+     * This assumes that the required entities have been created
      */
-    public void setup(Supplier<EntityCreator> ecSupplier, String conceptsPath, DBSelectorSupplier selectorSupplier) {
-        init(ecSupplier, selectorSupplier);
-
+    public void fillLabels(String conceptsPath) {
         ConceptReader cr = new ConceptReader(conceptsPath);
 
         //Fill Concept map
@@ -211,7 +210,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
         LOGGER.entry();
         TimeHelper.tic();
-        List<StringDoublePair> _return = null;
+        List<StringDoublePair> _return = new ArrayList();
 
         if(!sc.getTags().isEmpty()){
             List<String> wnLabels = new ArrayList();
@@ -249,7 +248,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
             }
         }
         //TODO Currently returns mock-result until we get data in the DB
-        _return = new ArrayList<StringDoublePair>();
+        _return = new ArrayList();
         _return.add(new StringDoublePair("125", 0.5));
         LOGGER.debug("NeuralNetFeature.getSimilar() done in {}",
                 TimeHelper.toc());

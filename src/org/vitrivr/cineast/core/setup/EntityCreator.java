@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.setup;
 
-import java.util.ArrayList;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
@@ -9,6 +7,8 @@ import org.vitrivr.adam.grpc.AdamGrpc.AttributeDefinitionMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage;
 import org.vitrivr.cineast.core.db.ADAMproWrapper;
+
+import java.util.ArrayList;
 
 public class EntityCreator {
 
@@ -154,6 +154,10 @@ public class EntityCreator {
 		}
 		
 		return ack;
+	}
+
+	public boolean existsEntity(String entityName){
+		return this.adampro.existsEntity(entityName);
 	}
 	
 	public void close(){
