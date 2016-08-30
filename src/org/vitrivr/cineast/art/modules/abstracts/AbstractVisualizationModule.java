@@ -15,17 +15,30 @@ import java.util.Map;
  */
 public abstract class AbstractVisualizationModule implements Visualization{
   protected final String tableName;
+  protected final String moviesTable;
+  protected final String shotsTable;
   protected Map<String, DBSelector> selectors;
 
   protected AbstractVisualizationModule(String tableName){
     this.tableName = tableName;
+    this.moviesTable = "cineast_multimediaobject";
+    this.shotsTable = "cineast_segment";
   }
 
   public void init(DBSelectorSupplier supplier){
     selectors = new HashMap();
+
     DBSelector selector = supplier.get();
     selector.open(tableName);
     selectors.put(tableName, selector);
+
+    selector = supplier.get();
+    selector.open(moviesTable);
+    selectors.put(moviesTable, selector);
+
+    selector = supplier.get();
+    selector.open(shotsTable);
+    selectors.put(shotsTable, selector);
   }
 
   public String visualizeShot(String shotId){

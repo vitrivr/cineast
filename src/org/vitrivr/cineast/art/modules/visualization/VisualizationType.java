@@ -5,5 +5,5 @@ package org.vitrivr.cineast.art.modules.visualization;
  */
 public enum VisualizationType {
   VISUALIZATION_SHOT,
-  VISUALIZATION_MOVIE
+  VISUALIZATION_VIDEO
 }
