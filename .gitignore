@@ -23,3 +23,6 @@ proto/
 representative_frames/
 thumbnails/
 queryImages/
+
+##Tensorflow
+*.tfmodel
