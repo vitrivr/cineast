@@ -301,7 +301,7 @@ public class ADAMproSelector implements DBSelector {
 			if(id == null){
 				continue;
 			}
-			_return.add(new StringDoublePair(id, msg.getData().get("adamprodistance").getFloatData()));
+			_return.add(new StringDoublePair(id, msg.getData().get("ap_distance").getFloatData()));
 		}
 		
 		return _return;
