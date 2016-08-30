@@ -32,8 +32,8 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
         return new ADAMproSelector();
       }
     });
-    //System.out.println(module.visualizeShot("655386"));
-    System.out.println(module.visualizeVideo("11"));
+    //System.out.println(module.visualizeShot("655390", 40));
+    System.out.println(module.visualizeVideo("11", 60));
     module.finish();
   }
 
@@ -44,6 +44,10 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
 
   @Override
   public String visualizeVideo(String movieId){
+    return visualizeVideo(movieId, 1);
+  }
+
+  public String visualizeVideo(String movieId, int scale){
     DBSelector selector = selectors.get(tableName);
     DBSelector shotSelector = selectors.get(shotsTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", movieId);
@@ -62,13 +66,19 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
       pixels[i] = pixels[i]/shots.size();
     }
 
-    return ArtUtil.pixelsToImage(pixels, 8, 8);
+    pixels = ArtUtil.scalePixels(pixels, scale, 8, 8);
+
+    return ArtUtil.pixelsToImage(pixels, 8*scale, 8*scale);
   }
 
   @Override
   public String visualizeShot(String shotId) {
+    return visualizeShot(shotId, 1);
+  }
+
+  public String visualizeShot(String shotId, int scale){
     DBSelector selector = selectors.get(tableName);
-    return ArtUtil.pixelsToImage(ArtUtil.shotToRGB(shotId, selector, 8, 8), 8, 8);
+    return ArtUtil.pixelsToImage(ArtUtil.scalePixels(ArtUtil.shotToRGB(shotId, selector, 8, 8), scale, 8, 8), 8*scale, 8*scale);
   }
 
   @Override

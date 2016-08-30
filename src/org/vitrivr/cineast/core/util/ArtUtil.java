@@ -35,6 +35,25 @@ public class ArtUtil {
     return WebUtils.BufferedImageToDataURL(image, "png");
   }
 
+  public static int[] scalePixels(int[] pixels, int multiplier, int sizeX, int sizeY){
+    if(multiplier < 1){
+      return pixels;
+    }
+    int[] newpixels = new int[pixels.length*multiplier*multiplier];
+    for(int x=0;x<sizeX;x++){
+      for(int y=0;y<sizeY;y++){
+        for(int a=x*multiplier;a<(x+1)*multiplier;a++){
+          for(int b=y*multiplier;b<(y+1)*multiplier;b++){
+            newpixels[(b*sizeX*multiplier + a)*3] = pixels[(y*sizeX+x)*3];
+            newpixels[(b*sizeX*multiplier + a)*3 + 1] = pixels[(y*sizeX+x)*3 + 1];
+            newpixels[(b*sizeX*multiplier + a)*3 + 2] = pixels[(y*sizeX+x)*3 + 2];
+          }
+        }
+      }
+    }
+    return newpixels;
+  }
+
   public static int[] shotToRGB(String shotId, DBSelector selector, int sizeX, int sizeY){
     java.util.List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", shotId);
 
