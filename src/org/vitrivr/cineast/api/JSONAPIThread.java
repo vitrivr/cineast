@@ -6,8 +6,12 @@ import com.eclipsesource.json.JsonValue;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
+import org.vitrivr.cineast.art.modules.visualization.Visualization;
+import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.VisualizationConfig;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -424,7 +428,27 @@ public class JSONAPIThread extends Thread {
 			}
 
 			case "getVisualizations":{
-				//TODO: implement getVisualizations
+				JsonArray visual = new JsonArray();
+				for(Class<? extends Visualization> visualization: VisualizationConfig.visualizations){
+					Visualization obj = visualization.newInstance();
+					JsonObject element = new JsonObject();
+					element.add("className", visualization.getCanonicalName());
+					element.add("displayName", obj.getDisplayName());
+
+					JsonArray types = new JsonArray();
+					LOGGER.info("I have " + obj.getVisualizations().size() + " visualization types in an object!");
+					for(VisualizationType t: obj.getVisualizations()){
+						types.add(t.toString());
+					}
+					element.add("visualizationTypes", types);
+					visual.add(element);
+				}
+				_return.set("visualizations", visual);
+				break;
+			}
+
+			case "getVisualizationCategories":{
+				//TODO: implement getVisualizationsCategories
 				break;
 			}
 

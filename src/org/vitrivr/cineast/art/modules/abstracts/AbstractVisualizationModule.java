@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.art.modules.abstracts;
 
+import org.vitrivr.cineast.art.modules.visualization.Visualization;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -12,15 +13,13 @@ import java.util.Map;
 /**
  * Created by sein on 26.08.16.
  */
-public abstract class AbstractVisualizationModule {
+public abstract class AbstractVisualizationModule implements Visualization{
   protected final String tableName;
   protected Map<String, DBSelector> selectors;
 
   protected AbstractVisualizationModule(String tableName){
     this.tableName = tableName;
   }
-
-  public abstract String getName();
 
   public void init(DBSelectorSupplier supplier){
     selectors = new HashMap();
@@ -36,9 +35,7 @@ public abstract class AbstractVisualizationModule {
     return null;
   }
 
-  public List<VisualizationType> getVisualizations(){
-    return new ArrayList<VisualizationType>();
-  }
+  public abstract List<VisualizationType> getVisualizations();
 
   public void finish(){
     if(selectors != null){

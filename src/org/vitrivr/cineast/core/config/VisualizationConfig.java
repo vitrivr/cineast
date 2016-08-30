@@ -19,11 +19,16 @@ import java.util.*;
 public final class VisualizationConfig {
 
 	private final HashMap<String, List<Class<? extends Visualization>>> visualizationCategories;
+	public static List<Class<? extends Visualization>> visualizations = new ArrayList();
 
 	public static final HashMap<String, List<Class<? extends Visualization>>> DEFAULT_VISUALIZATION_CATEGORIES = new HashMap<>();
 
 	static{
+		//add all visualizations
+		visualizations.add(VisualizationAverageColorGrid8.class);
 
+
+		//add all categories with their containing visualizations
 		List<Class<? extends Visualization>> list;
 
 		list = new ArrayList<>(1);
