@@ -13,6 +13,16 @@ This will create the cineast.jar file which can be found in build/libs. Edit the
 
 java -jar cineast.jar 
 
+If you have an adampro-container, run it with
+
+sudo docker run --name=adampro -p 5890:5890 -p 9099:9099 -d adampro:withdata
+
+You can then check up on the containers health with
+
+sudo docker ps -a
+respectively
+sudo docker logs adampro
+
 Cineast has the following dependencies:
 
 * [BoofCV](https://github.com/lessthanoptimal/BoofCV)
