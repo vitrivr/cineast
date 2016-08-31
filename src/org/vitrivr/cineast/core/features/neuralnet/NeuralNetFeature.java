@@ -216,7 +216,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         if (!sc.getTags().isEmpty()) {
             List<String> wnLabels = new ArrayList();
             for (String label : sc.getTags()) {
-                LOGGER.debug("Looking for tag: " + label);
+                LOGGER.debug("Looking for tag {}", label);
                 wnLabels = new ArrayList();
                 for (Map<String, PrimitiveTypeProvider> row : classSelector.getRows("label", label)) {
                     //TODO is this the proper way to get info from the row?
@@ -227,7 +227,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
             //TODO Eliminate Duplicates from wnLabels
             for (String wnLabel : wnLabels) {
                 for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", wnLabel)) {
-                    LOGGER.debug("Found hit for query: " + row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
+                    LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
                     _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
                 }
             }
@@ -242,7 +242,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
 
                     for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", net.getSynSetLabels()[i])) {
                         //TODO Duplicates?
-                        LOGGER.debug("Found hit for query: " + row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
+                        LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
                         _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
                     }
                 }
