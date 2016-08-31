@@ -49,8 +49,6 @@ public class VisualizationMedianColorGradient extends AbstractVisualizationModul
     DBSelector shotSelector = selectors.get(shotsTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
-    LOGGER.info("Need to calculate MedianColorGradient of " + shots.size() + " shots...");
-
     BufferedImage image = new BufferedImage(shots.size(), 1, BufferedImage.TYPE_INT_RGB);
     int count = 0;
     for (Map<String, PrimitiveTypeProvider> shot : shots) {
