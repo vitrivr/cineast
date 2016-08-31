@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.playground;
 
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
-import org.vitrivr.cineast.core.features.neuralnet.classification.tf.TensorFlowNet;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -17,7 +17,7 @@ public class NN_demo {
 
     public static void main(String[] args) throws IOException {
 
-        NeuralNet nn = TensorFlowNet.getCurrentImpl();
+        NeuralNet nn = Config.getNeuralNetConfig().getNeuralNetFactory().get();
         float[] probs = nn.classify(ImageIO.read(new File("src/resources/cat.jpg")));
         List<List<String>> labels = nn.getAllLabels();
         for (int i = 0; i < probs.length; i++) {
