@@ -35,7 +35,7 @@ public class TensorFlowNet implements NeuralNet{
 
     @Override
     public String[] getLabels(String i) {
-        return new String[0];
+        return model.getLabels(i);
     }
 
     /**
