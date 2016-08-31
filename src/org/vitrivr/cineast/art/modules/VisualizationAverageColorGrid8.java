@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.art.modules;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
@@ -31,8 +29,8 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
         return new ADAMproSelector();
       }
     });
-    //System.out.println(module.visualizeShot("655390", 40));
-    System.out.println(module.visualizeVideo("11", 60));
+    //System.out.println(module.visualizeSegment("655390", 40));
+    System.out.println(module.visualizeMultimediaobject("11", 60));
     module.finish();
   }
 
@@ -42,14 +40,14 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
   }
 
   @Override
-  public String visualizeVideo(String movieId){
-    return visualizeVideo(movieId, 1);
+  public String visualizeMultimediaobject(String multimediaobjectId){
+    return visualizeMultimediaobject(multimediaobjectId, 1);
   }
 
-  public String visualizeVideo(String movieId, int scale){
+  public String visualizeMultimediaobject(String multimediaobjectId, int scale){
     DBSelector selector = selectors.get(tableName);
     DBSelector shotSelector = selectors.get(shotsTable);
-    List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", movieId);
+    List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
     LOGGER.info("Need to calculate AverageColorGrid8 of " + shots.size() + " shots...");
 
@@ -71,13 +69,13 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
   }
 
   @Override
-  public String visualizeShot(String shotId) {
-    return visualizeShot(shotId, 1);
+  public String visualizeSegment(String segmentId) {
+    return visualizeSegment(segmentId, 1);
   }
 
-  public String visualizeShot(String shotId, int scale){
+  public String visualizeSegment(String segmentId, int scale){
     DBSelector selector = selectors.get(tableName);
-    return ArtUtil.pixelsToImage(ArtUtil.scalePixels(ArtUtil.shotToRGB(shotId, selector, 8, 8), scale, 8, 8, false), 8*scale, 8*scale, false);
+    return ArtUtil.pixelsToImage(ArtUtil.scalePixels(ArtUtil.shotToRGB(segmentId, selector, 8, 8), scale, 8, 8, false), 8*scale, 8*scale, false);
   }
 
   @Override

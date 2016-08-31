@@ -6,16 +6,12 @@ import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
-import org.vitrivr.cineast.core.color.ColorConverter;
-import org.vitrivr.cineast.core.color.RGBContainer;
-import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -26,18 +22,18 @@ import java.util.Map;
 /**
  * Created by sein on 30.08.16.
  */
-public class VisualizationAverageColorStripe extends AbstractVisualizationModule {
-  public VisualizationAverageColorStripe() {
+public class VisualizationAverageColorGradient extends AbstractVisualizationModule {
+  public VisualizationAverageColorGradient() {
     super("features_AverageColor");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationAverageColorStripe";
+    return "VisualizationAverageColorGradient";
   }
 
   public static void main(String[] args){
-    VisualizationAverageColorStripe vis = new VisualizationAverageColorStripe();
+    VisualizationAverageColorGradient vis = new VisualizationAverageColorGradient();
     vis.init(Config.getDatabaseConfig().getSelectorSupplier());
     System.out.println(vis.visualizeMultimediaobject("11", 10));
     vis.finish();
@@ -53,25 +49,24 @@ public class VisualizationAverageColorStripe extends AbstractVisualizationModule
     DBSelector shotSelector = selectors.get(shotsTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
-    LOGGER.info("Need to calculate AverageColorStripe of " + shots.size() + " shots...");
+    LOGGER.info("Need to calculate AverageColorGradient of " + shots.size() + " shots...");
 
-    int[] pixels = new int[shots.size()*8];
+    BufferedImage image = new BufferedImage(shots.size(), 1, BufferedImage.TYPE_INT_RGB);
     int count = 0;
     for (Map<String, PrimitiveTypeProvider> shot : shots) {
-      List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", shot.get("id").getString());
-      for (Map<String, PrimitiveTypeProvider> row : result) {
-        float[] arr = row.get("feature").getFloatArray();
-        for (int i = 0; i < 8; i++) {
-          RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));
-          pixels[shots.size()*i + count] = rgbContainer.toIntColor();
-        }
-      }
+      int[] avg = ArtUtil.shotToInt(shot.get("id").getString(), selector, 1, 1);
+      image.setRGB(count, 0, avg[0]);
       count++;
     }
 
-    pixels = ArtUtil.scalePixels(pixels, scale, shots.size(), 8, true);
+    try {
+      image = Thumbnails.of(image).scalingMode(ScalingMode.BILINEAR).scale(10, 100).asBufferedImage();
+      ImageIO.write(image, "png", new File("src/resources/imageAverageColorGradient.png"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-    return ArtUtil.pixelsToImage(pixels, shots.size()*scale, 8*scale, true);
+    return WebUtils.BufferedImageToDataURL(image, "png");
   }
 
   @Override
