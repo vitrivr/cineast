@@ -72,7 +72,6 @@ sourceSets {
         }
 		resources {
 			srcDir 'config'
-            include "src/resources/vgg16/synset.txt"
 		}
 		proto {
 			srcDir 'adampro-grpc/src/main/protobuf'
