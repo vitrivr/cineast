@@ -485,11 +485,11 @@ public class JSONAPIThread extends Thread {
 				switch(visualizationType){
 					case VISUALIZATION_SHOT:
 						String shotId = clientJSON.get("shotId").asString();
-						result = visualization.visualizeShot(shotId);
+						result = visualization.visualizeSegment(shotId);
 						break;
 					case VISUALIZATION_VIDEO:
 						String movieId = clientJSON.get("movieId").asString();
-						result = visualization.visualizeVideo(movieId);
+						result = visualization.visualizeMultimediaobject(movieId);
 						break;
 					default:
 						LOGGER.error("Missing VisualizationType in API implementation!");

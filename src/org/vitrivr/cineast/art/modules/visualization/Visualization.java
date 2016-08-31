@@ -12,7 +12,7 @@ public interface Visualization {
   String getDisplayName();
   List<VisualizationType> getVisualizations();
   VisualizationResult getResultType();
-  String visualizeShot(String shotId);
-  String visualizeVideo(String videoId);
+  String visualizeSegment(String segmentId);
+  String visualizeMultimediaobject(String multimediaobjectId);
   void finish();
 }

@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.util;
 
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.resizers.Resizers;
+import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.WebUtils;
@@ -9,8 +12,11 @@ import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -26,6 +32,7 @@ public class ArtUtil {
     }
     if(sizeX * sizeY != pixels.length/pixelSize){
       LOGGER.error("Not matching number of available pixels and images size!");
+      return null;
     }
     BufferedImage image = new BufferedImage(sizeX, sizeY, BufferedImage.TYPE_INT_RGB);
 
@@ -41,9 +48,25 @@ public class ArtUtil {
       }
     }
 
+    try {
+      ImageIO.write(image, "png", new File("src/resources/imageArtUtil.png"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     return WebUtils.BufferedImageToDataURL(image, "png");
   }
 
+  /**
+   * Scales a given Image in integer array format with the given multiplier.
+   *
+   * @param pixels containing the pixels, either as single integer in rgb format, or 3 integers in row for every pixel
+   * @param multiplier scale multiplier, array size will increase cubic
+   * @param sizeX x size of the given image
+   * @param sizeY y size of the given image
+   * @param isRgb true if the rgb is encoded in one single integer, false if 3 integers are used
+   * @return scaled integer array representing the exact same image, just larger
+   */
   public static int[] scalePixels(int[] pixels, int multiplier, int sizeX, int sizeY, boolean isRgb){
     int pixelSize = 3;
     if(isRgb){
@@ -67,6 +90,16 @@ public class ArtUtil {
     return newpixels;
   }
 
+  /**
+   * This reads a given shot into an integer array representing an image. This can be done on shots which have a given
+   * size of values which represent a given position on a feature shot.
+   *
+   * @param shotId shot id to sue
+   * @param selector DBSelector for the corresponding table
+   * @param sizeX size x of the resulted image
+   * @param sizeY size y of the resulted image
+   * @return integer array representing an image in 3 integer rgb format
+   */
   public static int[] shotToRGB(String shotId, DBSelector selector, int sizeX, int sizeY){
     java.util.List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", shotId);
 
@@ -80,6 +113,21 @@ public class ArtUtil {
         pixels[i] = rgbContainer.getRed(color);
         pixels[i+1] = rgbContainer.getGreen(color);
         pixels[i+2] = rgbContainer.getBlue(color);
+      }
+    }
+    return pixels;
+  }
+
+  public static int[] shotToInt(String shotId, DBSelector selector, int sizeX, int sizeY){
+    java.util.List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", shotId);
+
+    int[] pixels = new int[sizeX*sizeY];
+
+    for (Map<String, PrimitiveTypeProvider> row : result) {
+      float[] arr = row.get("feature").getFloatArray();
+      for (int i = 0; i < arr.length; i+=3) {
+        RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[i], arr[i + 1], arr[i + 2]));
+        pixels[i] = rgbContainer.toIntColor();
       }
     }
     return pixels;

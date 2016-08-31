@@ -45,10 +45,10 @@ public abstract class AbstractVisualizationModule implements Visualization{
     selectors.put(shotsTable, selector);
   }
 
-  public String visualizeShot(String shotId){
+  public String visualizeSegment(String segmentId){
     return null;
   }
-  public String visualizeVideo(String videoId){
+  public String visualizeMultimediaobject(String multimediaobjectId){
     return null;
   }
 

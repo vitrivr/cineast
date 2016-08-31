@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.art.modules;
 
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
-import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
@@ -14,11 +11,6 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,18 +18,18 @@ import java.util.Map;
 /**
  * Created by sein on 30.08.16.
  */
-public class VisualizationAverageColorStripe extends AbstractVisualizationModule {
-  public VisualizationAverageColorStripe() {
-    super("features_AverageColor");
+public class VisualizationMedianColorStripe extends AbstractVisualizationModule {
+  public VisualizationMedianColorStripe() {
+    super("features_MedianColor");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationAverageColorStripe";
+    return "VisualizationMedianColorStripe";
   }
 
   public static void main(String[] args){
-    VisualizationAverageColorStripe vis = new VisualizationAverageColorStripe();
+    VisualizationMedianColorStripe vis = new VisualizationMedianColorStripe();
     vis.init(Config.getDatabaseConfig().getSelectorSupplier());
     System.out.println(vis.visualizeMultimediaobject("11", 10));
     vis.finish();
@@ -53,7 +45,7 @@ public class VisualizationAverageColorStripe extends AbstractVisualizationModule
     DBSelector shotSelector = selectors.get(shotsTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
-    LOGGER.info("Need to calculate AverageColorStripe of " + shots.size() + " shots...");
+    LOGGER.info("Need to calculate MedianColorStripe of " + shots.size() + " shots...");
 
     int[] pixels = new int[shots.size()*8];
     int count = 0;
