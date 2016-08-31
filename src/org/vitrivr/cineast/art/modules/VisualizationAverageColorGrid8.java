@@ -49,8 +49,6 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule{
     DBSelector shotSelector = selectors.get(shotsTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
-    LOGGER.info("Need to calculate AverageColorGrid8 of " + shots.size() + " shots...");
-
     int[] pixels = new int[8*8*3];
     for (Map<String, PrimitiveTypeProvider> shot : shots) {
       int[] shotPixels = ArtUtil.shotToRGB(shot.get("id").getString(), selector, 8, 8);

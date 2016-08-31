@@ -53,8 +53,6 @@ public class VisualizationAverageColorStripe extends AbstractVisualizationModule
     DBSelector shotSelector = selectors.get(shotsTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
-    LOGGER.info("Need to calculate AverageColorStripe of " + shots.size() + " shots...");
-
     int[] pixels = new int[shots.size()*8];
     int count = 0;
     for (Map<String, PrimitiveTypeProvider> shot : shots) {
