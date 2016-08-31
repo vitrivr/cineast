@@ -110,10 +110,10 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         super.init(phandlerSupply);
         classificationWriter = phandlerSupply.get();
         classificationWriter.open(generatedLabelsTableName);
-        classificationWriter.setFieldNames("id","shotid","objectid","probability");
+        classificationWriter.setFieldNames("id", "shotid", "objectid", "probability");
         classWriter = phandlerSupply.get();
         classWriter.open(classTableName);
-        classWriter.setFieldNames("id","objectid","label");
+        classWriter.setFieldNames("id", "objectid", "label");
     }
 
     @Override
@@ -143,34 +143,52 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     public void fillLabels(String conceptsPath) {
         ConceptReader cr = new ConceptReader(conceptsPath);
 
+        LOGGER.info("Filling Labels");
         int id = 0;
         //Fill Concept map
+        List<PersistentTuple> tuples = new ArrayList(10000);
+
         for (Map.Entry<String, String[]> entry : cr.getConceptMap().entrySet()) {
             //values are n... -values being labeled as entry.getKey()
             for (String label : entry.getValue()) {
                 //TODO Terrible idsolution
                 PersistentTuple tuple = classWriter.generateTuple(String.valueOf(id), label, entry.getKey());
-                classWriter.persist(tuple);
+                //classWriter.persist(tuple);
+                tuples.add(tuple);
                 id++;
+                if (id % 9500 == 0) {
+                    LOGGER.info("Index {} key {}, inserting... ", id, entry.getKey());
+                    classWriter.persist(tuples);
+                    tuples.clear();
+                }
             }
         }
 
-        LOGGER.info("done 1 {}", id);
+        classWriter.persist(tuples);
+        tuples.clear();
 
+        LOGGER.info("done 1 {}", id);
         //Fill class names
         for (int i = 0; i < net.getSynSetLabels().length; i++) {
             String[] labels = net.getLabels(net.getSynSetLabels()[i]);
             for (String label : labels) {
                 PersistentTuple tuple = classWriter.generateTuple(String.valueOf(id), net.getSynSetLabels()[i], label);
-                classWriter.persist(tuple);
+                tuples.add(tuple);
                 id++;
             }
         }
+        classWriter.persist(tuples);
+        tuples.clear();
 
         LOGGER.info("done 2 {}", id);
 
-        for(PrimitiveTypeProvider typeProvider : classSelector.getAll("label")){
+        int idx = 0;
+        for (PrimitiveTypeProvider typeProvider : classSelector.getAll("label")) {
             LOGGER.info("Retrieved label {}", typeProvider.getString());
+            idx++;
+            if (idx > 10) {
+                System.exit(1);
+            }
         }
     }
 
