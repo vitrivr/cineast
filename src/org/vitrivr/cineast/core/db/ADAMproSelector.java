@@ -29,6 +29,13 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.util.LogHelper;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.QueryConfig.Distance;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.util.LogHelper;
+
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -54,7 +61,7 @@ public class ADAMproSelector implements DBSelector {
 		hints.add("exact");
 		
 		projectionMessage = AdamGrpc.ProjectionMessage.newBuilder().setAttributes(
-				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("ap_distance").addAttribute("id")).build();
+				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("adamprodistance").addAttribute("id")).build();
 		
 		DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
 		
@@ -344,24 +351,23 @@ public class ADAMproSelector implements DBSelector {
 	private List<Map<String, PrimitiveTypeProvider>> executeBooleanQuery(BooleanQueryMessage bqm) {
 		QueryMessage qbqm = buildQueryMessage(hints, bqm, null, null);
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
-
 		QueryResultsMessage result;
 		try {
 			result = f.get();
 		} catch (InterruptedException | ExecutionException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
-			return new ArrayList<>(0);
+			return new ArrayList<>(1);
 		}
-
+		
 		if(result.getResponsesCount() == 0){
-			return new ArrayList<>(0);
+			return new ArrayList<>(1);
 		}
-
+		
 		QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
-
+		
 		List<QueryResultTupleMessage> resultList = response.getResultsList();
 		if(resultList.isEmpty()){
-			return new ArrayList<>(0);
+			return new ArrayList<>(1);
 		}
 		ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(resultList.size());
 		for(QueryResultTupleMessage resultMessage : resultList){
@@ -373,6 +379,7 @@ public class ADAMproSelector implements DBSelector {
 			}
 			_return.add(map);
 		}
+		
 		return _return;
 	}
 
