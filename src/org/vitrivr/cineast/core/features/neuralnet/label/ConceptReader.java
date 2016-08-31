@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,17 +40,25 @@ public class ConceptReader {
             String line = null;
             //Skip header
             br.readLine();
+            List<String> blacklist = new ArrayList();
+            blacklist.add("adult");
+            blacklist.add("object");
+            blacklist.add("Tree");
+            blacklist.add("Fish");
+            blacklist.add("Bush");
+            blacklist.add("flower with stem");
             while ((line = br.readLine()) != null) {
-
-                //TODO Maybe exclude the following concepts:
-                //bird, machine, adult, vehicle, animal, plant, food, fish, flower, tool, tree, object, dog, bush, Tree (big/small???), Fish (big/small???), flower with stem...,
-                //vessel, Bush(b/s???), vegetable, fruit, person, grass, furniture, standing bird, cloth, building
                 String[] data = line.split(",");
+                if(blacklist.contains(data[1])){
+                    System.out.println("Found forbidden word: "+data[1]);
+                    continue;
+                }
                 String[] concepts = data[2].split(" ");
                 if(concepts==null){
                     System.out.println(line+" Concepts null");
                     concepts = new String[0];
                 }
+
                 conceptMap.put(data[1],concepts);
             }
         } catch (IOException e) {

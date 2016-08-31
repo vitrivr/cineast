@@ -110,10 +110,10 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         super.init(phandlerSupply);
         classificationWriter = phandlerSupply.get();
         classificationWriter.open(generatedLabelsTableName);
-        classificationWriter.setFieldNames("shotid","objectid","probability");
+        classificationWriter.setFieldNames("id","shotid","objectid","probability");
         classWriter = phandlerSupply.get();
         classWriter.open(classTableName);
-        classWriter.setFieldNames("objectid","label");
+        classWriter.setFieldNames("id","objectid","label");
     }
 
     @Override
@@ -143,22 +143,34 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     public void fillLabels(String conceptsPath) {
         ConceptReader cr = new ConceptReader(conceptsPath);
 
+        int id = 0;
         //Fill Concept map
         for (Map.Entry<String, String[]> entry : cr.getConceptMap().entrySet()) {
             //values are n... -values being labeled as entry.getKey()
             for (String label : entry.getValue()) {
-                PersistentTuple tuple = classWriter.generateTuple(label, entry.getKey());
+                //TODO Terrible idsolution
+                PersistentTuple tuple = classWriter.generateTuple(String.valueOf(id), label, entry.getKey());
                 classWriter.persist(tuple);
+                id++;
             }
         }
+
+        LOGGER.info("done 1 {}", id);
 
         //Fill class names
         for (int i = 0; i < net.getSynSetLabels().length; i++) {
             String[] labels = net.getLabels(net.getSynSetLabels()[i]);
             for (String label : labels) {
-                PersistentTuple tuple = classWriter.generateTuple(net.getSynSetLabels()[i], label);
+                PersistentTuple tuple = classWriter.generateTuple(String.valueOf(id), net.getSynSetLabels()[i], label);
                 classWriter.persist(tuple);
+                id++;
             }
+        }
+
+        LOGGER.info("done 2 {}", id);
+
+        for(PrimitiveTypeProvider typeProvider : classSelector.getAll("label")){
+            LOGGER.info("Retrieved label {}", typeProvider.getString());
         }
     }
 

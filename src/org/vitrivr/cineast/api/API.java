@@ -61,8 +61,8 @@ public class API {
 		if(commandline.getArgList().contains("neuralnet")){
 			LOGGER.info("Initializing nn persistent layer");
 			NeuralNetFeature feature = new NeuralNetFeature(Config.getNeuralNetConfig().getNeuralNetFactory());
-			//TODO Does this work? It seems very non-java
-			//feature.initalizePersistentLayer(() -> new EntityCreator());
+
+			feature.initalizePersistentLayer(() -> new EntityCreator());
 			LOGGER.info("Initalizing writers");
 			feature.init(Config.getDatabaseConfig().getWriterSupplier());
 			feature.init(Config.getDatabaseConfig().getSelectorSupplier());
