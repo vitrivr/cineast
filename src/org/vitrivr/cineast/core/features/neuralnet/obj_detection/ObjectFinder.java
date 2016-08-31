@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.features.neuralnet.obj_detection;
 
 import net.coobird.thumbnailator.Thumbnails;
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
-import org.vitrivr.cineast.core.features.neuralnet.classification.CineastNetFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -28,7 +28,7 @@ public class ObjectFinder {
         if(!new File("src/resources/finder").exists()){
             new File("src/resources/finder").mkdirs();
         }
-        ObjectFinder obj = new ObjectFinder(ImageIO.read(new File("src/resources/bbb-splash.png")), CineastNetFactory.generateTensorflowNet());
+        ObjectFinder obj = new ObjectFinder(ImageIO.read(new File("src/resources/bbb-splash.png")), Config.getNeuralNetConfig().getNeuralNetFactory().get());
         obj.showHeatMap();
     }
 

@@ -5,9 +5,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.google.common.util.concurrent.ListenableFuture;
-
 import org.vitrivr.adam.grpc.AdamGrpc;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage.Code;
@@ -19,6 +16,8 @@ import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 
 

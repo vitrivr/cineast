@@ -3,10 +3,9 @@ package org.vitrivr.cineast.core.features.neuralnet.classification.tf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacpp.tensorflow;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.util.TimeHelper;
 import org.vitrivr.cineast.core.features.neuralnet.ImageCropper;
 import org.vitrivr.cineast.core.features.neuralnet.label.SynLabelProvider;
+import org.vitrivr.cineast.core.util.TimeHelper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,7 +21,7 @@ import java.util.List;
  * <p>
  * Be careful when creating multiple tf-instances since the models are quite big
  * <p>
- * Models & Labels are loaded using the classLoader of this class. If no DB-Conn is available, labels are loaded from config.
+ * Models & Labels are loaded using the classLoader of this class. Currently labels are not stored in the DB
  * <p>
  * Created by silvan on 23.08.16.
  */
@@ -33,55 +32,29 @@ class VGG16Model implements TensorFlowModel {
     private final tensorflow.Session session = new tensorflow.Session(new tensorflow.SessionOptions());
 
     VGG16Model(String model, String labels) {
+        LOGGER.debug("Loading model {} and labels {}", model, labels);
+        System.out.println("Loading model "+model +" labels "+labels);
         loadGraph(model);
-        labelProvider = new SynLabelProvider(this.getClass().getResourceAsStream(labels));
-    }
 
-    VGG16Model(String model) {
-        loadGraph(model);
-        loadLabels();
-    }
-
-    VGG16Model() {
-        loadLabels();
-        loadGraph();
-    }
-
-    VGG16Model(SynLabelProvider labelProvider) {
-        this.labelProvider = labelProvider;
-        loadGraph();
-    }
-
-    /**
-     * Load graph from location in config-file
-     */
-    private void loadGraph() {
-        String path = Config.getNeuralNetConfig().getModelPath();
-        loadGraph(path);
-    }
-
-    /**
-     * Inits labelprovider with labels from DB
-     * If no labels are stored in the DB, load from Config
-     */
-    private void loadLabels() {
-        //TODO Check DB-Connection if labels are available
-        String labels = Config.getNeuralNetConfig().getLabelPath();
-        if (labels.equals("")) {
-            labels = "src/resources/vgg16/synset.txt";
-        }
         InputStream is = this.getClass().getResourceAsStream(labels);
         if (is == null) {
             try {
                 is = Files.newInputStream(Paths.get(labels));
             } catch (IOException e) {
-                throw new RuntimeException("Couldn't get labels", e);
+                //Intellij Fix
+                try {
+                    is = Files.newInputStream(Paths.get("src/", labels));
+                } catch (IOException e1) {
+                    e.printStackTrace();
+                    e1.printStackTrace();
+                    throw new RuntimeException("Couldn't get labels", e);
+                }
             }
             if (is == null) {
                 LOGGER.fatal("Could not load labels in vgg16-model");
             }
         }
-        this.labelProvider = new SynLabelProvider(is);
+        labelProvider = new SynLabelProvider(is);
     }
 
     private void loadGraph(String model) {

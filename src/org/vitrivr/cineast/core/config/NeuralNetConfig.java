@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.config;
 import com.eclipsesource.json.JsonObject;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactory;
-import org.vitrivr.cineast.core.features.neuralnet.classification.CineastNetFactory;
+import org.vitrivr.cineast.core.features.neuralnet.classification.tf.TensorFlowNet;
 
 /**
  * Config for neural nets
@@ -21,10 +21,9 @@ public class NeuralNetConfig {
 
     public static final String DEFAULT_MODEL_PATH = "src/resources/vgg16/vgg16.tfmodel";
     public static final float DEFAULT_CUTOFF = 0.2f;
-    public static final String DEFAULT_LABEL_PATH = "";
+    public static final String DEFAULT_LABEL_PATH = "resources/vgg16/synset.txt";
     public static final String DEFAULT_CONCEPT_PATH = "src/resources/classes.csv";
-    //Do this last. This might depend on defaults if poorly implemented
-    public static final NeuralNetFactory DEFAULT_NEURAL_NET_FACTORY = new CineastNetFactory();
+    public static final NeuralNetFactory DEFAULT_NEURAL_NET_FACTORY = () -> TensorFlowNet.VGG16(DEFAULT_MODEL_PATH, DEFAULT_LABEL_PATH);
 
     NeuralNetConfig() {
         this(DEFAULT_MODEL_PATH, DEFAULT_CUTOFF, DEFAULT_NEURAL_NET_FACTORY, DEFAULT_LABEL_PATH, DEFAULT_CONCEPT_PATH);
@@ -53,6 +52,8 @@ public class NeuralNetConfig {
     public String getLabelPath() {
         return labelPath;
     }
+
+    public String getConceptPath(){return conceptsPath;}
 
     public static NeuralNetConfig parse(JsonObject obj) {
         if (obj == null) {

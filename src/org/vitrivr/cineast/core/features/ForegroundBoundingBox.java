@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.setup.EntityCreator;
@@ -61,5 +62,11 @@ public class ForegroundBoundingBox  extends AbstractFeatureModule {
 	@Override
 	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
 		supply.get().createFeatureEntity("features_ForegroundBoundingBox", false, new AttributeDefinition("frame", AttributeType.LONG), new AttributeDefinition("bbox", AttributeType.FEATURE));
+	}
+
+	@Override
+	public void init(PersistencyWriterSupplier phandlerSupply) {
+		super.init(phandlerSupply);
+		this.phandler.setFieldNames("id", "frame", "bbox");
 	}
 }

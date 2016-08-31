@@ -45,13 +45,11 @@ public class QueryContainer implements SegmentContainer {
 
 	@Override
 	public int getStart() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int getEnd() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

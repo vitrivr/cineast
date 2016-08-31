@@ -59,6 +59,9 @@ dependencies {
     compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.9.0-1.2', classifier: osdetector.classifier
     compile group: 'net.coobird', name: 'thumbnailator', version: '[0.4, 0.5)'
 }
+configurations {
+    all*.exclude group: 'org.bytedeco', module: 'javacpp-presets'
+}
 
 sourceSets {
     main {
@@ -69,6 +72,7 @@ sourceSets {
         }
 		resources {
 			srcDir 'config'
+            include "src/resources/vgg16/synset.txt"
 		}
 		proto {
 			srcDir 'adampro-grpc/src/main/protobuf'

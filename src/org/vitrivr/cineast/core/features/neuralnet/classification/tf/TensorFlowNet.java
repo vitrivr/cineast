@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.features.neuralnet.classification.tf;
 
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
-import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactory;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
  * <p>
  * Created by silvan on 23.08.16.
  */
-public class TensorFlowNet implements NeuralNet, NeuralNetFactory {
+public class TensorFlowNet implements NeuralNet{
 
     private TensorFlowModel model;
 
@@ -39,19 +38,11 @@ public class TensorFlowNet implements NeuralNet, NeuralNetFactory {
         return new String[0];
     }
 
-    public static TensorFlowNet getCurrentImpl() {
-        return VGG16();
-    }
-
     /**
      * The VGG16-Tensorflow Model
      */
-    private static TensorFlowNet VGG16() {
-        TensorFlowModel vgg = new VGG16Model();
+    public static TensorFlowNet VGG16(String modelPath, String labelPath) {
+        TensorFlowModel vgg = new VGG16Model(modelPath, labelPath);
         return new TensorFlowNet(vgg);
-    }
-    @Override
-    public NeuralNet get() {
-        return getCurrentImpl();
     }
 }

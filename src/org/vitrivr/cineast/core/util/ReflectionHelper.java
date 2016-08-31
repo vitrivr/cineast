@@ -47,6 +47,20 @@ public class ReflectionHelper {
 	}
 	
 	/**
+	 * creates a new instance of an {@link AbstractFeatureModule} as specified by the provided json.
+	 * @param json see {@link #instanciateFromJson(JsonObject, Class, String)}}
+	 * @return an instance of the requested class or null in case of error
+	 */
+	public static final Extractor newExtractor(JsonObject json){
+		try {
+			return instanciateFromJson(json, Extractor.class, FEATURE_MODULE_PACKAGE);
+		} catch (IllegalArgumentException | InstantiationException | ClassNotFoundException e) {
+			LOGGER.error(LogHelper.getStackTrace(e));
+		}
+		return null;
+	}
+	
+	/**
 	 * creates a new instance of a {@link Retriever}} as specified by the provided json.
 	 * @param json see {@link #instanciateFromJson(JsonObject, Class, String)}}
 	 * @return an instance of the requested class or null in case of error
