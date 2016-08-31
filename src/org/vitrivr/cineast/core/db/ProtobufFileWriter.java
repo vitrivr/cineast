@@ -59,7 +59,7 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
 	@Override
 	public boolean persist(PersistentTuple<TupleInsertMessage> tuple) {
 		try {
-			tuple.getPersistentRepresentation().writeTo(out);
+			tuple.getPersistentRepresentation().writeDelimitedTo(out);
 			out.flush();
 			return true;
 		} catch (IOException e) {
