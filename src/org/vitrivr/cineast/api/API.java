@@ -1,5 +1,17 @@
 package org.vitrivr.cineast.api;
 
+import org.apache.commons.cli.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
+import org.vitrivr.cineast.core.run.ExtractionJobRunner;
+import org.vitrivr.cineast.core.run.FeatureExtractionRunner;
+import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.LogHelper;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -11,23 +23,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
-import org.vitrivr.cineast.core.run.ExtractionJobRunner;
-import org.vitrivr.cineast.core.run.FeatureExtractionRunner;
-import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * Entry point. 
@@ -55,12 +50,28 @@ public class API {
 		// TODO parse command line arguments
 
 		CommandLine commandline = handleCommandLine(args);
-		
+
 		if(commandline.hasOption("config")){
 			Config.parse(new File(commandline.getOptionValue("config")));
 		}
-		
+
+
 		boolean disableAllAPI = false;
+
+		if(commandline.getArgList().contains("neuralnet")){
+			LOGGER.info("Initializing nn persistent layer");
+			NeuralNetFeature feature = new NeuralNetFeature(Config.getNeuralNetConfig().getNeuralNetFactory());
+			//TODO Does this work? It seems very non-java
+			//feature.initalizePersistentLayer(() -> new EntityCreator());
+			LOGGER.info("Initalizing writers");
+			feature.init(Config.getDatabaseConfig().getWriterSupplier());
+			feature.init(Config.getDatabaseConfig().getSelectorSupplier());
+			LOGGER.info("Filling labels");
+			feature.fillLabels(Config.getNeuralNetConfig().getConceptsPath());
+
+			disableAllAPI = true;
+			LOGGER.info("done");
+		}
 		
 		if(commandline.hasOption("job")){
 			ExtractionJobRunner ejr = new ExtractionJobRunner(new File(commandline.getOptionValue("job")));

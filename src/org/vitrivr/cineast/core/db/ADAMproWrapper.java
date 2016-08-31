@@ -121,8 +121,8 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 		this.close();
 		super.finalize();
 	}
-
-    class LastObserver<T> implements StreamObserver<T>{
+	
+	class LastObserver<T> implements StreamObserver<T>{
 
 		private final SettableFuture<T> future;
 		private T last = null;
