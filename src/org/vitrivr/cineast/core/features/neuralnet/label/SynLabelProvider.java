@@ -13,7 +13,7 @@ public class SynLabelProvider implements LabelProvider {
 
     private List<List<String>> labels;
     private String[] synLabels;
-    private Map<String, String[]> labelMappings = new HashMap();
+    private Map<String, String[]> labelMappings = new HashMap<String, String[]>();
 
     public SynLabelProvider(InputStream is) {
         try {
@@ -23,9 +23,11 @@ public class SynLabelProvider implements LabelProvider {
 
             String line = null;
             while ((line = br.readLine()) != null) {
-                labels.add(Arrays.asList(line.substring(line.indexOf(" "), line.length()).split(", ")));
-                synl.add(line.substring(0, line.indexOf(" ")));
-                labelMappings.put(synl.getLast(),line.substring(line.indexOf(" "), line.length()).split(", "));
+                String[] readable = line.substring(line.indexOf(" "), line.length()).split(", ");
+                labels.add(Arrays.asList(readable));
+                String lbl = line.substring(0, line.indexOf(" "));
+                synl.add(lbl);
+                labelMappings.put(lbl, readable);
             }
             this.synLabels = synl.toArray(new String[synl.size()]);
         } catch (IOException e) {
