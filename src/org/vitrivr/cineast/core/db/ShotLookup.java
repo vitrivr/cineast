@@ -147,18 +147,18 @@ public class ShotLookup {
 		//TODO check type as well
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).setUseFallback(true).build();
 		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
-		QueryResultInfoMessage responce;
+		QueryResultInfoMessage response;
 		try {
-			responce = f.get().getResponses(0);
+			response = f.get().getResponses(0);
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return _return;
 		}
 		
-		List<QueryResultTupleMessage> results = responce.getResultsList();
+		List<QueryResultTupleMessage> results = response.getResultsList();
 		
 		for(QueryResultTupleMessage result : results){
 			Map<String, AdamGrpc.DataMessage> metadata = result.getData();
