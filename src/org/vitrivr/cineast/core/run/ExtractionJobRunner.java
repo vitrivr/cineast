@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.run;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.decode.shotboundary.ShotBoundaryDecoder;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.runtime.ShotDispatcher;
@@ -34,6 +35,7 @@ public class ExtractionJobRunner implements Runnable{
 	private List<File> subtitleFiles = null;
 	private String inputId = null;
 	private List<Extractor> extractors = new ArrayList<>();
+	private List<ShotDescriptor> knownShots = null;
 	
 	public ExtractionJobRunner(File jobFile) {
 		try {
@@ -168,9 +170,9 @@ public class ExtractionJobRunner implements Runnable{
 		for(JsonValue jval : inputArray){
 			try{
 				JsonObject jobj = jval.asObject();
-				AbstractFeatureModule module = ReflectionHelper.newFeatureModule(jobj);
-				if(module != null){
-					this.extractors.add(module);
+				Extractor e = ReflectionHelper.newExtractor(jobj);
+				if(e != null){
+					this.extractors.add(e);
 				}
 			}catch(UnsupportedOperationException notAnObject){
 				LOGGER.warn("Could not parse job config entry in 'input.features[]': entry is not a valid json object, skipping");
@@ -197,21 +199,23 @@ public class ExtractionJobRunner implements Runnable{
 	}
 
 	/**
-	 * Parses the input config entry which is expected to have the following structure:
+	 * Parses the input config entry which is expected to have the following structure:<pre>
 	 * {
 	 * 	"folder" : "...",
 	 * 	"file" : "...",
 	 * 	"name" : "...",
 	 * 	"subtitles" : ["", "", ""],
-	 * 	"id" : string
+	 * 	"id" : string,
+	 *  "shotboundaries" : "..."
 	 * }
 	 * 'folder' designates the base folder in which the input files are to be found. If 'file' or 'subtitles' is not specified, the folder is scanned for files.
 	 * 'file' designates the input (video) file to be processed. If a 'folder' is specified, the path is expected to be relative to it and absolute otherwise.
 	 * 'name' designates the name of the entry to add. If not specified, the name of the 'folder' or the name of the 'file' is used.
 	 * 'subtitles' holds the filenames of the subtitle files to use during extractions. If a 'folder' is specified, the paths are expected to be relative to it and absolute otherwise.
 	 * 'id' designates the base id to use for this entry. This entry is required in case of extraction without connection to a database.
+	 * 'shotboundaries' a file containing pre-computed shot boundaries. This is needed in case an extraction is to be resumed without a database connection to ensure consistent ids.
 	 * 
-	 * 
+	 * </pre>
 	 */
 	private void parseInputEntry(JsonObject inputObject) {
 		File baseFolder = null;
@@ -379,6 +383,24 @@ public class ExtractionJobRunner implements Runnable{
 			}
 		}
 		
+		if(inputObject.get("shotboundaries") != null){
+			try{
+				String fileName = inputObject.get("shotboundaries").asString();
+				try{
+					this.knownShots = ShotBoundaryDecoder.decode(new File(fileName), this.inputId);
+				}catch(SecurityException e){
+					LOGGER.warn("Could not read shotboundaries: {}", e.getMessage());
+				} catch (NullPointerException e) {
+					LOGGER.warn("Could not read shotboundaries: {}", e.getMessage());
+				} catch (FileNotFoundException e) {
+					LOGGER.warn("Could not read shotboundaries: {}", e.getMessage());
+				}
+				
+			}catch(UnsupportedOperationException notAString){
+				LOGGER.warn("Could not parse job config entry 'input.shotboundaries': entry is not a valid string, ignoring 'shotboundaries'");
+			}
+		}
+		
 	}
 
 	@Override
@@ -398,10 +420,8 @@ public class ExtractionJobRunner implements Runnable{
 		PersistentTuple tuple = writer.generateTuple(inputId, 0, inputName, inputFile.getAbsolutePath(), vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
 		writer.persist(tuple);
 		
-		List<ShotDescriptor> knownShots = null; //TODO
 		
 		ShotSegmenter segmenter = new ShotSegmenter(vd, inputId, Config.getDatabaseConfig().getWriterSupplier().get(), knownShots);
-		
 		
 		ExtractorInitializer initializer = new ExtractorInitializer() {
 

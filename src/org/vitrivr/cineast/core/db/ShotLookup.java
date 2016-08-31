@@ -1,22 +1,32 @@
 package org.vitrivr.cineast.core.db;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adam.grpc.AdamGrpc;
-import org.vitrivr.adam.grpc.AdamGrpc.*;
+import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.FromMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultTupleMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.cineast.core.data.Shot;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import com.google.common.util.concurrent.ListenableFuture;
 
 public class ShotLookup {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private ADAMproWrapper adampro = new ADAMproWrapper();
+	private ADAMproWrapper adampro = new ADAMproWrapper(); //FIXME use abstaction layer!
 	
 	public void close(){
 		this.adampro.close();
@@ -81,7 +91,7 @@ public class ShotLookup {
 		//TODO check type as well
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).setUseFallback(true).build();
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;
 		
@@ -147,18 +157,18 @@ public class ShotLookup {
 		//TODO check type as well
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).setUseFallback(true).build();
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
-		QueryResultInfoMessage response;
+		QueryResultInfoMessage responce;
 		try {
-			response = f.get().getResponses(0);
+			responce = f.get().getResponses(0);
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return _return;
 		}
 		
-		List<QueryResultTupleMessage> results = response.getResultsList();
+		List<QueryResultTupleMessage> results = responce.getResultsList();
 		
 		for(QueryResultTupleMessage result : results){
 			Map<String, AdamGrpc.DataMessage> metadata = result.getData();

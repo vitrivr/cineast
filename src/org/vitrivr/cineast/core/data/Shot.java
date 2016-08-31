@@ -11,8 +11,8 @@ import org.vitrivr.cineast.core.descriptor.AvgImg;
 import org.vitrivr.cineast.core.descriptor.MedianImg;
 import org.vitrivr.cineast.core.descriptor.MostRepresentative;
 import org.vitrivr.cineast.core.descriptor.PathList;
-import boofcv.struct.geo.AssociatedPair;
 
+import boofcv.struct.geo.AssociatedPair;
 import georegression.struct.point.Point2D_F32;
 
 public class Shot implements SegmentContainer{

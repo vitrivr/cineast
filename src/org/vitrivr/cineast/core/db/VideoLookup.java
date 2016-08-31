@@ -1,16 +1,21 @@
 package org.vitrivr.cineast.core.db;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import org.vitrivr.adam.grpc.AdamGrpc;
-import org.vitrivr.adam.grpc.AdamGrpc.*;
-import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.cineast.core.setup.EntityCreator;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import org.vitrivr.adam.grpc.AdamGrpc;
+import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultTupleMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
+import org.vitrivr.cineast.core.setup.EntityCreator;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 public class VideoLookup{
 	
@@ -22,7 +27,7 @@ public class VideoLookup{
 		//TODO check type as well
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).setUseFallback(true).build();
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;
 		try {
@@ -66,7 +71,7 @@ public class VideoLookup{
 		//TODO check type as well
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).setUseFallback(true).build();
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;
 		try {
