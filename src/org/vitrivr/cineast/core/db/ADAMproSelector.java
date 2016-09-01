@@ -8,28 +8,6 @@ import org.vitrivr.adam.grpc.AdamGrpc.*;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DistanceMessage.DistanceType;
-import org.vitrivr.adam.grpc.AdamGrpc.FeatureVectorMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.FromMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.NearestNeighbourQueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.ProjectionMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultTupleMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.QueryConfig.Distance;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.util.LogHelper;
-
-import com.google.common.util.concurrent.ListenableFuture;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.QueryConfig.Distance;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.util.LogHelper;
-
-import com.google.common.util.concurrent.ListenableFuture;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -61,7 +39,7 @@ public class ADAMproSelector implements DBSelector {
 		hints.add("exact");
 		
 		projectionMessage = AdamGrpc.ProjectionMessage.newBuilder().setAttributes(
-				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("adamprodistance").addAttribute("id")).build();
+				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("ap_distance").addAttribute("id")).build();
 		
 		DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
 		
