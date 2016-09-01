@@ -123,8 +123,6 @@ public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleI
 			}
 		}
 		
-		
-		
 	}
 	
 }
