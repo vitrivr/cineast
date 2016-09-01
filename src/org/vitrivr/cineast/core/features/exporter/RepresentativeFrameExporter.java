@@ -20,6 +20,7 @@ import org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition;
 
 public class RepresentativeFrameExporter implements Extractor {
 
+	@SuppressWarnings("rawtypes")
 	private PersistencyWriter phandler;
 	private File folder;
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -34,19 +35,20 @@ public class RepresentativeFrameExporter implements Extractor {
 	}
 
 	@Override
-	public void processShot(SegmentContainer shot) {
-		File outFolder = new File(this.folder, shot.getSuperId());
+	public void processShot(SegmentContainer segment) {
+		File outFolder = new File(this.folder, segment.getSuperId());
 		outFolder.mkdirs();
-		File outFile = new File(outFolder, shot.getId() + ".jpg");
-		Frame f = shot.getMostRepresentativeFrame();
+		File outFile = new File(outFolder, segment.getId() + ".png");
+		Frame f = segment.getMostRepresentativeFrame();
 		try {
-			ImageIO.write(f.getImage().getBufferedImage(), "JPG", outFile);
+			ImageIO.write(f.getImage().getBufferedImage(), "PNG", outFile);
 		} catch (IOException e) {
 			LOGGER.error("Could not write representative frame: {}", e.getMessage());
 		}
-		persist(shot.getId(), f.getId());
+		persist(segment.getId(), f.getId());
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void persist(String shotId, int frameId) {
 		this.phandler.persist(this.phandler.generateTuple(shotId, frameId));
 	}

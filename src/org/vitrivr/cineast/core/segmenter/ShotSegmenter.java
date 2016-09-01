@@ -106,6 +106,7 @@ public class ShotSegmenter implements ShotProvider{
 			_return.setShotId(bounds.getShotId());
 			addSubtitleItems(_return);
 			
+			idCounter.incrementAndGet();
 			
 			return _return;
 			
