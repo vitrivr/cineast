@@ -91,6 +91,11 @@ jar {
 	archiveName = 'cineast.jar'
 }
 
+def f = new File('src/resources/cat.jpg')
+if (!f.exists()) {
+    new URL('https://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg').withInputStream{ i -> f.withOutputStream{ it << i }}
+}
+
 task copyConfigs(type: Copy){
 	from "cineast.json"
 	into "$buildDir/libs/"
