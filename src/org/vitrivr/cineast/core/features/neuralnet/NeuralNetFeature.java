@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.features.neuralnet;
 
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Position;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adam.grpc.AdamGrpc;
@@ -19,6 +22,8 @@ import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.TimeHelper;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.rmi.server.UID;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -216,7 +221,46 @@ public class NeuralNetFeature extends AbstractFeatureModule {
      * @return A float array containing the probabilities given by the neural net.
      */
     private float[] classifyImage(BufferedImage img) {
-        return net.classify(img);
+        float[] probs = new float[1000];
+        Arrays.fill(probs, 0f);
+        Position[] positions = new Position[3];
+        positions[0] = Positions.CENTER;
+        if(img.getHeight()>img.getWidth()){
+            positions[1] = Positions.TOP_RIGHT;
+            positions[2] = Positions.BOTTOM_RIGHT;
+        }else{
+            positions[1] = Positions.CENTER_RIGHT;
+            positions[2] = Positions.CENTER_LEFT;
+        }
+
+        for(Position pos: positions){
+            float[] curr = new float[0];
+            try {
+                curr = net.classify(Thumbnails.of(img).size(224, 224).crop(pos).asBufferedImage());
+            } catch (IOException e) {
+                LOGGER.error(e);
+            }
+            probs = maxpool(curr, probs);
+        }
+        return probs;
+    }
+
+    /**
+     * Takes the maximum value at each position
+     */
+    private float[] maxpool(float[] curr, float[] probs) {
+        if(curr.length!=probs.length){
+            throw new IllegalArgumentException("Float[] need to have the same size");
+        }
+        float[] _ret = new float[curr.length];
+        for(int i = 0; i<curr.length;i++){
+            if(curr[i]>probs[i]){
+                _ret[i]= curr[i];
+            } else{
+                _ret[i]=probs[i];
+            }
+        }
+        return _ret;
     }
 
     @Override
@@ -226,18 +270,20 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         //check if shot has been processed
         if (!phandler.idExists(shot.getId())) {
             BufferedImage keyframe = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
-            float[] probs = classifyImage(keyframe);
 
+            float[] probs = classifyImage(keyframe);
             //Persist best matches
             for (int i = 0; i < probs.length; i++) {
                 if (probs[i] > cutoff) {
-                    LOGGER.info("Match found {}", String.join(", ", net.getLabels(net.getSynSetLabels()[i])));
-                    PersistentTuple tuple = classificationWriter.generateTuple(shot.getId(), net.getSynSetLabels()[i], probs[i]);
+                    LOGGER.info("Match found for shot {}: {} with probability {}",shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[i])), probs[i]);
+                    //TODO Ugly Fix for the ID-Problem
+                    UID userId = new UID();
+                    PersistentTuple tuple = classificationWriter.generateTuple(userId.toString(), shot.getId(), net.getSynSetLabels()[i], probs[i]);
                     classificationWriter.persist(tuple);
                 }
             }
             persist(shot.getId(), new FloatVectorImpl(probs));
-            LOGGER.info("NeuralNetFeature.processShot() done in {}",
+            LOGGER.debug("NeuralNetFeature.processShot() done in {}",
                     TimeHelper.toc());
         }
         LOGGER.exit();
