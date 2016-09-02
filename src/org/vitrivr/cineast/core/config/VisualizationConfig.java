@@ -25,6 +25,8 @@ public final class VisualizationConfig {
     visualizations.add(VisualizationMedianColorStripe.class);
     visualizations.add(VisualizationDominantEdgeGrid8.class);
     visualizations.add(VisualizationDominantEdgeGrid16.class);
+    visualizations.add(VisualizationDominantEdgeAverageColorGrid8.class);
+    visualizations.add(VisualizationDominantEdgeAverageColorGrid16.class);
 
 
     //add all categories with their containing visualizations
@@ -35,6 +37,8 @@ public final class VisualizationConfig {
     list.add(VisualizationMedianColorGrid8.class);
     list.add(VisualizationDominantEdgeGrid8.class);
     list.add(VisualizationDominantEdgeGrid16.class);
+    visualizations.add(VisualizationDominantEdgeAverageColorGrid8.class);
+    visualizations.add(VisualizationDominantEdgeAverageColorGrid16.class);
     DEFAULT_VISUALIZATION_CATEGORIES.put("shots", list);
 
     list = new ArrayList<>();
