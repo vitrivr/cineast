@@ -24,11 +24,6 @@ public class ConceptReader {
      */
     Map<String, String[]> conceptMap = new HashMap();
 
-    public ConceptReader() {
-        //TODO Read from DB
-        throw new UnsupportedOperationException();
-    }
-
     public ConceptReader(String location) {
         try {
             InputStream is = this.getClass().getResourceAsStream(location);
