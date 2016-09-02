@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.ShotLookup;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.srt.SRTSubTitle;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
@@ -91,7 +91,7 @@ public class FeatureExtractionRunner {
 
 		writer.open("cineast_multimediaobject");
 
-		List<ShotDescriptor> knownShots = null;
+		List<SegmentDescriptor> knownShots = null;
 		String id = null;
 
 		if (writer.exists("name", videoName)) {

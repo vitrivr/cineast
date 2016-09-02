@@ -17,11 +17,11 @@ import org.vitrivr.cineast.core.setup.EntityCreator;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-public class VideoLookup{
+public class VideoLookup{//TODO rename to MultimediaObjectLookup
 	
 	private ADAMproWrapper adampro = new ADAMproWrapper();
 	
-	public VideoDescriptor lookUpVideo(String videoId){
+	public MultimediaObjectDescriptor lookUpVideo(String videoId){
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		WhereMessage where = WhereMessage.newBuilder().setAttribute("id").setValue(videoId).build();
 		//TODO check type as well
@@ -46,11 +46,11 @@ public class VideoLookup{
 
 		QueryResultTupleMessage result = results.get(0);
 		
-		return new VideoDescriptor(result.getData());
+		return new MultimediaObjectDescriptor(result.getData());
 		
 	}
 	
-	public Map<String, VideoDescriptor> lookUpVideos(String... videoIds){
+	public Map<String, MultimediaObjectDescriptor> lookUpVideos(String... videoIds){
 		if(videoIds == null || videoIds.length == 0){
 			return new HashMap<>();
 		}
@@ -88,11 +88,11 @@ public class VideoLookup{
 			return null; //TODO
 		}
 		
-		HashMap<String, VideoDescriptor> _return = new HashMap<>();
+		HashMap<String, MultimediaObjectDescriptor> _return = new HashMap<>();
 		
 		for(QueryResultTupleMessage result : results){
 			Map<String, AdamGrpc.DataMessage> meta = result.getData();
-			_return.put(meta.get("id").getStringData(), new VideoDescriptor(meta));
+			_return.put(meta.get("id").getStringData(), new MultimediaObjectDescriptor(meta));
 		}
 		
 		return _return;
@@ -107,15 +107,15 @@ public class VideoLookup{
 		this.close();
 		super.finalize();
 	}
-
-public static class VideoDescriptor{
+	
+public static class MultimediaObjectDescriptor{
 		
 		private final String videoId; 
 		private final int width, height, framecount;
 		private final float seconds, fps;
 		private final String name, path;
 		
-		VideoDescriptor(Map<String, AdamGrpc.DataMessage> map){
+		MultimediaObjectDescriptor(Map<String, AdamGrpc.DataMessage> map){
 			this.videoId = map.get("id").getStringData();
 			this.name = map.get("name").getStringData();
 			this.path = map.get("path").getStringData();

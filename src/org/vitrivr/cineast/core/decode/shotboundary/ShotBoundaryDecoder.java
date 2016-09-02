@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
 
 public final class ShotBoundaryDecoder {
 
 	private ShotBoundaryDecoder(){}
 	
-	public static List<ShotDescriptor> decode(File boundaryFile, String videoId) throws NullPointerException, SecurityException, FileNotFoundException{
+	public static List<SegmentDescriptor> decode(File boundaryFile, String videoId) throws NullPointerException, SecurityException, FileNotFoundException{
 		if(boundaryFile == null){
 			throw new NullPointerException("boundaryFile was null in ShotBoundaryDecoder.decode()");
 		}

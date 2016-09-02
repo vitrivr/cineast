@@ -18,9 +18,9 @@ import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.QuerySubTitleItem;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.ShotLookup;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.VideoLookup;
-import org.vitrivr.cineast.core.db.VideoLookup.VideoDescriptor;
+import org.vitrivr.cineast.core.db.VideoLookup.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -180,7 +180,7 @@ public class JSONUtils {
 	}
 	
 	public static HashSet<String> printShotsBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> shotids) {
-		ArrayList<ShotDescriptor> sdList = new ArrayList<>(resultlist.size());
+		ArrayList<SegmentDescriptor> sdList = new ArrayList<>(resultlist.size());
 		ShotLookup sl = new ShotLookup();
 		
 		String[] ids = new String[resultlist.size()];
@@ -189,10 +189,10 @@ public class JSONUtils {
 			ids[i++] = sdp.key;
 		}
 		
-		Map<String, ShotDescriptor> map = sl.lookUpShots(ids);
+		Map<String, SegmentDescriptor> map = sl.lookUpShots(ids);
 		
 		for(String id : ids){
-			ShotDescriptor sd = map.get(id);
+			SegmentDescriptor sd = map.get(id);
 			if(sd != null){
 				sdList.add(sd);
 			}
@@ -226,7 +226,7 @@ public class JSONUtils {
 			ids[i++] = sdp.key;
 		}
 		
-		Map<String, ShotDescriptor> map = sl.lookUpShots(ids);
+		Map<String, SegmentDescriptor> map = sl.lookUpShots(ids);
 		
 		HashSet<String> videoIds = new HashSet<>();
 		for(String id : ids){
@@ -239,9 +239,9 @@ public class JSONUtils {
 			vids[i++] = vid;
 		}
 		
-		ArrayList<VideoDescriptor> vdList = new ArrayList<>(vids.length);
+		ArrayList<MultimediaObjectDescriptor> vdList = new ArrayList<>(vids.length);
 		
-		Map<String, VideoDescriptor> vmap = vl.lookUpVideos(vids);
+		Map<String, MultimediaObjectDescriptor> vmap = vl.lookUpVideos(vids);
 		
 		for(String vid : vids){
 			vdList.add(vmap.get(vid));

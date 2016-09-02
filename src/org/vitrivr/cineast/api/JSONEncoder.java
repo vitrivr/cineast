@@ -3,8 +3,8 @@ package org.vitrivr.cineast.api;
 import java.util.List;
 
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
-import org.vitrivr.cineast.core.db.VideoLookup.VideoDescriptor;
+import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.VideoLookup.MultimediaObjectDescriptor;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -53,7 +53,7 @@ public final class JSONEncoder {
 		return _return;
 	}
 	
-	public static JsonObject encodeShot(ShotDescriptor sd, boolean includeType){
+	public static JsonObject encodeShot(SegmentDescriptor sd, boolean includeType){
 		return encodeShot(sd.getShotId(), sd.getVideoId(), sd.getStartFrame(), sd.getEndFrame(), includeType);
 	}
 	
@@ -61,16 +61,16 @@ public final class JSONEncoder {
 		return encodeShot(shotId, videoId, startFrame, endFrame, true);
 	}
 	
-	public static final JsonObject encodeShot(ShotDescriptor sd){
+	public static final JsonObject encodeShot(SegmentDescriptor sd){
 		return encodeShot(sd, true);
 	}
 	
-	public static final JsonObject encodeShotBatch(List<ShotDescriptor> sdList){
+	public static final JsonObject encodeShotBatch(List<SegmentDescriptor> sdList){
 		JsonObject _return = new JsonObject();
 		_return.add("type", "batch");
 		_return.add("inner", "shot");
 		JsonArray array = new JsonArray();
-		for(ShotDescriptor sd : sdList){
+		for(SegmentDescriptor sd : sdList){
 			array.add(encodeShot(sd, false));
 		}
 		_return.add("array", array);
@@ -100,20 +100,20 @@ public final class JSONEncoder {
 	
 
 	
-	public static final JsonObject encodeVideo(VideoDescriptor vd, boolean includeType){
+	public static final JsonObject encodeVideo(MultimediaObjectDescriptor vd, boolean includeType){
 		return encodeVideo(vd.getName(), vd.getVideoId(), vd.getPath(), vd.getWidth(), vd.getHeight(), vd.getFramecount(), vd.getSeconds(), includeType);
 	}
 	
-	public static final JsonObject encodeVideo(VideoDescriptor vd){
+	public static final JsonObject encodeVideo(MultimediaObjectDescriptor vd){
 		return encodeVideo(vd, true);
 	}
 	
-	public static final JsonObject encodeVideoBatch(List<VideoDescriptor> vdList){
+	public static final JsonObject encodeVideoBatch(List<MultimediaObjectDescriptor> vdList){
 		JsonObject _return = new JsonObject();
 		_return.add("type", "batch");
 		_return.add("inner", "video");
 		JsonArray array = new JsonArray();
-		for(VideoDescriptor vd : vdList){
+		for(MultimediaObjectDescriptor vd : vdList){
 			array.add(encodeVideo(vd, false));
 		}
 		_return.add("array", array);

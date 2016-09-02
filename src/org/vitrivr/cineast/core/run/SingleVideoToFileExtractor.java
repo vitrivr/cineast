@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.ProtobufFileWriter;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.cc.CCSubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.srt.SRTSubTitle;
@@ -112,7 +112,7 @@ public class SingleVideoToFileExtractor {
 		LOGGER.debug("Total frames: {}", vd.getTotalFrameCount());
 		LOGGER.debug("frames per second: {}", vd.getFPS());
 		
-		List<ShotDescriptor> knownShots = readKnownShots(inputFolder, videoId);
+		List<SegmentDescriptor> knownShots = readKnownShots(inputFolder, videoId);
 		
 		ShotSegmenter segmenter = new ShotSegmenter(vd, videoId, new ProtobufFileWriter(), knownShots);
 		
@@ -152,7 +152,7 @@ public class SingleVideoToFileExtractor {
 		LOGGER.info("finished extraction for video {} in {}", videoId, formatTime(System.currentTimeMillis() - startTime));
 	}
 	
-	private static List<ShotDescriptor> readKnownShots(File inputFolder, String videoId) {
+	private static List<SegmentDescriptor> readKnownShots(File inputFolder, String videoId) {
 		File input = new File(inputFolder, "shotEndFrames.csv");
 		if(!(input.exists() && input.isFile() && input.canRead())){
 			return null;
@@ -163,17 +163,17 @@ public class SingleVideoToFileExtractor {
 			inReader.close();
 			
 			String[] split = line.split(",");
-			ArrayList<ShotDescriptor> shots = new ArrayList<>(split.length);
+			ArrayList<SegmentDescriptor> shots = new ArrayList<>(split.length);
 			
 			int startFrame = 1;
 			int endFrame = Integer.parseInt(split[0].trim());
-			ShotDescriptor descriptor = new ShotDescriptor(videoId, 1, startFrame, endFrame);
+			SegmentDescriptor descriptor = new SegmentDescriptor(videoId, 1, startFrame, endFrame);
 			shots.add(descriptor);
 			
 			for(int i = 0; i < split.length - 1; ++i){
 				startFrame = Integer.parseInt(split[i].trim()) + 1;
 				endFrame = Integer.parseInt(split[i + 1].trim());
-				descriptor = new ShotDescriptor(videoId, i + 2, startFrame, endFrame);
+				descriptor = new SegmentDescriptor(videoId, i + 2, startFrame, endFrame);
 				shots.add(descriptor);
 			}
 			LOGGER.debug("successfully read {} shot boundaries", shots.size());

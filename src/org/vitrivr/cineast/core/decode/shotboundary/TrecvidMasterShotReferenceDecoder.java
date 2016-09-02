@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
 
 public class TrecvidMasterShotReferenceDecoder {
 
@@ -23,9 +23,9 @@ public class TrecvidMasterShotReferenceDecoder {
 	 * @param msr the file containing the master shot reference
 	 * @param videoId the video id
 	 */
-	public static List<ShotDescriptor> decode(File msr, String videoId){
+	public static List<SegmentDescriptor> decode(File msr, String videoId){
 		
-		ArrayList<ShotDescriptor> _return = new ArrayList<>();
+		ArrayList<SegmentDescriptor> _return = new ArrayList<>();
 		
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(msr));
@@ -56,7 +56,7 @@ public class TrecvidMasterShotReferenceDecoder {
 					continue;
 				}
 				
-				_return.add(new ShotDescriptor(videoId, ++shotCounter, start, end));
+				_return.add(new SegmentDescriptor(videoId, ++shotCounter, start, end));
 				
 			}
 			
