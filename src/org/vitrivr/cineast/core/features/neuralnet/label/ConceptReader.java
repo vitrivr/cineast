@@ -45,12 +45,10 @@ public class ConceptReader {
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
                 if(blacklist.contains(data[1])){
-                    System.out.println("Found forbidden word: "+data[1]);
                     continue;
                 }
                 String[] concepts = data[2].split(" ");
                 if(concepts==null){
-                    System.out.println(line+" Concepts null");
                     concepts = new String[0];
                 }
 

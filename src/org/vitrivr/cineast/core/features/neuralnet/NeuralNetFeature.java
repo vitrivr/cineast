@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features.neuralnet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adam.grpc.AdamGrpc;
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.NeuralNetConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
@@ -18,14 +19,9 @@ import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.TimeHelper;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
-/**
- * Please use setup as an entrypoint
- */
 public class NeuralNetFeature extends AbstractFeatureModule {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -45,6 +41,12 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     }
 
     /**
+     * TODO At querytime, where do you set the neuralnet in a smooth way?
+     */
+    public NeuralNetFeature(){
+        this(1f);
+    }
+    /**
      * TODO I think this is the proper way to handle compability with the extractionRunner
      * Needs to be public.
      * IMO This does not destroy the self-contained nature of the feature-modules.
@@ -55,10 +57,6 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         this.cutoff = parsedConfig.getCutoff();
         this.net = parsedConfig.getNeuralNetFactory().get();
     }
-
-    /**
-     * Careful: This constructor does not initalize the neural net
-     */
     protected NeuralNetFeature(float maxDist) {
         super(fullVectorTableName, maxDist);
     }
@@ -255,21 +253,34 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
         LOGGER.entry();
         TimeHelper.tic();
+        NeuralNet _net = null;
+        if(this.net!=null){
+            _net = this.net;
+        }
+        if(qc.getNet() != null){
+            _net = qc.getNet();
+        }
+        if(_net == null){
+            this.net = Config.getNeuralNetConfig().getNeuralNetFactory().get(); //cache NN
+            _net = this.net;
+        }
         List<StringDoublePair> _return = new ArrayList();
-        /*
+
         if (!sc.getTags().isEmpty()) {
             List<String> wnLabels = new ArrayList();
             for (String label : sc.getTags()) {
                 LOGGER.debug("Looking for tag {}", label);
                 wnLabels = new ArrayList();
                 for (Map<String, PrimitiveTypeProvider> row : classSelector.getRows("label", label)) {
-                    //TODO is this the proper way to get info from the row?
-                    wnLabels.add(row.get("label").getString());
+                    wnLabels.add(row.get("objectid").getString());
                 }
             }
+            Set<String> setLabels = new HashSet<>();
+            for(String label: wnLabels){
+                setLabels.add(label);
+            }
 
-            //TODO Eliminate Duplicates from wnLabels
-            for (String wnLabel : wnLabels) {
+            for (String wnLabel : setLabels) {
                 for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", wnLabel)) {
                     LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
                     _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
@@ -277,13 +288,11 @@ public class NeuralNetFeature extends AbstractFeatureModule {
             }
         } else {
             //TODO Can we just take the most representative frame from the sc? Is that the query image?
-            float[] res = classifyImage(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
+            float[] res = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
 
             for (int i = 0; i < res.length; i++) {
                 //TODO This cutoff should be in queryConfig probably
                 if (res[i] > cutoff) {
-                    //Matching! Wub wub
-
                     for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", net.getSynSetLabels()[i])) {
                         //TODO Duplicates?
                         LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
@@ -291,10 +300,10 @@ public class NeuralNetFeature extends AbstractFeatureModule {
                     }
                 }
             }
-        }*/
+        }
         //TODO Currently returns mock-result until we get data in the DB
         _return = new ArrayList();
-        _return.add(new StringDoublePair("125", 0.5));
+        _return.add(new StringDoublePair("720909", 0.5));
         LOGGER.info("NeuralNetFeature.getSimilar() done in {}",
                 TimeHelper.toc());
         return LOGGER.exit(_return);

@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.config;
 
+import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
+
 import java.util.Optional;
 
 public class QueryConfig {
@@ -11,6 +13,7 @@ public class QueryConfig {
 	private Distance distance = null;
 	private float[] distanceWeights = null;
 	private float norm = Float.NaN;
+	private NeuralNet net = null;
 	
 	public QueryConfig(){}
 	
@@ -21,8 +24,17 @@ public class QueryConfig {
 		this.distance = qc.distance;
 		this.distanceWeights = qc.distanceWeights;
 		this.norm = qc.norm;
+		this.net = qc.net;
 	}
-	
+
+	public NeuralNet getNet() {
+		return net;
+	}
+
+	public void setNet(NeuralNet net) {
+		this.net = net;
+	}
+
 	public Optional<Distance> getDistance(){
 		return Optional.ofNullable(this.distance);
 	}
