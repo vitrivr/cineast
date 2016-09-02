@@ -17,7 +17,8 @@ import java.util.List;
  */
 public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule {
   public VisualizationAverageColorGrid8() {
-    super("features_AverageColorGrid8");
+    super();
+    tableNames.put("AverageColorGrid8", "features_AverageColorGrid8");
   }
 
   //Test main function
@@ -45,8 +46,8 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule 
   }
 
   public String visualizeMultimediaobject(String multimediaobjectId, int scale) {
-    DBSelector selector = selectors.get(tableName);
-    DBSelector shotSelector = selectors.get(shotsTable);
+    DBSelector selector = selectors.get("AverageColorGrid8");
+    DBSelector shotSelector = selectors.get(segmentTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
     int[] pixels = new int[8 * 8 * 3];
@@ -72,7 +73,7 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule 
   }
 
   public String visualizeSegment(String segmentId, int scale) {
-    DBSelector selector = selectors.get(tableName);
+    DBSelector selector = selectors.get(tableNames.get("AverageColorGrid8"));
     return ArtUtil.pixelsToImage(ArtUtil.scalePixels(ArtUtil.shotToRGB(segmentId, selector, 8, 8), scale, 8, 8, false), 8 * scale, 8 * scale, false);
   }
 

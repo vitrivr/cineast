@@ -7,7 +7,6 @@ import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,48 +14,52 @@ import java.util.Map;
 /**
  * Created by sein on 26.08.16.
  */
-public abstract class AbstractVisualizationModule implements Visualization{
-  protected final String tableName;
-  protected final String moviesTable;
-  protected final String shotsTable;
+public abstract class AbstractVisualizationModule implements Visualization {
+  protected final Map<String, String> tableNames;
+  protected final String multimediaobjectTable;
+  protected final String segmentTable;
   protected Map<String, DBSelector> selectors;
 
   protected static final Logger LOGGER = LogManager.getLogger();
 
-  protected AbstractVisualizationModule(String tableName){
-    this.tableName = tableName;
-    this.moviesTable = "cineast_multimediaobject";
-    this.shotsTable = "cineast_segment";
+  protected AbstractVisualizationModule() {
+    this.tableNames = new HashMap();
+    this.multimediaobjectTable = "cineast_multimediaobject";
+    this.segmentTable = "cineast_segment";
   }
 
-  public void init(DBSelectorSupplier supplier){
+  public void init(DBSelectorSupplier supplier) {
     selectors = new HashMap();
 
-    DBSelector selector = supplier.get();
-    selector.open(tableName);
-    selectors.put(tableName, selector);
+    DBSelector selector;
+    for (Map.Entry<String, String> entry : tableNames.entrySet()) {
+      selector = supplier.get();
+      selector.open(entry.getValue());
+      selectors.put(entry.getKey(), selector);
+    }
 
     selector = supplier.get();
-    selector.open(moviesTable);
-    selectors.put(moviesTable, selector);
+    selector.open(multimediaobjectTable);
+    selectors.put(multimediaobjectTable, selector);
 
     selector = supplier.get();
-    selector.open(shotsTable);
-    selectors.put(shotsTable, selector);
+    selector.open(segmentTable);
+    selectors.put(segmentTable, selector);
   }
 
-  public String visualizeSegment(String segmentId){
+  public String visualizeSegment(String segmentId) {
     return null;
   }
-  public String visualizeMultimediaobject(String multimediaobjectId){
+
+  public String visualizeMultimediaobject(String multimediaobjectId) {
     return null;
   }
 
   public abstract List<VisualizationType> getVisualizations();
 
-  public void finish(){
-    if(selectors != null){
-      for(Map.Entry<String, DBSelector> entry: selectors.entrySet()){
+  public void finish() {
+    if (selectors != null) {
+      for (Map.Entry<String, DBSelector> entry : selectors.entrySet()) {
         entry.getValue().close();
       }
       selectors = null;

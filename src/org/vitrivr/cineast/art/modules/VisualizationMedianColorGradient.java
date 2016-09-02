@@ -24,7 +24,8 @@ import java.util.Map;
  */
 public class VisualizationMedianColorGradient extends AbstractVisualizationModule {
   public VisualizationMedianColorGradient() {
-    super("features_MedianColor");
+    super();
+    tableNames.put("MedianColor", "features_MedianColor");
   }
 
   @Override
@@ -45,8 +46,8 @@ public class VisualizationMedianColorGradient extends AbstractVisualizationModul
   }
 
   public String visualizeMultimediaobject(String multimediaobjectId, int scale) {
-    DBSelector selector = selectors.get(tableName);
-    DBSelector shotSelector = selectors.get(shotsTable);
+    DBSelector selector = selectors.get("MedianColor");
+    DBSelector shotSelector = selectors.get(segmentTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
     BufferedImage image = new BufferedImage(shots.size(), 1, BufferedImage.TYPE_INT_RGB);

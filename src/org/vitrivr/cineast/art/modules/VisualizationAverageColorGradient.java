@@ -24,7 +24,8 @@ import java.util.Map;
  */
 public class VisualizationAverageColorGradient extends AbstractVisualizationModule {
   public VisualizationAverageColorGradient() {
-    super("features_AverageColor");
+    super();
+    tableNames.put("AverageColor", "features_AverageColor");
   }
 
   @Override
@@ -45,8 +46,8 @@ public class VisualizationAverageColorGradient extends AbstractVisualizationModu
   }
 
   public String visualizeMultimediaobject(String multimediaobjectId, int scale) {
-    DBSelector selector = selectors.get(tableName);
-    DBSelector shotSelector = selectors.get(shotsTable);
+    DBSelector selector = selectors.get("AverageColor");
+    DBSelector shotSelector = selectors.get(segmentTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
     BufferedImage image = new BufferedImage(shots.size(), 1, BufferedImage.TYPE_INT_RGB);

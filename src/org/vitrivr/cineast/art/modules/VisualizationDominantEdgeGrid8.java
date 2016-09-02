@@ -25,7 +25,8 @@ import java.util.Map;
  */
 public class VisualizationDominantEdgeGrid8 extends AbstractVisualizationModule {
   protected VisualizationDominantEdgeGrid8() {
-    super("features_DominantEdgeGrid8");
+    super();
+    tableNames.put("DominantEdgeGrid8", "features_DominantEdgeGrid8");
   }
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -50,7 +51,7 @@ public class VisualizationDominantEdgeGrid8 extends AbstractVisualizationModule 
 
   @Override
   public String visualizeSegment(String segmentId) {
-    DBSelector selector = selectors.get(tableName);
+    DBSelector selector = selectors.get("DominantEdgeGrid8");
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segmentId);
 
     BufferedImage image = new BufferedImage(256, 256, BufferedImage.TYPE_INT_RGB);

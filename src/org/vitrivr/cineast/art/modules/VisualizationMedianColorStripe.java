@@ -20,7 +20,8 @@ import java.util.Map;
  */
 public class VisualizationMedianColorStripe extends AbstractVisualizationModule {
   public VisualizationMedianColorStripe() {
-    super("features_MedianColor");
+    super();
+    tableNames.put("MedianColor", "features_MedianColor");
   }
 
   @Override
@@ -41,8 +42,8 @@ public class VisualizationMedianColorStripe extends AbstractVisualizationModule 
   }
 
   public String visualizeMultimediaobject(String multimediaobjectId, int scale) {
-    DBSelector selector = selectors.get(tableName);
-    DBSelector shotSelector = selectors.get(shotsTable);
+    DBSelector selector = selectors.get("MedianColor");
+    DBSelector shotSelector = selectors.get(segmentTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
     int[] pixels = new int[shots.size()*8];

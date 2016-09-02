@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.art.modules;
 
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
-import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
@@ -14,11 +11,6 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +20,8 @@ import java.util.Map;
  */
 public class VisualizationAverageColorStripe extends AbstractVisualizationModule {
   public VisualizationAverageColorStripe() {
-    super("features_AverageColor");
+    super();
+    tableNames.put("AverageColor", "features_AverageColor");
   }
 
   @Override
@@ -49,8 +42,8 @@ public class VisualizationAverageColorStripe extends AbstractVisualizationModule
   }
 
   public String visualizeMultimediaobject(String multimediaobjectId, int scale) {
-    DBSelector selector = selectors.get(tableName);
-    DBSelector shotSelector = selectors.get(shotsTable);
+    DBSelector selector = selectors.get("AverageColor");
+    DBSelector shotSelector = selectors.get(segmentTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
     int[] pixels = new int[shots.size()*8];

@@ -25,7 +25,8 @@ import java.util.Map;
  */
 public class VisualizationDominantEdgeGrid16 extends AbstractVisualizationModule {
   protected VisualizationDominantEdgeGrid16() {
-    super("features_DominantEdgeGrid16");
+    super();
+    tableNames.put("DominantEdgeGrid16", "features_DominantEdgeGrid16");
   }
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -35,7 +36,7 @@ public class VisualizationDominantEdgeGrid16 extends AbstractVisualizationModule
     return "VisualizationDominantEdgeGrid16";
   }
 
-  public static void main(String[] args){
+  public static void main(String[] args) {
     VisualizationDominantEdgeGrid16 module = new VisualizationDominantEdgeGrid16();
     module.init(new DBSelectorSupplier() {
       @Override
@@ -50,7 +51,7 @@ public class VisualizationDominantEdgeGrid16 extends AbstractVisualizationModule
 
   @Override
   public String visualizeSegment(String segmentId) {
-    DBSelector selector = selectors.get(tableName);
+    DBSelector selector = selectors.get("DominantEdgeGrid16");
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segmentId);
 
     BufferedImage image = new BufferedImage(512, 512, BufferedImage.TYPE_INT_RGB);
@@ -61,9 +62,9 @@ public class VisualizationDominantEdgeGrid16 extends AbstractVisualizationModule
 
     for (Map<String, PrimitiveTypeProvider> row : result) {
       float[] arr = row.get("feature").getFloatArray();
-      for(int x=0;x<16;x++){
-        for(int y=0;y<16;y++) {
-          switch((int)arr[x*16+y]) {
+      for (int x = 0; x < 16; x++) {
+        for (int y = 0; y < 16; y++) {
+          switch ((int) arr[x * 16 + y]) {
             case -10:
               graph.setColor(Color.lightGray);
               break;
@@ -84,7 +85,7 @@ public class VisualizationDominantEdgeGrid16 extends AbstractVisualizationModule
               graph.setPaint(gradient);
               break;
           }
-          graph.fillRect(x*32, y*32, 32, 32);
+          graph.fillRect(x * 32, y * 32, 32, 32);
         }
       }
     }

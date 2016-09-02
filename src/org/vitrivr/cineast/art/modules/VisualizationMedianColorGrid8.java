@@ -14,7 +14,8 @@ import java.util.List;
  */
 public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule{
   public VisualizationMedianColorGrid8() {
-    super("features_MedianColorGrid8");
+    super();
+    tableNames.put("MedianColorGrid8", "features_MedianColorGrid8");
   }
 
   @Override
@@ -28,7 +29,7 @@ public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule{
   }
 
   public String visualizeSegment(String segmentId, int scale){
-    DBSelector selector = selectors.get(tableName);
+    DBSelector selector = selectors.get("MedianColorGrid8");
     return ArtUtil.pixelsToImage(ArtUtil.scalePixels(ArtUtil.shotToRGB(segmentId, selector, 8, 8), scale, 8, 8, false), 8*scale, 8*scale, false);
   }
 
