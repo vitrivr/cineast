@@ -65,22 +65,22 @@ public class VisualizationDominantEdgeGrid16 extends AbstractVisualizationModule
         for(int y=0;y<16;y++) {
           switch((int)arr[x*16+y]) {
             case -10:
-              graph.setColor(Color.black);
+              graph.setColor(Color.lightGray);
               break;
             case 2:
-              gradient = new GradientPaint(x*32, y*32+16, Color.blue, x*32+32, y*32+16, Color.white);
+              gradient = new GradientPaint(x * 32, y * 32 + 16, Color.white, x * 32 + 32, y * 32 + 16, Color.black);
               graph.setPaint(gradient);
               break;
             case 3:
-              gradient = new GradientPaint(x*32, y*32, Color.blue, x*32+32, y*32+32, Color.white);
+              gradient = new GradientPaint(x * 32, y * 32, Color.white, x * 32 + 32, y * 32 + 32, Color.black);
               graph.setPaint(gradient);
               break;
             case 0:
-              gradient = new GradientPaint(x*32+16, y*32, Color.blue, x*32+16, y*32+32, Color.white);
+              gradient = new GradientPaint(x * 32 + 16, y * 32, Color.white, x * 32 + 16, y * 32 + 32, Color.black);
               graph.setPaint(gradient);
               break;
             case 1:
-              gradient = new GradientPaint(x*32, y*32+32, Color.blue, x*32+32, y*32, Color.white);
+              gradient = new GradientPaint(x * 32, y * 32 + 32, Color.white, x * 32 + 32, y * 32, Color.black);
               graph.setPaint(gradient);
               break;
           }
