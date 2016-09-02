@@ -1,15 +1,5 @@
 package org.vitrivr.cineast.core.db;
 
-import java.util.concurrent.ExecutionException;
-
-import org.vitrivr.adam.grpc.AdamDefinitionGrpc;
-import org.vitrivr.adam.grpc.AdamDefinitionGrpc.AdamDefinitionStub;
-import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import io.grpc.ManagedChannel;
@@ -23,12 +13,6 @@ import org.vitrivr.adam.grpc.AdamSearchGrpc.AdamSearchStub;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.SettableFuture;
-
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ExecutionException;
 
 public class ADAMproWrapper { //TODO generate interrupted ackmessage
@@ -108,6 +92,14 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 		SettableFuture<QueryResultsMessage> future = SettableFuture.create();
 		synchronized (this.searchStub) {
 			this.searchStub.doQuery(message, new LastQueryResponseStreamObserver(future));
+		}
+		return future;
+	}
+
+	public ListenableFuture<QueryResultsMessage> previewEntity(EntityNameMessage message){
+		SettableFuture<QueryResultsMessage> future = SettableFuture.create();
+		synchronized (this.searchStub) {
+			this.searchStub.preview(message, new LastQueryResponseStreamObserver(future));
 		}
 		return future;
 	}
