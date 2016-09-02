@@ -1,22 +1,13 @@
 package org.vitrivr.cineast.api;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import georegression.struct.point.Point2D_F32;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.QueryContainer;
-import org.vitrivr.cineast.core.data.QuerySubTitleItem;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.*;
 import org.vitrivr.cineast.core.db.ShotLookup;
 import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
 import org.vitrivr.cineast.core.db.VideoLookup;
@@ -24,12 +15,11 @@ import org.vitrivr.cineast.core.db.VideoLookup.VideoDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-
-import georegression.struct.point.Point2D_F32;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.util.*;
 
 public class JSONUtils {
 
@@ -86,7 +76,8 @@ public class JSONUtils {
 		}
 		
 		if(jobj.get("tags") != null){
-			JsonArray concepts = jobj.get("concepts").asArray();
+			JsonObject tags = jobj.get("tags").asObject();
+			JsonArray concepts = tags.get("concepts").asArray();
 			for(JsonValue concept : concepts){
 				qc.addTag(concept.asString());
 			}
