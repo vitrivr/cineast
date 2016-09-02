@@ -322,6 +322,42 @@ public class ADAMproSelector implements DBSelector {
 		return this.adampro.existsEntity(eName);
 	}
 
+	@Override
+	public List<Map<String, PrimitiveTypeProvider>> preview() {
+		ListenableFuture<QueryResultsMessage> f = this.adampro.previewEntity(EntityNameMessage.newBuilder().setEntity(this.fromBuilder.getEntity()).build());
+		QueryResultsMessage result;
+		try {
+			result = f.get();
+		} catch (InterruptedException | ExecutionException e) {
+			LOGGER.error(LogHelper.getStackTrace(e));
+			return new ArrayList<>(1);
+		}
+
+		if(result.getResponsesCount() == 0){
+			return new ArrayList<>(1);
+		}
+
+		QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
+
+		List<QueryResultTupleMessage> resultList = response.getResultsList();
+		if(resultList.isEmpty()){
+			return new ArrayList<>(1);
+		}
+
+		ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(resultList.size());
+		for(QueryResultTupleMessage resultMessage : resultList){
+			Map<String, DataMessage> data = resultMessage.getData();
+			Set<String> keys = data.keySet();
+			HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
+			for(String key : keys){
+				map.put(key, DataMessageConverter.convert(data.get(key)));
+			}
+			_return.add(map);
+		}
+
+		return _return;
+	}
+
 	/**
 	 * Executes a bqm and returns the resulting tuples
 	 * @return an empty ArrayList if an error happens. Else just the list of rows

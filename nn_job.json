@@ -1,0 +1,20 @@
+{
+"input":
+	{
+	"file": "Between_Two_Trees.mp4",
+	"name": "Between Two Trees",
+	"id": "v1"
+	},
+"features":
+	[
+	{
+		"name": "neuralnet.NeuralNetFeature",
+		"config": {}}
+	],
+
+"exporters":
+	[
+	{"name": "ShotThumbNails"},
+	{"name": "RepresentativeFrameExporter"}
+	]
+}

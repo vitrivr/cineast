@@ -46,7 +46,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(this.entityName).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).setUseFallback(true).build();
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;
 		try {

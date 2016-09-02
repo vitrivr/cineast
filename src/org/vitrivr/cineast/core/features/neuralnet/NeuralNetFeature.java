@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features.neuralnet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adam.grpc.AdamGrpc;
+import org.vitrivr.cineast.core.config.NeuralNetConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.SegmentContainer;
@@ -41,6 +42,18 @@ public class NeuralNetFeature extends AbstractFeatureModule {
 
     public NeuralNetFeature(NeuralNetFactory factory) {
         this(1f, factory);
+    }
+
+    /**
+     * TODO I think this is the proper way to handle compability with the extractionRunner
+     * Needs to be public.
+     * IMO This does not destroy the self-contained nature of the feature-modules.
+     */
+    public NeuralNetFeature(com.eclipsesource.json.JsonObject config){
+        super(fullVectorTableName, 1f);
+        NeuralNetConfig parsedConfig = NeuralNetConfig.parse(config);
+        this.cutoff = parsedConfig.getCutoff();
+        this.net = parsedConfig.getNeuralNetFactory().get();
     }
 
     /**
@@ -220,12 +233,13 @@ public class NeuralNetFeature extends AbstractFeatureModule {
             //Persist best matches
             for (int i = 0; i < probs.length; i++) {
                 if (probs[i] > cutoff) {
+                    LOGGER.info("Match found {}", String.join(", ", net.getLabels(net.getSynSetLabels()[i])));
                     PersistentTuple tuple = classificationWriter.generateTuple(shot.getId(), net.getSynSetLabels()[i], probs[i]);
                     classificationWriter.persist(tuple);
                 }
             }
             persist(shot.getId(), new FloatVectorImpl(probs));
-            LOGGER.debug("NeuralNetFeature.processShot() done in {}",
+            LOGGER.info("NeuralNetFeature.processShot() done in {}",
                     TimeHelper.toc());
         }
         LOGGER.exit();
@@ -242,7 +256,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         LOGGER.entry();
         TimeHelper.tic();
         List<StringDoublePair> _return = new ArrayList();
-
+        /*
         if (!sc.getTags().isEmpty()) {
             List<String> wnLabels = new ArrayList();
             for (String label : sc.getTags()) {
@@ -277,11 +291,11 @@ public class NeuralNetFeature extends AbstractFeatureModule {
                     }
                 }
             }
-        }
+        }*/
         //TODO Currently returns mock-result until we get data in the DB
         _return = new ArrayList();
         _return.add(new StringDoublePair("125", 0.5));
-        LOGGER.debug("NeuralNetFeature.getSimilar() done in {}",
+        LOGGER.info("NeuralNetFeature.getSimilar() done in {}",
                 TimeHelper.toc());
         return LOGGER.exit(_return);
     }
