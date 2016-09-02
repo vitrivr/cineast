@@ -6,14 +6,11 @@ import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +30,8 @@ public class VisualizationAverageColorGradient extends AbstractVisualizationModu
     return "VisualizationAverageColorGradient";
   }
 
-  public static void main(String[] args){
-    VisualizationAverageColorGradient vis = new VisualizationAverageColorGradient();
-    vis.init(Config.getDatabaseConfig().getSelectorSupplier());
-    System.out.println(vis.visualizeMultimediaobject("11", 10));
-    vis.finish();
-  }
-
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    return visualizeMultimediaobject(multimediaobjectId, 1);
-  }
-
-  public String visualizeMultimediaobject(String multimediaobjectId, int scale) {
     DBSelector selector = selectors.get("AverageColor");
     DBSelector shotSelector = selectors.get(segmentTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
@@ -60,7 +46,6 @@ public class VisualizationAverageColorGradient extends AbstractVisualizationModu
 
     try {
       image = Thumbnails.of(image).scalingMode(ScalingMode.BILINEAR).scale(10, 100).asBufferedImage();
-      ImageIO.write(image, "png", new File("src/resources/imageAverageColorGradient.png"));
     } catch (IOException e) {
       e.printStackTrace();
     }

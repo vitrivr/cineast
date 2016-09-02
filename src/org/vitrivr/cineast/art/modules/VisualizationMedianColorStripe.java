@@ -1,16 +1,17 @@
 package org.vitrivr.cineast.art.modules;
 
+import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.util.ArtUtil;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,40 +30,28 @@ public class VisualizationMedianColorStripe extends AbstractVisualizationModule 
     return "VisualizationMedianColorStripe";
   }
 
-  public static void main(String[] args){
-    VisualizationMedianColorStripe vis = new VisualizationMedianColorStripe();
-    vis.init(Config.getDatabaseConfig().getSelectorSupplier());
-    System.out.println(vis.visualizeMultimediaobject("11", 10));
-    vis.finish();
-  }
-
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    return visualizeMultimediaobject(multimediaobjectId, 1);
-  }
-
-  public String visualizeMultimediaobject(String multimediaobjectId, int scale) {
     DBSelector selector = selectors.get("MedianColor");
     DBSelector shotSelector = selectors.get(segmentTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
 
-    int[] pixels = new int[shots.size()*8];
+    BufferedImage image = new BufferedImage(shots.size()*10, 100, BufferedImage.TYPE_INT_RGB);
+    Graphics2D graph = image.createGraphics();
     int count = 0;
     for (Map<String, PrimitiveTypeProvider> shot : shots) {
       List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", shot.get("id").getString());
       for (Map<String, PrimitiveTypeProvider> row : result) {
         float[] arr = row.get("feature").getFloatArray();
-        for (int i = 0; i < 8; i++) {
-          RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));
-          pixels[shots.size()*i + count] = rgbContainer.toIntColor();
-        }
+        RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));
+        graph.setColor(new Color(rgbContainer.toIntColor()));
+        graph.fillRect(count*10, 0, 10, 100);
       }
       count++;
     }
+    graph.dispose();
 
-    pixels = ArtUtil.scalePixels(pixels, scale, shots.size(), 8, true);
-
-    return ArtUtil.pixelsToImage(pixels, shots.size()*scale, 8*scale, true);
+    return WebUtils.BufferedImageToDataURL(image, "png");
   }
 
   @Override
