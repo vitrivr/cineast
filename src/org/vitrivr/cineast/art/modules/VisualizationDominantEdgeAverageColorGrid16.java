@@ -10,15 +10,10 @@ import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,19 +35,6 @@ public class VisualizationDominantEdgeAverageColorGrid16 extends AbstractVisuali
     return "VisualizationDominantEdgeAverageColorGrid16";
   }
 
-  public static void main(String[] args) {
-    VisualizationDominantEdgeAverageColorGrid16 module = new VisualizationDominantEdgeAverageColorGrid16();
-    module.init(new DBSelectorSupplier() {
-      @Override
-      public DBSelector get() {
-        return new ADAMproSelector();
-      }
-    });
-    System.out.println(module.visualizeSegment("1900546"));
-    //System.out.println(module.visualizeMultimediaobject("11", 60));
-    module.finish();
-  }
-
   @Override
   public String visualizeSegment(String segmentId) {
     DBSelector selector = selectors.get("DominantEdgeGrid16");
@@ -72,9 +54,7 @@ public class VisualizationDominantEdgeAverageColorGrid16 extends AbstractVisuali
     }
 
     BufferedImage image = new BufferedImage(512, 512, BufferedImage.TYPE_INT_RGB);
-
     Graphics2D graph = image.createGraphics();
-
     GradientPaint gradient;
 
     for (Map<String, PrimitiveTypeProvider> row : edgeResult) {
@@ -111,12 +91,6 @@ public class VisualizationDominantEdgeAverageColorGrid16 extends AbstractVisuali
       }
     }
     graph.dispose();
-
-    try {
-      ImageIO.write(image, "png", new File("src/resources/imageDominantEdgeAverageColorGrid16.png"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     return WebUtils.BufferedImageToDataURL(image, "png");
   }

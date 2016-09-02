@@ -7,17 +7,12 @@ import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -35,19 +30,8 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
     return "VisualizationAverageColorStripeVariable";
   }
 
-  public static void main(String[] args){
-    VisualizationAverageColorStripeVariable vis = new VisualizationAverageColorStripeVariable();
-    vis.init(Config.getDatabaseConfig().getSelectorSupplier());
-    System.out.println(vis.visualizeMultimediaobject("11", 10));
-    vis.finish();
-  }
-
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    return visualizeMultimediaobject(multimediaobjectId, 1);
-  }
-
-  public String visualizeMultimediaobject(String multimediaobjectId, int scale) {
     DBSelector selector = selectors.get("AverageColor");
     DBSelector shotSelector = selectors.get(segmentTable);
     List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
@@ -70,9 +54,6 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
       count++;
     }
 
-    System.out.println(Arrays.toString(widths));
-    System.out.println(totalWidth);
-
     BufferedImage image = new BufferedImage(totalWidth, 100, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
     for(int i=0, pos=0;i<widths.length;i++){
@@ -81,12 +62,6 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
       pos += widths[i];
     }
     graph.dispose();
-
-    try {
-      ImageIO.write(image, "png", new File("src/resources/imageAverageColorStripeVariable.png"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     return WebUtils.BufferedImageToDataURL(image, "png");
   }

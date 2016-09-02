@@ -7,17 +7,12 @@ import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -33,13 +28,6 @@ public class VisualizationMedianColorStripeVariable extends AbstractVisualizatio
   @Override
   public String getDisplayName() {
     return "VisualizationMedianColorStripeVariable";
-  }
-
-  public static void main(String[] args){
-    VisualizationMedianColorStripeVariable vis = new VisualizationMedianColorStripeVariable();
-    vis.init(Config.getDatabaseConfig().getSelectorSupplier());
-    System.out.println(vis.visualizeMultimediaobject("11"));
-    vis.finish();
   }
 
   @Override
@@ -66,9 +54,6 @@ public class VisualizationMedianColorStripeVariable extends AbstractVisualizatio
       count++;
     }
 
-    System.out.println(Arrays.toString(widths));
-    System.out.println(totalWidth);
-
     BufferedImage image = new BufferedImage(totalWidth, 100, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
     for(int i=0, pos=0;i<widths.length;i++){
@@ -77,12 +62,6 @@ public class VisualizationMedianColorStripeVariable extends AbstractVisualizatio
       pos += widths[i];
     }
     graph.dispose();
-
-    try {
-      ImageIO.write(image, "png", new File("src/resources/imageMedianColorStripeVariable.png"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     return WebUtils.BufferedImageToDataURL(image, "png");
   }

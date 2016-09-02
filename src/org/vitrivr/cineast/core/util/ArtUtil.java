@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.core.util;
 
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.resizers.Resizers;
-import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.WebUtils;
@@ -17,7 +14,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 
 /**
  * Created by sein on 30.08.16.
@@ -100,19 +97,23 @@ public class ArtUtil {
    * @param sizeY size y of the resulted image
    * @return integer array representing an image in 3 integer rgb format
    */
-  public static int[] shotToRGB(String shotId, DBSelector selector, int sizeX, int sizeY){
+  public static int[][][] shotToRGB(String shotId, DBSelector selector, int sizeX, int sizeY){
     java.util.List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", shotId);
 
-    int[] pixels = new int[sizeX*sizeY*3];
+    int[][][] pixels = new int[sizeX][sizeY][3];
 
     for (Map<String, PrimitiveTypeProvider> row : result) {
       float[] arr = row.get("feature").getFloatArray();
-      for (int i = 0; i < arr.length; i+=3) {
-        RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[i], arr[i + 1], arr[i + 2]));
-        int color = rgbContainer.toIntColor();
-        pixels[i] = rgbContainer.getRed(color);
-        pixels[i+1] = rgbContainer.getGreen(color);
-        pixels[i+2] = rgbContainer.getBlue(color);
+      int count = 0;
+      for(int x=0;x<sizeX;x++){
+        for(int y=0;y<sizeY;y++) {
+          RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[count], arr[count + 1], arr[count + 2]));
+          int color = rgbContainer.toIntColor();
+          pixels[x][y][0] = rgbContainer.getRed(color);
+          pixels[x][y][1] = rgbContainer.getGreen(color);
+          pixels[x][y][2] = rgbContainer.getBlue(color);
+          count+=3;
+        }
       }
     }
     return pixels;

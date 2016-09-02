@@ -7,15 +7,10 @@ import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,28 +31,13 @@ public class VisualizationDominantEdgeGrid16 extends AbstractVisualizationModule
     return "VisualizationDominantEdgeGrid16";
   }
 
-  public static void main(String[] args) {
-    VisualizationDominantEdgeGrid16 module = new VisualizationDominantEdgeGrid16();
-    module.init(new DBSelectorSupplier() {
-      @Override
-      public DBSelector get() {
-        return new ADAMproSelector();
-      }
-    });
-    System.out.println(module.visualizeSegment("65563"));
-    //System.out.println(module.visualizeMultimediaobject("11", 60));
-    module.finish();
-  }
-
   @Override
   public String visualizeSegment(String segmentId) {
     DBSelector selector = selectors.get("DominantEdgeGrid16");
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segmentId);
 
     BufferedImage image = new BufferedImage(512, 512, BufferedImage.TYPE_INT_RGB);
-
     Graphics2D graph = image.createGraphics();
-
     GradientPaint gradient;
 
     for (Map<String, PrimitiveTypeProvider> row : result) {
@@ -90,12 +70,6 @@ public class VisualizationDominantEdgeGrid16 extends AbstractVisualizationModule
       }
     }
     graph.dispose();
-
-    try {
-      ImageIO.write(image, "png", new File("src/resources/imageDominantEdgeGrid16.png"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     return WebUtils.BufferedImageToDataURL(image, "png");
   }

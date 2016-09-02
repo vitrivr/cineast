@@ -10,15 +10,10 @@ import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,19 +33,6 @@ public class VisualizationDominantEdgeAverageColorGrid8 extends AbstractVisualiz
   @Override
   public String getDisplayName() {
     return "VisualizationDominantEdgeAverageColorGrid8";
-  }
-
-  public static void main(String[] args) {
-    VisualizationDominantEdgeAverageColorGrid8 module = new VisualizationDominantEdgeAverageColorGrid8();
-    module.init(new DBSelectorSupplier() {
-      @Override
-      public DBSelector get() {
-        return new ADAMproSelector();
-      }
-    });
-    System.out.println(module.visualizeSegment("720900"));
-    //System.out.println(module.visualizeMultimediaobject("11", 60));
-    module.finish();
   }
 
   @Override
@@ -111,12 +93,6 @@ public class VisualizationDominantEdgeAverageColorGrid8 extends AbstractVisualiz
       }
     }
     graph.dispose();
-
-    try {
-      ImageIO.write(image, "png", new File("src/resources/imageDominantEdgeAverageColorGrid8.png"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     return WebUtils.BufferedImageToDataURL(image, "png");
   }
