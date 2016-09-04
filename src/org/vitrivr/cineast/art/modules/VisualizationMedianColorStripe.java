@@ -35,7 +35,7 @@ public class VisualizationMedianColorStripe extends AbstractVisualizationModule 
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("MedianColor");
     DBSelector shotSelector = selectors.get(segmentTable);
-    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortById(shotSelector.getRows("multimediaobject", multimediaobjectId));
+    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortBySequenceNumber(shotSelector.getRows("multimediaobject", multimediaobjectId));
 
     BufferedImage image = new BufferedImage(shots.size()*10, 100, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();

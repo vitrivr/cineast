@@ -31,7 +31,7 @@ public class VisualizationMedianColorGrid8Square extends AbstractVisualizationMo
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("MedianColorGrid8");
     DBSelector shotSelector = selectors.get(segmentTable);
-    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortById(shotSelector.getRows("multimediaobject", multimediaobjectId));
+    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortBySequenceNumber(shotSelector.getRows("multimediaobject", multimediaobjectId));
 
     int dim = (int)Math.floor(Math.sqrt(shots.size()));
     int size[] = {dim + 1, dim + 1};

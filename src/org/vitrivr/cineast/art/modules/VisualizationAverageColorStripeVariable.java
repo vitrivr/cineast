@@ -35,7 +35,7 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("AverageColor");
     DBSelector shotSelector = selectors.get(segmentTable);
-    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortById(shotSelector.getRows("multimediaobject", multimediaobjectId));
+    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortBySequenceNumber(shotSelector.getRows("multimediaobject", multimediaobjectId));
 
     int count = 0;
     int totalWidth = 0;

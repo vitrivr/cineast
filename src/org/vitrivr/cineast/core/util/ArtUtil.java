@@ -23,19 +23,8 @@ import java.util.List;
 public class ArtUtil {
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public static List<Map<String, PrimitiveTypeProvider>> sortById(List<Map<String, PrimitiveTypeProvider>> list){
-    boolean isSorted = false;
-    while(!isSorted){
-      isSorted = true;
-      for(int i=0;i<list.size()-1;i++){
-        if(Integer.parseInt(list.get(i).get("id").getString()) > Integer.parseInt(list.get(i+1).get("id").getString())){
-          Map<String, PrimitiveTypeProvider> element = list.get(i);
-          list.set(i, list.get(i+1));
-          list.set(i+1, element);
-          isSorted = false;
-        }
-      }
-    }
+  public static List<Map<String, PrimitiveTypeProvider>> sortBySequenceNumber(List<Map<String, PrimitiveTypeProvider>> list){
+    Collections.sort(list, (a, b) -> a.get("number").getInt() < b.get("number").getInt() ? -1 : a.get("number").getInt() == b.get("number").getInt() ? 0 : 1);
     return list;
   }
 
