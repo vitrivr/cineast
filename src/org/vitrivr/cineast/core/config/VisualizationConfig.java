@@ -29,6 +29,8 @@ public final class VisualizationConfig {
     visualizations.add(VisualizationDominantEdgeAverageColorGrid16.class);
     visualizations.add(VisualizationAverageColorStripeVariable.class);
     visualizations.add(VisualizationMedianColorStripeVariable.class);
+    visualizations.add(VisualizationMedianColorGrid8Square.class);
+    visualizations.add(VisualizationAverageColorGrid8Square.class);
 
 
     //add all categories with their containing visualizations
@@ -52,6 +54,8 @@ public final class VisualizationConfig {
     list.add(VisualizationMedianColorStripe.class);
     list.add(VisualizationAverageColorStripeVariable.class);
     list.add(VisualizationMedianColorStripeVariable.class);
+    list.add(VisualizationMedianColorGrid8Square.class);
+    list.add(VisualizationAverageColorGrid8Square.class);
     DEFAULT_VISUALIZATION_CATEGORIES.put("multimediaobjects", list);
 
     list = new ArrayList();
