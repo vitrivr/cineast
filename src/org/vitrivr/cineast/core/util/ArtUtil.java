@@ -14,13 +14,30 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by sein on 30.08.16.
  */
 public class ArtUtil {
   private static final Logger LOGGER = LogManager.getLogger();
+
+  public static List<Map<String, PrimitiveTypeProvider>> sortById(List<Map<String, PrimitiveTypeProvider>> list){
+    boolean isSorted = false;
+    while(!isSorted){
+      isSorted = true;
+      for(int i=0;i<list.size()-1;i++){
+        if(Integer.parseInt(list.get(i).get("id").getString()) > Integer.parseInt(list.get(i+1).get("id").getString())){
+          Map<String, PrimitiveTypeProvider> element = list.get(i);
+          list.set(i, list.get(i+1));
+          list.set(i+1, element);
+          isSorted = false;
+        }
+      }
+    }
+    return list;
+  }
 
   public static String pixelsToImage(int[] pixels, int sizeX, int sizeY, boolean isRgb){
     int pixelSize = 3;
@@ -119,16 +136,20 @@ public class ArtUtil {
     return pixels;
   }
 
-  public static int[] shotToInt(String shotId, DBSelector selector, int sizeX, int sizeY){
+  public static int[][] shotToInt(String shotId, DBSelector selector, int sizeX, int sizeY){
     java.util.List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", shotId);
 
-    int[] pixels = new int[sizeX*sizeY];
+    int[][] pixels = new int[sizeX][sizeY];
 
     for (Map<String, PrimitiveTypeProvider> row : result) {
       float[] arr = row.get("feature").getFloatArray();
-      for (int i = 0; i < arr.length; i+=3) {
-        RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[i], arr[i + 1], arr[i + 2]));
-        pixels[i] = rgbContainer.toIntColor();
+      int count = 0;
+      for(int x=0;x<sizeX;x++){
+        for(int y=0;y<sizeY;y++) {
+          RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[count], arr[count + 1], arr[count + 2]));
+          pixels[x][y] = rgbContainer.toIntColor();
+          count+=3;
+        }
       }
     }
     return pixels;

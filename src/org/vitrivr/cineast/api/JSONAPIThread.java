@@ -477,11 +477,11 @@ public class JSONAPIThread extends Thread {
 				String result = new String();
 				visualization.init(Config.getDatabaseConfig().getSelectorSupplier());
 				switch(visualizationType){
-					case VISUALIZATION_SHOT:
+					case VISUALIZATION_SEGMENT:
 						String shotId = clientJSON.get("shotId").asString();
 						result = visualization.visualizeSegment(shotId);
 						break;
-					case VISUALIZATION_VIDEO:
+					case VISUALIZATION_MULTIMEDIAOBJECT:
 						String movieId = clientJSON.get("movieId").asString();
 						result = visualization.visualizeMultimediaobject(movieId);
 						break;

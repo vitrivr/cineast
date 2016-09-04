@@ -34,13 +34,13 @@ public class VisualizationAverageColorGradient extends AbstractVisualizationModu
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("AverageColor");
     DBSelector shotSelector = selectors.get(segmentTable);
-    List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
+    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortById(shotSelector.getRows("multimediaobject", multimediaobjectId));
 
     BufferedImage image = new BufferedImage(shots.size(), 1, BufferedImage.TYPE_INT_RGB);
     int count = 0;
     for (Map<String, PrimitiveTypeProvider> shot : shots) {
-      int[] avg = ArtUtil.shotToInt(shot.get("id").getString(), selector, 1, 1);
-      image.setRGB(count, 0, avg[0]);
+      int[][] avg = ArtUtil.shotToInt(shot.get("id").getString(), selector, 1, 1);
+      image.setRGB(count, 0, avg[0][0]);
       count++;
     }
 
@@ -56,7 +56,7 @@ public class VisualizationAverageColorGradient extends AbstractVisualizationModu
   @Override
   public List<VisualizationType> getVisualizations() {
     List<VisualizationType> types = new ArrayList();
-    types.add(VisualizationType.VISUALIZATION_VIDEO);
+    types.add(VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT);
     return types;
   }
 

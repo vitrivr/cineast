@@ -9,12 +9,10 @@ import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.util.ArtUtil;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +35,7 @@ public class VisualizationAverageColorStripe extends AbstractVisualizationModule
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("AverageColor");
     DBSelector shotSelector = selectors.get(segmentTable);
-    List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
+    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortById(shotSelector.getRows("multimediaobject", multimediaobjectId));
 
     BufferedImage image = new BufferedImage(shots.size()*10, 100, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
@@ -60,7 +58,7 @@ public class VisualizationAverageColorStripe extends AbstractVisualizationModule
   @Override
   public List<VisualizationType> getVisualizations() {
     List<VisualizationType> types = new ArrayList();
-    types.add(VisualizationType.VISUALIZATION_VIDEO);
+    types.add(VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT);
     return types;
   }
 
