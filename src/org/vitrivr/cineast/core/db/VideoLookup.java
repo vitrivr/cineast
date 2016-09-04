@@ -4,17 +4,34 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.vitrivr.adam.grpc.AdamGrpc;
 import org.vitrivr.adam.grpc.AdamGrpc.*;
 import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class VideoLookup{
 	
 	private ADAMproWrapper adampro = new ADAMproWrapper();
+
+	public List<String> lookUpVideoIds(){
+		DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+		selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
+		List<PrimitiveTypeProvider> ids = selector.getAll("id");
+		Set<String> uniqueIds = new HashSet();
+		for(PrimitiveTypeProvider l: ids){
+			uniqueIds.add(l.getString());
+		}
+		selector.close();
+
+		List<String> multimediaobjectIds = new ArrayList();
+		for(String id: uniqueIds){
+			multimediaobjectIds.add(id);
+		}
+
+		return multimediaobjectIds;
+	}
 	
 	public VideoDescriptor lookUpVideo(String videoId){
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
