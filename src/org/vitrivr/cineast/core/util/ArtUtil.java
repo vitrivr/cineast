@@ -7,6 +7,7 @@ import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.ShotLookup;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,8 +19,9 @@ import java.util.Map;
 public class ArtUtil {
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public static List<Map<String, PrimitiveTypeProvider>> sortBySequenceNumber(List<Map<String, PrimitiveTypeProvider>> list){
-    Collections.sort(list, (a, b) -> a.get("number").getInt() < b.get("number").getInt() ? -1 : a.get("number").getInt() == b.get("number").getInt() ? 0 : 1);
+  public static List<ShotLookup.ShotDescriptor> sortBySequenceNumber(List<ShotLookup.ShotDescriptor> list){
+    //TODO: put the comparator into a class and use this on comparison
+    Collections.sort(list, (a, b) -> Integer.parseInt(a.getShotId()) < Integer.parseInt(b.getShotId()) ? -1 : Integer.parseInt(a.getShotId()) == Integer.parseInt(b.getShotId()) ? 0 : 1);
     return list;
   }
 

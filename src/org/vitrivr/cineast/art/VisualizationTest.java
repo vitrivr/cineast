@@ -17,7 +17,7 @@ public class VisualizationTest {
     Visualization vis = new VisualizationMedianColorGrid8Square();
     vis.init(Config.getDatabaseConfig().getSelectorSupplier());
     try {
-      ImageIO.write(WebUtils.dataURLtoBufferedImage(vis.visualizeMultimediaobject("11")), "png", new File("src/resources/test.png"));
+      ImageIO.write(WebUtils.dataURLtoBufferedImage(vis.visualizeMultimediaobject("10")), "png", new File("src/resources/test.png"));
       //ImageIO.write(WebUtils.dataURLtoBufferedImage(vis.visualizeSegment("720900")), "png", new File("src/resources/test.png"));
     } catch (IOException e) {
       e.printStackTrace();

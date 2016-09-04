@@ -4,14 +4,13 @@ import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.ShotLookup;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sein on 26.08.16.
@@ -30,19 +29,19 @@ public class VisualizationAverageColorGrid8Square extends AbstractVisualizationM
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("AverageColorGrid8");
-    DBSelector shotSelector = selectors.get(segmentTable);
-    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortBySequenceNumber(shotSelector.getRows("multimediaobject", multimediaobjectId));
+    ShotLookup segmentLookup = new ShotLookup();
+    List<ShotLookup.ShotDescriptor> segments = ArtUtil.sortBySequenceNumber(segmentLookup.lookUpVideo(multimediaobjectId));
 
-    int size[] = {(int)Math.ceil(Math.sqrt(shots.size())), (int)Math.ceil(Math.sqrt(shots.size()))};
-    if(size[0] * size[1] - size[0] >= shots.size()){
+    int size[] = {(int)Math.ceil(Math.sqrt(segments.size())), (int)Math.ceil(Math.sqrt(segments.size()))};
+    if(size[0] * size[1] - size[0] >= segments.size()){
       size[1]--;
     }
 
     BufferedImage image = new BufferedImage(8*size[0], 8*size[1], BufferedImage.TYPE_INT_RGB);
 
     int count = 0;
-    for (Map<String, PrimitiveTypeProvider> shot : shots) {
-      int[][] pixels = ArtUtil.shotToInt(shot.get("id").getString(), selector, 8, 8);
+    for (ShotLookup.ShotDescriptor segment : segments) {
+      int[][] pixels = ArtUtil.shotToInt(segment.getShotId(), selector, 8, 8);
       int baseY = (count/size[0])*8;
       int baseX = (count%size[0])*8;
       for (int x = 0; x < pixels.length; x++) {

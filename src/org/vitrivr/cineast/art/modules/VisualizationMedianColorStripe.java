@@ -9,6 +9,7 @@ import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.ShotLookup;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.awt.*;
@@ -34,14 +35,14 @@ public class VisualizationMedianColorStripe extends AbstractVisualizationModule 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("MedianColor");
-    DBSelector shotSelector = selectors.get(segmentTable);
-    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortBySequenceNumber(shotSelector.getRows("multimediaobject", multimediaobjectId));
+    ShotLookup segmentLookup = new ShotLookup();
+    List<ShotLookup.ShotDescriptor> segments = ArtUtil.sortBySequenceNumber(segmentLookup.lookUpVideo(multimediaobjectId));
 
-    BufferedImage image = new BufferedImage(shots.size()*10, 100, BufferedImage.TYPE_INT_RGB);
+    BufferedImage image = new BufferedImage(segments.size()*10, 100, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
     int count = 0;
-    for (Map<String, PrimitiveTypeProvider> shot : shots) {
-      List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", shot.get("id").getString());
+    for (ShotLookup.ShotDescriptor segment : segments) {
+      List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segment.getShotId());
       for (Map<String, PrimitiveTypeProvider> row : result) {
         float[] arr = row.get("feature").getFloatArray();
         RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));

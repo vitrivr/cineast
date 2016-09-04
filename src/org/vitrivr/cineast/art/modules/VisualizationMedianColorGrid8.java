@@ -4,15 +4,14 @@ import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.ShotLookup;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sein on 26.08.16.
@@ -49,12 +48,12 @@ public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule{
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("MedianColorGrid8");
-    DBSelector shotSelector = selectors.get(segmentTable);
-    List<Map<String, PrimitiveTypeProvider>> shots = shotSelector.getRows("multimediaobject", multimediaobjectId);
+    ShotLookup segmentLookup = new ShotLookup();
+    List<ShotLookup.ShotDescriptor> segments = ArtUtil.sortBySequenceNumber(segmentLookup.lookUpVideo(multimediaobjectId));
 
     int[][][] pixels = new int[8][8][3];
-    for (Map<String, PrimitiveTypeProvider> shot : shots) {
-      int[][][] shotPixels = ArtUtil.shotToRGB(shot.get("id").getString(), selector, 8, 8);
+    for (ShotLookup.ShotDescriptor segment : segments) {
+      int[][][] shotPixels = ArtUtil.shotToRGB(segment.getShotId(), selector, 8, 8);
       for (int x = 0; x < pixels.length; x++) {
         for (int y = 0; y < pixels[0].length; y++) {
           for (int i = 0; i < 3; i++) {
@@ -67,7 +66,7 @@ public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule{
     for (int x = 0; x < pixels.length; x++) {
       for (int y = 0; y < pixels[0].length; y++) {
         for (int i = 0; i < 3; i++) {
-          pixels[x][y][i] = pixels[x][y][i] / shots.size();
+          pixels[x][y][i] = pixels[x][y][i] / segments.size();
         }
       }
     }

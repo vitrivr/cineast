@@ -6,15 +6,14 @@ import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.ShotLookup;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sein on 30.08.16.
@@ -33,13 +32,13 @@ public class VisualizationMedianColorGradient extends AbstractVisualizationModul
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("MedianColor");
-    DBSelector shotSelector = selectors.get(segmentTable);
-    List<Map<String, PrimitiveTypeProvider>> shots = ArtUtil.sortBySequenceNumber(shotSelector.getRows("multimediaobject", multimediaobjectId));
+    ShotLookup segmentLookup = new ShotLookup();
+    List<ShotLookup.ShotDescriptor> segments = ArtUtil.sortBySequenceNumber(segmentLookup.lookUpVideo(multimediaobjectId));
 
-    BufferedImage image = new BufferedImage(shots.size(), 1, BufferedImage.TYPE_INT_RGB);
+    BufferedImage image = new BufferedImage(segments.size(), 1, BufferedImage.TYPE_INT_RGB);
     int count = 0;
-    for (Map<String, PrimitiveTypeProvider> shot : shots) {
-      int[][] avg = ArtUtil.shotToInt(shot.get("id").getString(), selector, 1, 1);
+    for (ShotLookup.ShotDescriptor segment : segments) {
+      int[][] avg = ArtUtil.shotToInt(segment.getShotId(), selector, 1, 1);
       image.setRGB(count, 0, avg[0][0]);
       count++;
     }
