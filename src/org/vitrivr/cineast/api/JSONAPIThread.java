@@ -13,10 +13,8 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.VisualizationConfig;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
-import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -400,35 +398,26 @@ public class JSONAPIThread extends Thread {
 				break;
 			}
 
-			case "getMovies":{
-				DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
-				selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
-				List<PrimitiveTypeProvider> ids = selector.getAll("id");
-				Set<String> uniqueIds = new HashSet();
-				for(PrimitiveTypeProvider l: ids){
-					uniqueIds.add(l.getString());
-				}
+			case "getMultimediaobjects":{
+				List<String> multimediaobjectIds = new VideoLookup().lookUpVideoIds();
 
 				JsonArray movies = new JsonArray();
-				for(String s: uniqueIds){
+				for(String s: multimediaobjectIds){
 					movies.add(s);
 				}
 
-				_return.set("movies", movies);
-				selector.close();
+				_return.set("multimediaobjects", movies);
 				break;
 			}
 
-			case "getShots":{
-				String movieId = clientJSON.get("movieId").asString();
-				DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
-				selector.open(EntityCreator.CINEAST_SEGMENT);
-				List<Map<String, PrimitiveTypeProvider>> shots = selector.getRows("multimediaobject", movieId);
+			case "getSegments":{
+				String multimediaobjectId = clientJSON.get("multimediaobjectId").asString();
+				List<ShotDescriptor> segments = new ShotLookup().lookUpVideo(multimediaobjectId);
 				JsonArray list = new JsonArray();
-				for (Map<String, PrimitiveTypeProvider> shot : shots) {
-					list.add(shot.get("id").getString());
+				for (ShotDescriptor segment: segments) {
+					list.add(segment.getShotId());
 				}
-				_return.set("shots", list);
+				_return.set("segments", list);
 				break;
 			}
 
@@ -478,11 +467,11 @@ public class JSONAPIThread extends Thread {
 				visualization.init(Config.getDatabaseConfig().getSelectorSupplier());
 				switch(visualizationType){
 					case VISUALIZATION_SEGMENT:
-						String shotId = clientJSON.get("shotId").asString();
+						String shotId = clientJSON.get("segmentId").asString();
 						result = visualization.visualizeSegment(shotId);
 						break;
 					case VISUALIZATION_MULTIMEDIAOBJECT:
-						String movieId = clientJSON.get("movieId").asString();
+						String movieId = clientJSON.get("multimediaobjectId").asString();
 						result = visualization.visualizeMultimediaobject(movieId);
 						break;
 					default:
