@@ -2,34 +2,21 @@ package org.vitrivr.cineast.core.db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.adam.grpc.AdamGrpc;
-import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.FromMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultTupleMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.Shot;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
-public class ShotLookup {//TODO rename to SegmentLookup
+public class ShotLookup {
 
 	private static final Logger LOGGER = LogManager.getLogger();
-	@Deprecated
-	private ADAMproWrapper adampro = new ADAMproWrapper(); //FIXME use abstaction layer!
 	private final DBSelector selector;
 	
 	public ShotLookup(){
@@ -38,7 +25,6 @@ public class ShotLookup {//TODO rename to SegmentLookup
 	}
 	
 	public void close(){
-		this.adampro.close();
 		this.selector.close();
 	}
 	
@@ -52,8 +38,14 @@ public class ShotLookup {//TODO rename to SegmentLookup
 		
 		Map<String, PrimitiveTypeProvider> map = results.get(0);
 		
+		return mapToDescriptor(map);
+		
+	}
+
+	private SegmentDescriptor mapToDescriptor(Map<String, PrimitiveTypeProvider> map) {
 		PrimitiveTypeProvider idProvider = map.get("id");
 		PrimitiveTypeProvider mmobjidProvider = map.get("multimediaobject");
+		PrimitiveTypeProvider sequenceProvider = map.get("sequencenumber");
 		PrimitiveTypeProvider startProvider = map.get("segmentstart");
 		PrimitiveTypeProvider endProvider = map.get("segmentend");
 		
@@ -73,6 +65,17 @@ public class ShotLookup {//TODO rename to SegmentLookup
 		
 		if(mmobjidProvider.getType() != ProviderDataType.STRING){
 			LOGGER.error("invalid data type for field multimediaobject in segment, expected string, got {}", mmobjidProvider.getType());
+			return new SegmentDescriptor();
+		}
+		
+		if(sequenceProvider == null){
+			LOGGER.error("no sequencenumber in segment");
+			return new SegmentDescriptor();
+		}
+		
+		if(sequenceProvider.getType() != ProviderDataType.INT){
+			LOGGER.error("invalid data type for field sequencenumber in segment, expected int, got {}", sequenceProvider.getType());
+			return new SegmentDescriptor();
 		}
 		
 		if(startProvider == null){
@@ -82,6 +85,7 @@ public class ShotLookup {//TODO rename to SegmentLookup
 		
 		if(startProvider.getType() != ProviderDataType.INT){
 			LOGGER.error("invalid data type for field segmentstart in segment, expected int, got {}", startProvider.getType());
+			return new SegmentDescriptor();
 		}
 		
 		if(endProvider == null){
@@ -91,147 +95,77 @@ public class ShotLookup {//TODO rename to SegmentLookup
 		
 		if(endProvider.getType() != ProviderDataType.INT){
 			LOGGER.error("invalid data type for field segmentend in segment, expected int, got {}", endProvider.getType());
+			return new SegmentDescriptor();
 		}
 		
-		return new SegmentDescriptor(mmobjidProvider.getString(), idProvider.getString(), startProvider.getInt(), endProvider.getInt());
-		
+		return new SegmentDescriptor(mmobjidProvider.getString(), idProvider.getString(), sequenceProvider.getInt(), startProvider.getInt(), endProvider.getInt());
 	}
 	
 	public Map<String, SegmentDescriptor> lookUpShots(String...ids){
-		LOGGER.entry();
 		
 		if(ids == null || ids.length == 0){
 			return new HashMap<>();
 		}
 		
-		long start = System.currentTimeMillis();
-		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		StringBuilder builder = new StringBuilder("IN(");
-		for(int i = 0; i < ids.length - 1; ++i){
-			builder.append("'");
-			builder.append(ids[i]);
-			builder.append("', ");
-		}
-		builder.append("'");
-		builder.append(ids[ids.length - 1]);
-		builder.append("')");
-		WhereMessage where = WhereMessage.newBuilder().setAttribute("id").setValue(builder.toString()).build();
-		//TODO check type as well
-		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
-		QueryResultInfoMessage responce;
-		
-		try {
-			responce = f.get().getResponses(0);
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new HashMap<>();
-		}
-
-		List<QueryResultTupleMessage> results = responce.getResultsList();
-		
-		if(results.isEmpty()){//no such video
-			return new HashMap<>();
-		}
-		
 		HashMap<String, SegmentDescriptor> _return = new HashMap<>();
-		for(QueryResultTupleMessage result : results){
-			Map<String, AdamGrpc.DataMessage> map = result.getData();
-			_return.put(map.get("id").getStringData(), new SegmentDescriptor(map.get("multimediaobject").getStringData(), map.get("id").getStringData(), map.get("segmentstart").getIntData(), map.get("segmentend").getIntData()));
+		
+		for(String id : ids){
+			SegmentDescriptor descriptor = lookUpShot(id);
+			if(descriptor.exists()){
+				_return.put(id, descriptor);
+			}
 		}
-		LOGGER.debug("lookUpShot done in {}ms", System.currentTimeMillis() - start);
-		return LOGGER.exit(_return);
-	}
-	
-	
-	public String lookUpVideoid(String name){ //TODO move to VideoLookup
-		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		WhereMessage where = WhereMessage.newBuilder().setAttribute("name").setValue(name).build();
-		//TODO check type as well
-		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
-		QueryResultInfoMessage responce;
-		try {
-			responce = f.get().getResponses(0);
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "";
-		}
-
-		List<QueryResultTupleMessage> results = responce.getResultsList();
-		
-		if(results.isEmpty()){//no such video
-			return "";
-		}
-
-		QueryResultTupleMessage result = results.get(0);
-		
-		String id = result.getData().get("id").getStringData();
-		
-		return id;
-
-	}
-	
-	public List<SegmentDescriptor> lookUpVideo(String videoId){
-		LinkedList<SegmentDescriptor> _return = new LinkedList<ShotLookup.SegmentDescriptor>();
-		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		WhereMessage where = WhereMessage.newBuilder().setAttribute("multimediaobject").setValue(videoId).build();
-		//TODO check type as well
-		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_SEGMENT).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResultsMessage> f = adampro.booleanQuery(qbqm);
-		QueryResultInfoMessage responce;
-		try {
-			responce = f.get().getResponses(0);
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return _return;
-		}
-		
-		List<QueryResultTupleMessage> results = responce.getResultsList();
-		
-		for(QueryResultTupleMessage result : results){
-			Map<String, AdamGrpc.DataMessage> metadata = result.getData();
-			_return.add(new SegmentDescriptor(
-					videoId,
-					metadata.get("id").getStringData(),
-					metadata.get("segmentstart").getIntData(),
-					metadata.get("segmentend").getIntData()));
-		}
-		
-
 		
 		return _return;
 	}
 	
 
-	public static class SegmentDescriptor{
+	public List<SegmentDescriptor> lookUpAllSegments(String objectId){
+		
+		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("multimediaobject", objectId);
+		
+		if(results.isEmpty()){
+			return new ArrayList<>(0);
+		}
+		
+		ArrayList<SegmentDescriptor> _return = new ArrayList<>(results.size());
+		
+		for(Map<String, PrimitiveTypeProvider> map : results){
+			SegmentDescriptor descriptor = mapToDescriptor(map);
+			if(descriptor.exists){
+				_return.add(descriptor);
+			}
+		}
+		
+		return _return;
+	}
+	
+
+	public static class SegmentDescriptor implements ExistenceCheck{
 		
 		private final String segmentId, mmobjId;
-		private final int startFrame, endFrame;
+		private final int startFrame, endFrame, number;
+		private final boolean exists;
 		
-		
-		public SegmentDescriptor(String videoId, int segmentNumber, int startFrame, int endFrame) {
-			this(videoId, Shot.generateShotID(videoId, segmentNumber), startFrame, endFrame);
-		}
-		
-		SegmentDescriptor(String multimediaObjectId, String segmentId,  int startFrame, int endFrame){
-			this.mmobjId = multimediaObjectId;
+		private SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber,  int startFrame, int endFrame, boolean exists){
 			this.segmentId = segmentId;
+			this.mmobjId = multimediaObjectId;
+			this.number = segmentNumber;
 			this.startFrame = startFrame;
 			this.endFrame = endFrame;
+			this.exists = exists;
 		}
-
+		
+		public SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber,  int startFrame, int endFrame){
+			this(multimediaObjectId, segmentId, segmentNumber, startFrame, endFrame, true);
+		}
+		
+		public SegmentDescriptor(String videoId, int segmentNumber, int startFrame, int endFrame) {
+			this(videoId, Shot.generateShotID(videoId, segmentNumber), segmentNumber, startFrame, endFrame, true);
+		}
+		
 		public SegmentDescriptor() {
-			this("", "", 0, 0);
+			this("", "", 0, 0, 0, false);
 		}
 
 		public String getShotId() {
@@ -242,7 +176,9 @@ public class ShotLookup {//TODO rename to SegmentLookup
 			return mmobjId;
 		}
 
-
+		public int getSequenceNumber(){
+			return this.number;
+		}
 
 		public int getFramecount() {
 			return endFrame - startFrame + 1;
@@ -258,7 +194,12 @@ public class ShotLookup {//TODO rename to SegmentLookup
 
 		@Override
 		public String toString() {
-			return "ShotDescriptor(" + segmentId + ")";
+			return "SegmentDescriptor(" + segmentId + ")";
+		}
+
+		@Override
+		public boolean exists() {
+			return this.exists;
 		}
 
 	}

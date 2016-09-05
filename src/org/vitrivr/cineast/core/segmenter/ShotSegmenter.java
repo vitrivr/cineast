@@ -35,7 +35,7 @@ public class ShotSegmenter implements ShotProvider{
 		this.vdecoder = vdecoder;
 		this.movieId = movieId;
 		this.pwriter = pwriter;
-		this.pwriter.setFieldNames("id", "multimediaobject", "segmentstart", "segmentend");
+		this.pwriter.setFieldNames("id", "multimediaobject", "sequencenumber", "segmentstart", "segmentend");
 		this.pwriter.open("cineast_segment");
 		this.knownShotBoundaries = ((knownShotBoundaries == null) ? new LinkedList<SegmentDescriptor>() : knownShotBoundaries);
 	}

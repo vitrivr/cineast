@@ -1,105 +1,138 @@
 package org.vitrivr.cineast.core.db;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
-import org.vitrivr.adam.grpc.AdamGrpc;
-import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultTupleMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.ExistenceCheck;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
-public class VideoLookup{//TODO rename to MultimediaObjectLookup
+public class VideoLookup{
 	
-	private ADAMproWrapper adampro = new ADAMproWrapper();
+	private static final Logger LOGGER = LogManager.getLogger();
 	
-	public MultimediaObjectDescriptor lookUpVideo(String videoId){
-		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		WhereMessage where = WhereMessage.newBuilder().setAttribute("id").setValue(videoId).build();
-		//TODO check type as well
-		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
-		QueryResultInfoMessage responce;
-		try {
-			responce = f.get().getResponses(0);
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+	private final DBSelector selector;
+	
+	public VideoLookup(){
+		this.selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+		this.selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
+	}
+	
+	
+	public MultimediaObjectDescriptor lookUpObjectById(String objectId){
+		List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", objectId);
+		
+		if(result.isEmpty()){
+			return new MultimediaObjectDescriptor();
 		}
 		
-		List<QueryResultTupleMessage> results = responce.getResultsList();
+		return mapToDescriptor(result.get(1));		
+	}
+	
+	private MultimediaObjectDescriptor mapToDescriptor(Map<String, PrimitiveTypeProvider> map){
+		PrimitiveTypeProvider idProvider = map.get("id");
+		PrimitiveTypeProvider nameProvider = map.get("name");
+		PrimitiveTypeProvider pathProvider = map.get("path");
+		PrimitiveTypeProvider widthProvider = map.get("width");
+		PrimitiveTypeProvider heightProvider = map.get("height");
+		PrimitiveTypeProvider framecountProvider = map.get("framecount");
+		PrimitiveTypeProvider typeProvider = map.get("type");
+		PrimitiveTypeProvider durationProvider = map.get("duration");
 		
-		if(results.isEmpty()){//no such video
-			return null;
+		if(!checkProvider("id", idProvider, ProviderDataType.STRING)){
+			return new MultimediaObjectDescriptor();
 		}
-
-		QueryResultTupleMessage result = results.get(0);
 		
-		return new MultimediaObjectDescriptor(result.getData());
+		if(!checkProvider("name", nameProvider, ProviderDataType.STRING)){
+			return new MultimediaObjectDescriptor();
+		}
+		
+		if(!checkProvider("path", pathProvider, ProviderDataType.STRING)){
+			return new MultimediaObjectDescriptor();
+		}
+		
+		if(!checkProvider("width", widthProvider, ProviderDataType.INT)){
+			return new MultimediaObjectDescriptor();
+		}
+		
+		if(!checkProvider("height", heightProvider, ProviderDataType.INT)){
+			return new MultimediaObjectDescriptor();
+		}
+		
+		if(!checkProvider("framecount", framecountProvider, ProviderDataType.INT)){
+			return new MultimediaObjectDescriptor();
+		}
+		
+		if(!checkProvider("type", typeProvider, ProviderDataType.INT)){
+			return new MultimediaObjectDescriptor();
+		}
+		
+		if(!checkProvider("duration", durationProvider, ProviderDataType.FLOAT)){
+			return new MultimediaObjectDescriptor();
+		}	
+		
+		
+		return new MultimediaObjectDescriptor(
+				idProvider.getString(),
+				nameProvider.getString(),
+				pathProvider.getString(),
+				typeProvider.getInt(),
+				widthProvider.getInt(),
+				heightProvider.getInt(),
+				framecountProvider.getInt(),
+				durationProvider.getFloat(),
+				true
+				);
 		
 	}
 	
-	public Map<String, MultimediaObjectDescriptor> lookUpVideos(String... videoIds){
+	private boolean checkProvider(String name, PrimitiveTypeProvider provider, ProviderDataType expectedType){
+		if(provider == null){
+			LOGGER.error("no {} in multimedia object", name);
+			return false;
+		}
+		
+		if(provider.getType() != ProviderDataType.STRING){
+			LOGGER.error("invalid data type for field {} in multimedia object, expected {}, got {}", name, expectedType, provider.getType());
+			return false;
+		}
+		return true;
+	}
+	
+	public MultimediaObjectDescriptor lookUpObjectByName(String name){
+		List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("name", name);
+		
+		if(result.isEmpty()){
+			return new MultimediaObjectDescriptor();
+		}
+		
+		return mapToDescriptor(result.get(1));		
+	}
+	
+	public Map<String, MultimediaObjectDescriptor> lookUpVideos(String... videoIds){ //TODO make more efficient
 		if(videoIds == null || videoIds.length == 0){
 			return new HashMap<>();
 		}
 		
-		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		
-		StringBuilder builder = new StringBuilder("IN(");
-		for(int i = 0; i < videoIds.length - 1; ++i){
-			builder.append("'");
-			builder.append(videoIds[i]);
-			builder.append("', ");
-		}
-		builder.append("'");
-		builder.append(videoIds[videoIds.length - 1]);
-		builder.append("')");
-		
-		WhereMessage where = WhereMessage.newBuilder().setAttribute("id").setValue(builder.toString()).build();
-		//TODO check type as well
-		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(EntityCreator.CINEAST_MULTIMEDIAOBJECT).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
-		QueryResultInfoMessage responce;
-		try {
-			responce = f.get().getResponses(0);
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null; //TODO
-		}
-		
-		List<QueryResultTupleMessage> results = responce.getResultsList();
-		
-		if(results.isEmpty()){//no such video
-			return null; //TODO
-		}
-		
 		HashMap<String, MultimediaObjectDescriptor> _return = new HashMap<>();
 		
-		for(QueryResultTupleMessage result : results){
-			Map<String, AdamGrpc.DataMessage> meta = result.getData();
-			_return.put(meta.get("id").getStringData(), new MultimediaObjectDescriptor(meta));
+		for(String id : videoIds){
+			MultimediaObjectDescriptor descriptor = lookUpObjectById(id);
+			if(descriptor.exists()){
+				_return.put(id, descriptor);
+			}
 		}
 		
 		return _return;
 	}
 
 	public void close() {
-		this.adampro.close();
+		this.selector.close();
 	}
 
 	@Override
@@ -108,25 +141,40 @@ public class VideoLookup{//TODO rename to MultimediaObjectLookup
 		super.finalize();
 	}
 	
-public static class MultimediaObjectDescriptor{
+public static class MultimediaObjectDescriptor implements ExistenceCheck{
 		
 		private final String videoId; 
-		private final int width, height, framecount;
-		private final float seconds, fps;
+		private final int width, height, framecount, type;
+		private final float seconds;
 		private final String name, path;
+		private final boolean exists;
 		
-		MultimediaObjectDescriptor(Map<String, AdamGrpc.DataMessage> map){
-			this.videoId = map.get("id").getStringData();
-			this.name = map.get("name").getStringData();
-			this.path = map.get("path").getStringData();
-			this.width = map.get("width").getIntData();
-			this.height = map.get("height").getIntData();
-			this.framecount = map.get("framecount").getIntData();
-			this.seconds = map.get("duration").getFloatData();
-			this.fps = this.framecount / this.seconds;
+		public static MultimediaObjectDescriptor makeVideoDescriptor(String objectId, String name, String path, int width, int height, int framecount, float duration){
+			return new MultimediaObjectDescriptor(objectId, name, path, 0, width, height, framecount, duration, true);
+		}
+		
+		public static MultimediaObjectDescriptor makeImageDescriptor(String objectId, String name, String path, int width, int height){
+			return new MultimediaObjectDescriptor(objectId, name, path, 1, width, height, 1, 0, true);
 		}
 
-		public String getVideoId() {
+		private MultimediaObjectDescriptor(String objectId, String name, String path, int type, int width, int height, int framecount, float duration, boolean exists){
+			this.videoId = objectId;
+			this.name = name;
+			this.path = path;
+			this.type = type;
+			this.width = width;
+			this.height = height;
+			this.framecount = framecount;
+			this.seconds = duration;
+			this.exists = exists;
+		}
+		
+		public MultimediaObjectDescriptor() {
+			this("", "", "", 0, 0, 0, 0, 0, false);
+		}
+
+		
+		public String getId() {
 			return videoId;
 		}
 
@@ -155,12 +203,17 @@ public static class MultimediaObjectDescriptor{
 		}
 		
 		public float getFPS(){
-			return fps;
+			return this.framecount / this.seconds;
 		}
 
 		@Override
 		public String toString() {
-			return "VideoDescriptor(" + videoId + ")";
+			return "MultimediaObjectDescriptor(" + videoId + ")";
+		}
+
+		@Override
+		public boolean exists() {
+			return this.exists;
 		}
 	}
 }

@@ -86,7 +86,7 @@ public class JSONAPIThread extends Thread {
 				
 				//Send metadata
 				VideoLookup vl = new VideoLookup();
-				VideoLookup.MultimediaObjectDescriptor descriptor = vl.lookUpVideo(shot.getVideoId());
+				VideoLookup.MultimediaObjectDescriptor descriptor = vl.lookUpObjectById(shot.getVideoId());
 			
 				JsonObject resultobj = JSONEncoder.encodeVideo(descriptor);
 				
@@ -94,7 +94,7 @@ public class JSONAPIThread extends Thread {
 				this.printer.print(resultobj.toString());
 				this.printer.print(',');
 				
-				String id = descriptor.getVideoId();
+				String id = descriptor.getId();
 				
 				//send shots
 				DBSelector selector = new ADAMproSelector();

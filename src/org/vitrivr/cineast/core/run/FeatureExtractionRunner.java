@@ -12,6 +12,8 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.ShotLookup;
+import org.vitrivr.cineast.core.db.VideoLookup;
+import org.vitrivr.cineast.core.db.VideoLookup.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.srt.SRTSubTitle;
@@ -96,11 +98,16 @@ public class FeatureExtractionRunner {
 
 		if (writer.exists("name", videoName)) {
 			LOGGER.info("video '{}' is already in database", videoName);
-			ShotLookup lookup = new ShotLookup();
-			id = lookup.lookUpVideoid(videoName);
+//			ShotLookup lookup = new ShotLookup();
+//			id = lookup.lookUpVideoid(videoName);
 //			knownShots = lookup.lookUpVideo(id);
 //			lookup.close();
 			
+			VideoLookup lookup = new VideoLookup();
+			MultimediaObjectDescriptor descriptor = lookup.lookUpObjectByName(videoName);
+			if(descriptor.exists()){
+				id = descriptor.getId();
+			}
 			
 			
 		} else {

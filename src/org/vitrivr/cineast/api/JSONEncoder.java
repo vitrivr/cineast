@@ -101,7 +101,7 @@ public final class JSONEncoder {
 
 	
 	public static final JsonObject encodeVideo(MultimediaObjectDescriptor vd, boolean includeType){
-		return encodeVideo(vd.getName(), vd.getVideoId(), vd.getPath(), vd.getWidth(), vd.getHeight(), vd.getFramecount(), vd.getSeconds(), includeType);
+		return encodeVideo(vd.getName(), vd.getId(), vd.getPath(), vd.getWidth(), vd.getHeight(), vd.getFramecount(), vd.getSeconds(), includeType);
 	}
 	
 	public static final JsonObject encodeVideo(MultimediaObjectDescriptor vd){
