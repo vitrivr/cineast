@@ -23,7 +23,6 @@ import org.vitrivr.cineast.core.util.TimeHelper;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.rmi.server.UID;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -36,9 +35,9 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     private PersistencyWriter<?> classWriter;
     private DBSelector classificationSelector;
     private DBSelector classSelector;
-    private static final String fullVectorTableName = "features_neuralnet_fullvector";
-    private static final String generatedLabelsTableName = "features_neuralnet_labels";
-    private static final String classTableName = "features_neuralnet_classlabels";
+    private static final String fullVectorTableName =       "features_neuralnet_fullvector";
+    private static final String generatedLabelsTableName =  "features_neuralnet_labels";
+    private static final String classTableName =            "features_neuralnet_classlabels";
     private float cutoff = 0.2f;
 
     public NeuralNetFeature(NeuralNetFactory factory) {
@@ -267,6 +266,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     public void processShot(SegmentContainer shot) {
         LOGGER.entry();
         TimeHelper.tic();
+        int id = 0;
         //check if shot has been processed
         if (!phandler.idExists(shot.getId())) {
             BufferedImage keyframe = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
@@ -274,12 +274,33 @@ public class NeuralNetFeature extends AbstractFeatureModule {
             float[] probs = classifyImage(keyframe);
             //Persist best matches
             for (int i = 0; i < probs.length; i++) {
-                if (probs[i] > cutoff) {
+                int idcounter = 0;
+                if (probs[i] > 0.1) {
                     LOGGER.info("Match found for shot {}: {} with probability {}",shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[i])), probs[i]);
                     //TODO Ugly Fix for the ID-Problem
-                    UID userId = new UID();
-                    PersistentTuple tuple = classificationWriter.generateTuple(userId.toString(), shot.getId(), net.getSynSetLabels()[i], probs[i]);
+                    String classificationID = shot.getId()+"_"+idcounter++;
+                    int finalI = i;
+                    PersistentTuple gen = new PersistentTuple() {
+
+                        double prob = probs[finalI];
+                        String id = classificationID;
+                        String shotid = shot.getId();
+                        String objectid = net.getSynSetLabels()[finalI];
+                        @Override
+                        public Object getPersistentRepresentation() {
+                            Map<String, AdamGrpc.DataMessage> values = new HashMap<>();
+                            values.put("probability", AdamGrpc.DataMessage.newBuilder().setDoubleData(prob).build());
+                            values.put("id", AdamGrpc.DataMessage.newBuilder().setStringData(id).build());
+                            values.put("shotid", AdamGrpc.DataMessage.newBuilder().setStringData(shotid).build());
+                            values.put("objectid", AdamGrpc.DataMessage.newBuilder().setStringData(objectid).build());
+
+                            return AdamGrpc.InsertMessage.TupleInsertMessage.newBuilder().putAllData(values).build();
+                        }
+                    };
+                    PersistentTuple tuple = classificationWriter.generateTuple(classificationID, shot.getId(), net.getSynSetLabels()[i], (double) probs[i]);
                     classificationWriter.persist(tuple);
+                    classificationWriter.persist(gen);
+
                 }
             }
             persist(shot.getId(), new FloatVectorImpl(probs));
