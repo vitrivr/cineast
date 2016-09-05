@@ -16,7 +16,7 @@
         <AppenderRef ref="Console"/>
     </logger>
     <logger name="org.vitrivr.cineast" level="INFO">
-        <appender-ref ref="Console"/>
+
     </logger>
 <Root level="info">
 <!--<AppenderRef ref="MyFile"/>-->
