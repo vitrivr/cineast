@@ -3,8 +3,8 @@ package org.vitrivr.cineast.api;
 import java.util.List;
 
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
-import org.vitrivr.cineast.core.db.VideoLookup.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.db.SgmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;

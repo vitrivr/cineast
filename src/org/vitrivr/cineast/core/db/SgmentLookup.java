@@ -14,12 +14,12 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 
-public class ShotLookup {
+public class SgmentLookup {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final DBSelector selector;
 	
-	public ShotLookup(){
+	public SgmentLookup(){
 		this.selector = Config.getDatabaseConfig().getSelectorSupplier().get();
 		this.selector.open(EntityCreator.CINEAST_SEGMENT);
 	}

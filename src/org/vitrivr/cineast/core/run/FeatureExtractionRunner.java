@@ -11,10 +11,10 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.db.ShotLookup;
-import org.vitrivr.cineast.core.db.VideoLookup;
-import org.vitrivr.cineast.core.db.VideoLookup.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.SgmentLookup;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.db.SgmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.srt.SRTSubTitle;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
@@ -103,7 +103,7 @@ public class FeatureExtractionRunner {
 //			knownShots = lookup.lookUpVideo(id);
 //			lookup.close();
 			
-			VideoLookup lookup = new VideoLookup();
+			MultimediaObjectLookup lookup = new MultimediaObjectLookup();
 			MultimediaObjectDescriptor descriptor = lookup.lookUpObjectByName(videoName);
 			if(descriptor.exists()){
 				id = descriptor.getId();

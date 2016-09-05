@@ -12,13 +12,13 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 
-public class VideoLookup{
+public class MultimediaObjectLookup{
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private final DBSelector selector;
 	
-	public VideoLookup(){
+	public MultimediaObjectLookup(){
 		this.selector = Config.getDatabaseConfig().getSelectorSupplier().get();
 		this.selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
 	}

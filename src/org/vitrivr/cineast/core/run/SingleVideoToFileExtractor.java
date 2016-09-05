@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.ProtobufFileWriter;
-import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.SgmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.cc.CCSubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.srt.SRTSubTitle;

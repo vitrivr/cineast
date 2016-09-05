@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.SgmentLookup.SegmentDescriptor;
 
 public final class ShotBoundaryDecoder {
 

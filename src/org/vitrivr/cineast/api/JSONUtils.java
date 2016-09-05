@@ -17,10 +17,10 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.QuerySubTitleItem;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.ShotLookup;
-import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
-import org.vitrivr.cineast.core.db.VideoLookup;
-import org.vitrivr.cineast.core.db.VideoLookup.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.db.SgmentLookup;
+import org.vitrivr.cineast.core.db.SgmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -181,7 +181,7 @@ public class JSONUtils {
 	
 	public static HashSet<String> printShotsBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> shotids) {
 		ArrayList<SegmentDescriptor> sdList = new ArrayList<>(resultlist.size());
-		ShotLookup sl = new ShotLookup();
+		SgmentLookup sl = new SgmentLookup();
 		
 		String[] ids = new String[resultlist.size()];
 		int i = 0;
@@ -217,8 +217,8 @@ public class JSONUtils {
 	}
 	
 	public static HashSet<String> printVideosBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> videoids) {
-		ShotLookup sl = new ShotLookup();
-		VideoLookup vl = new VideoLookup();
+		SgmentLookup sl = new SgmentLookup();
+		MultimediaObjectLookup vl = new MultimediaObjectLookup();
 		
 		String[] ids = new String[resultlist.size()];
 		int i = 0;

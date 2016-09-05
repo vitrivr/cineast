@@ -11,7 +11,7 @@ import org.vitrivr.cineast.core.data.Shot;
 import org.vitrivr.cineast.core.data.providers.ShotProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.db.ShotLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.SgmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
