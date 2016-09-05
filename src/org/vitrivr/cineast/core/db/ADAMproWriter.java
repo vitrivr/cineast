@@ -69,7 +69,19 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		TupleInsertMessage tim = tuple.getPersistentRepresentation();
 		tmp.add(tim);
 		this.builder.addAllTuples(tmp);
+
 		InsertMessage im = this.builder.build();
+		/*StringBuilder sb = new StringBuilder();
+		sb.append("Persisting tuple into "+this.entityName+"\n");
+		for (String s : im.getTuples(0).getData().keySet()) {
+			if(s.equals("feature")){
+				sb.append("Persisting full vector\n");
+			}
+			else{
+				sb.append(s+" : " + im.getTuples(0).getData().get(s).toString()+"\n");
+			}
+		}
+		LOGGER.info(sb.toString());*/
 		AckMessage ack = this.adampro.insertOneBlocking(im);
 		if(ack.getCode() != Code.OK){
 			LOGGER.warn("{} during persist", ack.getMessage());
