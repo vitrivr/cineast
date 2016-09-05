@@ -33,7 +33,6 @@ class VGG16Model implements TensorFlowModel {
 
     VGG16Model(String model, String labels) {
         LOGGER.debug("Loading model {} and labels {}", model, labels);
-        System.out.println("Loading model "+model +" labels "+labels);
         loadGraph(model);
 
         InputStream is = this.getClass().getResourceAsStream(labels);
