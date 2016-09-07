@@ -72,7 +72,7 @@ public class MultimediaObjectLookup{
 			return new MultimediaObjectDescriptor();
 		}
 		
-		if(!checkProvider("duration", durationProvider, ProviderDataType.FLOAT)){
+		if(!checkProvider("duration", durationProvider, ProviderDataType.DOUBLE)){
 			return new MultimediaObjectDescriptor();
 		}	
 		
@@ -85,7 +85,7 @@ public class MultimediaObjectLookup{
 				widthProvider.getInt(),
 				heightProvider.getInt(),
 				framecountProvider.getInt(),
-				durationProvider.getFloat(),
+				(float)durationProvider.getDouble(),
 				true
 				);
 		
