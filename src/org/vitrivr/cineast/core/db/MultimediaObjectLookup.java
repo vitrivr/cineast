@@ -97,7 +97,7 @@ public class MultimediaObjectLookup{
 			return false;
 		}
 		
-		if(provider.getType() != ProviderDataType.STRING){
+		if(provider.getType() != expectedType){
 			LOGGER.error("invalid data type for field {} in multimedia object, expected {}, got {}", name, expectedType, provider.getType());
 			return false;
 		}
