@@ -292,7 +292,7 @@ public class ADAMproSelector implements DBSelector {
 
 		AckMessage ack = response.getAck();
 		if(ack.getCode() != Code.OK){
-			LOGGER.error("error in getNearestNeighbours ({}) : {}", ack.getCode(), ack.getMessage());
+			LOGGER.error("error in getNearestNeighbours ({}) : {}, {}", ack.getCode(), ack.getMessage(), ack);
 			return _return;
 		}
 		
