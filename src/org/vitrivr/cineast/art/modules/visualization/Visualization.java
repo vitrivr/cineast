@@ -9,10 +9,16 @@ import java.util.List;
  */
 public interface Visualization {
   void init(DBSelectorSupplier supplier);
+
   String getDisplayName();
+
   List<VisualizationType> getVisualizations();
+
   VisualizationResult getResultType();
+
   String visualizeSegment(String segmentId);
+
   String visualizeMultimediaobject(String multimediaobjectId);
+
   void finish();
 }

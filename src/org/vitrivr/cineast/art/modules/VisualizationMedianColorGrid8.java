@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by sein on 26.08.16.
  */
-public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule{
+public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule {
   public VisualizationMedianColorGrid8() {
     super();
     tableNames.put("MedianColorGrid8", "features_MedianColorGrid8");
@@ -88,7 +88,7 @@ public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule{
   }
 
   @Override
-  public List<VisualizationType> getVisualizations(){
+  public List<VisualizationType> getVisualizations() {
     List<VisualizationType> types = new ArrayList();
     types.add(VisualizationType.VISUALIZATION_SEGMENT);
     types.add(VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT);

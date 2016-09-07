@@ -46,7 +46,7 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
     int[] widths = new int[segments.size()];
     for (ShotLookup.ShotDescriptor segment : segments) {
       List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segment.getShotId());
-      widths[count] = (segment.getEndFrame() - segment.getStartFrame())/10 + 1;
+      widths[count] = (segment.getEndFrame() - segment.getStartFrame()) / 10 + 1;
       totalWidth += widths[count];
       for (Map<String, PrimitiveTypeProvider> row : result) {
         float[] arr = row.get("feature").getFloatArray();
@@ -60,7 +60,7 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
 
     BufferedImage image = new BufferedImage(totalWidth, 100, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
-    for(int i=0, pos=0;i<widths.length;i++){
+    for (int i = 0, pos = 0; i < widths.length; i++) {
       graph.setColor(new Color(colors[i]));
       graph.fillRect(pos, 0, widths[i], 100);
       pos += widths[i];

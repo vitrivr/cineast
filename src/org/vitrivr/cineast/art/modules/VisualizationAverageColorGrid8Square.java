@@ -35,18 +35,18 @@ public class VisualizationAverageColorGrid8Square extends AbstractVisualizationM
     List<ShotLookup.ShotDescriptor> segments = segmentLookup.lookUpVideo(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
 
-    int size[] = {(int)Math.ceil(Math.sqrt(segments.size())), (int)Math.ceil(Math.sqrt(segments.size()))};
-    if(size[0] * size[1] - size[0] >= segments.size()){
+    int size[] = {(int) Math.ceil(Math.sqrt(segments.size())), (int) Math.ceil(Math.sqrt(segments.size()))};
+    if (size[0] * size[1] - size[0] >= segments.size()) {
       size[1]--;
     }
 
-    BufferedImage image = new BufferedImage(8*size[0], 8*size[1], BufferedImage.TYPE_INT_RGB);
+    BufferedImage image = new BufferedImage(8 * size[0], 8 * size[1], BufferedImage.TYPE_INT_RGB);
 
     int count = 0;
     for (ShotLookup.ShotDescriptor segment : segments) {
       int[][] pixels = ArtUtil.shotToInt(segment.getShotId(), selector, 8, 8);
-      int baseY = (count/size[0])*8;
-      int baseX = (count%size[0])*8;
+      int baseY = (count / size[0]) * 8;
+      int baseX = (count % size[0]) * 8;
       for (int x = 0; x < pixels.length; x++) {
         for (int y = 0; y < pixels[0].length; y++) {
           image.setRGB(baseX + x, baseY + y, pixels[x][y]);

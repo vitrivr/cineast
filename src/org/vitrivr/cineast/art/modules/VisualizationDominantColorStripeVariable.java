@@ -22,36 +22,48 @@ import java.util.Map;
 /**
  * Created by sein on 30.08.16.
  */
-public class VisualizationAverageColorStripe extends AbstractVisualizationModule {
-  public VisualizationAverageColorStripe() {
+public class VisualizationDominantColorStripeVariable extends AbstractVisualizationModule {
+  public VisualizationDominantColorStripeVariable() {
     super();
-    tableNames.put("AverageColor", "features_AverageColor");
+    tableNames.put("DominantColor", "features_DominantColors");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationAverageColorStripe";
+    return "VisualizationDominantColorStripeVariable";
   }
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    DBSelector selector = selectors.get("AverageColor");
+    DBSelector selector = selectors.get("DominantColor");
     ShotLookup segmentLookup = new ShotLookup();
     List<ShotLookup.ShotDescriptor> segments = segmentLookup.lookUpVideo(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
 
-    BufferedImage image = new BufferedImage(segments.size() * 10, 100, BufferedImage.TYPE_INT_RGB);
-    Graphics2D graph = image.createGraphics();
     int count = 0;
+    int totalWidth = 0;
+    int[] colors = new int[segments.size()];
+    int[] widths = new int[segments.size()];
     for (ShotLookup.ShotDescriptor segment : segments) {
       List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segment.getShotId());
+      widths[count] = (segment.getEndFrame() - segment.getStartFrame()) / 10 + 1;
+      totalWidth += widths[count];
       for (Map<String, PrimitiveTypeProvider> row : result) {
         float[] arr = row.get("feature").getFloatArray();
-        RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));
-        graph.setColor(new Color(rgbContainer.toIntColor()));
-        graph.fillRect(count * 10, 0, 10, 100);
+        for (int i = 0; i < 8; i++) {
+          RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));
+          colors[count] = rgbContainer.toIntColor();
+        }
       }
       count++;
+    }
+
+    BufferedImage image = new BufferedImage(totalWidth, 100, BufferedImage.TYPE_INT_RGB);
+    Graphics2D graph = image.createGraphics();
+    for (int i = 0, pos = 0; i < widths.length; i++) {
+      graph.setColor(new Color(colors[i]));
+      graph.fillRect(pos, 0, widths[i], 100);
+      pos += widths[i];
     }
     graph.dispose();
 

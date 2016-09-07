@@ -41,7 +41,7 @@ public class VisualizationMedianColorStripe extends AbstractVisualizationModule 
     List<ShotLookup.ShotDescriptor> segments = segmentLookup.lookUpVideo(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
 
-    BufferedImage image = new BufferedImage(segments.size()*10, 100, BufferedImage.TYPE_INT_RGB);
+    BufferedImage image = new BufferedImage(segments.size() * 10, 100, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
     int count = 0;
     for (ShotLookup.ShotDescriptor segment : segments) {
@@ -50,7 +50,7 @@ public class VisualizationMedianColorStripe extends AbstractVisualizationModule 
         float[] arr = row.get("feature").getFloatArray();
         RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));
         graph.setColor(new Color(rgbContainer.toIntColor()));
-        graph.fillRect(count*10, 0, 10, 100);
+        graph.fillRect(count * 10, 0, 10, 100);
       }
       count++;
     }
