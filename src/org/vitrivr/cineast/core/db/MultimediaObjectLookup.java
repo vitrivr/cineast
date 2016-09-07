@@ -31,7 +31,7 @@ public class MultimediaObjectLookup{
 			return new MultimediaObjectDescriptor();
 		}
 		
-		return mapToDescriptor(result.get(1));		
+		return mapToDescriptor(result.get(0));		
 	}
 	
 	private MultimediaObjectDescriptor mapToDescriptor(Map<String, PrimitiveTypeProvider> map){
@@ -111,7 +111,7 @@ public class MultimediaObjectLookup{
 			return new MultimediaObjectDescriptor();
 		}
 		
-		return mapToDescriptor(result.get(1));		
+		return mapToDescriptor(result.get(0));		
 	}
 	
 	public Map<String, MultimediaObjectDescriptor> lookUpVideos(String... videoIds){ //TODO make more efficient
