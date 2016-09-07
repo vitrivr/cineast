@@ -201,6 +201,24 @@ public class AdamDefinitionGrpc {
               "AdamDefinition", "ImportData"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.ImportMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adam.grpc.AdamGrpc.ImportDataFileMessage,
+      org.vitrivr.adam.grpc.AdamGrpc.AckMessage> METHOD_IMPORT_DATA_FILE =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamDefinition", "ImportDataFile"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.ImportDataFileMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage,
+      org.vitrivr.adam.grpc.AdamGrpc.ExportDataFileMessage> METHOD_EXPORT_DATA_FILE =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamDefinition", "ExportDataFile"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.ExportDataFileMessage.getDefaultInstance()));
 
   public static AdamDefinitionStub newStub(io.grpc.Channel channel) {
     return new AdamDefinitionStub(channel);
@@ -277,6 +295,12 @@ public class AdamDefinitionGrpc {
 
     public void importData(org.vitrivr.adam.grpc.AdamGrpc.ImportMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> responseObserver);
+
+    public void importDataFile(org.vitrivr.adam.grpc.AdamGrpc.ImportDataFileMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> responseObserver);
+
+    public void exportDataFile(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.ExportDataFileMessage> responseObserver);
   }
 
   public static interface AdamDefinitionBlockingClient {
@@ -318,6 +342,10 @@ public class AdamDefinitionGrpc {
     public org.vitrivr.adam.grpc.AdamGrpc.AckMessage sparsifyEntity(org.vitrivr.adam.grpc.AdamGrpc.SparsifyEntityMessage request);
 
     public org.vitrivr.adam.grpc.AdamGrpc.AckMessage importData(org.vitrivr.adam.grpc.AdamGrpc.ImportMessage request);
+
+    public org.vitrivr.adam.grpc.AdamGrpc.AckMessage importDataFile(org.vitrivr.adam.grpc.AdamGrpc.ImportDataFileMessage request);
+
+    public org.vitrivr.adam.grpc.AdamGrpc.ExportDataFileMessage exportDataFile(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request);
   }
 
   public static interface AdamDefinitionFutureClient {
@@ -378,6 +406,12 @@ public class AdamDefinitionGrpc {
 
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> importData(
         org.vitrivr.adam.grpc.AdamGrpc.ImportMessage request);
+
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> importDataFile(
+        org.vitrivr.adam.grpc.AdamGrpc.ImportDataFileMessage request);
+
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.ExportDataFileMessage> exportDataFile(
+        org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request);
   }
 
   public static class AdamDefinitionStub extends io.grpc.stub.AbstractStub<AdamDefinitionStub>
@@ -536,6 +570,20 @@ public class AdamDefinitionGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_IMPORT_DATA, getCallOptions()), request, responseObserver);
     }
+
+    @java.lang.Override
+    public void importDataFile(org.vitrivr.adam.grpc.AdamGrpc.ImportDataFileMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_IMPORT_DATA_FILE, getCallOptions()), request, responseObserver);
+    }
+
+    @java.lang.Override
+    public void exportDataFile(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.ExportDataFileMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_EXPORT_DATA_FILE, getCallOptions()), request, responseObserver);
+    }
   }
 
   public static class AdamDefinitionBlockingStub extends io.grpc.stub.AbstractStub<AdamDefinitionBlockingStub>
@@ -667,6 +715,18 @@ public class AdamDefinitionGrpc {
     public org.vitrivr.adam.grpc.AdamGrpc.AckMessage importData(org.vitrivr.adam.grpc.AdamGrpc.ImportMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_IMPORT_DATA, getCallOptions(), request);
+    }
+
+    @java.lang.Override
+    public org.vitrivr.adam.grpc.AdamGrpc.AckMessage importDataFile(org.vitrivr.adam.grpc.AdamGrpc.ImportDataFileMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_IMPORT_DATA_FILE, getCallOptions(), request);
+    }
+
+    @java.lang.Override
+    public org.vitrivr.adam.grpc.AdamGrpc.ExportDataFileMessage exportDataFile(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_EXPORT_DATA_FILE, getCallOptions(), request);
     }
   }
 
@@ -819,6 +879,20 @@ public class AdamDefinitionGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_IMPORT_DATA, getCallOptions()), request);
     }
+
+    @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> importDataFile(
+        org.vitrivr.adam.grpc.AdamGrpc.ImportDataFileMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_IMPORT_DATA_FILE, getCallOptions()), request);
+    }
+
+    @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.ExportDataFileMessage> exportDataFile(
+        org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_EXPORT_DATA_FILE, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_ENTITY = 0;
@@ -840,7 +914,9 @@ public class AdamDefinitionGrpc {
   private static final int METHODID_SET_SCAN_WEIGHT = 16;
   private static final int METHODID_SPARSIFY_ENTITY = 17;
   private static final int METHODID_IMPORT_DATA = 18;
-  private static final int METHODID_INSERT = 19;
+  private static final int METHODID_IMPORT_DATA_FILE = 19;
+  private static final int METHODID_EXPORT_DATA_FILE = 20;
+  private static final int METHODID_INSERT = 21;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -933,6 +1009,14 @@ public class AdamDefinitionGrpc {
         case METHODID_IMPORT_DATA:
           serviceImpl.importData((org.vitrivr.adam.grpc.AdamGrpc.ImportMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage>) responseObserver);
+          break;
+        case METHODID_IMPORT_DATA_FILE:
+          serviceImpl.importDataFile((org.vitrivr.adam.grpc.AdamGrpc.ImportDataFileMessage) request,
+              (io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage>) responseObserver);
+          break;
+        case METHODID_EXPORT_DATA_FILE:
+          serviceImpl.exportDataFile((org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage) request,
+              (io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.ExportDataFileMessage>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -1095,6 +1179,20 @@ public class AdamDefinitionGrpc {
               org.vitrivr.adam.grpc.AdamGrpc.ImportMessage,
               org.vitrivr.adam.grpc.AdamGrpc.AckMessage>(
                 serviceImpl, METHODID_IMPORT_DATA)))
+        .addMethod(
+          METHOD_IMPORT_DATA_FILE,
+          asyncUnaryCall(
+            new MethodHandlers<
+              org.vitrivr.adam.grpc.AdamGrpc.ImportDataFileMessage,
+              org.vitrivr.adam.grpc.AdamGrpc.AckMessage>(
+                serviceImpl, METHODID_IMPORT_DATA_FILE)))
+        .addMethod(
+          METHOD_EXPORT_DATA_FILE,
+          asyncUnaryCall(
+            new MethodHandlers<
+              org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage,
+              org.vitrivr.adam.grpc.AdamGrpc.ExportDataFileMessage>(
+                serviceImpl, METHODID_EXPORT_DATA_FILE)))
         .build();
   }
 }
