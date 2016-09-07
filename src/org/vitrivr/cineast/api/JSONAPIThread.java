@@ -413,10 +413,12 @@ public class JSONAPIThread extends Thread {
 			case "getSegments":{
 				String multimediaobjectId = clientJSON.get("multimediaobjectId").asString();
 				List<ShotDescriptor> segments = new ShotLookup().lookUpVideo(multimediaobjectId);
+
 				JsonArray list = new JsonArray();
 				for (ShotDescriptor segment: segments) {
 					list.add(segment.getShotId());
 				}
+
 				_return.set("segments", list);
 				break;
 			}

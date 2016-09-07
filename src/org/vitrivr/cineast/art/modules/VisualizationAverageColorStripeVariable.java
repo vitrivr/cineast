@@ -2,6 +2,7 @@ package org.vitrivr.cineast.art.modules;
 
 import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
+import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.color.ColorConverter;
@@ -10,11 +11,11 @@ import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.ShotLookup;
-import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,8 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("AverageColor");
     ShotLookup segmentLookup = new ShotLookup();
-    List<ShotLookup.ShotDescriptor> segments = ArtUtil.sortBySequenceNumber(segmentLookup.lookUpVideo(multimediaobjectId));
+    List<ShotLookup.ShotDescriptor> segments = segmentLookup.lookUpVideo(multimediaobjectId);
+    Collections.sort(segments, new SegmentDescriptorComparator());
 
     int count = 0;
     int totalWidth = 0;

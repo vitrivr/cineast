@@ -7,10 +7,7 @@ import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.ShotLookup;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,12 +15,6 @@ import java.util.Map;
  */
 public class ArtUtil {
   private static final Logger LOGGER = LogManager.getLogger();
-
-  public static List<ShotLookup.ShotDescriptor> sortBySequenceNumber(List<ShotLookup.ShotDescriptor> list){
-    //TODO: put the comparator into a class and use this on comparison
-    Collections.sort(list, (a, b) -> Integer.parseInt(a.getShotId()) < Integer.parseInt(b.getShotId()) ? -1 : Integer.parseInt(a.getShotId()) == Integer.parseInt(b.getShotId()) ? 0 : 1);
-    return list;
-  }
 
   /**
    * This reads a given shot into an integer array representing an image. This can be done on shots which have a given

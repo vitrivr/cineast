@@ -2,6 +2,7 @@ package org.vitrivr.cineast.art.modules;
 
 import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
+import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -11,6 +12,7 @@ import org.vitrivr.cineast.core.util.ArtUtil;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -49,7 +51,8 @@ public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule{
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("MedianColorGrid8");
     ShotLookup segmentLookup = new ShotLookup();
-    List<ShotLookup.ShotDescriptor> segments = ArtUtil.sortBySequenceNumber(segmentLookup.lookUpVideo(multimediaobjectId));
+    List<ShotLookup.ShotDescriptor> segments = segmentLookup.lookUpVideo(multimediaobjectId);
+    Collections.sort(segments, new SegmentDescriptorComparator());
 
     int[][][] pixels = new int[8][8][3];
     for (ShotLookup.ShotDescriptor segment : segments) {

@@ -5,56 +5,55 @@ import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
+import org.vitrivr.cineast.core.color.ColorConverter;
+import org.vitrivr.cineast.core.color.RGBContainer;
+import org.vitrivr.cineast.core.color.ReadableLabContainer;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.ShotLookup;
-import org.vitrivr.cineast.core.util.ArtUtil;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by sein on 26.08.16.
+ * Created by sein on 30.08.16.
  */
-public class VisualizationMedianColorGrid8Square extends AbstractVisualizationModule {
-  public VisualizationMedianColorGrid8Square() {
+public class VisualizationDominantColorStripe extends AbstractVisualizationModule {
+  public VisualizationDominantColorStripe() {
     super();
-    tableNames.put("MedianColorGrid8", "features_MedianColorGrid8");
+    tableNames.put("DominantColor", "features_DominantColors");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationMedianColorGrid8Square";
+    return "VisualizationDominantColorStripe";
   }
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
+    DBSelector selector = selectors.get("DominantColor");
     ShotLookup segmentLookup = new ShotLookup();
-    DBSelector selector = selectors.get("MedianColorGrid8");
     List<ShotLookup.ShotDescriptor> segments = segmentLookup.lookUpVideo(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
 
-    int dim = (int) Math.floor(Math.sqrt(segments.size()));
-    int size[] = {dim + 1, dim + 1};
-    if ((size[0] - 1) * size[1] >= segments.size()) {
-      size[1]--;
-    }
-
-    BufferedImage image = new BufferedImage(8 * size[0], 8 * size[1], BufferedImage.TYPE_INT_RGB);
-
+    BufferedImage image = new BufferedImage(segments.size()*10, 100, BufferedImage.TYPE_INT_RGB);
+    Graphics2D graph = image.createGraphics();
     int count = 0;
     for (ShotLookup.ShotDescriptor segment : segments) {
-      int[][] pixels = ArtUtil.shotToInt(segment.getShotId(), selector, 8, 8);
-      int baseY = (count / size[0]) * 8;
-      int baseX = (count % size[0]) * 8;
-      for (int x = 0; x < pixels.length; x++) {
-        for (int y = 0; y < pixels[0].length; y++) {
-          image.setRGB(baseX + x, baseY + y, pixels[x][y]);
-        }
+      List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segment.getShotId());
+      for (Map<String, PrimitiveTypeProvider> row : result) {
+        float[] arr = row.get("feature").getFloatArray();
+        RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));
+        graph.setColor(new Color(rgbContainer.toIntColor()));
+        graph.fillRect(count*10, 0, 10, 100);
       }
       count++;
     }
+    graph.dispose();
 
     return WebUtils.BufferedImageToDataURL(image, "png");
   }
