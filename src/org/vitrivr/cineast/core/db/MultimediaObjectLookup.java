@@ -143,7 +143,7 @@ public class MultimediaObjectLookup{
 	
 public static class MultimediaObjectDescriptor implements ExistenceCheck{
 		
-		private final String videoId; 
+		private final String objectId; 
 		private final int width, height, framecount, type;
 		private final float seconds;
 		private final String name, path;
@@ -158,7 +158,7 @@ public static class MultimediaObjectDescriptor implements ExistenceCheck{
 		}
 
 		private MultimediaObjectDescriptor(String objectId, String name, String path, int type, int width, int height, int framecount, float duration, boolean exists){
-			this.videoId = objectId;
+			this.objectId = objectId;
 			this.name = name;
 			this.path = path;
 			this.type = type;
@@ -175,7 +175,7 @@ public static class MultimediaObjectDescriptor implements ExistenceCheck{
 
 		
 		public String getId() {
-			return videoId;
+			return objectId;
 		}
 
 		public int getWidth() {
@@ -208,7 +208,7 @@ public static class MultimediaObjectDescriptor implements ExistenceCheck{
 
 		@Override
 		public String toString() {
-			return "MultimediaObjectDescriptor(" + videoId + ")";
+			return "MultimediaObjectDescriptor(" + objectId + ")";
 		}
 
 		@Override
