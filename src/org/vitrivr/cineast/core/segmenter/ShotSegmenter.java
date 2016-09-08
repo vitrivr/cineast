@@ -11,7 +11,7 @@ import org.vitrivr.cineast.core.data.Shot;
 import org.vitrivr.cineast.core.data.providers.ShotProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
@@ -29,15 +29,15 @@ public class ShotSegmenter implements ShotProvider{
 	private ArrayList<SubTitle> subtitles = new ArrayList<SubTitle>();
 	@SuppressWarnings("rawtypes")
 	private PersistencyWriter pwriter;
-	private List<ShotDescriptor> knownShotBoundaries;
+	private List<SegmentDescriptor> knownShotBoundaries;
 	
-	public ShotSegmenter(VideoDecoder vdecoder, String movieId, @SuppressWarnings("rawtypes") PersistencyWriter pwriter, List<ShotDescriptor> knownShotBoundaries){
+	public ShotSegmenter(VideoDecoder vdecoder, String movieId, @SuppressWarnings("rawtypes") PersistencyWriter pwriter, List<SegmentDescriptor> knownShotBoundaries){
 		this.vdecoder = vdecoder;
 		this.movieId = movieId;
 		this.pwriter = pwriter;
-		this.pwriter.setFieldNames("id", "multimediaobject", "segmentstart", "segmentend");
+		this.pwriter.setFieldNames("id", "multimediaobject", "sequencenumber", "segmentstart", "segmentend");
 		this.pwriter.open("cineast_segment");
-		this.knownShotBoundaries = ((knownShotBoundaries == null) ? new LinkedList<ShotDescriptor>() : knownShotBoundaries);
+		this.knownShotBoundaries = ((knownShotBoundaries == null) ? new LinkedList<SegmentDescriptor>() : knownShotBoundaries);
 	}
 	
 	public void addSubTitle(SubTitle st) {
@@ -87,7 +87,7 @@ public class ShotSegmenter implements ShotProvider{
 		
 		Frame frame = this.frameQueue.poll();
 		
-		ShotDescriptor bounds = this.knownShotBoundaries.size() > 0 ? this.knownShotBoundaries.remove(0) : null;
+		SegmentDescriptor bounds = this.knownShotBoundaries.size() > 0 ? this.knownShotBoundaries.remove(0) : null;
 		
 		if (bounds != null && frame.getId() >= bounds.getStartFrame() && frame.getId() <= bounds.getEndFrame()){
 			

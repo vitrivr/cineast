@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.shotboundary.ShotBoundaryDecoder;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -35,7 +35,7 @@ public class ExtractionJobRunner implements Runnable{
 	private List<File> subtitleFiles = null;
 	private String inputId = null;
 	private List<Extractor> extractors = new ArrayList<>();
-	private List<ShotDescriptor> knownShots = null;
+	private List<SegmentDescriptor> knownShots = null;
 	
 	public ExtractionJobRunner(File jobFile) {
 		try {

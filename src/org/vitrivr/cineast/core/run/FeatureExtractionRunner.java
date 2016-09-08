@@ -11,8 +11,9 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.db.ShotLookup;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.srt.SRTSubTitle;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
@@ -91,16 +92,21 @@ public class FeatureExtractionRunner {
 
 		writer.open("cineast_multimediaobject");
 
-		List<ShotDescriptor> knownShots = null;
+		List<SegmentDescriptor> knownShots = null;
 		String id = null;
 
 		if (writer.exists("name", videoName)) {
 			LOGGER.info("video '{}' is already in database", videoName);
-			ShotLookup lookup = new ShotLookup();
-			id = lookup.lookUpVideoid(videoName);
+//			ShotLookup lookup = new ShotLookup();
+//			id = lookup.lookUpVideoid(videoName);
 //			knownShots = lookup.lookUpVideo(id);
 //			lookup.close();
 			
+			MultimediaObjectLookup lookup = new MultimediaObjectLookup();
+			MultimediaObjectDescriptor descriptor = lookup.lookUpObjectByName(videoName);
+			if(descriptor.exists()){
+				id = descriptor.getId();
+			}
 			
 			
 		} else {

@@ -9,7 +9,7 @@ import org.vitrivr.adam.grpc.AdamDefinitionGrpc;
 import org.vitrivr.adam.grpc.AdamDefinitionGrpc.AdamDefinitionStub;
 import org.vitrivr.adam.grpc.AdamGrpc.*;
 import org.vitrivr.adam.grpc.AdamSearchGrpc;
-import org.vitrivr.adam.grpc.AdamSearchGrpc.AdamSearchStub;
+import org.vitrivr.adam.grpc.AdamSearchGrpc.AdamSearchFutureStub;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 
@@ -19,13 +19,13 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 
 	private ManagedChannel channel;
 	private AdamDefinitionStub definitionStub;
-	private AdamSearchStub searchStub;
+	private AdamSearchFutureStub searchStub;
 	
 	public ADAMproWrapper(){
 		DatabaseConfig config = Config.getDatabaseConfig();
 		this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPplaintext()).build();
 		this.definitionStub = AdamDefinitionGrpc.newStub(channel);
-		this.searchStub = AdamSearchGrpc.newStub(channel);
+		this.searchStub = AdamSearchGrpc.newFutureStub(channel);
 	}
 	
 	public synchronized ListenableFuture<AckMessage> createEntity(CreateEntityMessage message){
@@ -89,17 +89,17 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	}
 	
 	public ListenableFuture<QueryResultsMessage> standardQuery(QueryMessage message){
-		SettableFuture<QueryResultsMessage> future = SettableFuture.create();
-		synchronized (this.searchStub) {
-			this.searchStub.doQuery(message, new LastQueryResponseStreamObserver(future));
-		}
-		return future;
+		//SettableFuture<QueryResultsMessage> future = SettableFuture.create();
+		//synchronized (this.searchStub) {
+			return this.searchStub.doQuery(message/*, new LastQueryResponseStreamObserver(future)*/);
+		//}
+		//return future;
 	}
 
 	public ListenableFuture<QueryResultsMessage> previewEntity(EntityNameMessage message){
 		SettableFuture<QueryResultsMessage> future = SettableFuture.create();
 		synchronized (this.searchStub) {
-			this.searchStub.preview(message, new LastQueryResponseStreamObserver(future));
+			this.searchStub.preview(message);
 		}
 		return future;
 	}

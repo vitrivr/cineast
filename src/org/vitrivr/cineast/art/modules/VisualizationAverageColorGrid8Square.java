@@ -6,7 +6,7 @@ import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.ShotLookup;
+import org.vitrivr.cineast.core.db.SegmentLookup;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.awt.image.BufferedImage;
@@ -31,8 +31,8 @@ public class VisualizationAverageColorGrid8Square extends AbstractVisualizationM
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("AverageColorGrid8");
-    ShotLookup segmentLookup = new ShotLookup();
-    List<ShotLookup.ShotDescriptor> segments = segmentLookup.lookUpVideo(multimediaobjectId);
+    SegmentLookup segmentLookup = new SegmentLookup();
+    List<SegmentLookup.SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
 
     int size[] = {(int) Math.ceil(Math.sqrt(segments.size())), (int) Math.ceil(Math.sqrt(segments.size()))};
@@ -43,7 +43,7 @@ public class VisualizationAverageColorGrid8Square extends AbstractVisualizationM
     BufferedImage image = new BufferedImage(8 * size[0], 8 * size[1], BufferedImage.TYPE_INT_RGB);
 
     int count = 0;
-    for (ShotLookup.ShotDescriptor segment : segments) {
+    for (SegmentLookup.SegmentDescriptor segment : segments) {
       int[][] pixels = ArtUtil.shotToInt(segment.getShotId(), selector, 8, 8);
       int baseY = (count / size[0]) * 8;
       int baseX = (count % size[0]) * 8;

@@ -13,8 +13,12 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.VisualizationConfig;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.*;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.ADAMproSelector;
+import org.vitrivr.cineast.core.db.DBResultCache;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.SegmentLookup;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -71,13 +75,13 @@ public class JSONAPIThread extends Thread {
 				// String category = queryObject.get("category").asString();
 				String shotId = queryObject.get("shotid").asString();
 				
-				ShotLookup sl = new ShotLookup();
-				ShotDescriptor shot = sl.lookUpShot(shotId);
+				SegmentLookup sl = new SegmentLookup();
+				SegmentDescriptor shot = sl.lookUpShot(shotId);
 				//List<ShotDescriptor> allShots = sl.lookUpVideo(shot.getVideoId());
 				
 				//Send metadata
-				VideoLookup vl = new VideoLookup();
-				VideoLookup.VideoDescriptor descriptor = vl.lookUpVideo(shot.getVideoId());
+				MultimediaObjectLookup vl = new MultimediaObjectLookup();
+				MultimediaObjectLookup.MultimediaObjectDescriptor descriptor = vl.lookUpObjectById(shot.getVideoId());
 			
 				JsonObject resultobj = JSONEncoder.encodeVideo(descriptor);
 				
@@ -85,7 +89,7 @@ public class JSONAPIThread extends Thread {
 				this.printer.print(resultobj.toString());
 				this.printer.print(',');
 				
-				String id = descriptor.getVideoId();
+				String id = descriptor.getId();
 				
 				//send shots
 				DBSelector selector = new ADAMproSelector();
@@ -93,7 +97,7 @@ public class JSONAPIThread extends Thread {
 //				rset = selector.select("SELECT id, startframe, endframe FROM cineast.shots WHERE video = " + id);
 				int i = 0;
 //				while (rset.next()) {
-//					ShotLookup.ShotDescriptor desc= sl.lookUpShot(rset.getInt(1));
+//					SegmentLookup.ShotDescriptor desc= sl.lookUpShot(rset.getInt(1));
 //					
 //					resultobj = JSONEncoder.encodeShot(rset.getInt(1), desc.getVideoId(), desc.getStartFrame(), desc.getEndFrame());
 //					
@@ -332,8 +336,8 @@ public class JSONAPIThread extends Thread {
 				JsonArray shotidlist = query.get("shotidlist").asArray();
 				int limit = query.get("limit") == null ? 1 : query.get("limit").asInt();
 				DBSelector selector = new ADAMproSelector();
-				ShotLookup sl = new ShotLookup();
-				ShotLookup.ShotDescriptor descriptor;
+				SegmentLookup sl = new SegmentLookup();
+				SegmentLookup.SegmentDescriptor descriptor;
 				this.printer.print('[');
 				
 //				PreparedStatement select = selector.createPreparedStatement("(select id, startframe, endframe from cineast.shots WHERE video=? AND startframe<? ORDER BY startframe desc LIMIT ?)UNION(select id, startframe, endframe from cineast.shots WHERE video=? AND endframe>? ORDER BY startframe asc LIMIT ?)");
@@ -399,7 +403,7 @@ public class JSONAPIThread extends Thread {
 			}
 
 			case "getMultimediaobjects":{
-				List<String> multimediaobjectIds = new VideoLookup().lookUpVideoIds();
+				List<String> multimediaobjectIds = new MultimediaObjectLookup().lookUpVideoIds();
 
 				JsonArray movies = new JsonArray();
 				for(String s: multimediaobjectIds){
@@ -412,10 +416,10 @@ public class JSONAPIThread extends Thread {
 
 			case "getSegments":{
 				String multimediaobjectId = clientJSON.get("multimediaobjectId").asString();
-				List<ShotDescriptor> segments = new ShotLookup().lookUpVideo(multimediaobjectId);
+				List<SegmentDescriptor> segments = new SegmentLookup().lookUpAllSegments(multimediaobjectId);
 
 				JsonArray list = new JsonArray();
-				for (ShotDescriptor segment: segments) {
+				for (SegmentDescriptor segment: segments) {
 					list.add(segment.getShotId());
 				}
 

@@ -46,7 +46,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
 		tmp.add(where);
 		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(this.entityName).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).setUseFallback(true).build();
+				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultInfoMessage responce;
 		try {
@@ -63,30 +63,9 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 
 	@Override
 	public synchronized boolean persist(PersistentTuple<TupleInsertMessage> tuple) {
-		this.builder.clear();
-		this.builder.setEntity(this.entityName);
-		ArrayList<TupleInsertMessage> tmp = new ArrayList<>(1);
-		TupleInsertMessage tim = tuple.getPersistentRepresentation();
-		tmp.add(tim);
-		this.builder.addAllTuples(tmp);
-
-		InsertMessage im = this.builder.build();
-		/*StringBuilder sb = new StringBuilder();
-		sb.append("Persisting tuple into "+this.entityName+"\n");
-		for (String s : im.getTuples(0).getData().keySet()) {
-			if(s.equals("feature")){
-				sb.append("Persisting full vector\n");
-			}
-			else{
-				sb.append(s+" : " + im.getTuples(0).getData().get(s).toString()+"\n");
-			}
-		}
-		LOGGER.info(sb.toString());*/
-		AckMessage ack = this.adampro.insertOneBlocking(im);
-		if(ack.getCode() != Code.OK){
-			LOGGER.warn("{} during persist", ack.getMessage());
-		}
-		return ack.getCode() == Code.OK;
+		List<PersistentTuple> tuples = new ArrayList<>(1);
+		tuples.add(tuple);
+		return persist(tuples);
 	}
 
 	public synchronized boolean persist(List<PersistentTuple> tuples){
@@ -101,7 +80,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 		InsertMessage im = this.builder.build();
 		AckMessage ack = this.adampro.insertOneBlocking(im);
 		if(ack.getCode() != Code.OK){
-			LOGGER.warn("{} during persist", ack.getMessage());
+			LOGGER.warn("Error: {} during persist", ack.getMessage());
 		}
 		return ack.getCode() == Code.OK;
 	}

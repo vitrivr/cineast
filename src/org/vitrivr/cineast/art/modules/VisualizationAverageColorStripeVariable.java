@@ -10,7 +10,7 @@ import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.ShotLookup;
+import org.vitrivr.cineast.core.db.SegmentLookup;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -36,15 +36,15 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("AverageColor");
-    ShotLookup segmentLookup = new ShotLookup();
-    List<ShotLookup.ShotDescriptor> segments = segmentLookup.lookUpVideo(multimediaobjectId);
+    SegmentLookup segmentLookup = new SegmentLookup();
+    List<SegmentLookup.SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
 
     int count = 0;
     int totalWidth = 0;
     int[] colors = new int[segments.size()];
     int[] widths = new int[segments.size()];
-    for (ShotLookup.ShotDescriptor segment : segments) {
+    for (SegmentLookup.SegmentDescriptor segment : segments) {
       List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segment.getShotId());
       widths[count] = (segment.getEndFrame() - segment.getStartFrame()) / 10 + 1;
       totalWidth += widths[count];

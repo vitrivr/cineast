@@ -57,6 +57,7 @@ public class EntityCreator {
 
 		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).setIndexed(true).build());
 		fields.add(builder.setName("multimediaobject").setAttributetype(AttributeType.STRING).setPk(false).setIndexed(true).build());
+		fields.add(builder.setName("sequencenumber").setAttributetype(AttributeType.INT).setPk(false).setIndexed(false).build());
 		fields.add(builder.setName("segmentstart").setAttributetype(AttributeType.INT).setPk(false).setIndexed(false).build());
 		fields.add(builder.setName("segmentend").setAttributetype(AttributeType.INT).setPk(false).setIndexed(false).build());
 

@@ -8,7 +8,7 @@ import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.ShotLookup;
+import org.vitrivr.cineast.core.db.SegmentLookup;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.awt.image.BufferedImage;
@@ -34,13 +34,13 @@ public class VisualizationDominantColorGradient extends AbstractVisualizationMod
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
     DBSelector selector = selectors.get("DominantColor");
-    ShotLookup segmentLookup = new ShotLookup();
-    List<ShotLookup.ShotDescriptor> segments = segmentLookup.lookUpVideo(multimediaobjectId);
+    SegmentLookup segmentLookup = new SegmentLookup();
+    List<SegmentLookup.SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
 
     BufferedImage image = new BufferedImage(segments.size(), 1, BufferedImage.TYPE_INT_RGB);
     int count = 0;
-    for (ShotLookup.ShotDescriptor segment : segments) {
+    for (SegmentLookup.SegmentDescriptor segment : segments) {
       int[][] avg = ArtUtil.shotToInt(segment.getShotId(), selector, 1, 1);
       image.setRGB(count, 0, avg[0][0]);
       count++;

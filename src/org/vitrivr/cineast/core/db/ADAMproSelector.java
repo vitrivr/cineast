@@ -72,7 +72,7 @@ public class ADAMproSelector implements DBSelector {
 	private QueryMessage buildQueryMessage(ArrayList<String> hints, BooleanQueryMessage bqMessage, ProjectionMessage pMessage, NearestNeighbourQueryMessage nnqMessage){
 		synchronized (qmBuilder) {
 			qmBuilder.clear();
-			qmBuilder.setFrom(fromBuilder).setUseFallback(true);
+			qmBuilder.setFrom(fromBuilder);
 			if(hints != null && !hints.isEmpty()){
 				qmBuilder.addAllHints(hints);
 			}
