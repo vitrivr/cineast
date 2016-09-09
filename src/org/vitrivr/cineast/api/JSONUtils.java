@@ -17,8 +17,8 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.QuerySubTitleItem;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.SgmentLookup;
-import org.vitrivr.cineast.core.db.SgmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
@@ -181,7 +181,7 @@ public class JSONUtils {
 	
 	public static HashSet<String> printShotsBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> shotids) {
 		ArrayList<SegmentDescriptor> sdList = new ArrayList<>(resultlist.size());
-		SgmentLookup sl = new SgmentLookup();
+		SegmentLookup sl = new SegmentLookup();
 		
 		String[] ids = new String[resultlist.size()];
 		int i = 0;
@@ -217,7 +217,7 @@ public class JSONUtils {
 	}
 	
 	public static HashSet<String> printVideosBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> videoids) {
-		SgmentLookup sl = new SgmentLookup();
+		SegmentLookup sl = new SegmentLookup();
 		MultimediaObjectLookup vl = new MultimediaObjectLookup();
 		
 		String[] ids = new String[resultlist.size()];

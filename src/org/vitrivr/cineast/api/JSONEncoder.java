@@ -3,7 +3,7 @@ package org.vitrivr.cineast.api;
 import java.util.List;
 
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.SgmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
 
 import com.eclipsesource.json.JsonArray;

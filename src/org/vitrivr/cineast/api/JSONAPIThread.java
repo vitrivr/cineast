@@ -23,8 +23,8 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.DBResultCache;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.SgmentLookup;
-import org.vitrivr.cineast.core.db.SgmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -80,7 +80,7 @@ public class JSONAPIThread extends Thread {
 				// String category = queryObject.get("category").asString();
 				String shotId = queryObject.get("shotid").asString();
 				
-				SgmentLookup sl = new SgmentLookup();
+				SegmentLookup sl = new SegmentLookup();
 				SegmentDescriptor shot = sl.lookUpShot(shotId);
 				//List<ShotDescriptor> allShots = sl.lookUpVideo(shot.getVideoId());
 				
@@ -341,8 +341,8 @@ public class JSONAPIThread extends Thread {
 				JsonArray shotidlist = query.get("shotidlist").asArray();
 				int limit = query.get("limit") == null ? 1 : query.get("limit").asInt();
 				DBSelector selector = new ADAMproSelector();
-				SgmentLookup sl = new SgmentLookup();
-				SgmentLookup.SegmentDescriptor descriptor;
+				SegmentLookup sl = new SegmentLookup();
+				SegmentLookup.SegmentDescriptor descriptor;
 				this.printer.print('[');
 				
 //				PreparedStatement select = selector.createPreparedStatement("(select id, startframe, endframe from cineast.shots WHERE video=? AND startframe<? ORDER BY startframe desc LIMIT ?)UNION(select id, startframe, endframe from cineast.shots WHERE video=? AND endframe>? ORDER BY startframe asc LIMIT ?)");
