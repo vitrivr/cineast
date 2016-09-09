@@ -8,7 +8,7 @@
 "features":
 	[
 	{
-		"name": "neuralnet.NeuralNetFeature",
+		"name": "neuralnet.classification.tf.NeuralNetVGG16Feature",
 		"config": {}}
 	],
 

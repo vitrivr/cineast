@@ -25,13 +25,13 @@ import java.util.List;
  * <p>
  * Created by silvan on 23.08.16.
  */
-class VGG16Model implements TensorFlowModel {
+public class VGG16Net implements TensorFlowNet {
 
     private SynLabelProvider labelProvider;
     private static final Logger LOGGER = LogManager.getLogger();
     private final tensorflow.Session session = new tensorflow.Session(new tensorflow.SessionOptions());
 
-    VGG16Model(String model, String labels) {
+    public VGG16Net(String model, String labels) {
         LOGGER.debug("Loading model {} and labels {}", model, labels);
         loadGraph(model);
 

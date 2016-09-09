@@ -29,78 +29,34 @@ import java.util.function.Supplier;
 /**
  * TODO Make this abstract and specify specific NN-Featuremodules with their own nets
  */
-public class NeuralNetFeature extends AbstractFeatureModule {
+public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private NeuralNet net;
-    private PersistencyWriter<?> classificationWriter;
     private PersistencyWriter<?> classWriter;
-    private DBSelector classificationSelector;
     private DBSelector classSelector;
-    private static final String fullVectorTableName =       "features_neuralnet_fullvector";
-    private static final String generatedLabelsTableName =  "features_neuralnet_labels";
     private static final String classTableName =            "features_neuralnet_classlabels";
     private float cutoff = 0.2f;
 
-    public NeuralNetFeature(NeuralNetFactory factory) {
-        this(1f, factory);
-    }
-
-    public NeuralNetFeature(){
-        this(1f);
-    }
-
-    /**
-     * Needs to be public so the extractionrunner has access with a config-object
-     */
-    public NeuralNetFeature(com.eclipsesource.json.JsonObject config){
-        super(fullVectorTableName, 1f);
-        NeuralNetConfig parsedConfig = NeuralNetConfig.parse(config);
-        this.cutoff = parsedConfig.getCutoff();
-        this.net = parsedConfig.getNeuralNetFactory().get();
-    }
-    protected NeuralNetFeature(float maxDist) {
-        super(fullVectorTableName, maxDist);
-    }
-
-    protected NeuralNetFeature(float maxDist, NeuralNetFactory factory) {
-        this(maxDist, factory.get());
-    }
-
-    private NeuralNetFeature(float maxDist, NeuralNet net) {
-        super(fullVectorTableName, maxDist);
-        this.net = net;
-    }
-
-    public void setCutoff(float cutoff) {
-        this.cutoff = cutoff;
+    public NeuralNetFeature(String tableName){
+        super(tableName, 1f);
     }
 
     @Override
     public void init(DBSelectorSupplier selectorSupplier) {
         super.init(selectorSupplier);
-        this.classificationSelector = selectorSupplier.get();
         this.classSelector = selectorSupplier.get();
-
-        this.classificationSelector.open(generatedLabelsTableName);
         this.classSelector.open(classTableName);
     }
 
 
     /**
      * TODO This method needs heavy refactoring because creating entities this way is not really pretty, we're relying on the AdamGRPC
-     * <p>
-     * Create tables that aren't created by super.
-     * <p>
      * Currently Objectid is a string. That is because we get a unique id which has the shape n+....
-     * <p>
      * Schema:
-     * Table 0: shotid | classification - vector - super
-     * Table 1: shotid | objectid | confidence (ex. 4014 | n203843 | 0.4) - generated labels
-     * <p>
-     * Table 2 is only touched for API-Calls about available labels and at init-time - not during extraction
-     * Table 2: objectid | label or concept
+     * Table 0: shotid | classificationvector - done by super
+     * Table 1: objectid | label or concept
+     * Table 1 is only touched for API-Calls about available labels and at init-time - not during extraction
      */
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
@@ -108,8 +64,6 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
         AdamGrpc.AttributeDefinitionMessage.Builder attrBuilder = AdamGrpc.AttributeDefinitionMessage.newBuilder();
-        //TODO Shotid is a string here is that correct?
-        ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("shotid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT));
         ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("label", AdamGrpc.AttributeType.STRING));
         ec.close();
     }
@@ -118,9 +72,6 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     @Override
     public void init(PersistencyWriterSupplier phandlerSupply) {
         super.init(phandlerSupply);
-        classificationWriter = phandlerSupply.get();
-        classificationWriter.open(generatedLabelsTableName);
-        classificationWriter.setFieldNames("id", "shotid", "objectid", "probability");
         classWriter = phandlerSupply.get();
         classWriter.open(classTableName);
         classWriter.setFieldNames("id", "objectid", "label");
@@ -129,17 +80,9 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     @Override
     public void finish() {
         super.finish();
-        if (this.classificationWriter != null) {
-            this.classificationWriter.close();
-            this.classificationWriter = null;
-        }
         if (this.classWriter != null) {
             this.classWriter.close();
             this.classWriter = null;
-        }
-        if (this.classificationSelector != null) {
-            this.classificationSelector.close();
-            this.classificationSelector = null;
         }
         if (this.classSelector != null) {
             this.classSelector.close();
@@ -148,10 +91,10 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     }
 
     /**
-     * Fills labels & concepts into the DB. Concepts are provided at conceptsPath and parsed by a reader
-     * Labels are retrieved from the Net
+     * Fills concepts into the DB. Concepts are provided at conceptsPath and parsed by a reader
+     * NeuralNets must fill their own labels into the DB
      */
-    public void fillLabels(String conceptsPath) {
+    public void fillConcepts(String conceptsPath) {
         ConceptReader cr = new ConceptReader(conceptsPath);
 
         LOGGER.info("Filling Labels");
@@ -172,150 +115,15 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         }
         classWriter.persist(tuples);
         tuples.clear();
-
-        //Fill class names
-        for (int i = 0; i < net.getSynSetLabels().length; i++) {
-            String[] labels = net.getLabels(net.getSynSetLabels()[i]);
-            for (String label : labels) {
-                PersistentTuple tuple = classWriter.generateTuple(UUID.randomUUID().toString(), net.getSynSetLabels()[i], label);
-                tuples.add(tuple);
-            }
-        }
-        classWriter.persist(tuples);
-        tuples.clear();
     }
 
-    /**
-     * Classifies an Image with the given neural net.
-     * Performs 3 Classifications with different croppings, maxpools the vectors on each dimension to get hits
-     */
-    private float[] classifyImage(BufferedImage img) {
-        float[] probs = new float[1000];
-        Arrays.fill(probs, 0f);
-        Position[] positions = new Position[3];
-        positions[0] = Positions.CENTER;
-        if(img.getHeight()>img.getWidth()){
-            positions[1] = Positions.TOP_RIGHT;
-            positions[2] = Positions.BOTTOM_RIGHT;
-        }else{
-            positions[1] = Positions.CENTER_RIGHT;
-            positions[2] = Positions.CENTER_LEFT;
-        }
+    public abstract void fillLabels();
 
-        float[] curr;
-        for(Position pos: positions){
-            try {
-                curr = net.classify(Thumbnails.of(img).size(224, 224).crop(pos).asBufferedImage());
-                probs = maxpool(curr, probs);
-            } catch (IOException e) {
-                LOGGER.error(e);
-            }
-        }
-        return probs;
+    protected PersistencyWriter getClassWriter(){
+        return this.classWriter;
     }
 
-    /**
-     * Takes the maximum value at each position
-     */
-    private float[] maxpool(float[] curr, float[] probs) {
-        if(curr.length!=probs.length){
-            throw new IllegalArgumentException("Float[] need to have the same size");
-        }
-        float[] _ret = new float[curr.length];
-        for(int i = 0; i<curr.length;i++){
-            if(curr[i]>probs[i]){
-                _ret[i]= curr[i];
-            } else{
-                _ret[i]=probs[i];
-            }
-        }
-        return _ret;
-    }
-
-    @Override
-    public void processShot(SegmentContainer shot) {
-        LOGGER.entry();
-        TimeHelper.tic();
-        //check if shot has been processed
-        if (!phandler.idExists(shot.getId())) {
-            BufferedImage keyframe = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
-
-            float[] probs = classifyImage(keyframe);
-            //Persist best matches
-            for (int i = 0; i < probs.length; i++) {
-                if (probs[i] > 0.1) {
-                    LOGGER.info("Match found for shot {}: {} with probability {}",shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[i])), probs[i]);
-                    String id = UUID.randomUUID().toString();
-                    PersistentTuple tuple = classificationWriter.generateTuple(id, shot.getId(), net.getSynSetLabels()[i], probs[i]);
-                    classificationWriter.persist(tuple);
-
-                }
-            }
-            persist(shot.getId(), new FloatVectorImpl(probs));
-            LOGGER.debug("NeuralNetFeature.processShot() done in {}",
-                    TimeHelper.toc());
-        }
-        LOGGER.exit();
-    }
-
-    /**
-     * TODO How do we calculate score?
-     * Checks if labels have been specified. If no labels have been specified, takes the queryimage.
-     * Might perform knn on the 1k-vector in the future.
-     * It's also not clear yet if we could combine labels and input image??
-     */
-    @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-        LOGGER.entry();
-        TimeHelper.tic();
-        NeuralNet _net = null;
-        if(this.net!=null){
-            _net = this.net;
-        }
-        if(qc.getNet() != null){
-            _net = qc.getNet();
-        }
-        if(_net == null){
-            this.net = Config.getNeuralNetConfig().getNeuralNetFactory().get(); //cache NN
-            _net = this.net;
-        }
-        List<StringDoublePair> _return = new ArrayList();
-
-        if (!sc.getTags().isEmpty()) {
-            Set<String> wnLabels = new HashSet<>();
-            for (String label : sc.getTags()) {
-                LOGGER.debug("Looking for tag {}", label);
-                for (Map<String, PrimitiveTypeProvider> row : classSelector.getRows("label", label)) {
-                    wnLabels.add(row.get("objectid").getString());
-                }
-            }
-
-            for (String wnLabel : wnLabels) {
-                for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", wnLabel)) {
-                    LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
-                    _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
-                }
-            }
-        } else {
-            //TODO Can we just take the most representative frame from the sc? Is that the query image?
-            float[] res = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
-
-            for (int i = 0; i < res.length; i++) {
-                //TODO This cutoff should be in queryConfig probably
-                if (res[i] > cutoff) {
-                    for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", net.getSynSetLabels()[i])) {
-                        //TODO Duplicates?
-                        LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
-                        _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
-                    }
-                }
-            }
-        }
-        //TODO Currently returns mock-result until we get data in the DB
-        _return = new ArrayList();
-        _return.add(new StringDoublePair("720909", 0.5));
-        LOGGER.info("NeuralNetFeature.getSimilar() done in {}",
-                TimeHelper.toc());
-        return LOGGER.exit(_return);
+    protected  DBSelector getClassSelector(){
+        return this.classSelector;
     }
 }

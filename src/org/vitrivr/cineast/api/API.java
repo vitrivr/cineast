@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
+import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.run.ExtractionJobRunner;
@@ -60,14 +61,15 @@ public class API {
 
 		if(commandline.getArgList().contains("neuralnet")){
 			LOGGER.info("Initializing nn persistent layer");
-			NeuralNetFeature feature = new NeuralNetFeature(Config.getNeuralNetConfig().getNeuralNetFactory());
+			NeuralNetFeature feature = new NeuralNetVGG16Feature(Config.getNeuralNetConfig());
 
 			feature.initalizePersistentLayer(() -> new EntityCreator());
 			LOGGER.info("Initalizing writers");
 			feature.init(Config.getDatabaseConfig().getWriterSupplier());
 			feature.init(Config.getDatabaseConfig().getSelectorSupplier());
 			LOGGER.info("Filling labels");
-			feature.fillLabels(Config.getNeuralNetConfig().getConceptsPath());
+			feature.fillConcepts(Config.getNeuralNetConfig().getConceptsPath());
+			feature.fillLabels();
 
 			disableAllAPI = true;
 			LOGGER.info("done");

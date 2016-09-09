@@ -8,7 +8,7 @@ import org.jcodec.common.logging.Logger;
 import org.vitrivr.cineast.core.data.DoublePair;
 import org.vitrivr.cineast.core.features.*;
 import org.vitrivr.cineast.core.features.exporter.QueryImageExporter;
-import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
+import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
@@ -79,7 +79,7 @@ public final class RetrieverConfig {
 		DEFAULT_RETRIEVER_CATEGORIES.put("motion", list);
 
 		list = new ArrayList<>(1);
-		list.add(DoublePair.pair(NeuralNetFeature.class, 1.0));
+		list.add(DoublePair.pair(NeuralNetVGG16Feature.class, 1.0));
 		DEFAULT_RETRIEVER_CATEGORIES.put("neuralNet", list);
 		
 		list = new ArrayList<>(3);
