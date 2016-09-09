@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 
+/**
+ * TODO Make this abstract and specify specific NN-Featuremodules with their own nets
+ */
 public class NeuralNetFeature extends AbstractFeatureModule {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -44,16 +47,12 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         this(1f, factory);
     }
 
-    /**
-     * TODO At querytime, where do you set the neuralnet in a smooth way?
-     */
     public NeuralNetFeature(){
         this(1f);
     }
+
     /**
-     * TODO I think this is the proper way to handle compability with the extractionRunner
-     * Needs to be public.
-     * IMO This does not destroy the self-contained nature of the feature-modules.
+     * Needs to be public so the extractionrunner has access with a config-object
      */
     public NeuralNetFeature(com.eclipsesource.json.JsonObject config){
         super(fullVectorTableName, 1f);
@@ -76,10 +75,6 @@ public class NeuralNetFeature extends AbstractFeatureModule {
 
     public void setCutoff(float cutoff) {
         this.cutoff = cutoff;
-    }
-
-    public static String getClassTableName() {
-        return classTableName;
     }
 
     @Override
@@ -114,7 +109,7 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         //TODO Set pk / Create idx -> Logic in the ecCreator
         AdamGrpc.AttributeDefinitionMessage.Builder attrBuilder = AdamGrpc.AttributeDefinitionMessage.newBuilder();
         //TODO Shotid is a string here is that correct?
-        ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("shotid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.DOUBLE));
+        ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("shotid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT));
         ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("label", AdamGrpc.AttributeType.STRING));
         ec.close();
     }
@@ -153,71 +148,46 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     }
 
     /**
-     * This assumes that the required entities have been created
+     * Fills labels & concepts into the DB. Concepts are provided at conceptsPath and parsed by a reader
+     * Labels are retrieved from the Net
      */
     public void fillLabels(String conceptsPath) {
         ConceptReader cr = new ConceptReader(conceptsPath);
 
         LOGGER.info("Filling Labels");
-        int id = 0;
-        //Fill Concept map
+        //Fill Concept map with batch-inserting
         List<PersistentTuple> tuples = new ArrayList(10000);
 
         for (Map.Entry<String, String[]> entry : cr.getConceptMap().entrySet()) {
-            //values are n... -values being labeled as entry.getKey()
             for (String label : entry.getValue()) {
-                //TODO Terrible idsolution
-                PersistentTuple tuple = classWriter.generateTuple(String.valueOf(id), label, entry.getKey());
-                //classWriter.persist(tuple);
+                String id = UUID.randomUUID().toString();
+                PersistentTuple tuple = classWriter.generateTuple(id, label, entry.getKey());
                 tuples.add(tuple);
-                id++;
-                if (id % 9500 == 0) {
-                    LOGGER.info("Index {} key {}, inserting... ", id, entry.getKey());
+                if (tuples.size()==9500) {
+                    LOGGER.debug("Batch-inserting");
                     classWriter.persist(tuples);
                     tuples.clear();
                 }
             }
         }
-
         classWriter.persist(tuples);
         tuples.clear();
 
-        LOGGER.info("done 1 {}", id);
         //Fill class names
         for (int i = 0; i < net.getSynSetLabels().length; i++) {
             String[] labels = net.getLabels(net.getSynSetLabels()[i]);
             for (String label : labels) {
-                PersistentTuple tuple = classWriter.generateTuple(String.valueOf(id), net.getSynSetLabels()[i], label);
+                PersistentTuple tuple = classWriter.generateTuple(UUID.randomUUID().toString(), net.getSynSetLabels()[i], label);
                 tuples.add(tuple);
-                id++;
             }
         }
         classWriter.persist(tuples);
         tuples.clear();
-
-        LOGGER.info("done 2 {}", id);
-
-        int idx = 0;
-        for (PrimitiveTypeProvider typeProvider : classSelector.getAll("label")) {
-            LOGGER.info("Retrieved label {}", typeProvider.getString());
-            idx++;
-            if (idx > 10) {
-                System.exit(1);
-            }
-        }
     }
 
     /**
-     * Set neuralNet to specified net if you have called the default constructor
-     */
-    public void setNeuralNet(NeuralNet net) {
-        this.net = net;
-    }
-
-    /**
-     * Classifies an Image with the given neural net
-     *
-     * @return A float array containing the probabilities given by the neural net.
+     * Classifies an Image with the given neural net.
+     * Performs 3 Classifications with different croppings, maxpools the vectors on each dimension to get hits
      */
     private float[] classifyImage(BufferedImage img) {
         float[] probs = new float[1000];
@@ -232,14 +202,14 @@ public class NeuralNetFeature extends AbstractFeatureModule {
             positions[2] = Positions.CENTER_LEFT;
         }
 
+        float[] curr;
         for(Position pos: positions){
-            float[] curr = new float[0];
             try {
                 curr = net.classify(Thumbnails.of(img).size(224, 224).crop(pos).asBufferedImage());
+                probs = maxpool(curr, probs);
             } catch (IOException e) {
                 LOGGER.error(e);
             }
-            probs = maxpool(curr, probs);
         }
         return probs;
     }
@@ -266,7 +236,6 @@ public class NeuralNetFeature extends AbstractFeatureModule {
     public void processShot(SegmentContainer shot) {
         LOGGER.entry();
         TimeHelper.tic();
-        int id = 0;
         //check if shot has been processed
         if (!phandler.idExists(shot.getId())) {
             BufferedImage keyframe = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
@@ -274,32 +243,11 @@ public class NeuralNetFeature extends AbstractFeatureModule {
             float[] probs = classifyImage(keyframe);
             //Persist best matches
             for (int i = 0; i < probs.length; i++) {
-                int idcounter = 0;
                 if (probs[i] > 0.1) {
                     LOGGER.info("Match found for shot {}: {} with probability {}",shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[i])), probs[i]);
-                    //TODO Ugly Fix for the ID-Problem
-                    String classificationID = shot.getId()+"_"+idcounter++;
-                    int finalI = i;
-                    PersistentTuple gen = new PersistentTuple() {
-
-                        double prob = probs[finalI];
-                        String id = classificationID;
-                        String shotid = shot.getId();
-                        String objectid = net.getSynSetLabels()[finalI];
-                        @Override
-                        public Object getPersistentRepresentation() {
-                            Map<String, AdamGrpc.DataMessage> values = new HashMap<>();
-                            values.put("probability", AdamGrpc.DataMessage.newBuilder().setDoubleData(prob).build());
-                            values.put("id", AdamGrpc.DataMessage.newBuilder().setStringData(id).build());
-                            values.put("shotid", AdamGrpc.DataMessage.newBuilder().setStringData(shotid).build());
-                            values.put("objectid", AdamGrpc.DataMessage.newBuilder().setStringData(objectid).build());
-
-                            return AdamGrpc.InsertMessage.TupleInsertMessage.newBuilder().putAllData(values).build();
-                        }
-                    };
-                    PersistentTuple tuple = classificationWriter.generateTuple(classificationID, shot.getId(), net.getSynSetLabels()[i], (double) probs[i]);
+                    String id = UUID.randomUUID().toString();
+                    PersistentTuple tuple = classificationWriter.generateTuple(id, shot.getId(), net.getSynSetLabels()[i], probs[i]);
                     classificationWriter.persist(tuple);
-                    classificationWriter.persist(gen);
 
                 }
             }
@@ -334,20 +282,15 @@ public class NeuralNetFeature extends AbstractFeatureModule {
         List<StringDoublePair> _return = new ArrayList();
 
         if (!sc.getTags().isEmpty()) {
-            List<String> wnLabels = new ArrayList();
+            Set<String> wnLabels = new HashSet<>();
             for (String label : sc.getTags()) {
                 LOGGER.debug("Looking for tag {}", label);
-                wnLabels = new ArrayList();
                 for (Map<String, PrimitiveTypeProvider> row : classSelector.getRows("label", label)) {
                     wnLabels.add(row.get("objectid").getString());
                 }
             }
-            Set<String> setLabels = new HashSet<>();
-            for(String label: wnLabels){
-                setLabels.add(label);
-            }
 
-            for (String wnLabel : setLabels) {
+            for (String wnLabel : wnLabels) {
                 for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", wnLabel)) {
                     LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
                     _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
