@@ -6,6 +6,7 @@ import com.eclipsesource.json.JsonValue;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.config.Config;
@@ -417,6 +418,7 @@ public class JSONAPIThread extends Thread {
 			case "getSegments":{
 				String multimediaobjectId = clientJSON.get("multimediaobjectId").asString();
 				List<SegmentDescriptor> segments = new SegmentLookup().lookUpAllSegments(multimediaobjectId);
+				Collections.sort(segments, new SegmentDescriptorComparator());
 
 				JsonArray list = new JsonArray();
 				for (SegmentDescriptor segment: segments) {
