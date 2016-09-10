@@ -10,6 +10,6 @@ import java.util.Comparator;
 public class SegmentDescriptorComparator implements Comparator<SegmentLookup.SegmentDescriptor> {
   @Override
   public int compare(SegmentLookup.SegmentDescriptor a, SegmentLookup.SegmentDescriptor b) {
-    return Integer.parseInt(a.getShotId()) < Integer.parseInt(b.getShotId()) ? -1 : Integer.parseInt(a.getShotId()) == Integer.parseInt(b.getShotId()) ? 0 : 1;
+    return a.getSequenceNumber() < b.getSequenceNumber() ? -1 : a.getSequenceNumber() == b.getSequenceNumber() ? 0 : 1;
   }
 }
