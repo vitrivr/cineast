@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by sein on 02.09.16.
  */
 public class VisualizationDominantEdgeGrid8 extends AbstractVisualizationModule {
-  protected VisualizationDominantEdgeGrid8() {
+  public VisualizationDominantEdgeGrid8() {
     super();
     tableNames.put("DominantEdgeGrid8", "features_DominantEdgeGrid8");
   }

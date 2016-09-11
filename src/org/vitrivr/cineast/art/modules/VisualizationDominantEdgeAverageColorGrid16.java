@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by sein on 02.09.16.
  */
 public class VisualizationDominantEdgeAverageColorGrid16 extends AbstractVisualizationModule {
-  protected VisualizationDominantEdgeAverageColorGrid16() {
+  public VisualizationDominantEdgeAverageColorGrid16() {
     super();
     tableNames.put("DominantEdgeGrid16", "features_DominantEdgeGrid16");
     tableNames.put("AverageColorGrid8", "features_AverageColorGrid8");
