@@ -139,6 +139,17 @@ public class MultimediaObjectLookup{
 		super.finalize();
 	}
 
+	public List<MultimediaObjectDescriptor> getAllVideos(){
+		DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+		selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
+		List<Map<String, PrimitiveTypeProvider>> all = selector.getAll();
+		List<MultimediaObjectDescriptor> _return = new ArrayList<>(all.size());
+		for (Map<String, PrimitiveTypeProvider> map : all) {
+			_return.add(mapToDescriptor(map));
+		}
+		return _return;
+	}
+
 	public List<String> lookUpVideoIds(){
 		DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
 		selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
