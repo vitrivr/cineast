@@ -31,6 +31,15 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adam.grpc.AdamGrpc.EmptyMessage,
+      org.vitrivr.adam.grpc.AdamGrpc.AvailableAttributeTypesMessage> METHOD_AVAILABLE_ATTRIBUTE_TYPES =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamDefinition", "AvailableAttributeTypes"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.EmptyMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.AvailableAttributeTypesMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage,
       org.vitrivr.adam.grpc.AdamGrpc.AckMessage> METHOD_COUNT =
       io.grpc.MethodDescriptor.create(
@@ -239,6 +248,9 @@ public class AdamDefinitionGrpc {
     public void createEntity(org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> responseObserver);
 
+    public void availableAttributeTypes(org.vitrivr.adam.grpc.AdamGrpc.EmptyMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AvailableAttributeTypesMessage> responseObserver);
+
     public void count(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> responseObserver);
 
@@ -307,6 +319,8 @@ public class AdamDefinitionGrpc {
 
     public org.vitrivr.adam.grpc.AdamGrpc.AckMessage createEntity(org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage request);
 
+    public org.vitrivr.adam.grpc.AdamGrpc.AvailableAttributeTypesMessage availableAttributeTypes(org.vitrivr.adam.grpc.AdamGrpc.EmptyMessage request);
+
     public org.vitrivr.adam.grpc.AdamGrpc.AckMessage count(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request);
 
     public org.vitrivr.adam.grpc.AdamGrpc.AckMessage dropEntity(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request);
@@ -352,6 +366,9 @@ public class AdamDefinitionGrpc {
 
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> createEntity(
         org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage request);
+
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.AvailableAttributeTypesMessage> availableAttributeTypes(
+        org.vitrivr.adam.grpc.AdamGrpc.EmptyMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> count(
         org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request);
@@ -436,6 +453,13 @@ public class AdamDefinitionGrpc {
         io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_CREATE_ENTITY, getCallOptions()), request, responseObserver);
+    }
+
+    @java.lang.Override
+    public void availableAttributeTypes(org.vitrivr.adam.grpc.AdamGrpc.EmptyMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AvailableAttributeTypesMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_AVAILABLE_ATTRIBUTE_TYPES, getCallOptions()), request, responseObserver);
     }
 
     @java.lang.Override
@@ -610,6 +634,12 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public org.vitrivr.adam.grpc.AdamGrpc.AvailableAttributeTypesMessage availableAttributeTypes(org.vitrivr.adam.grpc.AdamGrpc.EmptyMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_AVAILABLE_ATTRIBUTE_TYPES, getCallOptions(), request);
+    }
+
+    @java.lang.Override
     public org.vitrivr.adam.grpc.AdamGrpc.AckMessage count(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_COUNT, getCallOptions(), request);
@@ -755,6 +785,13 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.AvailableAttributeTypesMessage> availableAttributeTypes(
+        org.vitrivr.adam.grpc.AdamGrpc.EmptyMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_AVAILABLE_ATTRIBUTE_TYPES, getCallOptions()), request);
+    }
+
+    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> count(
         org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request) {
       return futureUnaryCall(
@@ -896,27 +933,28 @@ public class AdamDefinitionGrpc {
   }
 
   private static final int METHODID_CREATE_ENTITY = 0;
-  private static final int METHODID_COUNT = 1;
-  private static final int METHODID_DROP_ENTITY = 2;
-  private static final int METHODID_EXISTS_ENTITY = 3;
-  private static final int METHODID_INDEX = 4;
-  private static final int METHODID_GENERATE_ALL_INDEXES = 5;
-  private static final int METHODID_EXISTS_INDEX = 6;
-  private static final int METHODID_DROP_INDEX = 7;
-  private static final int METHODID_LIST_INDEXES = 8;
-  private static final int METHODID_GENERATE_RANDOM_DATA = 9;
-  private static final int METHODID_LIST_ENTITIES = 10;
-  private static final int METHODID_GET_ENTITY_PROPERTIES = 11;
-  private static final int METHODID_REPARTITION_ENTITY_DATA = 12;
-  private static final int METHODID_REPARTITION_INDEX_DATA = 13;
-  private static final int METHODID_ADJUST_SCAN_WEIGHTS = 14;
-  private static final int METHODID_RESET_SCAN_WEIGHTS = 15;
-  private static final int METHODID_SET_SCAN_WEIGHT = 16;
-  private static final int METHODID_SPARSIFY_ENTITY = 17;
-  private static final int METHODID_IMPORT_DATA = 18;
-  private static final int METHODID_IMPORT_DATA_FILE = 19;
-  private static final int METHODID_EXPORT_DATA_FILE = 20;
-  private static final int METHODID_INSERT = 21;
+  private static final int METHODID_AVAILABLE_ATTRIBUTE_TYPES = 1;
+  private static final int METHODID_COUNT = 2;
+  private static final int METHODID_DROP_ENTITY = 3;
+  private static final int METHODID_EXISTS_ENTITY = 4;
+  private static final int METHODID_INDEX = 5;
+  private static final int METHODID_GENERATE_ALL_INDEXES = 6;
+  private static final int METHODID_EXISTS_INDEX = 7;
+  private static final int METHODID_DROP_INDEX = 8;
+  private static final int METHODID_LIST_INDEXES = 9;
+  private static final int METHODID_GENERATE_RANDOM_DATA = 10;
+  private static final int METHODID_LIST_ENTITIES = 11;
+  private static final int METHODID_GET_ENTITY_PROPERTIES = 12;
+  private static final int METHODID_REPARTITION_ENTITY_DATA = 13;
+  private static final int METHODID_REPARTITION_INDEX_DATA = 14;
+  private static final int METHODID_ADJUST_SCAN_WEIGHTS = 15;
+  private static final int METHODID_RESET_SCAN_WEIGHTS = 16;
+  private static final int METHODID_SET_SCAN_WEIGHT = 17;
+  private static final int METHODID_SPARSIFY_ENTITY = 18;
+  private static final int METHODID_IMPORT_DATA = 19;
+  private static final int METHODID_IMPORT_DATA_FILE = 20;
+  private static final int METHODID_EXPORT_DATA_FILE = 21;
+  private static final int METHODID_INSERT = 22;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -937,6 +975,10 @@ public class AdamDefinitionGrpc {
         case METHODID_CREATE_ENTITY:
           serviceImpl.createEntity((org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage>) responseObserver);
+          break;
+        case METHODID_AVAILABLE_ATTRIBUTE_TYPES:
+          serviceImpl.availableAttributeTypes((org.vitrivr.adam.grpc.AdamGrpc.EmptyMessage) request,
+              (io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AvailableAttributeTypesMessage>) responseObserver);
           break;
         case METHODID_COUNT:
           serviceImpl.count((org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage) request,
@@ -1046,6 +1088,13 @@ public class AdamDefinitionGrpc {
               org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage,
               org.vitrivr.adam.grpc.AdamGrpc.AckMessage>(
                 serviceImpl, METHODID_CREATE_ENTITY)))
+        .addMethod(
+          METHOD_AVAILABLE_ATTRIBUTE_TYPES,
+          asyncUnaryCall(
+            new MethodHandlers<
+              org.vitrivr.adam.grpc.AdamGrpc.EmptyMessage,
+              org.vitrivr.adam.grpc.AdamGrpc.AvailableAttributeTypesMessage>(
+                serviceImpl, METHODID_AVAILABLE_ATTRIBUTE_TYPES)))
         .addMethod(
           METHOD_COUNT,
           asyncUnaryCall(
