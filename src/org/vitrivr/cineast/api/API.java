@@ -62,22 +62,21 @@ public class API {
 
 		boolean disableAllAPI = false;
 
-		if(commandline.getArgList().contains("neuralnet")){
-			LOGGER.info("Initializing nn persistent layer");
-
+		if(commandline.getArgList().contains("playground")){
 			DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
-			selector.open(NeuralNetFeature.getClassTableName());
-			System.out.println("Previewing");
-			List<Map<String, PrimitiveTypeProvider>> preview = selector.preview();
-			System.out.println("Previewed");
-			for (Map<String, PrimitiveTypeProvider> map : preview) {
-				LOGGER.debug("Map size: {}", map.size());
+			selector.open("cineast_segment");
+			for (Map<String, PrimitiveTypeProvider> map : selector.preview()) {
 				for(Map.Entry<String, PrimitiveTypeProvider> entry : map.entrySet()){
-					LOGGER.info("Entry {} ", entry.getKey(), entry.getValue());
+					LOGGER.info(entry.getKey()+" "+entry.getValue());
 				}
+				System.out.println("-------------\n");
 			}
 			System.exit(1);
+		}
 
+
+		if(commandline.getArgList().contains("neuralnet")){
+			LOGGER.info("Initializing nn persistent layer");
 			NeuralNetFeature feature = new NeuralNetVGG16Feature(Config.getNeuralNetConfig());
 
 			feature.initalizePersistentLayer(() -> new EntityCreator());
