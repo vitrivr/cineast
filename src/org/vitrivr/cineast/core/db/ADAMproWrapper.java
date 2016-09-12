@@ -97,9 +97,9 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	}
 
 	public ListenableFuture<QueryResultsMessage> previewEntity(EntityNameMessage message){
-		SettableFuture<QueryResultsMessage> future = SettableFuture.create();
+		ListenableFuture<QueryResultsMessage> future = SettableFuture.create();
 		synchronized (this.searchStub) {
-			this.searchStub.preview(message);
+			future = this.searchStub.preview(message);
 		}
 		return future;
 	}
