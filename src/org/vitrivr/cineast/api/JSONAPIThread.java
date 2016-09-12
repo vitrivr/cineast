@@ -14,12 +14,10 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.VisualizationConfig;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.ADAMproSelector;
-import org.vitrivr.cineast.core.db.DBResultCache;
-import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.SegmentLookup;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
-import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -380,25 +378,25 @@ public class JSONAPIThread extends Thread {
 			case "getLabels":{
 				LOGGER.debug("Label API call starting");
 				JsonArray jsonConcepts = new JsonArray();
-				/*DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+				DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
 				selector.open(NeuralNetFeature.getClassTableName());
 
 				List<PrimitiveTypeProvider> queryRes = selector.getAll("label");
 				Set<String> labels = new HashSet(queryRes.size());
 				//Eliminate Duplicates
 				for(PrimitiveTypeProvider el : queryRes){
-					LOGGER.debug("Found label: "+el.getString());
+					//LOGGER.debug("Found label: "+el.getString());
 					labels.add(el.getString());
 				}
 				for(String el : labels){
 					jsonConcepts.add(el);
-				}*/
-				String[] concepts = new String[]{"fruit, cars"};	//TODO Mock-labels while we wait for DB-Filling
+				}
+				/*String[] concepts = new String[]{"fruit, cars"};	//TODO Mock-labels while we wait for DB-Filling
 				for(String c: concepts){
 					jsonConcepts.add(c);
-				}
+				}*/
 				_return.set("concepts", jsonConcepts);
-				//selector.close();
+				selector.close();
 				LOGGER.debug("Concepts API call ending");
 				break;
 			}

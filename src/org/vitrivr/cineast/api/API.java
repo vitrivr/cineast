@@ -4,6 +4,8 @@ import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
@@ -21,6 +23,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,6 +64,20 @@ public class API {
 
 		if(commandline.getArgList().contains("neuralnet")){
 			LOGGER.info("Initializing nn persistent layer");
+
+			DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+			selector.open(NeuralNetFeature.getClassTableName());
+			System.out.println("Previewing");
+			List<Map<String, PrimitiveTypeProvider>> preview = selector.preview();
+			System.out.println("Previewed");
+			for (Map<String, PrimitiveTypeProvider> map : preview) {
+				LOGGER.debug("Map size: {}", map.size());
+				for(Map.Entry<String, PrimitiveTypeProvider> entry : map.entrySet()){
+					LOGGER.info("Entry {} ", entry.getKey(), entry.getValue());
+				}
+			}
+			System.exit(1);
+
 			NeuralNetFeature feature = new NeuralNetVGG16Feature(Config.getNeuralNetConfig());
 
 			feature.initalizePersistentLayer(() -> new EntityCreator());
@@ -73,6 +90,7 @@ public class API {
 
 			disableAllAPI = true;
 			LOGGER.info("done");
+
 		}
 		
 		if(commandline.hasOption("job")){

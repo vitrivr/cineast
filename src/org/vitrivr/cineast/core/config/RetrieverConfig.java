@@ -80,7 +80,7 @@ public final class RetrieverConfig {
 
 		list = new ArrayList<>(1);
 		list.add(DoublePair.pair(NeuralNetVGG16Feature.class, 1.0));
-		DEFAULT_RETRIEVER_CATEGORIES.put("neuralNet", list);
+		DEFAULT_RETRIEVER_CATEGORIES.put("neuralnet", list);
 		
 		list = new ArrayList<>(3);
 		list.add(DoublePair.pair(SubtitleWordSearch.class, 			1.0));
