@@ -23,7 +23,8 @@ public class SynLabelProvider implements LabelProvider {
 
             String line = null;
             while ((line = br.readLine()) != null) {
-                String[] readable = line.substring(line.indexOf(" "), line.length()).split(", ");
+                //+1 because we don't want the space
+                String[] readable = line.substring(line.indexOf(" ")+1, line.length()).split(", ");
                 labels.add(Arrays.asList(readable));
                 String lbl = line.substring(0, line.indexOf(" "));
                 synl.add(lbl);
