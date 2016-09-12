@@ -22,5 +22,7 @@ public interface DBSelector {
 	List<float[]> getFeatureVectors(String fieldName, String value, String vectorName);
 	
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
+
+	List<PrimitiveTypeProvider> getAllRows(String label);
 	
 }
