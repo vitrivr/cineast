@@ -402,11 +402,12 @@ public class JSONAPIThread extends Thread {
 			}
 
 			case "getMultimediaobjects":{
-				List<String> multimediaobjectIds = new MultimediaObjectLookup().lookUpVideoIds();
+				List<MultimediaObjectLookup.MultimediaObjectDescriptor> multimediaobjectIds = new MultimediaObjectLookup().getAllVideos();
 
 				JsonArray movies = new JsonArray();
-				for(String s: multimediaobjectIds){
-					movies.add(s);
+				for(MultimediaObjectLookup.MultimediaObjectDescriptor descriptor: multimediaobjectIds){
+					JsonObject resultobj = JSONEncoder.encodeVideo(descriptor);
+					movies.add(resultobj);
 				}
 
 				_return.set("multimediaobjects", movies);
