@@ -28,6 +28,11 @@ public interface DBSelector {
 	 */
     List<PrimitiveTypeProvider> getAll(String column);
 
+	/**
+	 * SELECT * from
+	 */
+	List<Map<String, PrimitiveTypeProvider>> getAll();
+
 	boolean existsEntity(String name);
 
 	/** Get first 100 rows since the preview-support of adampro does not include a limit.*/

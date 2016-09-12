@@ -16,6 +16,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class ADAMproSelector implements DBSelector {
 
@@ -302,6 +303,14 @@ public class ADAMproSelector implements DBSelector {
 	 */
 	@Override
 	public List<PrimitiveTypeProvider> getAll(String label) {
+		List<Map<String, PrimitiveTypeProvider>> resultList = getAll();
+		List<PrimitiveTypeProvider> _return = resultList.stream().map(row -> row.get(label)).collect(Collectors.toList());
+
+		return _return;
+	}
+
+	@Override
+	public List<Map<String, PrimitiveTypeProvider>> getAll() {
 		BooleanQueryMessage bqm;
 		synchronized (bqmBuilder){
 			bqmBuilder.clear();
@@ -309,12 +318,7 @@ public class ADAMproSelector implements DBSelector {
 		}
 		List<Map<String, PrimitiveTypeProvider>> resultList = executeBooleanQuery(bqm);
 
-		List<PrimitiveTypeProvider> _return = new ArrayList(resultList.size());
-		for(Map<String, PrimitiveTypeProvider> row : resultList){
-			_return.add(row.get(label));
-		}
-
-		return _return;
+		return resultList;
 	}
 
 	@Override
