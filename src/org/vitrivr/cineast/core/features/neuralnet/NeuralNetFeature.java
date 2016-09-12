@@ -1,29 +1,17 @@
 package org.vitrivr.cineast.core.features.neuralnet;
 
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.geometry.Position;
-import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adam.grpc.AdamGrpc;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.NeuralNetConfig;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.SegmentContainer;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
-import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
-import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactory;
 import org.vitrivr.cineast.core.features.neuralnet.label.ConceptReader;
 import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.TimeHelper;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -40,6 +28,10 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
     public NeuralNetFeature(String tableName){
         super(tableName, 1f);
+    }
+
+    public static String getClassTableName() {
+        return classTableName;
     }
 
     @Override
