@@ -62,6 +62,10 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         this.net = neuralNet;
     }
 
+    public NeuralNetVGG16Feature(){
+        this(Config.getNeuralNetConfig());
+    }
+
     public NeuralNetVGG16Feature(NeuralNetConfig neuralNetConfig) {
         super(fullVectorTableName);
         this.cutoff = neuralNetConfig.getCutoff();
@@ -144,21 +148,21 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         } else {
             //TODO Can we just take the most representative frame from the sc? Is that the query image?
             float[] res = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
-
             for (int i = 0; i < res.length; i++) {
                 //TODO This cutoff should be in queryConfig probably
                 if (res[i] > cutoff) {
                     for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", net.getSynSetLabels()[i])) {
-                        //TODO Duplicates?
+                        //TODO Handle Duplicates
+                        //TODO How do we tell the user why we matched
                         LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
                         _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
                     }
                 }
             }
         }
-        //TODO Currently returns mock-result until we get data in the DB
-        _return = new ArrayList();
-        _return.add(new StringDoublePair("720909", 0.5));
+        if(_return.size()==0){
+            _return = getSimilar(_net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage()), qc);
+        }
         LOGGER.info("NeuralNetFeature.getSimilar() done in {}",
                 TimeHelper.toc());
         return LOGGER.exit(_return);
