@@ -111,6 +111,18 @@ public class ADAMproSelector implements DBSelector {
 			return wmBuilder.setAttribute(key).setValue(value).build();
 		}
 	}
+
+	private WhereMessage buildWhereMessage(String key, String... values){
+		synchronized (wmBuilder) {
+			wmBuilder.clear();
+			StringBuilder sb = new StringBuilder();
+			sb.append("IN ('");
+			sb.append(String.join("', '", values));
+			sb.append("')");
+			LOGGER.debug("Querying... {}", sb.toString());
+			return wmBuilder.setAttribute(key).setValue(sb.toString()).build();
+		}
+	}
 	
 	private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column, FeatureVectorMessage fvm, int k, QueryConfig qc){
 		synchronized (nnqmBuilder) {
@@ -293,6 +305,12 @@ public class ADAMproSelector implements DBSelector {
 	@Override
 	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
 		WhereMessage where = buildWhereMessage(fieldName, value);		
+		BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
+		return executeBooleanQuery(bqMessage);
+	}
+
+	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
+		WhereMessage where = buildWhereMessage(fieldName, values);
 		BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
 		return executeBooleanQuery(bqMessage);
 	}
