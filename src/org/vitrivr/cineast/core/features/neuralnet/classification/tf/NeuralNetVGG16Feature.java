@@ -146,7 +146,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
             float[] res = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
             List<String> hits = new ArrayList<>();
             for (int i = 0; i < res.length; i++) {
-                if (res[i] > cutoff) {
+                if (res[i] > qc.getCutoff().orElse(cutoff)) {
                     hits.add(net.getSynSetLabels()[i]);
                 }
             }
