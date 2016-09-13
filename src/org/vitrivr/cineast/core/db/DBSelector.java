@@ -23,9 +23,9 @@ public interface DBSelector {
 	
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
 
-	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... value);
+    List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values);
 
-	/**
+    /**
 	 * SELECT column from the table. Be careful with large entities
 	 */
     List<PrimitiveTypeProvider> getAll(String column);

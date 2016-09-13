@@ -119,14 +119,21 @@ public class MultimediaObjectLookup{
 		
 		HashMap<String, MultimediaObjectDescriptor> _return = new HashMap<>();
 		
-		for(String id : videoIds){
-			MultimediaObjectDescriptor descriptor = lookUpObjectById(id);
-			if(descriptor.exists()){
-				_return.put(id, descriptor);
-			}
+		
+		List<Map<String, PrimitiveTypeProvider>> results = selector.getRows("id", videoIds);
+		
+		if(results.isEmpty()){
+			return new HashMap<>();
+		}
+		
+		for(Map<String, PrimitiveTypeProvider> map : results){
+			MultimediaObjectDescriptor d = mapToDescriptor(map);
+			_return.put(d.getId(), d);
 		}
 		
 		return _return;
+		
+
 	}
 
 	public void close() {

@@ -123,7 +123,7 @@ public class ADAMproSelector implements DBSelector {
 			return wmBuilder.setAttribute(key).setValue(sb.toString()).build();
 		}
 	}
-	
+
 	private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column, FeatureVectorMessage fvm, int k, QueryConfig qc){
 		synchronized (nnqmBuilder) {
 			this.nnqmBuilder.clear();
@@ -301,6 +301,22 @@ public class ADAMproSelector implements DBSelector {
 		
 		return _return;
 	}
+
+	@Override
+	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
+		if(values == null || values.length == 0){
+			LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows()");
+			return new ArrayList<>(0);
+		}
+
+		if(values.length == 1){
+			return getRows(fieldName, values[0]);
+		}
+
+        WhereMessage where = buildWhereMessage(fieldName, values);
+        BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
+        return executeBooleanQuery(bqMessage);
+    }
 
 	@Override
 	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
