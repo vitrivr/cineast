@@ -97,7 +97,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
                 }
             }
             persist(shot.getId(), new FloatVectorImpl(probabilities));
-            LOGGER.debug("NeuralNetFeature.processShot() done in {}",
+            LOGGER.trace("NeuralNetFeature.processShot() done in {}",
                     TimeHelper.toc());
         }
         LOGGER.exit();
