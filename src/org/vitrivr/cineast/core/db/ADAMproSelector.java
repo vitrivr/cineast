@@ -119,7 +119,6 @@ public class ADAMproSelector implements DBSelector {
 			sb.append("IN ('");
 			sb.append(String.join("', '", values));
 			sb.append("')");
-			LOGGER.debug("Querying... {}", sb.toString());
 			return wmBuilder.setAttribute(key).setValue(sb.toString()).build();
 		}
 	}
