@@ -41,7 +41,7 @@ public class VisualizationMedianColorGradient extends AbstractVisualizationModul
     BufferedImage image = new BufferedImage(segments.size(), 1, BufferedImage.TYPE_INT_RGB);
     int count = 0;
     for (SegmentLookup.SegmentDescriptor segment : segments) {
-      int[][] avg = ArtUtil.shotToInt(segment.getShotId(), selector, 1, 1);
+      int[][] avg = ArtUtil.shotToInt(segment.getSegmentId(), selector, 1, 1);
       image.setRGB(count, 0, avg[0][0]);
       count++;
     }

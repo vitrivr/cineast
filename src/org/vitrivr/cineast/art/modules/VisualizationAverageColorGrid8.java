@@ -38,7 +38,7 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule 
 
     int[][][] pixels = new int[8][8][3];
     for (SegmentLookup.SegmentDescriptor segment : segments) {
-      int[][][] shotPixels = ArtUtil.shotToRGB(segment.getShotId(), selector, 8, 8);
+      int[][][] shotPixels = ArtUtil.shotToRGB(segment.getSegmentId(), selector, 8, 8);
       for (int x = 0; x < pixels.length; x++) {
         for (int y = 0; y < pixels[0].length; y++) {
           for (int i = 0; i < 3; i++) {

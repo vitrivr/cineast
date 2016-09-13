@@ -44,7 +44,7 @@ public class VisualizationDominantColorStripe extends AbstractVisualizationModul
     Graphics2D graph = image.createGraphics();
     int count = 0;
     for (SegmentLookup.SegmentDescriptor segment : segments) {
-      List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segment.getShotId());
+      List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segment.getSegmentId());
       for (Map<String, PrimitiveTypeProvider> row : result) {
         float[] arr = row.get("feature").getFloatArray();
         RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));

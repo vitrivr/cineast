@@ -421,7 +421,7 @@ public class JSONAPIThread extends Thread {
 
 				JsonArray list = new JsonArray();
 				for (SegmentDescriptor segment: segments) {
-					list.add(segment.getShotId());
+					list.add(segment.getSegmentId());
 				}
 
 				_return.set("segments", list);

@@ -325,12 +325,6 @@ public class ADAMproSelector implements DBSelector {
 		return executeBooleanQuery(bqMessage);
 	}
 
-	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
-		WhereMessage where = buildWhereMessage(fieldName, values);
-		BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
-		return executeBooleanQuery(bqMessage);
-	}
-
 	/**
 	 * SELECT label FROM ...
 	 * Be careful with the size of the resulting List :)

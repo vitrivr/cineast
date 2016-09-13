@@ -44,7 +44,7 @@ public class VisualizationAverageColorGrid8Square extends AbstractVisualizationM
 
     int count = 0;
     for (SegmentLookup.SegmentDescriptor segment : segments) {
-      int[][] pixels = ArtUtil.shotToInt(segment.getShotId(), selector, 8, 8);
+      int[][] pixels = ArtUtil.shotToInt(segment.getSegmentId(), selector, 8, 8);
       int baseY = (count / size[0]) * 8;
       int baseX = (count % size[0]) * 8;
       for (int x = 0; x < pixels.length; x++) {

@@ -45,7 +45,7 @@ public class VisualizationDominantColorStripeVariable extends AbstractVisualizat
     int[] colors = new int[segments.size()];
     int[] widths = new int[segments.size()];
     for (SegmentLookup.SegmentDescriptor segment : segments) {
-      List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segment.getShotId());
+      List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segment.getSegmentId());
       widths[count] = (segment.getEndFrame() - segment.getStartFrame()) / 10 + 1;
       totalWidth += widths[count];
       for (Map<String, PrimitiveTypeProvider> row : result) {
