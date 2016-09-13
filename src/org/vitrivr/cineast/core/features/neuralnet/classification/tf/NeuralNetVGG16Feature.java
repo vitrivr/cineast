@@ -99,7 +99,6 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
                     String id = UUID.randomUUID().toString();
                     PersistentTuple tuple = classificationWriter.generateTuple(id, shot.getId(), net.getSynSetLabels()[i], probabilities[i]);
                     classificationWriter.persist(tuple);
-
                 }
             }
             persist(shot.getId(), new FloatVectorImpl(probabilities));
@@ -119,45 +118,48 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
         LOGGER.entry();
         TimeHelper.tic();
+        List<StringDoublePair> _return = new ArrayList();
+
+        LOGGER.debug("No tags found, classifying");
         NeuralNet _net = null;
         if(this.net!=null){
             _net = this.net;
         }
         if(qc.getNet() != null){
-            _net = qc.getNet();
+            _net = qc.getNet().get();
         }
         if(_net == null){
             this.net = (VGG16Net) Config.getNeuralNetConfig().getNeuralNetFactory().get(); //cache NN
             _net = this.net;
         }
-        List<StringDoublePair> _return = new ArrayList();
 
         if (!sc.getTags().isEmpty()) {
             Set<String> wnLabels = new HashSet<>();
+
+            //TODO Use distinct
             for (String label : sc.getTags()) {
                 LOGGER.debug("Looking for tag {}", label);
                 wnLabels.addAll(getClassSelector().getRows("label", label).stream().map(row -> row.get("objectid").getString()).collect(Collectors.toList()));
             }
-
-            for (String wnLabel : wnLabels) {
-                for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", wnLabel)) {
+                for (Map<String, PrimitiveTypeProvider> row :
+                        classificationSelector.getRows("objectid", wnLabels.toArray(new String[wnLabels.size()]))) {
                     LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
                     _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
                 }
-            }
         } else {
             //TODO Can we just take the most representative frame from the sc? Is that the query image?
             float[] res = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
+            List<String> hits = new ArrayList<>();
             for (int i = 0; i < res.length; i++) {
-                //TODO This cutoff should be in queryConfig probably
                 if (res[i] > cutoff) {
-                    for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", net.getSynSetLabels()[i])) {
-                        //TODO Handle Duplicates
-                        //TODO How do we tell the user why we matched
-                        LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
-                        _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
-                    }
+                    hits.add(net.getSynSetLabels()[i]);
                 }
+            }
+            for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", hits.toArray(new String[hits.size()]))) {
+                //TODO Handle Duplicates -> Wait for Maxpool-updates
+                //TODO How do we tell the user why we matched
+                LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
+                _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
             }
         }
         if(_return.size()==0){
