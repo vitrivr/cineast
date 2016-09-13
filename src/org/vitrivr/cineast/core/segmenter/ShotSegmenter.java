@@ -103,7 +103,7 @@ public class ShotSegmenter implements ShotProvider{
 				
 			}while(frame.getId() < bounds.getEndFrame());
 			
-			_return.setShotId(bounds.getShotId());
+			_return.setShotId(bounds.getSegmentId());
 			addSubtitleItems(_return);
 			
 			idCounter.incrementAndGet();
