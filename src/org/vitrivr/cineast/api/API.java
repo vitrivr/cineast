@@ -4,8 +4,6 @@ import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
@@ -23,7 +21,6 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,15 +60,14 @@ public class API {
 		boolean disableAllAPI = false;
 
 		if(commandline.getArgList().contains("playground")){
-			DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+			/**DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
 			selector.open("cineast_segment");
 			for (Map<String, PrimitiveTypeProvider> map : selector.preview()) {
 				for(Map.Entry<String, PrimitiveTypeProvider> entry : map.entrySet()){
 					LOGGER.info(entry.getKey()+" "+entry.getValue());
 				}
 				System.out.println("-------------\n");
-			}
-			System.exit(1);
+			}*/
 		}
 
 
