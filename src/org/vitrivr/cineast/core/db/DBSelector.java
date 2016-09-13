@@ -37,6 +37,6 @@ public interface DBSelector {
 
 	boolean existsEntity(String name);
 
-	/** Get first 100 rows since the preview-support of adampro does not include a limit.*/
-	List<Map<String, PrimitiveTypeProvider>> preview();
+	/** Get first k rows*/
+	List<Map<String, PrimitiveTypeProvider>> preview(int k);
 }

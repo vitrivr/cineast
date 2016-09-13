@@ -345,7 +345,8 @@ public class ADAMproSelector implements DBSelector {
 	}
 
 	@Override
-	public List<Map<String, PrimitiveTypeProvider>> preview() {
+	public List<Map<String, PrimitiveTypeProvider>> preview(int k) {
+		//TODO Currently doesn't support k
 		ListenableFuture<QueryResultsMessage> f = this.adampro.previewEntity(EntityNameMessage.newBuilder().setEntity(this.fromBuilder.getEntity()).build());
 		QueryResultsMessage result;
 		try {
