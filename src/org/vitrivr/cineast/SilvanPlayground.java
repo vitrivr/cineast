@@ -6,6 +6,7 @@ import org.jgraph.graph.Edge;
 import org.jgraph.plaf.basic.BasicGraphUI;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
+import org.jgrapht.alg.NeighborIndex;
 import org.jgrapht.alg.PrimMinimumSpanningTree;
 import org.jgrapht.alg.interfaces.MinimumSpanningTree;
 import org.jgrapht.graph.DefaultEdge;
@@ -20,7 +21,8 @@ import org.math.plot.plots.ScatterPlot;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
-import sun.misc.resources.Messages_zh_CN;
+import org.vitrivr.cineast.explorative.MST;
+import org.vitrivr.cineast.explorative.MSTNodeDouble;
 
 import javax.swing.*;
 import java.util.*;
@@ -35,13 +37,20 @@ public class SilvanPlayground {
 
     static int initialDimension = 0;
     public static void main(String[] args){
-        GraphInCell g = new GraphInCell();
-        g.addNode(new double[]{10});
-        g.addNode(new double[]{8});
-        g.addNode(new double[]{5.0});
-        g.addNode(new double[]{11});
-        g.addNode(new double[]{6});
-        g.addNode(new double[]{4});
+
+        try {
+            MST mst = new MST(MSTNodeDouble.class);
+            mst.add(Arrays.asList(new Double[] {new Double(1), new Double(2)}));
+//            mst.add(Arrays.asList(new Double[] {1,3}));
+//            mst.add(Arrays.asList(new Double[] {1,4}));
+//            mst.add(Arrays.asList(new Double[] {2,2}));
+//            mst.add(Arrays.asList(new Double[] {3,2}));
+
+            mst.getNucleus();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
 
 //
@@ -217,16 +226,28 @@ public class SilvanPlayground {
 class HCT{
     HCTNode root;
     int topLevelNo = 0;
+    HashMap<Integer, List<HCTNode>> levels = new HashMap<Integer, List<HCTNode>>();
+    public void add(Object nextItem){
+        if(root == null){
+            root = new HCTNode(nextItem);
+            topLevelNo++;
+        } else {
+            add(nextItem, 0);
+        }
+
+    }
 
     public void add(Object nextItem, int levelNo){
+
         if(levelNo > topLevelNo){
-            topLevelNo += 1;
+            topLevelNo++;
             HCTNode tcell = new HCTNode(nextItem);
             tcell.addItem(nextItem);
             // to be discussed
             root = tcell;
             return;
         }
+
         HCTNode cellO;
         if(levelNo == topLevelNo){
             cellO = root;
@@ -235,22 +256,22 @@ class HCT{
             ArrayCS.add(root);
             cellO = PreEmptiveCellSearch(ArrayCS, nextItem, topLevelNo, levelNo);
         }
-        Object oldNucleus = cellO.nucleus;
-        List<Object> newNnuclei = cellO.addItem(nextItem);
+        Object oldNucleus = cellO.getNucleus();
+        List<HCTNode> newNodes = cellO.addItem(nextItem);
         int levelAbove = levelNo + 1;
-        if(newNnuclei.size() == 2){
+        if(newNodes.size() == 2){
 
-            remove(oldNucleus, levelAbove);
-            add(newNnuclei.get(0), levelAbove);
-            add(newNnuclei.get(1), levelAbove);
-        }   else if(oldNucleus != cellO.nucleus){
-            remove(oldNucleus, levelAbove);
-            add(cellO.nucleus, levelAbove);
+            remove(levelAbove, oldNucleus);
+            add(newNodes.get(0).getNucleus(), levelAbove);
+            add(newNodes.get(1).getNucleus(), levelAbove);
+        }   else if(oldNucleus != cellO.getNucleus()){
+            remove(levelAbove, oldNucleus);
+            add(cellO.getNucleus(), levelAbove);
         }
     }
 
     private HCTNode PreEmptiveCellSearch(List<HCTNode> ArrayCS, Object nextItem, int currLevelNo, int levelNo){
-        HCTNode msNode = null; // // TODO: 12.09.16 find the most similar item in ArrayCS
+        HCTNode msNode = getMostSimilarItem(nextItem, ArrayCS); // // TODO: 12.09.16 find the most similar item in ArrayCS
         if(levelNo + 1 == currLevelNo){
             return msNode;
         }
@@ -258,7 +279,7 @@ class HCT{
         double delta_i = 0;
         for(HCTNode cell : ArrayCS){
             try {
-                delta_i = distance(nextItem, cell.nucleus); // // TODO: 12.09.16 implement the covering radius
+                delta_i = distance(((Nucleus)nextItem).value, cell.getNucleus().value); // // TODO: 12.09.16 implement the covering radius
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 System.exit(-1);
@@ -269,6 +290,23 @@ class HCT{
             }
         }
         return PreEmptiveCellSearch(newArrayCS, nextItem, currLevelNo - 1, levelNo);
+    }
+
+    private HCTNode getMostSimilarItem(Object item, List<HCTNode> toCompareItems){
+        double minDist = Double.MAX_VALUE;
+        HCTNode mostSimilarItem = null;
+        for(HCTNode item2 : toCompareItems){
+            try {
+                double actDist = distance((double[])item, (double[]) item2.getNucleus().value);
+                if(minDist > actDist){
+                    minDist = actDist;
+                    mostSimilarItem = item2;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return mostSimilarItem;
     }
 
     public double distance(Object item, Object item2) throws Exception {
@@ -285,78 +323,146 @@ class HCT{
 
     }
 
-    public HCTNode remove(Object item, int levelNo){
-        return null;
+    public void remove(int levelNo, Object item){
+        HCTNode containingNode = searchValue(root, item);
+        containingNode.removeItem(item);
+    }
+
+    public HCTNode searchValue(HCTNode parent, Object value){
+        HCTNode _return = null;
+        for(Object nodesInGraph : parent.getValue()){
+            if(nodesInGraph instanceof Nucleus){
+                HCTNode child = ((Nucleus) nodesInGraph).hctNode;
+                if(Arrays.asList(child.getValue()).contains(value)){
+                    return child;
+                } else {
+                    _return = searchValue(child, value);
+                }
+            }
+
+        }
+        return _return;
     }
 }
 
 class HCTNode{
-    private List<HCTNode> childCells;
-    private WeightedGraph graph = new SimpleWeightedGraph(DefaultWeightedEdge.class);
 
-    public Object nucleus;
-    public boolean nucleusIsChanged = false;
+    private GraphInCell data = new GraphInCell(this);
 
-    private HCTNode() {};
+    private HCTNode(){};
 
     public HCTNode(Object value){
-        addValueToGraph(value);
-        nucleus = value;
-    }
-
-    public HCTNode(WeightedGraph g, Object nucleus) {
-        this.nucleus = nucleus;
-        this.graph = g;
-    }
-
-    private void addValueToGraph(Object value) {
+        if( value instanceof double[]){
+            data.addNode((double[]) value);
+        }
 
     }
 
-    public Object getValue(){
-        return null;
+    public HCTNode(GraphInCell g) {
+        this.data = g;
     }
 
-    public List<Object> addItem(Object value){
-        addValueToGraph(value);
-        return null;
+    public Object[] getValue(){
+        return data.getData();
     }
 
+    public List<HCTNode> addItem(Object value){
+
+        List<HCTNode> _return = new ArrayList<>();
+        for(GraphInCell g : data.addNode((double[]) value)){
+            _return.add(new HCTNode(g));
+        }
+        return _return;
+    }
+
+    public void removeItem(Object item){
+        data.removeData(item);
+    }
+
+    public Nucleus getNucleus(){
+        return data.getNucleus();
+    }
+
+    public HCTNode getChild(Object item){
+        double minDist = Double.MAX_VALUE;
+        HCTNode _return = null;
+        for(Object value : getValue()){
+            try {
+                if(value instanceof Nucleus){
+                    Nucleus nucleus = (Nucleus) value;
+                    double actDist = GraphInCell.distance(nucleus.value, item);
+                    if(actDist < minDist){
+                        minDist = actDist;
+                        _return = nucleus.hctNode;
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return _return;
+    }
 }
 
 class GraphInCell{
 
-    SimpleWeightedGraph graph = new SimpleWeightedGraph(DefaultWeightedEdge.class);
-    Object nucleus;
+    private SimpleWeightedGraph graph = new SimpleWeightedGraph(DefaultWeightedEdge.class);
+    Nucleus nucleus;
+    HCTNode hctNode;
 
-    public void addNode(double[] value){
+    public GraphInCell(HCTNode hctNode){
+        this.hctNode = hctNode;
+    }
+
+    private GraphInCell(SimpleWeightedGraph g, Nucleus nucleus, HCTNode hctNode){
+        this.graph = g;
+        this.nucleus = nucleus;
+        this.hctNode = hctNode;
+    }
+
+    public void removeData(Object item){
+        graph.removeVertex(item);
+    }
+
+    public Nucleus getNucleus(){ return nucleus; }
+
+    public Object[] getData(){
+        return graph.vertexSet().toArray();
+    }
+
+    public List<GraphInCell> addNode(double[] value){
+        List<GraphInCell> _return = new ArrayList<>();
         Set<Object> vertices = insertVertex(value);
         SimpleWeightedGraph mst = null;
         if(graph.vertexSet().size() == 1){
-            nucleus = graph.vertexSet().toArray()[0]; // if the graph contains only one node, this must be the nucleus
+            nucleus = new Nucleus(graph.vertexSet().toArray()[0], hctNode); // if the graph contains only one node, this must be the nucleus
         } else {
             mst = defineNewNucleusIfNecessary(vertices);
         }
-        if(graph.vertexSet().size() > 5){
-            mitosis(mst);
+        if(graph.vertexSet().size() > 1){
+            _return = mitosis(mst);
         }
+        return _return;
     }
 
     private Set<Object> insertVertex(Object value) {
-        graph.addVertex(value);
-        Set<Object> vertices = graph.vertexSet();
-        for(Object vertex : vertices){
-            if(vertex != value){
-                try {
-                    DefaultWeightedEdge dwe = (DefaultWeightedEdge) graph.addEdge(value, vertex);
-                    graph.setEdgeWeight(dwe, distance(value, vertex));
-                } catch (Exception e) {
-                    e.getMessage();
-                    System.exit(-1);
+        try {
+            graph.addVertex(value);
+            Set<Object> vertices = graph.vertexSet();
+            for(Object vertex : vertices){ // // TODO: 13.09.16 creating a fully connected graph and then build a mst from this graph might be not the most efficient way to solve this problem
+                for(Object innerVertex : vertices){
+                    if(vertex != innerVertex && !(graph.containsEdge(vertex, innerVertex) || graph.containsEdge(innerVertex, vertex))){
+                        graph.setEdgeWeight( graph.addEdge(vertex, innerVertex), distance(vertex, innerVertex));
+                    }
                 }
             }
+            return vertices;
+        } catch (Exception e){
+            e.getMessage();
+            System.exit(-1);
         }
-        return vertices;
+        return null;
     }
 
     private SimpleWeightedGraph defineNewNucleusIfNecessary(Set<Object> vertices) {
@@ -377,20 +483,20 @@ class GraphInCell{
         return g;
     }
 
-    private Object findNucleus(SimpleWeightedGraph g) {
+    private Nucleus findNucleus(SimpleWeightedGraph g) {
         int maxDegree = 0;
-        Object nucleus = this.nucleus;
+        Nucleus nucleus = this.nucleus;
         for(Object vertex : g.vertexSet().toArray()){
             int deg = g.degreeOf(vertex);
             if(deg > maxDegree){
                 maxDegree = deg;
-                nucleus = vertex;
+                nucleus.value = vertex;
             }
         }
         return nucleus;
     }
 
-    private double distance(Object item, Object item2) throws Exception {
+    public static double distance(Object item, Object item2) throws Exception {
         //// TODO: 12.09.16 implement real distance function
         double dist = 0;
         if(item instanceof double[] && item2 instanceof double[]){
@@ -404,7 +510,7 @@ class GraphInCell{
 
     }
 
-    private void mitosis(SimpleWeightedGraph g) {
+    private List<GraphInCell> mitosis(SimpleWeightedGraph g) {
         Set<DefaultWeightedEdge> allEdges = g.edgeSet();
         DefaultWeightedEdge edgeWithLeastWeight = null;
         Iterator iterator = allEdges.iterator();
@@ -416,9 +522,10 @@ class GraphInCell{
         }
         g.removeEdge(edgeWithLeastWeight);
         SimpleWeightedGraph wgOne = getSubGraph(g, g.getEdgeSource(edgeWithLeastWeight));
-        HCTNode one = new HCTNode(wgOne, findNucleus(wgOne));
+        GraphInCell one = new GraphInCell(wgOne, findNucleus(wgOne), hctNode);
         SimpleWeightedGraph wgTwo = getSubGraph(g, g.getEdgeTarget(edgeWithLeastWeight));
-        HCTNode two = new HCTNode(wgTwo, findNucleus(wgTwo));
+        GraphInCell two = new GraphInCell(wgTwo, findNucleus(wgTwo), hctNode);
+        return Arrays.asList(new GraphInCell[]{one, two});
     }
 
     private SimpleWeightedGraph getSubGraph(SimpleWeightedGraph g, Object startVertex) {
@@ -437,5 +544,52 @@ class GraphInCell{
             }
         }
         return wg;
+    }
+
+    // g needs to be a mst and the algorithm returns a new mst with node inserted
+    private void addNodeToMst(SimpleWeightedGraph g, Object z) throws Exception { // TODO: 13.09.16 not finished
+
+        g.addVertex(z);
+        if(g.vertexSet().size() == 1) return;
+        NeighborIndex neighborIndex = new NeighborIndex(g);
+        DefaultWeightedEdge t = null;
+        HashSet<Object> oldNodes = new HashSet<Object>();
+        Object r = g.vertexSet().toArray()[0];
+        List<DefaultWeightedEdge> et = new ArrayList<>();
+
+        oldNodes.add(r);
+        DefaultWeightedEdge dwe = (DefaultWeightedEdge) g.addEdge(r,z);
+        g.setEdgeWeight(dwe, distance(r,z));
+        DefaultWeightedEdge m = null;
+        for(Object w : neighborIndex.neighborListOf(r)){
+            if(t == null) t = (DefaultWeightedEdge) g.getEdge(w, z);
+            if(!oldNodes.contains(w)){
+                addNodeToMst(g, w);
+                double edgeweight = g.getEdgeWeight(t);
+                DefaultWeightedEdge edgeWR = (DefaultWeightedEdge) g.getEdge(w, r);
+                DefaultWeightedEdge k = edgeweight > g.getEdgeWeight(edgeWR) ? t : edgeWR;
+                DefaultWeightedEdge h = edgeweight < g.getEdgeWeight(edgeWR) ? t : edgeWR;
+                et.add(h);
+                if(g.getEdgeWeight(k) < g.getEdgeWeight(m)){
+                    m = k;
+                } else {
+                    g.addEdge(r, z);
+                    m = (DefaultWeightedEdge) g.getEdge(r,z);
+                }
+            }
+        }
+        t = m;
+    }
+}
+
+class Nucleus{
+    Object value;
+    HCTNode hctNode;
+
+    private Nucleus(){}
+
+    public Nucleus(Object value, HCTNode hctNode){
+        this.value = value;
+        this.hctNode = hctNode;
     }
 }

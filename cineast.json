@@ -3,11 +3,11 @@
 		"host": "127.0.0.1",
 		"port": 5890,
 		"plaintext": true,
-		"writer": "PROTO"
+		"writer": "ADAMPRO"
 	},
 	
 	"retriever": {
-		"threadPoolSize": 2,
+		"threadPoolSize": 1,
 		"maxResults": 100,
 		"resultsPerModule": 50
 	},
