@@ -109,11 +109,15 @@ public class SegmentLookup {
 		
 		HashMap<String, SegmentDescriptor> _return = new HashMap<>();
 		
-		for(String id : ids){
-			SegmentDescriptor descriptor = lookUpShot(id);
-			if(descriptor.exists()){
-				_return.put(id, descriptor);
-			}
+		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("id", ids);
+		
+		if(results.isEmpty()){
+			return new HashMap<>();
+		}
+		
+		for(Map<String, PrimitiveTypeProvider> map : results){
+			SegmentDescriptor d = mapToDescriptor(map);
+			_return.put(d.getSegmentId(), d);
 		}
 		
 		return _return;
@@ -168,7 +172,7 @@ public class SegmentLookup {
 			this("", "", 0, 0, 0, false);
 		}
 
-		public String getShotId() {
+		public String getSegmentId() {
 			return segmentId;
 		}
 

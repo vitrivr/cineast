@@ -129,6 +129,17 @@ public class ADAMproSelector implements DBSelector {
 		}
 	}
 	
+	private WhereMessage buildWhereMessage(String key, String... values){
+        synchronized (wmBuilder) {
+            wmBuilder.clear();
+            StringBuilder sb = new StringBuilder();
+            sb.append("IN ('");
+            sb.append(String.join("', '", values));
+            sb.append("')");
+            return wmBuilder.setAttribute(key).setValue(sb.toString()).build();
+        }
+    }
+	
 	private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column, FeatureVectorMessage fvm, int k, QueryConfig qc){
 		synchronized (nnqmBuilder) {
 			this.nnqmBuilder.clear();
@@ -308,9 +319,29 @@ public class ADAMproSelector implements DBSelector {
 	}
 
 	@Override
+	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
+		if(values == null || values.length == 0){
+			LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows()");
+			return new ArrayList<>(0);
+		}
+		
+		if(values.length == 1){
+			return getRows(fieldName, values[0]);
+		}
+		
+        WhereMessage where = buildWhereMessage(fieldName, values);
+        BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
+        return executeBooleanQuery(bqMessage);
+    }
+	
+	@Override
 	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
 		WhereMessage where = buildWhereMessage(fieldName, value);		
 		BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
+		return executeBooleanQuery(bqMessage);
+	}
+
+	private List<Map<String, PrimitiveTypeProvider>> executeBooleanQuery(BooleanQueryMessage bqMessage) {
 		QueryMessage qbqm = buildQueryMessage(hints, bqMessage, null, null);
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultsMessage result;

@@ -54,7 +54,7 @@ public final class JSONEncoder {
 	}
 	
 	public static JsonObject encodeShot(SegmentDescriptor sd, boolean includeType){
-		return encodeShot(sd.getShotId(), sd.getVideoId(), sd.getStartFrame(), sd.getEndFrame(), includeType);
+		return encodeShot(sd.getSegmentId(), sd.getVideoId(), sd.getStartFrame(), sd.getEndFrame(), includeType);
 	}
 	
 	public static final JsonObject encodeShot(String shotId, String videoId, long startFrame, long endFrame){
