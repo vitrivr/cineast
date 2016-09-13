@@ -120,7 +120,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         if(this.net!=null){
             _net = this.net;
         }
-        if(qc.getNet() != null){
+        if(qc.getNet().isPresent()){
             _net = qc.getNet().get();
         }
         if(_net == null){
