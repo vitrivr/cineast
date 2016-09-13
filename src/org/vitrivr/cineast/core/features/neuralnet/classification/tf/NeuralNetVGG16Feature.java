@@ -41,9 +41,11 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
 
     private DBSelector classificationSelector;
     private PersistencyWriter<?> classificationWriter;
+
     /**
-     * Needs to be public so the extractionrunner has access with a config-object
+     * Needs to be public so the extraction runner has access with a config-object
      */
+    @SuppressWarnings("unused")
     public NeuralNetVGG16Feature(com.eclipsesource.json.JsonObject config){
         super(fullVectorTableName);
         NeuralNetConfig parsedConfig = NeuralNetConfig.parse(config);
@@ -51,17 +53,10 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         this.net = (VGG16Net) parsedConfig.getNeuralNetFactory().get();
     }
 
-    public NeuralNetVGG16Feature(float cutoff, VGG16Net net){
-        super(fullVectorTableName);
-        this.cutoff = cutoff;
-        this.net = net;
-    }
-
-    public NeuralNetVGG16Feature(VGG16Net neuralNet) {
-        super(fullVectorTableName);
-        this.net = neuralNet;
-    }
-
+    /**
+     * Also needs to be public since the retriever config needs access
+     */
+    @SuppressWarnings("unused")
     public NeuralNetVGG16Feature(){
         this(Config.getNeuralNetConfig());
     }
@@ -118,7 +113,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
         LOGGER.entry();
         TimeHelper.tic();
-        List<StringDoublePair> _return = new ArrayList();
+        List<StringDoublePair> _return = new ArrayList<>();
 
         LOGGER.debug("No tags found, classifying");
         NeuralNet _net = null;
@@ -235,7 +230,6 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         super.initalizePersistentLayer(supply);
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
-        AdamGrpc.AttributeDefinitionMessage.Builder attrBuilder = AdamGrpc.AttributeDefinitionMessage.newBuilder();
         ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("shotid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT));
         ec.close();
     }
