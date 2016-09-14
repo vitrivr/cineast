@@ -48,7 +48,7 @@ public class VisualizationDominantEdgeAverageColorGrid16 extends AbstractVisuali
       float[] arr = row.get("feature").getFloatArray();
       for (int i = 0; i < arr.length; i += 3) {
         RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[i], arr[i + 1], arr[i + 2]));
-        colors[count / 8][count % 8] = rgbContainer.toIntColor();
+        colors[count % 8][count / 8] = rgbContainer.toIntColor();
         count++;
       }
     }
