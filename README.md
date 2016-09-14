@@ -33,3 +33,9 @@ Cineast has the following dependencies:
 * [Guava](https://github.com/google/guava)
 * [Log4j2](http://logging.apache.org/log4j/2.x/)
 
+Common Issues:
+
+Could not parse default value '1.0' from Attr("distortion: float = 1.0") [locale dependent float parsing]
+You have the issue reported [here](https://github.com/tensorflow/tensorflow/issues/2974)
+
+the fix is to start cineast with LC_NUMERIC=C java -jar ...
