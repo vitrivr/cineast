@@ -25,6 +25,8 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
     private DBSelector classSelector;
     private static final String classTableName =            "features_neuralnet_classlabels";
     private float cutoff = 0.2f;
+    private static final String wnLabel = "wnlabel";
+    private static final String humanLabelColName = "humanlabel";
 
     public NeuralNetFeature(String tableName){
         super(tableName, 1f);
@@ -44,10 +46,10 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
     /**
      * TODO This method needs heavy refactoring because creating entities this way is not really pretty, we're relying on the AdamGRPC
-     * Currently Objectid is a string. That is because we get a unique id which has the shape n+....
+     * Currently wnLabel is a string. That is because we get a unique id which has the shape n+....
      * Schema:
-     * Table 0: shotid | classificationvector - done by super
-     * Table 1: objectid | label or concept
+     * Table 0: segmentid | classificationvector - done by super
+     * Table 1: wnLabel | humanlabel
      * Table 1 is only touched for API-Calls about available labels and at init-time - not during extraction
      */
     @Override
@@ -56,7 +58,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
         AdamGrpc.AttributeDefinitionMessage.Builder attrBuilder = AdamGrpc.AttributeDefinitionMessage.newBuilder();
-        ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("label", AdamGrpc.AttributeType.STRING));
+        ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition(wnLabel, AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition(getHumanLabelColName(), AdamGrpc.AttributeType.STRING));
         ec.close();
     }
 
@@ -66,7 +68,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         super.init(phandlerSupply);
         classWriter = phandlerSupply.get();
         classWriter.open(classTableName);
-        classWriter.setFieldNames("id", "objectid", "label");
+        classWriter.setFieldNames("id", wnLabel, getHumanLabelColName());
     }
 
     @Override
@@ -117,6 +119,14 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
     protected  DBSelector getClassSelector(){
         return this.classSelector;
+    }
+
+    public String getWnLabelColName(){
+        return wnLabel;
+    }
+
+    public static String getHumanLabelColName() {
+        return humanLabelColName;
     }
 
     /**

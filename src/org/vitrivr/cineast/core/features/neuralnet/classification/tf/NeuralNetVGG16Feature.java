@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 /**
  * VGG16-Feature
- *
+ * <p>
  * Created by silvan on 09.09.16.
  */
 public class NeuralNetVGG16Feature extends NeuralNetFeature {
@@ -46,7 +46,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
      * Needs to be public so the extraction runner has access with a config-object
      */
     @SuppressWarnings("unused")
-    public NeuralNetVGG16Feature(com.eclipsesource.json.JsonObject config){
+    public NeuralNetVGG16Feature(com.eclipsesource.json.JsonObject config) {
         super(fullVectorTableName);
         NeuralNetConfig parsedConfig = NeuralNetConfig.parse(config);
         this.cutoff = parsedConfig.getCutoff();
@@ -57,7 +57,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
      * Also needs to be public since the retriever config needs access
      */
     @SuppressWarnings("unused")
-    public NeuralNetVGG16Feature(){
+    public NeuralNetVGG16Feature() {
         this(Config.getNeuralNetConfig());
     }
 
@@ -68,7 +68,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     }
 
     @Override
-    public void fillLabels(){
+    public void fillLabels() {
         LOGGER.debug("filling labels");
         List<PersistentTuple> tuples = new ArrayList<>(1000);
         for (int i = 0; i < net.getSynSetLabels().length; i++) {
@@ -95,7 +95,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
             float[] probabilities = classifyImage(keyframe);
             for (int i = 0; i < probabilities.length; i++) {
                 if (probabilities[i] > 0.1) {
-                    LOGGER.info("Match found for shot {}: {} with probability {}",shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[i])), probabilities[i]);
+                    LOGGER.info("Match found for shot {}: {} with probability {}", shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[i])), probabilities[i]);
                     String id = UUID.randomUUID().toString();
                     PersistentTuple tuple = classificationWriter.generateTuple(id, shot.getId(), net.getSynSetLabels()[i], probabilities[i]);
                     classificationWriter.persist(tuple);
@@ -120,15 +120,14 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         TimeHelper.tic();
         List<StringDoublePair> _return = new ArrayList<>();
 
-        LOGGER.debug("No tags found, classifying");
         NeuralNet _net = null;
-        if(this.net!=null){
+        if (this.net != null) {
             _net = this.net;
         }
-        if(qc.getNet().isPresent()){
+        if (qc.getNet().isPresent()) {
             _net = qc.getNet().get();
         }
-        if(_net == null){
+        if (_net == null) {
             this.net = (VGG16Net) Config.getNeuralNetConfig().getNeuralNetFactory().get(); //cache NN
             _net = this.net;
         }
@@ -139,14 +138,15 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
             //TODO Use distinct
             for (String label : sc.getTags()) {
                 LOGGER.debug("Looking for tag {}", label);
-                wnLabels.addAll(getClassSelector().getRows("label", label).stream().map(row -> row.get("objectid").getString()).collect(Collectors.toList()));
+                wnLabels.addAll(getClassSelector().getRows(getHumanLabelColName(), label).stream().map(row -> row.get(getWnLabelColName()).getString()).collect(Collectors.toList()));
             }
-                for (Map<String, PrimitiveTypeProvider> row :
-                        classificationSelector.getRows("objectid", wnLabels.toArray(new String[wnLabels.size()]))) {
-                    LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
-                    _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
-                }
+            for (Map<String, PrimitiveTypeProvider> row :
+                    classificationSelector.getRows(getWnLabelColName(), wnLabels.toArray(new String[wnLabels.size()]))) {
+                LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getDouble(), row.get(getWnLabelColName()).toString());
+                _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getDouble()));
+            }
         } else {
+            LOGGER.debug("No tags found, classifying");
             //TODO Can we just take the most representative frame from the sc? Is that the query image?
             float[] res = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
             List<String> hits = new ArrayList<>();
@@ -155,14 +155,15 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
                     hits.add(net.getSynSetLabels()[i]);
                 }
             }
-            for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows("objectid", hits.toArray(new String[hits.size()]))) {
+            for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows(getWnLabelColName(), hits.toArray(new String[hits.size()]))) {
                 //TODO Handle Duplicates -> Wait for Maxpool-updates
                 //TODO How do we tell the user why we matched
-                LOGGER.debug("Found hit for query {}: {} {} ", row.get("shotid").getString(), row.get("probability").getDouble(), row.get("objectid").toString());
-                _return.add(new StringDoublePair(row.get("shotid").getString(), row.get("probability").getDouble()));
+                LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getDouble(), row.get(getWnLabelColName()).toString());
+                _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getDouble()));
             }
         }
-        if(_return.size()==0){
+        if (_return.size() == 0) {
+            LOGGER.debug("No hits found, performing kNN");
             _return = getSimilar(_net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage()), qc);
         }
         LOGGER.info("NeuralNetFeature.getSimilar() done in {}",
@@ -179,16 +180,16 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         Arrays.fill(probs, 0f);
         Position[] positions = new Position[3];
         positions[0] = Positions.CENTER;
-        if(img.getHeight()>img.getWidth()){
+        if (img.getHeight() > img.getWidth()) {
             positions[1] = Positions.TOP_RIGHT;
             positions[2] = Positions.BOTTOM_RIGHT;
-        }else{
+        } else {
             positions[1] = Positions.CENTER_RIGHT;
             positions[2] = Positions.CENTER_LEFT;
         }
 
         float[] curr;
-        for(Position pos: positions){
+        for (Position pos : positions) {
             try {
                 curr = net.classify(Thumbnails.of(img).size(224, 224).crop(pos).asBufferedImage());
                 probs = NeuralNetUtil.maxpool(curr, probs);
@@ -211,7 +212,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         super.init(phandlerSupply);
         classificationWriter = phandlerSupply.get();
         classificationWriter.open(generatedLabelsTableName);
-        classificationWriter.setFieldNames("id", "shotid", "objectid", "probability");
+        classificationWriter.setFieldNames("id", "segmentid", getWnLabelColName(), "probability");
     }
 
     @Override
@@ -228,14 +229,14 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     }
 
     /**
-     * Table 1: shotid | objectid | confidence (ex. 4014 | n203843 | 0.4) - generated labels
+     * Table 1: segmentid | wnLabel | confidence (ex. 4014 | n203843 | 0.4) - generated labels
      */
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
         super.initalizePersistentLayer(supply);
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
-        ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("shotid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("objectid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT));
+        ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("segmentid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition(getWnLabelColName(), AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT));
         ec.close();
     }
 }

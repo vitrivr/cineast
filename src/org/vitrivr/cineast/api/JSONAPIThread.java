@@ -381,20 +381,15 @@ public class JSONAPIThread extends Thread {
 				DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
 				selector.open(NeuralNetFeature.getClassTableName());
 
-				List<PrimitiveTypeProvider> queryRes = selector.getAll("label");
-				Set<String> labels = new HashSet(queryRes.size());
+				List<PrimitiveTypeProvider> queryRes = selector.getAll(NeuralNetFeature.getHumanLabelColName());
+				HashSet<String> labels = new HashSet<>(queryRes.size());
 				//Eliminate Duplicates
 				for(PrimitiveTypeProvider el : queryRes){
-					//LOGGER.debug("Found label: "+el.getString());
 					labels.add(el.getString());
 				}
-				for(String el : labels){
+				for(String el : labels) {
 					jsonConcepts.add(el);
 				}
-				/*String[] concepts = new String[]{"fruit, cars"};	//TODO Mock-labels while we wait for DB-Filling
-				for(String c: concepts){
-					jsonConcepts.add(c);
-				}*/
 				_return.set("concepts", jsonConcepts);
 				selector.close();
 				LOGGER.debug("Concepts API call ending");
