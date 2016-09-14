@@ -82,6 +82,11 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     }
 
     @Override
+    public String getClassificationTable() {
+        return this.generatedLabelsTableName;
+    }
+
+    @Override
     public void processShot(SegmentContainer shot) {
         LOGGER.entry();
         TimeHelper.tic();

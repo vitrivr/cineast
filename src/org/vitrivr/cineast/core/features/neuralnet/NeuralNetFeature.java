@@ -118,4 +118,9 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
     protected  DBSelector getClassSelector(){
         return this.classSelector;
     }
+
+    /**
+     * @return The table name where classification data is stored
+     */
+    abstract public String getClassificationTable();
 }
