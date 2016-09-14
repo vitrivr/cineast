@@ -59,7 +59,7 @@ public class ArtUtil {
       for(int x=0;x<sizeX;x++){
         for(int y=0;y<sizeY;y++) {
           RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[count], arr[count + 1], arr[count + 2]));
-          pixels[x][y] = rgbContainer.toIntColor();
+          pixels[y][x] = rgbContainer.toIntColor();
           count+=3;
         }
       }
