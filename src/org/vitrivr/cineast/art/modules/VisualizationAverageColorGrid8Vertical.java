@@ -17,15 +17,15 @@ import java.util.Map;
 /**
  * Created by sein on 26.08.16.
  */
-public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule {
-  public VisualizationAverageColorGrid8() {
+public class VisualizationAverageColorGrid8Vertical extends AbstractVisualizationModule {
+  public VisualizationAverageColorGrid8Vertical() {
     super();
     tableNames.put("AverageColorGrid8", "features_AverageColorGrid8");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationAverageColorGrid8";
+    return "VisualizationAverageColorGrid8Vertical";
   }
 
   @Override
@@ -56,12 +56,12 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule 
       }
     }
 
-    BufferedImage image = new BufferedImage(8, 8, BufferedImage.TYPE_INT_RGB);
+    BufferedImage image = new BufferedImage(8*16, 8*9, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
     for (int x = 0; x < pixels.length; x++) {
       for (int y = 0; y < pixels[0].length; y++) {
         graph.setColor(new Color(pixels[x][y][0], pixels[x][y][1], pixels[x][y][2]));
-        graph.fillRect(x, y, 1, 1);
+        graph.fillRect(x*16, y*9, 16, 9);
       }
     }
     graph.dispose();
@@ -78,12 +78,12 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule 
     DBSelector selector = selectors.get("AverageColorGrid8");
     int[][][] pixels = ArtUtil.shotToRGB(segmentId, selector, 8, 8);
 
-    BufferedImage image = new BufferedImage(8, 8, BufferedImage.TYPE_INT_RGB);
+    BufferedImage image = new BufferedImage(8*16, 8*9, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
     for (int x = 0; x < pixels.length; x++) {
       for (int y = 0; y < pixels[0].length; y++) {
         graph.setColor(new Color(pixels[x][y][0], pixels[x][y][1], pixels[x][y][2]));
-        graph.fillRect(x, y, 1, 1);
+        graph.fillRect(x*16, y*9, 16, 9);
       }
     }
     graph.dispose();
