@@ -24,4 +24,6 @@ interface IMST<V> {
     boolean isCellDeath();
 
     boolean containsValue(List<V> value);
+
+    <T> List<List<T>> getValues();
 }

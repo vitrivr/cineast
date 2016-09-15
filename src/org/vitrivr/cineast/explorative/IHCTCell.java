@@ -7,11 +7,11 @@ import java.util.List;
  */
 public interface IHCTCell<T> {
 
+    void addChild(HCTCell<T> child);
+
     boolean containsValue(List<T> value);
 
     boolean isCellDeath();
-
-    void setChild(HCTCell<T> child);
 
     void removeChild(HCTCell<T> child);
 }

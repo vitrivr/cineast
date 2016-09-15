@@ -99,6 +99,15 @@ class MST<V> implements IMST<V> {
         return false;
     }
 
+    @Override
+    public List<List<V>> getValues() {
+        List<List<V>> values = new ArrayList<>();
+        for(MSTNode<V> node : graph.vertexSet()){
+            values.add(node.getValue());
+        }
+        return values;
+    }
+
     // covering radius means the distance from the nucleus to the furthest element of the mst
     public double getCoveringRadius(){
         SimpleWeightedGraph<MSTNode<V>, DefaultWeightedEdge> mst = getMST();

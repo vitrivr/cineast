@@ -44,26 +44,6 @@ public class SilvanPlayground {
 
             System.out.println("Finished");
 
-
-//            HCTCell<Double> hctCell = new HCTCell<>((List<List<Double>> arguments) -> {
-//                List<Double> firstVector = arguments.get(0);
-//                List<Double> secondVector = arguments.get(1);
-//                Double distance = 0.0;
-//                for (int i = 0; i < firstVector.size(); i++) {
-//                    distance += (firstVector.get(i) - secondVector.get(i)) * (firstVector.get(i) - secondVector.get(i));
-//                }
-//                return Math.sqrt(distance);
-//            });
-//            hctCell.addValue(Arrays.asList(new Double(1), new Double(-4)));
-//            hctCell.addValue(Arrays.asList(new Double(1), new Double(-1)));
-//            hctCell.addValue(Arrays.asList(new Double(1), new Double(0)));
-//            hctCell.addValue(Arrays.asList(new Double(1), new Double(1)));
-//            hctCell.addValue(Arrays.asList(new Double(1), new Double(4)));
-
-//            System.out.println(hctCell.getNucleus());
-//            hctCell.mitosis();
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

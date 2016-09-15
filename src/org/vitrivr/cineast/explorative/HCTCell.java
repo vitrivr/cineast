@@ -50,10 +50,6 @@ public class HCTCell<T> implements IHCTCell {
         this.parent = parent;
     }
 
-    public void addChild(HCTCell<T> child){
-        children.add(child);
-    }
-
     public List<HCTCell<T>> getChildren(){
         return children;
     }
@@ -73,6 +69,11 @@ public class HCTCell<T> implements IHCTCell {
     public MSTNode<T> getNucleus(){ return mst.getNucleus(); }
 
     @Override
+    public void addChild(HCTCell child) {
+        children.add(child);
+    }
+
+    @Override
     public boolean containsValue(List value) {
         return mst.containsValue(value);
     }
@@ -83,11 +84,6 @@ public class HCTCell<T> implements IHCTCell {
     }
 
     @Override
-    public void setChild(HCTCell child) {
-        children.add(child);
-    }
-
-    @Override
     public void removeChild(HCTCell child) {
         children.remove(child);
     }
@@ -95,5 +91,9 @@ public class HCTCell<T> implements IHCTCell {
     public String toString(){
         return String.format("HCTCell | isCellDeath: %s | isReadyMitosis: %s | Nucleus: <%s>",
                 isCellDeath(), isReadyForMitosis(), getNucleus());
+    }
+
+    public List<List<T>> getValues() {
+        return mst.getValues();
     }
 }

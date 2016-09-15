@@ -19,28 +19,33 @@ public class HCT<T> implements IHCT<T>{
 
     @Override
     public void insert(List<T> nextItem, int levelNo) {
+        // create initial root
         if (levels.size() == 0){ // first insert / root insert
-            HCTLevel level = new HCTLevel();
+            HCTLevel<T> level = new HCTLevel<>();
             levels.add(level);
             HCTCell<T> cell = level.addCell(distanceCalculation);
             cell.addValue(nextItem);
             return;
         }
+
         int topLevelNo = levels.size() - 1;
         List<HCTCell<T>> topLevelCells = levels.get(levels.size() - 1).getCells();
         HCTCell<T> cellt = topLevelCells.get(0); // get root, normally only one node in topLevel exists
-        if(levelNo > topLevelNo){ // create new root
+
+        // create new root
+        if(levelNo > topLevelNo){
             HCTLevel<T> level = new HCTLevel<T>();
             levels.add(level);
             HCTCell<T> topLevelCell = level.addCell(distanceCalculation); //aka root
             topLevelCell.addValue(nextItem);
             for (HCTCell<T> oldTopLevelCell : topLevelCells) {
                 oldTopLevelCell.setParent(topLevelCell);
-                topLevelCell.setChild(oldTopLevelCell);
+                topLevelCell.addChild(oldTopLevelCell);
             }
-
             return;
         }
+
+
         HCTCell<T> cellO;
         if(levelNo == topLevelNo){
             cellO = cellt;
@@ -51,15 +56,6 @@ public class HCT<T> implements IHCT<T>{
         }
         List<T> oldNucleusValue = cellO.getNucleus().getValue();
         cellO.addValue(nextItem);
-
-        //experimental
-//        if(levels.size() > 1){ // obviously can not set child and parent if only one level exists
-//            HCTCell<T> mSCell =  getMSCell(levels.get(levelNo - 1).getCells(), nextItem, levelNo);
-//            mSCell.setParent(cellO);
-//            cellO.addChild(mSCell);
-//        }
-
-
 
         if(cellO.isReadyForMitosis()){
             List<HCTCell<T>> newCells = cellO.mitosis();
@@ -72,6 +68,16 @@ public class HCT<T> implements IHCT<T>{
             }
             for (HCTCell<T> newCell : newCells) {
                 insert(newCell.getNucleus().getValue(), levelNo + 1);
+
+                // experimental set Parents
+                if(levelNo - 1 >= 0){
+                    for(HCTCell<T> lowerCell : levels.get(levelNo - 1).getCells()){
+                        if(newCell.getValues().contains(lowerCell.getNucleus().getValue())){
+                            lowerCell.setParent(newCell);
+                            newCell.addChild(lowerCell);
+                        }
+                    }
+                }
             }
         }
         else if(oldNucleusValue != cellO.getNucleus().getValue()){
@@ -156,4 +162,9 @@ public class HCT<T> implements IHCT<T>{
     public String toString(){
         return String.format("HCT | #levels: %s", levels.size());
     }
+
+//    private boolean contains(HCTCell<T> cell, List<List<T>> cellContent){
+//
+//    }
+
 }
