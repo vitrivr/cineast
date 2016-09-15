@@ -2,17 +2,15 @@ package org.vitrivr.cineast.art.modules;
 
 import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
-import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
-import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.SegmentLookup;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sein on 26.08.16.
@@ -34,22 +32,19 @@ public class VisualizationMedianColorGrid8Square extends AbstractVisualizationMo
     if(cacheData != null){
       return cacheData;
     }
-    SegmentLookup segmentLookup = new SegmentLookup();
-    DBSelector selector = selectors.get("MedianColorGrid8");
-    List<SegmentLookup.SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
-    Collections.sort(segments, new SegmentDescriptorComparator());
+    List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("MedianColorGrid8"), multimediaobjectId);
 
-    int dim = (int) Math.floor(Math.sqrt(segments.size()));
+    int dim = (int) Math.floor(Math.sqrt(featureData.size()));
     int size[] = {dim + 1, dim + 1};
-    if ((size[0] - 1) * size[1] >= segments.size()) {
+    if ((size[0] - 1) * size[1] >= featureData.size()) {
       size[1]--;
     }
 
     BufferedImage image = new BufferedImage(8 * size[0], 8 * size[1], BufferedImage.TYPE_INT_RGB);
 
     int count = 0;
-    for (SegmentLookup.SegmentDescriptor segment : segments) {
-      int[][] pixels = ArtUtil.shotToInt(segment.getSegmentId(), selector, 8, 8);
+    for (Map<String, PrimitiveTypeProvider> feature : featureData) {
+      int[][] pixels = ArtUtil.shotToInt(feature.get("feature").getFloatArray(), 8, 8);
       int baseY = (count / size[0]) * 8;
       int baseX = (count % size[0]) * 8;
       for (int x = 0; x < pixels.length; x++) {

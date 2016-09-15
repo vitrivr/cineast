@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.SegmentLookup;
+import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -39,6 +40,8 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
     if(cacheData != null){
       return cacheData;
     }
+    List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("AverageColor"), multimediaobjectId);
+
     DBSelector selector = selectors.get("AverageColor");
     SegmentLookup segmentLookup = new SegmentLookup();
     List<SegmentLookup.SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
@@ -49,15 +52,12 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
     int[] colors = new int[segments.size()];
     int[] widths = new int[segments.size()];
     for (SegmentLookup.SegmentDescriptor segment : segments) {
-      List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segment.getSegmentId());
       widths[count] = (segment.getEndFrame() - segment.getStartFrame()) / 10 + 1;
       totalWidth += widths[count];
-      for (Map<String, PrimitiveTypeProvider> row : result) {
-        float[] arr = row.get("feature").getFloatArray();
-        for (int i = 0; i < 8; i++) {
-          RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));
-          colors[count] = rgbContainer.toIntColor();
-        }
+      float[] arr = featureData.get(count).get("feature").getFloatArray();
+      for (int i = 0; i < 8; i++) {
+        RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));
+        colors[count] = rgbContainer.toIntColor();
       }
       count++;
     }
