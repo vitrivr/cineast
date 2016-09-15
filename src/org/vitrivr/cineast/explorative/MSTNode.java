@@ -1,11 +1,15 @@
 package org.vitrivr.cineast.explorative;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 /**
  * Created by silvanstich on 13.09.16.
  */
-public abstract class MSTNode<T extends Number> implements IMSTNode<T> {
+public class MSTNode<T> implements IMSTNode<T> {
 
     private List<T> value;
     private MST mst;
@@ -17,10 +21,24 @@ public abstract class MSTNode<T extends Number> implements IMSTNode<T> {
     }
 
     @Override
-    public abstract double distance(IMSTNode<T> other);
+    public double distance(IMSTNode<T> other, Function<List<List<T>>, Double> calculation){
+        return distance(other.getValue(), calculation);
+    };
+
+    public double distance(List<T> otherValues, Function<List<List<T>>, Double> calculation){
+        List<List<T>> args = new ArrayList<>();
+        args.add(value); args.add(otherValues);
+        return calculation.apply(args);
+    };
+
 
     @Override
     public List<T> getValue() {
         return value;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("MSTNode <%s> with value <%s> and belongs to MST<%s>", this.hashCode(), Utils.listToString(value), mst.hashCode());
     }
 }

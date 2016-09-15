@@ -5,12 +5,23 @@ import java.util.List;
 /**
  * Created by silvanstich on 13.09.16.
  */
-public interface IMST<V> {
+interface IMST<V> {
 
     void add(List<V> item);
 
     void remove(List<V> item);
 
-    List<V> getNucleus();
+    MSTNode<V> getNucleus();
 
+    double getCompactness();
+
+    double getCoveringRadius();
+
+    boolean isReadyForMitosis();
+
+    List<MST<V>> mitosis();
+
+    boolean isCellDeath();
+
+    boolean containsValue(List<V> value);
 }

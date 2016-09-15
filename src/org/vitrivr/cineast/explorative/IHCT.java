@@ -1,13 +1,15 @@
 package org.vitrivr.cineast.explorative;
 
+import java.util.List;
+
 /**
  * Created by silvanstich on 13.09.16.
  */
 public interface IHCT<T> {
 
-    void insert(T nextItem, int levelNo);
+    void insert(List<T> nextItem, int levelNo);
 
-    void preemptiveCellSearch(T[] ArrayCS, T nextItem, int curLevelNo);
+    HCTCell<T> preemptiveCellSearch(List<HCTCell<T>> ArrayCS, List<T> nextItem, int curLevelNo, int levelNo);
 
-    T remove(T[] ArrayIR, int levelNo);
+    void remove(List<T> deleteItem, int levelNo);
 }

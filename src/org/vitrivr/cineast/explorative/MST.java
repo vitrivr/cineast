@@ -1,47 +1,53 @@
 package org.vitrivr.cineast.explorative;
 
+import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.alg.PrimMinimumSpanningTree;
 import org.jgrapht.alg.interfaces.MinimumSpanningTree;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
+import org.jgrapht.traverse.BreadthFirstIterator;
+import org.jgrapht.traverse.GraphIterator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 
 
-public class MST<V extends Number> implements IMST<V> {
+class MST<V> implements IMST<V> {
 
     private SimpleWeightedGraph<MSTNode<V>, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
-    private Class<MSTNode> concreteMSTNodeClass;
+    Function<List<List<V>>, Double> distanceMetric;
 
-    public MST(Class<MSTNode> MSTNodeClass) {
-        this.concreteMSTNodeClass = MSTNodeClass;
+    MST(Function<List<List<V>>, Double> distanceMetric) {
+        this.distanceMetric = distanceMetric;
     }
 
     @Override
     public void add(List<V> item) {
-//        MSTNode<V> mstNode = new MSTNode<V>(item, this);
-        MSTNode<V> mstNode = newMstNode(item, this);
+        MSTNode<V> mstNode = new MSTNode(item, this);
         graph.addVertex(mstNode);
         for (MSTNode<V> node : graph.vertexSet()) {
             if (node != mstNode){
                 DefaultWeightedEdge dwe = graph.addEdge(mstNode, node);
-                graph.setEdgeWeight(dwe, mstNode.distance(node));
+                graph.setEdgeWeight(dwe, mstNode.distance(node, distanceMetric));
             }
         }
     }
 
     @Override
     public void remove(List<V> item) {
-        for (MSTNode<V> current : graph.vertexSet()) {
-            if (current.getValue() == item) {
-                graph.removeVertex(current);
+        Iterator<MSTNode<V>> iterator = graph.vertexSet().iterator();
+        List<MSTNode<V>> toDeleteNodes = new ArrayList<>();
+        while(iterator.hasNext()){
+            MSTNode<V> current = iterator.next();
+            if(current.getValue() == item){
+                toDeleteNodes.add(current);
             }
         }
+        graph.removeAllVertices(toDeleteNodes);
     }
 
-    public List<V> getNucleus(){
+    public MSTNode<V> getNucleus(){
+        if(graph.vertexSet().size() == 1){return (MSTNode<V>) graph.vertexSet().toArray()[0];}
         SimpleWeightedGraph<MSTNode<V>, DefaultWeightedEdge> mst = getMST();
         int degree = 0;
         MSTNode<V> nucleus = null;
@@ -51,7 +57,72 @@ public class MST<V extends Number> implements IMST<V> {
                 nucleus = current;
             }
         }
-        return nucleus.getValue();
+        return nucleus;
+    }
+
+    public double getCompactness(){
+        // TODO: 14.09.16 implement real compactness measurement
+        return graph.vertexSet().size() > 2 ? 1.0 : 0.0;
+    }
+
+    public boolean isReadyForMitosis(){
+        return getCompactness() > 0.5; // // TODO: 14.09.16 needs real implemenation
+    }
+
+    public List<MST<V>> mitosis(){
+        SimpleWeightedGraph<MSTNode<V>, DefaultWeightedEdge> mst = getMST();
+        double largestWeight = 0;
+        DefaultWeightedEdge largestEdge = null;
+        for(DefaultWeightedEdge edge : mst.edgeSet()){
+            if(mst.getEdgeWeight(edge) > largestWeight){
+                largestWeight = mst.getEdgeWeight(edge);
+                largestEdge = edge;
+            }
+        }
+        List<MST<V>> newGraphs = new ArrayList<>();
+        mst.removeEdge(largestEdge);
+        newGraphs.add(createSubGraph(mst, mst.getEdgeSource(largestEdge)));
+        newGraphs.add(createSubGraph(mst, mst.getEdgeTarget(largestEdge)));
+        return newGraphs;
+    }
+
+    @Override
+    public boolean isCellDeath() {
+        return graph.vertexSet().size() == 0;
+    }
+
+    @Override
+    public boolean containsValue(List<V> value) { // TODO: 14.09.16 is a bottleneck
+        for (MSTNode<V> mstNode : graph.vertexSet()) {
+            if(mstNode.getValue() == value) return true;
+        }
+        return false;
+    }
+
+    // covering radius means the distance from the nucleus to the furthest element of the mst
+    public double getCoveringRadius(){
+        SimpleWeightedGraph<MSTNode<V>, DefaultWeightedEdge> mst = getMST();
+        MSTNode<V> nucleus = getNucleus();
+        double coveringRadius = 0;
+        for(MSTNode<V> node : mst.vertexSet()){
+            double pathLength = new DijkstraShortestPath(mst, nucleus, node).getPathLength();
+            if(pathLength > coveringRadius) coveringRadius = pathLength;
+        }
+        return coveringRadius;
+    }
+
+    private MST<V> createSubGraph(SimpleWeightedGraph mst, MSTNode<V> startNode){
+        List<MSTNode<V>> containedNodes = new ArrayList<>();
+        GraphIterator<MSTNode<V>, DefaultWeightedEdge> iterator = new BreadthFirstIterator<>(mst, startNode);
+        while(iterator.hasNext()){
+            MSTNode<V> next = iterator.next();
+            containedNodes.add(next);
+        }
+        MST<V> newSubGraph = new MST<V>(distanceMetric);
+        for(MSTNode<V> node : containedNodes){
+            newSubGraph.add(node.getValue());
+        }
+        return newSubGraph;
     }
 
     private SimpleWeightedGraph<MSTNode<V>, DefaultWeightedEdge> getMST(){
@@ -67,18 +138,7 @@ public class MST<V extends Number> implements IMST<V> {
         return internSWG;
     }
 
-    private MSTNode newMstNode(Object item, Object mst){
-        try {
-            return concreteMSTNodeClass.getDeclaredConstructor(List.class, MST.class).newInstance(item, mst);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public String toString(){
+        return String.format("MST | #nodes: %s | #edges: %s | nodes <%s>", graph.vertexSet().size(), graph.edgeSet().size(), Utils.listToString(Arrays.asList(graph.vertexSet().toArray())));
     }
 }
