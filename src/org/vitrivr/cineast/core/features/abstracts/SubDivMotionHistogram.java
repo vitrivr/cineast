@@ -7,6 +7,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.util.MathHelper;
@@ -15,13 +16,13 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
 
 protected PersistencyWriter phandler;
 	
-	protected SubDivMotionHistogram(String tableName, double maxDist){
-		super(tableName, (float)maxDist);
+	protected SubDivMotionHistogram(String tableName, String fieldName, double maxDist){
+		super(tableName, fieldName, (float)maxDist);
 	}
 
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		this.phandler = phandler;
+	public void init(PersistencyWriterSupplier supply) {
+		this.phandler = supply.get();
 		this.phandler.open(this.tableName);
 		this.phandler.setFieldNames("id", "hist", "sums");
 	}
@@ -42,6 +43,8 @@ protected PersistencyWriter phandler;
 		}
 		return distances;
 	}
+	
+	
 	
 	@Override
 	public void finish() {

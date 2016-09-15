@@ -11,8 +11,10 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.db.ShotLookup;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.srt.SRTSubTitle;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
@@ -81,7 +83,7 @@ public class FeatureExtractionRunner {
 			return;
 		}
 		
-		PersistencyWriter<?> writer = Config.getDatabaseConfig().newWriter();
+		PersistencyWriter<?> writer = Config.getDatabaseConfig().getWriterSupplier().get();
 		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
 
 		VideoDecoder vd = Config.getDecoderConfig().newVideoDecoder(videoFile);
@@ -91,16 +93,21 @@ public class FeatureExtractionRunner {
 
 		writer.open("cineast_multimediaobject");
 
-		List<ShotDescriptor> knownShots = null;
+		List<SegmentDescriptor> knownShots = null;
 		String id = null;
 
 		if (writer.exists("name", videoName)) {
 			LOGGER.info("video '{}' is already in database", videoName);
-			ShotLookup lookup = new ShotLookup();
-			id = lookup.lookUpVideoid(videoName);
+//			ShotLookup lookup = new ShotLookup();
+//			id = lookup.lookUpVideoid(videoName);
 //			knownShots = lookup.lookUpVideo(id);
 //			lookup.close();
 			
+			MultimediaObjectLookup lookup = new MultimediaObjectLookup();
+			MultimediaObjectDescriptor descriptor = lookup.lookUpObjectByName(videoName);
+			if(descriptor.exists()){
+				id = descriptor.getId();
+			}
 			
 			
 		} else {
@@ -114,7 +121,7 @@ public class FeatureExtractionRunner {
 		
 		}
 
-		ShotSegmenter segmenter = new ShotSegmenter(vd, id, Config.getDatabaseConfig().newWriter(), knownShots);
+		ShotSegmenter segmenter = new ShotSegmenter(vd, id, Config.getDatabaseConfig().getWriterSupplier().get(), knownShots);
 		
 		File parentFolder = videoFile.getParentFile();
 
@@ -180,7 +187,7 @@ public class FeatureExtractionRunner {
 
 			@Override
 			public void initialize(Extractor e) {
-				e.init(Config.getDatabaseConfig().newWriter());
+				e.init(Config.getDatabaseConfig().getWriterSupplier());
 			}
 		};
 

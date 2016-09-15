@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,7 +10,9 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 
 public class SubtitleWordSearch implements Retriever {
 
@@ -17,8 +21,8 @@ public class SubtitleWordSearch implements Retriever {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
-	public void init(DBSelector selector) {
-		this.selector = selector;
+	public void init(DBSelectorSupplier supply) {
+		this.selector = supply.get();
 	}
 
 //	@Override
@@ -114,13 +118,19 @@ public class SubtitleWordSearch implements Retriever {
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
 		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<>(0);
 	}
 
 	@Override
 	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
 		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<>(0);
+	}
+
+	@Override
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+		// TODO Auto-generated method stub
+		
 	}
 
 //	@Override

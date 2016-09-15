@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,11 +22,11 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.run.ExtractionJobRunner;
 import org.vitrivr.cineast.core.run.FeatureExtractionRunner;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
@@ -38,7 +40,7 @@ public class API {
 
 		@Override
 		public void initialize(Retriever r) {
-			r.init(new ADAMproSelector());
+			r.init(Config.getDatabaseConfig().getSelectorSupplier());
 
 		}
 	};
@@ -160,6 +162,45 @@ public class API {
 						}
 						FeatureExtractionRunner runner = new FeatureExtractionRunner();
 						runner.extractFolder(videoFolder);
+						break;
+					}
+					case "setup": {
+						
+						EntityCreator ec = new EntityCreator();
+						
+						System.out.print("setting up basic entities...");
+						
+						ec.createMultiMediaObjectsEntity();
+						ec.createSegmentEntity();
+						
+						System.out.println("done");
+						
+						
+						System.out.print("collecting retriever classes...");
+						
+						HashSet<Retriever> retrievers = new HashSet<>();
+						
+						for(String category : Config.getRetrieverConfig().getRetrieverCategories()){
+							retrievers.addAll(Config.getRetrieverConfig().getRetrieversByCategory(category).keySet());
+						}
+						
+						System.out.println("done");
+						
+						Supplier<EntityCreator> supply = new Supplier<EntityCreator>() {
+							
+							@Override
+							public EntityCreator get() {
+								return ec;
+							}
+						};
+						
+						for(Retriever r : retrievers){
+							System.out.println("setting up " + r.getClass().getSimpleName());
+							r.initalizePersistentLayer(supply);
+						}
+						
+						System.out.println("setup done.");
+						
 						break;
 					}
 					case "exit":

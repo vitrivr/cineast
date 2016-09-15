@@ -15,7 +15,7 @@ import org.vitrivr.cineast.core.util.MathHelper;
 public class SubDivMotionHistogram3 extends SubDivMotionHistogram {
 
 	public SubDivMotionHistogram3() {
-		super("features_SubDivMotionHistogram3", MathHelper.SQRT2 * 9);
+		super("features_SubDivMotionHistogram3", "hists", MathHelper.SQRT2 * 9);
 	}
 
 	@Override
@@ -49,12 +49,6 @@ public class SubDivMotionHistogram3 extends SubDivMotionHistogram {
 		}
 		FloatVectorImpl fv = new FloatVectorImpl(tmp);
 		return getSimilar(fv.toArray(null), qc);
-	}
-
-	@Override
-	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

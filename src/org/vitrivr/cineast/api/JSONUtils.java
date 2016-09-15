@@ -17,10 +17,10 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.QuerySubTitleItem;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.ShotLookup;
-import org.vitrivr.cineast.core.db.VideoLookup;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
-import org.vitrivr.cineast.core.db.VideoLookup.VideoDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -73,6 +73,17 @@ public class JSONUtils {
 				qc.addPath(pathList);
 			}
 		}
+		if(jobj.get("motionbackground") != null){
+			JsonArray motion = jobj.get("motionbackground").asArray();
+			for(JsonValue motionPath : motion){
+				LinkedList<Point2D_F32> pathList = new LinkedList<Point2D_F32>();
+				for(JsonValue point : motionPath.asArray()){
+					JsonArray pa = point.asArray();
+					pathList.add(new Point2D_F32(pa.get(0).asFloat(), pa.get(1).asFloat()));
+				}
+				qc.addBgPath(pathList);
+			}
+		}
 		
 		if(jobj.get("tags") != null){
 			JsonArray concepts = jobj.get("concepts").asArray();
@@ -114,6 +125,20 @@ public class JSONUtils {
 		}
 		jobj.add("motion", paths);
 		
+		JsonArray bgpaths = new JsonArray();
+		for(Pair<Integer, LinkedList<Point2D_F32>> pair : qc.getBgPaths()){
+			LinkedList<Point2D_F32> motionPath = pair.second;
+			JsonArray arr = new JsonArray();
+			for(Point2D_F32 point : motionPath){
+				JsonArray jpoint = new JsonArray();
+				jpoint.add(point.x);
+				jpoint.add(point.y);
+				arr.add(jpoint);
+			}
+			paths.add(arr);
+		}
+		jobj.add("motionbackground", bgpaths);
+				
 		JsonArray subs = new JsonArray();
 		for(SubtitleItem sub : qc.getSubtitleItems()){
 			subs.add(sub.getText());
@@ -136,6 +161,7 @@ public class JSONUtils {
 		weightMap.put("edge", weights.get("edge").asDouble());
 		weightMap.put("text", weights.get("text").asDouble());
 		weightMap.put("motion", weights.get("motion").asDouble());
+		weightMap.put("motionbackground", weights.get("motionbackground").asDouble());
 		weightMap.put("complex", weights.get("complex").asDouble());
 		return weightMap;
 	}
@@ -154,8 +180,8 @@ public class JSONUtils {
 	}
 	
 	public static HashSet<String> printShotsBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> shotids) {
-		ArrayList<ShotDescriptor> sdList = new ArrayList<>(resultlist.size());
-		ShotLookup sl = new ShotLookup();
+		ArrayList<SegmentDescriptor> sdList = new ArrayList<>(resultlist.size());
+		SegmentLookup sl = new SegmentLookup();
 		
 		String[] ids = new String[resultlist.size()];
 		int i = 0;
@@ -163,10 +189,10 @@ public class JSONUtils {
 			ids[i++] = sdp.key;
 		}
 		
-		Map<String, ShotDescriptor> map = sl.lookUpShots(ids);
+		Map<String, SegmentDescriptor> map = sl.lookUpShots(ids);
 		
 		for(String id : ids){
-			ShotDescriptor sd = map.get(id);
+			SegmentDescriptor sd = map.get(id);
 			if(sd != null){
 				sdList.add(sd);
 			}
@@ -191,8 +217,8 @@ public class JSONUtils {
 	}
 	
 	public static HashSet<String> printVideosBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> videoids) {
-		ShotLookup sl = new ShotLookup();
-		VideoLookup vl = new VideoLookup();
+		SegmentLookup sl = new SegmentLookup();
+		MultimediaObjectLookup vl = new MultimediaObjectLookup();
 		
 		String[] ids = new String[resultlist.size()];
 		int i = 0;
@@ -200,7 +226,7 @@ public class JSONUtils {
 			ids[i++] = sdp.key;
 		}
 		
-		Map<String, ShotDescriptor> map = sl.lookUpShots(ids);
+		Map<String, SegmentDescriptor> map = sl.lookUpShots(ids);
 		
 		HashSet<String> videoIds = new HashSet<>();
 		for(String id : ids){
@@ -213,9 +239,9 @@ public class JSONUtils {
 			vids[i++] = vid;
 		}
 		
-		ArrayList<VideoDescriptor> vdList = new ArrayList<>(vids.length);
+		ArrayList<MultimediaObjectDescriptor> vdList = new ArrayList<>(vids.length);
 		
-		Map<String, VideoDescriptor> vmap = vl.lookUpVideos(vids);
+		Map<String, MultimediaObjectDescriptor> vmap = vl.lookUpVideos(vids);
 		
 		for(String vid : vids){
 			vdList.add(vmap.get(vid));

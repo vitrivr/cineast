@@ -10,9 +10,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.google.common.util.concurrent.ListenableFuture;
-
 import org.vitrivr.adam.grpc.AdamGrpc;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage.Code;
@@ -22,11 +19,6 @@ import org.vitrivr.adam.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DenseVectorMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DistanceMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DistanceMessage.DistanceType;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.QueryConfig.Distance;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.adam.grpc.AdamGrpc.FeatureVectorMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.FromMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.NearestNeighbourQueryMessage;
@@ -35,6 +27,13 @@ import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultTupleMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.QueryConfig.Distance;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.util.LogHelper;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 public class ADAMproSelector implements DBSelector {
 
@@ -58,7 +57,7 @@ public class ADAMproSelector implements DBSelector {
 		hints.add("exact");
 		
 		projectionMessage = AdamGrpc.ProjectionMessage.newBuilder().setAttributes(
-				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("adamprodistance").addAttribute("id")).build();
+				AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("ap_distance").addAttribute("id")).build();
 		
 		DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
 		
@@ -129,6 +128,17 @@ public class ADAMproSelector implements DBSelector {
 			return wmBuilder.setAttribute(key).setValue(value).build();
 		}
 	}
+	
+	private WhereMessage buildWhereMessage(String key, String... values){
+        synchronized (wmBuilder) {
+            wmBuilder.clear();
+            StringBuilder sb = new StringBuilder();
+            sb.append("IN ('");
+            sb.append(String.join("', '", values));
+            sb.append("')");
+            return wmBuilder.setAttribute(key).setValue(sb.toString()).build();
+        }
+    }
 	
 	private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column, FeatureVectorMessage fvm, int k, QueryConfig qc){
 		synchronized (nnqmBuilder) {
@@ -302,16 +312,36 @@ public class ADAMproSelector implements DBSelector {
 			if(id == null){
 				continue;
 			}
-			_return.add(new StringDoublePair(id, msg.getData().get("adamprodistance").getFloatData()));
+			_return.add(new StringDoublePair(id, msg.getData().get("ap_distance").getFloatData()));
 		}
 		
 		return _return;
 	}
 
 	@Override
+	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
+		if(values == null || values.length == 0){
+			LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows()");
+			return new ArrayList<>(0);
+		}
+		
+		if(values.length == 1){
+			return getRows(fieldName, values[0]);
+		}
+		
+        WhereMessage where = buildWhereMessage(fieldName, values);
+        BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
+        return executeBooleanQuery(bqMessage);
+    }
+	
+	@Override
 	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
 		WhereMessage where = buildWhereMessage(fieldName, value);		
 		BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
+		return executeBooleanQuery(bqMessage);
+	}
+
+	private List<Map<String, PrimitiveTypeProvider>> executeBooleanQuery(BooleanQueryMessage bqMessage) {
 		QueryMessage qbqm = buildQueryMessage(hints, bqMessage, null, null);
 		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
 		QueryResultsMessage result;

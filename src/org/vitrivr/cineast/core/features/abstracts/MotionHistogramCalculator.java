@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.MathHelper;
 
 import georegression.struct.point.Point2D_F32;
 
@@ -17,18 +22,19 @@ public abstract class MotionHistogramCalculator implements Retriever {
 
 	protected DBSelector selector;
 	protected final float maxDist;
-	protected final String tableName;
-	private static Logger LOGGER = LogManager.getLogger();
+	protected final String tableName, fieldName;
+	
 
 
-	protected MotionHistogramCalculator(String tableName, float maxDist){
+	protected MotionHistogramCalculator(String tableName, String fieldName, float maxDist){
 		this.maxDist = maxDist;
 		this.tableName = tableName;
+		this.fieldName = fieldName;
 	}
 	
 	@Override
-	public void init(DBSelector selector) {
-		this.selector = selector;
+	public void init(DBSelectorSupplier supply) {
+		this.selector = supply.get();
 		this.selector.open(tableName);
 	}
 
@@ -97,6 +103,24 @@ public abstract class MotionHistogramCalculator implements Retriever {
 				histList);
 	}
 	
+	protected List<StringDoublePair> getSimilar(float[] vector, QueryConfig qc) {
+		List<StringDoublePair> distances = this.selector.getNearestNeighbours(Config.getRetrieverConfig().getMaxResultsPerModule(), vector, this.fieldName, qc);
+		for(StringDoublePair sdp : distances){
+			double dist = sdp.value;
+			sdp.value = MathHelper.getScore(dist, maxDist);
+		}
+		return distances;
+	}
+	
+	@Override
+	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
+		List<float[]> list = this.selector.getFeatureVectors("id", shotId, this.fieldName);
+		if(list.isEmpty()){
+			return new ArrayList<>(1);
+		}
+		return getSimilar(list.get(0), qc);
+	}
+	
 	@Override
 	public void finish(){
 		if(this.selector != null){
@@ -104,4 +128,9 @@ public abstract class MotionHistogramCalculator implements Retriever {
 		}
 	}
 
+	@Override
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().createFeatureEntity(this.tableName, true, "hist", "sums");
+	}
+	
 }

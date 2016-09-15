@@ -11,8 +11,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.ProtobufFileWriter;
-import org.vitrivr.cineast.core.db.ShotLookup.ShotDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.cc.CCSubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.srt.SRTSubTitle;
@@ -34,6 +36,7 @@ import org.vitrivr.cineast.core.features.EdgeARP88;
 import org.vitrivr.cineast.core.features.EdgeARP88Full;
 import org.vitrivr.cineast.core.features.EdgeGrid16;
 import org.vitrivr.cineast.core.features.EdgeGrid16Full;
+import org.vitrivr.cineast.core.features.ForegroundBoundingBox;
 import org.vitrivr.cineast.core.features.HueValueVarianceGrid8;
 import org.vitrivr.cineast.core.features.MedianColor;
 import org.vitrivr.cineast.core.features.MedianColorARP44;
@@ -41,6 +44,7 @@ import org.vitrivr.cineast.core.features.MedianColorGrid8;
 import org.vitrivr.cineast.core.features.MedianColorRaster;
 import org.vitrivr.cineast.core.features.MedianFuzzyHist;
 import org.vitrivr.cineast.core.features.MotionHistogram;
+import org.vitrivr.cineast.core.features.MotionHistogramBackground;
 import org.vitrivr.cineast.core.features.SaturationGrid8;
 import org.vitrivr.cineast.core.features.SubDivAverageFuzzyColor;
 import org.vitrivr.cineast.core.features.SubDivMedianFuzzyColor;
@@ -48,6 +52,10 @@ import org.vitrivr.cineast.core.features.SubDivMotionHistogram2;
 import org.vitrivr.cineast.core.features.SubDivMotionHistogram3;
 import org.vitrivr.cineast.core.features.SubDivMotionHistogram4;
 import org.vitrivr.cineast.core.features.SubDivMotionHistogram5;
+import org.vitrivr.cineast.core.features.SubDivMotionHistogramBackground2;
+import org.vitrivr.cineast.core.features.SubDivMotionHistogramBackground3;
+import org.vitrivr.cineast.core.features.SubDivMotionHistogramBackground4;
+import org.vitrivr.cineast.core.features.SubDivMotionHistogramBackground5;
 import org.vitrivr.cineast.core.features.SubtitleFulltextSearch;
 import org.vitrivr.cineast.core.features.exporter.ShotThumbNails;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -55,15 +63,26 @@ import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.runtime.ShotDispatcher;
 import org.vitrivr.cineast.core.segmenter.ShotSegmenter;
 
+
 public class SingleVideoToFileExtractor {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
+	
+	
 	private static ExtractorInitializer initializer = new ExtractorInitializer() {
 
+		private PersistencyWriterSupplier supply = new PersistencyWriterSupplier() {
+			
+			@Override
+			public PersistencyWriter<?> get() {
+				return new ProtobufFileWriter();
+			}
+		};
+		
 		@Override
 		public void initialize(Extractor e) {
-			e.init(new ProtobufFileWriter());
+			e.init(supply);
 		}
 		
 	};
@@ -93,7 +112,7 @@ public class SingleVideoToFileExtractor {
 		LOGGER.debug("Total frames: {}", vd.getTotalFrameCount());
 		LOGGER.debug("frames per second: {}", vd.getFPS());
 		
-		List<ShotDescriptor> knownShots = readKnownShots(inputFolder, videoId);
+		List<SegmentDescriptor> knownShots = readKnownShots(inputFolder, videoId);
 		
 		ShotSegmenter segmenter = new ShotSegmenter(vd, videoId, new ProtobufFileWriter(), knownShots);
 		
@@ -133,7 +152,7 @@ public class SingleVideoToFileExtractor {
 		LOGGER.info("finished extraction for video {} in {}", videoId, formatTime(System.currentTimeMillis() - startTime));
 	}
 	
-	private static List<ShotDescriptor> readKnownShots(File inputFolder, String videoId) {
+	private static List<SegmentDescriptor> readKnownShots(File inputFolder, String videoId) {
 		File input = new File(inputFolder, "shotEndFrames.csv");
 		if(!(input.exists() && input.isFile() && input.canRead())){
 			return null;
@@ -144,17 +163,17 @@ public class SingleVideoToFileExtractor {
 			inReader.close();
 			
 			String[] split = line.split(",");
-			ArrayList<ShotDescriptor> shots = new ArrayList<>(split.length);
+			ArrayList<SegmentDescriptor> shots = new ArrayList<>(split.length);
 			
 			int startFrame = 1;
 			int endFrame = Integer.parseInt(split[0].trim());
-			ShotDescriptor descriptor = new ShotDescriptor(videoId, 1, startFrame, endFrame);
+			SegmentDescriptor descriptor = new SegmentDescriptor(videoId, 1, startFrame, endFrame);
 			shots.add(descriptor);
 			
 			for(int i = 0; i < split.length - 1; ++i){
 				startFrame = Integer.parseInt(split[i].trim()) + 1;
 				endFrame = Integer.parseInt(split[i + 1].trim());
-				descriptor = new ShotDescriptor(videoId, i + 2, startFrame, endFrame);
+				descriptor = new SegmentDescriptor(videoId, i + 2, startFrame, endFrame);
 				shots.add(descriptor);
 			}
 			LOGGER.debug("successfully read {} shot boundaries", shots.size());
@@ -213,8 +232,14 @@ public class SingleVideoToFileExtractor {
 		featureList.add(new SubDivMotionHistogram3());
 		featureList.add(new SubDivMotionHistogram4());
 		featureList.add(new SubDivMotionHistogram5());
+		featureList.add(new MotionHistogramBackground());
+		featureList.add(new SubDivMotionHistogramBackground2());
+		featureList.add(new SubDivMotionHistogramBackground3());
+		featureList.add(new SubDivMotionHistogramBackground4());
+		featureList.add(new SubDivMotionHistogramBackground5());
 		featureList.add(new DominantEdgeGrid16());
 		featureList.add(new DominantEdgeGrid8());
+		featureList.add(new ForegroundBoundingBox());
 		
 		return featureList;
 	}

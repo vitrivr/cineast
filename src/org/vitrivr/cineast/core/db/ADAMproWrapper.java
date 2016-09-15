@@ -2,21 +2,21 @@ package org.vitrivr.cineast.core.db;
 
 import java.util.concurrent.ExecutionException;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.SettableFuture;
-
+import org.vitrivr.adam.grpc.AdamDefinitionGrpc;
+import org.vitrivr.adam.grpc.AdamDefinitionGrpc.AdamDefinitionStub;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
-import org.vitrivr.adam.grpc.AdamDefinitionGrpc;
-import org.vitrivr.adam.grpc.AdamDefinitionGrpc.AdamDefinitionStub;
 import org.vitrivr.adam.grpc.AdamSearchGrpc;
-import org.vitrivr.adam.grpc.AdamSearchGrpc.AdamSearchStub;
+import org.vitrivr.adam.grpc.AdamSearchGrpc.AdamSearchFutureStub;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -26,13 +26,13 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 
 	private ManagedChannel channel;
 	private AdamDefinitionStub definitionStub;
-	private AdamSearchStub searchStub;
+	private AdamSearchFutureStub searchStub;
 	
 	public ADAMproWrapper(){
 		DatabaseConfig config = Config.getDatabaseConfig();
 		this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPplaintext()).build();
 		this.definitionStub = AdamDefinitionGrpc.newStub(channel);
-		this.searchStub = AdamSearchGrpc.newStub(channel);
+		this.searchStub = AdamSearchGrpc.newFutureStub(channel);
 	}
 	
 	public synchronized ListenableFuture<AckMessage> createEntity(CreateEntityMessage message){
@@ -85,11 +85,11 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	}
 	
 	public ListenableFuture<QueryResultsMessage> standardQuery(QueryMessage message){
-		SettableFuture<QueryResultsMessage> future = SettableFuture.create();
-		synchronized (this.searchStub) {
-			this.searchStub.doQuery(message, new LastQueryResponseStreamObserver(future));
-		}
-		return future;
+		//SettableFuture<QueryResultsMessage> future = SettableFuture.create();
+		//synchronized (this.searchStub) {
+			return this.searchStub.doQuery(message/*, new LastQueryResponseStreamObserver(future)*/);
+		//}
+		//return future;
 	}
 	
 	public void close(){

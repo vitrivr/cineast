@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features.exporter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import javax.imageio.ImageIO;
 
@@ -10,8 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 public class ShotDescriptorExporter implements Extractor {
@@ -20,9 +22,7 @@ public class ShotDescriptorExporter implements Extractor {
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override
-	public void init(PersistencyWriter<?> phandler) {
-		phandler.close();
-		
+	public void init(PersistencyWriterSupplier supply) {
 		if(!folder.exists()){
 			folder.mkdirs();
 		}
@@ -60,5 +60,8 @@ public class ShotDescriptorExporter implements Extractor {
 
 	@Override
 	public void finish() {}
+	
+	@Override
+	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {}
 
 }
