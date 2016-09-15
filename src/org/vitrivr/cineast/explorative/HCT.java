@@ -27,12 +27,18 @@ public class HCT<T> implements IHCT<T>{
             return;
         }
         int topLevelNo = levels.size() - 1;
-        HCTCell<T> cellt = levels.get(levels.size() - 1).getCells().get(0); // get root
-        if(levelNo > topLevelNo){
+        List<HCTCell<T>> topLevelCells = levels.get(levels.size() - 1).getCells();
+        HCTCell<T> cellt = topLevelCells.get(0); // get root, normally only one node in topLevel exists
+        if(levelNo > topLevelNo){ // create new root
             HCTLevel<T> level = new HCTLevel<T>();
             levels.add(level);
             HCTCell<T> topLevelCell = level.addCell(distanceCalculation); //aka root
             topLevelCell.addValue(nextItem);
+            for (HCTCell<T> oldTopLevelCell : topLevelCells) {
+                oldTopLevelCell.setParent(topLevelCell);
+                topLevelCell.setChild(oldTopLevelCell);
+            }
+
             return;
         }
         HCTCell<T> cellO;
@@ -45,9 +51,25 @@ public class HCT<T> implements IHCT<T>{
         }
         List<T> oldNucleusValue = cellO.getNucleus().getValue();
         cellO.addValue(nextItem);
+
+        //experimental
+//        if(levels.size() > 1){ // obviously can not set child and parent if only one level exists
+//            HCTCell<T> mSCell =  getMSCell(levels.get(levelNo - 1).getCells(), nextItem, levelNo);
+//            mSCell.setParent(cellO);
+//            cellO.addChild(mSCell);
+//        }
+
+
+
         if(cellO.isReadyForMitosis()){
             List<HCTCell<T>> newCells = cellO.mitosis();
-            remove(cellO.getNucleus().getValue(), levelNo + 1);
+            HCTCell<T> parentCell = cellO.getParent();
+            if(parentCell != null) parentCell.removeChild(cellO);
+            levels.get(levelNo).removeCell(cellO);
+            remove(oldNucleusValue, levelNo + 1);
+            for (HCTCell<T> newCell : newCells) {
+                levels.get(levelNo).addCell(newCell);
+            }
             for (HCTCell<T> newCell : newCells) {
                 insert(newCell.getNucleus().getValue(), levelNo + 1);
             }
@@ -82,10 +104,11 @@ public class HCT<T> implements IHCT<T>{
     @Override
     public void remove(List<T> value, int levelNo) {
         int topLevelNo = levels.size() - 1;
-        if(levelNo - 1 > topLevelNo) return; // experimental
+        List<HCTCell<T>> cells = levels.get(levels.size() - 1).getCells();
+        if(cells.size() == 0) return; // experimental
+        HCTCell<T> cellT = cells.get(0); // get root
 
-        HCTCell<T> cellT = levels.get(levels.size() - 1).getCells().get(0); // get root
-        for (HCTCell<T> cell : levels.get(levelNo - 1).getCells()) {
+        for (HCTCell<T> cell : levels.get(levelNo).getCells()) {
             if (cell.containsValue(value)){
                 List<T> oldNucleusValue = cell.getNucleus().getValue();
                 cell.removeValue(value);
@@ -98,13 +121,13 @@ public class HCT<T> implements IHCT<T>{
                 }
                 else if(cell.isReadyForMitosis()){
                     List<HCTCell<T>> newCells = cell.mitosis();
-                    remove(cell.getNucleus().getValue(), levelNo + 1);
+                    if(levelNo < topLevelNo) remove(cell.getNucleus().getValue(), levelNo + 1);
                     for (HCTCell<T> newCell : newCells) {
                         insert(newCell.getNucleus().getValue(), levelNo + 1);
                     }
                 }
                 else if(oldNucleusValue != cell.getNucleus().getValue()){
-                    remove(oldNucleusValue, levelNo + 1);
+                    if(levelNo < topLevelNo) remove(oldNucleusValue, levelNo + 1);
                     insert(cell.getNucleus().getValue(), levelNo + 1);
                 }
             }
@@ -118,7 +141,7 @@ public class HCT<T> implements IHCT<T>{
         List<HCTCell<T>> cells = levels.get(currentLevel).getCells();
         double dist = Double.MAX_VALUE;
         for (HCTCell<T> cell : cells) {
-            if(ArrayCS.contains(cell.getParent())){
+            if(ArrayCS.contains(cell.getParent()) || cell.getParent() == null){
                 if(cell.getDistanceToNucleus(nextItem) < dist){
                     dist = cell.getDistanceToNucleus(nextItem);
                     mSCell = cell;
@@ -129,6 +152,6 @@ public class HCT<T> implements IHCT<T>{
     }
 
     public String toString(){
-        return String.format("HCT | #levels: %s | levels: %s", levels.size(), Utils.listToString(levels));
+        return String.format("HCT | #levels: %s", levels.size());
     }
 }

@@ -139,6 +139,6 @@ class MST<V> implements IMST<V> {
     }
 
     public String toString(){
-        return String.format("MST | #nodes: %s | #edges: %s | nodes <%s>", graph.vertexSet().size(), graph.edgeSet().size(), Utils.listToString(Arrays.asList(graph.vertexSet().toArray())));
+        return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(), graph.edgeSet().size(), Utils.listToString(getNucleus().getValue()));
     }
 }

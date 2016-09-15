@@ -39,6 +39,6 @@ public class MSTNode<T> implements IMSTNode<T> {
 
     @Override
     public String toString(){
-        return String.format("MSTNode <%s> with value <%s> and belongs to MST<%s>", this.hashCode(), Utils.listToString(value), mst.hashCode());
+        return String.format("MSTNode | value: %s >", Utils.listToString(value));
     }
 }

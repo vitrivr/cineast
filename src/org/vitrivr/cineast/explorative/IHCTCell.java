@@ -10,4 +10,8 @@ public interface IHCTCell<T> {
     boolean containsValue(List<T> value);
 
     boolean isCellDeath();
+
+    void setChild(HCTCell<T> child);
+
+    void removeChild(HCTCell<T> child);
 }

@@ -24,18 +24,22 @@ public class HCTLevel<T> {
 
     public List<HCTCell<T>> getCells(){ return cells;}
 
-    public List<HCTCell<T>> getAllCandidates(List<T> other, double dminUpperLevel, List<HCTCell<T>> parents){
+    public List<HCTCell<T>> getAllCandidates(List<T> other, double dmin, List<HCTCell<T>> parents){
         List<HCTCell<T>> candidates = new ArrayList<>();
         for(HCTCell<T> cell : cells){
-            if(!parents.contains(cell.getParent())) continue; // search only in children of matched nodes one level above
+            //if(!parents.contains(cell.getParent())) continue; // search only in children of matched nodes one level above
             double distanceToNucleus = cell.getDistanceToNucleus(other);
             double coveringRadius = cell.getCoveringRadius();
 
-            if(distanceToNucleus - coveringRadius < dminUpperLevel){
+            if(distanceToNucleus - coveringRadius < dmin){
                 candidates.add(cell);
             }
         }
         return candidates;
+    }
+
+    public void removeCell(HCTCell<T> cell){
+        cells.remove(cell);
     }
 
     public HCTCell<T> addCell(Function<List<List<T>>, Double> distanceCalculation){
@@ -44,7 +48,15 @@ public class HCTLevel<T> {
         return cell;
     }
 
+    public void addCell(HCTCell<T> cell){
+        cells.add(cell);
+    }
+
+    public void addCell(List<T> cells){
+        cells.addAll(cells);
+    }
+
     public String toString(){
-        return String.format("HCTLevel | #cells: %s | cells: %s", cells.size(), Utils.listToString(cells));
+        return String.format("HCTLevel | #cells: %s", cells.size());
     }
 }

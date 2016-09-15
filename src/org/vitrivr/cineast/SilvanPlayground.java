@@ -2,13 +2,6 @@ package org.vitrivr.cineast;
 
 import com.jujutsu.tsne.MemOptimizedTSne;
 import com.jujutsu.tsne.TSne;
-import org.jgrapht.alg.NeighborIndex;
-import org.jgrapht.alg.PrimMinimumSpanningTree;
-import org.jgrapht.alg.interfaces.MinimumSpanningTree;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleWeightedGraph;
-import org.jgrapht.traverse.BreadthFirstIterator;
-import org.jgrapht.traverse.GraphIterator;
 import org.math.plot.FrameView;
 import org.math.plot.Plot2DPanel;
 import org.math.plot.PlotPanel;
@@ -46,6 +39,8 @@ public class SilvanPlayground {
             hct.insert(Arrays.asList(new Double(1), new Double(-4)), 0);
             hct.insert(Arrays.asList(new Double(1), new Double(-1)), 0);
             hct.insert(Arrays.asList(new Double(1), new Double(1)), 0);
+            hct.insert(Arrays.asList(new Double(1), new Double(3)), 0);
+//            hct.insert(Arrays.asList(new Double(1), new Double(-5)), 0);
 
             System.out.println("Finished");
 

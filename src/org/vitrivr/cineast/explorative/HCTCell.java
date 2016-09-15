@@ -82,8 +82,18 @@ public class HCTCell<T> implements IHCTCell {
         return mst.isCellDeath();
     }
 
+    @Override
+    public void setChild(HCTCell child) {
+        children.add(child);
+    }
+
+    @Override
+    public void removeChild(HCTCell child) {
+        children.remove(child);
+    }
+
     public String toString(){
-        return String.format("HCTCell | parent: %s | children: %s | mst: %s | isCellDeath: %s | isReadyMitosis: %s | Nucleus: <%s>",
-                parent, Utils.listToString(children), mst, isCellDeath(), isReadyForMitosis(), getNucleus());
+        return String.format("HCTCell | isCellDeath: %s | isReadyMitosis: %s | Nucleus: <%s>",
+                isCellDeath(), isReadyForMitosis(), getNucleus());
     }
 }
