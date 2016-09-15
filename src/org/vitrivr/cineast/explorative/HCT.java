@@ -128,7 +128,9 @@ public class HCT<T> implements IHCT<T>{
                 }
                 else if(oldNucleusValue != cell.getNucleus().getValue()){
                     if(levelNo < topLevelNo) remove(oldNucleusValue, levelNo + 1);
-                    insert(cell.getNucleus().getValue(), levelNo + 1);
+                    // experimental
+                    if(levelNo < topLevelNo) insert(cell.getNucleus().getValue(), levelNo + 1);
+
                 }
             }
         }
