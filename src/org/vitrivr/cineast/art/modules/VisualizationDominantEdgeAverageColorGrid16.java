@@ -37,6 +37,10 @@ public class VisualizationDominantEdgeAverageColorGrid16 extends AbstractVisuali
 
   @Override
   public String visualizeSegment(String segmentId) {
+    String cacheData = visualizationCache.getFromCache(getDisplayName(), VisualizationType.VISUALIZATION_SEGMENT, segmentId);
+    if(cacheData != null){
+      return cacheData;
+    }
     DBSelector selector = selectors.get("DominantEdgeGrid16");
     List<Map<String, PrimitiveTypeProvider>> edgeResult = selector.getRows("id", segmentId);
 
@@ -92,7 +96,7 @@ public class VisualizationDominantEdgeAverageColorGrid16 extends AbstractVisuali
     }
     graph.dispose();
 
-    return WebUtils.BufferedImageToDataURL(image, "png");
+    return visualizationCache.cacheResult(getDisplayName(), VisualizationType.VISUALIZATION_SEGMENT, segmentId, WebUtils.BufferedImageToDataURL(image, "png"));
   }
 
   @Override

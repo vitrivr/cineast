@@ -34,12 +34,12 @@ public class VisualizationCache {
     }
     File visualizationDir = new File(cachePath + "/" + visualizationType.toString());
     visualizationDir.mkdirs();
-    File cache = new File(visualizationDir.getAbsolutePath() + "/" + objectId + ".cache");
+    File cache = new File(visualizationDir.getAbsolutePath() + "/" + objectId + "-" + visualization + ".cache");
     try {
       PrintWriter out = new PrintWriter(cache);
       out.println(data);
       out.close();
-      LOGGER.info("Cached visualization for '{}-{}-{}' ", visualization, visualizationType.toString(), objectId);
+      LOGGER.debug("Cached visualization for '{}-{}-{}' ", visualization, visualizationType.toString(), objectId);
     } catch (FileNotFoundException e) {
       LOGGER.warn("Failed to cache '{}'", cache.getAbsoluteFile());
       e.printStackTrace();
@@ -53,7 +53,7 @@ public class VisualizationCache {
     }
     File visualizationDir = new File(cachePath + "/" + visualizationType.toString());
     visualizationDir.mkdirs();
-    String filePath = visualizationDir.getAbsolutePath() + "/" + objectId + ".cache";
+    String filePath = visualizationDir.getAbsolutePath() + "/" + objectId + "-" + visualization + ".cache";
     File cache = new File(filePath);
     String data = null;
     if(cache.exists()){

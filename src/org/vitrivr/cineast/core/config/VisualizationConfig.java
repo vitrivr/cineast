@@ -97,7 +97,7 @@ public final class VisualizationConfig {
     this.cachePath = cachePath;
     this.cacheEnabled = cacheEnabled;
     if(cacheEnabled) {
-      LOGGER.info("Visualization cache enabled at '{}'", cachePath);
+      LOGGER.debug("Visualization cache enabled at '{}'", cachePath);
     }
   }
 

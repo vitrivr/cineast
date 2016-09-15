@@ -30,6 +30,10 @@ public class VisualizationMedianColorGrid8Square extends AbstractVisualizationMo
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
+    String cacheData = visualizationCache.getFromCache(getDisplayName(), VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT, multimediaobjectId);
+    if(cacheData != null){
+      return cacheData;
+    }
     SegmentLookup segmentLookup = new SegmentLookup();
     DBSelector selector = selectors.get("MedianColorGrid8");
     List<SegmentLookup.SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
@@ -56,7 +60,7 @@ public class VisualizationMedianColorGrid8Square extends AbstractVisualizationMo
       count++;
     }
 
-    return WebUtils.BufferedImageToDataURL(image, "png");
+    return visualizationCache.cacheResult(getDisplayName(), VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT, multimediaobjectId, WebUtils.BufferedImageToDataURL(image, "png"));
   }
 
   @Override

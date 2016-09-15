@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.art;
 
 import org.vitrivr.cineast.api.WebUtils;
-import org.vitrivr.cineast.art.modules.VisualizationMedianColorStripe;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorGrid8Square;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
 import org.vitrivr.cineast.core.config.Config;
 
@@ -16,10 +16,12 @@ import java.util.List;
  */
 public class VisualizationTest {
   public static void main(String[] args) {
-    Visualization vis = new VisualizationMedianColorStripe();
+    Visualization vis = new VisualizationMedianColorGrid8Square();
     vis.init(Config.getDatabaseConfig().getSelectorSupplier());
     try {
-      ImageIO.write(WebUtils.dataURLtoBufferedImage(vis.visualizeMultimediaobject("11")), "png", new File("src/resources/test.png"));
+      for(int x=1;x<50;x++) {
+        ImageIO.write(WebUtils.dataURLtoBufferedImage(vis.visualizeMultimediaobject("" + x)), "png", new File("src/resources/test.png"));
+      }
       //ImageIO.write(WebUtils.dataURLtoBufferedImage(vis.visualizeSegment("1900546")), "png", new File("src/resources/test.png"));
     } catch (IOException e) {
       e.printStackTrace();
