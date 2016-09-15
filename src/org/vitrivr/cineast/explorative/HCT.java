@@ -163,8 +163,18 @@ public class HCT<T> implements IHCT<T>{
         return String.format("HCT | #levels: %s", levels.size());
     }
 
-//    private boolean contains(HCTCell<T> cell, List<List<T>> cellContent){
-//
-//    }
+    public String print(){
+
+        StringBuilder sb = new StringBuilder();
+        for(HCTLevel<T> level : levels){
+            sb.append("level : " ).append(levels.indexOf(level)).append(" ");
+            for(HCTCell<T> cell : level.getCells()){
+                sb.append(Utils.listToString(cell.getValues())).append(" | Parent (Nucleus): ").append(cell.getNucleus().getValue());
+                sb.append("......");
+            }
+            sb.append(System.lineSeparator());
+        }
+        return sb.toString();
+    }
 
 }

@@ -42,6 +42,7 @@ public class SilvanPlayground {
             hct.insert(Arrays.asList(new Double(1), new Double(3)), 0);
             hct.insert(Arrays.asList(new Double(1), new Double(-5)), 0);
 
+            System.out.println(hct.print());
             System.out.println("Finished");
 
         } catch (Exception e) {
