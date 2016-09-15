@@ -11,7 +11,6 @@ import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.SegmentLookup;
-import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -36,6 +35,10 @@ public class VisualizationMedianColorStripe extends AbstractVisualizationModule 
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
+    String cacheData = visualizationCache.getFromCache(getDisplayName(), VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT, multimediaobjectId);
+    if(cacheData != null){
+      return cacheData;
+    }
     DBSelector selector = selectors.get("MedianColor");
     SegmentLookup segmentLookup = new SegmentLookup();
     List<SegmentLookup.SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
@@ -55,8 +58,7 @@ public class VisualizationMedianColorStripe extends AbstractVisualizationModule 
       count++;
     }
     graph.dispose();
-
-    return WebUtils.BufferedImageToDataURL(image, "png");
+    return visualizationCache.cacheResult(getDisplayName(), VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT, multimediaobjectId, WebUtils.BufferedImageToDataURL(image, "png"));
   }
 
   @Override

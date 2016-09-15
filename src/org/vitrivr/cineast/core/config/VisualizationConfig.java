@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.*;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
 
@@ -11,9 +13,14 @@ import java.util.Set;
 public final class VisualizationConfig {
 
   private final HashMap<String, List<Class<? extends Visualization>>> visualizationCategories;
+  private final String cachePath;
+  private final boolean cacheEnabled;
   public static List<Class<? extends Visualization>> visualizations = new ArrayList();
 
   public static final HashMap<String, List<Class<? extends Visualization>>> DEFAULT_VISUALIZATION_CATEGORIES = new HashMap<>();
+  public static final String DEFAULT_CACHE_PATH = "cache/art/";
+
+  private static Logger LOGGER = LogManager.getLogger();
 
   static {
     //add all visualizations
@@ -82,11 +89,24 @@ public final class VisualizationConfig {
   }
 
   public VisualizationConfig() {
-    this(DEFAULT_VISUALIZATION_CATEGORIES);
+    this(DEFAULT_VISUALIZATION_CATEGORIES, DEFAULT_CACHE_PATH, true);
   }
 
-  public VisualizationConfig(HashMap<String, List<Class<? extends Visualization>>> visualizationCategories) {
+  public VisualizationConfig(HashMap<String, List<Class<? extends Visualization>>> visualizationCategories, String cachePath, boolean cacheEnabled) {
     this.visualizationCategories = visualizationCategories;
+    this.cachePath = cachePath;
+    this.cacheEnabled = cacheEnabled;
+    if(cacheEnabled) {
+      LOGGER.info("Visualization cache enabled at '{}'", cachePath);
+    }
+  }
+
+  public String getVisualizationCachePath(){
+    return cachePath;
+  }
+
+  public boolean getCacheEnabled(){
+    return cacheEnabled;
   }
 
   public boolean isValidVisualization(Class className) {

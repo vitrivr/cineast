@@ -3,6 +3,7 @@ package org.vitrivr.cineast.art.modules.abstracts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
+import org.vitrivr.cineast.art.modules.visualization.VisualizationCache;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -19,6 +20,7 @@ public abstract class AbstractVisualizationModule implements Visualization {
   protected final String multimediaobjectTable;
   protected final String segmentTable;
   protected Map<String, DBSelector> selectors;
+  protected VisualizationCache visualizationCache;
 
   protected static final Logger LOGGER = LogManager.getLogger();
 
@@ -29,6 +31,7 @@ public abstract class AbstractVisualizationModule implements Visualization {
   }
 
   public void init(DBSelectorSupplier supplier) {
+    visualizationCache = new VisualizationCache();
     selectors = new HashMap();
 
     DBSelector selector;
