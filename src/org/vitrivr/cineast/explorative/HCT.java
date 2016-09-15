@@ -104,7 +104,7 @@ public class HCT<T> implements IHCT<T>{
             return closest;
         }
         List<HCTCell<T>> newArrayCS = levels.get(curLevelNo).getAllCandidates(nextItem, dmin, ArrayCS);
-        return preemptiveCellSearch(newArrayCS, nextItem, curLevelNo, levelNo);
+        return preemptiveCellSearch(newArrayCS, nextItem, curLevelNo - 1, levelNo);
     }
 
     @Override
