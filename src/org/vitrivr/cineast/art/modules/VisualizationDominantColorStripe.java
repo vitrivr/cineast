@@ -34,14 +34,14 @@ public class VisualizationDominantColorStripe extends AbstractVisualizationModul
   public String visualizeMultimediaobject(String multimediaobjectId) {
     List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("DominantColor"), multimediaobjectId);
 
-    BufferedImage image = new BufferedImage(featureData.size() * 10, 100, BufferedImage.TYPE_INT_RGB);
+    BufferedImage image = new BufferedImage(featureData.size(), 1, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
     int count = 0;
     for (Map<String, PrimitiveTypeProvider> feature : featureData) {
       float[] arr = feature.get("feature").getFloatArray();
       RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[0], arr[1], arr[2]));
       graph.setColor(new Color(rgbContainer.toIntColor()));
-      graph.fillRect(count * 10, 0, 10, 100);
+      graph.fillRect(count, 0, 1, 1);
       count++;
     }
     graph.dispose();

@@ -33,12 +33,12 @@ public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule {
     DBSelector selector = selectors.get("MedianColorGrid8");
     int[][][] pixels = ArtUtil.shotToRGB(segmentId, selector, 8, 8);
 
-    BufferedImage image = new BufferedImage(256, 256, BufferedImage.TYPE_INT_RGB);
+    BufferedImage image = new BufferedImage(8, 8, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
     for (int x = 0; x < pixels.length; x++) {
       for (int y = 0; y < pixels[0].length; y++) {
         graph.setColor(new Color(pixels[x][y][0], pixels[x][y][1], pixels[x][y][2]));
-        graph.fillRect(x * 32, y * 32, 32, 32);
+        graph.fillRect(x, y, 1, 1);
       }
     }
     graph.dispose();
@@ -70,12 +70,12 @@ public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule {
       }
     }
 
-    BufferedImage image = new BufferedImage(256, 256, BufferedImage.TYPE_INT_RGB);
+    BufferedImage image = new BufferedImage(8, 8, BufferedImage.TYPE_INT_RGB);
     Graphics2D graph = image.createGraphics();
     for (int x = 0; x < pixels.length; x++) {
       for (int y = 0; y < pixels[0].length; y++) {
         graph.setColor(new Color(pixels[x][y][0], pixels[x][y][1], pixels[x][y][2]));
-        graph.fillRect(x * 32, y * 32, 32, 32);
+        graph.fillRect(x, y, 1, 1);
       }
     }
     graph.dispose();
