@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.art;
 
 import org.vitrivr.cineast.api.WebUtils;
-import org.vitrivr.cineast.art.modules.VisualizationAverageColorGrid8Vertical;
+import org.vitrivr.cineast.art.modules.VisualizationAverageColorGradient;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
 import org.vitrivr.cineast.core.config.Config;
 
@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class VisualizationTest {
   public static void main(String[] args) {
-    Visualization vis = new VisualizationAverageColorGrid8Vertical();
+    Visualization vis = new VisualizationAverageColorGradient();
     vis.init(Config.getDatabaseConfig().getSelectorSupplier());
     try {
       for(int x=11;x<12;x++) {
