@@ -28,10 +28,6 @@ public class VisualizationMedianColorGrid8Square extends AbstractVisualizationMo
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    String cacheData = visualizationCache.getFromCache(getDisplayName(), VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT, multimediaobjectId);
-    if(cacheData != null){
-      return cacheData;
-    }
     List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("MedianColorGrid8"), multimediaobjectId);
 
     int dim = (int) Math.floor(Math.sqrt(featureData.size()));
@@ -55,7 +51,7 @@ public class VisualizationMedianColorGrid8Square extends AbstractVisualizationMo
       count++;
     }
 
-    return visualizationCache.cacheResult(getDisplayName(), VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT, multimediaobjectId, WebUtils.BufferedImageToDataURL(image, "png"));
+    return WebUtils.BufferedImageToDataURL(image, "png");
   }
 
   @Override

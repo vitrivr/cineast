@@ -32,10 +32,6 @@ public class VisualizationMedianColorStripe extends AbstractVisualizationModule 
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    String cacheData = visualizationCache.getFromCache(getDisplayName(), VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT, multimediaobjectId);
-    if(cacheData != null){
-      return cacheData;
-    }
     List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("MedianColor"), multimediaobjectId);
 
     BufferedImage image = new BufferedImage(featureData.size() * 10, 100, BufferedImage.TYPE_INT_RGB);
@@ -49,7 +45,7 @@ public class VisualizationMedianColorStripe extends AbstractVisualizationModule 
       count++;
     }
     graph.dispose();
-    return visualizationCache.cacheResult(getDisplayName(), VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT, multimediaobjectId, WebUtils.BufferedImageToDataURL(image, "png"));
+    return WebUtils.BufferedImageToDataURL(image, "png");
   }
 
   @Override

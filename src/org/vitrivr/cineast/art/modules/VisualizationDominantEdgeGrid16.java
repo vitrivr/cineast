@@ -33,10 +33,6 @@ public class VisualizationDominantEdgeGrid16 extends AbstractVisualizationModule
 
   @Override
   public String visualizeSegment(String segmentId) {
-    String cacheData = visualizationCache.getFromCache(getDisplayName(), VisualizationType.VISUALIZATION_SEGMENT, segmentId);
-    if(cacheData != null){
-      return cacheData;
-    }
     DBSelector selector = selectors.get("DominantEdgeGrid16");
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", segmentId);
 
@@ -75,7 +71,7 @@ public class VisualizationDominantEdgeGrid16 extends AbstractVisualizationModule
     }
     graph.dispose();
 
-    return visualizationCache.cacheResult(getDisplayName(), VisualizationType.VISUALIZATION_SEGMENT, segmentId, WebUtils.BufferedImageToDataURL(image, "png"));
+    return WebUtils.BufferedImageToDataURL(image, "png");
   }
 
 

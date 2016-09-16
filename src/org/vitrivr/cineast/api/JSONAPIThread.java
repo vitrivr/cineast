@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
+import org.vitrivr.cineast.art.modules.visualization.VisualizationCache;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -464,21 +465,33 @@ public class JSONAPIThread extends Thread {
 					_return.add("visualizationError", "Invalid visualizationClass!");
 					break;
 				}
-				Visualization visualization = (Visualization)visualizationClass.newInstance();
-				String result = new String();
-				visualization.init(Config.getDatabaseConfig().getSelectorSupplier());
+				String objectId = null;
 				switch(visualizationType){
 					case VISUALIZATION_SEGMENT:
-						String shotId = clientJSON.get("segmentId").asString();
-						result = visualization.visualizeSegment(shotId);
+						objectId = clientJSON.get("segmentId").asString();
 						break;
 					case VISUALIZATION_MULTIMEDIAOBJECT:
-						String movieId = clientJSON.get("multimediaobjectId").asString();
-						result = visualization.visualizeMultimediaobject(movieId);
+						objectId = clientJSON.get("multimediaobjectId").asString();
 						break;
 					default:
 						LOGGER.error("Missing VisualizationType in API implementation!");
 						break;
+				}
+				Visualization visualization = (Visualization)visualizationClass.newInstance();
+				String result = VisualizationCache.getFromCache(visualization.getDisplayName(), visualizationType, objectId);
+				if(result == null) {
+					visualization.init(Config.getDatabaseConfig().getSelectorSupplier());
+					switch(visualizationType){ //I'm not completely happy that I have to use the same switch cases again, should be possible in a better way
+						case VISUALIZATION_MULTIMEDIAOBJECT:
+							result = visualization.visualizeMultimediaobject(objectId);
+							break;
+						case VISUALIZATION_SEGMENT:
+							result = visualization.visualizeSegment(objectId);
+							break;
+						default:
+							break;
+					}
+					VisualizationCache.cacheResult(visualization.getDisplayName(), visualizationType, objectId, result);
 				}
 				_return.add("resultData", result);
 				_return.add("resultType", visualization.getResultType().toString());

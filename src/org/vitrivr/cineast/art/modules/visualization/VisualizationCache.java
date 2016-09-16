@@ -15,20 +15,19 @@ import java.nio.file.Paths;
  * Created by sein on 15.09.16.
  */
 public class VisualizationCache {
-  private final String cachePath = Config.getVisualizationConfig().getVisualizationCachePath();
-  private final boolean cacheEnabled = Config.getVisualizationConfig().getCacheEnabled();
-
-  public VisualizationCache(){
-    if(!cacheEnabled){
-      return;
-    }
-    File cache = new File(cachePath);
-    cache.mkdirs();
-  }
+  private static final String cachePath = Config.getVisualizationConfig().getVisualizationCachePath();
+  private static final boolean cacheEnabled = Config.getVisualizationConfig().getCacheEnabled();
 
   private static Logger LOGGER = LogManager.getLogger();
 
-  public String cacheResult(String visualization, VisualizationType visualizationType, String objectId, String data){
+  static {
+    if(cacheEnabled){
+      File cache = new File(cachePath);
+      cache.mkdirs();
+    }
+  }
+
+  public static String cacheResult(String visualization, VisualizationType visualizationType, String objectId, String data){
     if(!cacheEnabled){
       return data;
     }
@@ -47,7 +46,7 @@ public class VisualizationCache {
     return data;
   }
 
-  public String getFromCache(String visualization, VisualizationType visualizationType, String objectId){
+  public static String getFromCache(String visualization, VisualizationType visualizationType, String objectId){
     if(!cacheEnabled){
       return null;
     }
