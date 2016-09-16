@@ -42,7 +42,7 @@ public class VisualizationMedianColorGradient extends AbstractVisualizationModul
     }
 
     try {
-      image = Thumbnails.of(image).scalingMode(ScalingMode.BILINEAR).scale(10, 100).asBufferedImage();
+      image = Thumbnails.of(image).scalingMode(ScalingMode.BILINEAR).scale(10, 1).asBufferedImage();
     } catch (IOException e) {
       e.printStackTrace();
     }
