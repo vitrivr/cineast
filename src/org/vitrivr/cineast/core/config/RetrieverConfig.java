@@ -122,6 +122,7 @@ public final class RetrieverConfig {
 		list.add(DoublePair.pair(SubtitleWordSearch.class, 			1.0));
 		list.add(DoublePair.pair(SubtitleFulltextSearch.class, 		1.0));
 		list.add(DoublePair.pair(QueryImageExporter.class, 			0.001));
+		DEFAULT_RETRIEVER_CATEGORIES.put("meta", list);
 	}
 	
 	public RetrieverConfig(){

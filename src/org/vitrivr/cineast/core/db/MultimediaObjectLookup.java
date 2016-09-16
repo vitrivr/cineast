@@ -114,7 +114,7 @@ public class MultimediaObjectLookup{
 		return mapToDescriptor(result.get(0));		
 	}
 	
-	public Map<String, MultimediaObjectDescriptor> lookUpVideos(String... videoIds){ //TODO make more efficient
+	public Map<String, MultimediaObjectDescriptor> lookUpVideos(String... videoIds){
 		if(videoIds == null || videoIds.length == 0){
 			return new HashMap<>();
 		}
