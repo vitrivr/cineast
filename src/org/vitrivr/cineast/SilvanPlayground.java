@@ -6,6 +6,7 @@ import org.math.plot.FrameView;
 import org.math.plot.Plot2DPanel;
 import org.math.plot.PlotPanel;
 import org.math.plot.plots.ScatterPlot;
+import org.math.plot.utils.Array;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -27,41 +28,73 @@ public class SilvanPlayground {
     public static void main(String[] args){
 
         try {
-            HCT<Double> hct = new HCT<Double>((List<List<Double>> arguments) -> {
-                List<Double> firstVector = arguments.get(0);
-                List<Double> secondVector = arguments.get(1);
-                Double distance = 0.0;
-                for (int i = 0; i < firstVector.size(); i++) {
-                    distance += (firstVector.get(i) - secondVector.get(i)) * (firstVector.get(i) - secondVector.get(i));
-                }
+
+            HCT<Integer> hctInt = new HCT<Integer>((List<List<Integer>> arguments) -> {
+                int firstVector = arguments.get(0).get(0);
+                int secondVector = arguments.get(1).get(0);
+                int distance = (firstVector - secondVector) * (firstVector - secondVector);
                 return Math.sqrt(distance);
             });
-            hct.insert(Arrays.asList(new Double(1), new Double(-4)), 0);
-            hct.insert(Arrays.asList(new Double(1), new Double(-1)), 0);
-            hct.insert(Arrays.asList(new Double(1), new Double(1)), 0);
-            hct.insert(Arrays.asList(new Double(1), new Double(3)), 0);
-            hct.insert(Arrays.asList(new Double(1), new Double(-5)), 0);
 
-            System.out.println(hct.print());
-            System.out.println("Finished");
+            for(int i : new int[] {37, 56, 42, 81, 69, 95, 29, 52, 22, 11, 98, 37, 57, 23, 7, 26, 39, 93, 68, 12, 8, 6, 37}){
+                hctInt.insert(Arrays.asList(i));
+            }
+
+            while(true){
+                int i = new Random().nextInt(100);
+                hctInt.insert(Arrays.asList(i));
+            }
+
+
+//            DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
+//            dbSelector.open("features_averagecolor");
+//            List<PrimitiveTypeProvider> l = dbSelector.getAllRows("feature");
+//            List<float[]> features = new ArrayList<>();
+//            if (l.size() > 0) {
+//                for(PrimitiveTypeProvider ptp : l){
+//                    features.add(ptp.getFloatArray());
+//                }
+//            }
+//
+//            System.out.println("Read " + features.size() + " rows.");
+//
+//            HCT<Float> hct = new HCT<Float>((List<List<Float>> arguments) -> {
+//                List<Float> firstVector = arguments.get(0);
+//                List<Float> secondVector = arguments.get(1);
+//                Double distance = 0.0;
+//                for (int i = 0; i < firstVector.size(); i++) {
+//                    distance += (firstVector.get(i) - secondVector.get(i)) * (firstVector.get(i) - secondVector.get(i));
+//                }
+//                return Math.sqrt(distance);
+//            });
+//            for (float[] feature : features) {
+//                List<Float> featureEntryList = new ArrayList<>();
+//                for(float f : feature){
+//                    featureEntryList.add(f);
+//                }
+//                boolean isNullVector = true;
+//                for (Float entry : featureEntryList) {
+//                    if(entry != 0.0){
+//                        isNullVector = false;
+//                        break;
+//                    }
+//                }
+//                hct.insert(featureEntryList);
+//            }
+//
+//
+////            hct.insert(Arrays.asList(1d, -4d), 0);
+////            hct.insert(Arrays.asList(1d, -1d), 0);
+////            hct.insert(Arrays.asList(1d, 1d), 0);
+////            hct.insert(Arrays.asList(1d, 3d), 0);
+////            hct.insert(Arrays.asList(1d, -5d), 0);
+//
+//            System.out.println(hct.print());
+//            System.out.println("Finished");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-//
-//        DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
-//        dbSelector.open("cineast_representativeframes");
-//        List<Map<String, PrimitiveTypeProvider>> l = dbSelector.getRows("id", "65539");
-//        Integer frame = 0;
-//        if (l.size() > 0) {
-//            for(Map<String, PrimitiveTypeProvider> m : l){
-//                PrimitiveTypeProvider ptp = m.get("frame");
-//                frame = ptp.getInt();
-//                System.out.println(frame);
-//            }
-//        }
-
     }
 
     private static double[][] tsneSelf(double[][] x, int perplexity, int numIter, int learningRate, int monumentum){

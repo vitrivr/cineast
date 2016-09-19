@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface IHCT<T> {
 
-    void insert(List<T> nextItem, int levelNo);
+    void insert(List<T> nextItem);
 
     HCTCell<T> preemptiveCellSearch(List<HCTCell<T>> ArrayCS, List<T> nextItem, int curLevelNo, int levelNo);
 

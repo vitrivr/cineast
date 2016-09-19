@@ -70,7 +70,7 @@ public class HCTCell<T> implements IHCTCell {
 
     @Override
     public void addChild(HCTCell child) {
-        children.add(child);
+        if(!children.contains(child)) children.add(child);
     }
 
     @Override

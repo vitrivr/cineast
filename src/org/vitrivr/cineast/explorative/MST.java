@@ -62,10 +62,11 @@ class MST<V> implements IMST<V> {
 
     public double getCompactness(){
         // TODO: 14.09.16 implement real compactness measurement
-        return graph.vertexSet().size() > 2 ? 1.0 : 0.0;
+        return graph.vertexSet().size() > 5 ? 1.0 : 0.0;
     }
 
     public boolean isReadyForMitosis(){
+
         return getCompactness() > 0.5; // // TODO: 14.09.16 needs real implemenation
     }
 
@@ -135,6 +136,8 @@ class MST<V> implements IMST<V> {
     }
 
     private SimpleWeightedGraph<MSTNode<V>, DefaultWeightedEdge> getMST(){
+        if(graph.vertexSet().size() == 1) return graph; // PrimMinimum
+
         MinimumSpanningTree<MSTNode<V>, DefaultWeightedEdge> internMst = new PrimMinimumSpanningTree<>(graph);
         Set<DefaultWeightedEdge> edges = internMst.getMinimumSpanningTreeEdgeSet();
         Set<MSTNode<V>> nodes = graph.vertexSet();
