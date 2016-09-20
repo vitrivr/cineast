@@ -28,7 +28,7 @@ public class ObjectFinder {
         if(!new File("src/resources/finder").exists()){
             new File("src/resources/finder").mkdirs();
         }
-        ObjectFinder obj = new ObjectFinder(ImageIO.read(new File("src/resources/bbb-splash.png")), Config.getNeuralNetConfig().getNeuralNetFactory().get());
+        ObjectFinder obj = new ObjectFinder(ImageIO.read(new File("src/resources/nun_penguins.jpeg")), Config.getNeuralNetConfig().getNeuralNetFactory().get());
         obj.showHeatMap();
     }
 
@@ -48,6 +48,8 @@ public class ObjectFinder {
             }
         }
         int desiredIdx = getMax(res);
+        desiredIdx = 399;
+        System.out.println(net.getAllLabels().get(399));
         float desiredVal = res[desiredIdx];
         //System.out.println("Desired Label: "+net.getAllLabels()[desiredIdx]);
         BufferedImage greyHeatmap = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -57,7 +59,7 @@ public class ObjectFinder {
         int colindex = 1;
         Map<Integer, Integer> labelMap = new HashMap<Integer, Integer>();
 
-        int move = 300;
+        int move = 100;
         for (int x = 0; x < img.getWidth(); x += move) {
             for (int y = 0; y < img.getHeight(); y += move) {
                 BufferedImage grey = this.addGreyRectangle(img, x-move, y-move, move*3, move*3);

@@ -23,22 +23,28 @@ public class NN_demo {
     public static void main(String[] args) throws IOException {
 
         NeuralNet nn = Config.getNeuralNetConfig().getNeuralNetFactory().get();
-        BufferedImage keyframe = ImageIO.read(new File("thumbnails/v1/v1_38.jpg"));
+        BufferedImage keyframe = ImageIO.read(new File("src/resources/nun_penguins.jpeg"));
         float[] probs = new float[1000];
         Arrays.fill(probs, 0f);
         Position[] positions = new Position[]{Positions.CENTER, Positions.TOP_RIGHT, Positions.BOTTOM_RIGHT, Positions.BOTTOM_LEFT, Positions.TOP_LEFT};
-
+        List<List<String>> labels = nn.getAllLabels();
+        
         int posidx = 0;
         for(Position pos: positions){
             System.out.println(posidx);
-            keyframe = Thumbnails.of(keyframe).size(224, 224).crop(pos).asBufferedImage();
-            ImageIO.write(keyframe, "png", new File("src/resources/crop_"+posidx+++".png"));
+            BufferedImage cropped = Thumbnails.of(keyframe).size(224, 224).crop(pos).asBufferedImage();
+            ImageIO.write(cropped, "png", new File("src/resources/crop_"+posidx+++".png"));
             float[] curr = nn.classify(Thumbnails.of(keyframe).size(224, 224).crop(pos).asBufferedImage());
+            for (int i = 0; i < curr.length; i++) {
+                if (curr[i] > 0.05) {
+                    //Wow, Java 8 added a built-in functionality for converting a list to a string.
+                    System.out.println("Probability for " + String.join(", ", labels.get(i)) + "=" + curr[i]+"... "+pos.toString());
+                }
+            }
             probs = maxpool(curr, probs);
         }
 
         //float[] probs = nn.classify(ImageIO.read(new File("thumbnails/v1/v1_20.jpg")));
-        List<List<String>> labels = nn.getAllLabels();
         for (int i = 0; i < probs.length; i++) {
             if (probs[i] > 0.05) {
                 //Wow, Java 8 added a built-in functionality for converting a list to a string.
