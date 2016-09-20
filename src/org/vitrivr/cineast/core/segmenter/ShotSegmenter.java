@@ -103,7 +103,7 @@ public class ShotSegmenter implements ShotProvider{
 				
 			}while(frame.getId() < bounds.getEndFrame());
 			
-			_return.setShotId(bounds.getShotId());
+			_return.setShotId(bounds.getSegmentId());
 			addSubtitleItems(_return);
 			
 			idCounter.incrementAndGet();
@@ -174,7 +174,7 @@ public class ShotSegmenter implements ShotProvider{
 		addSubtitleItems(shot);
 		
 		
-		PersistentTuple tuple = this.pwriter.generateTuple(shotId, movieId, shot.getStart(), shot.getEnd());
+		PersistentTuple tuple = this.pwriter.generateTuple(shotId, movieId, shotNumber, shot.getStart(), shot.getEnd());
 		this.pwriter.persist(tuple);
 		
 		return shot;
