@@ -17,6 +17,7 @@ import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.MaxPool;
 import org.vitrivr.cineast.core.util.NeuralNetUtil;
 import org.vitrivr.cineast.core.util.TimeHelper;
 
@@ -54,7 +55,8 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     }
 
     /**
-     * Also needs to be public since the retriever config needs access
+     * Also needs to be public since the retriever config needs access.
+     * Passes the current NN-Config to the next constructor since we need a net to init and we get that net from the config
      */
     @SuppressWarnings("unused")
     public NeuralNetVGG16Feature() {
@@ -67,6 +69,9 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         this.net = (VGG16Net) neuralNetConfig.getNeuralNetFactory().get();
     }
 
+    /**
+     * Does not call super.fillLabels() since we do not want that to happen for every NN-Feature
+     */
     @Override
     public void fillLabels() {
         LOGGER.debug("filling labels");
@@ -83,9 +88,12 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
 
     @Override
     public String getClassificationTable() {
-        return this.generatedLabelsTableName;
+        return generatedLabelsTableName;
     }
 
+    /**
+     * Stores best classification hit if it's above 10%
+     */
     @Override
     public void processShot(SegmentContainer shot) {
         LOGGER.entry();
@@ -93,14 +101,25 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         if (!phandler.idExists(shot.getId())) {
             BufferedImage keyframe = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
             float[] probabilities = classifyImage(keyframe);
+            int maxIdx = -1;
+            float max = -1;
             for (int i = 0; i < probabilities.length; i++) {
+                if(max<probabilities[i]){
+                    maxIdx = i;
+                    max = probabilities[i];
+                }
                 if (probabilities[i] > 0.1) {
-                    LOGGER.info("Match found for shot {}: {} with probability {}", shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[i])), probabilities[i]);
-                    String id = UUID.randomUUID().toString();
-                    PersistentTuple tuple = classificationWriter.generateTuple(id, shot.getId(), net.getSynSetLabels()[i], probabilities[i]);
-                    classificationWriter.persist(tuple);
+                    LOGGER.trace("Match found for shot {}: {} with probability {}", shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[i])), probabilities[i]);
                 }
             }
+            LOGGER.info("Best Match for shot {}: {} with probability {}", shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[maxIdx])), probabilities[maxIdx]);
+            if(probabilities[maxIdx]>0.1){
+                LOGGER.info("Actually persisting result");
+                String id = UUID.randomUUID().toString();
+                PersistentTuple tuple = classificationWriter.generateTuple(id, shot.getId(), net.getSynSetLabels()[maxIdx], probabilities[maxIdx]);
+                classificationWriter.persist(tuple);
+            }
+
             persist(shot.getId(), new FloatVectorImpl(probabilities));
             LOGGER.trace("NeuralNetFeature.processShot() done in {}",
                     TimeHelper.toc());
@@ -162,11 +181,13 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
                 _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getDouble()));
             }
         }
+        LOGGER.trace("maxpooling results");
+        _return = MaxPool.maxPoolStringId(_return);
         if (_return.size() == 0) {
-            LOGGER.debug("No hits found, performing kNN");
+            LOGGER.warn("No hits found, performing kNN");
             _return = getSimilar(_net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage()), qc);
         }
-        LOGGER.info("NeuralNetFeature.getSimilar() done in {}",
+        LOGGER.trace("NeuralNetFeature.getSimilar() done in {}",
                 TimeHelper.toc());
         return LOGGER.exit(_return);
     }

@@ -15,7 +15,8 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * TODO Make this abstract and specify specific NN-Featuremodules with their own nets
+ * NeuralNet Feature modules should extend this class
+ * It provides label-support as well as provides an easy access to the classlabels
  */
 public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
@@ -24,10 +25,10 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
     private PersistencyWriter<?> classWriter;
     private DBSelector classSelector;
     private static final String classTableName =            "features_neuralnet_classlabels";
-    private float cutoff = 0.2f;
-    private static final String wnLabel = "wnlabel";
-    private static final String humanLabelColName = "humanlabel";
+    private static final String wnLabel =                   "wnlabel";
+    private static final String humanLabelColName =         "humanlabel";
 
+    /** Just passes the tableName to super **/
     public NeuralNetFeature(String tableName){
         super(tableName, 1f);
     }
@@ -45,12 +46,13 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
 
     /**
-     * TODO This method needs heavy refactoring because creating entities this way is not really pretty, we're relying on the AdamGRPC
+     * TODO This method needs heavy refactoring along with the entitycode because creating entities this way is not really pretty, we're relying on the AdamGRPC
      * Currently wnLabel is a string. That is because we get a unique id which has the shape n+....
      * Schema:
      * Table 0: segmentid | classificationvector - done by super
      * Table 1: wnLabel | humanlabel
      * Table 1 is only touched for API-Calls about available labels and at init-time - not during extraction
+     * It is also used at querytime for the nn-features to determine the wnLabel associated with the concepts they should query for.
      */
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
@@ -113,18 +115,30 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
     public abstract void fillLabels();
 
+    /**
+     * Use this writer to fill in your own labels
+     */
     protected PersistencyWriter getClassWriter(){
         return this.classWriter;
     }
 
+    /**
+     * Get wnLabels associated with concepts here
+     */
     protected  DBSelector getClassSelector(){
         return this.classSelector;
     }
 
+    /**
+     * Column name for the wnLabel
+     */
     public String getWnLabelColName(){
         return wnLabel;
     }
 
+    /**
+     * Column name for the concept/human label column
+     */
     public static String getHumanLabelColName() {
         return humanLabelColName;
     }
