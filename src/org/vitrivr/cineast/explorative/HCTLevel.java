@@ -44,8 +44,8 @@ public class HCTLevel<T> {
         cells.remove(cell);
     }
 
-    public HCTCell<T> addCell(Function<List<List<T>>, Double> distanceCalculation){
-        HCTCell<T> cell = new HCTCell<T>(distanceCalculation);
+    public HCTCell<T> addCell(Function<List<List<T>>, Double> distanceCalculation, Function<List<List<T>>, Double> comperatorFunction){
+        HCTCell<T> cell = new HCTCell<T>(distanceCalculation, comperatorFunction);
         cells.add(cell);
         return cell;
     }

@@ -6,7 +6,6 @@ import org.math.plot.FrameView;
 import org.math.plot.Plot2DPanel;
 import org.math.plot.PlotPanel;
 import org.math.plot.plots.ScatterPlot;
-import org.math.plot.utils.Array;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -14,6 +13,10 @@ import org.vitrivr.cineast.explorative.HCT;
 
 
 import javax.swing.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 /**
@@ -23,29 +26,53 @@ import java.util.*;
 
 
 public class SilvanPlayground {
-
     static int initialDimension = 0;
     public static void main(String[] args){
 
         try {
+            File path = new File("logs");
+            if(!path.exists()) path.mkdirs();
+            PrintStream ps = new PrintStream(new FileOutputStream(new File("logs/insert_test_log" + System.currentTimeMillis() +".log")));
+            System.setOut(ps);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String insertedValues = "";
+        try {
 
             HCT<Integer> hctInt = new HCT<Integer>((List<List<Integer>> arguments) -> {
-                int firstVector = arguments.get(0).get(0);
-                int secondVector = arguments.get(1).get(0);
-                int distance = (firstVector - secondVector) * (firstVector - secondVector);
+                long firstVector = arguments.get(0).get(0);
+                long secondVector = arguments.get(1).get(0);
+                long distance = (firstVector - secondVector) * (firstVector - secondVector);
                 return Math.sqrt(distance);
+            }, (List<List<Integer>> arguments) -> {
+                double firstVector = arguments.get(0).get(0);
+                double secondVector = arguments.get(1).get(0);
+                return firstVector - secondVector;
             });
 
-            for(int i : new int[] {37, 56, 42, 81, 69, 95, 29, 52, 22, 11, 98, 37, 57, 23, 7, 26, 39, 93, 68, 12, 8, 6, 37}){
-                hctInt.insert(Arrays.asList(i));
-            }
-
+            List<Integer> alreadyInserted = new ArrayList<>();
+            int counter = 0;
+//            for(int i : new int[] {92618, 45711, 59119, 19321, 55442, 62366, 20427, 49772, 76324, 92368, 5594, 38470, 29093, 13081, 93369, 1000 }){
+//                if(alreadyInserted.contains(i)) continue;
+//                alreadyInserted.add(i);
+//                System.out.println(System.lineSeparator());
+//                System.out.println("round " + ++counter);
+//                insertedValues += i + ", ";
+//                hctInt.insert(Arrays.asList(i));
+//            }
+//
             while(true){
-                int i = new Random().nextInt(100);
+                if(alreadyInserted.size() == 10000) break;
+                int i = new Random().nextInt(1000000);
+                if(alreadyInserted.contains(i)) continue;
+                alreadyInserted.add(i);
+                insertedValues += i + ", ";
                 hctInt.insert(Arrays.asList(i));
             }
 
-
+//
 //            DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
 //            dbSelector.open("features_averagecolor");
 //            List<PrimitiveTypeProvider> l = dbSelector.getAllRows("feature");
@@ -66,19 +93,24 @@ public class SilvanPlayground {
 //                    distance += (firstVector.get(i) - secondVector.get(i)) * (firstVector.get(i) - secondVector.get(i));
 //                }
 //                return Math.sqrt(distance);
+//            }, (List<List<Float>> arguments) -> {
+//                List<Float> firstVector = arguments.get(0);
+//                List<Float> secondVector = arguments.get(1);
+//                float lenFirstVector = 0;
+//                float lenSecondVector = 0;
+//                for (int i = 0; i < firstVector.size(); i++) {
+//                    lenFirstVector += firstVector.get(i) * firstVector.get(i);
+//                    lenSecondVector += secondVector.get(i) * secondVector.get(i);
+//                }
+//                return lenFirstVector - lenSecondVector > 0 ? 1 : lenFirstVector - lenSecondVector < 0 ? -1 : 0;
 //            });
+//            int i = 0;
 //            for (float[] feature : features) {
 //                List<Float> featureEntryList = new ArrayList<>();
 //                for(float f : feature){
 //                    featureEntryList.add(f);
 //                }
-//                boolean isNullVector = true;
-//                for (Float entry : featureEntryList) {
-//                    if(entry != 0.0){
-//                        isNullVector = false;
-//                        break;
-//                    }
-//                }
+//                i++;
 //                hct.insert(featureEntryList);
 //            }
 //
@@ -93,6 +125,7 @@ public class SilvanPlayground {
 //            System.out.println("Finished");
 
         } catch (Exception e) {
+            System.out.println("Inserted values are: {" + insertedValues.substring(0, insertedValues.length() - 2) + "}");
             e.printStackTrace();
         }
     }

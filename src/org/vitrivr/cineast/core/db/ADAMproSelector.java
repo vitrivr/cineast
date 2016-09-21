@@ -372,8 +372,7 @@ public class ADAMproSelector implements DBSelector {
 			}
 			_return.add(map);
 		}
-		
-		return _return;
+
         return executeBooleanQueryMessage(bqMessage);
 	}
 

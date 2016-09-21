@@ -41,4 +41,5 @@ public class MSTNode<T> implements IMSTNode<T> {
     public String toString(){
         return String.format("MSTNode | value: %s >", Utils.listToString(value));
     }
+
 }

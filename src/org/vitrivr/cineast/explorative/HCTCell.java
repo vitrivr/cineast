@@ -13,15 +13,18 @@ public class HCTCell<T> implements IHCTCell {
     private IMST<T> mst;
     private HCTCell<T> parent;
     private List<HCTCell<T>> children = new ArrayList<>();
+    private Function<List<List<T>>, Double> comperatorFunction;
 
-    public HCTCell(Function<List<List<T>>, Double> distanceCalculation) {
+    public HCTCell(Function<List<List<T>>, Double> distanceCalculation, Function<List<List<T>>, Double> comperatorFunction) {
         this.distanceCalculation = distanceCalculation;
-        mst = new MST<>(this.distanceCalculation);
+        this.comperatorFunction = comperatorFunction;
+        mst = new MST<>(this.distanceCalculation, comperatorFunction);
     }
 
-    public HCTCell(Function<List<List<T>>, Double> distanceCalculation, IMST<T> mst, HCTCell<T> parent) {
+    public HCTCell(Function<List<List<T>>, Double> distanceCalculation, IMST<T> mst, HCTCell<T> parent, Function<List<List<T>>, Double> comperatorFunction) {
         this.distanceCalculation = distanceCalculation;
-        this.mst = new MST<>(this.distanceCalculation);
+        this.comperatorFunction = comperatorFunction;
+        this.mst = new MST<>(this.distanceCalculation, comperatorFunction);
         this.mst = mst;
         this.parent = parent;
     }
@@ -47,6 +50,7 @@ public class HCTCell<T> implements IHCTCell {
     }
 
     public void setParent(HCTCell<T> parent) {
+        System.out.println("New parent is set. Parent: " + parent + " this: " + this);
         this.parent = parent;
     }
 
@@ -60,7 +64,7 @@ public class HCTCell<T> implements IHCTCell {
         List<MST<T>> msts = mst.mitosis();
         List<HCTCell<T>> newCells = new ArrayList<>();
         for (MST<T> mst : msts) {
-            newCells.add(new HCTCell<T>(distanceCalculation, mst, parent));
+            newCells.add(new HCTCell<T>(distanceCalculation, mst, parent, comperatorFunction));
         }
         return newCells;
 
@@ -70,7 +74,12 @@ public class HCTCell<T> implements IHCTCell {
 
     @Override
     public void addChild(HCTCell child) {
-        if(!children.contains(child)) children.add(child);
+        if(!children.contains(child)) {
+            System.out.println("New child is added. Child: " + child + " this: " + this);
+            children.add(child);
+        } else {
+            System.out.println("Child is already in child list. Child: " + child + "this: " + this);
+        }
     }
 
     @Override
@@ -95,5 +104,19 @@ public class HCTCell<T> implements IHCTCell {
 
     public List<List<T>> getValues() {
         return mst.getValues();
+    }
+
+    public HCTCell<T> getChildByNucleus(List<T> nucleus){
+        for(HCTCell<T> ChildCell : children){
+            if(ChildCell.getNucleus().getValue() == nucleus) return ChildCell;
+        }
+        return null;
+    }
+
+    public HCTCell<T> getChildByContainingValue(List<T> value){
+        for(HCTCell<T> childCell : children){
+            if(childCell.getValues().contains(value)) return childCell;
+        }
+        return null;
     }
 }
