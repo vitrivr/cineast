@@ -17,10 +17,12 @@ class MST<T> implements IMST<T> {
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     private Function<List<List<T>>, Double> distanceMetric;
     private Function<List<List<T>>, Double> comperatorFunction;
+    private Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction;
 
-    MST(Function<List<List<T>>, Double> distanceMetric, Function<List<List<T>>, Double> comperatorFunction) {
+    MST(Function<List<List<T>>, Double> distanceMetric, Function<List<List<T>>, Double> comperatorFunction, Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction) {
         this.distanceMetric = distanceMetric;
         this.comperatorFunction = comperatorFunction;
+        this.compactnessFunction = compactnessFunction;
     }
 
     @Override
@@ -68,7 +70,7 @@ class MST<T> implements IMST<T> {
 
     public double getCompactness(){
         // TODO: 14.09.16 implement real compactness measurement
-        return graph.vertexSet().size() > 3 ? 1.0 : 0.0;
+        return compactnessFunction.apply(getMST());
     }
 
     public boolean isReadyForMitosis(){
@@ -134,7 +136,7 @@ class MST<T> implements IMST<T> {
             MSTNode<T> next = iterator.next();
             containedNodes.add(next);
         }
-        MST<T> newSubGraph = new MST<T>(distanceMetric, comperatorFunction);
+        MST<T> newSubGraph = new MST<T>(distanceMetric, comperatorFunction, compactnessFunction);
         for(MSTNode<T> node : containedNodes){
             newSubGraph.add(node.getValue());
         }

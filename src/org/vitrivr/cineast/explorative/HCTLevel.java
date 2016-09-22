@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.explorative;
 
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleWeightedGraph;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -44,8 +47,8 @@ public class HCTLevel<T> {
         cells.remove(cell);
     }
 
-    public HCTCell<T> addCell(Function<List<List<T>>, Double> distanceCalculation, Function<List<List<T>>, Double> comperatorFunction){
-        HCTCell<T> cell = new HCTCell<T>(distanceCalculation, comperatorFunction);
+    public HCTCell<T> addCell(Function<List<List<T>>, Double> distanceCalculation, Function<List<List<T>>, Double> comperatorFunction, Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction){
+        HCTCell<T> cell = new HCTCell<T>(compactnessFunction, distanceCalculation, comperatorFunction);
         cells.add(cell);
         return cell;
     }

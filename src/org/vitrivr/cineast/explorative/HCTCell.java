@@ -1,5 +1,10 @@
 package org.vitrivr.cineast.explorative;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleWeightedGraph;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -9,22 +14,27 @@ import java.util.function.Function;
  */
 public class HCTCell<T> implements IHCTCell {
 
+    private static Logger logger = LogManager.getLogger();
+    private final Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction;
+
     private Function<List<List<T>>, Double> distanceCalculation;
     private IMST<T> mst;
     private HCTCell<T> parent;
     private List<HCTCell<T>> children = new ArrayList<>();
     private Function<List<List<T>>, Double> comperatorFunction;
 
-    public HCTCell(Function<List<List<T>>, Double> distanceCalculation, Function<List<List<T>>, Double> comperatorFunction) {
+    public HCTCell(Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction, Function<List<List<T>>, Double> distanceCalculation, Function<List<List<T>>, Double> comperatorFunction) {
+        this.compactnessFunction = compactnessFunction;
         this.distanceCalculation = distanceCalculation;
         this.comperatorFunction = comperatorFunction;
-        mst = new MST<>(this.distanceCalculation, comperatorFunction);
+        mst = new MST<>(this.distanceCalculation, comperatorFunction, this.compactnessFunction);
     }
 
-    public HCTCell(Function<List<List<T>>, Double> distanceCalculation, IMST<T> mst, HCTCell<T> parent, Function<List<List<T>>, Double> comperatorFunction) {
+    public HCTCell(Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction, Function<List<List<T>>, Double> distanceCalculation, IMST<T> mst, HCTCell<T> parent, Function<List<List<T>>, Double> comperatorFunction) {
+        this.compactnessFunction = compactnessFunction;
         this.distanceCalculation = distanceCalculation;
         this.comperatorFunction = comperatorFunction;
-        this.mst = new MST<>(this.distanceCalculation, comperatorFunction);
+        this.mst = new MST<>(this.distanceCalculation, comperatorFunction, this.compactnessFunction);
         this.mst = mst;
         this.parent = parent;
     }
@@ -50,7 +60,7 @@ public class HCTCell<T> implements IHCTCell {
     }
 
     public void setParent(HCTCell<T> parent) {
-        System.out.println("New parent is set. Parent: " + parent + " this: " + this);
+        logger.info("New parent is set. Parent: " + parent + " this: " + this);
         this.parent = parent;
     }
 
@@ -64,7 +74,7 @@ public class HCTCell<T> implements IHCTCell {
         List<MST<T>> msts = mst.mitosis();
         List<HCTCell<T>> newCells = new ArrayList<>();
         for (MST<T> mst : msts) {
-            newCells.add(new HCTCell<T>(distanceCalculation, mst, parent, comperatorFunction));
+            newCells.add(new HCTCell<T>(compactnessFunction, distanceCalculation, mst, parent, comperatorFunction));
         }
         return newCells;
 
@@ -75,10 +85,10 @@ public class HCTCell<T> implements IHCTCell {
     @Override
     public void addChild(HCTCell child) {
         if(!children.contains(child)) {
-            System.out.println("New child is added. Child: " + child + " this: " + this);
+            logger.info("New child is added. Child: " + child + " this: " + this);
             children.add(child);
         } else {
-            System.out.println("Child is already in child list. Child: " + child + "this: " + this);
+            logger.info("Child is already in child list. Child: " + child + "this: " + this);
         }
     }
 
