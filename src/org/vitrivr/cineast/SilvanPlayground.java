@@ -73,7 +73,7 @@ public class SilvanPlayground {
 //
             DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
             dbSelector.open("features_averagecolor");
-            List<PrimitiveTypeProvider> l = dbSelector.getAllRows("feature");
+            List<PrimitiveTypeProvider> l = dbSelector.getAll("feature");
             List<float[]> features = new ArrayList<>();
             if (l.size() > 0) {
                 for(PrimitiveTypeProvider ptp : l){
@@ -120,7 +120,7 @@ public class SilvanPlayground {
                 }
                 i++;
                 hct.insert(featureEntryList);
-                if(i == 10000) break;
+                if(i == 100) break;
             }
 
             logger.info("All items inserted...");

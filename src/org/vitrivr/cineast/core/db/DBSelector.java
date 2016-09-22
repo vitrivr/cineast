@@ -16,13 +16,17 @@ public interface DBSelector {
 	 * @return a list of pairs containing an id and the distance to the query vector
 	 */
 	List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column, QueryConfig config);
-	
-	List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, QueryConfig config);
+
+    List<Map<String, PrimitiveTypeProvider>> getAll();
+
+    List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, QueryConfig config);
 	
 	List<float[]> getFeatureVectors(String fieldName, String value, String vectorName);
 	
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
 
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values);
+
+    List<PrimitiveTypeProvider> getAll(String column);
 	
 }

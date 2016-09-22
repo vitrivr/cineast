@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -340,6 +341,26 @@ public class ADAMproSelector implements DBSelector {
 		BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
 		return executeBooleanQuery(bqMessage);
 	}
+
+	@Override
+	public List<PrimitiveTypeProvider> getAll(String label) {
+		List<Map<String, PrimitiveTypeProvider>> resultList = getAll();
+		List<PrimitiveTypeProvider> _return = resultList.stream().map(row -> row.get(label)).collect(Collectors.toList());
+
+		return _return;
+	}
+
+    @Override
+    public List<Map<String, PrimitiveTypeProvider>> getAll() {
+        BooleanQueryMessage bqm;
+        synchronized (bqmBuilder){
+            bqmBuilder.clear();
+            bqm = bqmBuilder.build();
+        }
+        List<Map<String, PrimitiveTypeProvider>> resultList = executeBooleanQuery(bqm);
+
+        return resultList;
+    }
 
 	private List<Map<String, PrimitiveTypeProvider>> executeBooleanQuery(BooleanQueryMessage bqMessage) {
 		QueryMessage qbqm = buildQueryMessage(hints, bqMessage, null, null);
