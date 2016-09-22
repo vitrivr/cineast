@@ -87,7 +87,7 @@ public final class DatabaseConfig {
 		return this.port;
 	}
 	
-	public boolean getPplaintext(){
+	public boolean getPlaintext(){
 		return this.plaintext;
 	}
 	

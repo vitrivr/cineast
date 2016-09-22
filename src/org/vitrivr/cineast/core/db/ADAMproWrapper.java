@@ -30,7 +30,7 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	
 	public ADAMproWrapper(){
 		DatabaseConfig config = Config.getDatabaseConfig();
-		this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPplaintext()).build();
+		this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPlaintext()).build();
 		this.definitionStub = AdamDefinitionGrpc.newStub(channel);
 		this.searchStub = AdamSearchGrpc.newFutureStub(channel);
 	}
