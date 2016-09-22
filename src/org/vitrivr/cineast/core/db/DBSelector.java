@@ -23,8 +23,6 @@ public interface DBSelector {
 	
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
 
-	List<PrimitiveTypeProvider> getAllRows(String label);
-
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values);
-
+	
 }

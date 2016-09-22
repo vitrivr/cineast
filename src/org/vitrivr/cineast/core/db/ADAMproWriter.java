@@ -19,8 +19,6 @@ import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-
-
 public class ADAMproWriter extends ProtobufTupleGenerator {
 	
 	private static final Logger LOGGER = LogManager.getLogger();

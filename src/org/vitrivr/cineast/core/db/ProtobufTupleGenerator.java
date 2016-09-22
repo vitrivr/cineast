@@ -12,11 +12,9 @@ import org.vitrivr.adam.grpc.AdamGrpc.IntVectorMessage;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 
-public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleInsertMessage> {
+public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<TupleInsertMessage> {
 
-	protected String[] names; 
 	private static final Builder builder = AdamGrpc.InsertMessage.TupleInsertMessage.newBuilder();
-	
 	
 	private final DataMessage.Builder insertMessageBuilder = DataMessage.newBuilder();
 	
@@ -83,11 +81,11 @@ public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleI
 	}
 	
 	protected ProtobufTupleGenerator(String...names){
-		this.names = names;
+		super(names);
 	}
 	
 	protected ProtobufTupleGenerator(){
-		this("id", "feature");
+		super();
 	}
 
 	@Override
@@ -95,12 +93,6 @@ public abstract class ProtobufTupleGenerator implements PersistencyWriter<TupleI
 		return new ProtobufTuple(objects);
 	}
 
-	public void setFieldNames(String...names){
-		if(names != null && names.length > 0){
-			this.names = names;
-		}
-	}
-	
 	class ProtobufTuple extends PersistentTuple<TupleInsertMessage>{
 
 		ProtobufTuple(Object...objects){

@@ -139,7 +139,7 @@ public class ADAMproSelector implements DBSelector {
             return wmBuilder.setAttribute(key).setValue(sb.toString()).build();
         }
     }
-
+	
 	private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column, FeatureVectorMessage fvm, int k, QueryConfig qc){
 		synchronized (nnqmBuilder) {
 			this.nnqmBuilder.clear();
@@ -303,7 +303,7 @@ public class ADAMproSelector implements DBSelector {
 
 		AckMessage ack = response.getAck();
 		if(ack.getCode() != Code.OK){
-			LOGGER.error("error in getNearestNeighbours ({}) : {}, {}", ack.getCode(), ack.getMessage(), ack);
+			LOGGER.error("error in getNearestNeighbours ({}) : {}", ack.getCode(), ack.getMessage());
 			return _return;
 		}
 		
@@ -324,16 +324,16 @@ public class ADAMproSelector implements DBSelector {
 			LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows()");
 			return new ArrayList<>(0);
 		}
-
+		
 		if(values.length == 1){
 			return getRows(fieldName, values[0]);
 		}
-
+		
         WhereMessage where = buildWhereMessage(fieldName, values);
         BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
         return executeBooleanQuery(bqMessage);
     }
-
+	
 	@Override
 	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
 		WhereMessage where = buildWhereMessage(fieldName, value);		
@@ -372,57 +372,8 @@ public class ADAMproSelector implements DBSelector {
 			}
 			_return.add(map);
 		}
-
-        return executeBooleanQueryMessage(bqMessage);
-	}
-
-    private List<Map<String, PrimitiveTypeProvider>> executeBooleanQueryMessage(BooleanQueryMessage bqMessage) {
-        QueryMessage qbqm = buildQueryMessage(hints, bqMessage, null, null);
-        ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
-        QueryResultsMessage result;
-        try {
-            result = f.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error(LogHelper.getStackTrace(e));
-            return new ArrayList<>(1);
-        }
-
-        if(result.getResponsesCount() == 0){
-            return new ArrayList<>(1);
-        }
-
-        QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
-
-        List<QueryResultTupleMessage> resultList = response.getResultsList();
-        if(resultList.isEmpty()){
-            return new ArrayList<>(1);
-        }
-        ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(resultList.size());
-        for(QueryResultTupleMessage resultMessage : resultList){
-            Map<String, DataMessage> data = resultMessage.getData();
-            Set<String> keys = data.keySet();
-            HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
-            for(String key : keys){
-                map.put(key, DataMessageConverter.convert(data.get(key)));
-            }
-            _return.add(map);
-        }
-
-        return _return;
-    }
-
-    public List<PrimitiveTypeProvider> getAllRows(String label){
-        BooleanQueryMessage bqm;
-        synchronized (bqmBuilder) {
-            bqmBuilder.clear();
-            bqm = bqmBuilder.build();
-        }
-        List<Map<String, PrimitiveTypeProvider>> results = executeBooleanQueryMessage(bqm);
-        List<PrimitiveTypeProvider> _return = new ArrayList<>();
-        for(Map<String, PrimitiveTypeProvider> row : results){
-            _return.add(row.get(label));
-        }
-        return _return;
+		
+		return _return;
 	}
 
 	@Override
