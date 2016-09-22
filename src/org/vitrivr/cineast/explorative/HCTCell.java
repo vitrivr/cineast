@@ -60,7 +60,7 @@ public class HCTCell<T> implements IHCTCell {
     }
 
     public void setParent(HCTCell<T> parent) {
-        logger.info("New parent is set. Parent: " + parent + " this: " + this);
+        logger.debug("New parent is set. Parent: " + parent + " this: " + this);
         this.parent = parent;
     }
 
@@ -85,10 +85,10 @@ public class HCTCell<T> implements IHCTCell {
     @Override
     public void addChild(HCTCell child) {
         if(!children.contains(child)) {
-            logger.info("New child is added. Child: " + child + " this: " + this);
+            logger.debug("New child is added. Child: " + child + " this: " + this);
             children.add(child);
         } else {
-            logger.info("Child is already in child list. Child: " + child + "this: " + this);
+            logger.debug("Child is already in child list. Child: " + child + "this: " + this);
         }
     }
 

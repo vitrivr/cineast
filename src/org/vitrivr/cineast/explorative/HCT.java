@@ -21,7 +21,15 @@ public class HCT<T> implements IHCT<T>{
     private Function<List<List<T>>, Double> comperatorFunction;
     private static Logger logger = LogManager.getLogger();
     private Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction;
+    private int size;
 
+
+    /**
+     * Initializes a new HCT
+     * @param distanceCalculation A function which calculates the distance between two elements. The two arguments are given as a list with two entries.
+     * @param comperatorFunction A function that compares two elements. Return <0 if the first item is bigger, 0 if the items are equal and 0> if the first item is smaller.
+     * @param compactnessFunction A function that determines the compactness of the cell. Return >0.5 if the compactness is to low and the cell should split, return <0.5 if the compactness is suffiecent.
+     */
     public HCT(Function<List<List<T>>, Double> distanceCalculation, Function<List<List<T>>, Double> comperatorFunction, Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction) {
         this.distanceCalculation = distanceCalculation;
         this.comperatorFunction = comperatorFunction;
@@ -29,10 +37,12 @@ public class HCT<T> implements IHCT<T>{
     }
 
     public void insert(List<T> nextItem) throws Exception {
-        logger.info(print());
+        logger.debug(print());
         sanityCheck();
-        logger.info("Next item to insert is " + Utils.listToString(nextItem));
+        logger.debug("Next item to insert is " + Utils.listToString(nextItem));
         insert(nextItem, 0);
+        size++;
+        logger.info("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
     }
 
     private void insert(List<T> nextItem, int levelNo) {
@@ -41,21 +51,9 @@ public class HCT<T> implements IHCT<T>{
             return;
         }
 
-        while(levels.get(levels.size()-1).getCells().size() == 0){
-            levels.remove(levels.get(levels.size() - 1));
-        }
+        List<HCTCell<T>> topLevelCells = getTopLevelCells();
 
-
-        List<HCTCell<T>> topLevelCells = levels.get(levels.size() - 1).getCells();
-        logger.info("TopLevelCells: " + Utils.listToString(topLevelCells));
-        if(levels.size() > 1){
-            logger.info("First level: " + Utils.listToString(levels.get(levels.size() - 2).getCells()));
-            if(levels.size() > 2) {
-                logger.info("Second level: " + Utils.listToString(levels.get(levels.size() - 3).getCells()));
-            }
-        }
-
-        HCTCell<T> cellt = topLevelCells.get(0); // get root, normally only one node in topLevel exists
+        HCTCell<T> cellT = topLevelCells.get(0); // get root, normally only one node in topLevel exists
 
         int topLevelNo = levels.size() - 1;
         if(levelNo > topLevelNo){
@@ -63,7 +61,42 @@ public class HCT<T> implements IHCT<T>{
             return;
         }
 
+        HCTCell<T> cellO = searchCellToInsertNewValue(nextItem, cellT, topLevelNo, levelNo);
+        if (cellO == null) return;
 
+        addValue(nextItem, levelNo, cellO);
+    }
+
+    private void addValue(List<T> nextItem, int levelNo, HCTCell<T> cellO) {
+        List<T> oldNucleusValue = cellO.getNucleus().getValue();
+        cellO.addValue(nextItem);
+        logger.debug("Added " + Utils.listToString(nextItem) + " to " + cellO);
+
+        if(cellO.isReadyForMitosis()){
+            logger.debug("Cell is ready for mitosis: " + cellO);
+            doMitosis(levelNo, cellO, oldNucleusValue);
+        }
+        else if(oldNucleusValue != cellO.getNucleus().getValue()){
+            nucleusChanged(levelNo, cellO, oldNucleusValue);
+        }
+    }
+
+    private List<HCTCell<T>> getTopLevelCells() {
+        while(levels.get(levels.size()-1).getCells().size() == 0){
+            levels.remove(levels.get(levels.size() - 1));
+        }
+        List<HCTCell<T>> topLevelCells = levels.get(levels.size() - 1).getCells();
+        logger.debug("TopLevelCells: " + Utils.listToString(topLevelCells));
+        if(levels.size() > 1){
+            logger.debug("First level: " + Utils.listToString(levels.get(levels.size() - 2).getCells()));
+            if(levels.size() > 2) {
+                logger.debug("Second level: " + Utils.listToString(levels.get(levels.size() - 3).getCells()));
+            }
+        }
+        return topLevelCells;
+    }
+
+    private HCTCell<T> searchCellToInsertNewValue(List<T> nextItem, HCTCell<T> cellt, int topLevelNo, int levelNo) {
         HCTCell<T> cellO;
         if(levelNo == topLevelNo){
             cellO = cellt;
@@ -74,30 +107,19 @@ public class HCT<T> implements IHCT<T>{
         }
 
         if(cellO == null){
-            logger.info("Empty cell. Created new cell to fix.");
+            logger.debug("Empty cell. Created new cell to fix.");
             cellO = levels.get(levelNo).addCell(distanceCalculation, comperatorFunction, compactnessFunction);
             cellO.addValue(nextItem);
             makeRelations(levelNo, cellO);
-            return;
+            return null;
         }
-
-        List<T> oldNucleusValue = cellO.getNucleus().getValue();
-        cellO.addValue(nextItem);
-        logger.info("Added " + Utils.listToString(nextItem) + " to " + cellO);
-
-        if(cellO.isReadyForMitosis()){
-            logger.info("Cell is ready for mitosis: " + cellO);
-            doMitosis(levelNo, cellO, oldNucleusValue);
-        }
-        else if(oldNucleusValue != cellO.getNucleus().getValue()){
-            nucleusChanged(levelNo, cellO, oldNucleusValue);
-        }
+        return cellO;
     }
 
     private void nucleusChanged(int levelNo, HCTCell<T> cellO, List<T> oldNucleusValue) {
         // nucleus change in the root does not have any influence -> ignore! this is important
         if(levelNo == levels.size() - 1) return;
-        logger.info("Nucleus changing...");
+        logger.debug("Nucleus changing...");
         remove(oldNucleusValue, levelNo + 1);
         cellO.getParent().removeChild(cellO);
         insert(cellO.getNucleus().getValue(), levelNo + 1);
@@ -105,15 +127,15 @@ public class HCT<T> implements IHCT<T>{
     }
 
     private void doMitosis(int levelNo, HCTCell<T> cellO, List<T> oldNucleusValue) {
-        logger.info("Mitosis...");
+        logger.debug("Mitosis...");
         List<HCTCell<T>> newCells = cellO.mitosis();
-        logger.info("New cells are " + Utils.listToString(newCells));
+        logger.debug("New cells are " + Utils.listToString(newCells));
         removeOldCell(levelNo, cellO, oldNucleusValue);
         addNewCells(levelNo, newCells);
     }
 
     private void addNewCells(int levelNo, List<HCTCell<T>> newCells) {
-        logger.info("Adding new cells. Cells " + Utils.listToString(newCells));
+        logger.debug("Adding new cells. Cells " + Utils.listToString(newCells));
         for (HCTCell<T> newCell : newCells) {
             levels.get(levelNo).addCell(newCell);
         }
@@ -124,7 +146,7 @@ public class HCT<T> implements IHCT<T>{
     }
 
     private void removeOldCell(int levelNo, HCTCell<T> cellO, List<T> oldNucleusValue) {
-        logger.info("Removing old cell. Old cell: " + cellO);
+        logger.debug("Removing old cell. Old cell: " + cellO);
         HCTCell<T> parentCell = cellO.getParent();
         if(parentCell != null) parentCell.removeChild(cellO);
         levels.get(levelNo).removeCell(cellO);
@@ -132,7 +154,7 @@ public class HCT<T> implements IHCT<T>{
     }
 
     private void makeRelations(int levelNo, HCTCell<T> newCell) {
-        logger.info("Creating relations...");
+        logger.debug("Creating relations...");
         if(levelNo - 1 >= 0){
             for(HCTCell<T> lowerCell : levels.get(levelNo - 1).getCells()){
                 if(lowerCell.isCellDeath()) continue;
@@ -161,7 +183,7 @@ public class HCT<T> implements IHCT<T>{
             oldTopLevelCell.setParent(topLevelCell);
             topLevelCell.addChild(oldTopLevelCell);
         }
-        logger.info("new Root created. Root is: " + topLevelCell);
+        logger.debug("new Root created. Root is: " + topLevelCell);
         return;
     }
 
@@ -170,7 +192,7 @@ public class HCT<T> implements IHCT<T>{
         levels.add(level);
         HCTCell<T> cell = level.addCell(distanceCalculation, comperatorFunction, compactnessFunction);
         cell.addValue(nextItem);
-        logger.info("Initial root created!");
+        logger.debug("Initial root created!");
         return;
     }
 
@@ -202,7 +224,7 @@ public class HCT<T> implements IHCT<T>{
 
     @Override
     public void remove(List<T> value, int levelNo) {
-        logger.info("Removing value. value: " + Utils.listToString(value));
+        logger.debug("Removing value. value: " + Utils.listToString(value));
         int topLevelNo = levels.size() - 1;
         List<HCTCell<T>> cells = levels.get(levels.size() - 1).getCells();
         if(cells.size() == 0 || levelNo > topLevelNo) return; // experimental
@@ -217,11 +239,11 @@ public class HCT<T> implements IHCT<T>{
                 cell.removeValue(value);
                 if(cell.isCellDeath()){
                     if(levelNo == topLevelNo){
-                        logger.info("Top cell is cell-death");
+                        logger.debug("Top cell is cell-death");
                         levels.remove(levels.get(topLevelNo));
-                        logger.info("New top level is " + Utils.listToString(levels.get(levels.size() - 1).getCells()));
+                        logger.debug("New top level is " + Utils.listToString(levels.get(levels.size() - 1).getCells()));
                     } else{
-                        logger.info("cell-death occured");
+                        logger.debug("cell-death occured");
                         cell.getParent().removeChild(cell);
                         cell.setParent(null);
                         iterator.remove();
@@ -229,11 +251,11 @@ public class HCT<T> implements IHCT<T>{
                     }
                 }
                 else if(cell.isReadyForMitosis()){
-                    logger.info("Cell is ready for mitosis after remove.");
+                    logger.debug("Cell is ready for mitosis after remove.");
                     doMitosis(levelNo, cell, oldNucleusValue);
                 }
                 else if(oldNucleusValue != cell.getNucleus().getValue()){
-                    logger.info("Nucleus changed after remove.");
+                    logger.debug("Nucleus changed after remove.");
                     nucleusChanged(levelNo, cell, oldNucleusValue);
                 }
             }
@@ -295,5 +317,18 @@ public class HCT<T> implements IHCT<T>{
 
     public List<HCTCell<T>> getGroundLevelCells(){
         return levels.get(0).getCells();
+    }
+
+    public HCTCell<T> getRoot() throws Exception {
+        if(levels.get(levels.size() - 1).getCells().size() != 1) throw new Exception("Root is ambiguous! # of cells on top level is " + levels.get(levels.size() - 1).getCells().size());
+        return levels.get(levels.size() - 1).getCells().get(0);
+    }
+
+    public long getNbrOfCellsInTree(){
+        long nbrOfCells = 0;
+        for(HCTLevel<T> level : levels){
+            nbrOfCells += level.getCells().size();
+        }
+        return nbrOfCells;
     }
 }

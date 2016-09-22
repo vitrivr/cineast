@@ -106,7 +106,7 @@ public class SilvanPlayground {
                 for(DefaultWeightedEdge edge : graph.edgeSet()){
                     totalWeight += graph.getEdgeWeight(edge);
                 }
-                if(totalWeight > 10 && graph.vertexSet().size() > 3){
+                if(totalWeight > 30 && graph.vertexSet().size() > 20){
                     return 1d;
                 } else{
                     return 0d;
@@ -120,10 +120,15 @@ public class SilvanPlayground {
                 }
                 i++;
                 hct.insert(featureEntryList);
-                if(i == 500) break;
+                if(i == 10000) break;
             }
 
-            visualizeCells(hct.getGroundLevelCells());
+            logger.info("All items inserted...");
+            String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date(System.currentTimeMillis()));
+            visualizeTree(hct.getRoot(), new File("results/" + timestamp + "/" + "root"));
+//            visualizeCells(hct.getGroundLevelCells());
+
+            logger.info("Finished!");
 
         } catch (Exception e) {
 //            logger.error("Inserted values are: {" + insertedValues.substring(0, insertedValues.length() - 2) + "}");
@@ -161,6 +166,27 @@ public class SilvanPlayground {
     private static void saveImgToFS(BufferedImage img, File path, String filename) throws IOException {
         File f = new File(path, filename + ".png");
         ImageIO.write(img, "PNG", f);
+    }
+
+    private static void visualizeTree(HCTCell<Float> cell, File file) throws Exception {
+        if(cell.getChildren().size() > 0){
+            for(HCTCell<Float> child : cell.getChildren()){
+                if(!file.exists()) file.mkdirs();
+                String cell_nbr = "cell_" + cell.getChildren().indexOf(child);
+                visualizeValue(child.getNucleus().getValue(), new File(file.toString(), cell_nbr + ".png"));
+                File f = new File(cell_nbr);
+                visualizeTree(child, new File(file.toString(), f.toString()));
+            }
+        }
+    }
+
+    private static void visualizeValue(List<Float> nucleus, File file) {
+        BufferedImage img = drawImage(ColorConverter.LabtoRGB(new ReadableLabContainer(nucleus.get(0), nucleus.get(1), nucleus.get(2))));
+        try {
+            ImageIO.write(img, "PNG", file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
