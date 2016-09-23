@@ -70,11 +70,23 @@ public class HCTCell<T> implements IHCTCell {
 
     public boolean isReadyForMitosis() { return mst.isReadyForMitosis(); }
 
-    public List<HCTCell<T>> mitosis() {
+    public List<HCTCell<T>> mitosis() throws Exception {
         List<MST<T>> msts = mst.mitosis();
         List<HCTCell<T>> newCells = new ArrayList<>();
         for (MST<T> mst : msts) {
-            newCells.add(new HCTCell<T>(compactnessFunction, distanceCalculation, mst, parent, comperatorFunction));
+            HCTCell<T> newCell = new HCTCell<T>(compactnessFunction, distanceCalculation, mst, parent, comperatorFunction);
+            newCells.add(newCell);
+            if(parent != null) parent.addChild(newCell);
+
+        }
+        for (HCTCell<T> child : children) {
+            for (HCTCell<T> newCell : newCells) {
+                if(newCell.getValues().contains(child.getNucleus().getValue())){
+                    newCell.addChild(child);
+                    child.setParent(newCell);
+                    break;
+                }
+            }
         }
         return newCells;
 
@@ -104,6 +116,7 @@ public class HCTCell<T> implements IHCTCell {
 
     @Override
     public void removeChild(HCTCell child) {
+        logger.debug("Child is removed: " + child);
         children.remove(child);
     }
 

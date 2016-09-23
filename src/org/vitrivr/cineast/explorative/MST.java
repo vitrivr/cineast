@@ -51,7 +51,7 @@ class MST<T> implements IMST<T> {
     }
 
     public MSTNode<T> getNucleus() throws java.lang.Exception{
-        if(graph.vertexSet().size() == 0) throw new Exception(String.format("This graph contains no nodes! %s", this.toString()));
+        if(graph.vertexSet().size() == 0) throw new Exception(String.format("This graph contains no nodes!"));
         if(graph.vertexSet().size() == 1){
             return (MSTNode<T>) graph.vertexSet().toArray()[0];}
         SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst = getMST();
@@ -84,7 +84,10 @@ class MST<T> implements IMST<T> {
         SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst = getMST();
         double largestWeight = 0;
         DefaultWeightedEdge largestEdge = null;
-        for(DefaultWeightedEdge edge : mst.edgeSet()){
+        List<DefaultWeightedEdge> edges = new ArrayList<>();
+        edges.addAll(mst.edgeSet());
+        Collections.sort(edges, (el1, el2) -> compare(graph.getEdgeSource(el1).getValue(), graph.getEdgeSource(el2).getValue()));
+        for(DefaultWeightedEdge edge : edges){
             if(mst.getEdgeWeight(edge) > largestWeight){
                 largestWeight = mst.getEdgeWeight(edge);
                 largestEdge = edge;

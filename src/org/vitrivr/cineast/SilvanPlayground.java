@@ -106,7 +106,7 @@ public class SilvanPlayground {
                 for(DefaultWeightedEdge edge : graph.edgeSet()){
                     totalWeight += graph.getEdgeWeight(edge);
                 }
-                if(totalWeight > 30 && graph.vertexSet().size() > 10){
+                if(totalWeight > 30 && graph.vertexSet().size() > 5){
                     return 1d;
                 } else{
                     return 0d;
@@ -120,14 +120,12 @@ public class SilvanPlayground {
                 }
                 i++;
                 hct.insert(featureEntryList);
-                if(i == 100) break;
+                if(i == 1000) break;
             }
 
             logger.info("All items inserted...");
             String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date(System.currentTimeMillis()));
             visualizeTree(hct.getRoot(), new File("results/" + timestamp + "/" + "root"));
-//            visualizeCells(hct.getGroundLevelCells());
-
             logger.info("Finished!");
 
         } catch (Exception e) {
