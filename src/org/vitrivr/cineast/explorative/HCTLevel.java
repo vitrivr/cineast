@@ -15,7 +15,7 @@ public class HCTLevel<T> {
     private List<HCTCell<T>> cells = new ArrayList<>();
 
     // calculate dmin on this level
-    public double dmin(List<T> other, List<HCTCell<T>> arrayCS){
+    public double dmin(List<T> other, List<HCTCell<T>> arrayCS) throws Exception {
         double dmin = Double.MAX_VALUE;
 //        for(HCTCell<T> cell : cells){
         for(HCTCell<T> cell : cells){ // search only in selected cells
@@ -28,20 +28,6 @@ public class HCTLevel<T> {
     }
 
     public List<HCTCell<T>> getCells(){ return cells;}
-
-    public List<HCTCell<T>> getAllCandidates(List<T> other, double dmin, List<HCTCell<T>> parents){
-        List<HCTCell<T>> candidates = new ArrayList<>();
-        for(HCTCell<T> cell : cells){
-            if(cell.isCellDeath()) continue;
-            double distanceToNucleus = cell.getDistanceToNucleus(other);
-            double coveringRadius = cell.getCoveringRadius();
-
-            if(distanceToNucleus - coveringRadius < dmin){
-                candidates.add(cell);
-            }
-        }
-        return candidates;
-    }
 
     public void removeCell(HCTCell<T> cell){
         cells.remove(cell);

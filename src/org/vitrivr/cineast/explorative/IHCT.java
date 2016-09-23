@@ -9,7 +9,7 @@ public interface IHCT<T> {
 
     void insert(List<T> nextItem) throws Exception;
 
-    HCTCell<T> preemptiveCellSearch(List<HCTCell<T>> ArrayCS, List<T> nextItem, int curLevelNo, int levelNo);
+    HCTCell<T> preemptiveCellSearch(List<HCTCell<T>> ArrayCS, List<T> nextItem, int curLevelNo, int levelNo) throws Exception;
 
-    void remove(List<T> deleteItem, int levelNo);
+    void remove(List<T> deleteItem, int levelNo) throws Exception;
 }

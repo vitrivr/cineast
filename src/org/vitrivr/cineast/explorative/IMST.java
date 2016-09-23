@@ -11,11 +11,11 @@ interface IMST<V> {
 
     void remove(List<V> item);
 
-    MSTNode<V> getNucleus();
+    MSTNode<V> getNucleus() throws Exception;
 
     double getCompactness();
 
-    double getCoveringRadius();
+    double getCoveringRadius() throws Exception;
 
     boolean isReadyForMitosis();
 

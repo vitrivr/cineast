@@ -106,7 +106,7 @@ public class SilvanPlayground {
                 for(DefaultWeightedEdge edge : graph.edgeSet()){
                     totalWeight += graph.getEdgeWeight(edge);
                 }
-                if(totalWeight > 30 && graph.vertexSet().size() > 20){
+                if(totalWeight > 30 && graph.vertexSet().size() > 10){
                     return 1d;
                 } else{
                     return 0d;
@@ -177,6 +177,12 @@ public class SilvanPlayground {
                 File f = new File(cell_nbr);
                 visualizeTree(child, new File(file.toString(), f.toString()));
             }
+        } else{
+            file.mkdirs();
+            for (List<Float> value : cell.getValues()) {
+                visualizeValue(value, new File(file.toString(), "value_" + cell.getValues().indexOf(value) + ".png"));
+            }
+
         }
     }
 

@@ -50,8 +50,10 @@ class MST<T> implements IMST<T> {
         graph.removeAllVertices(toDeleteNodes);
     }
 
-    public MSTNode<T> getNucleus(){
-        if(graph.vertexSet().size() == 1){return (MSTNode<T>) graph.vertexSet().toArray()[0];}
+    public MSTNode<T> getNucleus() throws java.lang.Exception{
+        if(graph.vertexSet().size() == 0) throw new Exception(String.format("This graph contains no nodes! %s", this.toString()));
+        if(graph.vertexSet().size() == 1){
+            return (MSTNode<T>) graph.vertexSet().toArray()[0];}
         SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst = getMST();
         int degree = 0;
         MSTNode<T> nucleus = null;
@@ -118,7 +120,7 @@ class MST<T> implements IMST<T> {
     }
 
     // covering radius means the distance from the nucleus to the furthest element of the mst
-    public double getCoveringRadius(){
+    public double getCoveringRadius() throws Exception{
         SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst = getMST();
         MSTNode<T> nucleus = getNucleus();
         double coveringRadius = 0;
@@ -159,7 +161,12 @@ class MST<T> implements IMST<T> {
     }
 
     public String toString(){
-        return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(), graph.edgeSet().size(), Utils.listToString(getNucleus().getValue()));
+        try {
+            return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(), graph.edgeSet().size(), Utils.listToString(getNucleus().getValue()));
+        } catch (Exception e){
+            return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(), graph.edgeSet().size(), "###Error while getting the nucleus" + e.getMessage());
+        }
+
     }
 
     private int compare(List<T> one, List<T> two){

@@ -47,11 +47,11 @@ public class HCTCell<T> implements IHCTCell {
         mst.remove(value);
     }
 
-    public double getDistanceToNucleus(List<T> other){
+    public double getDistanceToNucleus(List<T> other) throws Exception{
         return mst.getNucleus().distance(other, distanceCalculation);
     }
 
-    public double getCoveringRadius(){
+    public double getCoveringRadius() throws Exception {
         return mst.getCoveringRadius();
     }
 
@@ -80,7 +80,7 @@ public class HCTCell<T> implements IHCTCell {
 
     }
 
-    public MSTNode<T> getNucleus(){ return mst.getNucleus(); }
+    public MSTNode<T> getNucleus() throws Exception{ return mst.getNucleus(); }
 
     @Override
     public void addChild(HCTCell child) {
@@ -108,19 +108,18 @@ public class HCTCell<T> implements IHCTCell {
     }
 
     public String toString(){
-        return String.format("HCTCell | isCellDeath: %s | isReadyMitosis: %s | Nucleus: <%s>",
-                isCellDeath(), isReadyForMitosis(), getNucleus());
+        try {
+            return String.format("HCTCell | isCellDeath: %s | isReadyMitosis: %s | Nucleus: <%s>",
+                    isCellDeath(), isReadyForMitosis(), getNucleus());
+        } catch (Exception e){
+            return String.format("HCTCell | isCellDeath: %s | isReadyMitosis: %s | Nucleus: <%s>",
+                    isCellDeath(), isReadyForMitosis(), "###Error while getting the nucleus! " + e.getMessage());
+        }
+
     }
 
     public List<List<T>> getValues() {
         return mst.getValues();
-    }
-
-    public HCTCell<T> getChildByNucleus(List<T> nucleus){
-        for(HCTCell<T> ChildCell : children){
-            if(ChildCell.getNucleus().getValue() == nucleus) return ChildCell;
-        }
-        return null;
     }
 
     public HCTCell<T> getChildByContainingValue(List<T> value){
