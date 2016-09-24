@@ -121,8 +121,9 @@ public class HCT<T> implements IHCT<T>{
         logger.debug("Nucleus changing...");
         remove(cellO, oldNucleusValue, levelNo + 1);
         cellO.getParent().removeChild(cellO);
-        insert(cellO.getNucleus().getValue(), levelNo + 1);
-        makeRelations(levelNo, cellO);
+        HCTCell<T> newParent = insert(cellO.getNucleus().getValue(), levelNo + 1);
+        cellO.setParent(newParent);
+        newParent.addChild(cellO);
     }
 
     private List<HCTCell<T>> doMitosis(int levelNo, HCTCell<T> cellO, List<T> oldNucleusValue) throws Exception {
@@ -153,29 +154,6 @@ public class HCT<T> implements IHCT<T>{
         if(parentCell != null) parentCell.removeChild(cellO);
         levels.get(levelNo).removeCell(cellO);
         remove(cellO, oldNucleusValue, levelNo + 1);
-    }
-
-    private void makeRelations(int levelNo, HCTCell<T> newCell) throws Exception {
-        logger.debug("Creating relations...");
-        if(levelNo - 1 >= 0){
-            for(HCTCell<T> lowerCell : levels.get(levelNo - 1).getCells()){
-                if(lowerCell.isCellDeath()) continue;
-                if(newCell.getValues().contains(lowerCell.getNucleus().getValue())){
-                    lowerCell.getParent().removeChild(lowerCell);
-                    newCell.addChild(lowerCell);
-                    lowerCell.setParent(newCell);
-                }
-            }
-        }
-        if(levelNo + 1 < levels.size()){
-            for(HCTCell<T> upperCell : levels.get(levelNo + 1).getCells()){
-                if(upperCell.getValues().contains(newCell.getNucleus().getValue())){
-                    newCell.getParent().removeChild(newCell);
-                    upperCell.addChild(newCell);
-                    newCell.setParent(upperCell);
-                }
-            }
-        }
     }
 
     private HCTCell<T> createNewRoot(List<T> nextItem, List<HCTCell<T>> topLevelCells) {

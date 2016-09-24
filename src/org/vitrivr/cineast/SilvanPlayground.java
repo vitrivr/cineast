@@ -82,6 +82,7 @@ public class SilvanPlayground {
             }
 
             logger.info("Read " + features.size() + " rows.");
+            dbSelector.close();
 
             HCT<Float> hct = new HCT<>((List<List<Float>> arguments) -> {
                 List<Float> firstVector = arguments.get(0);
@@ -106,12 +107,13 @@ public class SilvanPlayground {
                 for(DefaultWeightedEdge edge : graph.edgeSet()){
                     totalWeight += graph.getEdgeWeight(edge);
                 }
-                if(totalWeight > 30 && graph.vertexSet().size() > 5){
+                if(totalWeight > 50 && graph.vertexSet().size() > 30){
                     return 1d;
                 } else{
                     return 0d;
                 }
             });
+            System.in.read();
             int i = 0;
             for (float[] feature : features) {
                 List<Float> featureEntryList = new ArrayList<>();
@@ -120,7 +122,7 @@ public class SilvanPlayground {
                 }
                 i++;
                 hct.insert(featureEntryList);
-                if(i == 1000) break;
+                if(i == 10000) break;
             }
 
             logger.info("All items inserted...");
