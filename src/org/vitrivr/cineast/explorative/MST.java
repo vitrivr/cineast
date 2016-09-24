@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.explorative;
 
 import org.jgrapht.alg.DijkstraShortestPath;
+import org.jgrapht.alg.KruskalMinimumSpanningTree;
 import org.jgrapht.alg.PrimMinimumSpanningTree;
 import org.jgrapht.alg.interfaces.MinimumSpanningTree;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -18,7 +19,7 @@ class MST<T> implements IMST<T> {
     private Function<List<List<T>>, Double> distanceMetric;
     private Function<List<List<T>>, Double> comperatorFunction;
     private Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction;
-
+    private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst;
     MST(Function<List<List<T>>, Double> distanceMetric, Function<List<List<T>>, Double> comperatorFunction, Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction) {
         this.distanceMetric = distanceMetric;
         this.comperatorFunction = comperatorFunction;
@@ -35,6 +36,7 @@ class MST<T> implements IMST<T> {
                 graph.setEdgeWeight(dwe, mstNode.distance(node, distanceMetric));
             }
         }
+        mst = getMST();
     }
 
     @Override
@@ -48,13 +50,13 @@ class MST<T> implements IMST<T> {
             }
         }
         graph.removeAllVertices(toDeleteNodes);
+        mst = getMST();
     }
 
     public MSTNode<T> getNucleus() throws java.lang.Exception{
         if(graph.vertexSet().size() == 0) throw new Exception(String.format("This graph contains no nodes!"));
         if(graph.vertexSet().size() == 1){
             return (MSTNode<T>) graph.vertexSet().toArray()[0];}
-        SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst = getMST();
         int degree = 0;
         MSTNode<T> nucleus = null;
         List<MSTNode<T>> mstNodes = new ArrayList<>();
@@ -72,7 +74,7 @@ class MST<T> implements IMST<T> {
 
     public double getCompactness(){
         // TODO: 14.09.16 implement real compactness measurement
-        return compactnessFunction.apply(getMST());
+        return compactnessFunction.apply(mst);
     }
 
     public boolean isReadyForMitosis(){
@@ -81,7 +83,6 @@ class MST<T> implements IMST<T> {
     }
 
     public List<MST<T>> mitosis(){
-        SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst = getMST();
         double largestWeight = 0;
         DefaultWeightedEdge largestEdge = null;
         List<DefaultWeightedEdge> edges = new ArrayList<>();
@@ -124,7 +125,6 @@ class MST<T> implements IMST<T> {
 
     // covering radius means the distance from the nucleus to the furthest element of the mst
     public double getCoveringRadius() throws Exception{
-        SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst = getMST();
         MSTNode<T> nucleus = getNucleus();
         double coveringRadius = 0;
         for(MSTNode<T> node : mst.vertexSet()){
@@ -151,7 +151,7 @@ class MST<T> implements IMST<T> {
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> getMST(){
         if(graph.vertexSet().size() == 1) return graph; // PrimMinimum
 
-        MinimumSpanningTree<MSTNode<T>, DefaultWeightedEdge> internMst = new PrimMinimumSpanningTree<>(graph);
+        MinimumSpanningTree<MSTNode<T>, DefaultWeightedEdge> internMst = new KruskalMinimumSpanningTree<>(graph);
         Set<DefaultWeightedEdge> edges = internMst.getMinimumSpanningTreeEdgeSet();
         Set<MSTNode<T>> nodes = graph.vertexSet();
         SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> internSWG = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
