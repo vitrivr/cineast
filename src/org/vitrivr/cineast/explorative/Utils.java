@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.explorative;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+
 import java.util.List;
 
 /**
@@ -8,15 +11,17 @@ import java.util.List;
 public class Utils {
 
     public static String listToString(List l){
-        if(l.size() == 0) return "{}";
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        for (Object o : l) {
-            sb.append(o.toString() + ", ");
-        }
-        sb.replace(sb.length() - 2, sb.length(), "");
-        sb.append("}");
-        return sb.toString();
+    if(l.size() == 0) return "{}";
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("{");
+    for (Object o : l) {
+        sb.append(o.toString() + ", ");
+    }
+    sb.replace(sb.length() - 2, sb.length(), "");
+    sb.append("}");
+    return sb.toString();
+
     }
 }

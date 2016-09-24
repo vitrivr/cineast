@@ -72,7 +72,7 @@ public class SilvanPlayground {
 //            }
 //
             DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
-            dbSelector.open("features_averagecolor");
+            dbSelector.open("features_averagecolorgrid8");
             List<PrimitiveTypeProvider> l = dbSelector.getAll("feature");
             List<float[]> features = new ArrayList<>();
             if (l.size() > 0) {
@@ -127,7 +127,7 @@ public class SilvanPlayground {
 
             logger.info("All items inserted...");
             String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date(System.currentTimeMillis()));
-            visualizeTree(hct.getRoot(), new File("results/" + timestamp + "/" + "root"));
+//            visualizeTree(hct.getRoot(), new File("results/" + timestamp + "/" + "root"));
             logger.info("Finished!");
 
         } catch (Exception e) {
