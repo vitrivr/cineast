@@ -2,38 +2,35 @@ package org.vitrivr.cineast.explorative;
 
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.alg.KruskalMinimumSpanningTree;
-import org.jgrapht.alg.PrimMinimumSpanningTree;
 import org.jgrapht.alg.interfaces.MinimumSpanningTree;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.GraphIterator;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 
 
-class MST<T> implements IMST<T> {
+class MST<T> implements IMST<T>, Serializable {
 
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
-    private Function<List<List<T>>, Double> distanceMetric;
-    private Function<List<List<T>>, Double> comperatorFunction;
-    private Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction;
+    private Mathematics mathematics;
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst;
-    MST(Function<List<List<T>>, Double> distanceMetric, Function<List<List<T>>, Double> comperatorFunction, Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction) {
-        this.distanceMetric = distanceMetric;
-        this.comperatorFunction = comperatorFunction;
-        this.compactnessFunction = compactnessFunction;
+
+    MST(Mathematics mathematics) {
+        this.mathematics = mathematics;
     }
 
     @Override
     public void add(List<T> item) {
-        MSTNode<T> mstNode = new MSTNode(item, this);
+        MSTNode<T> mstNode = new MSTNode<>(item, mathematics);
         graph.addVertex(mstNode);
         for (MSTNode<T> node : graph.vertexSet()) {
             if (node != mstNode){
                 DefaultWeightedEdge dwe = graph.addEdge(mstNode, node);
-                graph.setEdgeWeight(dwe, mstNode.distance(node, distanceMetric));
+                graph.setEdgeWeight(dwe, mstNode.distance(node));
             }
         }
         mst = getMST();
@@ -61,7 +58,7 @@ class MST<T> implements IMST<T> {
         MSTNode<T> nucleus = null;
         List<MSTNode<T>> mstNodes = new ArrayList<>();
         mstNodes.addAll(mst.vertexSet());
-        Collections.sort(mstNodes, (o1, o2) -> MST.this.compare(o1.getValue(), o2.getValue()));
+        Collections.sort(mstNodes, (o1, o2) -> mathematics.compareVectors(o1.getValue(), o2.getValue()));
 
         for (MSTNode<T> current : mstNodes) {
             if (degree < mst.degreeOf(current)) {
@@ -74,7 +71,7 @@ class MST<T> implements IMST<T> {
 
     public double getCompactness(){
         // TODO: 14.09.16 implement real compactness measurement
-        return compactnessFunction.apply(mst);
+        return mathematics.calculateCompactness(mst.vertexSet(), mst.edgeSet(), graph);
     }
 
     public boolean isReadyForMitosis(){
@@ -87,7 +84,7 @@ class MST<T> implements IMST<T> {
         DefaultWeightedEdge largestEdge = null;
         List<DefaultWeightedEdge> edges = new ArrayList<>();
         edges.addAll(mst.edgeSet());
-        Collections.sort(edges, (el1, el2) -> compare(graph.getEdgeSource(el1).getValue(), graph.getEdgeSource(el2).getValue()));
+        Collections.sort(edges, (el1, el2) -> mathematics.compareVectors(graph.getEdgeSource(el1).getValue(), graph.getEdgeSource(el2).getValue()));
         for(DefaultWeightedEdge edge : edges){
             if(mst.getEdgeWeight(edge) > largestWeight){
                 largestWeight = mst.getEdgeWeight(edge);
@@ -141,7 +138,7 @@ class MST<T> implements IMST<T> {
             MSTNode<T> next = iterator.next();
             containedNodes.add(next);
         }
-        MST<T> newSubGraph = new MST<T>(distanceMetric, comperatorFunction, compactnessFunction);
+        MST<T> newSubGraph = new MST<T>(mathematics);
         for(MSTNode<T> node : containedNodes){
             newSubGraph.add(node.getValue());
         }
@@ -172,20 +169,4 @@ class MST<T> implements IMST<T> {
 
     }
 
-    private int compare(List<T> one, List<T> two){
-        List<List<T>> args = new ArrayList<>();
-        args.add(one);
-        args.add(two);
-        double result = comperatorFunction.apply(args);
-        if(result > 0 ) {
-            return 1;
-        }
-        else if(result < 0){
-            return -1;
-        }
-        else{
-            return 0;
-        }
-
-    }
 }

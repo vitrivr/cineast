@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.explorative;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,26 +10,23 @@ import java.util.function.Function;
 /**
  * Created by silvanstich on 13.09.16.
  */
-public class MSTNode<T> implements IMSTNode<T> {
+public class MSTNode<T> implements IMSTNode<T>, Serializable {
 
     private List<T> value;
-    private MST mst;
+    private Mathematics mathematics;
 
-
-    public MSTNode(List<T> value, MST mst){
+    public MSTNode(List<T> value, Mathematics mathematics){
         this.value = value;
-        this.mst = mst;
+        this.mathematics = mathematics;
     }
 
     @Override
-    public double distance(IMSTNode<T> other, Function<List<List<T>>, Double> calculation){
-        return distance(other.getValue(), calculation);
+    public double distance(IMSTNode<T> other){
+        return mathematics.getEuclideanDistance(value, other.getValue());
     };
 
-    public double distance(List<T> otherValues, Function<List<List<T>>, Double> calculation){
-        List<List<T>> args = new ArrayList<>();
-        args.add(value); args.add(otherValues);
-        return calculation.apply(args);
+    public double distance(List<T> otherValues){
+        return mathematics.getEuclideanDistance(value, otherValues);
     };
 
 

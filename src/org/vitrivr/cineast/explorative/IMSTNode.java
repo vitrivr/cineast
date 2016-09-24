@@ -7,9 +7,9 @@ import java.util.function.Function;
 /**
  * Created by silvanstich on 13.09.16.
  */
-public interface IMSTNode<T> {
+public interface IMSTNode<T>  {
 
-    double distance(IMSTNode<T> other, Function<List<List<T>>, Double> calculation);
+    double distance(IMSTNode<T> other);
 
     List<T> getValue();
 

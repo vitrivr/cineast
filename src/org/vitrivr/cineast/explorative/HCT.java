@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -12,27 +13,20 @@ import java.util.function.Function;
 /**
  * Created by silvanstich on 13.09.16.
  */
-public class HCT<T> implements IHCT<T>{
+public class HCT<T> implements IHCT<T>, Serializable{
 
     // first element in list is top level, last element is ground level
     private List<HCTLevel<T>> levels = new ArrayList<>();
-    private Function<List<List<T>>, Double> distanceCalculation;
-    private Function<List<List<T>>, Double> comperatorFunction;
     private static Logger logger = LogManager.getLogger();
-    private Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction;
     private int size;
-
+    private Mathematics mathematics;
 
     /**
      * Initializes a new HCT
-     * @param distanceCalculation A function which calculates the distance between two elements. The two arguments are given as a list with two entries.
-     * @param comperatorFunction A function that compares two elements. Return <0 if the first item is bigger, 0 if the items are equal and 0> if the first item is smaller.
-     * @param compactnessFunction A function that determines the compactness of the cell. Return >0.5 if the compactness is to low and the cell should split, return <0.5 if the compactness is suffiecent.
+     * @param mathematics Class that contains the necessary mathematical operations
      */
-    public HCT(Function<List<List<T>>, Double> distanceCalculation, Function<List<List<T>>, Double> comperatorFunction, Function<SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge>, Double> compactnessFunction) {
-        this.distanceCalculation = distanceCalculation;
-        this.comperatorFunction = comperatorFunction;
-        this.compactnessFunction = compactnessFunction;
+    public HCT(Mathematics mathematics) {
+        this.mathematics = mathematics;
     }
 
     public void insert(List<T> nextItem) throws Exception {
@@ -142,7 +136,7 @@ public class HCT<T> implements IHCT<T>{
     private HCTCell<T> createNewRoot(List<T> nextItem, List<HCTCell<T>> topLevelCells) {
         HCTLevel<T> level = new HCTLevel<T>();
         levels.add(level);
-        HCTCell<T> topLevelCell = level.addCell(distanceCalculation, comperatorFunction, compactnessFunction); //aka root
+        HCTCell<T> topLevelCell = level.addCell(mathematics); //aka root
         topLevelCell.addValue(nextItem);
         for (HCTCell<T> oldTopLevelCell : levels.get(levels.size() - 2).getCells()) { // the root has all cells in level rootlevel - 1 as its children and those children all have the root as parent
             oldTopLevelCell.setParent(topLevelCell);
@@ -154,7 +148,7 @@ public class HCT<T> implements IHCT<T>{
     private void createInitialRoot(List<T> nextItem) {
         HCTLevel<T> level = new HCTLevel<>();
         levels.add(level);
-        HCTCell<T> cell = level.addCell(distanceCalculation, comperatorFunction, compactnessFunction);
+        HCTCell<T> cell = level.addCell(mathematics);
         cell.addValue(nextItem);
         return;
     }
