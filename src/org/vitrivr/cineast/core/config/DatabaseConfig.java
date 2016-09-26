@@ -4,6 +4,7 @@ import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.ADAMproWriter;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.JsonFileWriter;
+import org.vitrivr.cineast.core.db.NoDBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.ProtobufFileWriter;
 
@@ -21,6 +22,7 @@ public final class DatabaseConfig {
 	private static final PersistencyWriterSupplier PROTO_WRITER_SUPPLY = () -> new ProtobufFileWriter();
 	private static final PersistencyWriterSupplier JSON_WRITER_SUPPLY = () -> new JsonFileWriter();
 	
+	private static final DBSelectorSupplier NO_SELECTOR_SUPPLY = () -> new NoDBSelector();
 	private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = () -> new ADAMproSelector();
 	
 	public static enum Writer{
@@ -30,6 +32,7 @@ public final class DatabaseConfig {
 	}
 	
 	public static enum Selector{
+	  NONE,
 		ADAMPRO
 	}
 	
@@ -98,6 +101,8 @@ public final class DatabaseConfig {
 		switch(this.selector){
 		case ADAMPRO:
 			return ADAMPRO_SELECTOR_SUPPLY;
+		case NONE:
+		  return NO_SELECTOR_SUPPLY;
 		default:
 			throw new IllegalStateException("no supplier for selector " + this.selector);
 			
@@ -113,6 +118,7 @@ public final class DatabaseConfig {
 	 * 	"port" : (int)
 	 * 	"plaintext" : (boolean)
 	 *  "writer" : PROTO | JSON | ADAMPRO
+	 *  "selector" : NONE | ADAMPRO
 	 * }
 	 * </pre>
 	 * @throws NullPointerException in case provided JsonObject is null
