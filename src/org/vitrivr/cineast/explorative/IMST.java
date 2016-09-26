@@ -5,25 +5,25 @@ import java.util.List;
 /**
  * Created by silvanstich on 13.09.16.
  */
-interface IMST<V> {
+interface IMST<T extends Comparable<T> & DistanceCalculation<T>> {
 
-    void add(List<V> item);
+    void add(T item);
 
-    void remove(List<V> item);
+    void remove(T item);
 
-    MSTNode<V> getNucleus() throws Exception;
+    MSTNode<T> getNucleus() throws Exception;
 
-    double getCompactness();
+    double getCompactness() throws Exception;
 
     double getCoveringRadius() throws Exception;
 
     boolean isReadyForMitosis();
 
-    List<MST<V>> mitosis();
+    List<MST<T>> mitosis();
 
     boolean isCellDeath();
 
-    boolean containsValue(List<V> value);
+    boolean containsValue(T value);
 
-    <T> List<List<T>> getValues();
+    List<T> getValues();
 }

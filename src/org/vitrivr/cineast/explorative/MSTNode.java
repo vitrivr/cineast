@@ -1,43 +1,36 @@
 package org.vitrivr.cineast.explorative;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 /**
  * Created by silvanstich on 13.09.16.
  */
-public class MSTNode<T> implements IMSTNode<T>, Serializable {
+public class MSTNode<T extends Comparable<T> & DistanceCalculation<T>> implements IMSTNode<T>, Serializable {
 
-    private List<T> value;
-    private Mathematics mathematics;
+    private T value;
 
-    public MSTNode(List<T> value, Mathematics mathematics){
+    public MSTNode(T value){
         this.value = value;
-        this.mathematics = mathematics;
     }
 
     @Override
     public double distance(IMSTNode<T> other){
-        return mathematics.getEuclideanDistance(value, other.getValue());
+        return value.distance(other.getValue());
     };
 
-    public double distance(List<T> otherValues){
-        return mathematics.getEuclideanDistance(value, otherValues);
+    public double distance(T otherValue){
+        return value.distance(otherValue);
     };
 
 
     @Override
-    public List<T> getValue() {
+    public T getValue() {
         return value;
     }
 
     @Override
     public String toString(){
-        return String.format("MSTNode | value: %s >", Utils.listToString(value));
+        return String.format("MSTNode | value: %s >", value.toString());
     }
 
 }

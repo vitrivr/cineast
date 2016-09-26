@@ -5,11 +5,11 @@ import java.util.List;
 /**
  * Created by silvanstich on 13.09.16.
  */
-public interface IHCT<T> {
+public interface IHCT<T extends Comparable<T> & DistanceCalculation<T>> {
 
-    void insert(List<T> nextItem) throws Exception;
+    void insert(T nextItem) throws Exception;
 
-    HCTCell<T> preemptiveCellSearch(List<HCTCell<T>> ArrayCS, List<T> nextItem, int curLevelNo, int levelNo) throws Exception;
+    HCTCell<T> preemptiveCellSearch(List<HCTCell<T>> ArrayCS, T nextItem, int curLevelNo, int levelNo) throws Exception;
 
-    void remove(HCTCell<T> cellO, List<T> value, int levelNo) throws Exception;
+    void remove(HCTCell<T> cellO, T value, int levelNo) throws Exception;
 }

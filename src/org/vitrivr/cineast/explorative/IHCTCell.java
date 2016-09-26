@@ -1,15 +1,13 @@
 package org.vitrivr.cineast.explorative;
 
-import java.util.List;
-
 /**
  * Created by silvanstich on 13.09.16.
  */
-public interface IHCTCell<T> {
+public interface IHCTCell<T extends Comparable<T> & DistanceCalculation<T>> {
 
     void addChild(HCTCell<T> child);
 
-    boolean containsValue(List<T> value);
+    boolean containsValue(T value);
 
     boolean isCellDeath();
 

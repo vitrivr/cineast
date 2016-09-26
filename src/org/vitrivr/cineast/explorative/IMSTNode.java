@@ -7,11 +7,11 @@ import java.util.function.Function;
 /**
  * Created by silvanstich on 13.09.16.
  */
-public interface IMSTNode<T>  {
+public interface IMSTNode<T extends DistanceCalculation<T>>  {
 
     double distance(IMSTNode<T> other);
 
-    List<T> getValue();
+    T getValue();
 
 
 }

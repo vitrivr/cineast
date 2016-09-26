@@ -11,35 +11,33 @@ import java.util.List;
 /**
  * Created by silvanstich on 13.09.16.
  */
-public class HCTCell<T> implements IHCTCell, Serializable {
+public class HCTCell<T extends Comparable<T> & DistanceCalculation<T>> implements IHCTCell<T>, Serializable {
 
     private static Logger logger = LogManager.getLogger();
 
     private IMST<T> mst;
-    private Mathematics mathematics;
     private HCTCell<T> parent;
     private List<HCTCell<T>> children = new ArrayList<>();
 
-    public HCTCell(Mathematics mathematics) {
-         mst = new MST<>(mathematics);
-        this.mathematics = mathematics;
+    HCTCell() {
+        mst = new MST<>();
     }
 
     private HCTCell(IMST<T> mst, HCTCell<T> parent) {
-        this.mst = new MST<>(mathematics);
+        this.mst = new MST<>();
         this.mst = mst;
         this.parent = parent;
     }
 
-    void addValue(List<T> value){
+    void addValue(T value){
         mst.add(value);
     }
 
-    void removeValue(List<T> value){
+    void removeValue(T value){
         mst.remove(value);
     }
 
-    double getDistanceToNucleus(List<T> other) throws Exception{
+    double getDistanceToNucleus(T other) throws Exception{
         return mst.getNucleus().distance(other);
     }
 
@@ -93,7 +91,7 @@ public class HCTCell<T> implements IHCTCell, Serializable {
     }
 
     @Override
-    public boolean containsValue(List value) {
+    public boolean containsValue(T value) {
         return mst.containsValue(value);
     }
 
@@ -118,7 +116,7 @@ public class HCTCell<T> implements IHCTCell, Serializable {
 
     }
 
-    public List<List<T>> getValues() {
+    public List<T> getValues() {
         return mst.getValues();
     }
 

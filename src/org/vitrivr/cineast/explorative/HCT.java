@@ -2,40 +2,28 @@ package org.vitrivr.cineast.explorative;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleWeightedGraph;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Created by silvanstich on 13.09.16.
  */
-public class HCT<T> implements IHCT<T>, Serializable{
+public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IHCT<T>, Serializable{
 
     // first element in list is top level, last element is ground level
     private List<HCTLevel<T>> levels = new ArrayList<>();
     private static Logger logger = LogManager.getLogger();
     private int size;
-    private Mathematics mathematics;
 
-    /**
-     * Initializes a new HCT
-     * @param mathematics Class that contains the necessary mathematical operations
-     */
-    public HCT(Mathematics mathematics) {
-        this.mathematics = mathematics;
-    }
-
-    public void insert(List<T> nextItem) throws Exception {
+    public void insert(T nextItem) throws Exception {
         sanityCheck();
         insert(nextItem, 0);
         logger.info("#Items in tree: " + ++size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
     }
 
-    private HCTCell<T> insert(List<T> nextItem, int levelNo) throws Exception {
+    private HCTCell<T> insert(T nextItem, int levelNo) throws Exception {
         if (levels.size() == 0){ // first insert
             createInitialRoot(nextItem);
             return null;
@@ -57,8 +45,8 @@ public class HCT<T> implements IHCT<T>, Serializable{
         return cellO;
     }
 
-    private HCTCell<T> addValue(List<T> nextItem, int levelNo, HCTCell<T> cellO) throws Exception {
-        List<T> oldNucleusValue = cellO.getNucleus().getValue();
+    private HCTCell<T> addValue(T nextItem, int levelNo, HCTCell<T> cellO) throws Exception {
+        T oldNucleusValue = cellO.getNucleus().getValue();
         cellO.addValue(nextItem);
 
         if(cellO.isReadyForMitosis()){
@@ -84,7 +72,7 @@ public class HCT<T> implements IHCT<T>, Serializable{
         return topLevelCells;
     }
 
-    private HCTCell<T> searchCellToInsertNewValue(List<T> nextItem, HCTCell<T> cellt, int topLevelNo, int levelNo) throws Exception {
+    private HCTCell<T> searchCellToInsertNewValue(T nextItem, HCTCell<T> cellt, int topLevelNo, int levelNo) throws Exception {
         HCTCell<T> cellO;
         if(levelNo == topLevelNo){
             cellO = cellt;
@@ -97,7 +85,7 @@ public class HCT<T> implements IHCT<T>, Serializable{
         return cellO;
     }
 
-    private void nucleusChanged(int levelNo, HCTCell<T> cellO, List<T> oldNucleusValue) throws Exception {
+    private void nucleusChanged(int levelNo, HCTCell<T> cellO, T oldNucleusValue) throws Exception {
         // nucleus change in the root does not have any influence -> ignore! this is important
         if(levelNo == levels.size() - 1) return;
         remove(cellO, oldNucleusValue, levelNo + 1);
@@ -107,7 +95,7 @@ public class HCT<T> implements IHCT<T>, Serializable{
         newParent.addChild(cellO);
     }
 
-    private List<HCTCell<T>> doMitosis(int levelNo, HCTCell<T> cellO, List<T> oldNucleusValue) throws Exception {
+    private List<HCTCell<T>> doMitosis(int levelNo, HCTCell<T> cellO, T oldNucleusValue) throws Exception {
         List<HCTCell<T>> newCells = cellO.mitosis();
         removeOldCell(levelNo, cellO, oldNucleusValue);
         addNewCells(levelNo, newCells);
@@ -126,17 +114,17 @@ public class HCT<T> implements IHCT<T>, Serializable{
         }
     }
 
-    private void removeOldCell(int levelNo, HCTCell<T> cellO, List<T> oldNucleusValue) throws Exception {
+    private void removeOldCell(int levelNo, HCTCell<T> cellO, T oldNucleusValue) throws Exception {
         HCTCell<T> parentCell = cellO.getParent();
         if(parentCell != null) parentCell.removeChild(cellO);
         levels.get(levelNo).removeCell(cellO);
         remove(cellO, oldNucleusValue, levelNo + 1);
     }
 
-    private HCTCell<T> createNewRoot(List<T> nextItem, List<HCTCell<T>> topLevelCells) {
+    private HCTCell<T> createNewRoot(T nextItem, List<HCTCell<T>> topLevelCells) {
         HCTLevel<T> level = new HCTLevel<T>();
         levels.add(level);
-        HCTCell<T> topLevelCell = level.addCell(mathematics); //aka root
+        HCTCell<T> topLevelCell = level.addCell(); //aka root
         topLevelCell.addValue(nextItem);
         for (HCTCell<T> oldTopLevelCell : levels.get(levels.size() - 2).getCells()) { // the root has all cells in level rootlevel - 1 as its children and those children all have the root as parent
             oldTopLevelCell.setParent(topLevelCell);
@@ -145,16 +133,16 @@ public class HCT<T> implements IHCT<T>, Serializable{
         return topLevelCell;
     }
 
-    private void createInitialRoot(List<T> nextItem) {
+    private void createInitialRoot(T nextItem) {
         HCTLevel<T> level = new HCTLevel<>();
         levels.add(level);
-        HCTCell<T> cell = level.addCell(mathematics);
+        HCTCell<T> cell = level.addCell();
         cell.addValue(nextItem);
         return;
     }
 
     @Override
-    public HCTCell<T> preemptiveCellSearch(List<HCTCell<T>> ArrayCS, List<T> nextItem, int curLevelNo, int levelNo) throws Exception {
+    public HCTCell<T> preemptiveCellSearch(List<HCTCell<T>> ArrayCS, T nextItem, int curLevelNo, int levelNo) throws Exception {
         double dmin = dmin(nextItem, ArrayCS); // dmin of parent level
         if(curLevelNo == levelNo + 1){
             return getMSCell(ArrayCS, nextItem);
@@ -163,7 +151,7 @@ public class HCT<T> implements IHCT<T>, Serializable{
         return preemptiveCellSearch(newArrayCS, nextItem, curLevelNo - 1, levelNo);
     }
 
-    private HCTCell<T> getMSCell(List<HCTCell<T>> ArrayCS, List<T> nextItem) throws Exception {
+    private HCTCell<T> getMSCell(List<HCTCell<T>> ArrayCS, T nextItem) throws Exception {
         HCTCell<T> mSCell = null;
         double dist = Double.MAX_VALUE;
 
@@ -180,7 +168,7 @@ public class HCT<T> implements IHCT<T>, Serializable{
     }
 
     @Override
-    public void remove(HCTCell<T> cellO, List<T> value, int levelNo) throws Exception {
+    public void remove(HCTCell<T> cellO, T value, int levelNo) throws Exception {
         int topLevelNo = levels.size() - 1;
         List<HCTCell<T>> cells = levels.get(levels.size() - 1).getCells();
 
@@ -188,7 +176,7 @@ public class HCT<T> implements IHCT<T>, Serializable{
         if(cells.size() == 0 || levelNo > topLevelNo) return; // experimental
         if(!parentCell.containsValue(value)) throw new Exception("Parent cell does not contain expectedd nucleus! Child cell: " + cellO);
 
-        List<T> oldNucleusValue = parentCell.getNucleus().getValue();
+        T oldNucleusValue = parentCell.getNucleus().getValue();
         parentCell.removeValue(value);
         if(parentCell.isCellDeath()){
             if(levelNo == topLevelNo){
@@ -230,7 +218,7 @@ public class HCT<T> implements IHCT<T>, Serializable{
         return sb.toString();
     }
 
-    private List<HCTCell<T>> getAllCandidates(List<T> other, double dmin, List<HCTCell<T>> parents) throws Exception {
+    private List<HCTCell<T>> getAllCandidates(T other, double dmin, List<HCTCell<T>> parents) throws Exception {
         List<HCTCell<T>> candidates = new ArrayList<>();
         for(HCTCell<T> parent : parents){
             for(HCTCell<T> cell : parent.getChildren()){
@@ -276,7 +264,7 @@ public class HCT<T> implements IHCT<T>, Serializable{
         return nbrOfCells;
     }
 
-    private double dmin(List<T> other, List<HCTCell<T>> arrayCS) throws Exception {
+    private double dmin(T other, List<HCTCell<T>> arrayCS) throws Exception {
         double dmin = Double.MAX_VALUE;
         for(HCTCell<T> cell : arrayCS){ // search only in selected cells
             if(cell.getDistanceToNucleus(other) < dmin){

@@ -10,22 +10,18 @@ import org.jgrapht.traverse.GraphIterator;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.function.Function;
 
 
-class MST<T> implements IMST<T>, Serializable {
+class MST<T extends Comparable<T> & DistanceCalculation<T>> implements IMST<T>, Serializable {
+
+    public static CompactnessCalculation compactnessCalculation = new DefaultCompactnessCalculation();
 
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
-    private Mathematics mathematics;
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst;
 
-    MST(Mathematics mathematics) {
-        this.mathematics = mathematics;
-    }
-
     @Override
-    public void add(List<T> item) {
-        MSTNode<T> mstNode = new MSTNode<>(item, mathematics);
+    public void add(T item) {
+        MSTNode<T> mstNode = new MSTNode<>(item);
         graph.addVertex(mstNode);
         for (MSTNode<T> node : graph.vertexSet()) {
             if (node != mstNode){
@@ -37,7 +33,7 @@ class MST<T> implements IMST<T>, Serializable {
     }
 
     @Override
-    public void remove(List<T> item) {
+    public void remove(T item) {
         Iterator<MSTNode<T>> iterator = graph.vertexSet().iterator();
         List<MSTNode<T>> toDeleteNodes = new ArrayList<>();
         while(iterator.hasNext()){
@@ -58,7 +54,7 @@ class MST<T> implements IMST<T>, Serializable {
         MSTNode<T> nucleus = null;
         List<MSTNode<T>> mstNodes = new ArrayList<>();
         mstNodes.addAll(mst.vertexSet());
-        Collections.sort(mstNodes, (o1, o2) -> mathematics.compareVectors(o1.getValue(), o2.getValue()));
+        Collections.sort(mstNodes, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
 
         for (MSTNode<T> current : mstNodes) {
             if (degree < mst.degreeOf(current)) {
@@ -69,9 +65,8 @@ class MST<T> implements IMST<T>, Serializable {
         return nucleus;
     }
 
-    public double getCompactness(){
-        // TODO: 14.09.16 implement real compactness measurement
-        return mathematics.calculateCompactness(mst.vertexSet(), mst.edgeSet(), graph);
+    public double getCompactness() {
+        return compactnessCalculation.getCompactness(graph);
     }
 
     public boolean isReadyForMitosis(){
@@ -84,7 +79,7 @@ class MST<T> implements IMST<T>, Serializable {
         DefaultWeightedEdge largestEdge = null;
         List<DefaultWeightedEdge> edges = new ArrayList<>();
         edges.addAll(mst.edgeSet());
-        Collections.sort(edges, (el1, el2) -> mathematics.compareVectors(graph.getEdgeSource(el1).getValue(), graph.getEdgeSource(el2).getValue()));
+        Collections.sort(edges, (el1, el2) -> graph.getEdgeSource(el1).getValue().compareTo(graph.getEdgeSource(el2).getValue()));
         for(DefaultWeightedEdge edge : edges){
             if(mst.getEdgeWeight(edge) > largestWeight){
                 largestWeight = mst.getEdgeWeight(edge);
@@ -104,7 +99,7 @@ class MST<T> implements IMST<T>, Serializable {
     }
 
     @Override
-    public boolean containsValue(List<T> value) { // TODO: 14.09.16 is a bottleneck
+    public boolean containsValue(T value) {
         for (MSTNode<T> mstNode : graph.vertexSet()) {
             if(mstNode.getValue() == value) return true;
         }
@@ -112,8 +107,8 @@ class MST<T> implements IMST<T>, Serializable {
     }
 
     @Override
-    public List<List<T>> getValues() {
-        List<List<T>> values = new ArrayList<>();
+    public List<T> getValues() {
+        List<T> values = new ArrayList<>();
         for(MSTNode<T> node : graph.vertexSet()){
             values.add(node.getValue());
         }
@@ -138,7 +133,7 @@ class MST<T> implements IMST<T>, Serializable {
             MSTNode<T> next = iterator.next();
             containedNodes.add(next);
         }
-        MST<T> newSubGraph = new MST<T>(mathematics);
+        MST<T> newSubGraph = new MST<T>();
         for(MSTNode<T> node : containedNodes){
             newSubGraph.add(node.getValue());
         }
@@ -162,7 +157,7 @@ class MST<T> implements IMST<T>, Serializable {
 
     public String toString(){
         try {
-            return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(), graph.edgeSet().size(), Utils.listToString(getNucleus().getValue()));
+            return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(), graph.edgeSet().size(), getNucleus().getValue());
         } catch (Exception e){
             return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(), graph.edgeSet().size(), "###Error while getting the nucleus" + e.getMessage());
         }
