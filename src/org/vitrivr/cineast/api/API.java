@@ -25,7 +25,6 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.run.ExtractionJobRunner;
-import org.vitrivr.cineast.core.run.FeatureExtractionRunner;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -160,8 +159,11 @@ public class API {
 									+ videoFolder.getAbsolutePath() + " is not a folder");
 							break;
 						}
-						FeatureExtractionRunner runner = new FeatureExtractionRunner();
-						runner.extractFolder(videoFolder);
+//						FeatureExtractionRunner runner = new FeatureExtractionRunner();
+//						runner.extractFolder(videoFolder);
+						
+						ExtractionJobRunner runner = new ExtractionJobRunner(videoFolder, "test");
+						runner.run();
 						break;
 					}
 					case "setup": {
