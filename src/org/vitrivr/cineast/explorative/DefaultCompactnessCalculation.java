@@ -3,10 +3,12 @@ package org.vitrivr.cineast.explorative;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
+import java.io.Serializable;
+
 /**
  * Created by silvanstich on 26.09.16.
  */
-public class DefaultCompactnessCalculation implements CompactnessCalculation{
+public class DefaultCompactnessCalculation implements CompactnessCalculation, Serializable{
 
     @Override
     public double getCompactness(SimpleWeightedGraph<?, DefaultWeightedEdge> graph) {

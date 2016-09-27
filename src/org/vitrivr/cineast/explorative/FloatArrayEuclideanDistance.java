@@ -1,9 +1,12 @@
 package org.vitrivr.cineast.explorative;
 
+import java.io.Serializable;
+
 /**
  * Created by silvanstich on 27.09.16.
  */
-public class FloatArrayEuclideanDistance implements DistanceCalculation<HCTFloatVectorValue> {
+public class FloatArrayEuclideanDistance implements DistanceCalculation<HCTFloatVectorValue>, Serializable {
+
     @Override
     public double distance(HCTFloatVectorValue point1, HCTFloatVectorValue point2) {
         double dist = 0;
