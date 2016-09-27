@@ -5,21 +5,23 @@ import java.io.Serializable;
 /**
  * Created by silvanstich on 13.09.16.
  */
-public class MSTNode<T extends Comparable<T> & DistanceCalculation<T>> implements IMSTNode<T>, Serializable {
+public class MSTNode<T extends Comparable<T>> implements IMSTNode<T>, Serializable {
 
-    private T value;
+    private final T value;
+    private final HCT<T> hct;
 
-    public MSTNode(T value){
+    public MSTNode(T value, HCT<T> hct){
         this.value = value;
+        this.hct = hct;
     }
 
     @Override
     public double distance(IMSTNode<T> other){
-        return value.distance(other.getValue());
+        return hct.getDistanceCalculation().distance(value, other.getValue());
     };
 
     public double distance(T otherValue){
-        return value.distance(otherValue);
+        return hct.getDistanceCalculation().distance(value, otherValue);
     };
 
 

@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.explorative;
 
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,12 +11,20 @@ import java.util.List;
 /**
  * Created by silvanstich on 13.09.16.
  */
-public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IHCT<T>, Serializable{
+public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
 
     // first element in list is top level, last element is ground level
     private List<HCTLevel<T>> levels = new ArrayList<>();
     private static Logger logger = LogManager.getLogger();
     private int size;
+
+    private final CompactnessCalculation compactnessCalculation;
+    private final DistanceCalculation distanceCalculation;
+
+    public HCT(CompactnessCalculation compactnessCalculation, FloatArrayEuclideanDistance distanceCalculation) {
+        this.compactnessCalculation = compactnessCalculation;
+        this.distanceCalculation = distanceCalculation;
+    }
 
     public void insert(T nextItem) throws Exception {
         sanityCheck();
@@ -23,7 +32,7 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
         logger.info("#Items in tree: " + ++size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
     }
 
-    private HCTCell<T> insert(T nextItem, int levelNo) throws Exception {
+    private IHCTCell<T> insert(T nextItem, int levelNo) throws Exception {
         if (levels.size() == 0){ // first insert
             createInitialRoot(nextItem);
             return null;
@@ -38,14 +47,14 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
             return createNewRoot(nextItem, topLevelCells);
         }
 
-        HCTCell<T> cellO = searchCellToInsertNewValue(nextItem, cellT, topLevelNo, levelNo);
+        IHCTCell<T> cellO = searchCellToInsertNewValue(nextItem, cellT, topLevelNo, levelNo);
 
         cellO = addValue(nextItem, levelNo, cellO);
 
         return cellO;
     }
 
-    private HCTCell<T> addValue(T nextItem, int levelNo, HCTCell<T> cellO) throws Exception {
+    private IHCTCell<T> addValue(T nextItem, int levelNo, IHCTCell<T> cellO) throws Exception {
         T oldNucleusValue = cellO.getNucleus().getValue();
         cellO.addValue(nextItem);
 
@@ -68,16 +77,15 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
         while(levels.get(levels.size()-1).getCells().size() == 0){
             levels.remove(levels.get(levels.size() - 1));
         }
-        List<HCTCell<T>> topLevelCells = levels.get(levels.size() - 1).getCells();
-        return topLevelCells;
+        return levels.get(levels.size() - 1).getCells();
     }
 
-    private HCTCell<T> searchCellToInsertNewValue(T nextItem, HCTCell<T> cellt, int topLevelNo, int levelNo) throws Exception {
-        HCTCell<T> cellO;
+    private IHCTCell<T> searchCellToInsertNewValue(T nextItem, IHCTCell<T> cellt, int topLevelNo, int levelNo) throws Exception {
+        IHCTCell<T> cellO;
         if(levelNo == topLevelNo){
             cellO = cellt;
         }else{
-            List<HCTCell<T>> arrayCS = new ArrayList<>();
+            List<IHCTCell<T>> arrayCS = new ArrayList<>();
             arrayCS.add(cellt);
             cellO = preemptiveCellSearch(arrayCS, nextItem, topLevelNo, levelNo);
         }
@@ -85,17 +93,17 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
         return cellO;
     }
 
-    private void nucleusChanged(int levelNo, HCTCell<T> cellO, T oldNucleusValue) throws Exception {
+    private void nucleusChanged(int levelNo, IHCTCell<T> cellO, T oldNucleusValue) throws Exception {
         // nucleus change in the root does not have any influence -> ignore! this is important
         if(levelNo == levels.size() - 1) return;
         remove(cellO, oldNucleusValue, levelNo + 1);
         cellO.getParent().removeChild(cellO);
-        HCTCell<T> newParent = insert(cellO.getNucleus().getValue(), levelNo + 1);
+        IHCTCell<T> newParent = insert(cellO.getNucleus().getValue(), levelNo + 1);
         cellO.setParent(newParent);
         newParent.addChild(cellO);
     }
 
-    private List<HCTCell<T>> doMitosis(int levelNo, HCTCell<T> cellO, T oldNucleusValue) throws Exception {
+    private List<HCTCell<T>> doMitosis(int levelNo, IHCTCell<T> cellO, T oldNucleusValue) throws Exception {
         List<HCTCell<T>> newCells = cellO.mitosis();
         removeOldCell(levelNo, cellO, oldNucleusValue);
         addNewCells(levelNo, newCells);
@@ -106,23 +114,23 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
         for (HCTCell<T> newCell : newCells) {
             levels.get(levelNo).addCell(newCell);
         }
-        for (HCTCell<T> newCell : newCells) {
-            HCTCell<T> parentCell = insert(newCell.getNucleus().getValue(), levelNo + 1);
+        for (IHCTCell<T> newCell : newCells) {
+            IHCTCell<T> parentCell = insert(newCell.getNucleus().getValue(), levelNo + 1);
             newCell.getParent().removeChild(newCell);
             parentCell.addChild(newCell);
             newCell.setParent(parentCell);
         }
     }
 
-    private void removeOldCell(int levelNo, HCTCell<T> cellO, T oldNucleusValue) throws Exception {
-        HCTCell<T> parentCell = cellO.getParent();
+    private void removeOldCell(int levelNo, IHCTCell<T> cellO, T oldNucleusValue) throws Exception {
+        IHCTCell<T> parentCell = cellO.getParent();
         if(parentCell != null) parentCell.removeChild(cellO);
         levels.get(levelNo).removeCell(cellO);
         remove(cellO, oldNucleusValue, levelNo + 1);
     }
 
     private HCTCell<T> createNewRoot(T nextItem, List<HCTCell<T>> topLevelCells) {
-        HCTLevel<T> level = new HCTLevel<T>();
+        HCTLevel<T> level = new HCTLevel<>(this);
         levels.add(level);
         HCTCell<T> topLevelCell = level.addCell(); //aka root
         topLevelCell.addValue(nextItem);
@@ -134,29 +142,27 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
     }
 
     private void createInitialRoot(T nextItem) {
-        HCTLevel<T> level = new HCTLevel<>();
+        HCTLevel<T> level = new HCTLevel<>(this);
         levels.add(level);
         HCTCell<T> cell = level.addCell();
         cell.addValue(nextItem);
-        return;
     }
 
-    @Override
-    public HCTCell<T> preemptiveCellSearch(List<HCTCell<T>> ArrayCS, T nextItem, int curLevelNo, int levelNo) throws Exception {
+    public IHCTCell<T> preemptiveCellSearch(List<IHCTCell<T>> ArrayCS, T nextItem, int curLevelNo, int levelNo) throws Exception {
         double dmin = dmin(nextItem, ArrayCS); // dmin of parent level
         if(curLevelNo == levelNo + 1){
             return getMSCell(ArrayCS, nextItem);
         }
-        List<HCTCell<T>> newArrayCS = getAllCandidates(nextItem, dmin, ArrayCS);
+        List<IHCTCell<T>> newArrayCS = getAllCandidates(nextItem, dmin, ArrayCS);
         return preemptiveCellSearch(newArrayCS, nextItem, curLevelNo - 1, levelNo);
     }
 
-    private HCTCell<T> getMSCell(List<HCTCell<T>> ArrayCS, T nextItem) throws Exception {
-        HCTCell<T> mSCell = null;
+    private IHCTCell<T> getMSCell(List<IHCTCell<T>> ArrayCS, T nextItem) throws Exception {
+        IHCTCell<T> mSCell = null;
         double dist = Double.MAX_VALUE;
 
-        for (HCTCell<T> parent : ArrayCS) {
-            for (HCTCell<T> cell : parent.getChildren()) {
+        for (IHCTCell<T> parent : ArrayCS) {
+            for (IHCTCell<T> cell : parent.getChildren()) {
                 if(cell.isCellDeath()) continue;
                 if(cell.getDistanceToNucleus(nextItem) < dist){
                     dist = cell.getDistanceToNucleus(nextItem);
@@ -168,11 +174,11 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
     }
 
     @Override
-    public void remove(HCTCell<T> cellO, T value, int levelNo) throws Exception {
+    public void remove(IHCTCell<T> cellO, T value, int levelNo) throws Exception {
         int topLevelNo = levels.size() - 1;
         List<HCTCell<T>> cells = levels.get(levels.size() - 1).getCells();
 
-        HCTCell<T> parentCell = cellO.getParent();
+        IHCTCell<T> parentCell = cellO.getParent();
         if(cells.size() == 0 || levelNo > topLevelNo) return; // experimental
         if(!parentCell.containsValue(value)) throw new Exception("Parent cell does not contain expectedd nucleus! Child cell: " + cellO);
 
@@ -204,7 +210,7 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
         for(HCTLevel<T> level : levels){
             sb.append("level : " ).append(levels.indexOf(level)).append(" ");
             for(HCTCell<T> cell : level.getCells()){
-                sb.append(Utils.listToString(cell.getValues())).append(" | Parent (Nucleus): ");
+                sb.append(Joiner.on(", ").join(cell.getValues())).append(" | Parent (Nucleus): ");
                 sb.append(cell.getNucleus().getValue());
                 sb.append("......");
             }
@@ -218,10 +224,10 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
         return sb.toString();
     }
 
-    private List<HCTCell<T>> getAllCandidates(T other, double dmin, List<HCTCell<T>> parents) throws Exception {
-        List<HCTCell<T>> candidates = new ArrayList<>();
-        for(HCTCell<T> parent : parents){
-            for(HCTCell<T> cell : parent.getChildren()){
+    private List<IHCTCell<T>> getAllCandidates(T other, double dmin, List<IHCTCell<T>> parents) throws Exception {
+        List<IHCTCell<T>> candidates = new ArrayList<>();
+        for(IHCTCell<T> parent : parents){
+            for(IHCTCell<T> cell : parent.getChildren()){
                 double distanceToNucleus = cell.getDistanceToNucleus(other);
                 double coveringRadius = cell.getCoveringRadius();
 
@@ -247,16 +253,12 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
         }
     }
 
-    public List<HCTCell<T>> getGroundLevelCells(){
-        return levels.get(0).getCells();
-    }
-
     public HCTCell<T> getRoot() throws Exception {
         if(levels.get(levels.size() - 1).getCells().size() != 1) throw new Exception("Root is ambiguous! # of cells on top level is " + levels.get(levels.size() - 1).getCells().size());
         return levels.get(levels.size() - 1).getCells().get(0);
     }
 
-    public long getNbrOfCellsInTree(){
+    private long getNbrOfCellsInTree(){
         long nbrOfCells = 0;
         for(HCTLevel<T> level : levels){
             nbrOfCells += level.getCells().size();
@@ -264,13 +266,21 @@ public class HCT<T extends Comparable<T> & DistanceCalculation<T>> implements IH
         return nbrOfCells;
     }
 
-    private double dmin(T other, List<HCTCell<T>> arrayCS) throws Exception {
+    private double dmin(T other, List<IHCTCell<T>> arrayCS) throws Exception {
         double dmin = Double.MAX_VALUE;
-        for(HCTCell<T> cell : arrayCS){ // search only in selected cells
+        for(IHCTCell<T> cell : arrayCS){ // search only in selected cells
             if(cell.getDistanceToNucleus(other) < dmin){
                 dmin = cell.getDistanceToNucleus(other);
             }
         }
         return dmin;
+    }
+
+    public CompactnessCalculation getCompactnessCalculation() {
+        return compactnessCalculation;
+    }
+
+    public DistanceCalculation<T> getDistanceCalculation() {
+        return distanceCalculation;
     }
 }

@@ -5,5 +5,5 @@ package org.vitrivr.cineast.explorative;
  */
 public interface DistanceCalculation<T> {
 
-    double distance(T other);
+    double distance(T point1, T point2);
 }

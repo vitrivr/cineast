@@ -4,18 +4,24 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HCTLevel<T extends Comparable<T> &DistanceCalculation<T>> implements Serializable {
+public class HCTLevel<T extends Comparable<T>> implements Serializable {
+
+    private final HCT<T> hct;
 
     private List<HCTCell<T>> cells = new ArrayList<>();
 
+    public HCTLevel(HCT<T> hct) {
+        this.hct = hct;
+    }
+
     public List<HCTCell<T>> getCells(){ return cells;}
 
-    public void removeCell(HCTCell<T> cell){
+    public void removeCell(IHCTCell<T> cell){
         cells.remove(cell);
     }
 
     public HCTCell<T> addCell(){
-        HCTCell<T> cell = new HCTCell<T>();
+        HCTCell<T> cell = new HCTCell<T>(hct);
         cells.add(cell);
         return cell;
     }

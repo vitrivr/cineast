@@ -12,16 +12,20 @@ import java.io.Serializable;
 import java.util.*;
 
 
-class MST<T extends Comparable<T> & DistanceCalculation<T>> implements IMST<T>, Serializable {
+class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
 
-    public static CompactnessCalculation compactnessCalculation = new DefaultCompactnessCalculation();
+    private final HCT<T> hct;
 
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst;
 
+    MST(HCT<T> hct) {
+        this.hct = hct;
+    }
+
     @Override
     public void add(T item) {
-        MSTNode<T> mstNode = new MSTNode<>(item);
+        MSTNode<T> mstNode = new MSTNode<>(item, hct);
         graph.addVertex(mstNode);
         for (MSTNode<T> node : graph.vertexSet()) {
             if (node != mstNode){
@@ -47,7 +51,7 @@ class MST<T extends Comparable<T> & DistanceCalculation<T>> implements IMST<T>, 
     }
 
     public MSTNode<T> getNucleus() throws java.lang.Exception{
-        if(graph.vertexSet().size() == 0) throw new Exception(String.format("This graph contains no nodes!"));
+        if(graph.vertexSet().size() == 0) throw new Exception("This graph contains no nodes!");
         if(graph.vertexSet().size() == 1){
             return (MSTNode<T>) graph.vertexSet().toArray()[0];}
         int degree = 0;
@@ -66,7 +70,7 @@ class MST<T extends Comparable<T> & DistanceCalculation<T>> implements IMST<T>, 
     }
 
     public double getCompactness() {
-        return compactnessCalculation.getCompactness(graph);
+        return hct.getCompactnessCalculation().getCompactness(graph);
     }
 
     public boolean isReadyForMitosis(){
@@ -74,7 +78,7 @@ class MST<T extends Comparable<T> & DistanceCalculation<T>> implements IMST<T>, 
         return getCompactness() > 0.5; // // TODO: 14.09.16 needs real implemenation
     }
 
-    public List<MST<T>> mitosis(){
+    public List<IMST<T>> mitosis(){
         double largestWeight = 0;
         DefaultWeightedEdge largestEdge = null;
         List<DefaultWeightedEdge> edges = new ArrayList<>();
@@ -86,7 +90,7 @@ class MST<T extends Comparable<T> & DistanceCalculation<T>> implements IMST<T>, 
                 largestEdge = edge;
             }
         }
-        List<MST<T>> newGraphs = new ArrayList<>();
+        List<IMST<T>> newGraphs = new ArrayList<>();
         mst.removeEdge(largestEdge);
         newGraphs.add(createSubGraph(mst, mst.getEdgeSource(largestEdge)));
         newGraphs.add(createSubGraph(mst, mst.getEdgeTarget(largestEdge)));
@@ -94,8 +98,8 @@ class MST<T extends Comparable<T> & DistanceCalculation<T>> implements IMST<T>, 
     }
 
     @Override
-    public boolean isCellDeath() {
-        return graph.vertexSet().size() == 0;
+    public boolean isCellDead() {
+        return graph.vertexSet().isEmpty();
     }
 
     @Override
@@ -133,7 +137,7 @@ class MST<T extends Comparable<T> & DistanceCalculation<T>> implements IMST<T>, 
             MSTNode<T> next = iterator.next();
             containedNodes.add(next);
         }
-        MST<T> newSubGraph = new MST<T>();
+        MST<T> newSubGraph = new MST<T>(hct);
         for(MSTNode<T> node : containedNodes){
             newSubGraph.add(node.getValue());
         }

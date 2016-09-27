@@ -10,7 +10,6 @@ import java.io.Serializable;
  */
 public class HCTFloatVectorValue
         implements Comparable<HCTFloatVectorValue>,
-        DistanceCalculation<HCTFloatVectorValue>,
         Serializable{
 
     private final float[] vector;
@@ -38,16 +37,5 @@ public class HCTFloatVectorValue
             return -1;
         }
         return 0;
-    }
-
-    @Override
-    public double distance(HCTFloatVectorValue other) {
-        double dist = 0;
-        float[] otherVector = other.getVector();
-
-        for(int i = 0; i < vector.length; i++){
-            dist += Math.pow(vector[i] - otherVector[i], 2);
-        }
-        return dist;
     }
 }

@@ -9,9 +9,7 @@ import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.explorative.HCT;
-import org.vitrivr.cineast.explorative.HCTCell;
-import org.vitrivr.cineast.explorative.HCTFloatVectorValue;
+import org.vitrivr.cineast.explorative.*;
 
 
 import javax.imageio.ImageIO;
@@ -61,7 +59,7 @@ public class SilvanPlayground {
 
     private static void buildTree() throws Exception {
         DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
-        dbSelector.open("features_averagecolor");
+        dbSelector.open("features_dominantedgegrid16");
         List<Map<String, PrimitiveTypeProvider>> l = dbSelector.getAll();
         List<HCTFloatVectorValue> vectors = new ArrayList<>();
         if (l.size() > 0) {
@@ -87,7 +85,7 @@ public class SilvanPlayground {
         }
 
 
-        HCT<HCTFloatVectorValue> hct = new HCT<>();
+        HCT<HCTFloatVectorValue> hct = new HCT<HCTFloatVectorValue>(new DefaultCompactnessCalculation(), new FloatArrayEuclideanDistance());
         System.in.read();
         int i = 0;
         for (HCTFloatVectorValue vector : vectors) {
@@ -137,21 +135,21 @@ public class SilvanPlayground {
         ImageIO.write(img, "PNG", f);
     }
 
-    private static void visualizeTree(HCTCell<HCTFloatVectorValue> cell, File file) throws Exception {
+    private static void visualizeTree(IHCTCell<HCTFloatVectorValue> cell, File file) throws Exception {
         if(cell.getChildren().size() > 0){
-            for(HCTCell<HCTFloatVectorValue> child : cell.getChildren()){
+            for(IHCTCell<HCTFloatVectorValue> child : cell.getChildren()){
                 if(!file.exists()) file.mkdirs();
                 String cell_nbr = "cell_" + cell.getChildren().indexOf(child);
-                visualizeValue(child.getNucleus().getValue().getVector(), new File(file.toString(), cell_nbr + ".png"));
-//                visualizeValueByThumbnail(child.getNucleus().getValue().getSegment_id(), new File(file.toString(), cell_nbr + ".jpg"));
+//                visualizeValue(child.getNucleus().getValue().getVector(), new File(file.toString(), cell_nbr + ".png"));
+                visualizeValueByThumbnail(child.getNucleus().getValue().getSegment_id(), new File(file.toString(), cell_nbr + ".jpg"));
                 File f = new File(cell_nbr);
                 visualizeTree(child, new File(file.toString(), f.toString()));
             }
         } else{
             file.mkdirs();
             for (HCTFloatVectorValue value : cell.getValues()) {
-                visualizeValue(value.getVector(), new File(file.toString(), "value_" + cell.getValues().indexOf(value) + ".png"));
-//                visualizeValueByThumbnail(value.getSegment_id(), new File(file.toString(), "value_" + cell.getValues().indexOf(value) + ".jpg"));
+//                visualizeValue(value.getVector(), new File(file.toString(), "value_" + cell.getValues().indexOf(value) + ".png"));
+                visualizeValueByThumbnail(value.getSegment_id(), new File(file.toString(), "value_" + cell.getValues().indexOf(value) + ".jpg"));
             }
 
         }

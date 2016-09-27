@@ -34,6 +34,11 @@ public class NoDBSelector implements DBSelector {
   }
 
   @Override
+  public List<Map<String, PrimitiveTypeProvider>> getAll() {
+    return new ArrayList<>(0);
+  }
+
+  @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
       String column, QueryConfig config) {
     return new ArrayList<>(0);
@@ -51,6 +56,11 @@ public class NoDBSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
+    return new ArrayList<>(0);
+  }
+
+  @Override
+  public List<PrimitiveTypeProvider> getAll(String column) {
     return new ArrayList<>(0);
   }
 
