@@ -1,12 +1,9 @@
-package org.vitrivr.cineast.explorative;
+package org.vitrivr.cineast.core.data.hct;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
-/**
- * Created by silvanstich on 26.09.16.
- */
-interface CompactnessCalculation {
+public interface CompactnessCalculation {
 
     double getCompactness(SimpleWeightedGraph<?, DefaultWeightedEdge> graph);
 }

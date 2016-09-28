@@ -1,11 +1,8 @@
-package org.vitrivr.cineast.explorative;
+package org.vitrivr.cineast.core.data.hct;
 
 import java.util.List;
 
-/**
- * Created by silvanstich on 13.09.16.
- */
-public interface IHCTCell<T extends Comparable<T>> {
+interface IHCTCell<T extends Comparable<T>> {
 
     void addChild(IHCTCell<T> child);
 

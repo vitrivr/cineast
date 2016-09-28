@@ -1,16 +1,13 @@
-package org.vitrivr.cineast.explorative;
+package org.vitrivr.cineast.core.data.hct;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by silvanstich on 13.09.16.
- */
+
 public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializable {
 
     private static Logger logger = LogManager.getLogger();
@@ -33,15 +30,15 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
         this.parent = parent;
     }
 
-    public void addValue(T value){
+    public void addValue(T value) {
         mst.add(value);
     }
 
-    public void removeValue(T value){
+    public void removeValue(T value) {
         mst.remove(value);
     }
 
-    public double getDistanceToNucleus(T other) throws Exception{
+    public double getDistanceToNucleus(T other) throws Exception {
         return mst.getNucleus().distance(other);
     }
 
@@ -57,11 +54,13 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
         this.parent = parent;
     }
 
-    public List<IHCTCell<T>> getChildren(){
+    public List<IHCTCell<T>> getChildren() {
         return children;
     }
 
-    public boolean isReadyForMitosis() { return mst.isReadyForMitosis(); }
+    public boolean isReadyForMitosis() {
+        return mst.isReadyForMitosis();
+    }
 
     public List<HCTCell<T>> mitosis() throws Exception {
         List<IMST<T>> msts = mst.mitosis();
@@ -69,12 +68,12 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
         for (IMST<T> mst : msts) {
             HCTCell<T> newCell = new HCTCell<T>(mst, parent, hct);
             newCells.add(newCell);
-            if(parent != null) parent.addChild(newCell);
+            if (parent != null) parent.addChild(newCell);
 
         }
         for (IHCTCell<T> child : children) {
             for (HCTCell<T> newCell : newCells) {
-                if(newCell.getValues().contains(child.getNucleus().getValue())){
+                if (newCell.getValues().contains(child.getNucleus().getValue())) {
                     newCell.addChild(child);
                     child.setParent(newCell);
                     break;
@@ -85,11 +84,13 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
 
     }
 
-    public IMSTNode<T> getNucleus() throws Exception{ return mst.getNucleus(); }
+    public IMSTNode<T> getNucleus() throws Exception {
+        return mst.getNucleus();
+    }
 
     @Override
     public void addChild(IHCTCell child) {
-        if(!children.contains(child)) {
+        if (!children.contains(child)) {
             children.add(child);
         }
     }
@@ -109,11 +110,11 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
         children.remove(child);
     }
 
-    public String toString(){
+    public String toString() {
         try {
             return String.format("HCTCell | isCellDead: %s | isReadyMitosis: %s | Nucleus: <%s>",
                     isCellDeath(), isReadyForMitosis(), getNucleus());
-        } catch (Exception e){
+        } catch (Exception e) {
             return String.format("HCTCell | isCellDead: %s | isReadyMitosis: %s | Nucleus: <%s>",
                     isCellDeath(), isReadyForMitosis(), "###Error while getting the nucleus! " + e.getMessage());
         }

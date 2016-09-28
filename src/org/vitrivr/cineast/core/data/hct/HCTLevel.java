@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.explorative;
+package org.vitrivr.cineast.core.data.hct;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,23 +14,25 @@ public class HCTLevel<T extends Comparable<T>> implements Serializable {
         this.hct = hct;
     }
 
-    public List<HCTCell<T>> getCells(){ return cells;}
+    public List<HCTCell<T>> getCells() {
+        return cells;
+    }
 
-    public void removeCell(IHCTCell<T> cell){
+    public void removeCell(IHCTCell<T> cell) {
         cells.remove(cell);
     }
 
-    public HCTCell<T> addCell(){
+    public HCTCell<T> addCell() {
         HCTCell<T> cell = new HCTCell<T>(hct);
         cells.add(cell);
         return cell;
     }
 
-    public void addCell(HCTCell<T> cell){
+    public void addCell(HCTCell<T> cell) {
         cells.add(cell);
     }
 
-    public String toString(){
+    public String toString() {
         return String.format("HCTLevel | #cells: %s", cells.size());
     }
 }

@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.explorative;
 
+import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
+
 import java.io.Serializable;
 
 /**

@@ -1,10 +1,7 @@
-package org.vitrivr.cineast.explorative;
+package org.vitrivr.cineast.core.data.hct;
 
 import java.util.List;
 
-/**
- * Created by silvanstich on 13.09.16.
- */
 public interface IHCT<T extends Comparable<T>> {
 
     void insert(T nextItem) throws Exception;

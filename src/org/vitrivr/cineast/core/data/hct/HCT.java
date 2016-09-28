@@ -1,8 +1,9 @@
-package org.vitrivr.cineast.explorative;
+package org.vitrivr.cineast.core.data.hct;
 
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.explorative.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;

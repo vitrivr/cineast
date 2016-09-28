@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.explorative;
+package org.vitrivr.cineast.core.data.hct;
 
 import java.io.Serializable;
 
