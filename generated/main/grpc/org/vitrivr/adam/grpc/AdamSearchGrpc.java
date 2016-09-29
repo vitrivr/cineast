@@ -40,13 +40,13 @@ public class AdamSearchGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage,
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adam.grpc.AdamGrpc.PreviewMessage,
       org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> METHOD_PREVIEW =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
               "AdamSearch", "Preview"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.PreviewMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<org.vitrivr.adam.grpc.AdamGrpc.QueryMessage,
@@ -57,6 +57,24 @@ public class AdamSearchGrpc {
               "AdamSearch", "DoQuery"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.QueryMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adam.grpc.AdamGrpc.QueryMessage,
+      org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_STREAMING_QUERY =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING,
+          generateFullMethodName(
+              "AdamSearch", "DoStreamingQuery"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.QueryMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryMessage,
+      org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryResultsMessage> METHOD_DO_BATCH_QUERY =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamSearch", "DoBatchQuery"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryResultsMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<org.vitrivr.adam.grpc.AdamGrpc.QueryMessage,
       org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_PROGRESSIVE_QUERY =
@@ -98,11 +116,17 @@ public class AdamSearchGrpc {
     public void cacheEntity(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage> responseObserver);
 
-    public void preview(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request,
+    public void preview(org.vitrivr.adam.grpc.AdamGrpc.PreviewMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> responseObserver);
 
     public void doQuery(org.vitrivr.adam.grpc.AdamGrpc.QueryMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> responseObserver);
+
+    public io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryMessage> doStreamingQuery(
+        io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> responseObserver);
+
+    public void doBatchQuery(org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryResultsMessage> responseObserver);
 
     public void doProgressiveQuery(org.vitrivr.adam.grpc.AdamGrpc.QueryMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> responseObserver);
@@ -117,9 +141,11 @@ public class AdamSearchGrpc {
 
     public org.vitrivr.adam.grpc.AdamGrpc.AckMessage cacheEntity(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request);
 
-    public org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage preview(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request);
+    public org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage preview(org.vitrivr.adam.grpc.AdamGrpc.PreviewMessage request);
 
     public org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage doQuery(org.vitrivr.adam.grpc.AdamGrpc.QueryMessage request);
+
+    public org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryResultsMessage doBatchQuery(org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryMessage request);
 
     public java.util.Iterator<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> doProgressiveQuery(
         org.vitrivr.adam.grpc.AdamGrpc.QueryMessage request);
@@ -136,10 +162,13 @@ public class AdamSearchGrpc {
         org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> preview(
-        org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request);
+        org.vitrivr.adam.grpc.AdamGrpc.PreviewMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> doQuery(
         org.vitrivr.adam.grpc.AdamGrpc.QueryMessage request);
+
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryResultsMessage> doBatchQuery(
+        org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> getCachedResults(
         org.vitrivr.adam.grpc.AdamGrpc.CachedResultsMessage request);
@@ -177,7 +206,7 @@ public class AdamSearchGrpc {
     }
 
     @java.lang.Override
-    public void preview(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request,
+    public void preview(org.vitrivr.adam.grpc.AdamGrpc.PreviewMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_PREVIEW, getCallOptions()), request, responseObserver);
@@ -188,6 +217,20 @@ public class AdamSearchGrpc {
         io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_DO_QUERY, getCallOptions()), request, responseObserver);
+    }
+
+    @java.lang.Override
+    public io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryMessage> doStreamingQuery(
+        io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
+      return asyncBidiStreamingCall(
+          getChannel().newCall(METHOD_DO_STREAMING_QUERY, getCallOptions()), responseObserver);
+    }
+
+    @java.lang.Override
+    public void doBatchQuery(org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryResultsMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_DO_BATCH_QUERY, getCallOptions()), request, responseObserver);
     }
 
     @java.lang.Override
@@ -235,7 +278,7 @@ public class AdamSearchGrpc {
     }
 
     @java.lang.Override
-    public org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage preview(org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request) {
+    public org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage preview(org.vitrivr.adam.grpc.AdamGrpc.PreviewMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_PREVIEW, getCallOptions(), request);
     }
@@ -244,6 +287,12 @@ public class AdamSearchGrpc {
     public org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage doQuery(org.vitrivr.adam.grpc.AdamGrpc.QueryMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_DO_QUERY, getCallOptions(), request);
+    }
+
+    @java.lang.Override
+    public org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryResultsMessage doBatchQuery(org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_DO_BATCH_QUERY, getCallOptions(), request);
     }
 
     @java.lang.Override
@@ -293,7 +342,7 @@ public class AdamSearchGrpc {
 
     @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage> preview(
-        org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage request) {
+        org.vitrivr.adam.grpc.AdamGrpc.PreviewMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_PREVIEW, getCallOptions()), request);
     }
@@ -303,6 +352,13 @@ public class AdamSearchGrpc {
         org.vitrivr.adam.grpc.AdamGrpc.QueryMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_DO_QUERY, getCallOptions()), request);
+    }
+
+    @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryResultsMessage> doBatchQuery(
+        org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_DO_BATCH_QUERY, getCallOptions()), request);
     }
 
     @java.lang.Override
@@ -317,8 +373,10 @@ public class AdamSearchGrpc {
   private static final int METHODID_CACHE_ENTITY = 1;
   private static final int METHODID_PREVIEW = 2;
   private static final int METHODID_DO_QUERY = 3;
-  private static final int METHODID_DO_PROGRESSIVE_QUERY = 4;
-  private static final int METHODID_GET_CACHED_RESULTS = 5;
+  private static final int METHODID_DO_BATCH_QUERY = 4;
+  private static final int METHODID_DO_PROGRESSIVE_QUERY = 5;
+  private static final int METHODID_GET_CACHED_RESULTS = 6;
+  private static final int METHODID_DO_STREAMING_QUERY = 7;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -345,12 +403,16 @@ public class AdamSearchGrpc {
               (io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.AckMessage>) responseObserver);
           break;
         case METHODID_PREVIEW:
-          serviceImpl.preview((org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage) request,
+          serviceImpl.preview((org.vitrivr.adam.grpc.AdamGrpc.PreviewMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage>) responseObserver);
           break;
         case METHODID_DO_QUERY:
           serviceImpl.doQuery((org.vitrivr.adam.grpc.AdamGrpc.QueryMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage>) responseObserver);
+          break;
+        case METHODID_DO_BATCH_QUERY:
+          serviceImpl.doBatchQuery((org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryMessage) request,
+              (io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryResultsMessage>) responseObserver);
           break;
         case METHODID_DO_PROGRESSIVE_QUERY:
           serviceImpl.doProgressiveQuery((org.vitrivr.adam.grpc.AdamGrpc.QueryMessage) request,
@@ -369,6 +431,9 @@ public class AdamSearchGrpc {
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
+        case METHODID_DO_STREAMING_QUERY:
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.doStreamingQuery(
+              (io.grpc.stub.StreamObserver<org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -396,7 +461,7 @@ public class AdamSearchGrpc {
           METHOD_PREVIEW,
           asyncUnaryCall(
             new MethodHandlers<
-              org.vitrivr.adam.grpc.AdamGrpc.EntityNameMessage,
+              org.vitrivr.adam.grpc.AdamGrpc.PreviewMessage,
               org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage>(
                 serviceImpl, METHODID_PREVIEW)))
         .addMethod(
@@ -406,6 +471,20 @@ public class AdamSearchGrpc {
               org.vitrivr.adam.grpc.AdamGrpc.QueryMessage,
               org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage>(
                 serviceImpl, METHODID_DO_QUERY)))
+        .addMethod(
+          METHOD_DO_STREAMING_QUERY,
+          asyncBidiStreamingCall(
+            new MethodHandlers<
+              org.vitrivr.adam.grpc.AdamGrpc.QueryMessage,
+              org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage>(
+                serviceImpl, METHODID_DO_STREAMING_QUERY)))
+        .addMethod(
+          METHOD_DO_BATCH_QUERY,
+          asyncUnaryCall(
+            new MethodHandlers<
+              org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryMessage,
+              org.vitrivr.adam.grpc.AdamGrpc.BatchedQueryResultsMessage>(
+                serviceImpl, METHODID_DO_BATCH_QUERY)))
         .addMethod(
           METHOD_DO_PROGRESSIVE_QUERY,
           asyncServerStreamingCall(

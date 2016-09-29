@@ -125,7 +125,7 @@ public class ADAMproSelector implements DBSelector {
 	private WhereMessage buildWhereMessage(String key, String value){
 		synchronized (wmBuilder) {
 			wmBuilder.clear();
-			return wmBuilder.setAttribute(key).setValue(value).build();
+			return wmBuilder.setAttribute(key).addValues(DataMessage.newBuilder().setStringData(value)).build();
 		}
 	}
 	
@@ -133,10 +133,16 @@ public class ADAMproSelector implements DBSelector {
         synchronized (wmBuilder) {
             wmBuilder.clear();
             StringBuilder sb = new StringBuilder();
-            sb.append("IN ('");
-            sb.append(String.join("', '", values));
-            sb.append("')");
-            return wmBuilder.setAttribute(key).setValue(sb.toString()).build();
+
+			DataMessage.Builder damBuilder = DataMessage.newBuilder();
+
+			wmBuilder.setAttribute(key);
+
+			for(String value : values){
+				wmBuilder.addValues(damBuilder.setStringData(value).build());
+			}
+
+            return wmBuilder.build();
         }
     }
 	
