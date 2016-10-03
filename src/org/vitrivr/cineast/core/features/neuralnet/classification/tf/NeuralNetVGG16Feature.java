@@ -16,6 +16,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
+import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactory;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.MaxPool;
 import org.vitrivr.cineast.core.util.NeuralNetUtil;
@@ -37,7 +38,14 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     private static final String fullVectorTableName = "features_neuralnet_vgg16_fullvector";
     private static final String generatedLabelsTableName = "features_neuralnet_vgg16_classifiedlabels";
 
-    private VGG16Net net;
+    private VGG16Net cachedNet = null;
+    private VGG16Net net(){
+        if(cachedNet == null){
+            cachedNet = (VGG16Net) factory.get();
+        }
+        return cachedNet;
+    }
+    private NeuralNetFactory factory;
     private float cutoff = 0.2f;
 
     private DBSelector classificationSelector;
@@ -51,7 +59,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         super(fullVectorTableName);
         NeuralNetConfig parsedConfig = NeuralNetConfig.parse(config);
         this.cutoff = parsedConfig.getCutoff();
-        this.net = (VGG16Net) parsedConfig.getNeuralNetFactory().get();
+        this.factory = parsedConfig.getNeuralNetFactory();
     }
 
     /**
@@ -66,7 +74,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     public NeuralNetVGG16Feature(NeuralNetConfig neuralNetConfig) {
         super(fullVectorTableName);
         this.cutoff = neuralNetConfig.getCutoff();
-        this.net = (VGG16Net) neuralNetConfig.getNeuralNetFactory().get();
+        this.factory = neuralNetConfig.getNeuralNetFactory();
     }
 
     /**
@@ -76,10 +84,10 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     public void fillLabels() {
         LOGGER.debug("filling labels");
         List<PersistentTuple> tuples = new ArrayList<>(1000);
-        for (int i = 0; i < net.getSynSetLabels().length; i++) {
-            String[] labels = net.getLabels(net.getSynSetLabels()[i]);
+        for (int i = 0; i < net().getSynSetLabels().length; i++) {
+            String[] labels = net().getLabels(net().getSynSetLabels()[i]);
             for (String label : labels) {
-                PersistentTuple tuple = getClassWriter().generateTuple(UUID.randomUUID().toString(), net.getSynSetLabels()[i], label);
+                PersistentTuple tuple = getClassWriter().generateTuple(UUID.randomUUID().toString(), net().getSynSetLabels()[i], label);
                 tuples.add(tuple);
             }
         }
@@ -108,15 +116,12 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
                     maxIdx = i;
                     max = probabilities[i];
                 }
-                if (probabilities[i] > 0.1) {
-                    LOGGER.trace("Match found for shot {}: {} with probability {}", shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[i])), probabilities[i]);
-                }
             }
-            LOGGER.info("Best Match for shot {}: {} with probability {}", shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[maxIdx])), probabilities[maxIdx]);
+            LOGGER.info("Best Match for shot {}: {} with probability {}", shot.getId(), String.join(", ", net().getLabels(net().getSynSetLabels()[maxIdx])), probabilities[maxIdx]);
             if(probabilities[maxIdx]>0.1){
                 LOGGER.info("Actually persisting result");
                 String id = UUID.randomUUID().toString();
-                PersistentTuple tuple = classificationWriter.generateTuple(id, shot.getId(), net.getSynSetLabels()[maxIdx], probabilities[maxIdx]);
+                PersistentTuple tuple = classificationWriter.generateTuple(id, shot.getId(), net().getSynSetLabels()[maxIdx], probabilities[maxIdx]);
                 classificationWriter.persist(tuple);
             }
 
@@ -128,7 +133,6 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     }
 
     /**
-     * TODO How do we calculate score?
      * Checks if labels have been specified. If no labels have been specified, takes the queryimage.
      * Might perform knn on the 1k-vector in the future.
      * It's also not clear yet if we could combine labels and input image??
@@ -138,55 +142,37 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         LOGGER.entry();
         TimeHelper.tic();
         List<StringDoublePair> _return = new ArrayList<>();
-
-        NeuralNet _net = null;
-        if (this.net != null) {
-            _net = this.net;
-        }
-        if (qc.getNet().isPresent()) {
-            _net = qc.getNet().get();
-        }
-        if (_net == null) {
-            this.net = (VGG16Net) Config.getNeuralNetConfig().getNeuralNetFactory().get(); //cache NN
-            _net = this.net;
-        }
-
         if (!sc.getTags().isEmpty()) {
             Set<String> wnLabels = new HashSet<>();
+            wnLabels.addAll(getClassSelector().getRows(getHumanLabelColName(), sc.getTags().toArray(new String[sc.getTags().size()])).stream().map(row -> row.get(getWnLabelColName()).getString()).collect(Collectors.toList()));
 
-            //TODO Use distinct
-            for (String label : sc.getTags()) {
-                LOGGER.debug("Looking for tag {}", label);
-                wnLabels.addAll(getClassSelector().getRows(getHumanLabelColName(), label).stream().map(row -> row.get(getWnLabelColName()).getString()).collect(Collectors.toList()));
-            }
+            LOGGER.debug("Looking for labels: {}", String.join(", ",wnLabels.toArray(new String[wnLabels.size()])));
             for (Map<String, PrimitiveTypeProvider> row :
                     classificationSelector.getRows(getWnLabelColName(), wnLabels.toArray(new String[wnLabels.size()]))) {
                 LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getDouble(), row.get(getWnLabelColName()).toString());
                 _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getDouble()));
             }
         } else {
-            LOGGER.debug("No tags found, classifying");
-            //TODO Can we just take the most representative frame from the sc? Is that the query image?
+            NeuralNet _net = null;
+            if (qc.getNet().isPresent()) {
+                _net = qc.getNet().get();
+            }
+            if (_net == null) {
+                _net = net();
+            }
             float[] res = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
             List<String> hits = new ArrayList<>();
             for (int i = 0; i < res.length; i++) {
                 if (res[i] > qc.getCutoff().orElse(cutoff)) {
-                    hits.add(net.getSynSetLabels()[i]);
+                    hits.add(_net.getSynSetLabels()[i]);
                 }
             }
             for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows(getWnLabelColName(), hits.toArray(new String[hits.size()]))) {
-                //TODO Handle Duplicates -> Wait for Maxpool-updates
-                //TODO How do we tell the user why we matched
                 LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getDouble(), row.get(getWnLabelColName()).toString());
                 _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getDouble()));
             }
         }
-        LOGGER.trace("maxpooling results");
         _return = MaxPool.maxPoolStringId(_return);
-        if (_return.size() == 0) {
-            LOGGER.warn("No hits found, performing kNN");
-            _return = getSimilar(_net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage()), qc);
-        }
         LOGGER.trace("NeuralNetFeature.getSimilar() done in {}",
                 TimeHelper.toc());
         return LOGGER.exit(_return);
@@ -212,7 +198,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         float[] curr;
         for (Position pos : positions) {
             try {
-                curr = net.classify(Thumbnails.of(img).size(224, 224).crop(pos).asBufferedImage());
+                curr = net().classify(Thumbnails.of(img).size(224, 224).crop(pos).asBufferedImage());
                 probs = NeuralNetUtil.maxpool(curr, probs);
             } catch (IOException e) {
                 LOGGER.error(e);
