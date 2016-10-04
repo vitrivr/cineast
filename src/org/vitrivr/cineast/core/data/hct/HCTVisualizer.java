@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
+import org.vitrivr.cineast.explorative.Plane;
 import org.vitrivr.cineast.explorative.HCTFloatVectorValue;
 
 import javax.imageio.ImageIO;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -96,6 +98,17 @@ public class HCTVisualizer {
             logger.info("File does not exist: " + thumbnail.getPath());
         }
 
+    }
+
+    public static void draw(HCT hct) throws Exception{
+
+        HCTFloatVectorValue nucleusValue = (HCTFloatVectorValue) hct.getRoot().getNucleus().getValue();
+        Plane plane = new Plane((List<HCTFloatVectorValue>) hct.getRoot().getValues());
+        plane.processCollection(nucleusValue);
+        PrintWriter printWriter = new PrintWriter(new File("results/html_output.html"));
+        printWriter.print(plane.toHTML());
+        printWriter.flush();
+        printWriter.close();
     }
 
 }

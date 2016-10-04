@@ -9,9 +9,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by silvanstich on 13.09.16.
- */
 public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
 
     // first element in list is top level, last element is ground level
@@ -181,7 +178,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
 
         IHCTCell<T> parentCell = cellO.getParent();
         if(cells.size() == 0 || levelNo > topLevelNo) return; // experimental
-        if(!parentCell.containsValue(value)) throw new Exception("Parent cell does not contain expectedd nucleus! Child cell: " + cellO);
+        if(!parentCell.containsValue(value)) throw new Exception("Parent cell does not contain expected nucleus! Child cell: " + cellO);
 
         T oldNucleusValue = parentCell.getNucleus().getValue();
         parentCell.removeValue(value);
@@ -277,11 +274,12 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
         return dmin;
     }
 
-    public CompactnessCalculation getCompactnessCalculation() {
+    CompactnessCalculation getCompactnessCalculation() {
         return compactnessCalculation;
     }
 
-    public DistanceCalculation<T> getDistanceCalculation() {
+    DistanceCalculation<T> getDistanceCalculation() {
         return distanceCalculation;
     }
+
 }

@@ -3,10 +3,8 @@ package org.vitrivr.cineast.explorative;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
 import java.io.Serializable;
+import java.util.List;
 
-/**
- * Created by silvanstich on 27.09.16.
- */
 public class FloatArrayEuclideanDistance implements DistanceCalculation<HCTFloatVectorValue>, Serializable {
 
     @Override

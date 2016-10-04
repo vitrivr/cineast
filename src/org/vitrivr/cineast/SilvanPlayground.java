@@ -97,7 +97,8 @@ public class SilvanPlayground {
         ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(new File(folder, "serialized_tree.ser")));
         outputStream.writeObject(hct);
         logger.info("HCT has been written to the file system.");
-    }
 
+        HCTVisualizer.draw(hct);
+    }
 
 }
