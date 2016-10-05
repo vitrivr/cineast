@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class HCTFloatVectorValue
         implements Comparable<HCTFloatVectorValue>,
-        Serializable{
+        Serializable, Printable{
 
     private final float[] vector;
     private final String segment_id;
@@ -37,5 +37,10 @@ public class HCTFloatVectorValue
             return -1;
         }
         return 0;
+    }
+
+    @Override
+    public String print() {
+        return segment_id;
     }
 }

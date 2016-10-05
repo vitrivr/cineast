@@ -54,7 +54,7 @@ public class SilvanPlayground {
 
     private static void buildTree() throws Exception {
         DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
-        dbSelector.open("features_dominantedgegrid16");
+        dbSelector.open("features_averagecolor");
         List<Map<String, PrimitiveTypeProvider>> l = dbSelector.getAll();
         List<HCTFloatVectorValue> vectors = new ArrayList<>();
         if (l.size() > 0) {
@@ -86,7 +86,7 @@ public class SilvanPlayground {
         for (HCTFloatVectorValue vector : vectors) {
             i++;
             hct.insert(vector);
-            if(i == 100) break;
+            if(i == 10000) break;
         }
 
         logger.info("All items inserted...");
@@ -97,8 +97,8 @@ public class SilvanPlayground {
         ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(new File(folder, "serialized_tree.ser")));
         outputStream.writeObject(hct);
         logger.info("HCT has been written to the file system.");
-
-        HCTVisualizer.draw(hct);
+        logger.info("Traversion started!");
+        hct.traverseTree(new PlaneManager<>(new FloatArrayEuclideanDistance()));
     }
 
 }

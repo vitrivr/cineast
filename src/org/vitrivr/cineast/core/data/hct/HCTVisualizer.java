@@ -100,15 +100,15 @@ public class HCTVisualizer {
 
     }
 
-    public static void draw(HCT hct) throws Exception{
-
-        HCTFloatVectorValue nucleusValue = (HCTFloatVectorValue) hct.getRoot().getNucleus().getValue();
-        Plane plane = new Plane((List<HCTFloatVectorValue>) hct.getRoot().getValues());
-        plane.processCollection(nucleusValue);
-        PrintWriter printWriter = new PrintWriter(new File("results/html_output.html"));
-        printWriter.print(plane.toHTML());
-        printWriter.flush();
-        printWriter.close();
-    }
+//    public static void draw(HCT hct) throws Exception{
+//
+//        HCTFloatVectorValue nucleusValue = (HCTFloatVectorValue) hct.getRoot().getNucleus().getValue();
+//        Plane plane = new Plane((List<HCTFloatVectorValue>) hct.getRoot().getValues(), distanceCalculator, representative);
+//        plane.processCollection(nucleusValue);
+//        PrintWriter printWriter = new PrintWriter(new File("results/html_output.html"));
+//        printWriter.print(plane.toHTML());
+//        printWriter.flush();
+//        printWriter.close();
+//    }
 
 }

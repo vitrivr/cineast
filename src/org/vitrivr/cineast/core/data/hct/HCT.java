@@ -282,4 +282,16 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
         return distanceCalculation;
     }
 
+    public void traverseTree(TreeTraverserHorizontal<T> traverserHorizontal) throws Exception {
+        for(HCTLevel<T> level : levels){
+            traverserHorizontal.newLevel();
+            for(HCTCell<T> cell : level.getCells()){
+                traverserHorizontal.newCell();
+                traverserHorizontal.processValues(cell.getValues(), cell.getNucleus().getValue());
+                traverserHorizontal.endCell();
+            }
+            traverserHorizontal.endLevel();
+        }
+    }
+
 }

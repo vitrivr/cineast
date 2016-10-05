@@ -1,20 +1,20 @@
 package org.vitrivr.cineast.explorative;
 
 
-public class VisualizationElement {
+import org.vitrivr.cineast.core.data.hct.HCTVisualizer;
+
+class VisualizationElement<T extends Printable> implements Printable {
 
     private final Position position;
-    private final String key;
-    private final HCTFloatVectorValue vector;
+    private final T vector;
     private final Plane plane;
     private Position posTop;
     private Position posBottom;
     private Position posLeft;
     private Position posRight;
 
-    public VisualizationElement(HCTFloatVectorValue vector, String key, Position position, Plane plane) {
+    VisualizationElement(T vector, Position position, Plane plane) {
         this.vector = vector;
-        this.key = key;
         this.position = position;
         this.plane = plane;
         posTop = new Position(position.getX(), position.getY() + 1);
@@ -23,12 +23,8 @@ public class VisualizationElement {
         posLeft = new Position(position.getX() - 1, position.getY());
     }
 
-    public HCTFloatVectorValue getVector() {
+    public T getVector() {
         return vector;
-    }
-
-    public String getKey() {
-        return key;
     }
 
     public Position getPosition() {
@@ -57,5 +53,11 @@ public class VisualizationElement {
         if(plane.isFreePosition(posBottom)) return posBottom;
         if(plane.isFreePosition(posRight)) return posRight;
         throw new RuntimeException("This is an element without free neighborhood!");
+    }
+
+    @Override
+    public String print() {
+        if(HCTVisualizer.segments.get(vector.print()) == null) return vector.print();
+        return "<img src= /Applications/XAMPP/htdocs/vitrivr-ui/thumbnails/" + HCTVisualizer.segments.get(vector.print()) + "/" + vector.print() + ".jpg></img>";
     }
 }
