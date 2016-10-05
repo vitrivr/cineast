@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.explorative;
 
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
 import java.io.File;
@@ -48,7 +49,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
     @Override
     public void endLevel() {
         List<Plane<T>> actSubPlanes = subPlanes.get(subPlanes.size() - 1);
-        Plane<Plane<T>> plane = new Plane<>(actSubPlanes, (point1, point2) -> distanceCalculation.distance(point1.getRepresentative(), point2.getRepresentative()), actSubPlanes.get(0));
+        Plane<Plane<T>> plane = new Plane<>(actSubPlanes, (point1, point2) -> distanceCalculation.distance(point1.getRepresentative(), point2.getRepresentative()), getMiddleElement(actSubPlanes));
         plane.processCollection();
         File path = new File("results/html/" + timestamp);
         if(!path.exists()) path.mkdirs();
@@ -63,6 +64,27 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
 
+    private Plane<T> getMiddleElement(List<Plane<T>> planes){
+        List<Pair<Plane<T>, Double>> distances = new ArrayList<>();
+        for(Plane<T> plane : planes){
+            double tempDist = 0;
+            for(Plane<T> innerPlane : planes){
+                if(plane != innerPlane){
+                    tempDist += distanceCalculation.distance(plane.getRepresentative(), innerPlane.getRepresentative());
+                }
+            }
+            distances.add(new Pair<>(plane, tempDist));
+        }
+        double minDist = Double.MAX_VALUE;
+        Plane<T> middleElement = null;
+        for(Pair<Plane<T>, Double> pair : distances){
+            if(pair.second < minDist){
+                minDist = pair.second;
+                middleElement = pair.first;
+            }
+        }
+        return middleElement;
     }
 }

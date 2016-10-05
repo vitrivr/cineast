@@ -44,7 +44,7 @@ public class HCTVisualizer {
         }
     }
 
-    private static BufferedImage drawImage(RGBContainer rgb){
+    public static BufferedImage drawImage(RGBContainer rgb){
         BufferedImage img = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = img.createGraphics();
         graphics.setPaint(new Color(rgb.toIntColor()));
@@ -53,7 +53,7 @@ public class HCTVisualizer {
         return img;
     }
 
-    private static void saveImgToFS(BufferedImage img, File path, String filename) throws IOException {
+    public static void saveImgToFS(BufferedImage img, File path, String filename) throws IOException {
         File f = new File(path, filename + ".png");
         ImageIO.write(img, "PNG", f);
     }

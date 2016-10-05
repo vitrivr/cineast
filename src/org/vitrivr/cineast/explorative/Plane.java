@@ -43,10 +43,7 @@ public class Plane<T extends Printable> implements Printable {
             Position firstFreePosition = firstVisElementWithFreeNeighbors.getFirstFreeNeighborPosition();
             VisualizationElement<T> newVisElement = new VisualizationElement<>(nextElement, firstFreePosition, this);
             insert(newVisElement, firstFreePosition);
-
         }
-
-
     }
 
     public T getRepresentative() {

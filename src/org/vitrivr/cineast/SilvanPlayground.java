@@ -2,7 +2,11 @@ package org.vitrivr.cineast;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.color.ColorConverter;
+import org.vitrivr.cineast.core.color.RGBContainer;
+import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.hct.DefaultCompactnessCalculation;
 import org.vitrivr.cineast.core.data.hct.HCT;
 import org.vitrivr.cineast.core.data.hct.HCTVisualizer;
@@ -11,10 +15,15 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.explorative.*;
 
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+
+import static org.vitrivr.cineast.core.data.hct.HCTVisualizer.drawImage;
+import static org.vitrivr.cineast.core.data.hct.HCTVisualizer.saveImgToFS;
 
 /**
  * Created by silvanstich on 08.09.16.
@@ -26,6 +35,10 @@ public class SilvanPlayground {
         logger.info("started...");
 
         try {
+
+            if(args.length == 1 && args[0].equals("getAverageColorImages")){
+                createAverageColorPictures();
+            }
 
             if(args.length == 0){
                 buildTree();
@@ -99,6 +112,43 @@ public class SilvanPlayground {
         logger.info("HCT has been written to the file system.");
         logger.info("Traversion started!");
         hct.traverseTree(new PlaneManager<>(new FloatArrayEuclideanDistance()));
+    }
+
+    private static void createAverageColorPictures() throws IOException {
+        DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
+        dbSelector.open("features_averagecolor");
+        List<Map<String, PrimitiveTypeProvider>> l = dbSelector.getAll();
+
+        HashSet<Pair<String, float[]>> featuresPlusId = new HashSet<>();
+        HashMap<String, String> segments = new HashMap<>();
+
+        for(Map<String, PrimitiveTypeProvider> map: l) {
+            String id = map.get("id").getString();
+            float[] feature = map.get("feature").getFloatArray();
+            Pair<String, float[]> pair = new Pair<>(id, feature);
+            featuresPlusId.add(pair);
+        }
+        dbSelector.close();
+
+        dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
+        dbSelector.open("cineast_segment");
+        List<Map<String, PrimitiveTypeProvider>> allSegments = dbSelector.getAll();
+        for (Map<String, PrimitiveTypeProvider> segment : allSegments) {
+            String segmentId = segment.get("id").getString();
+            String multimediaobject = segment.get("multimediaobject").getString();
+            segments.put(segmentId, multimediaobject);
+        }
+
+        for(Pair<String, float[]> pair : featuresPlusId){
+            String segement = pair.first;
+            String multimediaobject = segments.get(segement);
+
+            BufferedImage img = drawImage(ColorConverter.LabtoRGB(new ReadableLabContainer(pair.second[0], pair.second[1], pair.second[2])));
+            File path = new File("data/averagecolors/" + multimediaobject + "/");
+            if(!path.exists()) path.mkdirs();
+            saveImgToFS(img, path, segement + ".jpg");
+        }
+
     }
 
 }

@@ -58,6 +58,6 @@ class VisualizationElement<T extends Printable> implements Printable {
     @Override
     public String print() {
         if(HCTVisualizer.segments.get(vector.print()) == null) return vector.print();
-        return "<img src= /Applications/XAMPP/htdocs/vitrivr-ui/thumbnails/" + HCTVisualizer.segments.get(vector.print()) + "/" + vector.print() + ".jpg></img>";
+        return "<img src= /Users/silvanstich/IdeaProjects/cineast_new/data/averagecolors/" + HCTVisualizer.segments.get(vector.print()) + "/" + vector.print() + ".jpg.png></img>";
     }
 }
