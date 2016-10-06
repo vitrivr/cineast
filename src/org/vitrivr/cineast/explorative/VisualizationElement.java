@@ -8,19 +8,12 @@ class VisualizationElement<T extends Printable> implements Printable {
     private final Position position;
     private final T vector;
     private final Plane plane;
-    private Position posTop;
-    private Position posBottom;
-    private Position posLeft;
-    private Position posRight;
+
 
     VisualizationElement(T vector, Position position, Plane plane) {
         this.vector = vector;
         this.position = position;
         this.plane = plane;
-        posTop = new Position(position.getX(), position.getY() + 1);
-        posRight = new Position(position.getX() + 1, position.getY());
-        posBottom = new Position(position.getX(), position.getY() - 1);
-        posLeft = new Position(position.getX() - 1, position.getY());
     }
 
     public T getVector() {
@@ -32,32 +25,41 @@ class VisualizationElement<T extends Printable> implements Printable {
     }
 
     public boolean hasFreeNeighborTop(){
-        return plane.isFreePosition(posRight);
+        return plane.isFreePosition(position.getPosTop());
     }
 
     public boolean hasFreeNeighborLeft(){
-        return plane.isFreePosition(posLeft);
+        return plane.isFreePosition(position.getPosLeft());
     }
 
     public boolean hasFreeNeighborBottom(){
-        return plane.isFreePosition(posBottom);
+        return plane.isFreePosition(position.getPosBottom());
     }
 
     public boolean HasFreeNeighborRight(){
-        return plane.isFreePosition(posRight);
+        return plane.isFreePosition(position.getPosRight());
     }
 
     public Position getFirstFreeNeighborPosition(){
-        if(plane.isFreePosition(posTop)) return posTop;
-        if(plane.isFreePosition(posLeft)) return posLeft;
-        if(plane.isFreePosition(posBottom)) return posBottom;
-        if(plane.isFreePosition(posRight)) return posRight;
+        if(plane.isFreePosition(position.getPosTop())) return position.getPosTop();
+        if(plane.isFreePosition(position.getPosLeft())) return position.getPosLeft();
+        if(plane.isFreePosition(position.getPosBottom())) return position.getPosBottom();
+        if(plane.isFreePosition(position.getPosRight())) return position.getPosRight();
         throw new RuntimeException("This is an element without free neighborhood!");
     }
 
     @Override
     public String print() {
-        if(HCTVisualizer.segments.get(vector.print()) == null) return vector.print();
-        return "<img src= /Users/silvanstich/IdeaProjects/cineast_new/data/averagecolors/" + HCTVisualizer.segments.get(vector.print()) + "/" + vector.print() + ".jpg.png></img>";
+        if(HCTVisualizer.segments.get(vector.print()) == null){
+            if(vector == plane.getRepresentative()) {
+                return "<div style=\"background-color:green; padding:10px\">" + vector.print() + "</div>";
+            }
+            return vector.print();
+        }
+        if(vector == plane.getRepresentative()){
+            return "<img style=\" background-color: red; padding: 2px; \" src= /Users/silvanstich/IdeaProjects/cineast_new/data/averagecolors/" + HCTVisualizer.segments.get(vector.print()) + "/" + vector.print() + ".jpg.png></img>";
+        } else {
+            return "<img src= /Users/silvanstich/IdeaProjects/cineast_new/data/averagecolors/" + HCTVisualizer.segments.get(vector.print()) + "/" + vector.print() + ".jpg.png></img>";
+        }
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Plane<T extends Printable> implements Printable {
 
-    private final VisualizationElement[][] plane;
+    private final VisualizationElement<T>[][] plane;
     private final static Logger logger = LogManager.getLogger();
     private final List<VisualizationElement<T>> insertOrderVisualizationElement;
     private final HashSet<T> addedVectors;
@@ -39,8 +39,15 @@ public class Plane<T extends Printable> implements Printable {
 
         while(insertOrderVisualizationElement.size() < vectors.size()){
             VisualizationElement<T> firstVisElementWithFreeNeighbors = getVisualizationItemWithFreeNeighbourhood();
-            T nextElement = getClosestElement(firstVisElementWithFreeNeighbors.getVector());
             Position firstFreePosition = firstVisElementWithFreeNeighbors.getFirstFreeNeighborPosition();
+
+            Position[] neighborhood = firstFreePosition.getNeighbors();
+            List<VisualizationElement<T>> neighbors = new ArrayList<>();
+            for(Position neighborPos : neighborhood){
+                if(getVisElementAtPos(neighborPos) != null) neighbors.add(plane[neighborPos.getX()][neighborPos.getY()]);
+            }
+
+            T nextElement = getClosestElement(neighbors);
             VisualizationElement<T> newVisElement = new VisualizationElement<>(nextElement, firstFreePosition, this);
             insert(newVisElement, firstFreePosition);
         }
@@ -58,12 +65,15 @@ public class Plane<T extends Printable> implements Printable {
         return width;
     }
 
-    private T getClosestElement(T vector) {
+    private T getClosestElement(List<VisualizationElement<T>> elements) {
         double minDist = Double.MAX_VALUE;
         T closestElement = null;
         for(T otherVector : vectors){
-            double actDist = distanceCalculator.distance(vector, otherVector);
-            if(actDist < minDist && otherVector != vector && !addedVectors.contains(otherVector)){
+            double actDist = 0;
+            for(VisualizationElement<T> element : elements){
+                actDist += distanceCalculator.distance(element.getVector(), otherVector);
+            }
+            if(actDist < minDist && !addedVectors.contains(otherVector)){
                 closestElement = otherVector;
             }
         }
@@ -117,6 +127,13 @@ public class Plane<T extends Printable> implements Printable {
         }
         sb.append("</table>");
         return sb.toString();
+    }
+
+    public VisualizationElement<T> getVisElementAtPos(Position p){
+        if(p.getX() < width && p.getY() < height && p.getX() >= 0 && p.getY() >= 0){
+            return plane[p.getX()][p.getY()];
+        }
+        return null;
     }
 
     @Override
