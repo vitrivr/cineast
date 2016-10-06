@@ -3,10 +3,10 @@ package org.vitrivr.cineast.explorative;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
-import org.vitrivr.cineast.core.data.hct.HCTVisualizer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -19,6 +19,8 @@ public class Plane<T extends Printable> implements Printable {
     private final int height;
     private final int width;
     private final List<T> vectors;
+    private final Iterator<T> iterator;
+    private int vectorsPointer = 0;
     private final DistanceCalculation<T> distanceCalculator;
     private final T representative;
 
@@ -26,8 +28,10 @@ public class Plane<T extends Printable> implements Printable {
         this.height = (int)Math.sqrt(vectors.size()) + 1;
         this.width = (int)Math.sqrt(vectors.size()) + 1;
         this.vectors = vectors;
-        this.distanceCalculator = distanceCalculator;
         this.representative = representative;
+        if(vectors.contains(representative)) vectors.remove(representative);
+        this.iterator = vectors.iterator();
+        this.distanceCalculator = distanceCalculator;
         plane = new VisualizationElement[width][height];
         insertOrderVisualizationElement = new ArrayList<>();
         addedVectors = new HashSet<>();
@@ -37,20 +41,28 @@ public class Plane<T extends Printable> implements Printable {
         Position startPos = new Position(width/2, height/2);
         insert(new VisualizationElement<>(representative, startPos, this), startPos);
 
-        while(insertOrderVisualizationElement.size() < vectors.size()){
-            VisualizationElement<T> firstVisElementWithFreeNeighbors = getVisualizationItemWithFreeNeighbourhood();
-            Position firstFreePosition = firstVisElementWithFreeNeighbors.getFirstFreeNeighborPosition();
+        while(iterator.hasNext()){
+            T nextItem = iterator.next();
+            Position optimalPosition = getOptimalPosition(nextItem);
 
-            Position[] neighborhood = firstFreePosition.getNeighbors();
-            List<VisualizationElement<T>> neighbors = new ArrayList<>();
-            for(Position neighborPos : neighborhood){
-                if(getVisElementAtPos(neighborPos) != null) neighbors.add(plane[neighborPos.getX()][neighborPos.getY()]);
-            }
-
-            T nextElement = getClosestElement(neighbors);
-            VisualizationElement<T> newVisElement = new VisualizationElement<>(nextElement, firstFreePosition, this);
-            insert(newVisElement, firstFreePosition);
+            VisualizationElement<T> newVisElement = new VisualizationElement<>(nextItem, optimalPosition, this);
+            insert(newVisElement, optimalPosition);
         }
+    }
+
+    private Position getOptimalPosition(T nextItem){
+
+        List<VisualizationElement<T>> elementsWithFreeNeigbors = getVisualizationItemWithFreeNeighbourhood();
+        double minDist = Double.MAX_VALUE;
+        VisualizationElement<T> optimalItem = null;
+        for(VisualizationElement<T> elementWithFreeNeighbors : elementsWithFreeNeigbors){
+            double actDist = distanceCalculator.distance(elementWithFreeNeighbors.getVector(), nextItem);
+            if(actDist < minDist){
+                optimalItem = elementWithFreeNeighbors;
+                minDist = actDist;
+            }
+        }
+        return optimalItem.getFirstFreeNeighborPosition();
     }
 
     public T getRepresentative() {
@@ -87,13 +99,14 @@ public class Plane<T extends Printable> implements Printable {
         addedVectors.add(newElement.getVector());
     }
 
-    private VisualizationElement<T> getVisualizationItemWithFreeNeighbourhood(){
+    private List<VisualizationElement<T>> getVisualizationItemWithFreeNeighbourhood(){
+        List<VisualizationElement<T>> visualizationElementsWithFreeNeighborhood = new ArrayList<>();
         for(VisualizationElement<T> vElement : insertOrderVisualizationElement){
             if(vElement.hasFreeNeighborTop() || vElement.hasFreeNeighborLeft() || vElement.hasFreeNeighborBottom() || vElement.HasFreeNeighborRight()){
-                return vElement;
+                visualizationElementsWithFreeNeighborhood.add(vElement);
             }
         }
-        return null;
+        return visualizationElementsWithFreeNeighborhood;
     }
 
     boolean isFreePosition(Position pos){
