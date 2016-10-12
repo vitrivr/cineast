@@ -3,9 +3,12 @@ package org.vitrivr.cineast.explorative;
 
 import org.vitrivr.cineast.core.data.hct.HCTVisualizer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class VisualizationElement<T extends Printable> implements Printable {
 
-    private final Position position;
+    private Position position;
     private final T vector;
     private final Plane plane;
 
@@ -22,6 +25,10 @@ class VisualizationElement<T extends Printable> implements Printable {
 
     public Position getPosition() {
         return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public boolean hasFreeNeighborTop(){
@@ -46,6 +53,17 @@ class VisualizationElement<T extends Printable> implements Printable {
         if(plane.isFreePosition(position.getPosBottom())) return position.getPosBottom();
         if(plane.isFreePosition(position.getPosRight())) return position.getPosRight();
         throw new RuntimeException("This is an element without free neighborhood!");
+    }
+
+    public List<VisualizationElement<T>> getNeighbors(){
+        Position[] neighborPositions = position.getNeighbors();
+        List<VisualizationElement<T>> neighbors = new ArrayList<>();
+        for(Position p : neighborPositions){
+            if(!plane.isFreePosition(p)){
+                neighbors.add(plane.getVisElementAtPos(p));
+            }
+        }
+        return neighbors;
     }
 
     @Override

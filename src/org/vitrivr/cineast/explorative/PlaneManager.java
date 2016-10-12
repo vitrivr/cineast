@@ -51,6 +51,9 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         List<Plane<T>> actSubPlanes = subPlanes.get(subPlanes.size() - 1);
         Plane<Plane<T>> plane = new Plane<>(actSubPlanes, (point1, point2) -> distanceCalculation.distance(point1.getRepresentative(), point2.getRepresentative()), getMiddleElement(actSubPlanes));
         plane.processCollection();
+
+
+
         File path = new File("results/html/" + timestamp);
         if(!path.exists()) path.mkdirs();
         File file = new File(path.getPath(), "level_" + (subPlanes.size() - 1) + ".html");

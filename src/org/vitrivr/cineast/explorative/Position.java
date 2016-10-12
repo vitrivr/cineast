@@ -40,4 +40,16 @@ public class Position {
     public Position[] getNeighbors(){
         return new Position[]{getPosTop(), getPosLeft(), getPosBottom(), getPosRight()};
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Position){
+            if(((Position) obj).x == this.x && ((Position) obj).y == y){
+                return true;
+            } else{
+                return false;
+            }
+        }
+        return super.equals(obj);
+    }
 }
