@@ -26,6 +26,7 @@ class ShotProviderThread extends Thread {
 				this.interrupt();
 			}
 		}
+		this.provider.close();
 	}
 
 	

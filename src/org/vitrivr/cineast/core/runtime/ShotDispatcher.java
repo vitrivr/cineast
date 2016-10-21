@@ -93,7 +93,7 @@ public class ShotDispatcher implements Runnable {
 				LOGGER.fatal("Error while reading video: {}", LogHelper.getStackTrace(e));
 			}
 		}
-		
+		this.providerThread.interrupt();
 		this.executor.shutdown();
 		try {
 			this.executor.awaitTermination(15, TimeUnit.MINUTES);
