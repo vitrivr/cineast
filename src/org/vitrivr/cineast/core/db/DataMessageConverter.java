@@ -9,18 +9,18 @@ import org.vitrivr.adam.grpc.AdamGrpc.IntVectorMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.SparseVectorMessage;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.IntArrayIterable;
-import org.vitrivr.cineast.core.data.providers.primitive.BooleanProviderImpl;
-import org.vitrivr.cineast.core.data.providers.primitive.DoubleProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.BooleanTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.DoubleTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProviderImpl;
-import org.vitrivr.cineast.core.data.providers.primitive.FloatProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatVectorProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.IntArrayProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.IntArrayProviderImpl;
-import org.vitrivr.cineast.core.data.providers.primitive.IntProviderImpl;
-import org.vitrivr.cineast.core.data.providers.primitive.LongProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.IntTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.IntVectorProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.LongTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
-import org.vitrivr.cineast.core.data.providers.primitive.StringProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 
 public final class DataMessageConverter {
 
@@ -36,11 +36,11 @@ public final class DataMessageConverter {
 			FeatureVectorMessage featureVectorMessage = message.getFeatureData();
 			switch(featureVectorMessage.getFeatureCase()){
 			case DENSEVECTOR:
-				return new FloatVectorProvider(featureVectorMessage.getDenseVector());
+				return new FloatVectorProvider(convert(featureVectorMessage.getDenseVector()));
 			case INTVECTOR:
-				return new IntVectorProvidre(featureVectorMessage.getIntVector());
+				return new IntVectorProvider(convert(featureVectorMessage.getIntVector()));
 			case SPARSEVECTOR:
-				return new FloatVectorProvider(featureVectorMessage.getSparseVector());
+				return new FloatVectorProvider(convert(featureVectorMessage.getSparseVector()));
 			case FEATURE_NOT_SET:
 			default:
 				return new NothingProvider();
@@ -180,169 +180,52 @@ public final class DataMessageConverter {
 		}
 	}
 	
-	private static class BooleanTypeProvider extends BooleanProviderImpl implements PrimitiveTypeProvider{
-
-		BooleanTypeProvider(boolean value) {
-			super(value);
+	private static float[] convert(DenseVectorMessage message){
+		List<Float> floatlist = message.getVectorList();
+		if(floatlist == null || floatlist.isEmpty()){
+			return FloatArrayProvider.DEFAULT_FLOAT_ARRAY;
 		}
-
-		@Override
-		public ProviderDataType getType() {
-			return ProviderDataType.BOOLEAN;
+		float[] _return = new float[floatlist.size()];
+		int i = 0;
+		for(float f : floatlist){
+			_return[i++] = f;
 		}
-		
+		return _return;
 	}
 	
-	private static class DoubleTypeProvider extends DoubleProviderImpl implements PrimitiveTypeProvider{
-
-		DoubleTypeProvider(double value) {
-			super(value);
-		}
-
-		@Override
-		public ProviderDataType getType() {
-			return ProviderDataType.DOUBLE;
+	private static float[] convert(SparseVectorMessage message) {
+		List<Integer> indexList = message.getPositionList();
+		if(indexList == null || indexList.isEmpty()){
+			return FloatArrayProvider.DEFAULT_FLOAT_ARRAY;
 		}
 		
+		int maxIndex = 0;
+		for(int i : indexList){
+			maxIndex = maxIndex < i ? i : maxIndex;
+		}
+		
+		float[] _return = new float[maxIndex + 1];
+		
+		List<Float> valueList = message.getVectorList();
+		
+		for(int i = 0; i < indexList.size(); ++i){
+			_return[indexList.get(i)] = valueList.get(i);
+		}
+		
+		return _return;
 	}
 	
-	private static class FloatTypeProvider extends FloatProviderImpl implements PrimitiveTypeProvider{
-
-		FloatTypeProvider(float value) {
-			super(value);
+	private static int[] convert(IntVectorMessage message) {
+		List<Integer> intList = message.getVectorList();
+		if(intList == null || intList.isEmpty()){
+			return IntArrayProvider.DEFAULT_INT_ARRAY;
 		}
-
-		@Override
-		public ProviderDataType getType() {
-			return ProviderDataType.FLOAT;
+		int[] _return = new int[intList.size()];
+		int i = 0;
+		for(int j : intList){
+			_return[i++] = j;
 		}
-		
-	}
-	
-	private static class IntTypeProvider extends IntProviderImpl implements PrimitiveTypeProvider{
-
-		IntTypeProvider(int value) {
-			super(value);
-		}
-
-		@Override
-		public ProviderDataType getType() {
-			return ProviderDataType.INT;
-		}
-		
-	}
-	
-	private static class LongTypeProvider extends LongProviderImpl implements PrimitiveTypeProvider{
-
-		LongTypeProvider(long value) {
-			super(value);
-		}
-
-		@Override
-		public ProviderDataType getType() {
-			return ProviderDataType.LONG;
-		}
-		
-	}
-	
-	private static class StringTypeProvider extends StringProviderImpl implements PrimitiveTypeProvider{
-
-		StringTypeProvider(String value) {
-			super(value);
-		}
-
-		@Override
-		public ProviderDataType getType() {
-			return ProviderDataType.STRING;
-		}
-		
-	}
-	
-	private static class NothingProvider implements PrimitiveTypeProvider{
-
-		@Override
-		public ProviderDataType getType() {
-			return ProviderDataType.UNKNOWN;
-		}
-		
-	}
-	
-	private static class FloatVectorProvider extends FloatArrayProviderImpl implements PrimitiveTypeProvider{
-
-		private static float[] convert(DenseVectorMessage message){
-			List<Float> floatlist = message.getVectorList();
-			if(floatlist == null || floatlist.isEmpty()){
-				return FloatArrayProvider.DEFAULT_FLOAT_ARRAY;
-			}
-			float[] _return = new float[floatlist.size()];
-			int i = 0;
-			for(float f : floatlist){
-				_return[i++] = f;
-			}
-			return _return;
-		}
-		
-		private static float[] convert(SparseVectorMessage message) {
-			List<Integer> indexList = message.getPositionList();
-			if(indexList == null || indexList.isEmpty()){
-				return FloatArrayProvider.DEFAULT_FLOAT_ARRAY;
-			}
-			
-			int maxIndex = 0;
-			for(int i : indexList){
-				maxIndex = maxIndex < i ? i : maxIndex;
-			}
-			
-			float[] _return = new float[maxIndex + 1];
-			
-			List<Float> valueList = message.getVectorList();
-			
-			for(int i = 0; i < indexList.size(); ++i){
-				_return[indexList.get(i)] = valueList.get(i);
-			}
-			
-			return _return;
-		}
-
-		FloatVectorProvider(DenseVectorMessage message) {
-			super(convert(message));
-		}
-		
-		FloatVectorProvider(SparseVectorMessage message) {
-			super(convert(message));
-		}
-
-		@Override
-		public ProviderDataType getType() {
-			return ProviderDataType.FLOAT_ARRAY;
-		}
-		
-	}
-	
-	private static class IntVectorProvidre extends IntArrayProviderImpl implements PrimitiveTypeProvider{
-
-		private static int[] convert(IntVectorMessage message) {
-			List<Integer> intList = message.getVectorList();
-			if(intList == null || intList.isEmpty()){
-				return IntArrayProvider.DEFAULT_INT_ARRAY;
-			}
-			int[] _return = new int[intList.size()];
-			int i = 0;
-			for(int j : intList){
-				_return[i++] = j;
-			}
-			return _return;
-		}
-
-		IntVectorProvidre(IntVectorMessage message) {
-			super(convert(message));
-		}
-
-		@Override
-		public ProviderDataType getType() {
-			return ProviderDataType.INT_ARRAY;
-		}
-		
+		return _return;
 	}
 	
 }
