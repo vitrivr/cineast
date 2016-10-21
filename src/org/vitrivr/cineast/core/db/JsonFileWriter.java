@@ -80,7 +80,14 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
   }
 
   
-  class JsonTuple extends PersistentTuple<JsonObject>{
+  @Override
+protected void finalize() throws Throwable {
+	close();
+	super.finalize();
+}
+
+
+class JsonTuple extends PersistentTuple<JsonObject>{
 
     @Override
     public JsonObject getPersistentRepresentation() {
