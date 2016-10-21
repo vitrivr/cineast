@@ -3,10 +3,10 @@ package org.vitrivr.cineast.core.db;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 
 import org.vitrivr.cineast.core.config.Config;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 
 public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
@@ -87,27 +87,43 @@ protected void finalize() throws Throwable {
 }
 
 
-class JsonTuple extends PersistentTuple<JsonObject>{
+	class JsonTuple extends PersistentTuple<JsonObject> {
 
-    @Override
-    public JsonObject getPersistentRepresentation() {
-      
-      int nameIndex = 0;
-      
-      JsonObject _return = new JsonObject();
-      
-      for(Object o : this.elements){
-        if(o instanceof float[]){
-          _return.add(names[nameIndex++], Arrays.toString((float[])o));
-        }else if(o instanceof int[]){
-          _return.add(names[nameIndex++], Arrays.toString((int[])o));
-        }else{
-          _return.add(names[nameIndex++], o.toString());
-        }
-      }
-      
-      return _return;
-    }
-    
-  }
+		@Override
+		public JsonObject getPersistentRepresentation() {
+
+			int nameIndex = 0;
+
+			JsonObject _return = new JsonObject();
+
+			for (Object o : this.elements) {
+				if (o instanceof float[]) {
+					_return.add(names[nameIndex++], toArray((float[]) o));
+				} else if (o instanceof int[]) {
+					_return.add(names[nameIndex++], toArray((int[]) o));
+				} else {
+					_return.add(names[nameIndex++], o.toString());
+				}
+			}
+
+			return _return;
+		}
+	}
+
+	private static JsonArray toArray(float[] arr) {
+		JsonArray jarr = new JsonArray();
+		for (int i = 0; i < arr.length; ++i) {
+			jarr.add(arr[i]);
+		}
+		return jarr;
+	}
+
+	private static JsonArray toArray(int[] arr) {
+		JsonArray jarr = new JsonArray();
+		for (int i = 0; i < arr.length; ++i) {
+			jarr.add(arr[i]);
+		}
+		return jarr;
+	}
+
 }
