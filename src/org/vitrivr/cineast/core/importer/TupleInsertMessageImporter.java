@@ -4,10 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.adam.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 public class TupleInsertMessageImporter implements Importer<TupleInsertMessage>{
@@ -26,6 +31,23 @@ public class TupleInsertMessageImporter implements Importer<TupleInsertMessage>{
 			LOGGER.error("error while reading TupleInsertMessage: {}", LogHelper.getStackTrace(e));
 			return null;
 		}
+	}
+
+	@Override
+	public Map<String, PrimitiveTypeProvider> convert(TupleInsertMessage message) {
+		if(message == null){
+			return null;
+		}
+		
+		Map<String, DataMessage> data = message.getData();
+		
+		HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
+		
+		for(String key : data.keySet()){
+			map.put(key, DataMessageConverter.convert(data.get(key)));
+		}
+		
+		return map;
 	}
 	
 	
