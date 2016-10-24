@@ -23,6 +23,7 @@
 	
 "database":
 	{
-	"writer": "PROTO"
+	"writer": "PROTO",
+	"selector": "NONE"
 	}
 }
