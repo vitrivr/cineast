@@ -8,13 +8,15 @@ import org.vitrivr.cineast.core.util.DecodingError;
 
 class ExtractionTask implements Runnable {
 
-	private Extractor feature;
-	private SegmentContainer shot;
+	private final Extractor feature;
+	private final SegmentContainer shot;
+	private final ExecutionTimeCounter etc;
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	ExtractionTask(Extractor feature, SegmentContainer shot) {
+	ExtractionTask(Extractor feature, SegmentContainer shot, ExecutionTimeCounter etc) {
 		this.feature = feature;
 		this.shot = shot;
+		this.etc = etc;
 	}
 	
 	@Override
@@ -22,7 +24,11 @@ class ExtractionTask implements Runnable {
 		LOGGER.entry();
 		LOGGER.debug("starting {} on shotId {}", feature.getClass().getSimpleName(), shot.getId());
 		try{
+		  long start = System.currentTimeMillis();
 			feature.processShot(shot);
+			if(this.etc != null){
+			  this.etc.reportExecutionTime(this.feature.getClass(), (System.currentTimeMillis() - start));
+			}
 		}catch(DecodingError e){
 			LOGGER.fatal("DECODING ERROR");
 			throw e;
