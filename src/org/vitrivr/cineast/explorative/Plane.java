@@ -66,11 +66,11 @@ public class Plane<T extends Printable> implements Printable {
             VisualizationElement<T> newVisElement = new VisualizationElement<>(nextItem, optimalPosition, this);
             insert(newVisElement, optimalPosition);
         }
-        boolean hasMoved = true;
-        while(hasMoved){
-            hasMoved = rearrangeItems();
-            logger.debug("Rearranging items");
-        }
+//        boolean hasMoved = true;
+//        while(hasMoved){
+//            hasMoved = rearrangeItems();
+//            logger.debug("Rearranging items");
+//        }
     }
 
     private boolean rearrangeItems() {
@@ -172,6 +172,10 @@ public class Plane<T extends Printable> implements Printable {
 
     public int getWidth() {
         return width;
+    }
+
+    public VisualizationElement<T>[][] getPlane() {
+        return plane;
     }
 
     private T getClosestElement(List<VisualizationElement<T>> elements) {

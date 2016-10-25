@@ -99,7 +99,7 @@ public class SilvanPlayground {
         for (HCTFloatVectorValue vector : vectors) {
             i++;
             hct.insert(vector);
-            if(i == 25000) break;
+            if(i == 10000) break;
         }
 
         logger.info("All items inserted...");
