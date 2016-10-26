@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.db;
 
+import com.eclipsesource.json.JsonObject;
+import org.vitrivr.cineast.core.config.Config;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Arrays;
-
-import org.vitrivr.cineast.core.config.Config;
-
-import com.eclipsesource.json.JsonObject;
+import java.util.List;
 
 public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
 
@@ -48,6 +48,17 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     this.first = false;
     return true;
     
+  }
+
+  @Override
+  public boolean persist(List<PersistentTuple> tuples) {
+    boolean success = true;
+    for(PersistentTuple tuple : tuples){
+      if(!persist(tuple)){
+        success = false;
+      }
+    }
+    return success;
   }
 
   public static void setFolder(File outputFolder) {
