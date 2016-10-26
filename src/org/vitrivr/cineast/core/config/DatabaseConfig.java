@@ -2,9 +2,9 @@ package org.vitrivr.cineast.core.config;
 
 import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.ADAMproWriter;
-import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.JsonFileWriter;
+import org.vitrivr.cineast.core.db.NoDBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.ProtobufFileWriter;
 
@@ -18,37 +18,21 @@ public final class DatabaseConfig {
 	private final Writer writer;
 	private final Selector selector;
 	
-	private static final PersistencyWriterSupplier ADAMPRO_WRITER_SUPPLY = new PersistencyWriterSupplier() {
-		
-		@Override
-		public PersistencyWriter<?> get() {
-			return new ADAMproWriter();
-		}
-	};
+	private static final PersistencyWriterSupplier ADAMPRO_WRITER_SUPPLY = () -> new ADAMproWriter();	
+	private static final PersistencyWriterSupplier PROTO_WRITER_SUPPLY = () -> new ProtobufFileWriter();
+	private static final PersistencyWriterSupplier JSON_WRITER_SUPPLY = () -> new JsonFileWriter();
 	
-	private static final PersistencyWriterSupplier PROTO_WRITER_SUPPLY = new PersistencyWriterSupplier() {
-		
-		@Override
-		public PersistencyWriter<?> get() {
-			return new ProtobufFileWriter();
-		}
-	}; 
-	
-	private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = new DBSelectorSupplier(){
-
-		@Override
-		public DBSelector get() {
-			return new ADAMproSelector();
-		}
-		
-	};
+	private static final DBSelectorSupplier NO_SELECTOR_SUPPLY = () -> new NoDBSelector();
+	private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = () -> new ADAMproSelector();
 	
 	public static enum Writer{
 		PROTO,
+		JSON,
 		ADAMPRO
 	}
 	
 	public static enum Selector{
+	  NONE,
 		ADAMPRO
 	}
 	
@@ -87,7 +71,7 @@ public final class DatabaseConfig {
 		return this.port;
 	}
 	
-	public boolean getPplaintext(){
+	public boolean getPlaintext(){
 		return this.plaintext;
 	}
 	
@@ -105,6 +89,8 @@ public final class DatabaseConfig {
 			return ADAMPRO_WRITER_SUPPLY;
 		case PROTO:
 			return PROTO_WRITER_SUPPLY;
+		case JSON:
+		  return JSON_WRITER_SUPPLY;
 		default:
 			throw new IllegalStateException("no supplier for writer " + this.writer);
 			
@@ -115,6 +101,8 @@ public final class DatabaseConfig {
 		switch(this.selector){
 		case ADAMPRO:
 			return ADAMPRO_SELECTOR_SUPPLY;
+		case NONE:
+		  return NO_SELECTOR_SUPPLY;
 		default:
 			throw new IllegalStateException("no supplier for selector " + this.selector);
 			
@@ -129,7 +117,8 @@ public final class DatabaseConfig {
 	 * 	"host" : (string)
 	 * 	"port" : (int)
 	 * 	"plaintext" : (boolean)
-	 *  "writer" : PROTO | ADAMPRO
+	 *  "writer" : PROTO | JSON | ADAMPRO
+	 *  "selector" : NONE | ADAMPRO
 	 * }
 	 * </pre>
 	 * @throws NullPointerException in case provided JsonObject is null

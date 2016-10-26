@@ -5,18 +5,25 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.ExtractorConfig;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.db.SegmentLookup;
 import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.shotboundary.ShotBoundaryDecoder;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
+import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.runtime.ShotDispatcher;
 import org.vitrivr.cineast.core.segmenter.ShotSegmenter;
 import org.vitrivr.cineast.core.util.FileUtil;
@@ -36,6 +43,7 @@ public class ExtractionJobRunner implements Runnable{
 	private String inputId = null;
 	private List<Extractor> extractors = new ArrayList<>();
 	private List<SegmentDescriptor> knownShots = null;
+	private boolean entryExists = false;
 	
 	public ExtractionJobRunner(File jobFile) {
 		try {
@@ -51,6 +59,36 @@ public class ExtractionJobRunner implements Runnable{
 		parseJobConfig(jobConfig);
 	}
 	
+	public ExtractionJobRunner(File input, String id){
+	  this.inputName = input.getName();
+	  if(id != null){
+	    this.inputId = id;
+	  }else{//TODO check id against database
+	    this.inputId = id = "v_" + inputName.replace(' ', '-');
+	  }
+	  if(input.isFile()){
+	    this.inputFile = input;
+	  }else{
+	    this.inputFile = FileUtil.scanFolderForOne(input, FileUtil.VIDEO_FILE_FILTER);
+	    this.subtitleFiles = FileUtil.scanFolderForAll(input, FileUtil.SUBTITLE_FILE_FILTER);
+	  }
+	  
+	  //TODO nicer solution
+	  
+	  Set<Extractor> rset = new HashSet<>();
+	  
+	  for(String category : Config.getRetrieverConfig().getRetrieverCategories()){
+	    for(Retriever r : Config.getRetrieverConfig().getRetrieversByCategory(category).keySet()){
+	      if(r instanceof Extractor){
+	        rset.add((Extractor) r);
+	      }
+	    }
+	  }
+	  
+	  this.extractors.addAll(rset);
+	  
+	}
+	
 	private boolean chechValidity() {
 		if(inputFile == null){
 			LOGGER.error("no input specified");
@@ -60,19 +98,44 @@ public class ExtractionJobRunner implements Runnable{
 			LOGGER.error("Cannot access '{}'", inputFile.getAbsolutePath());
 			return false;
 		}
-		if(inputId == null){ //TODO get id from external provider depending on database setting
-			LOGGER.error("No id specified");
-			return false;
-		}
 		if(inputName == null || inputName.isEmpty()){
-			LOGGER.error("No input name specified");
-			return false;
+      LOGGER.error("No input name specified");
+      return false;
+    }
+		
+		MultimediaObjectLookup lookup = new MultimediaObjectLookup();
+		
+		if(inputId == null){ 
+		  MultimediaObjectDescriptor descriptor = lookup.lookUpObjectByName(inputName);
+		  if(descriptor.exists()){
+		    this.entryExists = true;
+		    this.inputId = descriptor.getId();
+		    LOGGER.info("using id '{}' provided by database", this.inputId);
+		  }else{//TODO get id from external provider depending on database setting
+		    LOGGER.error("No id specified");
+	      return false;
+		  }
 		}
+		
 		if(this.extractors.isEmpty()){
 			LOGGER.error("No feature modules specified for extraction");
 			return false;
 		}
 		
+		//check if entry already exists
+		if(!this.entryExists){
+		  MultimediaObjectDescriptor descriptor = lookup.lookUpObjectById(this.inputId);
+		  if(descriptor.exists()){
+		    this.entryExists = true;
+		    if(!descriptor.getName().equals(this.inputName)){
+		      LOGGER.error("There exists a multimedia object with id '{}' with name '{}' which is different from the specified name '{}'", descriptor.getId(), descriptor.getName(), this.inputName);
+		      lookup.close();
+		      return false;
+		    }
+		  }
+		}
+		
+		lookup.close();
 		return true;
 		
 	}
@@ -268,18 +331,7 @@ public class ExtractionJobRunner implements Runnable{
 			}
 			//... scanning for one
 			LOGGER.info("No valid input file specified, start scanning {}", baseFolder.getAbsolutePath());
-			File[] fileCandidates = baseFolder.listFiles(FileUtil.VIDEO_FILE_FILTER);
-			for(File inputFileCandidate : fileCandidates){
-				try{
-					if(inputFileCandidate.canRead()){
-						this.inputFile = inputFileCandidate;
-						LOGGER.info("Found input file {}", this.inputFile.getAbsolutePath());
-						break;
-					}
-				}catch(SecurityException e){
-					//ignore at this point
-				}
-			}
+			this.inputFile = FileUtil.scanFolderForOne(baseFolder, FileUtil.SUBTITLE_FILE_FILTER);
 		}
 		
 		if(this.inputFile == null){
@@ -349,22 +401,12 @@ public class ExtractionJobRunner implements Runnable{
 		
 		if(this.subtitleFiles == null && baseFolder != null){//start scanning for subtitles
 			LOGGER.info("No subtitles specified, start scanning {} for suitable files", baseFolder.getAbsolutePath());
-			File[] fileCandidates = baseFolder.listFiles(FileUtil.SUBTITLE_FILE_FILTER);
-			this.subtitleFiles = new ArrayList<>(Math.max(1, fileCandidates.length));
-			for(File subtitleFileCandidate : fileCandidates){
-				try{
-					if(subtitleFileCandidate.canRead()){
-						this.subtitleFiles.add(subtitleFileCandidate);
-						LOGGER.info("Found subtitle file {}",subtitleFileCandidate.getAbsolutePath());
-					}
-				}catch(SecurityException e){
-					//ignore at this point
-				}
-			}
+			this.subtitleFiles = FileUtil.scanFolderForAll(baseFolder, FileUtil.SUBTITLE_FILE_FILTER);
+	    LOGGER.info("Found {} subtitle files", subtitleFiles.size());
 		}
 		
 		if(this.subtitleFiles == null){
-			this.subtitleFiles = new ArrayList<>(1);
+			this.subtitleFiles = new ArrayList<>(0);
 		}
 		
 		LOGGER.info("Found {} valid subtitle files", this.subtitleFiles.size());
@@ -411,27 +453,24 @@ public class ExtractionJobRunner implements Runnable{
 			return;
 		}
 		
-		PersistencyWriter<?> writer = Config.getDatabaseConfig().getWriterSupplier().get();
-		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
-		writer.open("cineast_multimediaobject");
-
 		VideoDecoder vd = Config.getDecoderConfig().newVideoDecoder(this.inputFile);
-			
-		PersistentTuple tuple = writer.generateTuple(inputId, 0, inputName, inputFile.getAbsolutePath(), vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
-		writer.persist(tuple);
 		
+		if(!this.entryExists){
+  		PersistencyWriter<?> writer = Config.getDatabaseConfig().getWriterSupplier().get();
+  		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
+  		writer.open("cineast_multimediaobject");
+  		PersistentTuple tuple = writer.generateTuple(inputId, 0, inputName, inputFile.getAbsolutePath(), vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
+  		writer.persist(tuple);
+  		writer.close();
+		}else if(this.knownShots == null || this.knownShots.isEmpty()){ //check for existing shot boundaries
+		  SegmentLookup lookup = new SegmentLookup();
+		  this.knownShots = lookup.lookUpAllSegments(this.inputId);		  
+		  lookup.close();
+		}
 		
 		ShotSegmenter segmenter = new ShotSegmenter(vd, inputId, Config.getDatabaseConfig().getWriterSupplier().get(), knownShots);
 		
-		ExtractorInitializer initializer = new ExtractorInitializer() {
-
-			@Override
-			public void initialize(Extractor e) {
-				e.init(Config.getDatabaseConfig().getWriterSupplier());
-			}
-		};
-
-		ShotDispatcher dispatcher = new ShotDispatcher(this.extractors, initializer, segmenter);
+		ShotDispatcher dispatcher = new ShotDispatcher(this.extractors, new DefaultExtractorInitializer(), segmenter);
 
 		dispatcher.run();
 

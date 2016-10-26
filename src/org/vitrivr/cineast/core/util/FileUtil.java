@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.util;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
 
@@ -83,6 +85,59 @@ public class FileUtil {
 			}
 			return isSubtitleFileName(pathname.getAbsolutePath());
 		}
+	}
+	
+	public static File scanFolderForOne(File folder, FileFilter filter){
+	  if(folder == null){
+	    throw new NullPointerException("folder was null in FileUtil.scanFolder");
+	  }
+	  if(filter == null){
+      throw new NullPointerException("filter was null in FileUtil.scanFolder");
+    }
+	  if(folder.isFile()){
+	    throw new IllegalArgumentException("not a folder: '" + folder.getAbsolutePath() + "'");
+	  }
+	  if(!folder.exists()){
+	    return null;
+	  }
+	  File[] fileCandidates = folder.listFiles(FileUtil.VIDEO_FILE_FILTER);
+    for(File fileCandidate : fileCandidates){
+      try{
+        if(fileCandidate.canRead()){
+         return fileCandidate;
+        }
+      }catch(SecurityException e){
+        //ignore at this point
+      }
+    }
+    return null;
+	}
+	
+	public static List<File> scanFolderForAll(File folder, FileFilter filter){
+	  if(folder == null){
+      throw new NullPointerException("folder was null in FileUtil.scanFolder");
+    }
+    if(filter == null){
+      throw new NullPointerException("filter was null in FileUtil.scanFolder");
+    }
+    if(folder.isFile()){
+      throw new IllegalArgumentException("not a folder: '" + folder.getAbsolutePath() + "'");
+    }
+    if(!folder.exists()){
+      return new ArrayList<File>(0);
+    }
+    File[] fileCandidates = folder.listFiles(FileUtil.VIDEO_FILE_FILTER);
+    ArrayList<File> _return = new ArrayList<>(fileCandidates.length);
+    for(File fileCandidate : fileCandidates){
+      try{
+        if(fileCandidate.canRead()){
+          _return.add(fileCandidate);
+        }
+      }catch(SecurityException e){
+        //ignore at this point
+      }
+    }
+    return _return;    
 	}
 
 }

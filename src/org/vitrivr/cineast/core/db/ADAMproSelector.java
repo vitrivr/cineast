@@ -6,8 +6,20 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.adam.grpc.AdamGrpc;
 import org.vitrivr.adam.grpc.AdamGrpc.*;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage.Code;
+import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.DataMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.DenseVectorMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.DistanceMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.DistanceMessage.DistanceType;
+import org.vitrivr.adam.grpc.AdamGrpc.FeatureVectorMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.FromMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.NearestNeighbourQueryMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.ProjectionMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultTupleMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -108,21 +120,27 @@ public class ADAMproSelector implements DBSelector {
 	private WhereMessage buildWhereMessage(String key, String value){
 		synchronized (wmBuilder) {
 			wmBuilder.clear();
-			return wmBuilder.setAttribute(key).setValue(value).build();
+			return wmBuilder.setAttribute(key).addValues(DataMessage.newBuilder().setStringData(value)).build();
 		}
 	}
-
+	
 	private WhereMessage buildWhereMessage(String key, String... values){
-		synchronized (wmBuilder) {
-			wmBuilder.clear();
-			StringBuilder sb = new StringBuilder();
-			sb.append("IN ('");
-			sb.append(String.join("', '", values));
-			sb.append("')");
-			return wmBuilder.setAttribute(key).setValue(sb.toString()).build();
-		}
-	}
+        synchronized (wmBuilder) {
+            wmBuilder.clear();
+            StringBuilder sb = new StringBuilder();
 
+			DataMessage.Builder damBuilder = DataMessage.newBuilder();
+
+			wmBuilder.setAttribute(key);
+
+			for(String value : values){
+				wmBuilder.addValues(damBuilder.setStringData(value).build());
+			}
+
+            return wmBuilder.build();
+        }
+    }
+	
 	private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column, FeatureVectorMessage fvm, int k, QueryConfig qc){
 		synchronized (nnqmBuilder) {
 			this.nnqmBuilder.clear();
@@ -307,16 +325,16 @@ public class ADAMproSelector implements DBSelector {
 			LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows()");
 			return new ArrayList<>(0);
 		}
-
+		
 		if(values.length == 1){
 			return getRows(fieldName, values[0]);
 		}
-
+		
         WhereMessage where = buildWhereMessage(fieldName, values);
         BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
         return executeBooleanQuery(bqMessage);
     }
-
+	
 	@Override
 	public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
 		WhereMessage where = buildWhereMessage(fieldName, value);		
