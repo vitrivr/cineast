@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.db;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -52,6 +52,26 @@ public class NoDBSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
     return new ArrayList<>(0);
+  }
+
+  @Override
+  public List<PrimitiveTypeProvider> getAll(String column) {
+    return null;
+  }
+
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getAll() {
+    return null;
+  }
+
+  @Override
+  public boolean existsEntity(String name) {
+    return false;
+  }
+
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> preview(int k) {
+    return null;
   }
 
 }
