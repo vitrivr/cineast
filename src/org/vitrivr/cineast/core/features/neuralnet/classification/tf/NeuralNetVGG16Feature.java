@@ -243,7 +243,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         super.initalizePersistentLayer(supply);
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
-        ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("segmentid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition(getWnLabelColName(), AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT));
+        ec.createIdEntity(generatedLabelsTableName, new EntityCreator.AttributeDefinition("segmentid", AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL), new EntityCreator.AttributeDefinition(getWnLabelColName(), AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT, AdamGrpc.HandlerType.RELATIONAL));
         ec.close();
     }
 }

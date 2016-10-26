@@ -60,7 +60,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
         AdamGrpc.AttributeDefinitionMessage.Builder attrBuilder = AdamGrpc.AttributeDefinitionMessage.newBuilder();
-        ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition(wnLabel, AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition(getHumanLabelColName(), AdamGrpc.AttributeType.STRING));
+        ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition(wnLabel, AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL), new EntityCreator.AttributeDefinition(getHumanLabelColName(), AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL));
         ec.close();
     }
 
