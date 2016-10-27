@@ -70,7 +70,7 @@ public class MultimediaObjectLookup{
 			return new MultimediaObjectDescriptor();
 		}
 		
-		if(!checkProvider("duration", durationProvider, ProviderDataType.DOUBLE)){
+		if(!checkProvider("duration", durationProvider, ProviderDataType.FLOAT)){
 			return new MultimediaObjectDescriptor();
 		}	
 		
