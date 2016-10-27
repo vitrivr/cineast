@@ -56,12 +56,12 @@ public class NoDBSelector implements DBSelector {
 
   @Override
   public List<PrimitiveTypeProvider> getAll(String column) {
-    return null;
+    return new ArrayList<>(0);
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
-    return null;
+    return new ArrayList<>(0);
   }
 
   @Override
@@ -71,7 +71,7 @@ public class NoDBSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> preview(int k) {
-    return null;
+    return new ArrayList<>(0);
   }
 
 }
