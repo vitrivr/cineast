@@ -149,10 +149,11 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
             LOGGER.debug("Looking for labels: {}", String.join(", ",wnLabels.toArray(new String[wnLabels.size()])));
             for (Map<String, PrimitiveTypeProvider> row :
                     classificationSelector.getRows(getWnLabelColName(), wnLabels.toArray(new String[wnLabels.size()]))) {
-                LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getDouble(), row.get(getWnLabelColName()).toString());
-                _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getDouble()));
+                LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getFloat(), row.get(getWnLabelColName()).toString());
+                _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getFloat()));
             }
         } else {
+            LOGGER.debug("Starting Sketch-based lookup");
             NeuralNet _net = null;
             if (qc.getNet().isPresent()) {
                 _net = qc.getNet().get();
@@ -168,8 +169,8 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
                 }
             }
             for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows(getWnLabelColName(), hits.toArray(new String[hits.size()]))) {
-                LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getDouble(), row.get(getWnLabelColName()).toString());
-                _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getDouble()));
+                LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getFloat(), row.get(getWnLabelColName()).toString());
+                _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getFloat()));
             }
         }
         _return = MaxPool.maxPoolStringId(_return);
