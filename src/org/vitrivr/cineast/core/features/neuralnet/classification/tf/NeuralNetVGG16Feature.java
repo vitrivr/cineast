@@ -133,9 +133,9 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     }
 
     /**
-     * Checks if labels have been specified. If no labels have been specified, takes the queryimage.
+     * Checks if labels have been specified. If no labels have been specified, takes the query image.
      * Might perform knn on the 1k-vector in the future.
-     * It's also not clear yet if we could combine labels and input image??
+     * It's also not clear yet if we could combine labels and input image
      */
     @Override
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
@@ -160,10 +160,10 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
             if (_net == null) {
                 _net = net();
             }
-            float[] res = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
+            float[] classified = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
             List<String> hits = new ArrayList<>();
-            for (int i = 0; i < res.length; i++) {
-                if (res[i] > qc.getCutoff().orElse(cutoff)) {
+            for (int i = 0; i < classified.length; i++) {
+                if (classified[i] > qc.getCutoff().orElse(cutoff)) {
                     hits.add(_net.getSynSetLabels()[i]);
                 }
             }
@@ -236,7 +236,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     }
 
     /**
-     * Table 1: segmentid | wnLabel | confidence (ex. 4014 | n203843 | 0.4) - generated labels
+     * Table 1: segmentid | wnLabel | confidence (ex. 4014 | n203843 | 0.4) - Stores specific hits from the Neuralnet
      */
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
