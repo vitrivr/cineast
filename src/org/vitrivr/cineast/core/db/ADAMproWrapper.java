@@ -89,19 +89,31 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	}
 	
 	public ListenableFuture<QueryResultsMessage> standardQuery(QueryMessage message){
-		//SettableFuture<QueryResultsMessage> future = SettableFuture.create();
-		//synchronized (this.searchStub) {
-			return this.searchStub.doQuery(message/*, new LastQueryResponseStreamObserver(future)*/);
-		//}
-		//return future;
+			synchronized (this.searchStub){
+				return this.searchStub.doQuery(message);
+			}
 	}
 
 	public ListenableFuture<QueryResultsMessage> previewEntity(PreviewMessage message){
-		ListenableFuture<QueryResultsMessage> future = SettableFuture.create();
+		ListenableFuture<QueryResultsMessage> future;
 		synchronized (this.searchStub) {
 			future = this.searchStub.preview(message);
 		}
 		return future;
+	}
+
+
+	public EntityPropertiesMessage getProperties(EntityNameMessage message) {
+		SettableFuture<EntityPropertiesMessage> future = SettableFuture.create();
+		synchronized (this.searchStub) {
+			this.definitionStub.getEntityProperties(message, new LastObserver<>(future));
+		}
+		try{
+			return future.get();
+		}catch(InterruptedException | ExecutionException e){
+			e.printStackTrace();
+			return null; //TODO
+		}
 	}
 	
 	public void close(){
@@ -113,8 +125,8 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 		this.close();
 		super.finalize();
 	}
-	
-	class LastObserver<T> implements StreamObserver<T>{
+
+    class LastObserver<T> implements StreamObserver<T>{
 
 		private final SettableFuture<T> future;
 		private T last = null;
