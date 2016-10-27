@@ -92,9 +92,9 @@ public class EntityCreator {
 		
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 		
-		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(unique).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(unique).setHandler(AdamGrpc.HandlerType.FILE).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		for(String feature : featrueNames){
-			fields.add(builder.setName(feature).setAttributetype(AttributeType.FEATURE).setPk(false).build());
+			fields.add(builder.setName(feature).setAttributetype(AttributeType.FEATURE).setPk(false).setHandler(AdamGrpc.HandlerType.FILE).build());
 		}
 		
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllAttributes(fields).build();
