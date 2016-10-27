@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.db;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.vitrivr.cineast.core.config.Config;
 
