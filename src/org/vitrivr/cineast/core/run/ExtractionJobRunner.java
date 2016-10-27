@@ -12,7 +12,6 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.ExtractorConfig;
 import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
@@ -472,10 +471,7 @@ public class ExtractionJobRunner implements Runnable{
 		
 		ShotDispatcher dispatcher = new ShotDispatcher(this.extractors, new DefaultExtractorInitializer(), segmenter);
 
-		dispatcher.run();
-
-		vd.close();
-		
+		dispatcher.run();		
 	}
 
 

@@ -5,6 +5,14 @@ public class StatElement {
 	private int count = 0;
 	private float sum = 0, sumsquared = 0;
 	
+	public StatElement(){
+	  
+	}
+	
+	public StatElement(float initialValue){
+    add(initialValue);
+  }
+	
 	public void reset(){
 		this.count = 0;
 		this.sum = 0;
@@ -19,22 +27,25 @@ public class StatElement {
 		return this.sum;
 	}
 	
-	public void add(float f){
+	public StatElement add(float f){
 		this.sum += f;
 		this.sumsquared += f * f;
 		++count;
+		return this;
 	}
 	
-	public void add(float... f){
+	public StatElement add(float... f){
 		for(int i = 0; i < f.length; ++i){
 			this.add(f);
 		}
+		return this;
 	}
 	
-	public void add(FloatVector f){
+	public StatElement add(FloatVector f){
 		for(int i = 0; i < f.getElementCount(); ++i){
 			this.add(f.getElement(i));
 		}
+		return this;
 	}
 	
 	public float getAvg(){

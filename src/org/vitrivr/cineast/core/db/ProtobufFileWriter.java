@@ -88,6 +88,12 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
 		return false;
 	}
 
+  @Override
+  protected void finalize() throws Throwable {
+    close();
+    super.finalize();
+  }
+
 	
 
 }

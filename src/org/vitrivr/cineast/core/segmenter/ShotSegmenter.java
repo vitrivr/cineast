@@ -193,6 +193,12 @@ public class ShotSegmenter implements ShotProvider{
 			}
 		}
 	}
+
+	@Override
+	public void close() {
+		this.pwriter.close();
+		this.vdecoder.close();
+	}
 	
 }
 

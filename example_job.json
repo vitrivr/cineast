@@ -1,19 +1,18 @@
 {
 "input":
 	{
-		"file": "Casino_Royale_Trailer.mp4",
-		"name": "Casino Royale Trailer",
-		"id": "casino_royale_v1"
+	"file": "test.mp4",
+	"name": "A Test Video",
+	"id": "v1"
 	},
 "features":
 	[
 	{"name": "AverageColor"},
+	{"name": "AverageColorARP44"},
 	{"name": "AverageColorGrid8"},
-	{"name": "DominantEdgeGrid8"},
-	{"name": "DominantEdgeGrid16"},
-	{"name": "MedianColor"},
-		{"name": "DominantColors"},
-		{"name": "MedianColorGrid8"}
+	{"name": "CLD"},
+	{"name": "EdgeGrid16"},
+	{"name": "EHD"}
 	],
 
 "exporters":
@@ -21,4 +20,11 @@
 	{"name": "ShotThumbNails"},
 	{"name": "RepresentativeFrameExporter"}
 	]
+	],
+
+"database":
+	{
+	"writer": "PROTO",
+	"selector": "NONE"
+	}
 }
