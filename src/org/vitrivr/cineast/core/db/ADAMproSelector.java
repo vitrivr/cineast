@@ -35,11 +35,11 @@ public class ADAMproSelector implements DBSelector {
 	private ADAMproWrapper adampro = new ADAMproWrapper();
 	
 	private FromMessage.Builder fromBuilder = FromMessage.newBuilder();
-	private QueryMessage.Builder qmBuilder = QueryMessage.newBuilder();
-	private NearestNeighbourQueryMessage.Builder nnqmBuilder = NearestNeighbourQueryMessage.newBuilder();
-	private BooleanQueryMessage.Builder bqmBuilder = BooleanQueryMessage.newBuilder();
-	private WhereMessage.Builder wmBuilder = WhereMessage.newBuilder();
-	private DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
+	private final QueryMessage.Builder qmBuilder = QueryMessage.newBuilder();
+	private final NearestNeighbourQueryMessage.Builder nnqmBuilder = NearestNeighbourQueryMessage.newBuilder();
+	private final BooleanQueryMessage.Builder bqmBuilder = BooleanQueryMessage.newBuilder();
+	private final WhereMessage.Builder wmBuilder = WhereMessage.newBuilder();
+	private final DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static ArrayList<String> hints = new ArrayList<>(1);
@@ -107,9 +107,7 @@ public class ADAMproSelector implements DBSelector {
 		ArrayList<WhereMessage> tmp = new ArrayList<>(1 + (whereMessages == null ? 0 : whereMessages.length));
 		tmp.add(where);
 		if(whereMessages != null){
-			for(WhereMessage w : whereMessages){
-				tmp.add(w);
-			}
+			Collections.addAll(tmp, whereMessages);
 		}
 		synchronized (bqmBuilder) {
 			bqmBuilder.clear();
@@ -127,8 +125,6 @@ public class ADAMproSelector implements DBSelector {
 	private WhereMessage buildWhereMessage(String key, String... values){
         synchronized (wmBuilder) {
             wmBuilder.clear();
-            StringBuilder sb = new StringBuilder();
-
 			DataMessage.Builder damBuilder = DataMessage.newBuilder();
 
 			wmBuilder.setAttribute(key);
@@ -222,11 +218,11 @@ public class ADAMproSelector implements DBSelector {
 			r = f.get();
 		} catch (InterruptedException | ExecutionException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
 		
 		if(r.getResponsesCount() == 0){
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
 		
 		QueryResultInfoMessage response = r.getResponses(0);  //only head (end-result) is important
@@ -291,11 +287,11 @@ public class ADAMproSelector implements DBSelector {
 			result = future.get();
 		} catch (InterruptedException | ExecutionException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
 		
 		if(result.getResponsesCount() == 0){
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
 		
 		QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
@@ -349,21 +345,24 @@ public class ADAMproSelector implements DBSelector {
 	@Override
 	public List<PrimitiveTypeProvider> getAll(String label) {
 		List<Map<String, PrimitiveTypeProvider>> resultList = getAll();
-		List<PrimitiveTypeProvider> _return = resultList.stream().map(row -> row.get(label)).collect(Collectors.toList());
-
-		return _return;
+		return resultList.stream().map(row -> row.get(label)).collect(Collectors.toList());
 	}
 
+	/**
+	 * TODO This is currently an ugly hack where we abuse the preview-function with LIMIT = COUNT() using the getProperties ADAMpro-method.
+	 * Once ADAMpro supports SELECT * FROM $ENTITY, this method should be rewritten
+	 */
 	@Override
 	public List<Map<String, PrimitiveTypeProvider>> getAll() {
-		BooleanQueryMessage bqm;
-		synchronized (bqmBuilder){
-			bqmBuilder.clear();
-			bqm = bqmBuilder.build();
+		EntityPropertiesMessage propertiesMessage = this.adampro.getProperties(EntityNameMessage.newBuilder().setEntity(fromBuilder.getEntity()).build());
+		int count;
+		try{
+			count = Integer.parseInt(propertiesMessage.getProperties().get("count"));
+		}catch(Exception e){
+			count = 1000000;	//You should not get more than 1M tuples into the system anyway. Again, this method is temporary
+								//This comment was written in October '16.
 		}
-		List<Map<String, PrimitiveTypeProvider>> resultList = executeBooleanQuery(bqm);
-
-		return resultList;
+		return preview(count);
 	}
 
 	@Override
@@ -380,21 +379,30 @@ public class ADAMproSelector implements DBSelector {
 			result = f.get();
 		} catch (InterruptedException | ExecutionException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
 
 		if(result.getResponsesCount() == 0){
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
 
 		QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
 
 		List<QueryResultTupleMessage> resultList = response.getResultsList();
+		return resultsToMap(resultList);
+	}
+
+	/**
+	 * @param resultList can be empty
+	 * @return an ArrayList of length one if the resultList is empty, else the  transformed QueryResultTupleMessage
+	 */
+	private List<Map<String, PrimitiveTypeProvider>> resultsToMap(List<QueryResultTupleMessage> resultList) {
 		if(resultList.isEmpty()){
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
 
 		ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(resultList.size());
+
 		for(QueryResultTupleMessage resultMessage : resultList){
 			Map<String, DataMessage> data = resultMessage.getData();
 			Set<String> keys = data.keySet();
@@ -409,42 +417,32 @@ public class ADAMproSelector implements DBSelector {
 	}
 
 	/**
-	 * Executes a bqm and returns the resulting tuples
+	 * Executes a QueryMessage and returns the resulting tuples
 	 * @return an empty ArrayList if an error happens. Else just the list of rows
 	 */
-	private List<Map<String, PrimitiveTypeProvider>> executeBooleanQuery(BooleanQueryMessage bqm) {
-		QueryMessage qbqm = buildQueryMessage(hints, bqm, null, null);
-		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
+	private List<Map<String, PrimitiveTypeProvider>> executeQuery(QueryMessage qm){
+		ListenableFuture<QueryResultsMessage> f = this.adampro.standardQuery(qm);
 		QueryResultsMessage result;
 		try {
 			result = f.get();
 		} catch (InterruptedException | ExecutionException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
-		
+
 		if(result.getResponsesCount() == 0){
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
-		
+
 		QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
-		
+
 		List<QueryResultTupleMessage> resultList = response.getResultsList();
-		if(resultList.isEmpty()){
-			return new ArrayList<>(1);
-		}
-		ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(resultList.size());
-		for(QueryResultTupleMessage resultMessage : resultList){
-			Map<String, DataMessage> data = resultMessage.getData();
-			Set<String> keys = data.keySet();
-			HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
-			for(String key : keys){
-				map.put(key, DataMessageConverter.convert(data.get(key)));
-			}
-			_return.add(map);
-		}
-		
-		return _return;
+		return resultsToMap(resultList);
+	}
+
+	private List<Map<String, PrimitiveTypeProvider>> executeBooleanQuery(BooleanQueryMessage bqm) {
+		QueryMessage qbqm = buildQueryMessage(hints, bqm, null, null);
+		return executeQuery(qbqm);
 	}
 
 	@Override
@@ -466,11 +464,11 @@ public class ADAMproSelector implements DBSelector {
 			result = future.get();
 		} catch (InterruptedException | ExecutionException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
 		
 		if(result.getResponsesCount() == 0){
-			return new ArrayList<>(1);
+			return new ArrayList<>(0);
 		}
 		
 		QueryResultInfoMessage response = result.getResponses(0);  //only head (end-result) is important
@@ -482,18 +480,7 @@ public class ADAMproSelector implements DBSelector {
 			LOGGER.error("error in getNearestNeighbourRows ({}) : {}", ack.getCode(), ack.getMessage());
 			return _return;
 		}
-		
-		for(QueryResultTupleMessage resultMessage : response.getResultsList()){
-			Map<String, DataMessage> data = resultMessage.getData();
-			Set<String> keys = data.keySet();
-			HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
-			for(String key : keys){
-				map.put(key, DataMessageConverter.convert(data.get(key)));
-			}
-			_return.add(map);
-		}
-		
-		return _return;
+		return resultsToMap(response.getResultsList());
 	}
 
 }
