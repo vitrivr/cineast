@@ -42,6 +42,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 
+@SuppressWarnings("deprecation") //some of the new API replacing the deprecated one appears to be not yet available which is why the deprecated one has to be used.
 public class FFMpegVideoDecoder implements VideoDecoder {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -162,6 +163,8 @@ public class FFMpegVideoDecoder implements VideoDecoder {
     avpicture_fill(new AVPicture(pFrameRGB), buffer, AV_PIX_FMT_RGB24,
         this.width, this.height);
     
+    LOGGER.debug("FFMpegVideoDecoder successfully initialized");
+    
   }
   
   private boolean readFrame(boolean queue) {
@@ -244,6 +247,11 @@ public class FFMpegVideoDecoder implements VideoDecoder {
 
   @Override
   public void close() {
+    
+    if(pFormatCtx == null){
+      return;
+    }
+    
     // Free the RGB image
     av_free(buffer);
     av_free(pFrameRGB);
@@ -256,6 +264,7 @@ public class FFMpegVideoDecoder implements VideoDecoder {
 
     // Close the video file
     avformat_close_input(pFormatCtx);
+    pFormatCtx = null;
   }
 
   @Override
@@ -276,6 +285,12 @@ public class FFMpegVideoDecoder implements VideoDecoder {
   @Override
   public int getHeight() {
     return this.height;
+  }
+
+  @Override
+  protected void finalize() throws Throwable {
+    this.clone();
+    super.finalize();
   }
 
 }
