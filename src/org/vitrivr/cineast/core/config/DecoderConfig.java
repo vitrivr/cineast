@@ -23,7 +23,7 @@ public final class DecoderConfig {
 	
 	public static final int DEFAULT_MAX_FRAME_WIDTH = Integer.MAX_VALUE;
 	public static final int DEFAULT_MAX_FRAME_HEIGHT = Integer.MAX_VALUE;
-	public static final Decoder DEFAULT_DECODER = Decoder.JLIBAV;
+	public static final Decoder DEFAULT_DECODER = Decoder.FFMPEG;
 	
 	public DecoderConfig(int maxFrameWidth, int maxFrameHeight, Decoder decoder){
 		this.maxFrameWidth = maxFrameWidth;
