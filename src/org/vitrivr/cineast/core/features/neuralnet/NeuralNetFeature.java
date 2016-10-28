@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 
 /**
  * NeuralNet Feature modules should extend this class
- * It provides label-support as well as provides an easy access to the classlabels
+ * It provides a table where neuralnets can access wordNet-labels and human labels
  */
 public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
@@ -24,15 +24,29 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
     private PersistencyWriter<?> classWriter;
     private DBSelector classSelector;
-    private static final String classTableName =            "features_neuralnet_classlabels";
-    private static final String wnLabel =                   "wnlabel";
-    private static final String humanLabelColName =         "humanlabel";
+    /**
+     * Table-name where the labels are stored
+     */
+    private static final String classTableName = "features_neuralnet_classlabels";
+    /**
+     * Column-name for the WordNet labels
+     */
+    private static final String wnLabel = "wnlabel";
+    /**
+     * Column-name for the human language label corresponding to a WordNet label
+     */
+    private static final String humanLabelColName = "humanlabel";
 
-    /** Just passes the tableName to super **/
-    public NeuralNetFeature(String tableName){
+    /**
+     * Just passes the tableName to super
+     **/
+    public NeuralNetFeature(String tableName) {
         super(tableName, 1f);
     }
 
+    /**
+     * Returns the Table-name where the labels are stored
+     */
     public static String getClassTableName() {
         return classTableName;
     }
@@ -49,7 +63,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
      * TODO This method needs heavy refactoring along with the entitycode because creating entities this way is not really pretty, we're relying on the AdamGRPC
      * Currently wnLabel is a string. That is because we get a unique id which has the shape n+....
      * Schema:
-     * Table 0: segmentid | classificationvector - done by super
+     * Table 0: segmentid | classificationvector - handled by super
      * Table 1: wnLabel | humanlabel
      * Table 1 is only touched for API-Calls about available labels and at init-time - not during extraction
      * It is also used at querytime for the nn-features to determine the wnLabel associated with the concepts they should query for.
@@ -59,7 +73,6 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         super.initalizePersistentLayer(supply);
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
-        AdamGrpc.AttributeDefinitionMessage.Builder attrBuilder = AdamGrpc.AttributeDefinitionMessage.newBuilder();
         ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition(wnLabel, AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL), new EntityCreator.AttributeDefinition(getHumanLabelColName(), AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL));
         ec.close();
     }
@@ -87,22 +100,22 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
     }
 
     /**
-     * Fills concepts into the DB. Concepts are provided at conceptsPath and parsed by a reader
-     * NeuralNets must fill their own labels into the DB
+     * Fills concepts into the DB. Concepts are provided at conceptsPath and parsed by the ConceptReader
+     * NeuralNets must fill their own labels into the DB. If their labels are not generally applicable, they should use their own table.
      */
     public void fillConcepts(String conceptsPath) {
         ConceptReader cr = new ConceptReader(conceptsPath);
 
         LOGGER.info("Filling Labels");
         //Fill Concept map with batch-inserting
-        List<PersistentTuple> tuples = new ArrayList(10000);
+        List<PersistentTuple> tuples = new ArrayList<>(10000);
 
         for (Map.Entry<String, String[]> entry : cr.getConceptMap().entrySet()) {
             for (String label : entry.getValue()) {
                 String id = UUID.randomUUID().toString();
                 PersistentTuple tuple = classWriter.generateTuple(id, label, entry.getKey());
                 tuples.add(tuple);
-                if (tuples.size()==9500) {
+                if (tuples.size() == 9500) {
                     LOGGER.debug("Batch-inserting");
                     classWriter.persist(tuples);
                     tuples.clear();
@@ -113,26 +126,31 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         tuples.clear();
     }
 
-    public abstract void fillLabels();
+    /**
+     * Fills Labels of the neuralNet
+     *
+     * @param options pass Options to the neuralNet such as filepath
+     */
+    public abstract void fillLabels(Map<String, String> options);
 
     /**
-     * Use this writer to fill in your own labels
+     * Use this writer to fill in your own labels into the table which is available to all neural nets
      */
-    protected PersistencyWriter getClassWriter(){
+    protected PersistencyWriter getClassWriter() {
         return this.classWriter;
     }
 
     /**
-     * Get wnLabels associated with concepts here
+     * Get wnLabels associated with concepts from this selector
      */
-    protected  DBSelector getClassSelector(){
+    protected DBSelector getClassSelector() {
         return this.classSelector;
     }
 
     /**
-     * Column name for the wnLabel
+     * Column name for the wnLabel. Example: n2348
      */
-    public String getWnLabelColName(){
+    protected String getWnLabelColName() {
         return wnLabel;
     }
 

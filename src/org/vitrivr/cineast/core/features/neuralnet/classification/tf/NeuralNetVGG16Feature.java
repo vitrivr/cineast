@@ -81,7 +81,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
      * Does not call super.fillLabels() since we do not want that to happen for every NN-Feature
      */
     @Override
-    public void fillLabels() {
+    public void fillLabels(Map<String, String> options) {
         LOGGER.debug("filling labels");
         List<PersistentTuple> tuples = new ArrayList<>(1000);
         for (int i = 0; i < net().getSynSetLabels().length; i++) {

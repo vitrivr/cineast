@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Supplier;
@@ -85,7 +86,7 @@ public class API {
 			feature.init(Config.getDatabaseConfig().getSelectorSupplier());
 			LOGGER.info("Filling labels");
 			feature.fillConcepts(Config.getNeuralNetConfig().getConceptsPath());
-			feature.fillLabels();
+			feature.fillLabels(new HashMap<>());
 
 			disableAllAPI = true;
 			LOGGER.info("done");

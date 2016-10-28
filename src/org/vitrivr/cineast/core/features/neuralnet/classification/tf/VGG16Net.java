@@ -21,12 +21,13 @@ import java.util.List;
  * <p>
  * Be careful when creating multiple tf-instances since the models are quite big
  * <p>
- * Models & Labels are loaded using the classLoader of this class. Currently labels are not stored in the DB
+ * Models & Labels are loaded using the classLoader of this class.
  * <p>
  * Created by silvan on 23.08.16.
  */
 public class VGG16Net implements TensorFlowNet {
 
+    //we satisfy the label-providing part of the NeuralNet-interface with our own label provider
     private SynLabelProvider labelProvider;
     private static final Logger LOGGER = LogManager.getLogger();
     private final tensorflow.Session session = new tensorflow.Session(new tensorflow.SessionOptions());
@@ -56,6 +57,9 @@ public class VGG16Net implements TensorFlowNet {
         labelProvider = new SynLabelProvider(is);
     }
 
+    /**
+     * Load graph into memory
+     */
     private void loadGraph(String model) {
         TimeHelper.tic();
         tensorflow.GraphDef def = new tensorflow.GraphDef();

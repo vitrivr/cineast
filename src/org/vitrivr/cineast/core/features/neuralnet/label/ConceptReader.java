@@ -8,22 +8,23 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Helper for importing concepts
- * Redundant Storage for retrieval-performance
+ * Helper-class for importing concepts. Give your concept-file as input and access the HashMap.
+ * Ideally, you store the concepts in a DB because for large concept-files, this implementation will be memory-intensive.
  * <p>
  * Created by silvan on 26.08.16.
  */
 public class ConceptReader {
 
-    /**
-     * Maps a human-readable concept onto wordnet-labels
-     */
-    Map<String, String[]> conceptMap = new HashMap();
+    private HashMap<String, String[]> conceptMap = new HashMap<>();
 
+    /**
+     * @param location This should point to a File which has the format
+     *                 id,ngram,annotated hyponyms seperated by whitespace
+     *                 So i.e. 1, animal, n... n... n...
+     */
     public ConceptReader(String location) {
         try {
             InputStream is = this.getClass().getResourceAsStream(location);
@@ -32,10 +33,14 @@ public class ConceptReader {
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String line = null;
+            String line;
             //Skip header
             br.readLine();
-            List<String> blacklist = new ArrayList();
+            /*
+              Manual Blacklist for the current concepts-File.
+              Some things are there because they appear twice, some are there because they do not add information
+             */
+            ArrayList<String> blacklist = new ArrayList<>();
             blacklist.add("adult");
             blacklist.add("object");
             blacklist.add("Tree");
@@ -44,21 +49,22 @@ public class ConceptReader {
             blacklist.add("flower with stem");
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
-                if(blacklist.contains(data[1])){
+                if (blacklist.contains(data[1])) {
                     continue;
                 }
                 String[] concepts = data[2].split(" ");
-                if(concepts==null){
-                    concepts = new String[0];
-                }
 
-                conceptMap.put(data[1],concepts);
+                conceptMap.put(data[1], concepts);
             }
         } catch (IOException e) {
             throw new RuntimeException("Couldn't get labels", e);
         }
     }
 
+    /**
+     * @return <human-readable label, [] of wordnet-labels>
+     * Example: <animal, [wn..., wn..., wn...]
+     */
     public Map<String, String[]> getConceptMap() {
         return conceptMap;
     }
