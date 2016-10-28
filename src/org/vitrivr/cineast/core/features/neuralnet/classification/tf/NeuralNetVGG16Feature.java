@@ -56,10 +56,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
      */
     @SuppressWarnings("unused")
     public NeuralNetVGG16Feature(com.eclipsesource.json.JsonObject config) {
-        super(fullVectorTableName);
-        NeuralNetConfig parsedConfig = NeuralNetConfig.parse(config);
-        this.cutoff = parsedConfig.getCutoff();
-        this.factory = parsedConfig.getNeuralNetFactory();
+        this(NeuralNetConfig.parse(config));
     }
 
     /**
