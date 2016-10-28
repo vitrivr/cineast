@@ -69,9 +69,15 @@ public class MultimediaObjectLookup{
 		if(!checkProvider("type", typeProvider, ProviderDataType.INT)){
 			return new MultimediaObjectDescriptor();
 		}
-		
+
+		/**
+		This is because the current setup produces a float-field as duration in the DB, but on old versions of Cineast it is a double
+		 So the code has to accomodate for both options
+		 */
 		if(!checkProvider("duration", durationProvider, ProviderDataType.FLOAT)){
-			return new MultimediaObjectDescriptor();
+			if(!checkProvider("duration", durationProvider, ProviderDataType.DOUBLE)){
+				return new MultimediaObjectDescriptor();
+			}
 		}	
 		
 		
