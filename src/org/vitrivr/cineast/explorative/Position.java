@@ -37,7 +37,7 @@ public class Position {
         return new Position(x, y + 1);
     }
 
-    public Position[] getNeighbors(){
+    public Position[] getNeighborPositions(){
         return new Position[]{getPosTop(), getPosLeft(), getPosBottom(), getPosRight()};
     }
 

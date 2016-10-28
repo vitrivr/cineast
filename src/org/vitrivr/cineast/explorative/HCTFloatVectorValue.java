@@ -2,6 +2,7 @@ package org.vitrivr.cineast.explorative;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
+import org.vitrivr.cineast.core.data.hct.HCTVisualizer;
 
 import java.io.Serializable;
 
@@ -41,6 +42,6 @@ public class HCTFloatVectorValue
 
     @Override
     public String print() {
-        return segment_id;
+        return "<img class=\"thumb\" src=\"/Applications/XAMPP/xamppfiles/htdocs/vitrivr-ui/thumbnails/" + HCTVisualizer.segments.get(segment_id) + "/" + segment_id + ".jpg\"></img>";
     }
 }

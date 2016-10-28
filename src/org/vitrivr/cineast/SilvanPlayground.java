@@ -3,7 +3,6 @@ package org.vitrivr.cineast;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ColorConverter;
-import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.Pair;
@@ -15,7 +14,6 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.explorative.*;
 
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -56,7 +54,7 @@ public class SilvanPlayground {
                 String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date(System.currentTimeMillis()));
                 HCTVisualizer.visualizeTree(hct.getRoot(), new File("results/" + timestamp + "/" + "root"));
             }
-
+            logger.info("# of cache access is " + FloatArrayEuclideanDistance.cacheCounter + " | # of calculations is " + FloatArrayEuclideanDistance.calculationCounter);
             logger.info("Finished!");
 
         } catch (Exception e) {

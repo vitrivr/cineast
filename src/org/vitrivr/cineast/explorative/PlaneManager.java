@@ -12,9 +12,6 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- * Created by silvanstich on 05.10.16.
- */
 public class PlaneManager<T extends Printable> implements TreeTraverserHorizontal<T> {
 
     private final DistanceCalculation<T> distanceCalculation;
@@ -113,13 +110,13 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
     private void printFile(VisualizationElement<T>[][] flatPlane, File fileOptimized) {
         try {
             PrintWriter pw = new PrintWriter(fileOptimized);
-            pw.print("<html><body><table>");
+            pw.print("<html><head><link rel=\"stylesheet\" href=\"/Users/silvanstich/IdeaProjects/cineast_new/results/html/style.css\"></head><body><table>");
             for(int x = 0; x < flatPlane.length; x++){
                 pw.print("<tr>");
                 for(int y = 0; y < flatPlane[x].length; y++){
                     if(flatPlane[x][y] != null){
                         pw.print("<td>");
-                        pw.print("<img src= /Users/silvanstich/IdeaProjects/cineast_new/data/averagecolors/" + HCTVisualizer.segments.get(flatPlane[x][y].getVector().print()) + "/" + flatPlane[x][y].getVector().print() + ".jpg.png></img>");
+                        pw.print(flatPlane[x][y].getVector().print());
                         pw.print("</td>");
                     } else {
                         pw.append("<td></td>");
@@ -169,11 +166,11 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
                     if(flatPlane[i][j] == null) continue;
                     int middleX = flatPlane.length / 2;
                     int middleY = flatPlane.length / 2;
-//                    if(i < middleX && i < flatPlane.length - 1) directions.add(Direction.RIGHT);
-//                    if(i > middleX && i > 0) directions.add(Direction.LEFT);
-                    if(j < middleY && j < flatPlane[i].length - 1) directions.add(Direction.DOWN);
-                    if(j > middleY && j > 0) directions.add(Direction.UP);
-//                    if(counter % 2 == 0) Collections.reverse(directions);
+                    if(i < middleX && i < flatPlane.length - 1) directions.add(Direction.RIGHT);
+                    if(i > middleX && i > 0) directions.add(Direction.LEFT);
+//                    if(j < middleY && j < flatPlane[i].length - 1) directions.add(Direction.DOWN);
+//                    if(j > middleY && j > 0) directions.add(Direction.UP);
+//                    if(cacheCounter % 2 == 0) Collections.reverse(directions);
                     boolean itemHasBeenMoved = moveItem(flatPlane, directions, i, j);
                     if(itemHasBeenMoved) doAgain = true;
                 }
@@ -189,11 +186,11 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
                     if(flatPlane[i][j] == null) continue;
                     int middleX = flatPlane.length / 2;
                     int middleY = flatPlane.length / 2;
-                    if(i < middleX && i < flatPlane.length - 1) directions.add(Direction.RIGHT);
-                    if(i > middleX && i > 0) directions.add(Direction.LEFT);
-//                    if(j < middleY && j < flatPlane[i].length - 1) directions.add(Direction.DOWN);
-//                    if(j > middleY && j > 0) directions.add(Direction.UP);
-//                    if(counter % 2 == 0) Collections.reverse(directions);
+//                    if(i < middleX && i < flatPlane.length - 1) directions.add(Direction.RIGHT);
+//                    if(i > middleX && i > 0) directions.add(Direction.LEFT);
+                    if(j < middleY && j < flatPlane[i].length - 1) directions.add(Direction.DOWN);
+                    if(j > middleY && j > 0) directions.add(Direction.UP);
+//                    if(cacheCounter % 2 == 0) Collections.reverse(directions);
                     boolean itemHasBeenMoved = moveItem(flatPlane, directions, i, j);
                     if(itemHasBeenMoved) doAgain = true;
                 }

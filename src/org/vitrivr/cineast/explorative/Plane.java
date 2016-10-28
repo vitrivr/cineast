@@ -7,129 +7,69 @@ import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
 import java.util.*;
 
-enum Direction {UP, LEFT, DOWN, RIGHT}
-
 public class Plane<T extends Printable> implements Printable {
 
     private final VisualizationElement<T>[][] plane;
     private final static Logger logger = LogManager.getLogger();
-    private final List<VisualizationElement<T>> insertOrderVisualizationElement;
+    private final List<VisualizationElement<T>> insertedItemsWithFreeNeighbors;
     private final HashSet<T> addedVectors;
+    private final List<T> remainingVectors = new ArrayList<>();
     private final int height;
     private final int width;
     private final List<T> vectors;
-    private final Iterator<T> iterator;
     private final DistanceCalculation<T> distanceCalculator;
     private final T representative;
-    private VisualizationElement<T> startItem;
 
-    public Plane(List<T> vectors, DistanceCalculation<T> distanceCalculator, T representative){
-        this.height = ((int)Math.sqrt(vectors.size()) + 1);
-        this.width = ((int)Math.sqrt(vectors.size()) + 1);
+    Plane(List<T> vectors, DistanceCalculation<T> distanceCalculator, T representative){
+        this.height = (int) Math.ceil(Math.sqrt(vectors.size()));
+        this.width = (int) Math.ceil(Math.sqrt(vectors.size()));
         this.vectors = vectors;
+        this.remainingVectors.addAll(vectors);
         this.representative = representative;
         if(vectors.contains(representative)) vectors.remove(representative);
-        this.iterator = vectors.iterator();
         this.distanceCalculator = distanceCalculator;
         plane = new VisualizationElement[width][height];
-        insertOrderVisualizationElement = new ArrayList<>();
+        insertedItemsWithFreeNeighbors = new ArrayList<>();
         addedVectors = new HashSet<>();
     }
 
-    public void processCollection(){
+    void processCollection(){
         Position startPos = new Position(width/2, height/2);
-        startItem = new VisualizationElement<>(representative, startPos, this);
+        VisualizationElement<T> startItem = new VisualizationElement<>(representative, startPos, this);
+        vectors.remove(startItem);
         insert(startItem, startPos);
-
-//        Random rand = new Random();
-//        for(int i = 0; i < 10 && i < vectors.size(); i++){
-//            int x;
-//            int y;
-//            x = rand.nextInt(width);
-//            y = rand.nextInt(height);
-//            T item = vectors.get(rand.nextInt(vectors.size()));
-//            vectors.remove(item);
-//            Position pos = new Position(x,y);
-//            while(!isFreePosition(pos)){
-//                x = rand.nextInt(width);
-//                y = rand.nextInt(height);
-//                pos = new Position(x,y);
-//            }
-//            insert(new VisualizationElement<T>(item, pos, this), pos);
-//        }
-
+        Collections.shuffle(vectors, new Random(1));
+        Iterator<T> iterator = vectors.iterator();
         while(addedVectors.size() < vectors.size()){
-            Pair<Position, T> optimalItemAndPosition = getOptimalItemAndPosition();
-            T nextItem = optimalItemAndPosition.second;
-            Position optimalPosition = optimalItemAndPosition.first;
+//            Pair<Position, T> optimalItemAndPosition = getOptimalItemAndPosition();
+
+            T nextItem = iterator.next();
+            Position optimalPosition = getOptimalPosition(nextItem).first;
 
             VisualizationElement<T> newVisElement = new VisualizationElement<>(nextItem, optimalPosition, this);
             insert(newVisElement, optimalPosition);
         }
-//        boolean hasMoved = true;
-//        while(hasMoved){
-//            hasMoved = rearrangeItems();
-//            logger.debug("Rearranging items");
-//        }
-    }
-
-    private boolean rearrangeItems() {
-        boolean atLeastOneItemHasBeenMoved = false;
-        for(VisualizationElement<T> item : insertOrderVisualizationElement){
-            boolean hasBeenMoved = false;
-            Position p = item.getPosition();
-            Position center = new Position(width/2, height/2);
-            Direction[] directions = new Direction[2];
-            if(p.getX() > center.getX()) directions[0] = Direction.LEFT;
-            if(p.getX() < center.getX()) directions[0] = Direction.RIGHT;
-            if(p.getY() > center.getY()) directions[1] = Direction.DOWN;
-            if(p.getY() < center.getY()) directions[1] = Direction.UP;
-            hasBeenMoved = moveItem(item, directions);
-            if(hasBeenMoved) atLeastOneItemHasBeenMoved = true;
-
-        }
-        return atLeastOneItemHasBeenMoved;
-    }
-
-    private boolean moveItem(VisualizationElement<T> item, Direction[] directions){
-        for(Direction d : directions){
-            if(d == null) continue;
-            Position oldPos = item.getPosition();
-            Position newPos = null;
-            if(d == Direction.UP){
-                newPos = new Position(oldPos.getX(), oldPos.getY() + 1);
-            }
-            if(d == Direction.LEFT){
-                newPos = new Position(oldPos.getX() - 1, oldPos.getY());
-            }
-            if(d == Direction.DOWN){
-                newPos = new Position(oldPos.getX(), oldPos.getY() - 1);
-            }
-            if(d == Direction.RIGHT){
-                newPos = new Position(oldPos.getX() + 1, oldPos.getY());
-            }
-            if(isFreePosition(newPos)){
-                plane[oldPos.getX()][oldPos.getY()] = null;
-                item.setPosition(newPos);
-                plane[newPos.getX()][newPos.getY()] = item;
-                return true;
-            }
-        }
-        return false;
     }
 
     private Pair<Position, Double> getOptimalPosition(T nextItem){
 
-        List<VisualizationElement<T>> elementsWithFreeNeigbors = getVisualizationItemWithFreeNeighbourhood();
         double minDist = Double.MAX_VALUE;
         Position optimalPosition = null;
-        for(VisualizationElement<T> elementWithFreeNeighbors : elementsWithFreeNeigbors){
-            for(Position p : elementWithFreeNeighbors.getPosition().getNeighbors()){
+        Iterator<VisualizationElement<T>> iterator = insertedItemsWithFreeNeighbors.iterator();
+        while(iterator.hasNext()){
+            VisualizationElement<T> elementWithFreeNeighbors = iterator.next();
+            if(!elementWithFreeNeighbors.hasFreeNeighborTop() && !elementWithFreeNeighbors.hasFreeNeighborLeft()
+                    && !elementWithFreeNeighbors.hasFreeNeighborBottom() && !elementWithFreeNeighbors.HasFreeNeighborRight()){
+                iterator.remove();
+                continue;
+            }
+
+            for(Position p : elementWithFreeNeighbors.getPosition().getNeighborPositions()){
                 if(p.getX() < 0 || p.getY() < 0 || p.getX() >= width || p.getY() >= height) continue;
                 double actDist = 0;
                 int nbrOfNeighbors = 0;
                 if(getVisElementAtPos(p) != null) continue;
-                for(Position pos : p.getNeighbors()){
+                for(Position pos : p.getNeighborPositions()){
                     VisualizationElement<T> element = getVisElementAtPos(pos);
                     if(element != null){
                         actDist += distanceCalculator.distance(element.getVector(), nextItem);
@@ -150,19 +90,18 @@ public class Plane<T extends Printable> implements Printable {
         T optimalVector = null;
         Position optimalPosition = null;
         double minDist = Double.MAX_VALUE;
-        for (T vector : vectors) {
-            if(addedVectors.contains(vector)) continue;
-            Pair<Position, Double> optmimumPerVektor = getOptimalPosition(vector);
-            if(minDist > optmimumPerVektor.second){
-                minDist = optmimumPerVektor.second;
-                optimalPosition = optmimumPerVektor.first;
+        for (T vector : remainingVectors) {
+            Pair<Position, Double> optimumPerVector = getOptimalPosition(vector);
+            if(minDist > optimumPerVector.second){
+                minDist = optimumPerVector.second;
+                optimalPosition = optimumPerVector.first;
                 optimalVector = vector;
             }
         }
         return new Pair<>(optimalPosition, optimalVector);
     }
 
-    public T getRepresentative() {
+    T getRepresentative() {
         return representative;
     }
 
@@ -174,40 +113,16 @@ public class Plane<T extends Printable> implements Printable {
         return width;
     }
 
-    public VisualizationElement<T>[][] getPlane() {
+    VisualizationElement<T>[][] getPlane() {
         return plane;
     }
 
-    private T getClosestElement(List<VisualizationElement<T>> elements) {
-        double minDist = Double.MAX_VALUE;
-        T closestElement = null;
-        for(T otherVector : vectors){
-            double actDist = 0;
-            for(VisualizationElement<T> element : elements){
-                actDist += distanceCalculator.distance(element.getVector(), otherVector);
-            }
-            if(actDist < minDist && !addedVectors.contains(otherVector)){
-                closestElement = otherVector;
-            }
-        }
-        return closestElement;
-    }
-
     private void insert(VisualizationElement<T> newElement, Position position){
-        if(plane[position.getX()][position.getY()] != null) logger.debug("The position (" + position.getX() + ", " + position.getY() + ") is already in use!");
+        if(plane[position.getX()][position.getY()] != null) logger.info("The position (" + position.getX() + ", " + position.getY() + ") is already in use!");
         plane[position.getX()][position.getY()] = newElement;
-        insertOrderVisualizationElement.add(newElement);
+        insertedItemsWithFreeNeighbors.add(newElement);
         addedVectors.add(newElement.getVector());
-    }
-
-    private List<VisualizationElement<T>> getVisualizationItemWithFreeNeighbourhood(){
-        List<VisualizationElement<T>> visualizationElementsWithFreeNeighborhood = new ArrayList<>();
-        for(VisualizationElement<T> vElement : insertOrderVisualizationElement){
-            if(vElement.hasFreeNeighborTop() || vElement.hasFreeNeighborLeft() || vElement.hasFreeNeighborBottom() || vElement.HasFreeNeighborRight()){
-                visualizationElementsWithFreeNeighborhood.add(vElement);
-            }
-        }
-        return visualizationElementsWithFreeNeighborhood;
+        remainingVectors.remove(newElement.getVector());
     }
 
     boolean isFreePosition(Position pos){
@@ -221,7 +136,15 @@ public class Plane<T extends Printable> implements Printable {
         return false;
     }
 
-    public String toHTML(){
+    VisualizationElement<T> getVisElementAtPos(Position p){
+        if(p.getX() < width && p.getY() < height && p.getX() >= 0 && p.getY() >= 0){
+            return plane[p.getX()][p.getY()];
+        }
+        return null;
+    }
+
+    @Override
+    public String print() {
         StringBuilder sb = new StringBuilder();
         sb.append("<table>");
         for(int i = 0; i < width; i++){
@@ -241,17 +164,5 @@ public class Plane<T extends Printable> implements Printable {
         }
         sb.append("</table>");
         return sb.toString();
-    }
-
-    public VisualizationElement<T> getVisElementAtPos(Position p){
-        if(p.getX() < width && p.getY() < height && p.getX() >= 0 && p.getY() >= 0){
-            return plane[p.getX()][p.getY()];
-        }
-        return null;
-    }
-
-    @Override
-    public String print() {
-        return toHTML();
     }
 }
