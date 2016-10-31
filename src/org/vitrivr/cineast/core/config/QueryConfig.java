@@ -49,9 +49,23 @@ public class QueryConfig {
 		return this;
 	}
 	
+	public QueryConfig setDistanceIfEmpty(Distance distance){
+	  if(this.distance == null){
+	    return setDistance(distance);
+	  }
+	  return this;
+	}
+	
 	public QueryConfig setDistanceWeights(float[] weights){
 		this.distanceWeights = weights;
 		return this;
+	}
+	
+	public QueryConfig setDistanceWeightsIfEmpty(float[] weights){
+	  if(this.distanceWeights == null){
+	    return setDistanceWeights(weights);
+	  }
+	  return this;
 	}
 	
 	public QueryConfig setNorm(float norm){
@@ -66,7 +80,18 @@ public class QueryConfig {
 		return this;
 	}
 	
+	public QueryConfig setNormIfEmty(float norm){
+	  if(Float.isNaN(this.norm)){
+	    return setNorm(norm);
+	  }
+	  return this;
+	}
+	
 	public QueryConfig clone(){
 		return new QueryConfig(this);
+	}
+	
+	public static QueryConfig clone(QueryConfig qc){
+	  return new QueryConfig(qc);
 	}
 }
