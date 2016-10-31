@@ -113,6 +113,14 @@ public class Config {
         }
     }
 
+    public static void setVisualizationConfig(JsonObject obj) {
+        try {
+            visualizationConfig = VisualizationConfig.parse(obj);
+        } catch (UnsupportedOperationException | IllegalArgumentException | NullPointerException e) {
+            LOGGER.warn("could not parse 'visualization' config: {}", e.getMessage());
+        }
+    }
+
     private static void parse(InputStream in) throws IOException {
         JsonObject obj = null;
         try {
@@ -146,6 +154,10 @@ public class Config {
                 }
                 case "neuralnet": {
                     setNeuralNetConfig(obj.get("neuralnet").asObject());
+                    break;
+                }
+                case "visualization": {
+                    setVisualizationConfig(obj.get("visualization").asObject());
                     break;
                 }
                 case "api": {

@@ -273,7 +273,7 @@ public class JSONAPIThread extends Thread {
 				
 				Set<String> categories = categoryMap.keySet();
 				
-				
+
 				List<StringDoublePair> result;
 				for(String category : categories){
 					TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
@@ -317,7 +317,7 @@ public class JSONAPIThread extends Thread {
 						videoids = JSONUtils.printVideosBatched(printer, list, videoids);
 						shotids = JSONUtils.printShotsBatched(printer, list, shotids);
 						JSONUtils.printResultsBatched(printer, list, category, 1);
-						
+
 					}
 					
 					
@@ -426,7 +426,7 @@ public class JSONAPIThread extends Thread {
 
 			case "getVisualizations":{
 				JsonArray visual = new JsonArray();
-				for(Class<? extends Visualization> visualization: VisualizationConfig.visualizations){
+				for(Class<? extends Visualization> visualization: Config.getVisualizationConfig().getVisualizations()){
 					Visualization obj = visualization.newInstance();
 					JsonObject element = new JsonObject();
 					element.add("className", visualization.getCanonicalName());

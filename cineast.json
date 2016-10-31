@@ -17,7 +17,7 @@
 	},
 	
 	"extractor": {
-		"threadPoolSize": 6
+		"threadPoolSize": 2
 	},
 	
 	"imagecache": {
@@ -28,6 +28,10 @@
 	"api": {
 		"jsonApiPort": 12345,
 		"enableCLI": true
+	},
+	"visualization": {
+		"cacheEnabled:": true,
+		"cachePath": "mycache/"
 	}
 
 }
