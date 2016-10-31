@@ -465,33 +465,41 @@ public class JSONAPIThread extends Thread {
 					_return.add("visualizationError", "Invalid visualizationClass!");
 					break;
 				}
-				String objectId = null;
+				List<String> objectIds = new ArrayList<String>();
 				switch(visualizationType){
 					case VISUALIZATION_SEGMENT:
-						objectId = clientJSON.get("segmentId").asString();
+						objectIds.add(clientJSON.get("segmentId").asString());
 						break;
 					case VISUALIZATION_MULTIMEDIAOBJECT:
-						objectId = clientJSON.get("multimediaobjectId").asString();
+						objectIds.add(clientJSON.get("multimediaobjectId").asString());
+						break;
+					case VISUALIZATION_MULTIPLESEGMENTS:
+						for(JsonValue i:clientJSON.get("segmentIds").asArray()) {
+							objectIds.add(i.asString());
+						}
 						break;
 					default:
 						LOGGER.error("Missing VisualizationType in API implementation!");
 						break;
 				}
 				Visualization visualization = (Visualization)visualizationClass.newInstance();
-				String result = VisualizationCache.getFromCache(visualization.getDisplayName(), visualizationType, objectId);
+				String result = VisualizationCache.getFromCache(visualization.getDisplayName(), visualizationType, objectIds);
 				if(result == null) {
 					visualization.init(Config.getDatabaseConfig().getSelectorSupplier());
 					switch(visualizationType){ //I'm not completely happy that I have to use the same switch cases again, should be possible in a better way
 						case VISUALIZATION_MULTIMEDIAOBJECT:
-							result = visualization.visualizeMultimediaobject(objectId);
+							result = visualization.visualizeMultimediaobject(objectIds.get(0));
 							break;
 						case VISUALIZATION_SEGMENT:
-							result = visualization.visualizeSegment(objectId);
+							result = visualization.visualizeSegment(objectIds.get(0));
+							break;
+						case VISUALIZATION_MULTIPLESEGMENTS:
+							result = visualization.visualizeMultipleSegments(objectIds);
 							break;
 						default:
 							break;
 					}
-					VisualizationCache.cacheResult(visualization.getDisplayName(), visualizationType, objectId, result);
+					VisualizationCache.cacheResult(visualization.getDisplayName(), visualizationType, objectIds, result);
 				}
 				_return.add("resultData", result);
 				_return.add("resultType", visualization.getResultType().toString());

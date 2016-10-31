@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Created by sein on 15.09.16.
@@ -27,18 +28,18 @@ public class VisualizationCache {
     }
   }
 
-  public static String cacheResult(String visualization, VisualizationType visualizationType, String objectId, String data){
+  public static String cacheResult(String visualization, VisualizationType visualizationType, List<String> objectIds, String data){
     if(!cacheEnabled){
       return data;
     }
     File visualizationDir = new File(cachePath + "/" + visualizationType.toString());
     visualizationDir.mkdirs();
-    File cache = new File(visualizationDir.getAbsolutePath() + "/" + objectId + "-" + visualization + ".cache");
+    File cache = new File(visualizationDir.getAbsolutePath() + "/" + String.join("-", objectIds.toArray(new String[objectIds.size()])) + "-" + visualization + ".cache");
     try {
       PrintWriter out = new PrintWriter(cache);
       out.println(data);
       out.close();
-      LOGGER.debug("Cached visualization for '{}-{}-{}' ", visualization, visualizationType.toString(), objectId);
+      LOGGER.debug("Cached visualization for '{}-{}-{}' ", visualization, visualizationType.toString(), objectIds);
     } catch (FileNotFoundException e) {
       LOGGER.warn("Failed to cache '{}'", cache.getAbsoluteFile());
       e.printStackTrace();
@@ -46,13 +47,13 @@ public class VisualizationCache {
     return data;
   }
 
-  public static String getFromCache(String visualization, VisualizationType visualizationType, String objectId){
+  public static String getFromCache(String visualization, VisualizationType visualizationType, List<String> objectIds){
     if(!cacheEnabled){
       return null;
     }
     File visualizationDir = new File(cachePath + "/" + visualizationType.toString());
     visualizationDir.mkdirs();
-    String filePath = visualizationDir.getAbsolutePath() + "/" + objectId + "-" + visualization + ".cache";
+    String filePath = visualizationDir.getAbsolutePath() + "/" + String.join("-", objectIds.toArray(new String[objectIds.size()])) + "-" + visualization + ".cache";
     File cache = new File(filePath);
     String data = null;
     if(cache.exists()){

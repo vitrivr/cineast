@@ -5,5 +5,6 @@ package org.vitrivr.cineast.art.modules.visualization;
  */
 public enum VisualizationResult {
   IMAGE,
-  GRAPH_SUNBURST
+  GRAPH_SUNBURST,
+  GRAPH_STREAMGRAPH
 }

@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 
@@ -50,6 +51,10 @@ public abstract class AbstractVisualizationModule implements Visualization {
   public String visualizeSegment(String segmentId) {
     return null;
   }
+
+  public String visualizeMultipleSegments(List<String> segmentIds){ return null; }
+
+  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){ return null; }
 
   public String visualizeMultimediaobject(String multimediaobjectId) {
     return null;

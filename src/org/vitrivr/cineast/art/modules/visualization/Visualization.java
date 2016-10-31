@@ -18,6 +18,8 @@ public interface Visualization {
 
   String visualizeSegment(String segmentId);
 
+  String visualizeMultipleSegments(List<String> segmentIds);
+
   String visualizeMultimediaobject(String multimediaobjectId);
 
   void finish();

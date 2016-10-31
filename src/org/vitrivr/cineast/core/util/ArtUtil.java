@@ -120,4 +120,22 @@ public class ArtUtil {
 
     return Arrays.asList(featureDataSorted);
   }
+
+  public static List<Map<String, PrimitiveTypeProvider>> getFeatureData(DBSelector selector, List<String> segmentIds){
+    Map<String, SegmentLookup.SegmentDescriptor> segments = new SegmentLookup().lookUpShots(segmentIds.toArray(new String[segmentIds.size()]));
+    Map<String, Integer> sequenceMapping = new HashMap();
+    for (SegmentLookup.SegmentDescriptor segment : segments.values()) {
+      segmentIds.add(segment.getSegmentId());
+      sequenceMapping.put(segment.getSegmentId(), segment.getSequenceNumber());
+    }
+    List<Map<String, PrimitiveTypeProvider>> featureData = selector.getRows("id", segmentIds.toArray(new String[segmentIds.size()]));
+
+    //sort by sequence number
+    Map<String, PrimitiveTypeProvider>[] featureDataSorted = new HashMap[featureData.size()];
+    for(Map<String, PrimitiveTypeProvider> entry: featureData){
+      featureDataSorted[sequenceMapping.get(entry.get("id").getString()) - 1] = entry;
+    }
+
+    return Arrays.asList(featureDataSorted);
+  }
 }
