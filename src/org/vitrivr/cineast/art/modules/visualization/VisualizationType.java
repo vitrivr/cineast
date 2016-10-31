@@ -5,5 +5,6 @@ package org.vitrivr.cineast.art.modules.visualization;
  */
 public enum VisualizationType {
   VISUALIZATION_SEGMENT,
-  VISUALIZATION_MULTIMEDIAOBJECT
+  VISUALIZATION_MULTIMEDIAOBJECT,
+  VISUALIZATION_MULTIPLESEGMENTS
 }
