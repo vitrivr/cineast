@@ -1,27 +1,39 @@
 package org.vitrivr.cineast.explorative;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.google.api.client.json.Json;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 import org.vitrivr.cineast.core.data.hct.HCTVisualizer;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class PlaneManager<T extends Printable> implements TreeTraverserHorizontal<T> {
+public class PlaneManager<T extends Printable> implements TreeTraverserHorizontal<T>, Serializable {
 
-    private final DistanceCalculation<T> distanceCalculation;
-    private final List<List<Plane<T>>> subPlanes = new ArrayList<>();
-    private final String timestamp;
-    private final static Logger logger = LogManager.getLogger();
+    private transient final DistanceCalculation<T> distanceCalculation;
+    private final String featureName;
+    private transient final List<List<Plane<T>>> subPlanes = new ArrayList<>();
+    private transient final String timestamp;
+    private transient final static Logger logger = LogManager.getLogger();
+    private final String PATH = "data/serialized/";
+    private final String FILE_NAME;
+    private final List<VisualizationElement<T>[][]> flatPlanes = new ArrayList<>();
 
-    public PlaneManager(DistanceCalculation<T> distanceCalculation) {
+    public PlaneManager(DistanceCalculation<T> distanceCalculation, String featureName) {
         this.distanceCalculation = distanceCalculation;
+        this.featureName = featureName;
+        this.FILE_NAME =  "plane_manager_" + featureName + ".ser".toLowerCase();
         timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date(System.currentTimeMillis()));
+    }
+
+    @Override
+    public void start(){
+
     }
 
     @Override
@@ -84,6 +96,9 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
                 }
             }
         }
+
+        flatPlanes.add(flatPlane);
+
         File path = new File("results/html/" + timestamp);
         if(!path.exists()) path.mkdirs();
         File fileNotOptimized = new File(path.getPath(), "level_notOpt_" + (subPlanes.size() - 1) + ".html");
@@ -105,6 +120,25 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
 
         File fileOptimized = new File(path.getPath(), "level_opt_" + (subPlanes.size() - 1) + ".html");
         printFile(flatPlane, fileOptimized);
+    }
+
+    @Override
+    public void finished() {
+        try {
+            serialize();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void serialize() throws IOException {
+        logger.info("start serialize plane manager.");
+        File path = new File(PATH);
+        if(!path.exists()) path.mkdirs();
+
+        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(new File(path, FILE_NAME)));
+        outputStream.writeObject(this);
+        logger.info("serialized plane manager.");
     }
 
     private void printFile(VisualizationElement<T>[][] flatPlane, File fileOptimized) {
@@ -218,6 +252,31 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
             }
         }
         return false;
+    }
+
+    public JsonArray toJSONArray(int level, int startX, int startY, int endX, int endY){
+        JsonArray jsonArray = new JsonArray();
+        VisualizationElement[][] plane = flatPlanes.get(level);
+        if(plane.length < endX - startX && plane[0].length < endY - endX) {
+            startX = 0;
+            startY = 0;
+            endX = plane.length;
+            endY = plane[0].length;
+        }
+
+        for(int x = startX; x < endX; x++){
+            JsonArray col = new JsonArray();
+            for(int y = startY; y < endY; y++){
+                if(plane[x][y] == null){
+                    col.add("");
+                } else {
+                    col.add(plane[x][y].getVector().print());
+                }
+            }
+            jsonArray.add(col);
+        }
+
+        return jsonArray;
     }
 
 }

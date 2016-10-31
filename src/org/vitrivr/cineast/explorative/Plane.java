@@ -5,9 +5,10 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Plane<T extends Printable> implements Printable {
+public class Plane<T extends Printable> implements Printable, Serializable {
 
     private final VisualizationElement<T>[][] plane;
     private final static Logger logger = LogManager.getLogger();
@@ -38,7 +39,7 @@ public class Plane<T extends Printable> implements Printable {
         VisualizationElement<T> startItem = new VisualizationElement<>(representative, startPos, this);
         vectors.remove(startItem);
         insert(startItem, startPos);
-        Collections.shuffle(vectors, new Random(1));
+//        Collections.shuffle(vectors, new Random(1));
         Iterator<T> iterator = vectors.iterator();
         while(addedVectors.size() < vectors.size()){
 //            Pair<Position, T> optimalItemAndPosition = getOptimalItemAndPosition();

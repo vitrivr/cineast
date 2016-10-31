@@ -382,6 +382,22 @@ public class JSONAPIThread extends Thread {
 				break;
 			}
 
+			case "explorative_tile":{
+				LOGGER.debug("Explorative_Tile API call starting");
+				JsonObject query = clientJSON.get("query").asObject();
+				int startX = query.get("startX").asInt();
+				int startY = query.get("startY").asInt();
+				int endX = query.get("endX").asInt();
+				int endY = query.get("endY").asInt();
+				String featureName = query.get("feature_name").asString();
+
+				printer.println("hallo welt");
+				printer.flush();
+				printer.close();
+				break;
+			}
+
+
 			default: {
 				LOGGER.warn("queryType {} is unknown", clientJSON.get("queryType").asString());
 			}

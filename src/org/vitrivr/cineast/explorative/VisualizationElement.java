@@ -1,10 +1,11 @@
 package org.vitrivr.cineast.explorative;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-class VisualizationElement<T extends Printable> implements Printable {
+class VisualizationElement<T extends Printable> implements Printable, Serializable {
 
     private Position position;
     private final T vector;

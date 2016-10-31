@@ -292,6 +292,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
             }
             traverserHorizontal.endLevel();
         }
+        traverserHorizontal.finished();
     }
 
 }

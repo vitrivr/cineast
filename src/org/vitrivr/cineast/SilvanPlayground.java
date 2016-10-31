@@ -65,7 +65,8 @@ public class SilvanPlayground {
 
     private static void buildTree() throws Exception {
         DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
-        dbSelector.open("features_averagecolor");
+        String featureName = "features_averagecolor";
+        dbSelector.open(featureName);
         List<Map<String, PrimitiveTypeProvider>> l = dbSelector.getAll();
         List<HCTFloatVectorValue> vectors = new ArrayList<>();
         if (l.size() > 0) {
@@ -109,7 +110,12 @@ public class SilvanPlayground {
         outputStream.writeObject(hct);
         logger.info("HCT has been written to the file system.");
         logger.info("Traversion started!");
-        hct.traverseTree(new PlaneManager<>(new FloatArrayEuclideanDistance()));
+        hct.traverseTree(new PlaneManager<>(new FloatArrayEuclideanDistance(), featureName.toLowerCase()));
+
+        PlaneManager pm = RequestHandler.getSpecificPlaneManager(featureName);
+        System.out.println(pm.toJSONArray(0, 240, 240, 245, 245));
+
+
     }
 
     private static void createAverageColorPictures() throws IOException {

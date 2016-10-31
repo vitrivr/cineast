@@ -1,11 +1,14 @@
 package org.vitrivr.cineast.explorative;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by silvanstich on 05.10.16.
  */
-public interface TreeTraverserHorizontal<T> {
+public interface TreeTraverserHorizontal<T> extends Serializable {
+
+    void start();
 
     void newLevel();
 
@@ -17,4 +20,5 @@ public interface TreeTraverserHorizontal<T> {
 
     void endLevel();
 
+    void finished();
 }

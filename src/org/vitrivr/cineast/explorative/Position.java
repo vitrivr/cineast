@@ -1,9 +1,11 @@
 package org.vitrivr.cineast.explorative;
 
+import java.io.Serializable;
+
 /**
  * Created by silvanstich on 04.10.16.
  */
-public class Position {
+public class Position implements Serializable{
 
     private final int x;
     private final int y;
