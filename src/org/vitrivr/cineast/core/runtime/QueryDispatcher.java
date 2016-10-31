@@ -26,7 +26,7 @@ import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-
+@Deprecated
 public class QueryDispatcher implements Callable<List<StringDoublePair>> {
 
 	private static final Logger LOGGER = LogManager.getLogger();
