@@ -123,6 +123,6 @@ public class VisualizationAverageColorStreamgraph extends AbstractVisualizationM
 
   @Override
   public VisualizationResult getResultType() {
-    return VisualizationResult.GRAPH_SUNBURST;
+    return VisualizationResult.GRAPH_STREAMGRAPH;
   }
 }
