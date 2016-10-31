@@ -8,9 +8,6 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.*;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
 import org.vitrivr.cineast.core.data.DoublePair;
-import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
-import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactory;
-import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 import java.util.*;
@@ -54,6 +51,8 @@ public final class VisualizationConfig {
     list.add(VisualizationDominantColorStripe.class);
     list.add(VisualizationDominantColorGradient.class);
     list.add(VisualizationDominantColorStripeVariable.class);
+    list.add(VisualizationAverageColorSunburst.class);
+    list.add(VisualizationAverageColorStreamgraph.class);
     DEFAULT_VISUALIZATION_CATEGORIES.put("multimediaobjects", list);
 
     list = new ArrayList();
