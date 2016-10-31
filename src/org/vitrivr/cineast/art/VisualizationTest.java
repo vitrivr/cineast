@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.art;
 
-import org.vitrivr.cineast.art.modules.VisualizationGraphAverageColor;
+import org.vitrivr.cineast.art.modules.VisualizationStreamgraphAverageColor;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
 import org.vitrivr.cineast.core.config.Config;
 
@@ -9,7 +9,7 @@ import org.vitrivr.cineast.core.config.Config;
  */
 public class VisualizationTest {
   public static void main(String[] args) {
-    Visualization vis = new VisualizationGraphAverageColor();
+    Visualization vis = new VisualizationStreamgraphAverageColor();
     vis.init(Config.getDatabaseConfig().getSelectorSupplier());
     for(int x=11;x<12;x++) {
       //ImageIO.write(WebUtils.dataURLtoBufferedImage(vis.visualizeMultimediaobject("" + x)), "png", new File("src/resources/test.png"));

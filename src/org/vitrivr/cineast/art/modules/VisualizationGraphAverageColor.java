@@ -108,7 +108,7 @@ public class VisualizationGraphAverageColor extends AbstractVisualizationModule 
 
     JsonObject graph = new JsonObject();
     graph.add("name", "VisualizationGraphAverageColor");
-    graph.add("multimediaobjet", multimediaobjectId);
+    graph.add("multimediaobject", multimediaobjectId);
     graph.add("children", getGraphChildren(data, colors, 0, 0));
 
     return graph.toString();
