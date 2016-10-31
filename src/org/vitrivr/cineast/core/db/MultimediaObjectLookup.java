@@ -78,6 +78,7 @@ public class MultimediaObjectLookup{
 			if(!checkProvider("duration", durationProvider, ProviderDataType.DOUBLE)){
 				return new MultimediaObjectDescriptor();
 			}
+			LOGGER.info("Duration is a double, returning valid Multimediadescriptor");
 		}	
 		
 		
