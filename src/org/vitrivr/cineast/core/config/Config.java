@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -27,7 +28,7 @@ public class Config {
 	private static ExtractorConfig extractorConfig = new ExtractorConfig();
 	private static ImageCacheConfig imageCacheConfig = new ImageCacheConfig();
 	private static RetrieverConfig retrieverConfig = new RetrieverConfig();
-	private static QueryConfig queryConfig = new QueryConfig();
+	private static QueryConfig queryConfig = new QueryConfig().setDistance(Distance.manhattan); //FIXME remove as soon as chisquared distance works again
 	
 	static{
 		
