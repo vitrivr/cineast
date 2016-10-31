@@ -3,16 +3,21 @@ package org.vitrivr.cineast.core.features.neuralnet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adam.grpc.AdamGrpc;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.*;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import org.vitrivr.cineast.core.features.neuralnet.label.ConceptReader;
 import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.MaxPool;
+import org.vitrivr.cineast.core.util.TimeHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * NeuralNet Feature modules should extend this class
@@ -24,6 +29,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
     private PersistencyWriter<?> classWriter;
     private DBSelector classSelector;
+
     /**
      * Table-name where the labels are stored
      */
@@ -51,6 +57,55 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         return classTableName;
     }
 
+    /**
+     * Checks if labels have been specified. If no labels have been specified, takes the query image.
+     * Might perform knn on the 1k-vector in the future.
+     * It's also not clear yet if we could combine labels and input image
+     */
+    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc, DBSelector classificationSelector, float defaultCutoff) {
+        LOGGER.entry();
+        TimeHelper.tic();
+        List<StringDoublePair> _return = new ArrayList<>();
+        if (!sc.getTags().isEmpty()) {
+            Set<String> wnLabels = new HashSet<>();
+            wnLabels.addAll(getClassSelector().getRows(getHumanLabelColName(), sc.getTags().toArray(new String[sc.getTags().size()])).stream().map(row -> row.get(getWnLabelColName()).getString()).collect(Collectors.toList()));
+
+            LOGGER.debug("Looking for labels: {}", String.join(", ",wnLabels.toArray(new String[wnLabels.size()])));
+            for (Map<String, PrimitiveTypeProvider> row :
+                    classificationSelector.getRows(getWnLabelColName(), wnLabels.toArray(new String[wnLabels.size()]))) {
+                LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getFloat(), row.get(getWnLabelColName()).toString());
+                _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getFloat()));
+            }
+        } else {
+            LOGGER.debug("Starting Sketch-based lookup");
+            NeuralNet _net = null;
+            if (qc.getNet().isPresent()) {
+                _net = qc.getNet().get();
+            }
+            if (_net == null) {
+                _net = getNet();
+            }
+
+            float[] classified = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
+            List<String> hits = new ArrayList<>();
+            for (int i = 0; i < classified.length; i++) {
+                if (classified[i] > qc.getCutoff().orElse(defaultCutoff)) {
+                    hits.add(_net.getSynSetLabels()[i]);
+                }
+            }
+            for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows(getWnLabelColName(), hits.toArray(new String[hits.size()]))) {
+                LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getFloat(), row.get(getWnLabelColName()).toString());
+                _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getFloat()));
+            }
+        }
+        _return = MaxPool.maxPoolStringId(_return);
+        LOGGER.trace("NeuralNetFeature.getSimilar() done in {}",
+                TimeHelper.toc());
+        return LOGGER.exit(_return);
+    }
+
+    protected abstract NeuralNet getNet();
+
     @Override
     public void init(DBSelectorSupplier selectorSupplier) {
         super.init(selectorSupplier);
@@ -77,6 +132,16 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         ec.close();
     }
 
+    /**
+     * Table 1: segmentid | wnLabel | confidence (ex. 4014 | n203843 | 0.4) - Stores specific hits from the Neuralnet
+     */
+    public void createLabelsTable(Supplier<EntityCreator> supply, String tableName){
+        EntityCreator ec = supply.get();
+        //TODO Set pk / Create idx -> Logic in the ecCreator
+        ec.createIdEntity(tableName, new EntityCreator.AttributeDefinition("segmentid", AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL), new EntityCreator.AttributeDefinition(getWnLabelColName(), AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT, AdamGrpc.HandlerType.RELATIONAL));
+        ec.close();
+    }
+
 
     @Override
     public void init(PersistencyWriterSupplier phandlerSupply) {
@@ -100,7 +165,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
     }
 
     /**
-     * Fills concepts into the DB. Concepts are provided at conceptsPath and parsed by the ConceptReader
+     * Fills general concepts into the DB. Concepts are provided at conceptsPath and parsed by the ConceptReader
      * NeuralNets must fill their own labels into the DB. If their labels are not generally applicable, they should use their own table.
      */
     public void fillConcepts(String conceptsPath) {
@@ -162,7 +227,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
     }
 
     /**
-     * @return The table name where classification data is stored
+     * @return The table name where generated data is stored (not the full 1k-vector)
      */
     abstract public String getClassificationTable();
 }
