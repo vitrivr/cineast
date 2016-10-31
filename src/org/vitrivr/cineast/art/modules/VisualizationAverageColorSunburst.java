@@ -15,15 +15,15 @@ import java.util.Map;
 /**
  * Created by sein on 26.08.16.
  */
-public class VisualizationGraphAverageColor extends AbstractVisualizationModule {
-  public VisualizationGraphAverageColor() {
+public class VisualizationAverageColorSunburst extends AbstractVisualizationModule {
+  public VisualizationAverageColorSunburst() {
     super();
     tableNames.put("AverageColor", "features_AverageColor");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationGraphAverageColor";
+    return "VisualizationAverageColorSunburst";
   }
 
   @Override
@@ -107,7 +107,7 @@ public class VisualizationGraphAverageColor extends AbstractVisualizationModule 
     }
 
     JsonObject graph = new JsonObject();
-    graph.add("name", "VisualizationGraphAverageColor");
+    graph.add("name", "VisualizationAverageColorSunburst");
     graph.add("multimediaobject", multimediaobjectId);
     graph.add("children", getGraphChildren(data, colors, 0, 0));
 

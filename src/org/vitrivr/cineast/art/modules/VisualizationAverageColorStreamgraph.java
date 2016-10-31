@@ -15,8 +15,8 @@ import java.util.Map;
 /**
  * Created by sein on 26.08.16.
  */
-public class VisualizationStreamgraphAverageColor extends AbstractVisualizationModule {
-  public VisualizationStreamgraphAverageColor() {
+public class VisualizationAverageColorStreamgraph extends AbstractVisualizationModule {
+  public VisualizationAverageColorStreamgraph() {
     super();
     tableNames.put("AverageColor", "features_AverageColorGrid8");
   }
