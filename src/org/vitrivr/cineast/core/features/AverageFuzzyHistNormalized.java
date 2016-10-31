@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features;
 import java.util.List;
 
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -30,5 +31,9 @@ public class AverageFuzzyHistNormalized extends AbstractFeatureModule {
 		return getSimilar(query.toArray(null), qc);
 	}
 
+  @Override
+  protected QueryConfig setQueryConfig(QueryConfig qc) {
+    return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
+  }
 
 }

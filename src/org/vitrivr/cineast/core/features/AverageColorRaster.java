@@ -14,6 +14,7 @@ import org.vitrivr.cineast.core.color.FuzzyColorHistogramQuantizer.Color;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
@@ -211,8 +212,10 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	}
 
 
-	private List<StringDoublePair> getSimilar(float[] raster, float[] hist, QueryConfig qc){//TODO
+	private List<StringDoublePair> getSimilar(float[] raster, float[] hist, QueryConfig qc){
 		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
+		
+		qc = QueryConfig.notNull(qc).setDistanceIfEmpty(Distance.chisquared);
 		
 		List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getNearestNeighbourRows(limit, hist, "hist", qc);
 		

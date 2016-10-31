@@ -94,4 +94,11 @@ public class QueryConfig {
 	public static QueryConfig clone(QueryConfig qc){
 	  return new QueryConfig(qc);
 	}
+
+  public static QueryConfig notNull(QueryConfig qc) {
+    if(qc == null){
+      return new QueryConfig();
+    }
+    return qc;
+  }
 }
