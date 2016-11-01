@@ -1,5 +1,17 @@
 package org.vitrivr.cineast.core.config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.UUID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.QueryConfig.Distance;
+
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +35,7 @@ public class Config {
     private static ExtractorConfig extractorConfig = new ExtractorConfig();
     private static ImageCacheConfig imageCacheConfig = new ImageCacheConfig();
     private static RetrieverConfig retrieverConfig = new RetrieverConfig();
-    private static QueryConfig queryConfig = new QueryConfig();
+    private static QueryConfig queryConfig = new QueryConfig().setDistance(Distance.manhattan); //FIXME remove as soon as chisquared distance works again;
     private static NeuralNetConfig neuralNetConfig = new NeuralNetConfig();
     private static VisualizationConfig visualizationConfig = new VisualizationConfig();
 
@@ -179,6 +191,10 @@ public class Config {
 
     public static final UUID UNIQUE_ID = UUID.randomUUID();
 
+    /**
+     * Returns the {@link ImageCacheConfig} as specified in the config file. If nothing is specified in the configuration file, the default values are returned, see {@link ImageCacheConfig#ImageMemoryConfig()}
+     * @return
+     */
     public static ImageCacheConfig getImageMemoryConfig() {
         return imageCacheConfig;
     }

@@ -17,11 +17,13 @@ bin
 .classpath
 .settings/
 
+
 .idea
 proto/
 representative_frames/
 thumbnails/
 queryImages/
+src/org/vitrivr/cineast/test/
 cache/
 
 ##Tensorflow

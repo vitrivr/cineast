@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Frame;
@@ -117,5 +118,10 @@ public class EHD extends AbstractFeatureModule {
 		FloatVector query = new FloatVectorImpl(process(sc.getMostRepresentativeFrame().getImage(), new float[80]));
 		return getSimilar(query.toArray(null), qc);
 	}
+	
+  @Override
+  protected QueryConfig setQueryConfig(QueryConfig qc) {
+    return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
+  }
 
 }
