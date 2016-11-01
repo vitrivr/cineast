@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.*;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
 import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -29,11 +30,15 @@ public class NeuralNetExtractor {
 
         MultimediaObjectLookup ml = new MultimediaObjectLookup();
         LOGGER.debug("Looking up all Multimedia objects... ");
-        List<MultimediaObjectLookup.MultimediaObjectDescriptor> videos = ml.getAllVideos();
-        for (MultimediaObjectLookup.MultimediaObjectDescriptor video : videos) {
-            LOGGER.info("Starting to extract for video {} at location {}", video.getName(), video.getPath());
-            continue;
-            /*VideoDecoder vd = Config.getDecoderConfig().newVideoDecoder(new File(video.getPath()));
+        List<MultimediaObjectDescriptor> videos = ml.getAllVideos();
+        for (MultimediaObjectDescriptor video : videos) {
+            LOGGER.info("Starting to extract for video {} at location {}", video.getName(), "osvc_1.0/"+video.getPath());
+            File location = new File(video.getPath());
+            if(!location.exists()){
+                LOGGER.warn("Could not find video {} at path {}", video.getName(), location.getAbsolutePath());
+                continue;
+            }
+            VideoDecoder vd = Config.getDecoderConfig().newVideoDecoder(new File("osvc_1.0/"+video.getPath()));
 
             SegmentLookup lookup = new SegmentLookup();
             List<SegmentLookup.SegmentDescriptor> knownShots = lookup.lookUpAllSegments(video.getId());
@@ -45,7 +50,7 @@ public class NeuralNetExtractor {
             extractors.add(new NeuralNetVGG16Feature());
             ShotDispatcher dispatcher = new ShotDispatcher(extractors, new DefaultExtractorInitializer(), segmenter);
 
-            dispatcher.run();*/
+            dispatcher.run();
         }
         ml.close();
     }
