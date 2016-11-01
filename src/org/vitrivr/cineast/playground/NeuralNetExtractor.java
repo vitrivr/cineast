@@ -33,12 +33,12 @@ public class NeuralNetExtractor {
         List<MultimediaObjectDescriptor> videos = ml.getAllVideos();
         for (MultimediaObjectDescriptor video : videos) {
             LOGGER.info("Starting to extract for video {} at location {}", video.getName(), "osvc_1.0/"+video.getPath());
-            File location = new File(video.getPath());
+            File location = new File("oscv_1.0/"+video.getPath());
             if(!location.exists()){
                 LOGGER.warn("Could not find video {} at path {}", video.getName(), location.getAbsolutePath());
                 continue;
             }
-            VideoDecoder vd = Config.getDecoderConfig().newVideoDecoder(new File("osvc_1.0/"+video.getPath()));
+            VideoDecoder vd = Config.getDecoderConfig().newVideoDecoder(location);
 
             SegmentLookup lookup = new SegmentLookup();
             List<SegmentLookup.SegmentDescriptor> knownShots = lookup.lookUpAllSegments(video.getId());
