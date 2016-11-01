@@ -39,13 +39,14 @@ public class Plane<T extends Printable> implements Printable, Serializable {
         VisualizationElement<T> startItem = new VisualizationElement<>(representative, startPos, this);
         vectors.remove(startItem);
         insert(startItem, startPos);
-//        Collections.shuffle(vectors, new Random(1));
         Iterator<T> iterator = vectors.iterator();
         while(addedVectors.size() < vectors.size()){
-//            Pair<Position, T> optimalItemAndPosition = getOptimalItemAndPosition();
+            Pair<Position, T> optimalItemAndPosition = getOptimalItemAndPosition();
 
-            T nextItem = iterator.next();
-            Position optimalPosition = getOptimalPosition(nextItem).first;
+//            T nextItem = iterator.next();
+//            Position optimalPosition = getOptimalPosition(nextItem).first;
+            T nextItem = optimalItemAndPosition.second;
+            Position optimalPosition = optimalItemAndPosition.first;
 
             VisualizationElement<T> newVisElement = new VisualizationElement<>(nextItem, optimalPosition, this);
             insert(newVisElement, optimalPosition);
@@ -91,7 +92,10 @@ public class Plane<T extends Printable> implements Printable, Serializable {
         T optimalVector = null;
         Position optimalPosition = null;
         double minDist = Double.MAX_VALUE;
+        int i = 0;
         for (T vector : remainingVectors) {
+            if(i > 10) break;
+            i++;
             Pair<Position, Double> optimumPerVector = getOptimalPosition(vector);
             if(minDist > optimumPerVector.second){
                 minDist = optimumPerVector.second;

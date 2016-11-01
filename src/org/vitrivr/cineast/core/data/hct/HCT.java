@@ -27,7 +27,9 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
     public void insert(T nextItem) throws Exception {
         sanityCheck();
         insert(nextItem, 0);
-        logger.info("#Items in tree: " + ++size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
+        if(size % 50 == 0) logger.info("#Items in tree: " + ++size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
+        logger.debug("#Items in tree: " + ++size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
+
     }
 
     private IHCTCell<T> insert(T nextItem, int levelNo) throws Exception {

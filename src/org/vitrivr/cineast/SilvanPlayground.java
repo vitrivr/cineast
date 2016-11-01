@@ -30,32 +30,52 @@ public class SilvanPlayground {
     static Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) {
+        long startTime;
+
         logger.info("started...");
 
         try {
+            String featureName = "features_averagecolor";
+            logger.info("Proccessing HCT for '" + featureName + "'...");
+            List<HCTFloatVectorValue> vectors = readFeaturesFromDB(featureName);
+            readSegementsFromDB();
 
-            if(args.length == 1 && args[0].equals("getAverageColorImages")){
-                createAverageColorPictures();
-            }
+            System.out.println("Press any key to start...");
+            System.in.read();
 
-            if(args.length == 0){
-                buildTree();
-                logger.info("Started deserialization");
-                ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(new File("data/serialized_tree.ser")));
-                Object o = objectInputStream.readObject();
-                HCT<HCTFloatVectorValue> hct = (HCT<HCTFloatVectorValue>)o;
-                String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date(System.currentTimeMillis()));
-                HCTVisualizer.visualizeTree(hct.getRoot(), new File("results/" + timestamp + "/" + "root"));
-            } else {
-                logger.info("Started deserialization");
-                ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(new File("data/serialized_tree.ser")));
-                Object o = objectInputStream.readObject();
-                HCT<HCTFloatVectorValue> hct = (HCT<HCTFloatVectorValue>)o;
-                String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date(System.currentTimeMillis()));
-                HCTVisualizer.visualizeTree(hct.getRoot(), new File("results/" + timestamp + "/" + "root"));
-            }
+            startTime = System.currentTimeMillis();
+            logger.info("Creating HCT...");
+            HCT<HCTFloatVectorValue> hct = buildTree(vectors);
+            logger.info("All items inserted...");
+
+            logger.info("Start writting HCT to the file system...");
+            File folder = new File("data/");
+            if(!folder.exists()) folder.mkdirs();
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(new File(folder, "serialized_tree.ser")));
+            outputStream.writeObject(hct);
+            logger.info("HCT has been written to the file system.");
+
+            logger.info("Traversion started...");
+            hct.traverseTree(new PlaneManager<>(new FloatArrayEuclideanDistance(), featureName.toLowerCase()));
+            logger.info("Traversion finished!");
+
+            logger.info("Show json request");
+            PlaneManager pm = RequestHandler.getSpecificPlaneManager(featureName);
+            System.out.println(pm.toJSONArray(0, 240, 240, 245, 245));
+
+            logger.info("Started deserialization");
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(new File("data/serialized_tree.ser")));
+            Object o = objectInputStream.readObject();
+            HCT<HCTFloatVectorValue> hct2 = (HCT<HCTFloatVectorValue>)o;
+            logger.info("Finished deserialization!");
+
+//            logger.info("Writing results to folders...");
+//            String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date(System.currentTimeMillis()));
+//            HCTVisualizer.visualizeTree(hct.getRoot(), new File("results/" + timestamp + "/" + "root"));
+//            logger.info("Finished writing results to folders!");
+
             logger.info("# of cache access is " + FloatArrayEuclideanDistance.cacheCounter + " | # of calculations is " + FloatArrayEuclideanDistance.calculationCounter);
-            logger.info("Finished!");
+            logger.info("Finished! Total duration (without DB request time): " + (System.currentTimeMillis() - startTime));
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -63,9 +83,33 @@ public class SilvanPlayground {
         }
     }
 
-    private static void buildTree() throws Exception {
+    private static HCT<HCTFloatVectorValue> buildTree(List<HCTFloatVectorValue> vectors) throws Exception {
+        HCT<HCTFloatVectorValue> hct = new HCT<>(new DefaultCompactnessCalculation(), new FloatArrayEuclideanDistance());
+        int i = 0;
+        for (HCTFloatVectorValue vector : vectors) {
+            i++;
+            hct.insert(vector);
+            if(i == 10000) break;
+        }
+        return hct;
+    }
+
+    private static void readSegementsFromDB() {
+        DBSelector dbSelector;
+
+        dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
+        dbSelector.open("cineast_segment");
+        List<Map<String, PrimitiveTypeProvider>> allSegments = dbSelector.getAll();
+        HCTVisualizer.segments = new HashMap<>();
+        for (Map<String, PrimitiveTypeProvider> segment : allSegments) {
+            String segmentId = segment.get("id").getString();
+            String multimediaobject = segment.get("multimediaobject").getString();
+            HCTVisualizer.segments.put(segmentId, multimediaobject);
+        }
+    }
+
+    private static List<HCTFloatVectorValue> readFeaturesFromDB(String featureName) {
         DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
-        String featureName = "features_averagecolor";
         dbSelector.open(featureName);
         List<Map<String, PrimitiveTypeProvider>> l = dbSelector.getAll();
         List<HCTFloatVectorValue> vectors = new ArrayList<>();
@@ -80,42 +124,7 @@ public class SilvanPlayground {
 
         logger.info("Read " + l.size() + " rows.");
         dbSelector.close();
-
-        dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
-        dbSelector.open("cineast_segment");
-        List<Map<String, PrimitiveTypeProvider>> allSegments = dbSelector.getAll();
-        HCTVisualizer.segments = new HashMap<>();
-        for (Map<String, PrimitiveTypeProvider> segment : allSegments) {
-            String segmentId = segment.get("id").getString();
-            String multimediaobject = segment.get("multimediaobject").getString();
-            HCTVisualizer.segments.put(segmentId, multimediaobject);
-        }
-
-
-        HCT<HCTFloatVectorValue> hct = new HCT<>(new DefaultCompactnessCalculation(), new FloatArrayEuclideanDistance());
-        System.in.read();
-        int i = 0;
-        for (HCTFloatVectorValue vector : vectors) {
-            i++;
-            hct.insert(vector);
-            if(i == 10000) break;
-        }
-
-        logger.info("All items inserted...");
-
-        logger.info("Start writting HCT to the file system.");
-        File folder = new File("data/");
-        if(!folder.exists()) folder.mkdirs();
-        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(new File(folder, "serialized_tree.ser")));
-        outputStream.writeObject(hct);
-        logger.info("HCT has been written to the file system.");
-        logger.info("Traversion started!");
-        hct.traverseTree(new PlaneManager<>(new FloatArrayEuclideanDistance(), featureName.toLowerCase()));
-
-        PlaneManager pm = RequestHandler.getSpecificPlaneManager(featureName);
-        System.out.println(pm.toJSONArray(0, 240, 240, 245, 245));
-
-
+        return vectors;
     }
 
     private static void createAverageColorPictures() throws IOException {
