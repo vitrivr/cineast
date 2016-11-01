@@ -32,8 +32,8 @@ public class NeuralNetExtractor {
         LOGGER.debug("Looking up all Multimedia objects... ");
         List<MultimediaObjectDescriptor> videos = ml.getAllVideos();
         for (MultimediaObjectDescriptor video : videos) {
-            LOGGER.info("Starting to extract for video {} at location {}", video.getName(), "oscv_1.0/"+video.getPath());
-            File location = new File("oscv_1.0/"+video.getPath());
+            File location = new File("osvc_1.0/"+video.getPath());
+            LOGGER.info("Starting to extract for video {} at location {}", video.getName(), location.getPath());
             if(!location.exists()){
                 LOGGER.warn("Could not find video {} at path {}", video.getName(), location.getAbsolutePath());
                 continue;
