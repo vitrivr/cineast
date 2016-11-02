@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -104,6 +105,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	}
 	
 	protected List<StringDoublePair> getSimilar(float[] vector, QueryConfig qc) {
+	  qc = setQueryConfig(qc);
 		List<StringDoublePair> distances = this.selector.getNearestNeighbours(Config.getRetrieverConfig().getMaxResultsPerModule(), vector, this.fieldName, qc);
 		for(StringDoublePair sdp : distances){
 			double dist = sdp.value;
@@ -132,5 +134,10 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
 		supply.get().createFeatureEntity(this.tableName, true, "hist", "sums");
 	}
+	
+	
+  protected QueryConfig setQueryConfig(QueryConfig qc) {
+    return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
+  }
 	
 }

@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.config;
 
 import java.io.File;
 
+import org.vitrivr.cineast.core.decode.video.FFMpegVideoDecoder;
 import org.vitrivr.cineast.core.decode.video.JCodecVideoDecoder;
 import org.vitrivr.cineast.core.decode.video.JLibAVVideoDecoder;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
@@ -16,12 +17,13 @@ public final class DecoderConfig {
 	
 	public static enum Decoder{
 		JCODEC,
-		JLIBAV
+		JLIBAV,
+		FFMPEG
 	}
 	
 	public static final int DEFAULT_MAX_FRAME_WIDTH = Integer.MAX_VALUE;
 	public static final int DEFAULT_MAX_FRAME_HEIGHT = Integer.MAX_VALUE;
-	public static final Decoder DEFAULT_DECODER = Decoder.JLIBAV;
+	public static final Decoder DEFAULT_DECODER = Decoder.FFMPEG;
 	
 	public DecoderConfig(int maxFrameWidth, int maxFrameHeight, Decoder decoder){
 		this.maxFrameWidth = maxFrameWidth;
@@ -47,6 +49,8 @@ public final class DecoderConfig {
 			return new JCodecVideoDecoder(file);
 		case JLIBAV:
 			return new JLibAVVideoDecoder(file);
+		case FFMPEG:
+		  return new FFMpegVideoDecoder(file);
 		default:
 			throw new IllegalArgumentException("trying to create invalid video decoder " + this.decoder);
 		}
@@ -58,7 +62,7 @@ public final class DecoderConfig {
 	 * {
 	 * 	"maxFrameWidth" : (int)
 	 * 	"maxFrameHeight" : (int)
-	 *  "decoder": JCODEC | JLIBAV
+	 *  "decoder": JCODEC | JLIBAV | FFMPEG
 	 * }
 	 * </pre>
 	 * @throws NullPointerException in case the given object is null

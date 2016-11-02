@@ -32,10 +32,11 @@ public final class RetrieverConfig {
 		
 		List<DoublePair<Class<? extends Retriever>>> list;
 		
-		list = new ArrayList<>(3);
+		list = new ArrayList<>(4);
 		list.add(DoublePair.pair(AverageColor.class,				2.3));
 		list.add(DoublePair.pair(DominantColors.class,				1.0));
 		list.add(DoublePair.pair(MedianColor.class,					1.2));
+		list.add(DoublePair.pair(QueryImageExporter.class, 0.0001));
 		DEFAULT_RETRIEVER_CATEGORIES.put("globalcolor", list);
 
 		list = new ArrayList<>(15);

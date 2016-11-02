@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -34,5 +35,10 @@ public class MedianFuzzyHist extends AbstractFeatureModule {
 		FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(sc.getMedianImg().getBufferedImage());
 		return getSimilar(query.toArray(null), qc);
 	}
+	
+  @Override
+  protected QueryConfig setQueryConfig(QueryConfig qc) {
+    return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
+  }
 
 }

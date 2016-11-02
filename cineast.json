@@ -13,7 +13,8 @@
 	
 	"decoder": {
 		"maxFrameWidth": 640,
-		"maxFrameHeight": 480
+		"maxFrameHeight": 480,
+		"decoder": "FFMPEG"
 	},
 	
 	"extractor": {
