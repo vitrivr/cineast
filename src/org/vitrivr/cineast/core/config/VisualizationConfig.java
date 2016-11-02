@@ -52,8 +52,15 @@ public final class VisualizationConfig {
     list.add(VisualizationDominantColorGradient.class);
     list.add(VisualizationDominantColorStripeVariable.class);
     list.add(VisualizationAverageColorSunburst.class);
+    list.add(VisualizationMedianColorSunburst.class);
+    list.add(VisualizationDominantColorSunburst.class);
     list.add(VisualizationAverageColorSunburstReal.class);
+    list.add(VisualizationDominantColorSunburstReal.class);
+    list.add(VisualizationMedianColorSunburstReal.class);
     list.add(VisualizationAverageColorStreamgraph.class);
+    list.add(VisualizationMedianColorStreamgraph.class);
+    list.add(VisualizationAverageColorStreamgraphReal.class);
+    list.add(VisualizationMedianColorStreamgraphReal.class);
     DEFAULT_VISUALIZATION_CATEGORIES.put("multimediaobjects", list);
 
     list = new ArrayList();

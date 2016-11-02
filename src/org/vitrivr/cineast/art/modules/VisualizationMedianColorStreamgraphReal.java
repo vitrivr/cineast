@@ -14,30 +14,31 @@ import java.util.Map;
 /**
  * Created by sein on 26.08.16.
  */
-public class VisualizationAverageColorStreamgraph extends AbstractVisualizationModule {
-  public VisualizationAverageColorStreamgraph() {
+public class VisualizationMedianColorStreamgraphReal extends AbstractVisualizationModule {
+  public VisualizationMedianColorStreamgraphReal() {
     super();
-    tableNames.put("AverageColor", "features_AverageColorGrid8");
+    tableNames.put("MedianColor", "features_MedianColorGrid8");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationAverageColorStreamgraph";
+    return "VisualizationMedianColorStreamgraphReal";
   }
 
   @Override
   public String visualizeMultipleSegments(List<String> segmentIds){
-    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), segmentIds));
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), segmentIds));
   }
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), multimediaobjectId));
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimediaobjectId));
   }
 
   @Override
   protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
-    int[][] colors = ArtUtil.createColorDistribution2();
+    int[][] base = ArtUtil.createColorDistribution2();
+    int[][] colors = new int[36][4];
 
     int[][] data = new int[featureData.size()][36];
     int counter = 0;
@@ -45,32 +46,31 @@ public class VisualizationAverageColorStreamgraph extends AbstractVisualizationM
       int[][][] pixel = ArtUtil.shotToRGB(feature.get("feature").getFloatArray(), 8, 8);
       for(int x=0;x<pixel.length;x++) {
         for(int y=0;y<pixel[0].length;y++){
-          int min = minDistance(colors, 36, pixel[x][y]);
+          int min = ArtUtil.minDistance(base, 36, pixel[x][y]);
           data[counter][min]++;
+          colors[min][0] += pixel[x][y][0];
+          colors[min][1] += pixel[x][y][1];
+          colors[min][2] += pixel[x][y][2];
+          colors[min][3]++;
         }
       }
       counter++;
     }
 
+    for(int x=0;x<colors.length;x++){
+      if(colors[x][3] > 0) {
+        colors[x][0] = colors[x][0] / colors[x][3];
+        colors[x][1] = colors[x][1] / colors[x][3];
+        colors[x][2] = colors[x][2] / colors[x][3];
+      }
+    }
+
     JsonObject graph = new JsonObject();
-    graph.add("name", "VisualizationAverageColorStreamgraph");
+    graph.add("name", "VisualizationMedianColorStreamgraphReal");
 
     graph = ArtUtil.createStreamGraphData(data, colors, graph);
 
     return graph.toString();
-  }
-
-  private int minDistance(int[][] colors, int len, int[] color){
-    int smallest = 0;
-    int minDist = 3*256;
-    for(int x=0;x<len;x++){
-      int dist = Math.abs(color[0] - colors[x][0]) + Math.abs(color[1] - colors[x][1]) + Math.abs(color[2] - colors[x][2]);
-      if(dist < minDist){
-        minDist = dist;
-        smallest = x;
-      }
-    }
-    return smallest;
   }
 
   @Override

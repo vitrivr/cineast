@@ -27,7 +27,7 @@ public class VisualizationAverageColorSunburst extends AbstractVisualizationModu
 
   @Override
   protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
-    int[][][] colors = ArtUtil.createColorDistribution();
+    int[][][] colors = ArtUtil.createColorDistribution3();
 
     int[][] data = new int[3][216];
     for (Map<String, PrimitiveTypeProvider> feature : featureData) {

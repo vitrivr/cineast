@@ -150,7 +150,64 @@ public class ArtUtil {
     return smallest;
   }
 
-  public static int[][][] createColorDistribution(){
+  public static int[][] createColorDistribution2(){
+    int[][] colors = new int[36][3];
+    for(int x=0;x<6;x++){
+      for(int y=0;y<6;y++) {
+        switch(x){
+          case 0:
+            colors[x*6+y][0] = 255;
+            colors[x*6+y][1] = 255*y/6;
+            break;
+          case 1:
+            colors[x*6+y][1] = 255;
+            colors[x*6+y][0] = 255 - 255*y/6;
+            break;
+          case 2:
+            colors[x*6+y][1] = 255;
+            colors[x*6+y][2] = 255*y/6;
+            break;
+          case 3:
+            colors[x*6+y][2] = 255;
+            colors[x*6+y][1] = 255 - 255*y/6;
+            break;
+          case 4:
+            colors[x*6+y][2] = 255;
+            colors[x*6+y][0] = 255*y/6;
+            break;
+          case 5:
+            colors[x*6+y][0] = 255;
+            colors[x*6+y][2] = 255 - 255*y/6;
+            break;
+        }
+      }
+    }
+    return colors;
+  }
+
+  public static JsonObject createStreamGraphData(int[][] data, int[][]colors, JsonObject graph){
+    JsonArray graphColors = new JsonArray();
+    JsonArray signals = new JsonArray();
+    int num = 0;
+    for(int x=0;x<data[0].length;x++){
+      JsonArray signal = new JsonArray();
+      int count = 0;
+      for(int y=0;y<40;y++){
+        signal.add(data[y][x]*500 + 1);
+        count += data[y][x]*500 + 1;
+      }
+      if(count > 0) {
+        signals.add(signal);
+        graphColors.add("rgb(" + colors[x][0] + "," + colors[x][1] + "," + colors[x][2] + ")");
+        num++;
+      }
+    }
+    graph.add("colors", graphColors);
+    graph.add("data", signals);
+    return graph;
+  }
+
+  public static int[][][] createColorDistribution3(){
     int[][][] colors = new int[3][216][3];
     for(int x=0;x<6;x++){
       if (x == 0 || x == 1 || x == 5) {

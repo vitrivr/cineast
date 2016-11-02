@@ -14,15 +14,15 @@ import java.util.Map;
 /**
  * Created by sein on 26.08.16.
  */
-public class VisualizationAverageColorSunburstReal extends AbstractVisualizationModule {
-  public VisualizationAverageColorSunburstReal() {
+public class VisualizationMedianColorSunburstReal extends AbstractVisualizationModule {
+  public VisualizationMedianColorSunburstReal() {
     super();
-    tableNames.put("AverageColor", "features_AverageColor");
+    tableNames.put("MedianColor", "features_MedianColor");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationAverageColorSunburstReal";
+    return "VisualizationMedianColorSunburstReal";
   }
 
   @Override
@@ -59,7 +59,7 @@ public class VisualizationAverageColorSunburstReal extends AbstractVisualization
     }
 
     JsonObject graph = new JsonObject();
-    graph.add("name", "VisualizationAverageColorSunburst");
+    graph.add("name", "VisualizationMedianColorSunburst");
     graph.add("children", ArtUtil.getSunburstChildren(data, colors, 0, 0));
 
     return graph.toString();
@@ -67,12 +67,12 @@ public class VisualizationAverageColorSunburstReal extends AbstractVisualization
 
   @Override
   public String visualizeMultipleSegments(List<String> segmentIds){
-    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), segmentIds));
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), segmentIds));
   }
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), multimediaobjectId));
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimediaobjectId));
   }
 
   @Override
