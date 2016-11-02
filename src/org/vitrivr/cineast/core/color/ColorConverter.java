@@ -8,30 +8,8 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 
 /* for equations see http://www.easyrgb.com/ */
 public final class ColorConverter {
-	
-//	private static LabContainer[] approxLookup = new LabContainer[64 * 64 * 64];
-//	
-//	private static int getApproxIndex(int color){
-//		int r = RGBContainer.getRed(color) / 4,
-//			g = RGBContainer.getGreen(color) / 4,
-//			b = RGBContainer.getBlue(color) / 4;
-//		
-//		return r * 64 * 64 + g * 64 + b;
-//	}
-//	
-//	public static LabContainer RGBToLabApprox(int color){
-//		int index = getApproxIndex(color);
-//		if(approxLookup[index] == null){
-//			int r = RGBContainer.getRed(color) / 4,
-//				g = RGBContainer.getGreen(color) / 4,
-//				b = RGBContainer.getBlue(color) / 4;
-//			
-//			approxLookup[index] = RGBtoLab(4 * r, 4 * g, 4 * b);
-//		}
-//		return approxLookup[index];
-//	}
 
-	private ColorConverter(){}
+  private ColorConverter(){}
 	
 	public static LabContainer XYZtoLab(float x, float y, float z){
 		return XYZtoLab((double) x, (double) y, (double) z);
@@ -284,6 +262,17 @@ public final class ColorConverter {
 			rgbToLabCache.put(rgb, _return);
 		}
 		return _return;
+	}
+	
+	private static TIntObjectMap<ReadableHSVContainer> rgbToHSVCache = TCollections.synchronizedMap( new TIntObjectHashMap<ReadableHSVContainer>(100000));
+  
+	public static ReadableHSVContainer cachedRGBtoHSV(int rgb){
+	  ReadableHSVContainer _return = rgbToHSVCache.get(rgb);
+    if (_return == null) {
+      _return = RGBtoHSV(new RGBContainer(rgb));
+      rgbToHSVCache.put(rgb, _return);
+    }
+    return _return;
 	}
 
 }
