@@ -27,9 +27,7 @@ public class VisualizationMedianColorGrid8Square extends AbstractVisualizationMo
   }
 
   @Override
-  public String visualizeMultimediaobject(String multimediaobjectId) {
-    List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("MedianColorGrid8"), multimediaobjectId);
-
+  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
     int dim = (int) Math.floor(Math.sqrt(featureData.size()));
     int size[] = {dim + 1, dim + 1};
     if ((size[0] - 1) * size[1] >= featureData.size()) {
@@ -52,6 +50,16 @@ public class VisualizationMedianColorGrid8Square extends AbstractVisualizationMo
     }
 
     return WebUtils.BufferedImageToDataURL(image, "png");
+  }
+
+  @Override
+  public String visualizeMultipleSegments(List<String> segmentIds){
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColorGrid8"), segmentIds));
+  }
+
+  @Override
+  public String visualizeMultimediaobject(String multimediaobjectId) {
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColorGrid8"), multimediaobjectId));
   }
 
   @Override

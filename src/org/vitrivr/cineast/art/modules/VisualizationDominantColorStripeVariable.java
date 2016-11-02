@@ -9,7 +9,6 @@ import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.SegmentLookup;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
@@ -34,13 +33,7 @@ public class VisualizationDominantColorStripeVariable extends AbstractVisualizat
     return "VisualizationDominantColorStripeVariable";
   }
 
-  @Override
-  public String visualizeMultimediaobject(String multimediaobjectId) {
-    List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("DominantColor"), multimediaobjectId);
-
-    DBSelector selector = selectors.get("DominantColor");
-    SegmentLookup segmentLookup = new SegmentLookup();
-    List<SegmentLookup.SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
+  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData, List<SegmentLookup.SegmentDescriptor> segments){
     Collections.sort(segments, new SegmentDescriptorComparator());
 
     int count = 0;
@@ -68,6 +61,29 @@ public class VisualizationDominantColorStripeVariable extends AbstractVisualizat
     graph.dispose();
 
     return WebUtils.BufferedImageToDataURL(image, "png");
+  }
+
+  @Override
+  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
+    return visualizeMulti(featureData, new ArrayList<SegmentLookup.SegmentDescriptor>());
+  }
+
+  @Override
+  public String visualizeMultipleSegments(List<String> segmentIds){
+    SegmentLookup segmentLookup = new SegmentLookup();
+    Map<String, SegmentLookup.SegmentDescriptor> segmentMap = segmentLookup.lookUpShots(segmentIds.toArray(new String[segmentIds.size()]));
+    List<SegmentLookup.SegmentDescriptor> segments = new ArrayList<>();
+    for (Map.Entry<String, SegmentLookup.SegmentDescriptor> entry : segmentMap.entrySet()) {
+      segments.add(entry.getValue());
+    }
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("DominantColor"), segmentIds), segments);
+  }
+
+  @Override
+  public String visualizeMultimediaobject(String multimediaobjectId) {
+    SegmentLookup segmentLookup = new SegmentLookup();
+    List<SegmentLookup.SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("DominantColor"), multimediaobjectId), segments);
   }
 
   @Override

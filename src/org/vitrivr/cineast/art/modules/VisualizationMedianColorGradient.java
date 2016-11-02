@@ -30,9 +30,7 @@ public class VisualizationMedianColorGradient extends AbstractVisualizationModul
   }
 
   @Override
-  public String visualizeMultimediaobject(String multimediaobjectId) {
-    List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("MedianColor"), multimediaobjectId);
-
+  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
     BufferedImage image = new BufferedImage(featureData.size(), 1, BufferedImage.TYPE_INT_RGB);
     int count = 0;
     for (Map<String, PrimitiveTypeProvider> feature : featureData) {
@@ -48,6 +46,16 @@ public class VisualizationMedianColorGradient extends AbstractVisualizationModul
     }
 
     return WebUtils.BufferedImageToDataURL(image, "png");
+  }
+
+  @Override
+  public String visualizeMultipleSegments(List<String> segmentIds){
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), segmentIds));
+  }
+
+  @Override
+  public String visualizeMultimediaobject(String multimediaobjectId) {
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimediaobjectId));
   }
 
   @Override

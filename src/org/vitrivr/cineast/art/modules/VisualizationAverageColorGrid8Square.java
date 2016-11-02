@@ -28,8 +28,16 @@ public class VisualizationAverageColorGrid8Square extends AbstractVisualizationM
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("AverageColorGrid8"), multimediaobjectId);
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColorGrid8"), multimediaobjectId));
+  }
 
+  @Override
+  public String visualizeMultipleSegments(List<String> segmentIds){
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColorGrid8"), segmentIds));
+  }
+
+  @Override
+  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
     int size[] = {(int) Math.ceil(Math.sqrt(featureData.size())), (int) Math.ceil(Math.sqrt(featureData.size()))};
     if (size[0] * size[1] - size[0] >= featureData.size()) {
       size[1]--;

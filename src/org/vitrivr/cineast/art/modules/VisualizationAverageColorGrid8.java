@@ -30,8 +30,16 @@ public class VisualizationAverageColorGrid8 extends AbstractVisualizationModule 
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("AverageColorGrid8"), multimediaobjectId);
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColorGrid8"), multimediaobjectId));
+  }
 
+  @Override
+  public String visualizeMultipleSegments(List<String> segmentIds){
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColorGrid8"), segmentIds));
+  }
+
+  @Override
+  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
     int[][][] pixels = new int[8][8][3];
     for (Map<String, PrimitiveTypeProvider> feature : featureData) {
       int[][][] shotPixels = ArtUtil.shotToRGB(feature.get("feature").getFloatArray(), 8, 8);

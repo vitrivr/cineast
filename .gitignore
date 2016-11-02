@@ -23,6 +23,7 @@ representative_frames/
 thumbnails/
 queryImages/
 cache/
+mycache/
 
 ##Tensorflow
 *.tfmodel

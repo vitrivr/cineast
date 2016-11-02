@@ -27,9 +27,17 @@ public class VisualizationAverageColorStreamgraph extends AbstractVisualizationM
   }
 
   @Override
-  public String visualizeMultimediaobject(String multimediaobjectId) {
-    List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("AverageColor"), multimediaobjectId);
+  public String visualizeMultipleSegments(List<String> segmentIds){
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), segmentIds));
+  }
 
+  @Override
+  public String visualizeMultimediaobject(String multimediaobjectId) {
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), multimediaobjectId));
+  }
+
+  @Override
+  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
     int[][] colors = new int[36][3];
     for(int x=0;x<6;x++){
       for(int y=0;y<6;y++) {
@@ -77,7 +85,6 @@ public class VisualizationAverageColorStreamgraph extends AbstractVisualizationM
 
     JsonObject graph = new JsonObject();
     graph.add("name", "VisualizationStreamgraphAverageColorGrid8");
-    graph.add("multimediaobject", multimediaobjectId);
 
     JsonArray graphColors = new JsonArray();
     JsonArray signals = new JsonArray();

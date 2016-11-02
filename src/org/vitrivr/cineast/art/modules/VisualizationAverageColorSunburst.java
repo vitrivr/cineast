@@ -27,9 +27,7 @@ public class VisualizationAverageColorSunburst extends AbstractVisualizationModu
   }
 
   @Override
-  public String visualizeMultimediaobject(String multimediaobjectId) {
-    List<Map<String, PrimitiveTypeProvider>> featureData = ArtUtil.getFeatureData(selectors.get("AverageColor"), multimediaobjectId);
-
+  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
     int[][][] colors = new int[3][216][3];
     for(int x=0;x<6;x++){
       if (x == 0 || x == 1 || x == 5) {
@@ -108,10 +106,19 @@ public class VisualizationAverageColorSunburst extends AbstractVisualizationModu
 
     JsonObject graph = new JsonObject();
     graph.add("name", "VisualizationAverageColorSunburst");
-    graph.add("multimediaobject", multimediaobjectId);
     graph.add("children", getGraphChildren(data, colors, 0, 0));
 
     return graph.toString();
+  }
+
+  @Override
+  public String visualizeMultipleSegments(List<String> segmentIds){
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), segmentIds));
+  }
+
+  @Override
+  public String visualizeMultimediaobject(String multimediaobjectId) {
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), multimediaobjectId));
   }
 
   private int minDistance(int[][] colors, int len, int[] color){
