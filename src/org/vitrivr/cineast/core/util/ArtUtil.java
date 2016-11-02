@@ -192,7 +192,7 @@ public class ArtUtil {
     for(int x=0;x<data[0].length;x++){
       JsonArray signal = new JsonArray();
       int count = 0;
-      for(int y=0;y<40;y++){
+      for(int y=0;y<data.length;y++){
         signal.add(data[y][x]*500 + 1);
         count += data[y][x]*500 + 1;
       }
