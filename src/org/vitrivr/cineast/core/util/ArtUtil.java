@@ -220,53 +220,81 @@ public class ArtUtil {
         colors[0][x][2] = 255;
       }
       for(int y=0;y<6;y++) {
+        int pos = x*6+y+3;
+        if(pos > 35){
+          pos -= 36;
+        }
         switch(x){
           case 0:
-            colors[1][x*6+y][0] = 255;
-            colors[1][x*6+y][1] = 255*(y-3)/6;
+            colors[1][pos][0] = 255;
+            colors[1][pos][1] = 255*y/6;
             for(int z=0;z<6;z++){
-              colors[2][x*36+y*6+z][0] = 255;
-              colors[2][x*36+y*6+z][1] = 255*(y-3)/6 + 255*z/36;
+              int pos2 =  x*36+y*6+z+18;
+              if(pos2 > 215){
+                pos2 -= 216;
+              }
+              colors[2][pos2][0] = 255;
+              colors[2][pos2][1] = 255*y/6 + 255*z/36;
             }
             break;
           case 1:
-            colors[1][x*6+y][1] = 255;
-            colors[1][x*6+y][0] = 255 - 255*(y-3)/6;
+            colors[1][pos][1] = 255;
+            colors[1][pos][0] = 255 - 255*(y-3)/6 - 127;
             for(int z=0;z<6;z++){
-              colors[2][x*36+y*6+z][1] = 255;
-              colors[2][x*36+y*6+z][0] = 255 - 255*(y-3)/6 - 255*z/36;
+              int pos2 =  x*36+y*6+z+18;
+              if(pos2 > 215){
+                pos2 -= 216;
+              }
+              colors[2][pos2][1] = 255;
+              colors[2][pos2][0] = 255 - 255*(y-3)/6 - 255*z/36 - 127;
             }
             break;
           case 2:
-            colors[1][x*6+y][1] = 255;
-            colors[1][x*6+y][2] = 255*(y-3)/6;
+            colors[1][pos][1] = 255;
+            colors[1][pos][2] = 255*(y-3)/6 + 127;
             for(int z=0;z<6;z++){
-              colors[2][x*36+y*6+z][1] = 255;
-              colors[2][x*36+y*6+z][2] = 255*(y-3)/6 + 255*z/36;
+              int pos2 =  x*36+y*6+z+18;
+              if(pos2 > 215){
+                pos2 -= 216;
+              }
+              colors[2][pos2][1] = 255;
+              colors[2][pos2][2] = 255*(y-3)/6 + 255*z/36 + 127;
             }
             break;
           case 3:
-            colors[1][x*6+y][2] = 255;
-            colors[1][x*6+y][1] = 255 - 255*(y-3)/6;
+            colors[1][pos][2] = 255;
+            colors[1][pos][1] = 255 - 255*(y-3)/6 - 127;
             for(int z=0;z<6;z++){
-              colors[2][x*36+y*6+z][2] = 255;
-              colors[2][x*36+y*6+z][1] = 255 - 255*(y-3)/6 - 255*z/36;
+              int pos2 =  x*36+y*6+z+18;
+              if(pos2 > 215){
+                pos2 -= 216;
+              }
+              colors[2][pos2][2] = 255;
+              colors[2][pos2][1] = 255 - 255*(y-3)/6 - 255*z/36 - 127;
             }
             break;
           case 4:
-            colors[1][x*6+y][2] = 255;
-            colors[1][x*6+y][0] = 255*(y-3)/6;
+            colors[1][pos][2] = 255;
+            colors[1][pos][0] = 255*(y-3)/6 + 127;
             for(int z=0;z<6;z++){
-              colors[2][x*36+y*6+z][2] = 255;
-              colors[2][x*36+y*6+z][0] = 255*(y-3)/6 + 255*z/36;
+              int pos2 =  x*36+y*6+z+18;
+              if(pos2 > 215){
+                pos2 -= 216;
+              }
+              colors[2][pos2][2] = 255;
+              colors[2][pos2][0] = 255*(y-3)/6 + 255*z/36 + 127;
             }
             break;
           case 5:
-            colors[1][x*6+y][0] = 255;
-            colors[1][x*6+y][2] = 255 - 255*(y-3)/6;
+            colors[1][pos][0] = 255;
+            colors[1][pos][2] = 255 - 255*(y-3)/6 - 127;
             for(int z=0;z<6;z++){
-              colors[2][x*36+y*6+z][0] = 255;
-              colors[2][x*36+y*6+z][2] = 255 - 255*(y-3)/6 - 255*z/36;
+              int pos2 =  x*36+y*6+z+18;
+              if(pos2 > 215){
+                pos2 -= 216;
+              }
+              colors[2][pos2][0] = 255;
+              colors[2][pos2][2] = 255 - 255*(y-3)/6 - 255*z/36 - 127;
             }
             break;
         }
