@@ -1,51 +1,46 @@
 package org.vitrivr.cineast.art.modules;
 
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
-import org.vitrivr.cineast.api.WebUtils;
+import com.eclipsesource.json.JsonObject;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by sein on 30.08.16.
+ * Created by sein on 26.08.16.
  */
-public class VisualizationMedianColorGradient extends AbstractVisualizationModule {
-  public VisualizationMedianColorGradient() {
+public class FullVisualizationMedianColorSunburstDistribution extends AbstractVisualizationModule {
+  public FullVisualizationMedianColorSunburstDistribution() {
     super();
     tableNames.put("MedianColor", "features_MedianColor");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationMedianColorGradient";
+    return "FullVisualizationMedianColorSunburstDistribution";
   }
 
   @Override
   protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
-    BufferedImage image = new BufferedImage(featureData.size(), 1, BufferedImage.TYPE_INT_RGB);
-    int count = 0;
-    for (Map<String, PrimitiveTypeProvider> feature : featureData) {
-      int[][] avg = ArtUtil.shotToInt(feature.get("feature").getFloatArray(), 1, 1);
-      image.setRGB(count, 0, avg[0][0]);
-      count++;
+    int[][][] colors = ArtUtil.createColorDistribution3();
+
+    int[][] data = new int[3][216];
+    for(int x=0;x<3;x++){
+      for(int y=0;y<216;y++){
+        data[x][y] = 1;
+      }
     }
 
-    try {
-      image = Thumbnails.of(image).scalingMode(ScalingMode.BILINEAR).scale(10, 1).asBufferedImage();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    JsonObject graph = new JsonObject();
+    graph.add("name", "FullVisualizationMedianColorSunburst");
+    graph.add("children", ArtUtil.getSunburstChildren(data, colors, 0, 0));
 
-    return WebUtils.BufferedImageToDataURL(image, "png");
+    return graph.toString();
   }
 
   @Override
@@ -55,7 +50,7 @@ public class VisualizationMedianColorGradient extends AbstractVisualizationModul
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimediaobjectId));
+    return visualizeMulti(null);
   }
 
   @Override
@@ -67,6 +62,6 @@ public class VisualizationMedianColorGradient extends AbstractVisualizationModul
 
   @Override
   public VisualizationResult getResultType() {
-    return VisualizationResult.IMAGE;
+    return VisualizationResult.GRAPH_SUNBURST;
   }
 }

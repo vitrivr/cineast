@@ -25,6 +25,7 @@ thumbnails/
 queryImages/
 src/org/vitrivr/cineast/test/
 cache/
+mycache/
 
 ##Tensorflow
 *.tfmodel

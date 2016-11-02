@@ -14,25 +14,25 @@ import java.util.Map;
 /**
  * Created by sein on 26.08.16.
  */
-public class VisualizationAverageColorStreamgraph extends AbstractVisualizationModule {
-  public VisualizationAverageColorStreamgraph() {
+public class VisualizationMedianColorStreamgraph extends AbstractVisualizationModule {
+  public VisualizationMedianColorStreamgraph() {
     super();
-    tableNames.put("AverageColor", "features_AverageColorGrid8");
+    tableNames.put("MedianColor", "features_MedianColorGrid8");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationAverageColorStreamgraph";
+    return "VisualizationMedianColorStreamgraph";
   }
 
   @Override
   public String visualizeMultipleSegments(List<String> segmentIds){
-    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), segmentIds));
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), segmentIds));
   }
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), multimediaobjectId));
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimediaobjectId));
   }
 
   @Override
@@ -53,7 +53,7 @@ public class VisualizationAverageColorStreamgraph extends AbstractVisualizationM
     }
 
     JsonObject graph = new JsonObject();
-    graph.add("name", "VisualizationAverageColorStreamgraph");
+    graph.add("name", "VisualizationMedianColorStreamgraph");
 
     graph = ArtUtil.createStreamGraphData(data, colors, graph);
 

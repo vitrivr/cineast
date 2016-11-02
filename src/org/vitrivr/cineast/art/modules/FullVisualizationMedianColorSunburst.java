@@ -5,6 +5,7 @@ import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
 import java.util.ArrayList;
@@ -14,15 +15,15 @@ import java.util.Map;
 /**
  * Created by sein on 26.08.16.
  */
-public class VisualizationAverageColorSunburst extends AbstractVisualizationModule {
-  public VisualizationAverageColorSunburst() {
+public class FullVisualizationMedianColorSunburst extends AbstractVisualizationModule {
+  public FullVisualizationMedianColorSunburst() {
     super();
-    tableNames.put("AverageColor", "features_AverageColor");
+    tableNames.put("MedianColor", "features_MedianColor");
   }
 
   @Override
   public String getDisplayName() {
-    return "VisualizationAverageColorSunburst";
+    return "FullVisualizationMedianColorSunburst";
   }
 
   @Override
@@ -39,7 +40,7 @@ public class VisualizationAverageColorSunburst extends AbstractVisualizationModu
     }
 
     JsonObject graph = new JsonObject();
-    graph.add("name", "VisualizationAverageColorSunburst");
+    graph.add("name", "FullVisualizationMedianColorSunburst");
     graph.add("children", ArtUtil.getSunburstChildren(data, colors, 0, 0));
 
     System.out.println(graph.toString());
@@ -49,12 +50,20 @@ public class VisualizationAverageColorSunburst extends AbstractVisualizationModu
 
   @Override
   public String visualizeMultipleSegments(List<String> segmentIds){
-    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), segmentIds));
+    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), segmentIds));
   }
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), multimediaobjectId));
+    //don't care about given id here...
+    MultimediaObjectLookup lookup = new MultimediaObjectLookup();
+    List<MultimediaObjectLookup.MultimediaObjectDescriptor> all = lookup.getAllVideos();
+    List<Map<String, PrimitiveTypeProvider>> allData = new ArrayList<>();
+    for(MultimediaObjectLookup.MultimediaObjectDescriptor multimedia: all){
+      allData.addAll(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimedia.getId()));
+      System.out.println(multimedia.getId());
+    }
+    return visualizeMulti(allData);
   }
 
   @Override
