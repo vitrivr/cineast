@@ -72,16 +72,16 @@ public final class RetrieverConfig {
 		
 		List<DoublePair<Class<? extends Retriever>>> list;
 		
-		list = new ArrayList<>(4);
+		list = new ArrayList<>(6);
 		list.add(DoublePair.pair(AverageColor.class,				2.3));
 		list.add(DoublePair.pair(DominantColors.class,				1.0));
 		list.add(DoublePair.pair(MedianColor.class,					1.2));
 		list.add(DoublePair.pair(QueryImageExporter.class, 0.0001));
+		list.add(DoublePair.pair(AverageFuzzyHist.class,      0.7));
+		list.add(DoublePair.pair(MedianFuzzyHist.class,       1.3));
 		DEFAULT_RETRIEVER_CATEGORIES.put("globalcolor", list);
 
-		list = new ArrayList<>(15);
-		list.add(DoublePair.pair(AverageFuzzyHist.class, 			0.7));
-		list.add(DoublePair.pair(MedianFuzzyHist.class, 			1.3));
+		list = new ArrayList<>(13);
 		list.add(DoublePair.pair(AverageColorARP44.class, 			0.5));
 		list.add(DoublePair.pair(MedianColorARP44.class, 			0.85));
 		list.add(DoublePair.pair(SubDivAverageFuzzyColor.class, 	0.5));
