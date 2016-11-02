@@ -29,6 +29,10 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
 		this.a = a;
 	}
 	
+	public ReadableRGBContainer(int r, int g, int b){
+	  this(r, g, b, 255);
+	}
+	
 	public ReadableRGBContainer(float r, float g, float b){
 		this(r, g, b, 1);
 	}
