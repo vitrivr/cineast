@@ -17,7 +17,7 @@ import java.util.Map;
 public class VisualizationDominantColorSunburstReal extends AbstractVisualizationModule {
   public VisualizationDominantColorSunburstReal() {
     super();
-    tableNames.put("DominantColor", "features_DominantColor");
+    tableNames.put("DominantColor", "features_DominantColors");
   }
 
   @Override
