@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/* based on Article "Fuzzy color histogram-based video segmentation" by Onur K���ktun�, Ugur G�d�kbay, �zg�r Ulusoy */
+/* based on Article "Fuzzy color histogram-based video segmentation" by Küçüktunç, Onur, Uğur Güdükbay, and Özgür Ulusoy */
 public class FuzzyColorHistogramQuantizer {
 
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -11,7 +11,32 @@ public class FuzzyColorHistogramQuantizer {
 	private FuzzyColorHistogramQuantizer(){}
 	
 	public static enum Color{
-		Black, Blue, Navy, Red, Yellow, Magenta, Brown, Grey, Green, Teal, Violet, Orange, Pink, White, Cyan
+		Black(new RGBContainer(0, 0, 0)),
+		Blue(new RGBContainer(0, 0, 255)),
+		Navy(new RGBContainer(0, 0, 128)),
+		Red(new RGBContainer(255, 0, 0)),
+		Yellow(new RGBContainer(255, 255, 0)),
+		Magenta(new RGBContainer(255, 0, 255)),
+		Brown(new RGBContainer(150, 75, 0)),
+		Grey(new RGBContainer(128, 128, 128)),
+		Green(new RGBContainer(0, 255, 0)),
+		Teal(new RGBContainer(0, 128, 128)),
+		Violet(new RGBContainer(143, 0, 255)),
+		Orange(new RGBContainer(255, 127, 0)),
+		Pink(new RGBContainer(255, 192, 203)),
+		White(new RGBContainer(255, 255, 255)),
+		Cyan(new RGBContainer(0, 255, 255));
+	  
+	  private final ReadableRGBContainer rgbc;
+	  
+	  Color(ReadableRGBContainer rgbc){
+	    this.rgbc = rgbc;
+	  }
+	  
+	  public ReadableRGBContainer getRGB(){
+	    return this.rgbc;
+	  }
+	  
 	};
 	
 	static boolean isBlack(ReadableLabContainer lab){
@@ -67,37 +92,6 @@ public class FuzzyColorHistogramQuantizer {
 	}
 	
 	public static Color quantize(ReadableLabContainer lab){
-		/*if(isBlack(lab)	&& isAmiddle(lab)	&& isBmiddle(lab))	{return Color.Black;}
-		if(isBlack(lab) 					&& isBluish(lab))	{return Color.Blue;}
-		if(isGrey(lab)	&& !isGreen(lab) 	&& isBlue(lab))		{return Color.Blue;}
-		if(isWhite(lab) && isAmiddle(lab) 	&& isBluish(lab))	{return Color.Blue;}
-		if(isWhite(lab) && isGreenish(lab) 	&& isBluish(lab))	{return Color.Blue;}
-		if(isBlack(lab) && isReddish(lab) 	&& isBlue(lab))		{return Color.Navy;}
-		if(isGrey(lab)	&& isRed(lab) 		&& !isBlue(lab))	{return Color.Red;}
-		if(isGrey(lab)	&& isReddish(lab) 	&& isBmiddle(lab))	{return Color.Red;}
-		if(isBlack(lab) && isReddish(lab) 	&& isYellowish(lab)){return Color.Red;}
-		if(isGrey(lab)	&& isReddish(lab) 	&& isYellow(lab))	{return Color.Yellow;}
-		if(isWhite(lab) && isAmiddle(lab) 	&& isYellow(lab))	{return Color.Yellow;}
-		if(isWhite(lab) && isGreenish(lab) 	&& isYellow(lab))	{return Color.Yellow;}
-		if(isGrey(lab)	&& isReddish(lab) 	&& isBluish(lab))	{return Color.Magenta;}
-		if(isWhite(lab) && isReddish(lab) 	&& isBluish(lab))	{return Color.Magenta;}
-		if(isGrey(lab)	&& isAmiddle(lab) 	&& isYellowish(lab)){return Color.Brown;}
-		if(isWhite(lab) && isReddish(lab) 	&& isYellow(lab))	{return Color.Brown;}
-		if(isGrey(lab)	&& isAmiddle(lab) 	&& isBmiddle(lab))	{return Color.Grey;}
-		if(isGrey(lab) 	&& isGreenish(lab) 	&& isYellow(lab))	{return Color.Green;}
-		if(isWhite(lab) && isGreen(lab) 	&& isYellowish(lab)){return Color.Green;}
-		if(isGrey(lab)	&& isGreenish(lab) 	&& isBmiddle(lab))	{return Color.Teal;}
-		if(isGrey(lab) 	&& isGreen(lab) 	&& isBlue(lab))		{return Color.Violet;}
-		if(isWhite(lab) && isRed(lab) 		&& isYellow(lab))	{return Color.Orange;}
-		if(isWhite(lab) && isReddish(lab) 	&& isBmiddle(lab))	{return Color.Pink;}
-		if(isWhite(lab) && isAmiddle(lab) 	&& isBmiddle(lab))	{return Color.White;}
-		if(isWhite(lab) && isGreenish(lab) 	&& isBmiddle(lab))	{return Color.Cyan;}
-		if(isWhite(lab) && isGreen(lab) 	&& isBluish(lab))	{return Color.Cyan;}*/
-		
-		//added rules to close gaps
-		//if(isGrey(lab))											{return Color.Grey;}
-		//if(isWhite(lab))										{return Color.White;}
-		//if(isBlack(lab))										{return Color.Black;}
 		
 		if(isWhite(lab)){
 			
@@ -259,41 +253,4 @@ public class FuzzyColorHistogramQuantizer {
 		return Color.Black;
 	}
 	
-	public static RGBContainer toRGB(Color col){
-		switch(col){
-		case Black:
-			return new RGBContainer(0, 0, 0);
-		case Blue:
-			return new RGBContainer(0, 0, 255);
-		case Brown:
-			return new RGBContainer(150, 75, 0);
-		case Cyan:
-			return new RGBContainer(0, 255, 255);
-		case Green:
-			return new RGBContainer(0, 255, 0);
-		case Grey:
-			return new RGBContainer(128, 128, 128);
-		case Magenta:
-			return new RGBContainer(255, 0, 255);
-		case Navy:
-			return new RGBContainer(0, 0, 128);
-		case Orange:
-			return new RGBContainer(255, 127, 0);
-		case Pink:
-			return new RGBContainer(255, 192, 203);
-		case Red:
-			return new RGBContainer(255, 0, 0);
-		case Teal:
-			return new RGBContainer(0, 128, 128);
-		case Violet:
-			return new RGBContainer(143, 0, 255);
-		case White:
-			return new RGBContainer(255, 255, 255);
-		case Yellow:
-			return new RGBContainer(255, 255, 0);
-		default:
-			return new RGBContainer(0, 0, 0);
-		
-		}
-	}
 }
