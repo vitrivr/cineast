@@ -31,8 +31,8 @@
 		"enableCLI": true
 	},
 	"visualization": {
-		"cacheEnabled:": true,
-		"cachePath": "mycache/"
+		"cacheEnabled": false,
+		"cachePath": "cache/art/"
 	}
 
 }

@@ -52,6 +52,7 @@ public final class VisualizationConfig {
     list.add(VisualizationDominantColorGradient.class);
     list.add(VisualizationDominantColorStripeVariable.class);
     list.add(VisualizationAverageColorSunburst.class);
+    list.add(VisualizationAverageColorSunburstReal.class);
     list.add(VisualizationAverageColorStreamgraph.class);
     DEFAULT_VISUALIZATION_CATEGORIES.put("multimediaobjects", list);
 
@@ -80,9 +81,6 @@ public final class VisualizationConfig {
     this.visualizationCategories = visualizationCategories;
     this.cachePath = cachePath;
     this.cacheEnabled = cacheEnabled;
-    if(cacheEnabled) {
-      LOGGER.debug("Visualization cache enabled at '{}'", cachePath);
-    }
   }
 
   public List<Class<? extends Visualization>> getVisualizations() {
