@@ -84,5 +84,12 @@ public class RGBContainer extends ReadableRGBContainer implements FloatVector{
 		return true;
 	}
 
+	public RGBContainer set(int intcolor){
+	  this.r = getRed(intcolor);
+	  this.g = getGreen(intcolor);
+	  this.b = getBlue(intcolor);
+	  this.a = getAlpha(intcolor);
+	  return this;
+	}
 	
 }
