@@ -24,3 +24,4 @@ representative_frames/
 thumbnails/
 queryImages/
 src/org/vitrivr/cineast/test/
+framecache_*
