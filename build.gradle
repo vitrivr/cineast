@@ -78,8 +78,6 @@ configurations {
     all*.exclude group: 'org.bytedeco', module: 'javacpp-presets'
 }
 
-}
-
 sourceSets {
     main {
         java {
