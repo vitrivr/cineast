@@ -24,14 +24,13 @@ representative_frames/
 thumbnails/
 queryImages/
 src/org/vitrivr/cineast/test/
+
+##Framecache
+framecache_*
+
+##Art-UI
 cache/
 mycache/
 
 ##Tensorflow
 *.tfmodel
-
-##Framecache
-framecache*
-
-##build.gradle
-src/resources/cat.jpg

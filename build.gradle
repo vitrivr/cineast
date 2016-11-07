@@ -59,8 +59,8 @@ dependencies {
 	compile group: 'commons-cli', name: 'commons-cli', version: '1.3.1'
 	compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.0.2-1.2'
     compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.0.2-1.2', classifier: osdetector.classifier
-	compile 'com.google.protobuf:protobuf-java:3.0.0-beta-2'
-	compile 'io.grpc:grpc-all:0.13.2'
+	compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.0.0-beta-2'
+	compile group: 'io.grpc', name: 'grpc-all', version: '0.13.2'
     compile group: 'org.bytedeco', name: 'javacpp', version: '1.2.3'
     if(osdetector.os.equals('windows')){
         compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.8.0-1.2'
@@ -76,6 +76,8 @@ dependencies {
 }
 configurations {
     all*.exclude group: 'org.bytedeco', module: 'javacpp-presets'
+}
+
 }
 
 sourceSets {
@@ -110,6 +112,6 @@ task copyConfigs(type: Copy){
 	from "cineast.json"
 	into "$buildDir/libs/"
 	outputs.upToDateWhen { false }
-	}
+}
 	
 task deploy(dependsOn: [build, jar, copyConfigs])
