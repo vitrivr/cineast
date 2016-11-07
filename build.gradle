@@ -62,6 +62,14 @@ dependencies {
 	compile 'com.google.protobuf:protobuf-java:3.0.0-beta-2'
 	compile 'io.grpc:grpc-all:0.13.2'
     compile group: 'org.bytedeco', name: 'javacpp', version: '1.2.3'
+    if(osdetector.os.equals('windows')){
+        compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.8.0-1.2'
+        compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.8.0-1.2', classifier: osdetector.classifier
+    }
+    else{
+        compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.9.0-1.2'
+        compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.9.0-1.2', classifier: osdetector.classifier
+    }
     compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.9.0-1.2'
     compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.9.0-1.2', classifier: osdetector.classifier
     compile group: 'net.coobird', name: 'thumbnailator', version: '[0.4, 0.5)'
@@ -96,11 +104,6 @@ jar {
 	}
 	
 	archiveName = 'cineast.jar'
-}
-
-def f = new File('src/resources/cat.jpg')
-if (!f.exists()) {
-    new URL('https://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg').withInputStream{ i -> f.withOutputStream{ it << i }}
 }
 
 task copyConfigs(type: Copy){
