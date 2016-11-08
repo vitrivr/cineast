@@ -208,9 +208,9 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
             int X = flatPlane.length;
             int Y = flatPlane[0].length;
             for(int i = 0; i < X * X; i++){
-                if(-X/2 < x && x < X/2 && -Y/2 < y && y < Y/2){
+                if(-X/2 < x && x <= X/2 && -Y/2 < y && y <= Y/2){
 
-                    if(flatPlane[x + X/2 - 1][Y/2 - y - 1] != null){
+                    if(flatPlane[x + X/2 - 1][Y/2 - y] != null){
                         List<Direction> directions = new ArrayList<>();
 
                         boolean preferShiftUpDown = Math.abs(y) > Math.abs(x);
@@ -230,7 +230,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
 
                         if(!preferShiftUpDown) Collections.reverse(directions);
 
-                        boolean itemHasBeenMoved = moveItem(flatPlane, directions, x + X/2 - 1, Y/2 - y - 1);
+                        boolean itemHasBeenMoved = moveItem(flatPlane, directions, x + X/2 - 1, Y/2 - y);
                         if(itemHasBeenMoved) doAgain = true;
                     }
                 }

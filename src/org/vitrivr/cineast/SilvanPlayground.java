@@ -74,7 +74,7 @@ public class SilvanPlayground {
         for (HCTFloatVectorValue vector : vectors) {
             i++;
             hct.insert(vector);
-            if(i == 10000) break;
+            if(i == 1000) break;
         }
         return hct;
     }
