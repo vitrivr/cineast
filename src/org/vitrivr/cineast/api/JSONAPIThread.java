@@ -1,9 +1,6 @@
 package org.vitrivr.cineast.api;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.Reader;
+import java.io.*;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -34,6 +31,8 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import org.vitrivr.cineast.explorative.PlaneManager;
+import org.vitrivr.cineast.explorative.RequestHandler;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,
@@ -382,21 +381,93 @@ public class JSONAPIThread extends Thread {
 				break;
 			}
 
-			case "explorative_tile":{
-				LOGGER.debug("Explorative_Tile API call starting");
-				JsonObject query = clientJSON.get("query").asObject();
-				int startX = query.get("startX").asInt();
-				int startY = query.get("startY").asInt();
-				int endX = query.get("endX").asInt();
-				int endY = query.get("endY").asInt();
-				String featureName = query.get("feature_name").asString();
+			case "explorative_tile_field":{
+				LOGGER.debug("Explorative_Tile Field API call starting");
 
-				printer.println("hallo welt");
+				int startX = clientJSON.get("startX").asInt();
+				int startY = clientJSON.get("startY").asInt();
+				int endX = clientJSON.get("endX").asInt();
+				int endY = clientJSON.get("endY").asInt();
+				int level = clientJSON.get("level").asInt();
+				String featureName = clientJSON.get("featureName").asString();
+				PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+				JsonArray jsonArray = specificPlaneManager.getElementField(level, startX, startY, endX, endY);
+
+				JsonObject batch = new JsonObject();
+				batch.add("type", "explorative");
+				batch.add("msg", jsonArray);
+				printer.print("[");
+				printer.println(batch.toString());
+				printer.print("]");
 				printer.flush();
 				printer.close();
 				break;
 			}
 
+			case "explorative_tile_position": {
+				LOGGER.debug("Explorative_Tile Position API call starting");
+
+				String featureName = clientJSON.get("featureName").asString();
+				String id = clientJSON.get("id").asString();
+				int level = clientJSON.get("level").asInt();
+
+				PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+				JsonObject jsonObject = specificPlaneManager.getElementPosition(level, id);
+
+				JsonObject batch = new JsonObject();
+				batch.add("type", "explorative_position");
+				batch.add("msg", jsonObject);
+				printer.print("[");
+				printer.println(batch.toString());
+				printer.print("]");
+				printer.flush();
+				printer.close();
+				break;
+			}
+
+				case "explorative_tile_single": {
+
+					LOGGER.debug("Explorative_Tile Single API call starting");
+
+					String featureName = clientJSON.get("featureName").asString();
+					int level = clientJSON.get("level").asInt();
+					int x = clientJSON.get("x").asInt();
+					int y = clientJSON.get("y").asInt();
+
+
+					PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+					JsonArray singleElement = specificPlaneManager.getSingleElement(level, x, y);
+
+					JsonObject batch = new JsonObject();
+					batch.add("type", "explorative_single");
+					batch.add("msg", singleElement);
+					batch.add("x", x);
+					batch.add("y", y);
+					printer.print("[");
+					printer.println(batch.toString());
+					printer.print("]");
+					printer.flush();
+					printer.close();
+
+					break;
+				}
+
+				case "getLabels": {
+					LOGGER.debug("Label API call starting");
+					JsonArray jsonConcepts = new JsonArray();
+
+					File folder = new File("data/serialized/");
+					if(!folder.exists()){
+						break;
+					}
+					String[] processedFeatures = folder.list();
+					for(String el : processedFeatures){
+						jsonConcepts.add(el.replace("plane_manager_", "").replace(".ser", ""));
+					}
+					_return.set("concepts", jsonConcepts);
+					LOGGER.debug("Concepts API call ending");
+					break;
+				}
 
 			default: {
 				LOGGER.warn("queryType {} is unknown", clientJSON.get("queryType").asString());

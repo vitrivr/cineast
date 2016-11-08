@@ -25,7 +25,7 @@ public class RequestHandler {
         if(!path.exists()) throw new RuntimeException("Folder for serialized PlaneManager does not exist!");
 
         for(String fileName : path.list()){
-            if(!fileName.matches("plane_manager_[A-z]*.ser")) continue;
+            if(!fileName.matches("plane_manager_[A-z0-9]*.ser")) continue;
 
             String featureName = fileName.replace("plane_manager_", "").replace(".ser", "").toLowerCase();
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(new File(path, fileName)));

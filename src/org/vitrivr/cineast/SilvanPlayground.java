@@ -2,32 +2,22 @@ package org.vitrivr.cineast;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.color.ColorConverter;
-import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.hct.DefaultCompactnessCalculation;
 import org.vitrivr.cineast.core.data.hct.HCT;
-import org.vitrivr.cineast.core.data.hct.HCTVisualizer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.explorative.*;
 
 
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
-import static org.vitrivr.cineast.core.data.hct.HCTVisualizer.drawImage;
-import static org.vitrivr.cineast.core.data.hct.HCTVisualizer.saveImgToFS;
 
-/**
- * Created by silvanstich on 08.09.16.
- */
 public class SilvanPlayground {
-    static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
+    public static HashMap<String, String> segments;
 
     public static void main(String[] args) {
         long startTime;
@@ -37,8 +27,8 @@ public class SilvanPlayground {
         try {
             String featureName = "features_averagecolor";
             logger.info("Proccessing HCT for '" + featureName + "'...");
-            List<HCTFloatVectorValue> vectors = readFeaturesFromDB(featureName);
             readSegementsFromDB();
+            List<HCTFloatVectorValue> vectors = readFeaturesFromDB(featureName);
 
             System.out.println("Press any key to start...");
             System.in.read();
@@ -61,18 +51,13 @@ public class SilvanPlayground {
 
             logger.info("Show json request");
             PlaneManager pm = RequestHandler.getSpecificPlaneManager(featureName);
-            System.out.println(pm.toJSONArray(0, 240, 240, 245, 245));
+            System.out.println(pm.getElementField(0, 240, 240, 245, 245));
 
             logger.info("Started deserialization");
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(new File("data/serialized_tree.ser")));
             Object o = objectInputStream.readObject();
             HCT<HCTFloatVectorValue> hct2 = (HCT<HCTFloatVectorValue>)o;
             logger.info("Finished deserialization!");
-
-//            logger.info("Writing results to folders...");
-//            String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date(System.currentTimeMillis()));
-//            HCTVisualizer.visualizeTree(hct.getRoot(), new File("results/" + timestamp + "/" + "root"));
-//            logger.info("Finished writing results to folders!");
 
             logger.info("# of cache access is " + FloatArrayEuclideanDistance.cacheCounter + " | # of calculations is " + FloatArrayEuclideanDistance.calculationCounter);
             logger.info("Finished! Total duration (without DB request time): " + (System.currentTimeMillis() - startTime));
@@ -100,11 +85,11 @@ public class SilvanPlayground {
         dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
         dbSelector.open("cineast_segment");
         List<Map<String, PrimitiveTypeProvider>> allSegments = dbSelector.getAll();
-        HCTVisualizer.segments = new HashMap<>();
+        segments = new HashMap<>();
         for (Map<String, PrimitiveTypeProvider> segment : allSegments) {
             String segmentId = segment.get("id").getString();
             String multimediaobject = segment.get("multimediaobject").getString();
-            HCTVisualizer.segments.put(segmentId, multimediaobject);
+            segments.put(segmentId, multimediaobject);
         }
     }
 
@@ -117,7 +102,7 @@ public class SilvanPlayground {
             for(Map<String, PrimitiveTypeProvider> map: l){
                 String id = map.get("id").getString();
                 float[] feature = map.get("feature").getFloatArray();
-                HCTFloatVectorValue vectorContainer = new HCTFloatVectorValue(feature, id);
+                HCTFloatVectorValue vectorContainer = new HCTFloatVectorValue(feature, segments.get(id) + "/" + id);
                 vectors.add(vectorContainer);
             }
         }
@@ -126,42 +111,4 @@ public class SilvanPlayground {
         dbSelector.close();
         return vectors;
     }
-
-    private static void createAverageColorPictures() throws IOException {
-        DBSelector dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
-        dbSelector.open("features_averagecolor");
-        List<Map<String, PrimitiveTypeProvider>> l = dbSelector.getAll();
-
-        HashSet<Pair<String, float[]>> featuresPlusId = new HashSet<>();
-        HashMap<String, String> segments = new HashMap<>();
-
-        for(Map<String, PrimitiveTypeProvider> map: l) {
-            String id = map.get("id").getString();
-            float[] feature = map.get("feature").getFloatArray();
-            Pair<String, float[]> pair = new Pair<>(id, feature);
-            featuresPlusId.add(pair);
-        }
-        dbSelector.close();
-
-        dbSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
-        dbSelector.open("cineast_segment");
-        List<Map<String, PrimitiveTypeProvider>> allSegments = dbSelector.getAll();
-        for (Map<String, PrimitiveTypeProvider> segment : allSegments) {
-            String segmentId = segment.get("id").getString();
-            String multimediaobject = segment.get("multimediaobject").getString();
-            segments.put(segmentId, multimediaobject);
-        }
-
-        for(Pair<String, float[]> pair : featuresPlusId){
-            String segement = pair.first;
-            String multimediaobject = segments.get(segement);
-
-            BufferedImage img = drawImage(ColorConverter.LabtoRGB(new ReadableLabContainer(pair.second[0], pair.second[1], pair.second[2])));
-            File path = new File("data/averagecolors/" + multimediaobject + "/");
-            if(!path.exists()) path.mkdirs();
-            saveImgToFS(img, path, segement + ".jpg");
-        }
-
-    }
-
 }

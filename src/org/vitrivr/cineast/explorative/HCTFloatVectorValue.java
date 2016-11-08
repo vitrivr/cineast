@@ -1,14 +1,8 @@
 package org.vitrivr.cineast.explorative;
 
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleWeightedGraph;
-import org.vitrivr.cineast.core.data.hct.HCTVisualizer;
-
 import java.io.Serializable;
 
-/**
- * Created by silvanstich on 26.09.16.
- */
+
 public class HCTFloatVectorValue
         implements Comparable<HCTFloatVectorValue>,
         Serializable, Printable{
@@ -42,6 +36,7 @@ public class HCTFloatVectorValue
 
     @Override
     public String print() {
-        return "<img class=\"thumb\" src=\"/Applications/XAMPP/xamppfiles/htdocs/vitrivr-ui/thumbnails/" + HCTVisualizer.segments.get(segment_id) + "/" + segment_id + ".jpg\"></img>";
+        return "<img class=\"thumb\" src=\"/Applications/XAMPP/xamppfiles/htdocs/vitrivr-ui/thumbnails/" + segment_id + ".jpg\" />";
+//        return segment_id;
     }
 }

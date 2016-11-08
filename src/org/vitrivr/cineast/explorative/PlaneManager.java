@@ -2,12 +2,10 @@ package org.vitrivr.cineast.explorative;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import com.google.api.client.json.Json;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
-import org.vitrivr.cineast.core.data.hct.HCTVisualizer;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -16,17 +14,16 @@ import java.util.*;
 public class PlaneManager<T extends Printable> implements TreeTraverserHorizontal<T>, Serializable {
 
     private transient final DistanceCalculation<T> distanceCalculation;
-    private final String featureName;
     private transient final List<List<Plane<T>>> subPlanes = new ArrayList<>();
     private transient final String timestamp;
     private transient final static Logger logger = LogManager.getLogger();
     private final String PATH = "data/serialized/";
     private final String FILE_NAME;
     private final List<VisualizationElement<T>[][]> flatPlanes = new ArrayList<>();
+    private final  List<Map<String, Position>> positionsOfElements = new ArrayList<>();
 
     public PlaneManager(DistanceCalculation<T> distanceCalculation, String featureName) {
         this.distanceCalculation = distanceCalculation;
-        this.featureName = featureName;
         this.FILE_NAME =  "plane_manager_" + featureName + ".ser".toLowerCase();
         timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date(System.currentTimeMillis()));
     }
@@ -99,13 +96,16 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
 
         flatPlanes.add(flatPlane);
 
-        File path = new File("results/html/" + timestamp);
-        if(!path.exists()) path.mkdirs();
-        File fileNotOptimized = new File(path.getPath(), "level_notOpt_" + (subPlanes.size() - 1) + ".html");
-        printFile(flatPlane, fileNotOptimized);
+        File path = writeNonOptimizedFile(flatPlane);
 
         rearrangeItems(flatPlane);
 
+        saveElementsAndPositions(flatPlane);
+
+        writeOptimizedFile(plane, flatPlane, path);
+    }
+
+    private void writeOptimizedFile(Plane<Plane<T>> plane, VisualizationElement<T>[][] flatPlane, File path) {
         File file = new File(path.getPath(), "level_" + (subPlanes.size() - 1) + ".html");
         try {
             PrintWriter printWriter = new PrintWriter(file);
@@ -120,6 +120,14 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
 
         File fileOptimized = new File(path.getPath(), "level_opt_" + (subPlanes.size() - 1) + ".html");
         printFile(flatPlane, fileOptimized);
+    }
+
+    private File writeNonOptimizedFile(VisualizationElement<T>[][] flatPlane) {
+        File path = new File("results/html/" + timestamp);
+        if(!path.exists()) path.mkdirs();
+        File fileNotOptimized = new File(path.getPath(), "level_notOpt_" + (subPlanes.size() - 1) + ".html");
+        printFile(flatPlane, fileNotOptimized);
+        return path;
     }
 
     @Override
@@ -188,81 +196,83 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         return middleElement;
     }
 
+    // Algorithm: http://stackoverflow.com/questions/398299/looping-in-a-spiral
     private void rearrangeItems(VisualizationElement<T>[][] flatPlane){
         boolean doAgain = true;
-        long counter = 0;
         while(doAgain){
             doAgain = false;
-            counter++;
-            for(int i = 0; i < flatPlane.length; i++){
-                for(int j = 0; j < flatPlane[i].length; j++){
-                    List<Direction> directions = new ArrayList<>();
-                    if(flatPlane[i][j] == null) continue;
-                    int middleX = flatPlane.length / 2;
-                    int middleY = flatPlane.length / 2;
-                    if(i < middleX && i < flatPlane.length - 1) directions.add(Direction.RIGHT);
-                    if(i > middleX && i > 0) directions.add(Direction.LEFT);
-//                    if(j < middleY && j < flatPlane[i].length - 1) directions.add(Direction.DOWN);
-//                    if(j > middleY && j > 0) directions.add(Direction.UP);
-//                    if(cacheCounter % 2 == 0) Collections.reverse(directions);
-                    boolean itemHasBeenMoved = moveItem(flatPlane, directions, i, j);
-                    if(itemHasBeenMoved) doAgain = true;
+            int x = 0;
+            int y = 0;
+            int dx = 0;
+            int dy = -1;
+            int X = flatPlane.length;
+            int Y = flatPlane[0].length;
+            for(int i = 0; i < X * X; i++){
+                if(-X/2 < x && x < X/2 && -Y/2 < y && y < Y/2){
+
+                    if(flatPlane[x + X/2 - 1][Y/2 - y - 1] != null){
+                        List<Direction> directions = new ArrayList<>();
+
+                        boolean preferShiftUpDown = Math.abs(y) > Math.abs(x);
+
+                        if(y > 0){
+                            directions.add(Direction.DOWN);
+                        }
+                        if(y < 0){
+                            directions.add(Direction.UP);
+                        }
+                        if(x < 0){
+                            directions.add(Direction.RIGHT);
+                        }
+                        if(x > 0){
+                            directions.add(Direction.LEFT);
+                        }
+
+                        if(!preferShiftUpDown) Collections.reverse(directions);
+
+                        boolean itemHasBeenMoved = moveItem(flatPlane, directions, x + X/2 - 1, Y/2 - y - 1);
+                        if(itemHasBeenMoved) doAgain = true;
+                    }
                 }
-            }
-        }
-        doAgain = true;
-        while(doAgain){
-            doAgain = false;
-            counter++;
-            for(int i = 0; i < flatPlane.length; i++){
-                for(int j = 0; j < flatPlane[i].length; j++){
-                    List<Direction> directions = new ArrayList<>();
-                    if(flatPlane[i][j] == null) continue;
-                    int middleX = flatPlane.length / 2;
-                    int middleY = flatPlane.length / 2;
-//                    if(i < middleX && i < flatPlane.length - 1) directions.add(Direction.RIGHT);
-//                    if(i > middleX && i > 0) directions.add(Direction.LEFT);
-                    if(j < middleY && j < flatPlane[i].length - 1) directions.add(Direction.DOWN);
-                    if(j > middleY && j > 0) directions.add(Direction.UP);
-//                    if(cacheCounter % 2 == 0) Collections.reverse(directions);
-                    boolean itemHasBeenMoved = moveItem(flatPlane, directions, i, j);
-                    if(itemHasBeenMoved) doAgain = true;
+                if(x == y || (x < 0 && x == -y) || (x > 0 && x == 1 - y)){
+                    int temp = dx;
+                    dx = -dy;
+                    dy = temp;
                 }
+                x = x + dx;
+                y = y + dy;
             }
         }
     }
 
     private boolean moveItem(VisualizationElement<T>[][] flatPlane, List<Direction> directions, int x, int y){
-        int newX = x;
-        int newY = y;
+
         for(Direction d : directions){
+            int newX = x;
+            int newY = y;
             if(d == Direction.RIGHT) newX = x + 1;
             if(d == Direction.LEFT) newX = x - 1;
             if(d == Direction.DOWN) newY = y + 1;
             if(d == Direction.UP) newY = y - 1;
+
+            if(newX < 0 || newX > flatPlane.length - 1 || newY < 0 || newY > flatPlane[0].length - 1) continue;
 
             if(flatPlane[newX][newY] == null){
                 logger.debug("Moved item " + d);
                 flatPlane[newX][newY] = flatPlane[x][y];
                 flatPlane[x][y] = null;
                 return true;
-            } else{
-                newX = x;
-                newY = y;
             }
         }
         return false;
     }
 
-    public JsonArray toJSONArray(int level, int startX, int startY, int endX, int endY){
+    public JsonArray getElementField(int level, int startX, int startY, int endX, int endY){
         JsonArray jsonArray = new JsonArray();
         VisualizationElement[][] plane = flatPlanes.get(level);
-        if(plane.length < endX - startX && plane[0].length < endY - endX) {
-            startX = 0;
-            startY = 0;
-            endX = plane.length;
-            endY = plane[0].length;
-        }
+
+        if(plane.length < endX) endX = plane.length;
+        if(plane[0].length < endY) endY = plane[0].length;
 
         for(int x = startX; x < endX; x++){
             JsonArray col = new JsonArray();
@@ -277,6 +287,42 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         }
 
         return jsonArray;
+    }
+
+    public JsonArray getSingleElement(int level, int x, int y){
+
+        JsonArray _return = new JsonArray();
+        VisualizationElement[][] plane = flatPlanes.get(level);
+
+        if(plane.length <= x || x < 0) return _return.add("");
+        if(plane[0].length <= y || y < 0) return _return.add("0");
+
+
+        VisualizationElement element = plane[x][y];
+        if(element != null) {
+            _return.add(element.getVector().print());
+        } else{
+            _return.add("");
+        }
+        return _return;
+    }
+
+    public JsonObject getElementPosition(int level, String id){
+        Position position = positionsOfElements.get(level).get(id);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("x", position.getX());
+        jsonObject.add("y", position.getY());
+        return jsonObject;
+    }
+
+    private void saveElementsAndPositions(VisualizationElement[][] flatPlane){
+        Map<String, Position> elementsAndPositions = new HashMap<>();
+        for(int x = 0; x < flatPlane.length; x++){
+            for(int y = 0; y < flatPlane[0].length; y++){
+                if(flatPlane[x][y] != null) elementsAndPositions.put(flatPlane[x][y].print(), new Position(x, y));
+            }
+        }
+        positionsOfElements.add(elementsAndPositions);
     }
 
 }

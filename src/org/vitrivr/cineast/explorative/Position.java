@@ -54,4 +54,9 @@ public class Position implements Serializable{
         }
         return super.equals(obj);
     }
+
+    @Override
+    public String toString(){
+        return "Position is (" + x + "," + y + ")";
+    }
 }
