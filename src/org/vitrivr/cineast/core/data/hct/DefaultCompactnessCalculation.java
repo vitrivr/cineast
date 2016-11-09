@@ -15,6 +15,6 @@ public class DefaultCompactnessCalculation implements CompactnessCalculation, Se
         for (DefaultWeightedEdge edge : graph.edgeSet()) {
             fullWeight += graph.getEdgeWeight(edge);
         }
-        return graph.vertexSet().size() > 20 && fullWeight / graph.vertexSet().size() > 100 ? 1.0d : 0.0d;
+        return graph.vertexSet().size() > 50 && fullWeight / graph.vertexSet().size() > 10000 ? 1.0d : 0.0d;
     }
 }

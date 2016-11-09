@@ -4,9 +4,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by silvanstich on 31.10.16.
- */
 public class RequestHandler {
 
     private static final String PATH = "data/serialized/";

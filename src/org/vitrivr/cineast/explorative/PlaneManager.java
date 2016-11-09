@@ -110,7 +110,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         try {
             PrintWriter printWriter = new PrintWriter(file);
             printWriter.print("<html><body>");
-            printWriter.print(plane.print());
+            printWriter.print(plane.printHtml());
             printWriter.print("</body></html>");
             printWriter.flush();
             printWriter.close();
@@ -158,7 +158,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
                 for(int y = 0; y < flatPlane[x].length; y++){
                     if(flatPlane[x][y] != null){
                         pw.print("<td>");
-                        pw.print(flatPlane[x][y].getVector().print());
+                        pw.print(flatPlane[x][y].getVector().printHtml());
                         pw.print("</td>");
                     } else {
                         pw.append("<td></td>");
@@ -280,7 +280,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
                 if(plane[x][y] == null){
                     col.add("");
                 } else {
-                    col.add(plane[x][y].getVector().print());
+                    col.add(plane[x][y].getVector().printHtml());
                 }
             }
             jsonArray.add(col);
@@ -289,22 +289,19 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         return jsonArray;
     }
 
-    public JsonArray getSingleElement(int level, int x, int y){
+    public String getSingleElement(int level, int x, int y){
 
-        JsonArray _return = new JsonArray();
         VisualizationElement[][] plane = flatPlanes.get(level);
 
-        if(plane.length <= x || x < 0) return _return.add("");
-        if(plane[0].length <= y || y < 0) return _return.add("0");
+        if(plane.length <= x || x < 0) return "";
+        if(plane[0].length <= y || y < 0) return "";
 
 
         VisualizationElement element = plane[x][y];
         if(element != null) {
-            _return.add(element.getVector().print());
-        } else{
-            _return.add("");
+            return element.getVector().print();
         }
-        return _return;
+        return "";
     }
 
     public JsonObject getElementPosition(int level, String id){
@@ -313,6 +310,10 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         jsonObject.add("x", position.getX());
         jsonObject.add("y", position.getY());
         return jsonObject;
+    }
+
+    public int getTopLevel(){
+        return flatPlanes.size() - 1;
     }
 
     private void saveElementsAndPositions(VisualizationElement[][] flatPlane){

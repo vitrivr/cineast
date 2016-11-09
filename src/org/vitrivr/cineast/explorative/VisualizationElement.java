@@ -58,6 +58,11 @@ class VisualizationElement<T extends Printable> implements Printable, Serializab
     }
 
     @Override
+    public String printHtml() {
+        return vector.printHtml();
+    }
+
+    @Override
     public String print() {
         return vector.print();
     }

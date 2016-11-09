@@ -94,7 +94,7 @@ public class Plane<T extends Printable> implements Printable, Serializable {
         double minDist = Double.MAX_VALUE;
         int i = 0;
         for (T vector : remainingVectors) {
-            if(i > 10) break;
+            if(i > 20) break;
             i++;
             Pair<Position, Double> optimumPerVector = getOptimalPosition(vector);
             if(minDist > optimumPerVector.second){
@@ -149,7 +149,7 @@ public class Plane<T extends Printable> implements Printable, Serializable {
     }
 
     @Override
-    public String print() {
+    public String printHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append("<table>");
         for(int i = 0; i < width; i++){
@@ -157,7 +157,7 @@ public class Plane<T extends Printable> implements Printable, Serializable {
             for(int j = 0; j < height; j++){
                 if(plane[i][j] != null){
                     sb.append("<td>");
-                    sb.append(plane[i][j].print());
+                    sb.append(plane[i][j].printHtml());
                     sb.append("</td>");
 
                 } else {
@@ -169,5 +169,10 @@ public class Plane<T extends Printable> implements Printable, Serializable {
         }
         sb.append("</table>");
         return sb.toString();
+    }
+
+    @Override
+    public String print() {
+        return "";
     }
 }

@@ -8,35 +8,39 @@ public class HCTFloatVectorValue
         Serializable, Printable{
 
     private final float[] vector;
-    private final String segment_id;
+    private final String id;
 
-    public HCTFloatVectorValue(float[] vector, String segment_id) {
+    public HCTFloatVectorValue(float[] vector, String id) {
         this.vector = vector;
-        this.segment_id = segment_id;
+        this.id = id;
     }
 
     public float[] getVector() {
         return vector;
     }
 
-    public String getSegment_id() {
-        return segment_id;
+    public String getId() {
+        return id;
     }
 
     @Override
     public int compareTo(HCTFloatVectorValue o) {
-        if(segment_id.hashCode() > o.getSegment_id().hashCode() ){
+        if(id.hashCode() > o.getId().hashCode() ){
             return 1;
         }
-        if(segment_id.hashCode() < o.getSegment_id().hashCode()){
+        if(id.hashCode() < o.getId().hashCode()){
             return -1;
         }
         return 0;
     }
 
     @Override
+    public String printHtml() {
+        return "<img class=\"thumb\" src=\"/Applications/XAMPP/xamppfiles/htdocs/vitrivr-ui/thumbnails/" + id + ".jpg\" />";
+    }
+
+    @Override
     public String print() {
-        return "<img class=\"thumb\" src=\"/Applications/XAMPP/xamppfiles/htdocs/vitrivr-ui/thumbnails/" + segment_id + ".jpg\" />";
-//        return segment_id;
+        return id;
     }
 }

@@ -105,8 +105,8 @@ public class JSONAPIThread extends Thread {
 //					
 //					resultobj = JSONEncoder.encodeShot(rset.getInt(1), desc.getVideoId(), desc.getStartFrame(), desc.getEndFrame());
 //					
-//					this.printer.print(resultobj.toString());
-//					this.printer.print(',');
+//					this.printer.printHtml(resultobj.toString());
+//					this.printer.printHtml(',');
 //					printer.flush();
 //					if(i % 20 == 0){
 //						Thread.sleep(100);
@@ -425,24 +425,27 @@ public class JSONAPIThread extends Thread {
 				break;
 			}
 
-				case "explorative_tile_single": {
+				case "explorative_tiles": {
 
-					LOGGER.debug("Explorative_Tile Single API call starting");
+					LOGGER.debug("Explorative_Tiles API call starting");
 
 					String featureName = clientJSON.get("featureName").asString();
 					int level = clientJSON.get("level").asInt();
-					int x = clientJSON.get("x").asInt();
-					int y = clientJSON.get("y").asInt();
-
-
+					JsonArray requested = clientJSON.get("requested").asArray();
+					JsonArray response = new JsonArray();
 					PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
-					JsonArray singleElement = specificPlaneManager.getSingleElement(level, x, y);
+					for (JsonValue jsonValue : requested.asArray()) {
+						JsonObject xyObject = jsonValue.asObject();
+						int x = xyObject.get("x").asInt();
+						int y = xyObject.get("y").asInt();
+						String img = specificPlaneManager.getSingleElement(level, x, y);
+						JsonObject singleTile = new JsonObject().add("x", x).add("y", y).add("img", img);
+						response.add(singleTile);
+					}
 
 					JsonObject batch = new JsonObject();
-					batch.add("type", "explorative_single");
-					batch.add("msg", singleElement);
-					batch.add("x", x);
-					batch.add("y", y);
+					batch.add("type", "explorative_tiles");
+					batch.add("response", response);
 					printer.print("[");
 					printer.println(batch.toString());
 					printer.print("]");
@@ -452,7 +455,7 @@ public class JSONAPIThread extends Thread {
 					break;
 				}
 
-				case "getLabels": {
+				case "getFeatureNames": {
 					LOGGER.debug("Label API call starting");
 					JsonArray jsonConcepts = new JsonArray();
 
@@ -462,9 +465,13 @@ public class JSONAPIThread extends Thread {
 					}
 					String[] processedFeatures = folder.list();
 					for(String el : processedFeatures){
-						jsonConcepts.add(el.replace("plane_manager_", "").replace(".ser", ""));
+						if(!el.matches("plane_manager_[A-z0-9]*.ser")) continue;
+						String featureName = el.replace("plane_manager_", "").replace(".ser", "").toLowerCase();
+						PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+						int topLevel = specificPlaneManager.getTopLevel();
+						jsonConcepts.add(new JsonObject().add("id", featureName).add("text", featureName).add("topLevel", topLevel));
 					}
-					_return.set("concepts", jsonConcepts);
+					_return.set("response", jsonConcepts);
 					LOGGER.debug("Concepts API call ending");
 					break;
 				}
