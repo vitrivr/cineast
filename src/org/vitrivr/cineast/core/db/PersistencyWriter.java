@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db;
 
+import java.util.List;
+
 public interface PersistencyWriter <R> {
 
 	/**
@@ -19,7 +21,8 @@ public interface PersistencyWriter <R> {
 	PersistentTuple<R> generateTuple(Object...objects);
 	
 	boolean persist(PersistentTuple<R> tuple);
-	
+
 	void setFieldNames(String...names);
-	
+
+    boolean persist(List<PersistentTuple> tuples);
 }

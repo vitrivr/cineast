@@ -1,39 +1,34 @@
 package org.vitrivr.cineast.api;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator;
+import org.vitrivr.cineast.art.modules.visualization.Visualization;
+import org.vitrivr.cineast.art.modules.visualization.VisualizationCache;
+import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.VisualizationConfig;
+import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.db.*;
+import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
+import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
+import org.vitrivr.cineast.core.util.LogHelper;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.net.Socket;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.QueryContainer;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.ADAMproSelector;
-import org.vitrivr.cineast.core.db.DBResultCache;
-import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.SegmentLookup;
-import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
-import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
-import org.vitrivr.cineast.core.util.LogHelper;
-
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.util.*;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,
@@ -102,7 +97,7 @@ public class JSONAPIThread extends Thread {
 //				rset = selector.select("SELECT id, startframe, endframe FROM cineast.shots WHERE video = " + id);
 				int i = 0;
 //				while (rset.next()) {
-//					ShotLookup.ShotDescriptor desc= sl.lookUpShot(rset.getInt(1));
+//					SegmentLookup.ShotDescriptor desc= sl.lookUpShot(rset.getInt(1));
 //					
 //					resultobj = JSONEncoder.encodeShot(rset.getInt(1), desc.getVideoId(), desc.getStartFrame(), desc.getEndFrame());
 //					
@@ -278,7 +273,7 @@ public class JSONAPIThread extends Thread {
 				
 				Set<String> categories = categoryMap.keySet();
 				
-				
+
 				List<StringDoublePair> result;
 				for(String category : categories){
 					TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
@@ -322,7 +317,7 @@ public class JSONAPIThread extends Thread {
 						videoids = JSONUtils.printVideosBatched(printer, list, videoids);
 						shotids = JSONUtils.printShotsBatched(printer, list, shotids);
 						JSONUtils.printResultsBatched(printer, list, category, 1);
-						
+
 					}
 					
 					
@@ -379,6 +374,136 @@ public class JSONAPIThread extends Thread {
 				sl.close();
 				
 				LOGGER.debug("Context API call ending");
+				break;
+			}
+			case "getLabels":{
+				LOGGER.debug("Label API call starting");
+				JsonArray jsonConcepts = new JsonArray();
+				DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+				selector.open(NeuralNetFeature.getClassTableName());
+
+				List<PrimitiveTypeProvider> queryRes = selector.getAll(NeuralNetFeature.getHumanLabelColName());
+				HashSet<String> labels = new HashSet<>(queryRes.size());
+				//Eliminate Duplicates
+				for(PrimitiveTypeProvider el : queryRes){
+					labels.add(el.getString());
+				}
+				for(String el : labels) {
+					jsonConcepts.add(el);
+				}
+				_return.set("concepts", jsonConcepts);
+				selector.close();
+				LOGGER.debug("Concepts API call ending");
+				break;
+			}
+
+			case "getMultimediaobjects":{
+				List<MultimediaObjectLookup.MultimediaObjectDescriptor> multimediaobjectIds = new MultimediaObjectLookup().getAllVideos();
+
+				JsonArray movies = new JsonArray();
+				for(MultimediaObjectLookup.MultimediaObjectDescriptor descriptor: multimediaobjectIds){
+					JsonObject resultobj = JSONEncoder.encodeVideo(descriptor);
+					movies.add(resultobj);
+				}
+
+				_return.set("multimediaobjects", movies);
+				break;
+			}
+
+			case "getSegments":{
+				String multimediaobjectId = clientJSON.get("multimediaobjectId").asString();
+				List<SegmentDescriptor> segments = new SegmentLookup().lookUpAllSegments(multimediaobjectId);
+				Collections.sort(segments, new SegmentDescriptorComparator());
+
+				JsonArray list = new JsonArray();
+				for (SegmentDescriptor segment: segments) {
+					list.add(segment.getSegmentId());
+				}
+
+				_return.set("segments", list);
+				break;
+			}
+
+			case "getVisualizations":{
+				JsonArray visual = new JsonArray();
+				for(Class<? extends Visualization> visualization: Config.getVisualizationConfig().getVisualizations()){
+					Visualization obj = visualization.newInstance();
+					JsonObject element = new JsonObject();
+					element.add("className", visualization.getCanonicalName());
+					element.add("displayName", obj.getDisplayName());
+
+					JsonArray types = new JsonArray();
+					for(VisualizationType t: obj.getVisualizations()){
+						types.add(t.toString());
+					}
+					element.add("visualizationTypes", types);
+					visual.add(element);
+				}
+				_return.set("visualizations", visual);
+				break;
+			}
+
+			case "getVisualizationCategories":{
+				JsonArray visual = new JsonArray();
+				for(String el: Config.getVisualizationConfig().getVisualizationCategories()){
+					visual.add(el);
+				}
+				_return.set("visualizationCategories", visual);
+				break;
+			}
+
+			case "getArt":{
+				VisualizationType visualizationType = VisualizationType.valueOf(clientJSON.get("visualizationType").asString());
+				Class<?> visualizationClass;
+				try {
+					visualizationClass = Class.forName(clientJSON.get("visualization").asString());
+				} catch (ClassNotFoundException e){
+					_return.add("visualizationError", "Invalid visualizationClass!");
+					break;
+				}
+				if(!Config.getVisualizationConfig().isValidVisualization(visualizationClass)){
+					_return.add("visualizationError", "Invalid visualizationClass!");
+					break;
+				}
+				List<String> objectIds = new ArrayList<String>();
+				switch(visualizationType){
+					case VISUALIZATION_SEGMENT:
+						objectIds.add(clientJSON.get("segmentId").asString());
+						break;
+					case VISUALIZATION_MULTIMEDIAOBJECT:
+						objectIds.add(clientJSON.get("multimediaobjectId").asString());
+						break;
+					case VISUALIZATION_MULTIPLESEGMENTS:
+						for(JsonValue i:clientJSON.get("segmentIds").asArray()) {
+							objectIds.add(i.asString());
+						}
+						break;
+					default:
+						LOGGER.error("Missing VisualizationType in API implementation!");
+						break;
+				}
+				Visualization visualization = (Visualization)visualizationClass.newInstance();
+				String result = VisualizationCache.getFromCache(visualization.getDisplayName(), visualizationType, objectIds);
+				if(result == null) {
+					visualization.init(Config.getDatabaseConfig().getSelectorSupplier());
+					switch(visualizationType){ //I'm not completely happy that I have to use the same switch cases again, should be possible in a better way
+						case VISUALIZATION_MULTIMEDIAOBJECT:
+							result = visualization.visualizeMultimediaobject(objectIds.get(0));
+							break;
+						case VISUALIZATION_SEGMENT:
+							result = visualization.visualizeSegment(objectIds.get(0));
+							break;
+						case VISUALIZATION_MULTIPLESEGMENTS:
+							result = visualization.visualizeMultipleSegments(objectIds);
+							break;
+						default:
+							break;
+					}
+					VisualizationCache.cacheResult(visualization.getDisplayName(), visualizationType, objectIds, result);
+				}
+				_return.add("resultData", result);
+				_return.add("resultType", visualization.getResultType().toString());
+				visualization.finish();
 				break;
 			}
 

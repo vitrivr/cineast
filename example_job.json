@@ -19,8 +19,9 @@
 	[
 	{"name": "ShotThumbNails"},
 	{"name": "RepresentativeFrameExporter"}
+	]
 	],
-	
+
 "database":
 	{
 	"writer": "PROTO",

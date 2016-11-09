@@ -9,8 +9,15 @@
 </File>-->
 </Appenders>
 <Loggers>
+    <logger name="io" level="ERROR">
+        <AppenderRef ref="Console"/>
+    </logger>
+    <logger name="org" level="INFO">
+        <AppenderRef ref="Console"/>
+    </logger>
+    <logger name="org.vitrivr.cineast" level="DEBUG">
+    </logger>
 <Root level="info">
-<AppenderRef ref="Console"/>
 <!--<AppenderRef ref="MyFile"/>-->
 </Root>
 </Loggers>

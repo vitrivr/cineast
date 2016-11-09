@@ -1,10 +1,5 @@
 package org.vitrivr.cineast.core.segmenter;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.Histogram;
 import org.vitrivr.cineast.core.data.Shot;
@@ -15,6 +10,11 @@ import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShotSegmenter implements ShotProvider{
 	

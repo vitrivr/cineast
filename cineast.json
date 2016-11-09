@@ -2,8 +2,7 @@
 	"database": {
 		"host": "127.0.0.1",
 		"port": 5890,
-		"plaintext": true,
-		"writer": "PROTO"
+		"plaintext": true
 	},
 	
 	"retriever": {
@@ -14,11 +13,12 @@
 	
 	"decoder": {
 		"maxFrameWidth": 640,
-		"maxFrameHeight": 480
+		"maxFrameHeight": 480,
+		"decoder": "FFMPEG"
 	},
 	
 	"extractor": {
-		"threadPoolSize": 6
+		"threadPoolSize": 2
 	},
 	
 	"imagecache": {
@@ -29,6 +29,10 @@
 	"api": {
 		"jsonApiPort": 12345,
 		"enableCLI": true
+	},
+	"visualization": {
+		"cacheEnabled": false,
+		"cachePath": "cache/art/"
 	}
 
 }

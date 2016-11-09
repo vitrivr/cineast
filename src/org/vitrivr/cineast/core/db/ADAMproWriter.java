@@ -1,23 +1,18 @@
 package org.vitrivr.cineast.core.db;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
+import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adam.grpc.AdamGrpc;
-import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adam.grpc.AdamGrpc.*;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage.Code;
-import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.Builder;
 import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultInfoMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.QueryResultsMessage;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ADAMproWriter extends ProtobufTupleGenerator {
 	
@@ -66,16 +61,24 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 
 	@Override
 	public synchronized boolean persist(PersistentTuple<TupleInsertMessage> tuple) {
+		List<PersistentTuple> tuples = new ArrayList<>(1);
+		tuples.add(tuple);
+		return persist(tuples);
+	}
+
+	public synchronized boolean persist(List<PersistentTuple> tuples){
 		this.builder.clear();
 		this.builder.setEntity(this.entityName);
-		ArrayList<TupleInsertMessage> tmp = new ArrayList<>(1);
-		TupleInsertMessage tim = tuple.getPersistentRepresentation();
-		tmp.add(tim);
+		ArrayList<TupleInsertMessage> tmp = new ArrayList(tuples.size());
+		for(PersistentTuple<TupleInsertMessage> tuple : tuples){
+			TupleInsertMessage tim = tuple.getPersistentRepresentation();
+			tmp.add(tim);
+		}
 		this.builder.addAllTuples(tmp);
 		InsertMessage im = this.builder.build();
 		AckMessage ack = this.adampro.insertOneBlocking(im);
 		if(ack.getCode() != Code.OK){
-			LOGGER.warn("{} during persist", ack.getMessage());
+			LOGGER.warn("Error: {} during persist", ack.getMessage());
 		}
 		return ack.getCode() == Code.OK;
 	}

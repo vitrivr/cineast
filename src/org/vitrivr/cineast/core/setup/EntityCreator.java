@@ -1,15 +1,16 @@
 package org.vitrivr.cineast.core.setup;
 
-import java.util.ArrayList;
-
 import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.adam.grpc.AdamGrpc;
 import org.vitrivr.adam.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.AttributeDefinitionMessage;
 import org.vitrivr.adam.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.adam.grpc.AdamGrpc.CreateEntityMessage;
 import org.vitrivr.cineast.core.db.ADAMproWrapper;
+
+import java.util.ArrayList;
 
 public class EntityCreator {
 
@@ -91,9 +92,9 @@ public class EntityCreator {
 		
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 		
-		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(unique).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(unique).setHandler(AdamGrpc.HandlerType.FILE).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		for(String feature : featrueNames){
-			fields.add(builder.setName(feature).setAttributetype(AttributeType.FEATURE).setPk(false).build());
+			fields.add(builder.setName(feature).setAttributetype(AttributeType.FEATURE).setPk(false).setHandler(AdamGrpc.HandlerType.FILE).build());
 		}
 		
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllAttributes(fields).build();
@@ -137,27 +138,31 @@ public class EntityCreator {
 	
 	public AckMessage createIdEntity(String entityName, AttributeDefinition...attributes){
 		ArrayList<AttributeDefinitionMessage> fieldList = new ArrayList<>();
-		
+
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
-		
-		fieldList.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
+
+		fieldList.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).setHandler(AdamGrpc.HandlerType.RELATIONAL).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		for(AttributeDefinition attribute : attributes){
-			fieldList.add(builder.setName(attribute.name).setAttributetype(attribute.type).setPk(false).build());
+			fieldList.add(builder.setName(attribute.name).setAttributetype(attribute.type).setHandler(attribute.handlerType).setPk(false).build());
 		}
-		
+
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(entityName.toLowerCase()).addAllAttributes(fieldList).build();
-		
+
 		AckMessage ack = adampro.createEntityBlocking(message);
-		
+
 		if(ack.getCode() == AckMessage.Code.OK){
 			LOGGER.info("successfully created feature entity {}", entityName);
 		}else{
 			LOGGER.error("error creating feature entity {}: {}", entityName, ack.getMessage());
 		}
-		
+
 		return ack;
 	}
-	
+
+	public boolean existsEntity(String entityName){
+		return this.adampro.existsEntity(entityName);
+	}
+
 	public void close(){
 		this.adampro.close();
 	}
@@ -165,10 +170,16 @@ public class EntityCreator {
 	public static class AttributeDefinition{
 		private final String name;
 		private final AttributeType type;
+		private final AdamGrpc.HandlerType handlerType;
 		
 		public AttributeDefinition(String name, AttributeType type){
+			this(name, type, AdamGrpc.HandlerType.RELATIONAL);
+		}
+
+		public AttributeDefinition(String name, AttributeType type, AdamGrpc.HandlerType handlerType){
 			this.name = name;
 			this.type = type;
+			this.handlerType = handlerType;
 		}
 	}
 	

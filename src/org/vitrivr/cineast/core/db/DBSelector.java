@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.db;
 
-import java.util.List;
-import java.util.Map;
-
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+
+import java.util.List;
+import java.util.Map;
 
 public interface DBSelector {
 
@@ -23,6 +23,20 @@ public interface DBSelector {
 	
 	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
 
-	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values);
-	
+    List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values);
+
+    /**
+	 * SELECT column from the table. Be careful with large entities
+	 */
+    List<PrimitiveTypeProvider> getAll(String column);
+
+	/**
+	 * SELECT * from
+	 */
+	List<Map<String, PrimitiveTypeProvider>> getAll();
+
+	boolean existsEntity(String name);
+
+	/** Get first k rows*/
+	List<Map<String, PrimitiveTypeProvider>> preview(int k);
 }

@@ -1,9 +1,5 @@
 package org.vitrivr.cineast.core.db;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
@@ -11,6 +7,8 @@ import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.setup.EntityCreator;
+
+import java.util.*;
 
 public class MultimediaObjectLookup{
 	
@@ -71,9 +69,16 @@ public class MultimediaObjectLookup{
 		if(!checkProvider("type", typeProvider, ProviderDataType.INT)){
 			return new MultimediaObjectDescriptor();
 		}
-		
-		if(!checkProvider("duration", durationProvider, ProviderDataType.DOUBLE)){
-			return new MultimediaObjectDescriptor();
+
+		/**
+		This is because the current setup produces a float-field as duration in the DB, but on old versions of Cineast it is a double
+		 So the code has to accomodate for both options
+		 */
+		if(!checkProvider("duration", durationProvider, ProviderDataType.FLOAT)){
+			if(!checkProvider("duration", durationProvider, ProviderDataType.DOUBLE)){
+				return new MultimediaObjectDescriptor();
+			}
+			LOGGER.info("Duration is a double, returning valid Multimediadescriptor");
 		}	
 		
 		
@@ -147,8 +152,36 @@ public class MultimediaObjectLookup{
 		this.close();
 		super.finalize();
 	}
-	
-public static class MultimediaObjectDescriptor implements ExistenceCheck{
+
+	public List<MultimediaObjectDescriptor> getAllVideos(){
+		DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+		selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
+		List<Map<String, PrimitiveTypeProvider>> all = selector.getAll();
+		List<MultimediaObjectDescriptor> _return = new ArrayList<>(all.size());
+		for (Map<String, PrimitiveTypeProvider> map : all) {
+			_return.add(mapToDescriptor(map));
+		}
+		return _return;
+	}
+
+	public List<String> lookUpVideoIds(){
+		DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+		selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
+		List<PrimitiveTypeProvider> ids = selector.getAll("id");
+		Set<String> uniqueIds = new HashSet<>();
+		for(PrimitiveTypeProvider l: ids){
+			uniqueIds.add(l.getString());
+		}
+		selector.close();
+
+		List<String> multimediaobjectIds = new ArrayList<>();
+		for(String id: uniqueIds){
+			multimediaobjectIds.add(id);
+		}
+
+		return multimediaobjectIds;
+	}
+    public static class MultimediaObjectDescriptor implements ExistenceCheck{
 		
 		private final String objectId; 
 		private final int width, height, framecount, type;

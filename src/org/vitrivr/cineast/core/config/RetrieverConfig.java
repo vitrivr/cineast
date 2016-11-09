@@ -1,58 +1,18 @@
 package org.vitrivr.cineast.core.config;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.jcodec.common.logging.Logger;
-import org.vitrivr.cineast.core.data.DoublePair;
-import org.vitrivr.cineast.core.features.AverageColor;
-import org.vitrivr.cineast.core.features.AverageColorARP44;
-import org.vitrivr.cineast.core.features.AverageColorCLD;
-import org.vitrivr.cineast.core.features.AverageColorGrid8;
-import org.vitrivr.cineast.core.features.AverageColorRaster;
-import org.vitrivr.cineast.core.features.AverageFuzzyHist;
-import org.vitrivr.cineast.core.features.CLD;
-import org.vitrivr.cineast.core.features.ChromaGrid8;
-import org.vitrivr.cineast.core.features.DominantColors;
-import org.vitrivr.cineast.core.features.DominantEdgeGrid16;
-import org.vitrivr.cineast.core.features.DominantEdgeGrid8;
-import org.vitrivr.cineast.core.features.EHD;
-import org.vitrivr.cineast.core.features.EdgeARP88;
-import org.vitrivr.cineast.core.features.EdgeARP88Full;
-import org.vitrivr.cineast.core.features.EdgeGrid16;
-import org.vitrivr.cineast.core.features.EdgeGrid16Full;
-import org.vitrivr.cineast.core.features.HueValueVarianceGrid8;
-import org.vitrivr.cineast.core.features.MedianColor;
-import org.vitrivr.cineast.core.features.MedianColorARP44;
-import org.vitrivr.cineast.core.features.MedianColorGrid8;
-import org.vitrivr.cineast.core.features.MedianColorRaster;
-import org.vitrivr.cineast.core.features.MedianFuzzyHist;
-import org.vitrivr.cineast.core.features.MotionHistogram;
-import org.vitrivr.cineast.core.features.SaturationGrid8;
-import org.vitrivr.cineast.core.features.SubDivAverageFuzzyColor;
-import org.vitrivr.cineast.core.features.SubDivMedianFuzzyColor;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram2;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram3;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram4;
-import org.vitrivr.cineast.core.features.SubDivMotionHistogram5;
-import org.vitrivr.cineast.core.features.SubDivMotionSum2;
-import org.vitrivr.cineast.core.features.SubDivMotionSum3;
-import org.vitrivr.cineast.core.features.SubDivMotionSum4;
-import org.vitrivr.cineast.core.features.SubDivMotionSum5;
-import org.vitrivr.cineast.core.features.SubtitleFulltextSearch;
-import org.vitrivr.cineast.core.features.SubtitleWordSearch;
-import org.vitrivr.cineast.core.features.exporter.QueryImageExporter;
-import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.util.ReflectionHelper;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import org.jcodec.common.logging.Logger;
+import org.vitrivr.cineast.core.data.DoublePair;
+import org.vitrivr.cineast.core.features.*;
+import org.vitrivr.cineast.core.features.exporter.QueryImageExporter;
+import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.util.ReflectionHelper;
+
+import java.util.*;
 
 public final class RetrieverConfig {
 
@@ -118,6 +78,10 @@ public final class RetrieverConfig {
 		list.add(DoublePair.pair(SubDivMotionSum4.class, 			0.5));
 		list.add(DoublePair.pair(SubDivMotionSum5.class, 			0.5));
 		DEFAULT_RETRIEVER_CATEGORIES.put("motion", list);
+
+		list = new ArrayList<>(1);
+		list.add(DoublePair.pair(NeuralNetVGG16Feature.class, 1.0));
+		DEFAULT_RETRIEVER_CATEGORIES.put("neuralnet", list);
 		
 		list = new ArrayList<>(3);
 		list.add(DoublePair.pair(SubtitleWordSearch.class, 			1.0));
