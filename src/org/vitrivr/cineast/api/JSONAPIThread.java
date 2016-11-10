@@ -105,8 +105,8 @@ public class JSONAPIThread extends Thread {
 //					
 //					resultobj = JSONEncoder.encodeShot(rset.getInt(1), desc.getVideoId(), desc.getStartFrame(), desc.getEndFrame());
 //					
-//					this.printer.printHtml(resultobj.toString());
-//					this.printer.printHtml(',');
+//					this.printer.print(resultobj.toString());
+//					this.printer.print(',');
 //					printer.flush();
 //					if(i % 20 == 0){
 //						Thread.sleep(100);

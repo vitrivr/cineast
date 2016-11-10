@@ -95,7 +95,7 @@ public class API {
 	private static CommandLine handleCommandLine(String[] args) {
 		Options options = new Options();
 		
-		options.addOption("h", "help", false, "printHtml this message");
+		options.addOption("h", "help", false, "print this message");
 		options.addOption("i", "interactive", false, "enables the CLI independently of what is specified in the config");
 		
 		Option configLocation = new Option(null, "config", true, "alternative config file, by default 'cineast.json' is used");
