@@ -455,6 +455,27 @@ public class JSONAPIThread extends Thread {
 					break;
 				}
 
+				case "explorative_tile_representative": {
+					String featureName = clientJSON.get("featureName").asString();
+					int level = clientJSON.get("level").asInt();
+					String id = clientJSON.get("id").asString();
+					PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+					String representativeId = specificPlaneManager.getRepresentativeOfElement(id, level);
+					level++;
+					JsonObject jsonObject = specificPlaneManager.getElementPosition(level, representativeId);
+
+					JsonObject batch = new JsonObject();
+					batch.add("type", "explorative_tile_representative");
+					batch.add("msg", jsonObject);
+					printer.print("[");
+					printer.println(batch.toString());
+					printer.print("]");
+					printer.flush();
+					printer.close();
+
+					break;
+				}
+
 				case "getFeatureNames": {
 					LOGGER.debug("Label API call starting");
 					JsonArray jsonConcepts = new JsonArray();

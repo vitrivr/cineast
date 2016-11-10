@@ -25,7 +25,7 @@ public class SilvanPlayground {
         logger.info("started...");
 
         try {
-            String featureName = "features_averagecolor";
+            String featureName = "features_averagecolorgrid8";
             logger.info("Proccessing HCT for '" + featureName + "'...");
             readSegementsFromDB();
             List<HCTFloatVectorValue> vectors = readFeaturesFromDB(featureName);
@@ -74,7 +74,7 @@ public class SilvanPlayground {
         for (HCTFloatVectorValue vector : vectors) {
             i++;
             hct.insert(vector);
-            if(i == 25000) break;
+            if(i == 10000) break;
         }
         return hct;
     }

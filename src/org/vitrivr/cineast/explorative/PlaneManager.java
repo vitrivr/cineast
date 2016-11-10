@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
+import javax.swing.tree.ExpandVetoException;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -20,7 +21,8 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
     private final String PATH = "data/serialized/";
     private final String FILE_NAME;
     private final List<VisualizationElement<T>[][]> flatPlanes = new ArrayList<>();
-    private final  List<Map<String, Position>> positionsOfElements = new ArrayList<>();
+    private final List<Map<String, Position>> positionsOfElements = new ArrayList<>();
+    private final List<Map<String, String>> representativeOfElements = new ArrayList<>();
 
     public PlaneManager(DistanceCalculation<T> distanceCalculation, String featureName) {
         this.distanceCalculation = distanceCalculation;
@@ -61,6 +63,18 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         Plane<Plane<T>> plane = new Plane<>(actSubPlanes, (point1, point2) -> distanceCalculation.distance(point1.getRepresentative(), point2.getRepresentative()), getMiddleElement(actSubPlanes));
         plane.processCollection();
 
+        VisualizationElement<T>[][] flatPlane = createFlatPlane(plane);
+
+        File path = writeNonOptimizedFile(flatPlane);
+
+        rearrangeItems(flatPlane);
+
+        saveElementsAndPositions(flatPlane);
+
+        writeOptimizedFile(plane, flatPlane, path);
+    }
+
+    private VisualizationElement<T>[][] createFlatPlane(Plane<Plane<T>> plane) {
         int maxX = 0;
         int maxY = 0;
         int i = 0;
@@ -80,29 +94,23 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
             }
         }
 
-
-
         VisualizationElement<T>[][] flatPlane = new VisualizationElement[i * maxX][j * maxY];
+        HashMap<String, String> representativeOfElement = new HashMap<>();
         for(int x = 0; x < plane.getPlane().length; x++){
             for(int y = 0; y < plane.getPlane()[x].length; y++){
                 if(plane.getPlane()[x][y] == null || plane.getPlane()[x][y].getVector() == null) continue;
                 for(int tempX = 0; tempX < plane.getPlane()[x][y].getVector().getWidth(); tempX++){
                     for(int tempY = 0; tempY < plane.getPlane()[x][y].getVector().getHeight(); tempY++){
-                        flatPlane[x * maxX + tempX][y *maxY + tempY] = plane.getPlane()[x][y].getVector().getPlane()[tempX][tempY];
+                        VisualizationElement<T> element = plane.getPlane()[x][y].getVector().getPlane()[tempX][tempY];
+                        flatPlane[x * maxX + tempX][y *maxY + tempY] = element;
+                        if(element != null) representativeOfElement.put(element.getVector().print(), element.getRepresentative());
                     }
                 }
             }
         }
-
+        representativeOfElements.add(representativeOfElement);
         flatPlanes.add(flatPlane);
-
-        File path = writeNonOptimizedFile(flatPlane);
-
-        rearrangeItems(flatPlane);
-
-        saveElementsAndPositions(flatPlane);
-
-        writeOptimizedFile(plane, flatPlane, path);
+        return flatPlane;
     }
 
     private void writeOptimizedFile(Plane<Plane<T>> plane, VisualizationElement<T>[][] flatPlane, File path) {
@@ -310,6 +318,11 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         jsonObject.add("x", position.getX());
         jsonObject.add("y", position.getY());
         return jsonObject;
+    }
+
+    public String getRepresentativeOfElement(String id, int currentLevel){
+        if(!representativeOfElements.get(currentLevel).containsKey(id)) throw new RuntimeException("no representative found for " + id);
+        return representativeOfElements.get(currentLevel).get(id);
     }
 
     public int getTopLevel(){

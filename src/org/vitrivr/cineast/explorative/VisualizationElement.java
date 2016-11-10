@@ -46,6 +46,10 @@ class VisualizationElement<T extends Printable> implements Printable, Serializab
         return plane.isFreePosition(position.getPosRight());
     }
 
+    public String getRepresentative(){
+        return plane.getRepresentative().print();
+    }
+
     public List<VisualizationElement<T>> getNeighbors(){
         Position[] neighborPositions = position.getNeighborPositions();
         List<VisualizationElement<T>> neighbors = new ArrayList<>();
