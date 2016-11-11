@@ -2,6 +2,7 @@ package org.vitrivr.cineast.explorative;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
@@ -47,19 +48,30 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
 
     @Override
     public void processValues(List<T> values, T representative) {
-        Plane<T> plane = new Plane<T>(values, distanceCalculation, representative);
+        Plane<T> plane = new Plane<>(values, distanceCalculation, representative);
         plane.processCollection();
         subPlanes.get(subPlanes.size() - 1 ).add(plane);
     }
 
     @Override
     public void endCell() {
-
     }
 
     @Override
     public void endLevel() {
         List<Plane<T>> actSubPlanes = subPlanes.get(subPlanes.size() - 1);
+        if(logger.getLevel() == Level.INFO){
+            int counter = 0;
+            for(Plane<T> p : actSubPlanes){
+                for(int x = 0; x < p.getPlane().length; x++){
+                    for(int y = 0; y < p.getPlane()[0].length; y++){
+                        if(p.getPlane()[x][y] != null) counter++;
+                    }
+                }
+            }
+            logger.info("Total number of elements in subplanes: " + counter);
+        }
+
         Plane<Plane<T>> plane = new Plane<>(actSubPlanes, (point1, point2) -> distanceCalculation.distance(point1.getRepresentative(), point2.getRepresentative()), getMiddleElement(actSubPlanes));
         plane.processCollection();
 
@@ -95,7 +107,6 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         }
 
         VisualizationElement<T>[][] flatPlane = new VisualizationElement[i * maxX][j * maxY];
-        HashMap<String, String> representativeOfElement = new HashMap<>();
         for(int x = 0; x < plane.getPlane().length; x++){
             for(int y = 0; y < plane.getPlane()[x].length; y++){
                 if(plane.getPlane()[x][y] == null || plane.getPlane()[x][y].getVector() == null) continue;
@@ -103,12 +114,10 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
                     for(int tempY = 0; tempY < plane.getPlane()[x][y].getVector().getHeight(); tempY++){
                         VisualizationElement<T> element = plane.getPlane()[x][y].getVector().getPlane()[tempX][tempY];
                         flatPlane[x * maxX + tempX][y *maxY + tempY] = element;
-                        if(element != null) representativeOfElement.put(element.getVector().print(), element.getRepresentative());
                     }
                 }
             }
         }
-        representativeOfElements.add(representativeOfElement);
         flatPlanes.add(flatPlane);
         return flatPlane;
     }
@@ -331,11 +340,19 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
 
     private void saveElementsAndPositions(VisualizationElement[][] flatPlane){
         Map<String, Position> elementsAndPositions = new HashMap<>();
+        HashMap<String, String> representativeOfElement = new HashMap<>();
         for(int x = 0; x < flatPlane.length; x++){
             for(int y = 0; y < flatPlane[0].length; y++){
-                if(flatPlane[x][y] != null) elementsAndPositions.put(flatPlane[x][y].print(), new Position(x, y));
+                if(flatPlane[x][y] != null){
+                    elementsAndPositions.put(flatPlane[x][y].print(), new Position(x, y));
+                    if(flatPlane[x][y].getRepresentative() == null || flatPlane[x][y].getRepresentative().length() == 0) throw new RuntimeException("Representative is null or empty!" + flatPlane[x][y].print());
+                    if(representativeOfElement.containsKey(flatPlane[x][y].print())) throw new RuntimeException("This key is allready in the collection");
+                    representativeOfElement.put(flatPlane[x][y].print(), flatPlane[x][y].getRepresentative());
+                }
             }
         }
+        logger.info("Number of elements in flat Plane: " + elementsAndPositions.size() + " Number of elements in representative list: " + representativeOfElement.size());
+        representativeOfElements.add(representativeOfElement);
         positionsOfElements.add(elementsAndPositions);
     }
 

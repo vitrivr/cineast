@@ -39,7 +39,7 @@ public class Plane<T extends Printable> implements Printable, Serializable {
         VisualizationElement<T> startItem = new VisualizationElement<>(representative, startPos, this);
         vectors.remove(startItem);
         insert(startItem, startPos);
-        while(addedVectors.size() < vectors.size()){
+        while(addedVectors.size() <= vectors.size()){
             Pair<Position, T> optimalItemAndPosition = getOptimalItemAndPosition();
 
             T nextItem = optimalItemAndPosition.second;

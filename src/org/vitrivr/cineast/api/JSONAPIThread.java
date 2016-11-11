@@ -461,6 +461,9 @@ public class JSONAPIThread extends Thread {
 					String id = clientJSON.get("id").asString();
 					PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
 					String representativeId = specificPlaneManager.getRepresentativeOfElement(id, level);
+					if (representativeId == null || representativeId.equals("")){
+						throw new Exception("RepresentativeID is empty");
+					}
 					level++;
 					JsonObject jsonObject = specificPlaneManager.getElementPosition(level, representativeId);
 

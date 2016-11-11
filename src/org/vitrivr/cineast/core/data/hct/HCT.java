@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.hct;
 
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.explorative.*;
@@ -27,8 +28,9 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
     public void insert(T nextItem) throws Exception {
         sanityCheck();
         insert(nextItem, 0);
-        if(size % 50 == 0) logger.info("#Items in tree: " + ++size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
-        logger.debug("#Items in tree: " + ++size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
+        size++;
+        if(size % 50 == 0) logger.info("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
+        logger.debug("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
 
     }
 
@@ -287,12 +289,22 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
     public void traverseTree(TreeTraverserHorizontal<T> traverserHorizontal) throws Exception {
         for(HCTLevel<T> level : levels){
             traverserHorizontal.newLevel();
+            int valuesInLevel = 0;
+            int valuesNotNullInLevel = 0;
             for(HCTCell<T> cell : level.getCells()){
                 traverserHorizontal.newCell();
                 traverserHorizontal.processValues(cell.getValues(), cell.getNucleus().getValue());
                 traverserHorizontal.endCell();
+                valuesInLevel += cell.getValues().size();
+                if(logger.getLevel() == Level.INFO){
+                    for (T v : cell.getValues()) {
+                        if(v != null) valuesNotNullInLevel++;
+                    }
+
+                }
             }
             traverserHorizontal.endLevel();
+            logger.info("# of values in this level is according to HCT: " + valuesInLevel + " # not null values in this level according to HCT: " + valuesNotNullInLevel);
         }
         traverserHorizontal.finished();
     }
