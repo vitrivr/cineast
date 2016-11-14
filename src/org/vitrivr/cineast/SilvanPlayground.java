@@ -31,12 +31,14 @@ public class SilvanPlayground {
             List<HCTFloatVectorValue> vectors = readFeaturesFromDB(featureName);
 
             System.out.println("Press any key to start...");
-            System.in.read();
+            //System.in.read();
 
             startTime = System.currentTimeMillis();
             logger.info("Creating HCT...");
             HCT<HCTFloatVectorValue> hct = buildTree(vectors);
             logger.info("All items inserted...");
+
+            logger.info("# of elements in tree by traversion: " + hct.traverse(hct.getRootCell(), 0));
 
             logger.info("Start writting HCT to the file system...");
             File folder = new File("data/");

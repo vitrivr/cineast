@@ -16,6 +16,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
     private List<HCTLevel<T>> levels = new ArrayList<>();
     private static Logger logger = LogManager.getLogger();
     private int size;
+    private boolean isReRun = false;
 
     private final CompactnessCalculation compactnessCalculation;
     private final DistanceCalculation distanceCalculation;
@@ -26,12 +27,12 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
     }
 
     public void insert(T nextItem) throws Exception {
+        isReRun = false;
         sanityCheck();
         insert(nextItem, 0);
         size++;
         if(size % 50 == 0) logger.info("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
         logger.debug("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
-
     }
 
     private IHCTCell<T> insert(T nextItem, int levelNo) throws Exception {
@@ -112,15 +113,29 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
         return newCells;
     }
 
+    int counter;
     private void addNewCells(int levelNo, List<HCTCell<T>> newCells) throws Exception {
+        List<HCTCell<T>> oneValueCells = new ArrayList<>();
+        newCells.sort((HCTCell<T> el1, HCTCell<T> el2) -> el1.getValues().size() - el2.getValues().size());
         for (HCTCell<T> newCell : newCells) {
             levels.get(levelNo).addCell(newCell);
         }
-        for (IHCTCell<T> newCell : newCells) {
+        for (HCTCell<T> newCell : newCells) {
             IHCTCell<T> parentCell = insert(newCell.getNucleus().getValue(), levelNo + 1);
             newCell.getParent().removeChild(newCell);
             parentCell.addChild(newCell);
             newCell.setParent(parentCell);
+            if (newCell.getValues().size() == 1 || !isReRun || levelNo == 0) oneValueCells.add(newCell);
+        }
+        for (HCTCell<T> oneValueCell : oneValueCells){
+            if (levelNo == 0 && !isReRun && oneValueCell.getValues().size() == 1){
+                counter++;
+                logger.info("# of reruns is: " + counter);
+                isReRun = true;
+                removeOldCell(0, oneValueCell, oneValueCell.getNucleus().getValue());
+                insert(oneValueCell.getNucleus().getValue(), 0);
+            }
+
         }
     }
 
@@ -309,4 +324,20 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
         traverserHorizontal.finished();
     }
 
+    public int traverse(IHCTCell<T> parentCell, int counter){
+
+        for(IHCTCell<T> cell : parentCell.getChildren()){
+            if(cell.getChildren().size() == 0){
+                // reached lowest level
+                counter += cell.getValues().size();
+            } else{
+                counter = traverse(cell, counter);
+            }
+        }
+        return counter;
+    }
+
+    public IHCTCell<T> getRootCell() {
+        return levels.get(levels.size() - 1).getCells().get(0);
+    }
 }
