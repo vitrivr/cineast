@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
-import javax.swing.tree.ExpandVetoException;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -47,8 +46,8 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
     }
 
     @Override
-    public void processValues(List<T> values, T representative) {
-        Plane<T> plane = new Plane<>(values, distanceCalculation, representative);
+    public void processValues(List<T> values, T representativeValue, T parentRepresentativeValue) {
+        Plane<T> plane = new Plane<>(values, distanceCalculation, representativeValue);
         plane.processCollection();
         subPlanes.get(subPlanes.size() - 1 ).add(plane);
     }
@@ -58,7 +57,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
     }
 
     @Override
-    public void endLevel() {
+    public void endLevel(int levelNo) {
         List<Plane<T>> actSubPlanes = subPlanes.get(subPlanes.size() - 1);
         if(logger.getLevel() == Level.INFO){
             int counter = 0;

@@ -301,24 +301,28 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
         return distanceCalculation;
     }
 
-    public void traverseTree(TreeTraverserHorizontal<T> traverserHorizontal) throws Exception {
+    public void traverseTreeHorizontal(TreeTraverserHorizontal<T> traverserHorizontal) throws Exception {
         for(HCTLevel<T> level : levels){
             traverserHorizontal.newLevel();
             int valuesInLevel = 0;
             int valuesNotNullInLevel = 0;
             for(HCTCell<T> cell : level.getCells()){
                 traverserHorizontal.newCell();
-                traverserHorizontal.processValues(cell.getValues(), cell.getNucleus().getValue());
+                if(cell.getParent() != null){
+                    traverserHorizontal.processValues(cell.getValues(), cell.getNucleus().getValue(), cell.getParent().getNucleus().getValue());
+                } else {
+                    traverserHorizontal.processValues(cell.getValues(), cell.getNucleus().getValue(), null);
+                }
+
                 traverserHorizontal.endCell();
                 valuesInLevel += cell.getValues().size();
                 if(logger.getLevel() == Level.INFO){
                     for (T v : cell.getValues()) {
                         if(v != null) valuesNotNullInLevel++;
                     }
-
                 }
             }
-            traverserHorizontal.endLevel();
+            traverserHorizontal.endLevel(levels.indexOf(level));
             logger.info("# of values in this level is according to HCT: " + valuesInLevel + " # not null values in this level according to HCT: " + valuesNotNullInLevel);
         }
         traverserHorizontal.finished();

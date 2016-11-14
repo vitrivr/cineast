@@ -48,7 +48,8 @@ public class SilvanPlayground {
             logger.info("HCT has been written to the file system.");
 
             logger.info("Traversion started...");
-            hct.traverseTree(new PlaneManager<>(new FloatArrayEuclideanDistance(), featureName.toLowerCase()));
+//            hct.traverseTreeHorizontal(new PlaneManager<>(new FloatArrayEuclideanDistance(), featureName.toLowerCase()));
+            hct.traverseTreeHorizontal(new ImprovedPlaneManager<>(new FloatArrayEuclideanDistance(), featureName.toLowerCase()));
             logger.info("Traversion finished!");
 
             logger.info("Show json request");
@@ -76,7 +77,7 @@ public class SilvanPlayground {
         for (HCTFloatVectorValue vector : vectors) {
             i++;
             hct.insert(vector);
-            if(i == 10000) break;
+            if(i == 1000) break;
         }
         return hct;
     }

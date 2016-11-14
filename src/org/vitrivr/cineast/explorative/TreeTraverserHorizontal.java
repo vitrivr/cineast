@@ -14,11 +14,11 @@ public interface TreeTraverserHorizontal<T> extends Serializable {
 
     void newCell();
 
-    void processValues(List<T> values, T representative);
+    void processValues(List<T> values, T representativeValue, T parentRepresentativeValue);
 
     void endCell();
 
-    void endLevel();
+    void endLevel(int levelNo);
 
     void finished();
 }
