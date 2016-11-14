@@ -54,8 +54,6 @@ public class API {
 	private static boolean running = true;
 
 	public static void main(String[] args) {
-		// TODO parse command line arguments
-
 		CommandLine commandline = handleCommandLine(args);
 		
 		if(commandline.hasOption("config")){
@@ -64,40 +62,16 @@ public class API {
 		
 		boolean disableAllAPI = false;
 
-		if(commandline.getArgList().contains("playground")){
-			/**DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
-			selector.open("cineast_segment");
-			for (Map<String, PrimitiveTypeProvider> map : selector.preview()) {
-				for(Map.Entry<String, PrimitiveTypeProvider> entry : map.entrySet()){
-					LOGGER.info(entry.getKey()+" "+entry.getValue());
-				}
-				System.out.println("-------------\n");
-			}*/
-		}
-
-
-		if(commandline.getArgList().contains("neuralnet")){
-			LOGGER.info("Initializing nn persistent layer");
-			NeuralNetFeature feature = new NeuralNetVGG16Feature(Config.getNeuralNetConfig());
-
-			feature.initalizePersistentLayer(() -> new EntityCreator());
-			LOGGER.info("Initalizing writers");
-			feature.init(Config.getDatabaseConfig().getWriterSupplier());
-			feature.init(Config.getDatabaseConfig().getSelectorSupplier());
-			LOGGER.info("Filling labels");
-			feature.fillConcepts(Config.getNeuralNetConfig().getConceptsPath());
-			feature.fillLabels(new HashMap<>());
-
-			disableAllAPI = true;
-			LOGGER.info("done");
-
-		}
-
 		if(commandline.hasOption("job")){
 			ExtractionJobRunner ejr = new ExtractionJobRunner(new File(commandline.getOptionValue("job")));
 			Thread thread = new Thread(ejr);
 			thread.start();
 			disableAllAPI = true;
+		}
+		
+		if(commandline.hasOption("setup")){
+		  setup();
+		  return;
 		}
 		
 		if(!disableAllAPI && Config.getApiConfig().getEnableCli() || commandline.hasOption('i')){
@@ -137,6 +111,9 @@ public class API {
 		configLocation.setArgName("JOB_FILE");
 		options.addOption(extractionJob);
 		
+		Option setup = new Option(null, "setup", false, "initialize the underlying storage layer");
+		options.addOption(setup);
+		
 		CommandLineParser parser = new DefaultParser();
 		CommandLine line;
 	    try {
@@ -156,6 +133,55 @@ public class API {
 
 	public static RetrieverInitializer getInitializer() {
 		return initializer;
+	}
+	
+	private static void setup(){
+	  EntityCreator ec = new EntityCreator();
+    
+	  LOGGER.info("setting up basic entities...");
+    
+    ec.createMultiMediaObjectsEntity();
+    ec.createSegmentEntity();
+    
+    LOGGER.info("...done");
+    
+    
+    LOGGER.info("collecting retriever classes...");
+    
+    HashSet<Retriever> retrievers = new HashSet<>();
+    
+    for(String category : Config.getRetrieverConfig().getRetrieverCategories()){
+      retrievers.addAll(Config.getRetrieverConfig().getRetrieversByCategory(category).keySet());
+    }
+    
+    LOGGER.info("...done");
+    
+    Supplier<EntityCreator> supply = new Supplier<EntityCreator>() {
+      
+      @Override
+      public EntityCreator get() {
+        return ec;
+      }
+    };
+    
+    for(Retriever r : retrievers){
+      LOGGER.info("setting up " + r.getClass().getSimpleName());
+      r.initalizePersistentLayer(supply);
+    }
+    
+    
+    LOGGER.info("Initializing nn persistent layer");
+    NeuralNetFeature feature = new NeuralNetVGG16Feature(Config.getNeuralNetConfig());
+
+    feature.initalizePersistentLayer(() -> new EntityCreator());
+    LOGGER.info("Initalizing writers");
+    feature.init(Config.getDatabaseConfig().getWriterSupplier());
+    feature.init(Config.getDatabaseConfig().getSelectorSupplier());
+    LOGGER.info("Filling labels");
+    feature.fillConcepts(Config.getNeuralNetConfig().getConceptsPath());
+    feature.fillLabels(new HashMap<>());
+
+    System.out.println("setup done.");
 	}
 	
 	private static final class APICLIThread extends Thread{
@@ -200,40 +226,7 @@ public class API {
 					}
 					case "setup": {
 						
-						EntityCreator ec = new EntityCreator();
-						
-						System.out.print("setting up basic entities...");
-						
-						ec.createMultiMediaObjectsEntity();
-						ec.createSegmentEntity();
-						
-						System.out.println("done");
-						
-						
-						System.out.print("collecting retriever classes...");
-						
-						HashSet<Retriever> retrievers = new HashSet<>();
-						
-						for(String category : Config.getRetrieverConfig().getRetrieverCategories()){
-							retrievers.addAll(Config.getRetrieverConfig().getRetrieversByCategory(category).keySet());
-						}
-						
-						System.out.println("done");
-						
-						Supplier<EntityCreator> supply = new Supplier<EntityCreator>() {
-							
-							@Override
-							public EntityCreator get() {
-								return ec;
-							}
-						};
-						
-						for(Retriever r : retrievers){
-							System.out.println("setting up " + r.getClass().getSimpleName());
-							r.initalizePersistentLayer(supply);
-						}
-						
-						System.out.println("setup done.");
+						setup();
 						
 						break;
 					}
