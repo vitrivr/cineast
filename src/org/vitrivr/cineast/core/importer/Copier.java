@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.importer;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,11 +56,58 @@ public class Copier {
 			}
 			@SuppressWarnings("rawtypes")
 			PersistentTuple tuple = this.writer.generateTuple(objects);
-			this.writer.persist(tuple); //TODO use batched operation
+			this.writer.persist(tuple);
 		}while((map = this.importer.readNextAsMap()) != null);
 		
 		this.writer.close();
-		
+	}
+	
+	public void copyBatched(int batchSize){
+	  
+	  if(batchSize <= 0){
+	    copy();
+	    return;
+	  }
+	  
+	  Map<String, PrimitiveTypeProvider> map = this.importer.readNextAsMap();
+    
+    if(map == null){
+      return;
+    }
+    
+    Set<String> keyset = map.keySet();
+    String[] names = new String[keyset.size()];
+    
+    int i = 0;
+    for(String name : keyset){
+      names[i++] = name;
+    }
+    
+    this.writer.open(entityName);
+    this.writer.setFieldNames(names);
+    
+    Object[] objects = new Object[names.length];
+    
+    @SuppressWarnings("rawtypes")
+    ArrayList<PersistentTuple> tupleCache = new ArrayList<>(batchSize);
+    
+    do{
+      for(i = 0; i < names.length; ++i){
+        objects[i] = map.get(names[i]);
+      }
+      @SuppressWarnings("rawtypes")
+      PersistentTuple tuple = this.writer.generateTuple(objects);
+      tupleCache.add(tuple);
+      if(tupleCache.size() >= batchSize){
+        this.writer.persist(tupleCache);
+        tupleCache.clear();
+      }
+      
+    }while((map = this.importer.readNextAsMap()) != null);
+    
+    this.writer.persist(tupleCache);
+    
+    this.writer.close();
 	}
 
 	@Override
