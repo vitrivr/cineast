@@ -1,9 +1,20 @@
 package org.vitrivr.cineast.api;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.net.Socket;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator;
@@ -12,23 +23,25 @@ import org.vitrivr.cineast.art.modules.visualization.VisualizationCache;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.VisualizationConfig;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.*;
+import org.vitrivr.cineast.core.db.ADAMproSelector;
+import org.vitrivr.cineast.core.db.DBResultCache;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.db.SegmentLookup;
 import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.Reader;
-import java.net.Socket;
-import java.sql.ResultSet;
-import java.util.*;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,
@@ -334,7 +347,7 @@ public class JSONAPIThread extends Thread {
 				LOGGER.debug("Context API call starting");
 				JsonObject query = clientJSON.get("query").asObject();
 				JsonArray shotidlist = query.get("shotidlist").asArray();
-				int limit = query.get("limit") == null ? 1 : query.get("limit").asInt();
+//				int limit = query.get("limit") == null ? 1 : query.get("limit").asInt();
 				DBSelector selector = new ADAMproSelector();
 				SegmentLookup sl = new SegmentLookup();
 				SegmentLookup.SegmentDescriptor descriptor;
@@ -507,6 +520,34 @@ public class JSONAPIThread extends Thread {
 				break;
 			}
 
+			case "meta":{
+			  JsonObject query = clientJSON.get("query").asObject();
+        JsonArray idList = query.get("idlist").asArray();
+        ArrayList<String> ids = new ArrayList<>(idList.size());
+        for(JsonValue v : idList){
+          ids.add(v.asString());
+        }
+        SegmentLookup lookup = new SegmentLookup();
+			  Map<String, SegmentDescriptor> segments = lookup.lookUpShots(ids);
+			  lookup.close();
+			  
+			  HashSet<String> mmobjectIds = new HashSet<>();
+			  for(SegmentDescriptor descriptor : segments.values()){
+			    mmobjectIds.add(descriptor.getVideoId());
+			  }
+        
+			  MultimediaObjectLookup mmlookup = new MultimediaObjectLookup();
+			  Map<String, MultimediaObjectDescriptor> mmobjects = mmlookup.lookUpVideos(mmobjectIds);
+			  mmlookup.close();
+			  
+			  printer.print(JSONEncoder.encodeVideoBatch(mmobjects.values()));
+			  printer.println(",");
+			  printer.print(JSONEncoder.encodeShotBatch(segments.values()).toString());
+			  printer.println(",");
+        
+			  break;
+			}
+			
 			default: {
 				LOGGER.warn("queryType {} is unknown", clientJSON.get("queryType").asString());
 			}
