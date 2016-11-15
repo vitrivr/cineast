@@ -74,4 +74,10 @@ public class NoDBSelector implements DBSelector {
     return new ArrayList<>(0);
   }
 
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
+      Iterable<String> values) {
+    return new ArrayList<>(0);
+  }
+
 }

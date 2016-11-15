@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -65,7 +66,7 @@ public final class JSONEncoder {
 		return encodeShot(sd, true);
 	}
 	
-	public static final JsonObject encodeShotBatch(List<SegmentDescriptor> sdList){
+	public static final JsonObject encodeShotBatch(Iterable<SegmentDescriptor> sdList){
 		JsonObject _return = new JsonObject();
 		_return.add("type", "batch");
 		_return.add("inner", "shot");
@@ -108,7 +109,7 @@ public final class JSONEncoder {
 		return encodeVideo(vd, true);
 	}
 	
-	public static final JsonObject encodeVideoBatch(List<MultimediaObjectDescriptor> vdList){
+	public static final JsonObject encodeVideoBatch(Iterable<MultimediaObjectDescriptor> vdList){
 		JsonObject _return = new JsonObject();
 		_return.add("type", "batch");
 		_return.add("inner", "video");

@@ -123,6 +123,26 @@ public class SegmentLookup {
 		return _return;
 	}
 	
+	public Map<String, SegmentDescriptor> lookUpShots(Iterable<String> ids){
+	  if(ids == null){
+      return new HashMap<>();
+    }
+    
+    HashMap<String, SegmentDescriptor> _return = new HashMap<>();
+    
+    List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("id", ids);
+    
+    if(results.isEmpty()){
+      return new HashMap<>();
+    }
+    
+    for(Map<String, PrimitiveTypeProvider> map : results){
+      SegmentDescriptor d = mapToDescriptor(map);
+      _return.put(d.getSegmentId(), d);
+    }
+    
+    return _return;
+	}
 
 	public List<SegmentDescriptor> lookUpAllSegments(String objectId){
 		

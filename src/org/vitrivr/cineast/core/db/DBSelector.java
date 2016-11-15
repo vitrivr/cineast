@@ -9,34 +9,39 @@ import java.util.Map;
 
 public interface DBSelector {
 
-	boolean open(String name);
-	
-	boolean close();
-	/**
-	 * @return a list of pairs containing an id and the distance to the query vector
-	 */
-	List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column, QueryConfig config);
-	
-	List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, QueryConfig config);
-	
-	List<float[]> getFeatureVectors(String fieldName, String value, String vectorName);
-	
-	List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
+  boolean open(String name);
 
-    List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values);
+  boolean close();
 
-    /**
-	 * SELECT column from the table. Be careful with large entities
-	 */
-    List<PrimitiveTypeProvider> getAll(String column);
+  /**
+   * @return a list of pairs containing an id and the distance to the query vector
+   */
+  List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column,
+      QueryConfig config);
 
-	/**
-	 * SELECT * from
-	 */
-	List<Map<String, PrimitiveTypeProvider>> getAll();
+  List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
+      String column, QueryConfig config);
 
-	boolean existsEntity(String name);
+  List<float[]> getFeatureVectors(String fieldName, String value, String vectorName);
 
-	/** Get first k rows*/
-	List<Map<String, PrimitiveTypeProvider>> preview(int k);
+  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
+
+  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values);
+  
+  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values);
+
+  /**
+   * SELECT column from the table. Be careful with large entities
+   */
+  List<PrimitiveTypeProvider> getAll(String column);
+
+  /**
+   * SELECT * from
+   */
+  List<Map<String, PrimitiveTypeProvider>> getAll();
+
+  boolean existsEntity(String name);
+
+  /** Get first k rows */
+  List<Map<String, PrimitiveTypeProvider>> preview(int k);
 }
