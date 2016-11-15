@@ -32,6 +32,7 @@ import com.eclipsesource.json.JsonValue;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.explorative.PlaneManager;
+import org.vitrivr.cineast.explorative.Position;
 import org.vitrivr.cineast.explorative.RequestHandler;
 
 /**
@@ -439,7 +440,11 @@ public class JSONAPIThread extends Thread {
 						int x = xyObject.get("x").asInt();
 						int y = xyObject.get("y").asInt();
 						String img = specificPlaneManager.getSingleElement(level, x, y);
-						JsonObject singleTile = new JsonObject().add("x", x).add("y", y).add("img", img);
+						String representativeId = "";
+						if (!img.equals("")){
+							representativeId = specificPlaneManager.getRepresentativeOfElement(img, level);
+						}
+						JsonObject singleTile = new JsonObject().add("x", x).add("y", y).add("img", img).add("representative", representativeId);
 						response.add(singleTile);
 					}
 
@@ -493,7 +498,8 @@ public class JSONAPIThread extends Thread {
 						String featureName = el.replace("plane_manager_", "").replace(".ser", "").toLowerCase();
 						PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
 						int topLevel = specificPlaneManager.getTopLevel();
-						jsonConcepts.add(new JsonObject().add("id", featureName).add("text", featureName).add("topLevel", topLevel));
+						Position center = specificPlaneManager.getCenter();
+						jsonConcepts.add(new JsonObject().add("id", featureName).add("text", featureName).add("topLevel", topLevel).add("x", center.getX()).add("y", center.getY()));
 					}
 					_return.set("response", jsonConcepts);
 					LOGGER.debug("Concepts API call ending");

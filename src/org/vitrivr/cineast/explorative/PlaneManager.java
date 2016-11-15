@@ -20,7 +20,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
     private transient final static Logger logger = LogManager.getLogger();
     private final String PATH = "data/serialized/";
     private final String FILE_NAME;
-    private final List<VisualizationElement<T>[][]> flatPlanes = new ArrayList<>();
+    final List<VisualizationElement<T>[][]> flatPlanes = new ArrayList<>();
     private final List<Map<String, Position>> positionsOfElements = new ArrayList<>();
     private final List<Map<String, String>> representativeOfElements = new ArrayList<>();
 
@@ -76,6 +76,8 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
 
         VisualizationElement<T>[][] flatPlane = createFlatPlane(plane);
 
+        flatPlanes.add(flatPlane);
+
         File path = writeNonOptimizedFile(flatPlane);
 
         rearrangeItems(flatPlane);
@@ -85,7 +87,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         writeOptimizedFile(plane, flatPlane, path);
     }
 
-    private VisualizationElement<T>[][] createFlatPlane(Plane<Plane<T>> plane) {
+    VisualizationElement<T>[][] createFlatPlane(Plane<Plane<T>> plane) {
         int maxX = 0;
         int maxY = 0;
         int i = 0;
@@ -117,7 +119,6 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
                 }
             }
         }
-        flatPlanes.add(flatPlane);
         return flatPlane;
     }
 
@@ -155,7 +156,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         }
     }
 
-    private void serialize() throws IOException {
+    void serialize() throws IOException {
         logger.info("start serialize plane manager.");
         File path = new File(PATH);
         if(!path.exists()) path.mkdirs();
@@ -165,7 +166,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         logger.info("serialized plane manager.");
     }
 
-    private void printFile(VisualizationElement<T>[][] flatPlane, File fileOptimized) {
+    void printFile(VisualizationElement<T>[][] flatPlane, File fileOptimized) {
         try {
             PrintWriter pw = new PrintWriter(fileOptimized);
             pw.print("<html><head><link rel=\"stylesheet\" href=\"/Users/silvanstich/IdeaProjects/cineast_new/results/html/style.css\"></head><body><table>");
@@ -190,7 +191,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         }
     }
 
-    private Plane<T> getMiddleElement(List<Plane<T>> planes){
+    Plane<T> getMiddleElement(List<Plane<T>> planes){
         List<Pair<Plane<T>, Double>> distances = new ArrayList<>();
         for(Plane<T> plane : planes){
             double tempDist = 0;
@@ -213,8 +214,10 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
     }
 
     // Algorithm: http://stackoverflow.com/questions/398299/looping-in-a-spiral
-    private void rearrangeItems(VisualizationElement<T>[][] flatPlane){
+    VisualizationElement<T>[][] rearrangeItems(VisualizationElement<T>[][] flatPlane){
         boolean doAgain = true;
+        HashMap<VisualizationElement<T>, Direction> hasBeenOnYAxis = new HashMap<>();
+        HashMap<VisualizationElement<T>, Direction> hasBeenOnXAxis = new HashMap<>();
         while(doAgain){
             doAgain = false;
             int x = 0;
@@ -225,8 +228,8 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
             int Y = flatPlane[0].length;
             for(int i = 0; i < X * X; i++){
                 if(-X/2 < x && x <= X/2 && -Y/2 < y && y <= Y/2){
-
-                    if(flatPlane[x + X/2 - 1][Y/2 - y] != null){
+                    VisualizationElement<T> element = flatPlane[x + X / 2 - 1][Y / 2 - y];
+                    if(element != null){
                         List<Direction> directions = new ArrayList<>();
 
                         boolean preferShiftUpDown = Math.abs(y) > Math.abs(x);
@@ -259,6 +262,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
                 y = y + dy;
             }
         }
+        return flatPlane;
     }
 
     private boolean moveItem(VisualizationElement<T>[][] flatPlane, List<Direction> directions, int x, int y){
@@ -337,7 +341,13 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         return flatPlanes.size() - 1;
     }
 
-    private void saveElementsAndPositions(VisualizationElement[][] flatPlane){
+    public Position getCenter(){
+        int x = flatPlanes.get(getTopLevel()).length/2;
+        int y = flatPlanes.get(getTopLevel())[0].length / 2;
+        return new Position(x, y);
+    }
+
+    void saveElementsAndPositions(VisualizationElement[][] flatPlane){
         Map<String, Position> elementsAndPositions = new HashMap<>();
         HashMap<String, String> representativeOfElement = new HashMap<>();
         for(int x = 0; x < flatPlane.length; x++){
@@ -345,7 +355,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
                 if(flatPlane[x][y] != null){
                     elementsAndPositions.put(flatPlane[x][y].print(), new Position(x, y));
                     if(flatPlane[x][y].getRepresentative() == null || flatPlane[x][y].getRepresentative().length() == 0) throw new RuntimeException("Representative is null or empty!" + flatPlane[x][y].print());
-                    if(representativeOfElement.containsKey(flatPlane[x][y].print())) throw new RuntimeException("This key is allready in the collection");
+                    if(representativeOfElement.containsKey(flatPlane[x][y].print())) throw new RuntimeException("This key is already in the collection");
                     representativeOfElement.put(flatPlane[x][y].print(), flatPlane[x][y].getRepresentative());
                 }
             }

@@ -31,7 +31,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
         sanityCheck();
         insert(nextItem, 0);
         size++;
-        if(size % 50 == 0) logger.info("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
+        if(size % 1000 == 0) logger.info("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
         logger.debug("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
     }
 
@@ -130,7 +130,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
         for (HCTCell<T> oneValueCell : oneValueCells){
             if (levelNo == 0 && !isReRun && oneValueCell.getValues().size() == 1){
                 counter++;
-                logger.info("# of reruns is: " + counter);
+                logger.debug("# of reruns is: " + counter);
                 isReRun = true;
                 removeOldCell(0, oneValueCell, oneValueCell.getNucleus().getValue());
                 insert(oneValueCell.getNucleus().getValue(), 0);

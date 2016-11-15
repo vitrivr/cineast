@@ -10,12 +10,20 @@ class VisualizationElement<T extends Printable> implements Printable, Serializab
     private Position position;
     private final T vector;
     private final Plane plane;
-
+    private Printable representative;
 
     VisualizationElement(T vector, Position position, Plane plane) {
         this.vector = vector;
         this.position = position;
         this.plane = plane;
+        this.representative = this.plane.getRepresentative();
+    }
+
+    VisualizationElement(T vector, Position position, Printable representative){
+        this.vector = vector;
+        this.position = position;
+        this.representative = representative;
+        this.plane = null;
     }
 
     public T getVector() {
@@ -47,7 +55,7 @@ class VisualizationElement<T extends Printable> implements Printable, Serializab
     }
 
     public String getRepresentative(){
-        return plane.getRepresentative().print();
+        return representative.print();
     }
 
     public List<VisualizationElement<T>> getNeighbors(){
@@ -69,5 +77,9 @@ class VisualizationElement<T extends Printable> implements Printable, Serializab
     @Override
     public String print() {
         return vector.print();
+    }
+
+    public <T extends Printable> void setRepresentative(T representative) {
+        this.representative = representative;
     }
 }

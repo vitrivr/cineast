@@ -27,7 +27,7 @@ public class RequestHandler {
             String featureName = fileName.replace("plane_manager_", "").replace(".ser", "").toLowerCase();
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(new File(path, fileName)));
             Object o = objectInputStream.readObject();
-            PlaneManager p = (PlaneManager) o;
+            ImprovedPlaneManager p = (ImprovedPlaneManager) o;
             planeManagers.put(featureName, p);
         }
     }
