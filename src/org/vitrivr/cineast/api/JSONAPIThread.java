@@ -440,11 +440,19 @@ public class JSONAPIThread extends Thread {
 						int x = xyObject.get("x").asInt();
 						int y = xyObject.get("y").asInt();
 						String img = specificPlaneManager.getSingleElement(level, x, y);
+						String shotid = "";
+
 						String representativeId = "";
 						if (!img.isEmpty()){
+							shotid = img.substring(img.indexOf("/")+1);
 							representativeId = specificPlaneManager.getRepresentativeOfElement(img, level);
 						}
-						JsonObject singleTile = new JsonObject().add("x", x).add("y", y).add("img", img).add("representative", representativeId);
+						JsonObject singleTile = new JsonObject()
+								.add("x", x)
+								.add("y", y)
+								.add("img", img)
+								.add("representative", representativeId)
+								.add("shotid", shotid);
 						response.add(singleTile);
 					}
 
@@ -499,7 +507,12 @@ public class JSONAPIThread extends Thread {
 						PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
 						int topLevel = specificPlaneManager.getTopLevel();
 						Position center = specificPlaneManager.getCenter();
-						jsonConcepts.add(new JsonObject().add("id", featureName).add("text", featureName).add("topLevel", topLevel).add("x", center.getX()).add("y", center.getY()));
+						jsonConcepts.add(new JsonObject()
+								.add("id", featureName)
+								.add("text", featureName)
+								.add("topLevel", topLevel)
+								.add("x", center.getX())
+								.add("y", center.getY()));
 					}
 					_return.set("response", jsonConcepts);
 					LOGGER.debug("Concepts API call ending");
