@@ -441,7 +441,7 @@ public class JSONAPIThread extends Thread {
 						int y = xyObject.get("y").asInt();
 						String img = specificPlaneManager.getSingleElement(level, x, y);
 						String representativeId = "";
-						if (!img.equals("")){
+						if (!img.isEmpty()){
 							representativeId = specificPlaneManager.getRepresentativeOfElement(img, level);
 						}
 						JsonObject singleTile = new JsonObject().add("x", x).add("y", y).add("img", img).add("representative", representativeId);
@@ -466,7 +466,7 @@ public class JSONAPIThread extends Thread {
 					String id = clientJSON.get("id").asString();
 					PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
 					String representativeId = specificPlaneManager.getRepresentativeOfElement(id, level);
-					if (representativeId == null || representativeId.equals("")){
+					if (representativeId == null || representativeId.isEmpty()){
 						throw new Exception("RepresentativeID is empty");
 					}
 					level++;
