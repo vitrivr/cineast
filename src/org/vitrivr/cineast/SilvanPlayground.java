@@ -25,7 +25,7 @@ public class SilvanPlayground {
         logger.info("started...");
 
         try {
-            String featureName = "features_saturationgrid8";
+            String featureName = "features_averagecolor";
             logger.info("Proccessing HCT for '" + featureName + "'...");
             readSegementsFromDB();
             List<HCTFloatVectorValue> vectors = readFeaturesFromDB(featureName);

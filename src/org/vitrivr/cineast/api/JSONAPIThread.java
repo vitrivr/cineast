@@ -512,7 +512,8 @@ public class JSONAPIThread extends Thread {
 								.add("text", featureName)
 								.add("topLevel", topLevel)
 								.add("x", center.getX())
-								.add("y", center.getY()));
+								.add("y", center.getY())
+								.add("identifier", specificPlaneManager.getSingleElement(topLevel, center.getX(), center.getY())));
 					}
 					_return.set("response", jsonConcepts);
 					LOGGER.debug("Concepts API call ending");
