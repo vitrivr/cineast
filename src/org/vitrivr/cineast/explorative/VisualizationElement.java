@@ -12,18 +12,11 @@ class VisualizationElement<T extends Printable> implements Printable, Serializab
     private final Plane plane;
     private Printable representative;
 
-    VisualizationElement(T vector, Position position, Plane plane) {
-        this.vector = vector;
-        this.position = position;
-        this.plane = plane;
-        this.representative = this.plane.getRepresentative();
-    }
-
-    VisualizationElement(T vector, Position position, Printable representative){
+    VisualizationElement(T vector, Position position, Printable representative, Plane plane){
         this.vector = vector;
         this.position = position;
         this.representative = representative;
-        this.plane = null;
+        this.plane = plane;
     }
 
     public T getVector() {

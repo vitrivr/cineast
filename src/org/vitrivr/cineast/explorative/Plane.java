@@ -36,7 +36,7 @@ public class Plane<T extends Printable> implements Printable, Serializable {
 
     void processCollection(){
         Position startPos = new Position(width/2, height/2);
-        VisualizationElement<T> startItem = new VisualizationElement<>(representative, startPos, this);
+        VisualizationElement<T> startItem = new VisualizationElement<>(representative, startPos, representative, this);
         vectors.remove(startItem);
         insert(startItem, startPos);
         while(addedVectors.size() <= vectors.size()){
@@ -45,7 +45,7 @@ public class Plane<T extends Printable> implements Printable, Serializable {
             T nextItem = optimalItemAndPosition.second;
             Position optimalPosition = optimalItemAndPosition.first;
 
-            VisualizationElement<T> newVisElement = new VisualizationElement<>(nextItem, optimalPosition, this);
+            VisualizationElement<T> newVisElement = new VisualizationElement<>(nextItem, optimalPosition, representative, this);
             insert(newVisElement, optimalPosition);
         }
     }

@@ -114,7 +114,7 @@ public class ImprovedPlaneManager<T extends Printable> extends PlaneManager<T>{
                 }
                 if (representativeToParentRepresentativePerLevel.get(level).containsKey(key)){
                     T parentKey = representativeToParentRepresentativePerLevel.get(level).get(key);
-                    parentFlatPlane[x][y] = new VisualizationElement<>(key, new Position(x, y), parentKey);
+                    parentFlatPlane[x][y] = new VisualizationElement<>(key, new Position(x, y), parentKey, null);
                 }
 
             }
