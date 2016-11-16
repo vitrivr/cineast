@@ -69,9 +69,14 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
 		}
 	}
 
-	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+  @Override
 	public boolean persist(List<PersistentTuple> persistentTuples) {
-		throw new UnsupportedOperationException();
+		boolean success = true;
+	  for(PersistentTuple<TupleInsertMessage> t : persistentTuples){
+		  success &= persist(t);
+		}
+	  return success;
 	}
 
 
