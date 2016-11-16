@@ -93,7 +93,56 @@ public class Copier {
     
     do{
       for(i = 0; i < names.length; ++i){
-        objects[i] = map.get(names[i]);
+        
+        PrimitiveTypeProvider t = map.get(names[i]);
+        switch(t.getType()){
+        case BOOLEAN:{
+          objects[i] = t.getBoolean();
+          break;
+        }
+        case BYTE:{
+          objects[i] = t.getByte();
+          break;
+        }
+        case DOUBLE:{
+          objects[i] = t.getDouble();
+          break;
+        }
+        case FLOAT:{
+          objects[i] = t.getFloat();
+          break;
+        }
+        case FLOAT_ARRAY:{
+          objects[i] = t.getFloatArray();
+          break;
+        }
+        case INT:{
+          objects[i] = t.getInt();
+          break;
+        }
+        case INT_ARRAY:{
+          objects[i] = t.getIntArray();
+          break;
+        }
+        case LONG:{
+          objects[i] = t.getLong();
+          break;
+        }
+        case SHORT:{
+          objects[i] = t.getShort();
+          break;
+        }
+        case STRING:
+        {
+          objects[i] = t.getString();
+          break;
+        }
+        case UNKNOWN:
+        default:
+          break;
+        
+        }
+
       }
       @SuppressWarnings("rawtypes")
       PersistentTuple tuple = this.writer.generateTuple(objects);
