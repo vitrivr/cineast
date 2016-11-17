@@ -2,6 +2,7 @@ package org.vitrivr.cineast.explorative;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.ExplorativeConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
@@ -82,7 +83,7 @@ public class ImprovedPlaneManager<T extends Printable> extends PlaneManager<T>{
 
     @Override
     public void finished() {
-        File path = new File("results/html/experimental/");
+        File path = new File(ExplorativeConfig.getResultFolder());
         if (!path.exists()) path.mkdirs();
 
         for(int i = 0; i < level; i++){

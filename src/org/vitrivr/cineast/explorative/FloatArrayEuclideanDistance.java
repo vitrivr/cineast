@@ -14,16 +14,19 @@ public class FloatArrayEuclideanDistance implements DistanceCalculation<HCTFloat
     private static transient Map<HCTFloatVectorValue, Map<HCTFloatVectorValue, Double>> cache = new HashMap<>(1000000);
     public static int cacheCounter = 0;
     public static int calculationCounter = 0;
+    public boolean useCache = false;
 
     @Override
     public double distance(HCTFloatVectorValue point1, HCTFloatVectorValue point2) {
 
+        if (useCache){
+            if (isCached(point1, point2)){
+                return getVDistFromCache(point1, point2);
+            }
+            if (isCached(point2, point1)){
+                return getVDistFromCache(point2, point1);
+            }
 
-        if (isCached(point1, point2)){
-            return getVDistFromCache(point1, point2);
-        }
-        if (isCached(point2, point1)){
-            return getVDistFromCache(point2, point1);
         }
 
         calculationCounter++;
@@ -34,8 +37,9 @@ public class FloatArrayEuclideanDistance implements DistanceCalculation<HCTFloat
             dist += (vector1[i] - vector2[i]) * (vector1[i] - vector2[i]);
         }
 
-        storeInCache(point1, point2, dist);
-
+        if (useCache){
+            storeInCache(point1, point2, dist);
+        }
         return dist;
     }
 

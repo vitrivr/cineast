@@ -216,8 +216,6 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
     // Algorithm: http://stackoverflow.com/questions/398299/looping-in-a-spiral
     VisualizationElement<T>[][] rearrangeItems(VisualizationElement<T>[][] flatPlane){
         boolean doAgain = true;
-        HashMap<VisualizationElement<T>, Direction> hasBeenOnYAxis = new HashMap<>();
-        HashMap<VisualizationElement<T>, Direction> hasBeenOnXAxis = new HashMap<>();
         while(doAgain){
             doAgain = false;
             int x = 0;
@@ -226,10 +224,12 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
             int dy = -1;
             int X = flatPlane.length;
             int Y = flatPlane[0].length;
+            HashSet<VisualizationElement<T>> itemHasBeenMovedThisRound = new HashSet<>();
             for(int i = 0; i < X * X; i++){
                 if(-X/2 < x && x <= X/2 && -Y/2 < y && y <= Y/2){
                     VisualizationElement<T> element = flatPlane[x + X / 2 - 1][Y / 2 - y];
-                    if(element != null){
+                    boolean alreadyMoved = itemHasBeenMovedThisRound.contains(element);
+                    if(element != null && !alreadyMoved){
                         List<Direction> directions = new ArrayList<>();
 
                         boolean preferShiftUpDown = Math.abs(y) > Math.abs(x);
@@ -250,7 +250,10 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
                         if(!preferShiftUpDown) Collections.reverse(directions);
 
                         boolean itemHasBeenMoved = moveItem(flatPlane, directions, x + X/2 - 1, Y/2 - y);
-                        if(itemHasBeenMoved) doAgain = true;
+                        if(itemHasBeenMoved){
+                            doAgain = true;
+                            itemHasBeenMovedThisRound.add(element);
+                        }
                     }
                 }
                 if(x == y || (x < 0 && x == -y) || (x > 0 && x == 1 - y)){

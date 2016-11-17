@@ -43,4 +43,13 @@ public class HCTFloatVectorValue
     public String print() {
         return id;
     }
+
+    public String toString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        for(float v : vector){
+            stringBuilder.append(v + ", ");
+        }
+        if(stringBuilder.length() >= 2) stringBuilder.delete(stringBuilder.length() -2, stringBuilder.length());
+        return stringBuilder.toString();
+    }
 }
