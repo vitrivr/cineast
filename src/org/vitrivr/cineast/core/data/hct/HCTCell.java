@@ -30,11 +30,11 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
         this.parent = parent;
     }
 
-    public void addValue(T value) {
+    public void addValue(T value) throws Exception {
         mst.add(value);
     }
 
-    public void removeValue(T value) {
+    public void removeValue(T value) throws Exception {
         mst.remove(value);
     }
 

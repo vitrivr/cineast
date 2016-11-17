@@ -22,13 +22,13 @@ interface IHCTCell<T extends Comparable<T>> {
 
     IHCTCell<T> getParent();
 
-    void addValue(T nextItem);
+    void addValue(T nextItem) throws Exception;
 
     boolean isReadyForMitosis();
 
     <T extends Comparable<T>> List<HCTCell<T>> mitosis() throws Exception;
 
-    void removeValue(T value);
+    void removeValue(T value) throws Exception;
 
     double getCoveringRadius() throws Exception;
 

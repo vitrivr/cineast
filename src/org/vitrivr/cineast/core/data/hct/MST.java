@@ -18,13 +18,14 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
 
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst;
+    private MSTNode<T> nucleus;
 
     MST(HCT<T> hct) {
         this.hct = hct;
     }
 
     @Override
-    public void add(T item) {
+    public void add(T item) throws Exception {
         MSTNode<T> mstNode = new MSTNode<>(item, hct);
         graph.addVertex(mstNode);
         for (MSTNode<T> node : graph.vertexSet()) {
@@ -34,10 +35,11 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
             }
         }
         mst = getMST();
+        nucleus = updateNucleus();
     }
 
     @Override
-    public void remove(T item) {
+    public void remove(T item) throws Exception {
         Iterator<MSTNode<T>> iterator = graph.vertexSet().iterator();
         List<MSTNode<T>> toDeleteNodes = new ArrayList<>();
         while(iterator.hasNext()){
@@ -48,9 +50,15 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
         }
         graph.removeAllVertices(toDeleteNodes);
         mst = getMST();
+        if(mst.vertexSet().size() > 0) nucleus = updateNucleus();
     }
 
-    public MSTNode<T> getNucleus() throws java.lang.Exception{
+    @Override
+    public MSTNode<T> getNucleus(){
+        return nucleus;
+    }
+
+    private MSTNode<T> updateNucleus() throws java.lang.Exception{
         if(graph.vertexSet().size() == 0) throw new Exception("This graph contains no nodes!");
         if(graph.vertexSet().size() == 1){
             return (MSTNode<T>) graph.vertexSet().toArray()[0];}
@@ -78,7 +86,7 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
         return getCompactness() > 0.5; // // TODO: 14.09.16 needs real implemenation
     }
 
-    public List<IMST<T>> mitosis(){
+    public List<IMST<T>> mitosis() throws Exception {
         double largestWeight = 0;
         DefaultWeightedEdge largestEdge = null;
         List<DefaultWeightedEdge> edges = new ArrayList<>();
@@ -121,7 +129,6 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
 
     // covering radius means the distance from the nucleus to the furthest element of the mst
     public double getCoveringRadius() throws Exception{
-        MSTNode<T> nucleus = getNucleus();
         double coveringRadius = 0;
         for(MSTNode<T> node : mst.vertexSet()){
             double pathLength = new DijkstraShortestPath(mst, nucleus, node).getPathLength();
@@ -130,7 +137,7 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
         return coveringRadius;
     }
 
-    private MST<T> createSubGraph(SimpleWeightedGraph mst, MSTNode<T> startNode){
+    private MST<T> createSubGraph(SimpleWeightedGraph mst, MSTNode<T> startNode) throws Exception {
         List<MSTNode<T>> containedNodes = new ArrayList<>();
         GraphIterator<MSTNode<T>, DefaultWeightedEdge> iterator = new BreadthFirstIterator<>(mst, startNode);
         while(iterator.hasNext()){
@@ -161,7 +168,7 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
 
     public String toString(){
         try {
-            return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(), graph.edgeSet().size(), getNucleus().getValue());
+            return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(), graph.edgeSet().size(), nucleus.getValue());
         } catch (Exception e){
             return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(), graph.edgeSet().size(), "###Error while getting the nucleus" + e.getMessage());
         }

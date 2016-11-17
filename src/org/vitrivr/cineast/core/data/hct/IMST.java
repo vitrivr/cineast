@@ -5,9 +5,9 @@ import java.util.List;
 
 interface IMST<T extends Comparable<T>> {
 
-    void add(T item);
+    void add(T item) throws Exception;
 
-    void remove(T item);
+    void remove(T item) throws Exception;
 
     IMSTNode<T> getNucleus() throws Exception;
 
@@ -17,7 +17,7 @@ interface IMST<T extends Comparable<T>> {
 
     boolean isReadyForMitosis();
 
-    List<IMST<T>> mitosis();
+    List<IMST<T>> mitosis() throws Exception;
 
     boolean isCellDead();
 

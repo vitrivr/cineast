@@ -146,7 +146,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
         remove(cellO, oldNucleusValue, levelNo + 1);
     }
 
-    private HCTCell<T> createNewRoot(T nextItem, List<HCTCell<T>> topLevelCells) {
+    private HCTCell<T> createNewRoot(T nextItem, List<HCTCell<T>> topLevelCells) throws Exception {
         HCTLevel<T> level = new HCTLevel<>(this);
         levels.add(level);
         HCTCell<T> topLevelCell = level.addCell(); //aka root
@@ -158,7 +158,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
         return topLevelCell;
     }
 
-    private void createInitialRoot(T nextItem) {
+    private void createInitialRoot(T nextItem) throws Exception {
         HCTLevel<T> level = new HCTLevel<>(this);
         levels.add(level);
         HCTCell<T> cell = level.addCell();
