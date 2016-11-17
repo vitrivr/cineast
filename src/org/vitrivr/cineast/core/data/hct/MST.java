@@ -19,6 +19,7 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> mst;
     private MSTNode<T> nucleus;
+    private double coveringRadius;
 
     MST(HCT<T> hct) {
         this.hct = hct;
@@ -36,6 +37,7 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
         }
         mst = getMST();
         nucleus = updateNucleus();
+        coveringRadius = updateCoveringRadius();
     }
 
     @Override
@@ -50,7 +52,10 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
         }
         graph.removeAllVertices(toDeleteNodes);
         mst = getMST();
-        if(mst.vertexSet().size() > 0) nucleus = updateNucleus();
+        if(mst.vertexSet().size() > 0){
+            nucleus = updateNucleus();
+            coveringRadius = updateCoveringRadius();
+        }
     }
 
     @Override
@@ -127,8 +132,12 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
         return values;
     }
 
-    // covering radius means the distance from the nucleus to the furthest element of the mst
     public double getCoveringRadius() throws Exception{
+        return coveringRadius;
+    }
+
+    // covering radius means the distance from the nucleus to the furthest element of the mst
+    private double updateCoveringRadius() throws Exception{
         double coveringRadius = 0;
         for(MSTNode<T> node : mst.vertexSet()){
             double pathLength = new DijkstraShortestPath(mst, nucleus, node).getPathLength();
