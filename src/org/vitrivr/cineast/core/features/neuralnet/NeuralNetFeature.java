@@ -1,23 +1,32 @@
 package org.vitrivr.cineast.core.features.neuralnet;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.adam.grpc.AdamGrpc;
+import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.*;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import org.vitrivr.cineast.core.features.neuralnet.label.ConceptReader;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.MaxPool;
 import org.vitrivr.cineast.core.util.TimeHelper;
-
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * NeuralNet Feature modules should extend this class
@@ -128,7 +137,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         super.initalizePersistentLayer(supply);
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
-        ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition(wnLabel, AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL), new EntityCreator.AttributeDefinition(getHumanLabelColName(), AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL));
+        ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition(wnLabel, AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition(getHumanLabelColName(), AdamGrpc.AttributeType.STRING));
         ec.close();
     }
 
@@ -138,7 +147,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
     public void createLabelsTable(Supplier<EntityCreator> supply, String tableName){
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
-        ec.createIdEntity(tableName, new EntityCreator.AttributeDefinition("segmentid", AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL), new EntityCreator.AttributeDefinition(getWnLabelColName(), AdamGrpc.AttributeType.STRING, AdamGrpc.HandlerType.RELATIONAL), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT, AdamGrpc.HandlerType.RELATIONAL));
+        ec.createIdEntity(tableName, new EntityCreator.AttributeDefinition("segmentid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition(getWnLabelColName(), AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT));
         ec.close();
     }
 

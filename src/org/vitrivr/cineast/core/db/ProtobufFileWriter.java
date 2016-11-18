@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.db;
 
-import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.cineast.core.config.Config;
 
 import java.io.File;

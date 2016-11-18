@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.adam.grpc.AdamGrpc.AttributeType;
+import org.vitrivr.adampro.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.SegmentContainer;

@@ -1,37 +1,46 @@
 package org.vitrivr.cineast.core.db;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.SettableFuture;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.stub.StreamObserver;
-import org.vitrivr.adam.grpc.AdamDefinitionGrpc;
-import org.vitrivr.adam.grpc.AdamDefinitionGrpc.AdamDefinitionStub;
-import org.vitrivr.adam.grpc.AdamGrpc.*;
-import org.vitrivr.adam.grpc.AdamSearchGrpc;
-import org.vitrivr.adam.grpc.AdamSearchGrpc.AdamSearchFutureStub;
+import java.util.concurrent.ExecutionException;
+
+import org.vitrivr.adampro.grpc.AdamDefinitionGrpc;
+import org.vitrivr.adampro.grpc.AdamDefinitionGrpc.AdamDefinitionFutureStub;
+import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.CreateEntityMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.EntityPropertiesMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.PropertiesMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
+import org.vitrivr.adampro.grpc.AdamSearchGrpc;
+import org.vitrivr.adampro.grpc.AdamSearchGrpc.AdamSearchFutureStub;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 
-import java.util.concurrent.ExecutionException;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
+
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 
 public class ADAMproWrapper { //TODO generate interrupted ackmessage
 
 	private ManagedChannel channel;
-	private AdamDefinitionStub definitionStub;
+	private AdamDefinitionFutureStub definitionStub;
 	private AdamSearchFutureStub searchStub;
 	
 	public ADAMproWrapper(){
 		DatabaseConfig config = Config.getDatabaseConfig();
 		this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPlaintext()).build();
-		this.definitionStub = AdamDefinitionGrpc.newStub(channel);
+		this.definitionStub = AdamDefinitionGrpc.newFutureStub(channel);
 		this.searchStub = AdamSearchGrpc.newFutureStub(channel);
 	}
 	
 	public synchronized ListenableFuture<AckMessage> createEntity(CreateEntityMessage message){
-		SettableFuture<AckMessage> future = SettableFuture.create();
-		this.definitionStub.createEntity(message, new LastAckStreamObserver(future));
-		return future;
+		return this.definitionStub.createEntity(message);
 	}
 
 	public AckMessage createEntityBlocking(CreateEntityMessage message){
@@ -45,11 +54,7 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	}
 	
 	public synchronized ListenableFuture<AckMessage> insertOne(InsertMessage message){
-		SettableFuture<AckMessage> future = SettableFuture.create();
-		StreamObserver<InsertMessage> insertObserver = this.definitionStub.insert(new LastAckStreamObserver(future));
-		insertObserver.onNext(message);
-		insertObserver.onCompleted();
-		return future;
+		return this.definitionStub.insert(message);
 	}
 	
 	public AckMessage insertOneBlocking(InsertMessage message){
@@ -63,8 +68,7 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	}
 
 	public boolean existsEntity(String eName) {
-		SettableFuture<ExistsMessage> future = SettableFuture.create();
-		this.definitionStub.existsEntity(EntityNameMessage.getDefaultInstance().toBuilder().clear().setEntity(eName).build(), new LastObserver(future));
+	  ListenableFuture<ExistsMessage> future = this.definitionStub.existsEntity(EntityNameMessage.getDefaultInstance().toBuilder().clear().setEntity(eName).build());
 		try{
 			return future.get().getExists();
 		}catch(InterruptedException | ExecutionException e){
@@ -74,8 +78,7 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	}
 
 	public AckMessage dropEntityBlocking(EntityNameMessage message){
-		SettableFuture<AckMessage> future = SettableFuture.create();
-		this.definitionStub.dropEntity(message, new LastAckStreamObserver(future));
+		ListenableFuture<AckMessage> future = this.definitionStub.dropEntity(message);
 		try {
 			return future.get();
 		} catch (InterruptedException | ExecutionException e) {
@@ -103,10 +106,10 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	}
 
 
-	public EntityPropertiesMessage getProperties(EntityNameMessage message) {
-		SettableFuture<EntityPropertiesMessage> future = SettableFuture.create();
-		synchronized (this.searchStub) {
-			this.definitionStub.getEntityProperties(message, new LastObserver<>(future));
+	public PropertiesMessage getProperties(EntityPropertiesMessage message) {
+		ListenableFuture<PropertiesMessage> future;
+    synchronized (this.searchStub) {
+			future = this.definitionStub.getEntityProperties(message);
 		}
 		try{
 			return future.get();

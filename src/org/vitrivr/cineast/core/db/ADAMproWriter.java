@@ -3,12 +3,12 @@ package org.vitrivr.cineast.core.db;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.adam.grpc.AdamGrpc;
-import org.vitrivr.adam.grpc.AdamGrpc.*;
-import org.vitrivr.adam.grpc.AdamGrpc.AckMessage.Code;
-import org.vitrivr.adam.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.Builder;
-import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc;
+import org.vitrivr.adampro.grpc.AdamGrpc.*;
+import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
+import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.Builder;
+import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 
 import java.util.ArrayList;
 import java.util.List;

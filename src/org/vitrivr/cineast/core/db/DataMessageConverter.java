@@ -2,11 +2,11 @@ package org.vitrivr.cineast.core.db;
 
 import java.util.List;
 
-import org.vitrivr.adam.grpc.AdamGrpc.DataMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.DenseVectorMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.FeatureVectorMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.IntVectorMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.SparseVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.IntArrayIterable;
 import org.vitrivr.cineast.core.data.providers.primitive.BooleanTypeProvider;

@@ -2,13 +2,13 @@ package org.vitrivr.cineast.core.db;
 
 import java.util.HashMap;
 
-import org.vitrivr.adam.grpc.AdamGrpc;
-import org.vitrivr.adam.grpc.AdamGrpc.DataMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.DenseVectorMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.FeatureVectorMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
-import org.vitrivr.adam.grpc.AdamGrpc.InsertMessage.TupleInsertMessage.Builder;
-import org.vitrivr.adam.grpc.AdamGrpc.IntVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc;
+import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage.Builder;
+import org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 
