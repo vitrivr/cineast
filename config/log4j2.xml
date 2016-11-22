@@ -4,9 +4,9 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-        <!--<File name="MyFile" fileName="cineast.log" bufferedIO="false">
+        <File name="MyFile" fileName="explorative.log" bufferedIO="false">
         <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </File>-->
+        </File>
     </Appenders>
     <Loggers>
         <logger name="io" level="ERROR">
@@ -16,6 +16,7 @@
             <AppenderRef ref="Console"/>
         </logger>
         <logger name="org.vitrivr.cineast" level="INFO">
+            <AppenderRef ref="MyFile"/>
         </logger>
         <Root level="info">
             <!--<AppenderRef ref="MyFile"/>-->
