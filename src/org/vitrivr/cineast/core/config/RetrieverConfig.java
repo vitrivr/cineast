@@ -86,7 +86,7 @@ public final class RetrieverConfig {
 		list = new ArrayList<>(3);
 		list.add(DoublePair.pair(SubtitleWordSearch.class, 			1.0));
 		list.add(DoublePair.pair(SubtitleFulltextSearch.class, 		1.0));
-		list.add(DoublePair.pair(QueryImageExporter.class, 			0.001));
+//		list.add(DoublePair.pair(QueryImageExporter.class, 			0.001));
 		DEFAULT_RETRIEVER_CATEGORIES.put("meta", list);
 	}
 	
@@ -144,7 +144,7 @@ public final class RetrieverConfig {
 	
 	/**
 	 * 
-	 * expects a json object of the follwing form:
+	 * expects a json object of the following form:
 	 * <pre>
 	 * {
 	 * 	"threadPoolSize" : (int)
