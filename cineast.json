@@ -1,6 +1,6 @@
 {
 	"database": {
-		"host": "10.34.58.7",
+		"host": "localhost",
 		"port": 5890,
 		"plaintext": true,
 		"writer": "ADAMPRO"

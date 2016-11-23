@@ -83,7 +83,7 @@ public class JSONAPIThread extends Thread {
 				SegmentLookup sl = new SegmentLookup();
 				SegmentDescriptor shot = sl.lookUpShot(shotId);
 				//List<ShotDescriptor> allShots = sl.lookUpVideo(shot.getVideoId());
-				
+
 				//Send metadata
 				MultimediaObjectLookup vl = new MultimediaObjectLookup();
 				MultimediaObjectLookup.MultimediaObjectDescriptor descriptor = vl.lookUpObjectById(shot.getVideoId());
@@ -120,6 +120,29 @@ public class JSONAPIThread extends Thread {
 				
 				break;
 			}
+
+				/*
+				 * Input: id: ID of a shot
+				 *
+				 * Output: Information about the shot- startframe, endframe etc.
+				 */
+				case "shot": {
+					String shotId = clientJSON.get("shotid").asString();
+
+					SegmentLookup sl = new SegmentLookup();
+					SegmentDescriptor shot = sl.lookUpShot(shotId);
+
+					JsonObject resultobj = new JsonObject();
+					resultobj.add("type", "submitShot").add("videoId", shot.getVideoId()).add("start", shot.getStartFrame()).add("end", shot.getEndFrame());
+
+					this.printer.print(resultobj.toString());
+					this.printer.print(',');
+
+					sl.close();
+
+					break;
+				}
+
 
 			case "relevanceFeedback": {
 				JsonObject queryObject = clientJSON.get("query").asObject();
