@@ -4,7 +4,8 @@ import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.explorative.*;
+import org.vitrivr.cineast.explorative.FloatArrayEuclideanDistance;
+import org.vitrivr.cineast.explorative.TreeTraverserHorizontal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
         sanityCheck();
         insert(nextItem, 0);
         size++;
-        if(size % 1000 == 0) logger.info("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
+        if(size % 1000 == 0) logger.info( System.currentTimeMillis() + "     #Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
         logger.debug("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
     }
 
@@ -180,7 +181,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
 
         for (IHCTCell<T> parent : ArrayCS) {
             for (IHCTCell<T> cell : parent.getChildren()) {
-                if(cell.isCellDeath()) continue;
+                if(cell.isCellDead()) continue;
                 if(cell.getDistanceToNucleus(nextItem) < dist){
                     dist = cell.getDistanceToNucleus(nextItem);
                     mSCell = cell;
@@ -201,7 +202,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable{
 
         T oldNucleusValue = parentCell.getNucleus().getValue();
         parentCell.removeValue(value);
-        if(parentCell.isCellDeath()){
+        if(parentCell.isCellDead()){
             if(levelNo == topLevelNo){
                 levels.remove(levels.get(topLevelNo));
             } else{

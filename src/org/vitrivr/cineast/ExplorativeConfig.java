@@ -2,26 +2,28 @@ package org.vitrivr.cineast;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Properties;
 
 
 public class ExplorativeConfig {
 
-    private static String csvPath = "/Users/silvanstich/Downloads/keyframes.crop.fovea";
-    private static String featureName = "csv_value";
-    private static String elementLimit = "1000000";
+    private static String csvPath = "/Users/silvanstich/Library/Containers/com.apple.mail/Data/Library/Mail Downloads/CA01A1C7-162D-454F-9645-8F9250035697/neuralnet_vgg16_fullvector";
+    private static String featureName = "nn_vecotrs";
+    private static String elementLimit = "1000";
     private static String dataFolder = "data/";
     private static String resultFolder = "results/html/experimental/";
-    private static String treeSerializationFileName = "serialized_tree.ser";
+    private static String treeSerializationFileName = "nn_serialized_tree.ser";
+    private static String mode = "csv";
 
-    public void readConfig(){
+    public static void readConfig(String file){
         Properties properties = new Properties();
-        File propertiesFile = new File("properties.config");
+        File propertiesFile = new File(file);
         try {
             FileInputStream fileInputStream = new FileInputStream(propertiesFile);
-        } catch (FileNotFoundException e) {
-            return; // use in code defaults
+            properties.load(fileInputStream);
+            fileInputStream.close();
+        } catch (java.io.IOException e) {
+            return; // use hard coded defaults defaults
         }
         csvPath = properties.getProperty("csvPath", csvPath);
         featureName = properties.getProperty("featureName", featureName);
@@ -29,6 +31,7 @@ public class ExplorativeConfig {
         dataFolder = properties.getProperty("dataFolder", dataFolder);
         resultFolder = properties.getProperty("resultFolder", resultFolder);
         treeSerializationFileName = properties.getProperty("treeSerializationFileName", treeSerializationFileName);
+        mode = properties.getProperty("mode", mode);
     }
 
     public static String getCsvPath() {
@@ -53,5 +56,9 @@ public class ExplorativeConfig {
 
     public static String getTreeSerializationFileName() {
         return treeSerializationFileName;
+    }
+
+    public static String getMode() {
+        return mode;
     }
 }

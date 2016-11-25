@@ -8,7 +8,7 @@ interface IHCTCell<T extends Comparable<T>> {
 
     boolean containsValue(T value);
 
-    boolean isCellDeath();
+    boolean isCellDead();
 
     void removeChild(IHCTCell<T> child);
 

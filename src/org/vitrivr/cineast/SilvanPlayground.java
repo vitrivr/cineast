@@ -9,11 +9,12 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.explorative.*;
 
-
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class SilvanPlayground {
@@ -21,7 +22,18 @@ public class SilvanPlayground {
     public static HashMap<String, String> segments = new HashMap<>();;
 
     public static void main(String[] args) {
-        processCSVValues();
+        if(args.length > 0){
+            logger.info("Config file specified, search at " + args[0]);
+            ExplorativeConfig.readConfig(args[0]);
+        }
+        String mode = ExplorativeConfig.getMode();
+
+        if(mode.equals("csv")){
+            processCSVValues();
+        } else if(mode.equals("db")){
+            processFeatureFromDB();
+        }
+
     }
 
     private static void processFeatureFromDB() {
@@ -30,7 +42,7 @@ public class SilvanPlayground {
         logger.info("started...");
 
         try {
-            String featureName = "features_averagecolor";
+            String featureName = ExplorativeConfig.getFeatureName();
             logger.info("Proccessing HCT for '" + featureName + "'...");
 
             readSegementsFromDB();
@@ -91,8 +103,9 @@ public class SilvanPlayground {
 
     private static void readAndInsertFeatureFromCSV(HCT<HCTFloatVectorValue> hct, String path) throws Exception {
         File[] files = new File(path).listFiles();
-        int id = 0;
         for(File f : files){
+            if(f.getName().startsWith(".")) continue;
+            String id = f.getName().replace("shot", "").replace("_RKF.jpg", "").replace(".csv", "");
             String content = com.google.common.io.Files.toString(f, Charset.defaultCharset());
             String[] values = content.split(",");
             float[] floatValues = new float[values.length];
@@ -100,9 +113,8 @@ public class SilvanPlayground {
                 floatValues[i] = Float.parseFloat(values[i]);
             }
             HCTFloatVectorValue floatVectorValue = new HCTFloatVectorValue(floatValues, String.valueOf(id));
-            mockSegments(String.valueOf(id));
+//            mockSegments(id);
             hct.insert(floatVectorValue);
-            id++;
         }
     }
 
@@ -120,6 +132,10 @@ public class SilvanPlayground {
             logger.info("Start reading values from csv...");
             readAndInsertFeatureFromCSV(hct, ExplorativeConfig.getCsvPath());
             logger.info("End reading values from csv.");
+
+            logger.info("Start insert segements");
+            readSegementsFromDB();
+            logger.info("End insert segments");
 
             startTime = System.currentTimeMillis();
 

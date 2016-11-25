@@ -74,11 +74,16 @@ public class ImprovedPlaneManager<T extends Printable> extends PlaneManager<T>{
                 plane.processCollection();
                 planes.add(plane);
             }
+
             Plane<Plane<T>> wholePlane = new Plane<>(planes, (point1, point2) -> distanceCalculation.distance(point1.getRepresentative(), point2.getRepresentative()), getMiddleElement(planes));
             wholePlane.processCollection();
             nonOptimizedPlanes.add(createFlatPlane(wholePlane));
         }
     level++;
+    }
+
+    private double getDistanceBetweenPlanes(Plane<T> p1, Plane<T> p2){
+        return distanceCalculation.distance(p1.getRepresentative(), p2.getRepresentative());
     }
 
     @Override

@@ -101,7 +101,7 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
     }
 
     @Override
-    public boolean isCellDeath() {
+    public boolean isCellDead() {
         return mst.isCellDead();
     }
 
@@ -113,10 +113,10 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
     public String toString() {
         try {
             return String.format("HCTCell | isCellDead: %s | isReadyMitosis: %s | Nucleus: <%s>",
-                    isCellDeath(), isReadyForMitosis(), getNucleus());
+                    isCellDead(), isReadyForMitosis(), getNucleus());
         } catch (Exception e) {
             return String.format("HCTCell | isCellDead: %s | isReadyMitosis: %s | Nucleus: <%s>",
-                    isCellDeath(), isReadyForMitosis(), "###Error while getting the nucleus! " + e.getMessage());
+                    isCellDead(), isReadyForMitosis(), "###Error while getting the nucleus! " + e.getMessage());
         }
 
     }
