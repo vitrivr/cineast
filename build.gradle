@@ -121,10 +121,16 @@ jar {
 //    new URL('https://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg').withInputStream{ i -> f.withOutputStream{ it << i }}
 //}
 
-task copyConfigs(type: Copy){
-	from "cineast.json"
-	into "$buildDir/libs/"
-	outputs.upToDateWhen { false }
+task copyResources() << {
+	copy {
+		from "cineast.json"
+		into "$buildDir/libs/"
+	}
+	copy {
+		from "resources"
+		into "$buildDir/libs/resources/"
+	}
+	
 }
 	
-task deploy(dependsOn: [build, jar, copyConfigs])
+task deploy(dependsOn: [build, jar, copyResources])

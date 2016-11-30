@@ -19,10 +19,10 @@ public class NeuralNetConfig {
     private final String labelPath;
     private String conceptsPath;
 
-    public static final String DEFAULT_MODEL_PATH = "src/resources/vgg16/vgg16.tfmodel";
+    public static final String DEFAULT_MODEL_PATH = "resources/vgg16/vgg16.tfmodel";
     public static final float DEFAULT_CUTOFF = 0.2f;
     public static final String DEFAULT_LABEL_PATH = "resources/vgg16/synset.txt";
-    public static final String DEFAULT_CONCEPT_PATH = "src/resources/classes.csv";
+    public static final String DEFAULT_CONCEPT_PATH = "resources/classes.csv";
     public static final NeuralNetFactory DEFAULT_NEURAL_NET_FACTORY = () -> new VGG16Net(DEFAULT_MODEL_PATH, DEFAULT_LABEL_PATH);
 
     NeuralNetConfig() {

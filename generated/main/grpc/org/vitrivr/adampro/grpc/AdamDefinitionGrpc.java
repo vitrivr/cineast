@@ -86,11 +86,11 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage,
-      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_GET_NEXT_PK_VALUE =
+      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_VACUUM_ENTITY =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
-              "AdamDefinition", "GetNextPkValue"),
+              "AdamDefinition", "VacuumEntity"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
@@ -211,24 +211,6 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.RepartitionMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage,
-      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_RESET_SCAN_WEIGHTS =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamDefinition", "ResetScanWeights"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.WeightMessage,
-      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_SET_SCAN_WEIGHT =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamDefinition", "SetScanWeight"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.WeightMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.AdaptScanMethodsMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_ADAPT_SCAN_METHODS =
       io.grpc.MethodDescriptor.create(
@@ -256,23 +238,14 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.ImportMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.ImportDataFileMessage,
-      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_IMPORT_DATA_FILE =
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.ProtoImportMessage,
+      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_PROTO_IMPORT_DATA =
       io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
+          io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING,
           generateFullMethodName(
-              "AdamDefinition", "ImportDataFile"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.ImportDataFileMessage.getDefaultInstance()),
+              "AdamDefinition", "ProtoImportData"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.ProtoImportMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage,
-      org.vitrivr.adampro.grpc.AdamGrpc.ExportDataFileMessage> METHOD_EXPORT_DATA_FILE =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamDefinition", "ExportDataFile"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.ExportDataFileMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.StorageHandlersMessage> METHOD_LIST_STORAGE_HANDLERS =
@@ -320,7 +293,7 @@ public class AdamDefinitionGrpc {
     public io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage> streamInsert(
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver);
 
-    public void getNextPkValue(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request,
+    public void vacuumEntity(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver);
 
     public void delete(org.vitrivr.adampro.grpc.AdamGrpc.DeleteMessage request,
@@ -362,12 +335,6 @@ public class AdamDefinitionGrpc {
     public void repartitionIndexData(org.vitrivr.adampro.grpc.AdamGrpc.RepartitionMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver);
 
-    public void resetScanWeights(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver);
-
-    public void setScanWeight(org.vitrivr.adampro.grpc.AdamGrpc.WeightMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver);
-
     public void adaptScanMethods(org.vitrivr.adampro.grpc.AdamGrpc.AdaptScanMethodsMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver);
 
@@ -377,11 +344,8 @@ public class AdamDefinitionGrpc {
     public void importData(org.vitrivr.adampro.grpc.AdamGrpc.ImportMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver);
 
-    public void importDataFile(org.vitrivr.adampro.grpc.AdamGrpc.ImportDataFileMessage request,
+    public void protoImportData(org.vitrivr.adampro.grpc.AdamGrpc.ProtoImportMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver);
-
-    public void exportDataFile(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.ExportDataFileMessage> responseObserver);
 
     public void listStorageHandlers(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.StorageHandlersMessage> responseObserver);
@@ -401,7 +365,7 @@ public class AdamDefinitionGrpc {
 
     public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage insert(org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage request);
 
-    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage getNextPkValue(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request);
+    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage vacuumEntity(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request);
 
     public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage delete(org.vitrivr.adampro.grpc.AdamGrpc.DeleteMessage request);
 
@@ -429,19 +393,14 @@ public class AdamDefinitionGrpc {
 
     public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage repartitionIndexData(org.vitrivr.adampro.grpc.AdamGrpc.RepartitionMessage request);
 
-    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage resetScanWeights(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request);
-
-    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage setScanWeight(org.vitrivr.adampro.grpc.AdamGrpc.WeightMessage request);
-
     public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage adaptScanMethods(org.vitrivr.adampro.grpc.AdamGrpc.AdaptScanMethodsMessage request);
 
     public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage sparsifyEntity(org.vitrivr.adampro.grpc.AdamGrpc.SparsifyEntityMessage request);
 
     public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage importData(org.vitrivr.adampro.grpc.AdamGrpc.ImportMessage request);
 
-    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage importDataFile(org.vitrivr.adampro.grpc.AdamGrpc.ImportDataFileMessage request);
-
-    public org.vitrivr.adampro.grpc.AdamGrpc.ExportDataFileMessage exportDataFile(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request);
+    public java.util.Iterator<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> protoImportData(
+        org.vitrivr.adampro.grpc.AdamGrpc.ProtoImportMessage request);
 
     public org.vitrivr.adampro.grpc.AdamGrpc.StorageHandlersMessage listStorageHandlers(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request);
   }
@@ -466,7 +425,7 @@ public class AdamDefinitionGrpc {
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> insert(
         org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage request);
 
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> getNextPkValue(
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> vacuumEntity(
         org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> delete(
@@ -508,12 +467,6 @@ public class AdamDefinitionGrpc {
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> repartitionIndexData(
         org.vitrivr.adampro.grpc.AdamGrpc.RepartitionMessage request);
 
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> resetScanWeights(
-        org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> setScanWeight(
-        org.vitrivr.adampro.grpc.AdamGrpc.WeightMessage request);
-
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> adaptScanMethods(
         org.vitrivr.adampro.grpc.AdamGrpc.AdaptScanMethodsMessage request);
 
@@ -522,12 +475,6 @@ public class AdamDefinitionGrpc {
 
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> importData(
         org.vitrivr.adampro.grpc.AdamGrpc.ImportMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> importDataFile(
-        org.vitrivr.adampro.grpc.AdamGrpc.ImportDataFileMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.ExportDataFileMessage> exportDataFile(
-        org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request);
 
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.StorageHandlersMessage> listStorageHandlers(
         org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request);
@@ -600,10 +547,10 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public void getNextPkValue(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request,
+    public void vacuumEntity(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(METHOD_GET_NEXT_PK_VALUE, getCallOptions()), request, responseObserver);
+          getChannel().newCall(METHOD_VACUUM_ENTITY, getCallOptions()), request, responseObserver);
     }
 
     @java.lang.Override
@@ -698,20 +645,6 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public void resetScanWeights(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_RESET_SCAN_WEIGHTS, getCallOptions()), request, responseObserver);
-    }
-
-    @java.lang.Override
-    public void setScanWeight(org.vitrivr.adampro.grpc.AdamGrpc.WeightMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_SET_SCAN_WEIGHT, getCallOptions()), request, responseObserver);
-    }
-
-    @java.lang.Override
     public void adaptScanMethods(org.vitrivr.adampro.grpc.AdamGrpc.AdaptScanMethodsMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
       asyncUnaryCall(
@@ -733,17 +666,10 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public void importDataFile(org.vitrivr.adampro.grpc.AdamGrpc.ImportDataFileMessage request,
+    public void protoImportData(org.vitrivr.adampro.grpc.AdamGrpc.ProtoImportMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_IMPORT_DATA_FILE, getCallOptions()), request, responseObserver);
-    }
-
-    @java.lang.Override
-    public void exportDataFile(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.ExportDataFileMessage> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_EXPORT_DATA_FILE, getCallOptions()), request, responseObserver);
+      asyncServerStreamingCall(
+          getChannel().newCall(METHOD_PROTO_IMPORT_DATA, getCallOptions()), request, responseObserver);
     }
 
     @java.lang.Override
@@ -808,9 +734,9 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage getNextPkValue(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request) {
+    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage vacuumEntity(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request) {
       return blockingUnaryCall(
-          getChannel(), METHOD_GET_NEXT_PK_VALUE, getCallOptions(), request);
+          getChannel(), METHOD_VACUUM_ENTITY, getCallOptions(), request);
     }
 
     @java.lang.Override
@@ -892,18 +818,6 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage resetScanWeights(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_RESET_SCAN_WEIGHTS, getCallOptions(), request);
-    }
-
-    @java.lang.Override
-    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage setScanWeight(org.vitrivr.adampro.grpc.AdamGrpc.WeightMessage request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_SET_SCAN_WEIGHT, getCallOptions(), request);
-    }
-
-    @java.lang.Override
     public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage adaptScanMethods(org.vitrivr.adampro.grpc.AdamGrpc.AdaptScanMethodsMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_ADAPT_SCAN_METHODS, getCallOptions(), request);
@@ -922,15 +836,10 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage importDataFile(org.vitrivr.adampro.grpc.AdamGrpc.ImportDataFileMessage request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_IMPORT_DATA_FILE, getCallOptions(), request);
-    }
-
-    @java.lang.Override
-    public org.vitrivr.adampro.grpc.AdamGrpc.ExportDataFileMessage exportDataFile(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_EXPORT_DATA_FILE, getCallOptions(), request);
+    public java.util.Iterator<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> protoImportData(
+        org.vitrivr.adampro.grpc.AdamGrpc.ProtoImportMessage request) {
+      return blockingServerStreamingCall(
+          getChannel(), METHOD_PROTO_IMPORT_DATA, getCallOptions(), request);
     }
 
     @java.lang.Override
@@ -1000,10 +909,10 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> getNextPkValue(
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> vacuumEntity(
         org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request) {
       return futureUnaryCall(
-          getChannel().newCall(METHOD_GET_NEXT_PK_VALUE, getCallOptions()), request);
+          getChannel().newCall(METHOD_VACUUM_ENTITY, getCallOptions()), request);
     }
 
     @java.lang.Override
@@ -1098,20 +1007,6 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> resetScanWeights(
-        org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_RESET_SCAN_WEIGHTS, getCallOptions()), request);
-    }
-
-    @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> setScanWeight(
-        org.vitrivr.adampro.grpc.AdamGrpc.WeightMessage request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_SET_SCAN_WEIGHT, getCallOptions()), request);
-    }
-
-    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> adaptScanMethods(
         org.vitrivr.adampro.grpc.AdamGrpc.AdaptScanMethodsMessage request) {
       return futureUnaryCall(
@@ -1133,20 +1028,6 @@ public class AdamDefinitionGrpc {
     }
 
     @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> importDataFile(
-        org.vitrivr.adampro.grpc.AdamGrpc.ImportDataFileMessage request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_IMPORT_DATA_FILE, getCallOptions()), request);
-    }
-
-    @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.ExportDataFileMessage> exportDataFile(
-        org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_EXPORT_DATA_FILE, getCallOptions()), request);
-    }
-
-    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.StorageHandlersMessage> listStorageHandlers(
         org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request) {
       return futureUnaryCall(
@@ -1160,7 +1041,7 @@ public class AdamDefinitionGrpc {
   private static final int METHODID_DROP_ENTITY = 3;
   private static final int METHODID_EXISTS_ENTITY = 4;
   private static final int METHODID_INSERT = 5;
-  private static final int METHODID_GET_NEXT_PK_VALUE = 6;
+  private static final int METHODID_VACUUM_ENTITY = 6;
   private static final int METHODID_DELETE = 7;
   private static final int METHODID_INDEX = 8;
   private static final int METHODID_GENERATE_ALL_INDEXES = 9;
@@ -1174,15 +1055,12 @@ public class AdamDefinitionGrpc {
   private static final int METHODID_GET_INDEX_PROPERTIES = 17;
   private static final int METHODID_REPARTITION_ENTITY_DATA = 18;
   private static final int METHODID_REPARTITION_INDEX_DATA = 19;
-  private static final int METHODID_RESET_SCAN_WEIGHTS = 20;
-  private static final int METHODID_SET_SCAN_WEIGHT = 21;
-  private static final int METHODID_ADAPT_SCAN_METHODS = 22;
-  private static final int METHODID_SPARSIFY_ENTITY = 23;
-  private static final int METHODID_IMPORT_DATA = 24;
-  private static final int METHODID_IMPORT_DATA_FILE = 25;
-  private static final int METHODID_EXPORT_DATA_FILE = 26;
-  private static final int METHODID_LIST_STORAGE_HANDLERS = 27;
-  private static final int METHODID_STREAM_INSERT = 28;
+  private static final int METHODID_ADAPT_SCAN_METHODS = 20;
+  private static final int METHODID_SPARSIFY_ENTITY = 21;
+  private static final int METHODID_IMPORT_DATA = 22;
+  private static final int METHODID_PROTO_IMPORT_DATA = 23;
+  private static final int METHODID_LIST_STORAGE_HANDLERS = 24;
+  private static final int METHODID_STREAM_INSERT = 25;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1224,8 +1102,8 @@ public class AdamDefinitionGrpc {
           serviceImpl.insert((org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
           break;
-        case METHODID_GET_NEXT_PK_VALUE:
-          serviceImpl.getNextPkValue((org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage) request,
+        case METHODID_VACUUM_ENTITY:
+          serviceImpl.vacuumEntity((org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
           break;
         case METHODID_DELETE:
@@ -1280,14 +1158,6 @@ public class AdamDefinitionGrpc {
           serviceImpl.repartitionIndexData((org.vitrivr.adampro.grpc.AdamGrpc.RepartitionMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
           break;
-        case METHODID_RESET_SCAN_WEIGHTS:
-          serviceImpl.resetScanWeights((org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage) request,
-              (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
-          break;
-        case METHODID_SET_SCAN_WEIGHT:
-          serviceImpl.setScanWeight((org.vitrivr.adampro.grpc.AdamGrpc.WeightMessage) request,
-              (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
-          break;
         case METHODID_ADAPT_SCAN_METHODS:
           serviceImpl.adaptScanMethods((org.vitrivr.adampro.grpc.AdamGrpc.AdaptScanMethodsMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
@@ -1300,13 +1170,9 @@ public class AdamDefinitionGrpc {
           serviceImpl.importData((org.vitrivr.adampro.grpc.AdamGrpc.ImportMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
           break;
-        case METHODID_IMPORT_DATA_FILE:
-          serviceImpl.importDataFile((org.vitrivr.adampro.grpc.AdamGrpc.ImportDataFileMessage) request,
+        case METHODID_PROTO_IMPORT_DATA:
+          serviceImpl.protoImportData((org.vitrivr.adampro.grpc.AdamGrpc.ProtoImportMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
-          break;
-        case METHODID_EXPORT_DATA_FILE:
-          serviceImpl.exportDataFile((org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage) request,
-              (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.ExportDataFileMessage>) responseObserver);
           break;
         case METHODID_LIST_STORAGE_HANDLERS:
           serviceImpl.listStorageHandlers((org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage) request,
@@ -1383,12 +1249,12 @@ public class AdamDefinitionGrpc {
               org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
                 serviceImpl, METHODID_STREAM_INSERT)))
         .addMethod(
-          METHOD_GET_NEXT_PK_VALUE,
+          METHOD_VACUUM_ENTITY,
           asyncUnaryCall(
             new MethodHandlers<
               org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage,
               org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
-                serviceImpl, METHODID_GET_NEXT_PK_VALUE)))
+                serviceImpl, METHODID_VACUUM_ENTITY)))
         .addMethod(
           METHOD_DELETE,
           asyncUnaryCall(
@@ -1481,20 +1347,6 @@ public class AdamDefinitionGrpc {
               org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
                 serviceImpl, METHODID_REPARTITION_INDEX_DATA)))
         .addMethod(
-          METHOD_RESET_SCAN_WEIGHTS,
-          asyncUnaryCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
-                serviceImpl, METHODID_RESET_SCAN_WEIGHTS)))
-        .addMethod(
-          METHOD_SET_SCAN_WEIGHT,
-          asyncUnaryCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.WeightMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
-                serviceImpl, METHODID_SET_SCAN_WEIGHT)))
-        .addMethod(
           METHOD_ADAPT_SCAN_METHODS,
           asyncUnaryCall(
             new MethodHandlers<
@@ -1516,19 +1368,12 @@ public class AdamDefinitionGrpc {
               org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
                 serviceImpl, METHODID_IMPORT_DATA)))
         .addMethod(
-          METHOD_IMPORT_DATA_FILE,
-          asyncUnaryCall(
+          METHOD_PROTO_IMPORT_DATA,
+          asyncServerStreamingCall(
             new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.ImportDataFileMessage,
+              org.vitrivr.adampro.grpc.AdamGrpc.ProtoImportMessage,
               org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
-                serviceImpl, METHODID_IMPORT_DATA_FILE)))
-        .addMethod(
-          METHOD_EXPORT_DATA_FILE,
-          asyncUnaryCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.ExportDataFileMessage>(
-                serviceImpl, METHODID_EXPORT_DATA_FILE)))
+                serviceImpl, METHODID_PROTO_IMPORT_DATA)))
         .addMethod(
           METHOD_LIST_STORAGE_HANDLERS,
           asyncUnaryCall(
