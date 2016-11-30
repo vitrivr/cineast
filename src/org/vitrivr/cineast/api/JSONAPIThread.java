@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.net.Socket;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -102,30 +101,8 @@ public class JSONAPIThread extends Thread {
 				this.printer.print(resultobj.toString());
 				this.printer.print(',');
 				
-				String id = descriptor.getId();
-				
-				//send shots
-				DBSelector selector = new ADAMproSelector();
-				ResultSet rset;
-//				rset = selector.select("SELECT id, startframe, endframe FROM cineast.shots WHERE video = " + id);
-				int i = 0;
-//				while (rset.next()) {
-//					SegmentLookup.ShotDescriptor desc= sl.lookUpShot(rset.getInt(1));
-//					
-//					resultobj = JSONEncoder.encodeShot(rset.getInt(1), desc.getVideoId(), desc.getStartFrame(), desc.getEndFrame());
-//					
-//					this.printer.print(resultobj.toString());
-//					this.printer.print(',');
-//					printer.flush();
-//					if(i % 20 == 0){
-//						Thread.sleep(100);
-//					}
-//				}
-
 				sl.close();
-				vl.close();
-				selector.close();
-				
+				vl.close();				
 				break;
 			}
 
@@ -350,7 +327,7 @@ public class JSONAPIThread extends Thread {
 //				int limit = query.get("limit") == null ? 1 : query.get("limit").asInt();
 				DBSelector selector = new ADAMproSelector();
 				SegmentLookup sl = new SegmentLookup();
-				SegmentLookup.SegmentDescriptor descriptor;
+//				SegmentLookup.SegmentDescriptor descriptor;
 				this.printer.print('[');
 				
 //				PreparedStatement select = selector.createPreparedStatement("(select id, startframe, endframe from cineast.shots WHERE video=? AND startframe<? ORDER BY startframe desc LIMIT ?)UNION(select id, startframe, endframe from cineast.shots WHERE video=? AND endframe>? ORDER BY startframe asc LIMIT ?)");
