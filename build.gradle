@@ -1,4 +1,6 @@
 apply plugin: 'com.google.osdetector'
+apply plugin: 'de.undercouch.download'
+import de.undercouch.gradle.tasks.download.Download
 
 buildscript {
   repositories {
@@ -10,6 +12,7 @@ buildscript {
   dependencies {
       classpath "gradle.plugin.com.google.gradle:osdetector-gradle-plugin:1.4.0"
       classpath 'gradle.plugin.com.google.protobuf:protobuf-gradle-plugin:0.7.6'
+      classpath 'de.undercouch:gradle-download-task:3.1.2'
   }
 }
 
@@ -115,11 +118,10 @@ jar {
 	archiveName = 'cineast.jar'
 }
 
-// Democode to check existence of a file and if it doesn't exist, download it.
-//def f = new File('src/resources/cat.jpg')
-//if (!f.exists()) {
-//    new URL('https://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg').withInputStream{ i -> f.withOutputStream{ it << i }}
-//}
+task downloadExternalFiles(type: Download){
+	src 'http://download.vitrivr.org/vgg16.tfmodel'
+	dest 'resources/vgg16'
+}
 
 task copyResources() << {
 	copy {
