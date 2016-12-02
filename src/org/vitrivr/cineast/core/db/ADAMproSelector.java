@@ -86,11 +86,11 @@ public class ADAMproSelector implements DBSelector {
     return false;
   }
 
-  private QueryMessage buildQueryMessage(ArrayList<String> hints, BooleanQueryMessage bqMessage,
+  private QueryMessage buildQueryMessage(ArrayList<String> hints, FromMessage.Builder fb, BooleanQueryMessage bqMessage,
       ProjectionMessage pMessage, NearestNeighbourQueryMessage nnqMessage) {
     synchronized (qmBuilder) {
       qmBuilder.clear();
-      qmBuilder.setFrom(fromBuilder);
+      qmBuilder.setFrom(fb);
       if (hints != null && !hints.isEmpty()) {
         qmBuilder.addAllHints(hints);
       }
@@ -106,6 +106,11 @@ public class ADAMproSelector implements DBSelector {
 
       return qmBuilder.build();
     }
+  }
+  
+  private QueryMessage buildQueryMessage(ArrayList<String> hints, BooleanQueryMessage bqMessage,
+      ProjectionMessage pMessage, NearestNeighbourQueryMessage nnqMessage) {
+    return buildQueryMessage(hints, fromBuilder, bqMessage, pMessage, nnqMessage);
   }
 
   private BooleanQueryMessage buildBooleanQueryMessage(WhereMessage where,
@@ -260,7 +265,7 @@ public class ADAMproSelector implements DBSelector {
 
     for (QueryResultTupleMessage result : response.getResultsList()) {
 
-      Map<String, DataMessage> data = result.getData();
+      Map<String, DataMessage> data = result.getDataMap();
 
       if (!data.containsKey(vectorName)) {
         continue;
@@ -330,11 +335,11 @@ public class ADAMproSelector implements DBSelector {
     }
 
     for (QueryResultTupleMessage msg : response.getResultsList()) {
-      String id = msg.getData().get("id").getStringData();
+      String id = msg.getDataMap().get("id").getStringData();
       if (id == null) {
         continue;
       }
-      _return.add(new StringDoublePair(id, msg.getData().get("ap_distance").getFloatData()));
+      _return.add(new StringDoublePair(id, msg.getDataMap().get("ap_distance").getFloatData()));
     }
 
     return _return;
@@ -396,7 +401,7 @@ public class ADAMproSelector implements DBSelector {
         .getProperties(EntityPropertiesMessage.newBuilder().setEntity(fromBuilder.getEntity()).build());
     int count;
     try {
-      count = Integer.parseInt(propertiesMessage.getProperties().get("count"));
+      count = Integer.parseInt(propertiesMessage.getPropertiesMap().get("count"));
     } catch (Exception e) {
       count = 1000000; // You should not get more than 1M tuples into the system anyway. Again, this
                        // method is temporary
@@ -448,7 +453,7 @@ public class ADAMproSelector implements DBSelector {
     ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(resultList.size());
 
     for (QueryResultTupleMessage resultMessage : resultList) {
-      Map<String, DataMessage> data = resultMessage.getData();
+      Map<String, DataMessage> data = resultMessage.getDataMap();
       Set<String> keys = data.keySet();
       HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
       for (String key : keys) {
