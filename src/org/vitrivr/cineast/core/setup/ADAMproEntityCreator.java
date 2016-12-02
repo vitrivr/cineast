@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.adampro.grpc.AdamGrpc.AttributeDefinitionMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.adampro.grpc.AdamGrpc.CreateEntityMessage;
@@ -21,7 +22,7 @@ public class ADAMproEntityCreator implements EntityCreator {
    * @see org.vitrivr.cineast.core.setup.IEntityCreator#createMultiMediaObjectsEntity()
    */
 	@Override
-  public AckMessage createMultiMediaObjectsEntity(){
+  public boolean createMultiMediaObjectsEntity(){
 		ArrayList<AttributeDefinitionMessage> attributes = new ArrayList<>(8);
 		
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
@@ -45,14 +46,14 @@ public class ADAMproEntityCreator implements EntityCreator {
 			LOGGER.error("error creating multimedia object entity: {}", ack.getMessage());
 		}
 		
-		return ack;
+		return ack.getCode() == Code.OK;
 	}
 	
 	/* (non-Javadoc)
    * @see org.vitrivr.cineast.core.setup.IEntityCreator#createSegmentEntity()
    */
 	@Override
-  public AckMessage createSegmentEntity(){
+  public boolean createSegmentEntity(){
 		ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
 		
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
@@ -73,7 +74,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 			LOGGER.error("error creating segment entity: {}", ack.getMessage());
 		}
 		
-		return ack;
+		return ack.getCode() == Code.OK;
 		
 	}
 	
@@ -81,7 +82,7 @@ public class ADAMproEntityCreator implements EntityCreator {
    * @see org.vitrivr.cineast.core.setup.IEntityCreator#createFeatureEntity(java.lang.String, boolean)
    */
 	@Override
-  public AckMessage createFeatureEntity(String featurename, boolean unique){
+  public boolean createFeatureEntity(String featurename, boolean unique){
 		return createFeatureEntity(featurename, unique, "feature");
  
 	}
@@ -90,7 +91,7 @@ public class ADAMproEntityCreator implements EntityCreator {
    * @see org.vitrivr.cineast.core.setup.IEntityCreator#createFeatureEntity(java.lang.String, boolean, java.lang.String)
    */
 	@Override
-  public AckMessage createFeatureEntity(String featurename, boolean unique, String...featrueNames){
+  public boolean createFeatureEntity(String featurename, boolean unique, String...featrueNames){
 		ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>();
 		
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
@@ -110,7 +111,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 			LOGGER.error("error creating feature entity {}: {}", featurename, ack.getMessage());
 		}
 		
-		return ack;
+		return ack.getCode() == Code.OK;
  
 	}
 	
@@ -118,7 +119,7 @@ public class ADAMproEntityCreator implements EntityCreator {
    * @see org.vitrivr.cineast.core.setup.IEntityCreator#createFeatureEntity(java.lang.String, boolean, org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition)
    */
 	@Override
-  public AckMessage createFeatureEntity(String featurename, boolean unique, AttributeDefinition... attributes) {
+  public boolean createFeatureEntity(String featurename, boolean unique, AttributeDefinition... attributes) {
 		ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>();
 
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
@@ -139,7 +140,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 			LOGGER.error("error creating feature entity {}: {}", featurename, ack.getMessage());
 		}
 		
-		return ack;
+		return ack.getCode() == Code.OK;
 		
 	}
 	
@@ -147,7 +148,7 @@ public class ADAMproEntityCreator implements EntityCreator {
    * @see org.vitrivr.cineast.core.setup.IEntityCreator#createIdEntity(java.lang.String, org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition)
    */
 	@Override
-  public AckMessage createIdEntity(String entityName, AttributeDefinition...attributes){
+  public boolean createIdEntity(String entityName, AttributeDefinition...attributes){
 		ArrayList<AttributeDefinitionMessage> fieldList = new ArrayList<>();
 
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
@@ -167,7 +168,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 			LOGGER.error("error creating feature entity {}: {}", entityName, ack.getMessage());
 		}
 
-		return ack;
+		return ack.getCode() == Code.OK;
 	}
 
 	/* (non-Javadoc)
