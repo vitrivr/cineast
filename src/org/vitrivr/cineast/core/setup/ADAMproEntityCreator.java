@@ -126,7 +126,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(unique).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		
 		for(AttributeDefinition attribute : attributes){
-			fields.add(builder.setName(attribute.name).setAttributetype(attribute.type).setPk(false).build());
+			fields.add(builder.setName(attribute.name).setAttributetype(mapAttributeType(attribute.type)).setPk(false).build());
 		}
 		
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllAttributes(fields).build();
@@ -154,7 +154,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 
 		fieldList.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		for(AttributeDefinition attribute : attributes){
-			fieldList.add(builder.setName(attribute.name).setAttributetype(attribute.type).setPk(false).build());
+			fieldList.add(builder.setName(attribute.name).setAttributetype(mapAttributeType(attribute.type)).setPk(false).build());
 		}
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(entityName.toLowerCase()).addAllAttributes(fieldList).build();
@@ -184,6 +184,38 @@ public class ADAMproEntityCreator implements EntityCreator {
 	@Override
   public void close(){
 		this.adampro.close();
+	}
+	
+	public static final AttributeType mapAttributeType(org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType type){
+	  switch(type){
+    case AUTO:
+      return AttributeType.AUTO;
+    case BOOLEAN:
+      return AttributeType.BOOLEAN;
+    case DOUBLE:
+      return AttributeType.DOUBLE;
+    case FEATURE:
+      return AttributeType.FEATURE;
+    case FLOAT:
+      return AttributeType.FLOAT;
+    case GEOGRAPHY:
+      return AttributeType.GEOGRAPHY;
+    case GEOMETRY:
+      return AttributeType.GEOMETRY;
+    case INT:
+      return AttributeType.INT;
+    case LONG:
+      return AttributeType.LONG;
+    case SERIAL:
+      return AttributeType.SERIAL;
+    case STRING:
+      return AttributeType.STRING;
+    case TEXT:
+      return AttributeType.TEXT;
+    default:
+      return AttributeType.UNKOWNAT;
+	  
+	  }
 	}
 	
 }
