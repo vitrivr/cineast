@@ -538,15 +538,13 @@ public class ADAMproSelector implements DBSelector {
     return resultsToMap(response.getResultsList());
   }
   
-  public List<Map<String, PrimitiveTypeProvider>> getFromExternal(String externalHandlerName, String queryString){
+  public List<Map<String, PrimitiveTypeProvider>> getFromExternal(String externalHandlerName, Map<String, String> parameters){
     
     ExternalHandlerQueryMessage.Builder ehqmBuilder = ExternalHandlerQueryMessage.newBuilder();
     ehqmBuilder.setEntity(this.entityName);
     ehqmBuilder.setHandler(externalHandlerName);
     
-    HashMap<String, String> map = new HashMap<>();
-    map.put("query", queryString);
-    ehqmBuilder.putAllParams(map);
+    ehqmBuilder.putAllParams(parameters);
     
     SubExpressionQueryMessage.Builder seqmBuilder = SubExpressionQueryMessage.newBuilder();
     seqmBuilder.setEhqm(ehqmBuilder);
