@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.config;
 
+import java.util.function.Supplier;
+
 import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.ADAMproWriter;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -7,6 +9,9 @@ import org.vitrivr.cineast.core.db.JsonFileWriter;
 import org.vitrivr.cineast.core.db.NoDBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.ProtobufFileWriter;
+import org.vitrivr.cineast.core.setup.ADAMproEntityCreator;
+import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.setup.NoEntityCreator;
 
 import com.eclipsesource.json.JsonObject;
 
@@ -25,6 +30,9 @@ public final class DatabaseConfig {
 	private static final DBSelectorSupplier NO_SELECTOR_SUPPLY = () -> new NoDBSelector();
 	private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = () -> new ADAMproSelector();
 	
+  private static final Supplier<EntityCreator> ADAMPRO_CREATOR_SUPPLY = () -> new ADAMproEntityCreator();
+  private static final Supplier<EntityCreator> NO_CREATOR_SUPPLY = () -> new NoEntityCreator();
+
 	public static enum Writer{
 		PROTO,
 		JSON,
@@ -107,6 +115,18 @@ public final class DatabaseConfig {
 			throw new IllegalStateException("no supplier for selector " + this.selector);
 			
 		}
+	}
+	
+	public Supplier<EntityCreator> getEntityCreatorSupplier(){
+	  switch(this.selector){
+    case ADAMPRO:
+      return ADAMPRO_CREATOR_SUPPLY;
+    case NONE:
+      return NO_CREATOR_SUPPLY;
+    default:
+      throw new IllegalStateException("no supplier for EntityCreator " + this.selector);
+      
+    }
 	}
 	
 	/**
