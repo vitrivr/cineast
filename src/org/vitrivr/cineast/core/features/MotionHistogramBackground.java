@@ -13,8 +13,8 @@ import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
+import org.vitrivr.cineast.core.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition;
 import org.vitrivr.cineast.core.util.MathHelper;
 
 public class MotionHistogramBackground extends SubDivMotionHistogram {

@@ -24,6 +24,7 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import org.vitrivr.cineast.core.features.neuralnet.label.ConceptReader;
+import org.vitrivr.cineast.core.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.MaxPool;
 import org.vitrivr.cineast.core.util.TimeHelper;
@@ -137,7 +138,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         super.initalizePersistentLayer(supply);
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
-        ec.createIdEntity(classTableName, new EntityCreator.AttributeDefinition(wnLabel, AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition(getHumanLabelColName(), AdamGrpc.AttributeType.STRING));
+        ec.createIdEntity(classTableName, new AttributeDefinition(wnLabel, AdamGrpc.AttributeType.STRING), new AttributeDefinition(getHumanLabelColName(), AdamGrpc.AttributeType.STRING));
         ec.close();
     }
 
@@ -147,7 +148,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
     public void createLabelsTable(Supplier<EntityCreator> supply, String tableName){
         EntityCreator ec = supply.get();
         //TODO Set pk / Create idx -> Logic in the ecCreator
-        ec.createIdEntity(tableName, new EntityCreator.AttributeDefinition("segmentid", AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition(getWnLabelColName(), AdamGrpc.AttributeType.STRING), new EntityCreator.AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT));
+        ec.createIdEntity(tableName, new AttributeDefinition("segmentid", AdamGrpc.AttributeType.STRING), new AttributeDefinition(getWnLabelColName(), AdamGrpc.AttributeType.STRING), new AttributeDefinition("probability", AdamGrpc.AttributeType.FLOAT));
         ec.close();
     }
 

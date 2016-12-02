@@ -28,6 +28,7 @@ import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVG
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.run.ExtractionJobRunner;
+import org.vitrivr.cineast.core.setup.ADAMproEntityCreator;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -136,7 +137,7 @@ public class API {
 	}
 	
 	private static void setup(){
-	  EntityCreator ec = new EntityCreator();
+	  EntityCreator ec = new ADAMproEntityCreator();
     
 	  LOGGER.info("setting up basic entities...");
     
@@ -173,7 +174,7 @@ public class API {
     LOGGER.info("Initializing nn persistent layer");
     NeuralNetFeature feature = new NeuralNetVGG16Feature(Config.getNeuralNetConfig());
 
-    feature.initalizePersistentLayer(() -> new EntityCreator());
+    feature.initalizePersistentLayer(() -> new ADAMproEntityCreator());
     LOGGER.info("Initalizing writers");
     feature.init(Config.getDatabaseConfig().getWriterSupplier());
     feature.init(Config.getDatabaseConfig().getSelectorSupplier());

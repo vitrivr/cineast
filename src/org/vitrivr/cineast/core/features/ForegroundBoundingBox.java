@@ -16,8 +16,8 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition;
 import org.vitrivr.cineast.core.util.MaskGenerator;
 import org.vitrivr.cineast.core.util.TimeHelper;
 
