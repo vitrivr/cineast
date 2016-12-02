@@ -12,8 +12,14 @@ import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncServerStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncClientStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
+import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 
-@javax.annotation.Generated("by gRPC proto compiler")
+/**
+ */
+@javax.annotation.Generated(
+    value = "by gRPC proto compiler (version 1.0.1)",
+    comments = "Source: grpc.proto")
 public class AdamSearchGrpc {
 
   private AdamSearchGrpc() {}
@@ -21,7 +27,7 @@ public class AdamSearchGrpc {
   public static final String SERVICE_NAME = "AdamSearch";
 
   // Static method descriptors that strictly reflect the proto.
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_CACHE_INDEX =
       io.grpc.MethodDescriptor.create(
@@ -30,7 +36,7 @@ public class AdamSearchGrpc {
               "AdamSearch", "CacheIndex"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_CACHE_ENTITY =
       io.grpc.MethodDescriptor.create(
@@ -39,7 +45,7 @@ public class AdamSearchGrpc {
               "AdamSearch", "CacheEntity"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_PREVIEW =
       io.grpc.MethodDescriptor.create(
@@ -48,7 +54,7 @@ public class AdamSearchGrpc {
               "AdamSearch", "Preview"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_QUERY =
       io.grpc.MethodDescriptor.create(
@@ -57,7 +63,7 @@ public class AdamSearchGrpc {
               "AdamSearch", "DoQuery"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_STREAMING_QUERY =
       io.grpc.MethodDescriptor.create(
@@ -66,7 +72,7 @@ public class AdamSearchGrpc {
               "AdamSearch", "DoStreamingQuery"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage> METHOD_DO_BATCH_QUERY =
       io.grpc.MethodDescriptor.create(
@@ -75,7 +81,7 @@ public class AdamSearchGrpc {
               "AdamSearch", "DoBatchQuery"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_PROGRESSIVE_QUERY =
       io.grpc.MethodDescriptor.create(
@@ -84,7 +90,7 @@ public class AdamSearchGrpc {
               "AdamSearch", "DoProgressiveQuery"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_GET_CACHED_RESULTS =
       io.grpc.MethodDescriptor.create(
@@ -94,88 +100,164 @@ public class AdamSearchGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
 
+  /**
+   * Creates a new async stub that supports all call types for the service
+   */
   public static AdamSearchStub newStub(io.grpc.Channel channel) {
     return new AdamSearchStub(channel);
   }
 
+  /**
+   * Creates a new blocking-style stub that supports unary and streaming output calls on the service
+   */
   public static AdamSearchBlockingStub newBlockingStub(
       io.grpc.Channel channel) {
     return new AdamSearchBlockingStub(channel);
   }
 
+  /**
+   * Creates a new ListenableFuture-style stub that supports unary and streaming output calls on the service
+   */
   public static AdamSearchFutureStub newFutureStub(
       io.grpc.Channel channel) {
     return new AdamSearchFutureStub(channel);
   }
 
-  public static interface AdamSearch {
+  /**
+   */
+  public static abstract class AdamSearchImplBase implements io.grpc.BindableService {
 
+    /**
+     * <pre>
+     *caches an index explicitly (before performing a query to speed up retrieval time)
+     * </pre>
+     */
     public void cacheIndex(org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver);
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_CACHE_INDEX, responseObserver);
+    }
 
+    /**
+     */
     public void cacheEntity(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver);
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_CACHE_ENTITY, responseObserver);
+    }
 
+    /**
+     */
     public void preview(org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver);
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_PREVIEW, responseObserver);
+    }
 
+    /**
+     * <pre>
+     *performs a query on an entity with hints on which search method to use
+     *(if no hint is specified a fallback is used)
+     * </pre>
+     */
     public void doQuery(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver);
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_DO_QUERY, responseObserver);
+    }
 
+    /**
+     */
     public io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage> doStreamingQuery(
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver);
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
+      return asyncUnimplementedStreamingCall(METHOD_DO_STREAMING_QUERY, responseObserver);
+    }
 
+    /**
+     */
     public void doBatchQuery(org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage> responseObserver);
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_DO_BATCH_QUERY, responseObserver);
+    }
 
+    /**
+     */
     public void doProgressiveQuery(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver);
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_DO_PROGRESSIVE_QUERY, responseObserver);
+    }
 
+    /**
+     * <pre>
+     *return cached results
+     * </pre>
+     */
     public void getCachedResults(org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage request,
-        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver);
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_GET_CACHED_RESULTS, responseObserver);
+    }
+
+    @java.lang.Override public io.grpc.ServerServiceDefinition bindService() {
+      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+          .addMethod(
+            METHOD_CACHE_INDEX,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
+                  this, METHODID_CACHE_INDEX)))
+          .addMethod(
+            METHOD_CACHE_ENTITY,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
+                  this, METHODID_CACHE_ENTITY)))
+          .addMethod(
+            METHOD_PREVIEW,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
+                  this, METHODID_PREVIEW)))
+          .addMethod(
+            METHOD_DO_QUERY,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
+                  this, METHODID_DO_QUERY)))
+          .addMethod(
+            METHOD_DO_STREAMING_QUERY,
+            asyncBidiStreamingCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
+                  this, METHODID_DO_STREAMING_QUERY)))
+          .addMethod(
+            METHOD_DO_BATCH_QUERY,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage>(
+                  this, METHODID_DO_BATCH_QUERY)))
+          .addMethod(
+            METHOD_DO_PROGRESSIVE_QUERY,
+            asyncServerStreamingCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
+                  this, METHODID_DO_PROGRESSIVE_QUERY)))
+          .addMethod(
+            METHOD_GET_CACHED_RESULTS,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
+                  this, METHODID_GET_CACHED_RESULTS)))
+          .build();
+    }
   }
 
-  public static interface AdamSearchBlockingClient {
-
-    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage cacheIndex(org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage request);
-
-    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage cacheEntity(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request);
-
-    public org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage preview(org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage request);
-
-    public org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage doQuery(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request);
-
-    public org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage doBatchQuery(org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage request);
-
-    public java.util.Iterator<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> doProgressiveQuery(
-        org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request);
-
-    public org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage getCachedResults(org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage request);
-  }
-
-  public static interface AdamSearchFutureClient {
-
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> cacheIndex(
-        org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> cacheEntity(
-        org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> preview(
-        org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> doQuery(
-        org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage> doBatchQuery(
-        org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage request);
-
-    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> getCachedResults(
-        org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage request);
-  }
-
-  public static class AdamSearchStub extends io.grpc.stub.AbstractStub<AdamSearchStub>
-      implements AdamSearch {
+  /**
+   */
+  public static final class AdamSearchStub extends io.grpc.stub.AbstractStub<AdamSearchStub> {
     private AdamSearchStub(io.grpc.Channel channel) {
       super(channel);
     }
@@ -191,56 +273,74 @@ public class AdamSearchGrpc {
       return new AdamSearchStub(channel, callOptions);
     }
 
-    @java.lang.Override
+    /**
+     * <pre>
+     *caches an index explicitly (before performing a query to speed up retrieval time)
+     * </pre>
+     */
     public void cacheIndex(org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_CACHE_INDEX, getCallOptions()), request, responseObserver);
     }
 
-    @java.lang.Override
+    /**
+     */
     public void cacheEntity(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_CACHE_ENTITY, getCallOptions()), request, responseObserver);
     }
 
-    @java.lang.Override
+    /**
+     */
     public void preview(org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_PREVIEW, getCallOptions()), request, responseObserver);
     }
 
-    @java.lang.Override
+    /**
+     * <pre>
+     *performs a query on an entity with hints on which search method to use
+     *(if no hint is specified a fallback is used)
+     * </pre>
+     */
     public void doQuery(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_DO_QUERY, getCallOptions()), request, responseObserver);
     }
 
-    @java.lang.Override
+    /**
+     */
     public io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage> doStreamingQuery(
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       return asyncBidiStreamingCall(
           getChannel().newCall(METHOD_DO_STREAMING_QUERY, getCallOptions()), responseObserver);
     }
 
-    @java.lang.Override
+    /**
+     */
     public void doBatchQuery(org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_DO_BATCH_QUERY, getCallOptions()), request, responseObserver);
     }
 
-    @java.lang.Override
+    /**
+     */
     public void doProgressiveQuery(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       asyncServerStreamingCall(
           getChannel().newCall(METHOD_DO_PROGRESSIVE_QUERY, getCallOptions()), request, responseObserver);
     }
 
-    @java.lang.Override
+    /**
+     * <pre>
+     *return cached results
+     * </pre>
+     */
     public void getCachedResults(org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       asyncUnaryCall(
@@ -248,8 +348,9 @@ public class AdamSearchGrpc {
     }
   }
 
-  public static class AdamSearchBlockingStub extends io.grpc.stub.AbstractStub<AdamSearchBlockingStub>
-      implements AdamSearchBlockingClient {
+  /**
+   */
+  public static final class AdamSearchBlockingStub extends io.grpc.stub.AbstractStub<AdamSearchBlockingStub> {
     private AdamSearchBlockingStub(io.grpc.Channel channel) {
       super(channel);
     }
@@ -265,52 +366,70 @@ public class AdamSearchGrpc {
       return new AdamSearchBlockingStub(channel, callOptions);
     }
 
-    @java.lang.Override
+    /**
+     * <pre>
+     *caches an index explicitly (before performing a query to speed up retrieval time)
+     * </pre>
+     */
     public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage cacheIndex(org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_CACHE_INDEX, getCallOptions(), request);
     }
 
-    @java.lang.Override
+    /**
+     */
     public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage cacheEntity(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_CACHE_ENTITY, getCallOptions(), request);
     }
 
-    @java.lang.Override
+    /**
+     */
     public org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage preview(org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_PREVIEW, getCallOptions(), request);
     }
 
-    @java.lang.Override
+    /**
+     * <pre>
+     *performs a query on an entity with hints on which search method to use
+     *(if no hint is specified a fallback is used)
+     * </pre>
+     */
     public org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage doQuery(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_DO_QUERY, getCallOptions(), request);
     }
 
-    @java.lang.Override
+    /**
+     */
     public org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage doBatchQuery(org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_DO_BATCH_QUERY, getCallOptions(), request);
     }
 
-    @java.lang.Override
+    /**
+     */
     public java.util.Iterator<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> doProgressiveQuery(
         org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request) {
       return blockingServerStreamingCall(
           getChannel(), METHOD_DO_PROGRESSIVE_QUERY, getCallOptions(), request);
     }
 
-    @java.lang.Override
+    /**
+     * <pre>
+     *return cached results
+     * </pre>
+     */
     public org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage getCachedResults(org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_GET_CACHED_RESULTS, getCallOptions(), request);
     }
   }
 
-  public static class AdamSearchFutureStub extends io.grpc.stub.AbstractStub<AdamSearchFutureStub>
-      implements AdamSearchFutureClient {
+  /**
+   */
+  public static final class AdamSearchFutureStub extends io.grpc.stub.AbstractStub<AdamSearchFutureStub> {
     private AdamSearchFutureStub(io.grpc.Channel channel) {
       super(channel);
     }
@@ -326,42 +445,58 @@ public class AdamSearchGrpc {
       return new AdamSearchFutureStub(channel, callOptions);
     }
 
-    @java.lang.Override
+    /**
+     * <pre>
+     *caches an index explicitly (before performing a query to speed up retrieval time)
+     * </pre>
+     */
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> cacheIndex(
         org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_CACHE_INDEX, getCallOptions()), request);
     }
 
-    @java.lang.Override
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> cacheEntity(
         org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_CACHE_ENTITY, getCallOptions()), request);
     }
 
-    @java.lang.Override
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> preview(
         org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_PREVIEW, getCallOptions()), request);
     }
 
-    @java.lang.Override
+    /**
+     * <pre>
+     *performs a query on an entity with hints on which search method to use
+     *(if no hint is specified a fallback is used)
+     * </pre>
+     */
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> doQuery(
         org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_DO_QUERY, getCallOptions()), request);
     }
 
-    @java.lang.Override
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage> doBatchQuery(
         org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_DO_BATCH_QUERY, getCallOptions()), request);
     }
 
-    @java.lang.Override
+    /**
+     * <pre>
+     *return cached results
+     * </pre>
+     */
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> getCachedResults(
         org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage request) {
       return futureUnaryCall(
@@ -383,14 +518,15 @@ public class AdamSearchGrpc {
       io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final AdamSearch serviceImpl;
+    private final AdamSearchImplBase serviceImpl;
     private final int methodId;
 
-    public MethodHandlers(AdamSearch serviceImpl, int methodId) {
+    public MethodHandlers(AdamSearchImplBase serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
 
+    @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
@@ -427,6 +563,7 @@ public class AdamSearchGrpc {
       }
     }
 
+    @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
@@ -440,65 +577,16 @@ public class AdamSearchGrpc {
     }
   }
 
-  public static io.grpc.ServerServiceDefinition bindService(
-      final AdamSearch serviceImpl) {
-    return io.grpc.ServerServiceDefinition.builder(SERVICE_NAME)
-        .addMethod(
-          METHOD_CACHE_INDEX,
-          asyncUnaryCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
-                serviceImpl, METHODID_CACHE_INDEX)))
-        .addMethod(
-          METHOD_CACHE_ENTITY,
-          asyncUnaryCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
-                serviceImpl, METHODID_CACHE_ENTITY)))
-        .addMethod(
-          METHOD_PREVIEW,
-          asyncUnaryCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
-                serviceImpl, METHODID_PREVIEW)))
-        .addMethod(
-          METHOD_DO_QUERY,
-          asyncUnaryCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
-                serviceImpl, METHODID_DO_QUERY)))
-        .addMethod(
-          METHOD_DO_STREAMING_QUERY,
-          asyncBidiStreamingCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
-                serviceImpl, METHODID_DO_STREAMING_QUERY)))
-        .addMethod(
-          METHOD_DO_BATCH_QUERY,
-          asyncUnaryCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage>(
-                serviceImpl, METHODID_DO_BATCH_QUERY)))
-        .addMethod(
-          METHOD_DO_PROGRESSIVE_QUERY,
-          asyncServerStreamingCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
-                serviceImpl, METHODID_DO_PROGRESSIVE_QUERY)))
-        .addMethod(
-          METHOD_GET_CACHED_RESULTS,
-          asyncUnaryCall(
-            new MethodHandlers<
-              org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage,
-              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
-                serviceImpl, METHODID_GET_CACHED_RESULTS)))
-        .build();
+  public static io.grpc.ServiceDescriptor getServiceDescriptor() {
+    return new io.grpc.ServiceDescriptor(SERVICE_NAME,
+        METHOD_CACHE_INDEX,
+        METHOD_CACHE_ENTITY,
+        METHOD_PREVIEW,
+        METHOD_DO_QUERY,
+        METHOD_DO_STREAMING_QUERY,
+        METHOD_DO_BATCH_QUERY,
+        METHOD_DO_PROGRESSIVE_QUERY,
+        METHOD_GET_CACHED_RESULTS);
   }
+
 }
