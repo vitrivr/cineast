@@ -45,6 +45,8 @@ public class ADAMproSelector implements DBSelector {
 
   private static ArrayList<String> hints = new ArrayList<>(1);
   private static ProjectionMessage projectionMessage;
+  
+  private String entityName;
 
   private static final DistanceMessage chisquared, correlation, cosine, hamming, jaccard,
       kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, spannorm;
@@ -77,6 +79,7 @@ public class ADAMproSelector implements DBSelector {
   @Override
   public boolean open(String name) {
     this.fromBuilder.setEntity(name);
+    this.entityName = name;
     return true;
   }
 
@@ -533,6 +536,27 @@ public class ADAMproSelector implements DBSelector {
       return _return;
     }
     return resultsToMap(response.getResultsList());
+  }
+  
+  public List<Map<String, PrimitiveTypeProvider>> getFromExternal(String externalHandlerName, String queryString){
+    
+    ExternalHandlerQueryMessage.Builder ehqmBuilder = ExternalHandlerQueryMessage.newBuilder();
+    ehqmBuilder.setEntity(this.entityName);
+    ehqmBuilder.setHandler(externalHandlerName);
+    
+    HashMap<String, String> map = new HashMap<>();
+    map.put("query", queryString);
+    ehqmBuilder.putAllParams(map);
+    
+    SubExpressionQueryMessage.Builder seqmBuilder = SubExpressionQueryMessage.newBuilder();
+    seqmBuilder.setEhqm(ehqmBuilder);
+    
+    FromMessage.Builder fmBuilder = FromMessage.newBuilder();
+    fmBuilder.setExpression(seqmBuilder);
+    
+    QueryMessage qm = buildQueryMessage(hints, fmBuilder, null, null, null);
+    
+    return executeQuery(qm);
   }
 
 }
