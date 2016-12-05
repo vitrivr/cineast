@@ -65,17 +65,23 @@ public abstract class SolrTextRetriever implements Retriever {
     HashMap<String, String> parameters = new HashMap<>();
     parameters.put("rows", Integer.toString(Config.getRetrieverConfig().getMaxResultsPerModule()));
 
-    StringBuilder sb = new StringBuilder();
-    for (SubtitleItem subItem : sc.getSubtitleItems()) {
-      sb.append(subItem.getText());
-      sb.append('\n');
-    }
-    String query = sb.toString();
-    if (query.isEmpty()) {
+    List<SubtitleItem> subItems = sc.getSubtitleItems();
+    
+    if(subItems.isEmpty()){
       return new ArrayList<>(0);
     }
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append('(');
+    for (SubtitleItem subItem : subItems) {
+      sb.append(subItem.getText());
+      sb.append(' ');
+    }
+    sb.append(')');
+    String query = sb.toString();
+   
 
-    parameters.put("query", query);
+    parameters.put("query", "feature:" + query);
 
     List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFromExternal("solr",
         parameters);
