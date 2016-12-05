@@ -270,6 +270,15 @@ public class AdamDefinitionGrpc {
               "AdamDefinition", "ListStorageHandlers"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.StorageHandlersMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.TransferStorageHandlerMessage,
+      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_TRANSFER_STORAGE_HANDLER =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamDefinition", "TransferStorageHandler"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.TransferStorageHandlerMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -493,6 +502,16 @@ public class AdamDefinitionGrpc {
       asyncUnimplementedUnaryCall(METHOD_LIST_STORAGE_HANDLERS, responseObserver);
     }
 
+    /**
+     * <pre>
+     *TODO: register storage handlers
+     * </pre>
+     */
+    public void transferStorageHandler(org.vitrivr.adampro.grpc.AdamGrpc.TransferStorageHandlerMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_TRANSFER_STORAGE_HANDLER, responseObserver);
+    }
+
     @java.lang.Override public io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -684,6 +703,13 @@ public class AdamDefinitionGrpc {
                 org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
                 org.vitrivr.adampro.grpc.AdamGrpc.StorageHandlersMessage>(
                   this, METHODID_LIST_STORAGE_HANDLERS)))
+          .addMethod(
+            METHOD_TRANSFER_STORAGE_HANDLER,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.TransferStorageHandlerMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
+                  this, METHODID_TRANSFER_STORAGE_HANDLER)))
           .build();
     }
   }
@@ -927,6 +953,17 @@ public class AdamDefinitionGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_LIST_STORAGE_HANDLERS, getCallOptions()), request, responseObserver);
     }
+
+    /**
+     * <pre>
+     *TODO: register storage handlers
+     * </pre>
+     */
+    public void transferStorageHandler(org.vitrivr.adampro.grpc.AdamGrpc.TransferStorageHandlerMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_TRANSFER_STORAGE_HANDLER, getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -1134,6 +1171,16 @@ public class AdamDefinitionGrpc {
     public org.vitrivr.adampro.grpc.AdamGrpc.StorageHandlersMessage listStorageHandlers(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_LIST_STORAGE_HANDLERS, getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     *TODO: register storage handlers
+     * </pre>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage transferStorageHandler(org.vitrivr.adampro.grpc.AdamGrpc.TransferStorageHandlerMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_TRANSFER_STORAGE_HANDLER, getCallOptions(), request);
     }
   }
 
@@ -1360,6 +1407,17 @@ public class AdamDefinitionGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_LIST_STORAGE_HANDLERS, getCallOptions()), request);
     }
+
+    /**
+     * <pre>
+     *TODO: register storage handlers
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> transferStorageHandler(
+        org.vitrivr.adampro.grpc.AdamGrpc.TransferStorageHandlerMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_TRANSFER_STORAGE_HANDLER, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_ENTITY = 0;
@@ -1388,7 +1446,8 @@ public class AdamDefinitionGrpc {
   private static final int METHODID_PROTO_IMPORT_DATA = 23;
   private static final int METHODID_PROTO_EXPORT_DATA = 24;
   private static final int METHODID_LIST_STORAGE_HANDLERS = 25;
-  private static final int METHODID_STREAM_INSERT = 26;
+  private static final int METHODID_TRANSFER_STORAGE_HANDLER = 26;
+  private static final int METHODID_STREAM_INSERT = 27;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1511,6 +1570,10 @@ public class AdamDefinitionGrpc {
           serviceImpl.listStorageHandlers((org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.StorageHandlersMessage>) responseObserver);
           break;
+        case METHODID_TRANSFER_STORAGE_HANDLER:
+          serviceImpl.transferStorageHandler((org.vitrivr.adampro.grpc.AdamGrpc.TransferStorageHandlerMessage) request,
+              (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
+          break;
         default:
           throw new AssertionError();
       }
@@ -1558,7 +1621,8 @@ public class AdamDefinitionGrpc {
         METHOD_IMPORT_DATA,
         METHOD_PROTO_IMPORT_DATA,
         METHOD_PROTO_EXPORT_DATA,
-        METHOD_LIST_STORAGE_HANDLERS);
+        METHOD_LIST_STORAGE_HANDLERS,
+        METHOD_TRANSFER_STORAGE_HANDLER);
   }
 
 }
