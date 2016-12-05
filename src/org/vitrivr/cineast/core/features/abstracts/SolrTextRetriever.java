@@ -90,7 +90,7 @@ public abstract class SolrTextRetriever implements Retriever {
     
     for(Map<String, PrimitiveTypeProvider> result : resultList){
       String id = result.get("id").getString();
-      float dist = result.get("score").getFloat();
+      float dist = result.get("ap_score").getFloat();
       
       pairs.add(new StringDoublePair(id, MathHelper.getScore(dist, getMaxDist())));
     }
