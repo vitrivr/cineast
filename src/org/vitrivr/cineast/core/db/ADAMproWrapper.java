@@ -23,7 +23,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 
 import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
 public class ADAMproWrapper { //TODO generate interrupted ackmessage
@@ -34,7 +34,8 @@ public class ADAMproWrapper { //TODO generate interrupted ackmessage
 	
 	public ADAMproWrapper(){
 		DatabaseConfig config = Config.getDatabaseConfig();
-		this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPlaintext()).build();
+		this.channel = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).maxMessageSize(10000000).usePlaintext(config.getPlaintext())
+		    .build();
 		this.definitionStub = AdamDefinitionGrpc.newFutureStub(channel);
 		this.searchStub = AdamSearchGrpc.newFutureStub(channel);
 	}
