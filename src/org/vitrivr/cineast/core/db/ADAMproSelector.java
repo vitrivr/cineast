@@ -323,6 +323,12 @@ public class ADAMproSelector implements DBSelector {
       return new ArrayList<>(0);
     }
 
+    AckMessage ack = result.getAck();
+    if(ack.getCode() != AckMessage.Code.OK){
+      LOGGER.error("error in getNearestNeighbours ({}) : {}", ack.getCode(), ack.getMessage());
+      return new ArrayList<>(0);
+    }
+    
     if (result.getResponsesCount() == 0) {
       return new ArrayList<>(0);
     }
@@ -330,12 +336,6 @@ public class ADAMproSelector implements DBSelector {
     QueryResultInfoMessage response = result.getResponses(0); // only head (end-result) is important
 
     ArrayList<StringDoublePair> _return = new ArrayList<>(k);
-
-    AckMessage ack = response.getAck();
-    if (ack.getCode() != Code.OK) {
-      LOGGER.error("error in getNearestNeighbours ({}) : {}", ack.getCode(), ack.getMessage());
-      return _return;
-    }
 
     for (QueryResultTupleMessage msg : response.getResultsList()) {
       String id = msg.getDataMap().get("id").getStringData();
@@ -484,7 +484,7 @@ public class ADAMproSelector implements DBSelector {
     }
     
     if(result.getAck().getCode() != AckMessage.Code.OK){
-      LOGGER.warn(result.getAck().getMessage());
+      LOGGER.error(result.getAck().getMessage());
     }
 
     if (result.getResponsesCount() == 0) {
