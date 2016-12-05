@@ -84,8 +84,9 @@ public final class RetrieverConfig {
 		DEFAULT_RETRIEVER_CATEGORIES.put("neuralnet", list);
 		
 		list = new ArrayList<>(3);
-		list.add(DoublePair.pair(SubtitleWordSearch.class, 			1.0));
-		list.add(DoublePair.pair(SubtitleFulltextSearch.class, 		1.0));
+		list.add(DoublePair.pair(SubtitleFulltextSearch.class,    1.0));
+		list.add(DoublePair.pair(DescriptionTextSearch.class,    1.0));
+		
 //		list.add(DoublePair.pair(QueryImageExporter.class, 			0.001));
 		DEFAULT_RETRIEVER_CATEGORIES.put("meta", list);
 	}

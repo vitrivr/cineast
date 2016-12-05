@@ -1,0 +1,109 @@
+package org.vitrivr.cineast.core.features.abstracts;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.db.ADAMproSelector;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.MathHelper;
+
+/**
+ * This is a proof of concept class and will probably be replaced by a more general solution to text
+ * retrieval in the future
+ * 
+ *
+ */
+public abstract class SolrTextRetriever implements Retriever {
+
+  private ADAMproSelector selector = null; // this is necessary since there is no abstraction for
+                                           // the way external providers are handled in ADAMpro
+                                           // (yet)
+
+  private static final Logger LOGGER = LogManager.getLogger();
+
+  @Override
+  public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+  }
+
+  protected abstract String getEntityName();
+  protected abstract float getMaxDist();
+
+  @Override
+  public void init(DBSelectorSupplier selectorSupply) {
+    DBSelector s = selectorSupply.get();
+    if (s instanceof ADAMproSelector) {
+      this.selector = (ADAMproSelector) s;
+      this.selector.open(getEntityName());
+    } else {
+      LOGGER.warn(
+          "SolrTextRetriever only works with ADAMproSelectors, {} is currently not supported",
+          s.getClass().getSimpleName());
+    }
+
+  }
+
+  @Override
+  public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    if (this.selector == null) {
+      return new ArrayList<>(0);
+    }
+
+    HashMap<String, String> parameters = new HashMap<>();
+    parameters.put("rows", Integer.toString(Config.getRetrieverConfig().getMaxResultsPerModule()));
+
+    StringBuilder sb = new StringBuilder();
+    for (SubtitleItem subItem : sc.getSubtitleItems()) {
+      sb.append(subItem.getText());
+      sb.append('\n');
+    }
+    String query = sb.toString();
+    if (query.isEmpty()) {
+      return new ArrayList<>(0);
+    }
+
+    parameters.put("query", query);
+
+    List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFromExternal("solr",
+        parameters);
+    
+    ArrayList<StringDoublePair> pairs = new ArrayList<>(resultList.size());
+    
+    for(Map<String, PrimitiveTypeProvider> result : resultList){
+      String id = result.get("id").getString();
+      float dist = result.get("score").getFloat();
+      
+      pairs.add(new StringDoublePair(id, MathHelper.getScore(dist, getMaxDist())));
+    }
+    
+    return pairs;
+  }
+
+  @Override
+  public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
+    return new ArrayList<>(0); // currently not supported
+  }
+
+  @Override
+  public void finish() {
+    if (this.selector != null) {
+      this.selector.close();
+      this.selector = null;
+    }
+
+  }
+
+}
