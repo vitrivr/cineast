@@ -482,6 +482,10 @@ public class ADAMproSelector implements DBSelector {
       LOGGER.error(LogHelper.getStackTrace(e));
       return new ArrayList<>(0);
     }
+    
+    if(result.getAck().getCode() != AckMessage.Code.OK){
+      LOGGER.warn(result.getAck().getMessage());
+    }
 
     if (result.getResponsesCount() == 0) {
       return new ArrayList<>(0);
