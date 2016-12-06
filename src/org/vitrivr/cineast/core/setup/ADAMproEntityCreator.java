@@ -176,7 +176,7 @@ public class ADAMproEntityCreator implements EntityCreator {
    */
 	@Override
   public boolean existsEntity(String entityName){
-		return this.adampro.existsEntity(entityName);
+		return this.adampro.existsEntityBlocking(entityName);
 	}
 
 	/* (non-Javadoc)
