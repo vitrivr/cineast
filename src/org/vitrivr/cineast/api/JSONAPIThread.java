@@ -1,9 +1,6 @@
 package org.vitrivr.cineast.api;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.Reader;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +38,9 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import org.vitrivr.cineast.explorative.PlaneManager;
+import org.vitrivr.cineast.explorative.Position;
+import org.vitrivr.cineast.explorative.RequestHandler;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,
@@ -90,7 +90,7 @@ public class JSONAPIThread extends Thread {
 				SegmentLookup sl = new SegmentLookup();
 				SegmentDescriptor shot = sl.lookUpShot(shotId);
 				//List<ShotDescriptor> allShots = sl.lookUpVideo(shot.getVideoId());
-				
+
 				//Send metadata
 				MultimediaObjectLookup vl = new MultimediaObjectLookup();
 				MultimediaObjectLookup.MultimediaObjectDescriptor descriptor = vl.lookUpObjectById(shot.getVideoId());
@@ -105,6 +105,29 @@ public class JSONAPIThread extends Thread {
 				vl.close();				
 				break;
 			}
+
+				/*
+				 * Input: id: ID of a shot
+				 *
+				 * Output: Information about the shot- startframe, endframe etc.
+				 */
+				case "shot": {
+					String shotId = clientJSON.get("shotid").asString();
+
+					SegmentLookup sl = new SegmentLookup();
+					SegmentDescriptor shot = sl.lookUpShot(shotId);
+
+					JsonObject resultobj = new JsonObject();
+					resultobj.add("type", "submitShot").add("videoId", shot.getVideoId()).add("start", shot.getStartFrame()).add("end", shot.getEndFrame());
+
+					this.printer.print(resultobj.toString());
+					this.printer.print(',');
+
+					sl.close();
+
+					break;
+				}
+
 
 			case "relevanceFeedback": {
 				JsonObject queryObject = clientJSON.get("query").asObject();
@@ -497,6 +520,7 @@ public class JSONAPIThread extends Thread {
 				break;
 			}
 
+
 			case "meta":{
 			  JsonObject query = clientJSON.get("query").asObject();
         JsonArray idList = query.get("idlist").asArray();
@@ -525,6 +549,145 @@ public class JSONAPIThread extends Thread {
 			  break;
 			}
 			
+
+			case "explorative_tile_field":{
+				LOGGER.debug("Explorative_Tile Field API call starting");
+
+				int startX = clientJSON.get("startX").asInt();
+				int startY = clientJSON.get("startY").asInt();
+				int endX = clientJSON.get("endX").asInt();
+				int endY = clientJSON.get("endY").asInt();
+				int level = clientJSON.get("level").asInt();
+				String featureName = clientJSON.get("featureName").asString();
+				PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+				JsonArray jsonArray = specificPlaneManager.getElementField(level, startX, startY, endX, endY);
+
+				JsonObject batch = new JsonObject();
+				batch.add("type", "explorative");
+				batch.add("msg", jsonArray);
+				printer.print("[");
+				printer.println(batch.toString());
+				printer.print("]");
+				printer.flush();
+				printer.close();
+				break;
+			}
+
+			case "explorative_tile_position": {
+				LOGGER.debug("Explorative_Tile Position API call starting");
+
+				String featureName = clientJSON.get("featureName").asString();
+				String id = clientJSON.get("id").asString();
+				int level = clientJSON.get("level").asInt();
+
+				PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+				JsonObject jsonObject = specificPlaneManager.getElementPosition(level, id);
+
+				JsonObject batch = new JsonObject();
+				batch.add("type", "explorative_position");
+				batch.add("msg", jsonObject);
+				printer.print("[");
+				printer.println(batch.toString());
+				printer.print("]");
+				printer.flush();
+				printer.close();
+				break;
+			}
+
+				case "explorative_tiles": {
+
+					LOGGER.debug("Explorative_Tiles API call starting");
+
+					String featureName = clientJSON.get("featureName").asString();
+					int level = clientJSON.get("level").asInt();
+					JsonArray requested = clientJSON.get("requested").asArray();
+					JsonArray response = new JsonArray();
+					PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+					for (JsonValue jsonValue : requested.asArray()) {
+						JsonObject xyObject = jsonValue.asObject();
+						int x = xyObject.get("x").asInt();
+						int y = xyObject.get("y").asInt();
+						String img = specificPlaneManager.getSingleElement(level, x, y);
+						String shotid = "";
+
+						String representativeId = "";
+						if (!img.isEmpty()){
+							shotid = img.substring(img.indexOf("/")+1);
+							representativeId = specificPlaneManager.getRepresentativeOfElement(img, level);
+						}
+						JsonObject singleTile = new JsonObject()
+								.add("x", x)
+								.add("y", y)
+								.add("img", img)
+								.add("representative", representativeId)
+								.add("shotid", shotid);
+						response.add(singleTile);
+					}
+
+					JsonObject batch = new JsonObject();
+					batch.add("type", "explorative_tiles");
+					batch.add("response", response);
+					printer.print("[");
+					printer.println(batch.toString());
+					printer.print("]");
+					printer.flush();
+					printer.close();
+
+					break;
+				}
+
+				case "explorative_tile_representative": {
+					String featureName = clientJSON.get("featureName").asString();
+					int level = clientJSON.get("level").asInt();
+					String id = clientJSON.get("id").asString();
+					PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+					String representativeId = specificPlaneManager.getRepresentativeOfElement(id, level);
+					if (representativeId == null || representativeId.isEmpty()){
+						throw new Exception("RepresentativeID is empty");
+					}
+					level++;
+					JsonObject jsonObject = specificPlaneManager.getElementPosition(level, representativeId);
+
+					JsonObject batch = new JsonObject();
+					batch.add("type", "explorative_tile_representative");
+					batch.add("msg", jsonObject);
+					printer.print("[");
+					printer.println(batch.toString());
+					printer.print("]");
+					printer.flush();
+					printer.close();
+
+					break;
+				}
+
+				case "getFeatureNames": {
+					LOGGER.debug("Label API call starting");
+					JsonArray jsonConcepts = new JsonArray();
+
+					File folder = new File("data/serialized/");
+					if(!folder.exists()){
+						break;
+					}
+					String[] processedFeatures = folder.list();
+					for(String el : processedFeatures){
+						if(!el.matches("plane_manager_[A-z0-9]*.ser")) continue;
+						String featureName = el.replace("plane_manager_", "").replace(".ser", "").toLowerCase();
+						PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+						int topLevel = specificPlaneManager.getTopLevel();
+						Position center = specificPlaneManager.getCenter();
+						jsonConcepts.add(new JsonObject()
+								.add("id", featureName)
+								.add("text", featureName)
+								.add("topLevel", topLevel)
+								.add("x", center.getX())
+								.add("y", center.getY())
+								.add("identifier", specificPlaneManager.getSingleElement(topLevel, center.getX(), center.getY())));
+					}
+					_return.set("response", jsonConcepts);
+					LOGGER.debug("Concepts API call ending");
+					break;
+				}
+
 			default: {
 				LOGGER.warn("queryType {} is unknown", clientJSON.get("queryType").asString());
 			}

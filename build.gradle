@@ -66,6 +66,7 @@ dependencies {
 	compile group: 'io.grpc', name: 'grpc-stub', version: '1.0.2'
     compile group: 'org.bytedeco', name: 'javacpp', version: '1.2.3'
     compile group: 'net.coobird', name: 'thumbnailator', version: '[0.4, 0.5)'
+	compile group: 'org.jgrapht', name: 'jgrapht-core', version: '1.0.0'
     /**
      * Manual Fixes for the javacpp-devs because of naming conventions & versions. Each os is handled independently
      */
