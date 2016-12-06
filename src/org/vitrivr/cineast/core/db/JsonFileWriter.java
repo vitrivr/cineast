@@ -19,6 +19,9 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
 	@Override
 	public boolean open(String name) {
 		baseFolder.mkdirs();
+		if(this.out != null && !this.out.checkError()){
+		  return false;
+		}
 		try {
 			this.out = new PrintWriter(new File(baseFolder, name + ".json"));
 			this.out.println('[');
@@ -50,7 +53,8 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
 
 	}
 
-	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+  @Override
 	public boolean persist(List<PersistentTuple> tuples) {
 		boolean success = true;
 		for(PersistentTuple tuple : tuples){

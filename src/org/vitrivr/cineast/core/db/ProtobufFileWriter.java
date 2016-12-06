@@ -1,7 +1,10 @@
 package org.vitrivr.cineast.core.db;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,9 +13,11 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class ProtobufFileWriter extends ProtobufTupleGenerator {
+public class ProtobufFileWriter extends ProtobufTupleGenerator{
 
 	private static File baseFolder = new File(Config.getExtractorConfig().getOutputLocation(), "proto");
+  private static final Logger LOGGER = LogManager.getLogger();
+
 		
 	private FileOutputStream out;
 	
@@ -27,6 +32,9 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
 	@Override
 	public boolean open(String name) {
 		baseFolder.mkdirs();
+		if(this.out != null){
+		  return false;
+		}
 		try {
 			this.out = new FileOutputStream(new File(baseFolder, name + ".bin"));
 			return true;
@@ -44,10 +52,11 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
 		try {
 			out.flush();
 			out.close();
-			out = null;
 			return true;
 		} catch (IOException e) {
 			return false;
+		}finally{
+		  out = null;
 		}
 	}
 
@@ -63,8 +72,7 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
 			out.flush();
 			return true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		  LOGGER.error("error in persist: {}", LogHelper.getStackTrace(e));
 			return false;
 		}
 	}
@@ -98,7 +106,5 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
     close();
     super.finalize();
   }
-
-	
 
 }
