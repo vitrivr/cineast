@@ -67,12 +67,12 @@ public class ADAMproWrapper {
     }
   }
 
-  public synchronized ListenableFuture<AckMessage> insertOne(InsertMessage message) {
+  public synchronized ListenableFuture<AckMessage> insert(InsertMessage message) {
     return this.definitionStub.insert(message);
   }
 
-  public AckMessage insertOneBlocking(InsertMessage message) {
-    ListenableFuture<AckMessage> future = this.insertOne(message);
+  public AckMessage insertBlocking(InsertMessage message) {
+    ListenableFuture<AckMessage> future = this.insert(message);
     try {
       return future.get();
     } catch (InterruptedException | ExecutionException e) {

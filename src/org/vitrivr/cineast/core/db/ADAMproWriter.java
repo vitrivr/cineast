@@ -1,92 +1,136 @@
 package org.vitrivr.cineast.core.db;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.adampro.grpc.AdamGrpc;
-import org.vitrivr.adampro.grpc.AdamGrpc.*;
-import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
-import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.Builder;
-import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.adampro.grpc.AdamGrpc;
+import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
+import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultInfoMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
+import org.vitrivr.cineast.core.util.LogHelper;
+
+import com.google.common.util.concurrent.ListenableFuture;
+
 public class ADAMproWriter extends ProtobufTupleGenerator {
-	
-	private static final Logger LOGGER = LogManager.getLogger();
-	private ADAMproWrapper adampro = new ADAMproWrapper();
-	private String entityName;
-	private Builder builder = InsertMessage.newBuilder();
-	
-	@Override
-	public boolean open(String name) {
-		this.entityName = name;
-		return true;
-	}
 
-	@Override
-	public boolean close() {
-		this.adampro.close();
-		return false;
-	}
+  /**
+   * flag to choose if every selector should have its own connection to ADAMpro or if they should
+   * share one
+   */
+  private static boolean useGlobalWrapper = true;
 
-	@Override
-	public boolean idExists(String id) {
-		return exists("id", id);
-	}
+  private static final ADAMproWrapper GLOBAL_ADAMPRO_WRAPPER = useGlobalWrapper
+      ? new ADAMproWrapper() : null;
 
-	@Override
-	public boolean exists(String key, String value) { //TODO reduce the number of new objects created
-		WhereMessage where = WhereMessage.newBuilder().setAttribute(key).addValues(AdamGrpc.DataMessage.newBuilder().setStringData(value)).build();
-		ArrayList<WhereMessage> tmp = new ArrayList<>(1);
-		tmp.add(where);
-		QueryMessage qbqm = QueryMessage.newBuilder().setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(this.entityName).build())
-				.setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp)).build();
-		ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
-		QueryResultInfoMessage responce;
-		try {
-			responce = f.get().getResponses(0);
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		
-		return responce.getResultsCount() > 0;
-		
-	}
+  private ADAMproWrapper adampro = useGlobalWrapper ? GLOBAL_ADAMPRO_WRAPPER : new ADAMproWrapper();
 
-	@Override
-	public synchronized boolean persist(PersistentTuple<TupleInsertMessage> tuple) {
-		List<PersistentTuple> tuples = new ArrayList<>(1);
-		tuples.add(tuple);
-		return persist(tuples);
-	}
+  private static final Logger LOGGER = LogManager.getLogger();
+  
+  private String entityName;
+  private final InsertMessage.Builder imBuilder = InsertMessage.newBuilder();
+  private QueryMessage.Builder qmBuilder;
+  private final WhereMessage.Builder wmBuilder = WhereMessage.newBuilder();
 
-	public synchronized boolean persist(List<PersistentTuple> tuples){
-		this.builder.clear();
-		this.builder.setEntity(this.entityName);
-		ArrayList<TupleInsertMessage> tmp = new ArrayList(tuples.size());
-		for(PersistentTuple<TupleInsertMessage> tuple : tuples){
-			TupleInsertMessage tim = tuple.getPersistentRepresentation();
-			tmp.add(tim);
-		}
-		this.builder.addAllTuples(tmp);
-		InsertMessage im = this.builder.build();
-		AckMessage ack = this.adampro.insertOneBlocking(im);
-		if(ack.getCode() != Code.OK){
-			LOGGER.warn("Error: {} during persist", ack.getMessage());
-		}
-		return ack.getCode() == Code.OK;
-	}
+  @Override
+  public boolean open(String name) {
+    this.entityName = name;
+    this.qmBuilder = QueryMessage.newBuilder()
+        .setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(this.entityName).build());
+    return true;
+  }
 
-	@Override
-	protected void finalize() throws Throwable {
-		this.close();
-		super.finalize();
-	}
+  @Override
+  public boolean close() {
+    if (useGlobalWrapper) {
+      return false;
+    }
+    this.adampro.close();
+    return true;
+  }
+
+  @Override
+  public boolean idExists(String id) {
+    return exists("id", id);
+  }
+
+  @Override
+  public boolean exists(String key, String value) {
+    WhereMessage where;
+    synchronized (this.wmBuilder) {
+      where = this.wmBuilder.clear().setAttribute(key)
+          .addValues(AdamGrpc.DataMessage.newBuilder().setStringData(value)).build();
+    }
+
+    ArrayList<WhereMessage> tmp = new ArrayList<>(1);
+    tmp.add(where);
+    QueryMessage qbqm;
+    synchronized (this.qmBuilder) {
+      qbqm = this.qmBuilder.clear().setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp))
+          .build();
+    }
+    ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
+    QueryResultInfoMessage responce;
+    try {
+      responce = f.get().getResponses(0);
+    } catch (InterruptedException | ExecutionException e) {
+      LOGGER.error("error in exists: {}", LogHelper.getStackTrace(e));
+      return false;
+    }
+
+    return responce.getResultsCount() > 0;
+
+  }
+
+  @SuppressWarnings("rawtypes")
+  @Override
+  public boolean persist(PersistentTuple<TupleInsertMessage> tuple) {
+    List<PersistentTuple> tuples = new ArrayList<>(1);
+    tuples.add(tuple);
+    return persist(tuples);
+  }
+
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public boolean persist(List<PersistentTuple> tuples) {
+    InsertMessage im;
+    synchronized (this.imBuilder) {
+      this.imBuilder.clear();
+      this.imBuilder.setEntity(this.entityName);
+      ArrayList<TupleInsertMessage> tmp = new ArrayList<>(tuples.size());
+      for (PersistentTuple<TupleInsertMessage> tuple : tuples) {
+        TupleInsertMessage tim = tuple.getPersistentRepresentation();
+        tmp.add(tim);
+      }
+      this.imBuilder.addAllTuples(tmp);
+      im = this.imBuilder.build();
+    }
+    ListenableFuture<AckMessage> future = this.adampro.insert(im);
+    AckMessage ack;
+    try{
+      ack = future.get();
+    } catch (InterruptedException | ExecutionException e) {
+      LOGGER.error("error in persist: {}", LogHelper.getStackTrace(e));
+      return false;
+    }
+    if (ack.getCode() != Code.OK) {
+      LOGGER.warn("Error: {} during persist", ack.getMessage());
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  protected void finalize() throws Throwable {
+    this.close();
+    super.finalize();
+  }
 
 }
