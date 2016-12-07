@@ -6,7 +6,7 @@ public class DescriptionTextSearch extends SolrTextRetriever {
 
   @Override
   protected String getEntityName() {
-    return "features_description";
+    return "features_densecap";
   }
 
   @Override

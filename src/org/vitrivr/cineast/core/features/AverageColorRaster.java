@@ -221,7 +221,10 @@ public class AverageColorRaster extends AbstractFeatureModule {
 		
 		ArrayList<StringDoublePair> _return = new ArrayList<>(rows.size());
 		for(Map<String, PrimitiveTypeProvider> map : rows){
-			_return.add(new StringDoublePair(map.get("id").getString(), register(raster, map.get("raster").getFloatArray())));
+			_return.add(new StringDoublePair(map.get("id").getString(),
+			    register(raster,
+			        map.get("raster")
+			        .getFloatArray())));
 		}
 		return _return;
 		
