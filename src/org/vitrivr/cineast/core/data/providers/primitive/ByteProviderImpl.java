@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
-public class ByteProviderImpl implements ByteProvider {
+public class ByteProviderImpl implements ByteProvider, ShortProvider, IntProvider, LongProvider {
 
 	private final byte value;
 	
@@ -12,6 +12,21 @@ public class ByteProviderImpl implements ByteProvider {
 	public byte getByte() {
 		return this.value;
 	}
+	
+	@Override
+  public short getShort() {
+    return this.value;
+  }
+
+  @Override
+  public int getInt() {
+    return this.value;
+  }
+
+  @Override
+  public long getLong() {
+    return this.value;
+  }
 
 	@Override
 	public int hashCode() {

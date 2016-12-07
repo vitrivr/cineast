@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
-public class ShortProviderImpl implements ShortProvider {
+public class ShortProviderImpl implements ShortProvider, IntProvider, LongProvider {
 
 	private final short value;
 	
@@ -14,6 +14,16 @@ public class ShortProviderImpl implements ShortProvider {
 	}
 
 	@Override
+  public int getInt() {
+    return this.value;
+  }
+
+  @Override
+  public long getLong() {
+    return this.value;
+  }
+
+  @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

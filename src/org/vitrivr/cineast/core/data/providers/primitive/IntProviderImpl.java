@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
-public class IntProviderImpl implements IntProvider {
+public class IntProviderImpl implements IntProvider, LongProvider {
 
 	private final int value;
 	
@@ -12,8 +12,13 @@ public class IntProviderImpl implements IntProvider {
 	public int getInt() {
 		return this.value;
 	}
-
+	
 	@Override
+  public long getLong() {
+    return this.value;
+  }
+
+  @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

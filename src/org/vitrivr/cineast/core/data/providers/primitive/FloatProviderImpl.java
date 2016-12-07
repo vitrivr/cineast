@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
-public class FloatProviderImpl implements FloatProvider {
+public class FloatProviderImpl implements FloatProvider, DoubleProvider {
 
 	private final float value;
 	
@@ -14,6 +14,11 @@ public class FloatProviderImpl implements FloatProvider {
 	}
 
 	@Override
+  public double getDouble() {
+    return this.value;
+  }
+
+  @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
