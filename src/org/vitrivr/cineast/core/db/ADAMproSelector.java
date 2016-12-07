@@ -37,7 +37,9 @@ import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.QueryConfig.Distance;
+import org.vitrivr.cineast.core.data.DefaultValueHashMap;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -495,7 +497,7 @@ public class ADAMproSelector implements DBSelector {
     for (QueryResultTupleMessage resultMessage : resultList) {
       Map<String, DataMessage> data = resultMessage.getDataMap();
       Set<String> keys = data.keySet();
-      HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
+      DefaultValueHashMap<String, PrimitiveTypeProvider> map = new DefaultValueHashMap<>(NothingProvider.INSTANCE);
       for (String key : keys) {
         map.put(key, DataMessageConverter.convert(data.get(key)));
       }
