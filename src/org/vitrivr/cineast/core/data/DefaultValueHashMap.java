@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class DefaultValueHashMap<K, V> extends HashMap<K, V> {
 
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = -8326007409332438019L;
 
   private static final Logger LOGGER = LogManager.getLogger();
   

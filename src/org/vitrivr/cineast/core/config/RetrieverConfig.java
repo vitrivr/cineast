@@ -221,15 +221,16 @@ public final class RetrieverConfig {
 		if(obj.get("features") != null){
 			try{
 				JsonObject features = obj.get("features").asObject();
-				HashMap<String, List<DoublePair<Class<Retriever>>>> map = new HashMap<>();
+				HashMap<String, List<DoublePair<Class<? extends Retriever>>>> map = new HashMap<>();
 				for(String category : features.names()){
 					try{
-						ArrayList<DoublePair<Class<Retriever>>> list = parseRetrieverCategory(features.get(category).asArray());
+						ArrayList<DoublePair<Class<? extends Retriever>>> list = parseRetrieverCategory(features.get(category).asArray());
 						map.put(category, list);
 					}catch(UnsupportedOperationException notAnArray){
 						throw new IllegalArgumentException("not an array in retreiver config > features > " + category);
 					}
 				}
+				retrieverCategories = map;
 			}catch(UnsupportedOperationException notAnObject){
 				throw new IllegalArgumentException("'features' was not an object in retriever configuration");
 			}
@@ -238,12 +239,12 @@ public final class RetrieverConfig {
 		return new RetrieverConfig(threadPoolSize, taskQueueSize, maxResults, resultsPerModule, retrieverCategories);
 	}
 	
-	private static ArrayList<DoublePair<Class<Retriever>>> parseRetrieverCategory(JsonArray jarr){
+	private static ArrayList<DoublePair<Class<? extends Retriever>>> parseRetrieverCategory(JsonArray jarr){
 		if(jarr == null){
 			return null;
 		}
 		
-		ArrayList<DoublePair<Class<Retriever>>> _return = new ArrayList<>(jarr.size());
+		ArrayList<DoublePair<Class<? extends Retriever>>> _return = new ArrayList<>(jarr.size());
 		
 		HashSet<Class<Retriever>> classes = new HashSet<>(); //for de-duplication
 		
@@ -255,7 +256,12 @@ public final class RetrieverConfig {
 				}
 				Class<Retriever> c = null;
 				try {
-					c = ReflectionHelper.getClassFromJson(jobj.get("feature").asObject(), Retriever.class, ReflectionHelper.FEATURE_MODULE_PACKAGE);
+				  if(jobj.get("feature").isString()){
+				    c = ReflectionHelper.getClassFromName(jobj.get("feature").asString(), Retriever.class, ReflectionHelper.FEATURE_MODULE_PACKAGE);
+				  }else{
+				    c = ReflectionHelper.getClassFromJson(jobj.get("feature").asObject(), Retriever.class, ReflectionHelper.FEATURE_MODULE_PACKAGE);
+				  }
+					
 				} catch (IllegalArgumentException | ClassNotFoundException | InstantiationException | UnsupportedOperationException e) {
 					//ignore at this point
 				}
@@ -273,7 +279,7 @@ public final class RetrieverConfig {
 					}
 				}
 				
-				_return.add(new DoublePair<Class<Retriever>>(c, weight));
+				_return.add(new DoublePair<Class<? extends Retriever>>(c, weight));
 				classes.add(c);
 				
 			}catch(UnsupportedOperationException notAnObject){

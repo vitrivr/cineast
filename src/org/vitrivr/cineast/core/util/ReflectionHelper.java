@@ -150,18 +150,7 @@ public class ReflectionHelper {
 		Class<T> targetClass = null;
 		String classPath = null;
 		if(json.get("name") != null){
-			try{
-				classPath = expectedPackage + "." + json.get("name").asString();
-				Class<?> c =  Class.forName(classPath);
-				if(!expectedSuperClass.isAssignableFrom(c)){
-					throw new InstantiationException(classPath + " is not a sub-class of " + expectedSuperClass.getName());
-				}
-				targetClass = (Class<T>) c;
-			}catch(ClassNotFoundException e){
-				//can be ignored at this point
-			}catch(UnsupportedOperationException notAString){
-				LOGGER.warn("'name' was not a string during class instanciation in instanciateFromJson");
-			}
+		  targetClass = getClassFromName(json.get("name").asString(), expectedSuperClass, expectedPackage);
 		}
 		
 		if(targetClass != null){
@@ -187,6 +176,25 @@ public class ReflectionHelper {
 		
 		return targetClass;
 		
+	}
+	
+	@SuppressWarnings("unchecked")
+  public static <T> Class<T> getClassFromName(String className, Class<T> expectedSuperClass, String expectedPackage) throws IllegalArgumentException, ClassNotFoundException, InstantiationException{
+	  Class<T> targetClass = null;
+    String classPath = null;
+	  try{
+      classPath = expectedPackage + "." + className;
+      Class<?> c =  Class.forName(classPath);
+      if(!expectedSuperClass.isAssignableFrom(c)){
+        throw new InstantiationException(classPath + " is not a sub-class of " + expectedSuperClass.getName());
+      }
+      targetClass = (Class<T>) c;
+    }catch(ClassNotFoundException e){
+      //can be ignored at this point
+    }catch(UnsupportedOperationException notAString){
+      LOGGER.warn("'name' was not a string during class instanciation in instanciateFromJson");
+    }
+	  return targetClass;
 	}
 	
 }
