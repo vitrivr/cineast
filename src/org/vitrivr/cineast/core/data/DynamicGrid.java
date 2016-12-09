@@ -5,7 +5,7 @@ import java.io.Serializable;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-public class DynamicGrid<T> implements Serializable {
+public class DynamicGrid<T> implements Serializable, Grid<T> {
 
   private static final long serialVersionUID = -2284330171007553138L;
   private final TIntObjectHashMap<TIntObjectHashMap<T>> grid = new TIntObjectHashMap<TIntObjectHashMap<T>>();
@@ -36,7 +36,11 @@ public class DynamicGrid<T> implements Serializable {
     grid.compact();
   }
 
-  public DynamicGrid<T> setElement(int x, int y, T element) {
+  /* (non-Javadoc)
+   * @see org.vitrivr.cineast.core.data.Grid#setElement(int, int, T)
+   */
+  @Override
+  public Grid<T> setElement(int x, int y, T element) {
     if (!grid.containsKey(x)) {
       grid.put(x, new TIntObjectHashMap<>());
     }
@@ -44,6 +48,10 @@ public class DynamicGrid<T> implements Serializable {
     return this;
   }
 
+  /* (non-Javadoc)
+   * @see org.vitrivr.cineast.core.data.Grid#get(int, int)
+   */
+  @Override
   public T get(int x, int y) {
     if (!grid.containsKey(x)) {
       return defaultElement;
@@ -55,6 +63,10 @@ public class DynamicGrid<T> implements Serializable {
     return map.get(y);
   }
 
+  /* (non-Javadoc)
+   * @see org.vitrivr.cineast.core.data.Grid#isset(int, int)
+   */
+  @Override
   public boolean isset(int x, int y) {
     if (!grid.containsKey(x)) {
       return false;
@@ -62,10 +74,10 @@ public class DynamicGrid<T> implements Serializable {
     return grid.get(x).containsKey(y);
   }
   
-  /**
-   * returns and removes the element at (x,y).
-   * @return the element at position (x,y) or null if there was no such element 
+  /* (non-Javadoc)
+   * @see org.vitrivr.cineast.core.data.Grid#remove(int, int)
    */
+  @Override
   public T remove(int x, int y){
     if (!grid.containsKey(x)) {
       return null;
@@ -81,9 +93,10 @@ public class DynamicGrid<T> implements Serializable {
     return _return;
   }
   
-  /**
-   * compacts the grid by removing unnecessary data structures.
+  /* (non-Javadoc)
+   * @see org.vitrivr.cineast.core.data.Grid#compact()
    */
+  @Override
   public void compact(){
     TIntIterator iter = grid.keySet().iterator();
     while(iter.hasNext()){
