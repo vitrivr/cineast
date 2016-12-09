@@ -3,6 +3,7 @@ package org.vitrivr.cineast.explorative;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.Position;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
 import java.io.Serializable;

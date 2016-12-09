@@ -19,6 +19,7 @@ import org.vitrivr.cineast.art.modules.visualization.VisualizationCache;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.Position;
 import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -39,7 +40,6 @@ import com.eclipsesource.json.JsonValue;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.explorative.PlaneManager;
-import org.vitrivr.cineast.explorative.Position;
 import org.vitrivr.cineast.explorative.RequestHandler;
 
 /**

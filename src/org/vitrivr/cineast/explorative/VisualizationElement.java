@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.vitrivr.cineast.core.data.Position;
+
 class VisualizationElement<T extends Printable> implements Printable, Serializable {
 
   private static final long serialVersionUID = 3023060852779864874L;
