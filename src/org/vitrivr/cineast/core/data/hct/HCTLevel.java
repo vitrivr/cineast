@@ -6,6 +6,8 @@ import java.util.List;
 
 public class HCTLevel<T extends Comparable<T>> implements Serializable {
 
+  private static final long serialVersionUID = 2430734223457861476L;
+
     private final HCT<T> hct;
 
     private List<HCTCell<T>> cells = new ArrayList<>();

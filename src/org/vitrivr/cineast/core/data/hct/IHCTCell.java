@@ -26,7 +26,7 @@ interface IHCTCell<T extends Comparable<T>> {
 
     boolean isReadyForMitosis();
 
-    <T extends Comparable<T>> List<HCTCell<T>> mitosis() throws Exception;
+    <U extends Comparable<U>> List<HCTCell<U>> mitosis() throws Exception;
 
     void removeValue(T value) throws Exception;
 

@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 public class DefaultCompactnessCalculation implements CompactnessCalculation, Serializable{
 
+  private static final long serialVersionUID = -1858648486843864388L;
+
     @Override
     public double getCompactness(SimpleWeightedGraph<?, DefaultWeightedEdge> graph) {
         double fullWeight = 0;
