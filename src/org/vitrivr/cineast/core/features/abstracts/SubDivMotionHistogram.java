@@ -28,7 +28,7 @@ protected PersistencyWriter phandler;
 	}
 	
 	protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {
-		PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2); //FIXME currently only one vector is supported
+		PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2);
 		this.phandler.persist(tuple);
 	}
 	

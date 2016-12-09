@@ -7,12 +7,13 @@ import java.util.List;
 
 class VisualizationElement<T extends Printable> implements Printable, Serializable {
 
+  private static final long serialVersionUID = 3023060852779864874L;
     private Position position;
     private final T vector;
-    private final Plane plane;
+    private final Plane<T> plane;
     private Printable representative;
 
-    VisualizationElement(T vector, Position position, Printable representative, Plane plane){
+    VisualizationElement(T vector, Position position, Printable representative, Plane<T> plane){
         this.vector = vector;
         this.position = position;
         this.representative = representative;
@@ -72,7 +73,7 @@ class VisualizationElement<T extends Printable> implements Printable, Serializab
         return vector.print();
     }
 
-    public <T extends Printable> void setRepresentative(T representative) {
+    public void setRepresentative(T representative) {
         this.representative = representative;
     }
 }

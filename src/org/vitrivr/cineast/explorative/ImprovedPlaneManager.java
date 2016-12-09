@@ -1,22 +1,20 @@
 package org.vitrivr.cineast.explorative;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.ExplorativeConfig;
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.ExplorativeConfig;
+import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
+
 public class ImprovedPlaneManager<T extends Printable> extends PlaneManager<T>{
 
+  private static final long serialVersionUID = -7117435544336649775L;
     private List<List<T>> valuesPerCell;
     private List<T> representativePerCell;
     private DistanceCalculation<T> distanceCalculation;
@@ -80,10 +78,6 @@ public class ImprovedPlaneManager<T extends Printable> extends PlaneManager<T>{
             nonOptimizedPlanes.add(createFlatPlane(wholePlane));
         }
     level++;
-    }
-
-    private double getDistanceBetweenPlanes(Plane<T> p1, Plane<T> p2){
-        return distanceCalculation.distance(p1.getRepresentative(), p2.getRepresentative());
     }
 
     @Override

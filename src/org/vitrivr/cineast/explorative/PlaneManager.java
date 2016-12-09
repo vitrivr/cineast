@@ -14,6 +14,7 @@ import java.util.*;
 
 public class PlaneManager<T extends Printable> implements TreeTraverserHorizontal<T>, Serializable {
 
+  private static final long serialVersionUID = -7745507778074218761L;
     private transient final DistanceCalculation<T> distanceCalculation;
     private transient final List<List<Plane<T>>> subPlanes = new ArrayList<>();
     private transient final String timestamp;
@@ -169,7 +170,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
     void printFile(VisualizationElement<T>[][] flatPlane, File fileOptimized) {
         try {
             PrintWriter pw = new PrintWriter(fileOptimized);
-            pw.print("<html><head><link rel=\"stylesheet\" href=\"/Users/silvanstich/IdeaProjects/cineast_new/results/html/style.css\"></head><body><table>");
+            pw.print("<html><head><link rel=\"stylesheet\" href=\"style.css\"></head><body><table>");
             for(int x = 0; x < flatPlane.length; x++){
                 pw.print("<tr>");
                 for(int y = 0; y < flatPlane[x].length; y++){
@@ -333,6 +334,34 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         jsonObject.add("x", position.getX());
         jsonObject.add("y", position.getY());
         return jsonObject;
+    }
+    
+    public void writeAllToCSV(){
+      for(int level = 0; level < positionsOfElements.size(); ++level){
+        System.out.println("writing level " + level);
+        try {
+          PrintWriter writer = new PrintWriter(new File(level + ".csv"));
+          Map<String, Position> map = positionsOfElements.get(level);
+          int i = 0;
+          for(String key : map.keySet()){
+            Position p = map.get(key);
+            writer.print(p.getX());
+            writer.print(',');
+            writer.print(p.getY());
+            writer.print(',');
+            writer.println(key);
+            if(++i >= 1000){
+              writer.flush();
+              i = 0;
+            }
+          }
+          writer.flush();
+          writer.close();
+        } catch (FileNotFoundException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
     }
 
     public String getRepresentativeOfElement(String id, int currentLevel){

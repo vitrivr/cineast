@@ -10,6 +10,7 @@ import java.util.*;
 
 public class Plane<T extends Printable> implements Printable, Serializable {
 
+  private static final long serialVersionUID = 606801342895949566L;
     private final VisualizationElement<T>[][] plane;
     private final static Logger logger = LogManager.getLogger();
     private final List<VisualizationElement<T>> insertedItemsWithFreeNeighbors;
