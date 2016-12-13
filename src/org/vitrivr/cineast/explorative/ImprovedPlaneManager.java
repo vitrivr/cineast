@@ -13,7 +13,7 @@ import org.vitrivr.cineast.core.config.ExplorativeConfig;
 import org.vitrivr.cineast.core.data.Position;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
-public class ImprovedPlaneManager<T extends Printable> extends PlaneManager<T>{
+public class ImprovedPlaneManager<T extends Printable> extends BasicPlaneManager<T>{
 
   private static final long serialVersionUID = -7117435544336649775L;
     private List<List<T>> valuesPerCell;

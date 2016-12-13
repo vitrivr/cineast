@@ -39,6 +39,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+
 import org.vitrivr.cineast.explorative.PlaneManager;
 import org.vitrivr.cineast.explorative.RequestHandler;
 
