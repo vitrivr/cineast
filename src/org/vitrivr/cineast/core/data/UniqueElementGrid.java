@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.data;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.common.collect.HashBiMap;
 
 public class UniqueElementGrid<T> implements Grid<T> {
@@ -68,6 +71,13 @@ public class UniqueElementGrid<T> implements Grid<T> {
   @Override
   public void compact() {
     // not supported
+  }
+
+  @Override
+  public Set<Position> getKeySet() {
+    HashSet<Position> _return = new HashSet<>();
+    _return.addAll(_return);
+    return _return;
   }
 
 }

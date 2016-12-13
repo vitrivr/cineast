@@ -1,8 +1,9 @@
-package org.vitrivr.cineast;
+package org.vitrivr.cineast.test;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.ExplorativeConfig;
 import org.vitrivr.cineast.core.data.hct.DefaultCompactnessCalculation;
 import org.vitrivr.cineast.core.data.hct.HCT;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -71,8 +72,8 @@ public class SilvanPlayground {
             logger.info("Traversion finished!");
 
             logger.info("Show json request");
-            PlaneManager pm = RequestHandler.getSpecificPlaneManager(featureName);
-            System.out.println(pm.getElementField(0, 240, 240, 245, 245));
+            //PlaneManager pm = RequestHandler.getSpecificPlaneManager(featureName);
+            //System.out.println(pm.getElementField(0, 240, 240, 245, 245));
 
             logger.info("Started deserialization");
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(new File("data/serialized_tree.ser")));
@@ -154,8 +155,8 @@ public class SilvanPlayground {
             logger.info("Traversion finished!");
 
             logger.info("Show json request");
-            PlaneManager pm = RequestHandler.getSpecificPlaneManager(featureName);
-            System.out.println(pm.getElementField(0, 240, 240, 245, 245));
+           // PlaneManager pm = RequestHandler.getSpecificPlaneManager(featureName);
+            //System.out.println(pm.getElementField(0, 240, 240, 245, 245));
 
             logger.info("Started deserialization");
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(new File(ExplorativeConfig.getDataFolder(), ExplorativeConfig.getTreeSerializationFileName())));

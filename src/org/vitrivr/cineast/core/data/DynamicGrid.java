@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.data;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -109,6 +111,20 @@ public class DynamicGrid<T> implements Serializable, Grid<T> {
       }
     }
     grid.compact();
+  }
+
+  @Override
+  public Set<Position> getKeySet() {
+    HashSet<Position> _return = new HashSet<>();
+    TIntIterator xiter = grid.keySet().iterator();
+    while(xiter.hasNext()){
+      int x = xiter.next();
+      TIntIterator yiter = grid.get(x).keySet().iterator();
+      while(yiter.hasNext()){
+        _return.add(new Position(x, yiter.next()));
+      }
+    }
+    return _return;
   }
 
 }

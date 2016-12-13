@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.ExplorativeConfig;
+import org.vitrivr.cineast.core.config.ExplorativeConfig;
 import org.vitrivr.cineast.core.data.Position;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
@@ -22,7 +22,7 @@ public class ImprovedPlaneManager<T extends Printable> extends PlaneManager<T>{
     List<Map<T, T>> representativeToParentRepresentativePerLevel = new ArrayList<>();
     private List<Map<T,T>> elementToRepresentative = new ArrayList<>();
     private int level;
-    private List<VisualizationElement<T>[][]> nonOptimizedPlanes = new ArrayList<>();
+    private transient List<VisualizationElement<T>[][]> nonOptimizedPlanes = new ArrayList<>();
     private final Logger LOGGER = LogManager.getLogger();
 
     public ImprovedPlaneManager(DistanceCalculation distanceCalculation, String featureName){
@@ -88,12 +88,12 @@ public class ImprovedPlaneManager<T extends Printable> extends PlaneManager<T>{
 
         for(int i = 0; i < level; i++){
             VisualizationElement<T>[][] flatPlane = createParentFlatPlane(nonOptimizedPlanes.get(i), i);
-            nonOptimizedPlanes.add(flatPlane);
-            printFile(nonOptimizedPlanes.get(i), new File(path, "improvedFlatPlane_level_" + i + ".html"));
+//            nonOptimizedPlanes.add(flatPlane);
+//            printFile(nonOptimizedPlanes.get(i), new File(path, "improvedFlatPlane_level_" + i + ".html"));
             VisualizationElement<T>[][] optimizedPlane = rearrangeItems(nonOptimizedPlanes.get(i));
-            printFile(optimizedPlane, new File(path, "improvedOptimizedFlatPlane_level_" + i + ".html"));
+//            printFile(optimizedPlane, new File(path, "improvedOptimizedFlatPlane_level_" + i + ".html"));
             saveElementsAndPositions(optimizedPlane);
-            flatPlanes.add(optimizedPlane);
+            flatPlanes.add(compactGrid(optimizedPlane));
         }
         LOGGER.info("# of flat planes is " + flatPlanes.size());
         try {

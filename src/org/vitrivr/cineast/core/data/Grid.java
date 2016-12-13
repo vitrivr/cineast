@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.data;
 
+import java.util.Set;
+
 public interface Grid<T> {
 
   Grid<T> setElement(int x, int y, T element);
@@ -18,5 +20,7 @@ public interface Grid<T> {
    * compacts the grid by removing unnecessary data structures.
    */
   void compact();
+  
+  Set<Position> getKeySet();
 
 }

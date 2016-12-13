@@ -1,4 +1,4 @@
-package org.vitrivr.cineast;
+package org.vitrivr.cineast.core.config;
 
 import java.io.File;
 import java.io.FileInputStream;
