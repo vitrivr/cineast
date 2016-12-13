@@ -15,7 +15,7 @@ public class Position implements Serializable {
     this.x = x;
     this.y = y;
   }
-  
+
   public int getX() {
     return x;
   }
@@ -46,7 +46,7 @@ public class Position implements Serializable {
 
   @Override
   public int hashCode() {
-   return (x >>> 16) | (x << 16) | y;
+    return (x >>> 16) | (x << 16) | y;
   }
 
   @Override

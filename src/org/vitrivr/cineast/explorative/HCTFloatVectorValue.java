@@ -35,13 +35,8 @@ public class HCTFloatVectorValue
 
   @Override
   public String printHtml() {
-    return "<img class=\"thumb\" src=\"/Applications/XAMPP/xamppfiles/htdocs/vitrivr-ui/thumbnails/"
+    return "<img class=\"thumb\" src=\"thumbnails/"
         + id + ".jpg\" />";
-  }
-
-  @Override
-  public String print() {
-    return id;
   }
 
   public String toString() {

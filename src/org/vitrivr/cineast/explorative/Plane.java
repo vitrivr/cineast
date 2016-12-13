@@ -171,7 +171,7 @@ public class Plane<T extends Printable> implements Printable, Serializable {
     }
 
     @Override
-    public String print() {
+    public String getId() {
         return "";
     }
 }

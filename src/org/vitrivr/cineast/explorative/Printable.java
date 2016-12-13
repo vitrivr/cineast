@@ -6,5 +6,5 @@ interface Printable extends Serializable{
 
     String printHtml();
 
-    String print();
+    String getId();
 }

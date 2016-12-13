@@ -324,7 +324,7 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
 
         VisualizationElement element = plane[x][y];
         if(element != null) {
-            return element.getVector().print();
+            return element.getVector().getId();
         }
         return "";
     }
@@ -386,10 +386,10 @@ public class PlaneManager<T extends Printable> implements TreeTraverserHorizonta
         for(int x = 0; x < flatPlane.length; x++){
             for(int y = 0; y < flatPlane[0].length; y++){
                 if(flatPlane[x][y] != null){
-                    elementsAndPositions.put(flatPlane[x][y].print(), new Position(x, y));
-                    if(flatPlane[x][y].getRepresentative() == null || flatPlane[x][y].getRepresentative().length() == 0) throw new RuntimeException("Representative is null or empty!" + flatPlane[x][y].print());
-                    if(representativeOfElement.containsKey(flatPlane[x][y].print())) throw new RuntimeException("This key is already in the collection");
-                    representativeOfElement.put(flatPlane[x][y].print(), flatPlane[x][y].getRepresentative());
+                    elementsAndPositions.put(flatPlane[x][y].getId(), new Position(x, y));
+                    if(flatPlane[x][y].getRepresentative() == null || flatPlane[x][y].getRepresentative().length() == 0) throw new RuntimeException("Representative is null or empty!" + flatPlane[x][y].getId());
+                    if(representativeOfElement.containsKey(flatPlane[x][y].getId())) throw new RuntimeException("This key is already in the collection");
+                    representativeOfElement.put(flatPlane[x][y].getId(), flatPlane[x][y].getRepresentative());
                 }
             }
         }

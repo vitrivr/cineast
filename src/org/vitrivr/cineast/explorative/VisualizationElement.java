@@ -51,7 +51,7 @@ class VisualizationElement<T extends Printable> implements Printable, Serializab
     }
 
     public String getRepresentative(){
-        return representative.print();
+        return representative.getId();
     }
 
     public List<VisualizationElement<T>> getNeighbors(){
@@ -71,8 +71,8 @@ class VisualizationElement<T extends Printable> implements Printable, Serializab
     }
 
     @Override
-    public String print() {
-        return vector.print();
+    public String getId() {
+        return vector.getId();
     }
 
     public void setRepresentative(T representative) {
