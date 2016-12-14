@@ -41,7 +41,7 @@ import com.eclipsesource.json.JsonValue;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 import org.vitrivr.cineast.explorative.PlaneManager;
-import org.vitrivr.cineast.explorative.RequestHandler;
+import org.vitrivr.cineast.explorative.PlaneHandler;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,
@@ -557,7 +557,7 @@ public class JSONAPIThread extends Thread {
 				String id = clientJSON.get("id").asString();
 				int level = clientJSON.get("level").asInt();
 
-				PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+				PlaneManager specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
 				JsonObject jsonObject = specificPlaneManager.getElementPosition(level, id);
 
 				JsonObject batch = new JsonObject();
@@ -579,7 +579,7 @@ public class JSONAPIThread extends Thread {
 					int level = clientJSON.get("level").asInt();
 					JsonArray requested = clientJSON.get("requested").asArray();
 					JsonArray response = new JsonArray();
-					PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+					PlaneManager specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
 					for (JsonValue jsonValue : requested.asArray()) {
 						JsonObject xyObject = jsonValue.asObject();
 						int x = xyObject.get("x").asInt();
@@ -617,7 +617,7 @@ public class JSONAPIThread extends Thread {
 					String featureName = clientJSON.get("featureName").asString();
 					int level = clientJSON.get("level").asInt();
 					String id = clientJSON.get("id").asString();
-					PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+					PlaneManager specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
 					String representativeId = specificPlaneManager.getRepresentativeOfElement(id, level);
 					if (representativeId == null || representativeId.isEmpty()){
 						throw new Exception("RepresentativeID is empty");
@@ -641,15 +641,16 @@ public class JSONAPIThread extends Thread {
 					LOGGER.debug("Label API call starting");
 					JsonArray jsonConcepts = new JsonArray();
 
-					File folder = new File("data/serialized/");
-					if(!folder.exists()){
-						break;
-					}
-					String[] processedFeatures = folder.list();
-					for(String el : processedFeatures){
-						if(!el.matches("plane_manager_[A-z0-9]*.ser")) continue;
-						String featureName = el.replace("plane_manager_", "").replace(".ser", "").toLowerCase();
-						PlaneManager specificPlaneManager = RequestHandler.getSpecificPlaneManager(featureName);
+//					File folder = new File("data/serialized/");
+//					if(!folder.exists()){
+//						break;
+//					}
+					//String[] processedFeatures = folder.list();
+					Set<String> processedFeatures = PlaneHandler.getPlaneManagerNames();
+					for(String featureName : processedFeatures){
+//						if(!el.matches("plane_manager_[A-z0-9]*.ser")) continue;
+//						String featureName = el.replace("plane_manager_", "").replace(".ser", "").toLowerCase();
+						PlaneManager specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
 						int topLevel = specificPlaneManager.getTopLevel();
 						Position center = specificPlaneManager.getCenter();
 						jsonConcepts.add(new JsonObject()

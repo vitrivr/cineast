@@ -64,12 +64,19 @@ public class CSVPlaneManager<T extends Printable> implements PlaneManager<T> {
   
   @Override
   public String getSingleElement(int level, int x, int y) {
-    return this.grids.get(level).get(x, y);
+    String _return = this.grids.get(level).get(x, y);
+    if(_return != null){
+      return _return;
+    }
+    return ""; 
   }
 
   @Override
   public JsonObject getElementPosition(int level, String id) {
     Position position = this.grids.get(level).getPosition(id);
+    if(position == null){
+      position = new Position(0, 0);
+    }
     JsonObject jsonObject = new JsonObject();
     jsonObject.add("x", position.getX());
     jsonObject.add("y", position.getY());
