@@ -8,5 +8,10 @@ public class NothingProvider implements PrimitiveTypeProvider{
 	public ProviderDataType getType() {
 		return ProviderDataType.UNKNOWN;
 	}
+
+  @Override
+  public String toString() {
+    return "NothingProvider";
+  }
 	
 }
