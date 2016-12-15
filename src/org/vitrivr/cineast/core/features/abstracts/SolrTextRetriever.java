@@ -88,11 +88,13 @@ public abstract class SolrTextRetriever implements Retriever {
     
     ArrayList<StringDoublePair> pairs = new ArrayList<>(resultList.size());
     
+    int words = query.split("\\s+").length;
+    
     for(Map<String, PrimitiveTypeProvider> result : resultList){
       String id = result.get("id").getString();
-      float dist = result.get("ap_score").getFloat();
+      float score = result.get("ap_score").getFloat();
       
-      pairs.add(new StringDoublePair(id, MathHelper.getScore(dist, getMaxDist())));
+      pairs.add(new StringDoublePair(id, MathHelper.limit(score / words / 10f, 0f, 1f)));
     }
     
     return pairs;
