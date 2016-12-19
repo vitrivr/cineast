@@ -24,7 +24,7 @@ protected PersistencyWriter phandler;
 	public void init(PersistencyWriterSupplier supply) {
 		this.phandler = supply.get();
 		this.phandler.open(this.tableName);
-		this.phandler.setFieldNames("id", "hist", "sums");
+		this.phandler.setFieldNames("id", "sums", "hist");
 	}
 	
 	protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {
