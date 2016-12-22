@@ -12,6 +12,7 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
@@ -42,6 +43,7 @@ public class ExtractionJobRunner implements Runnable{
 	private String inputId = null;
 	private List<Extractor> extractors = new ArrayList<>();
 	private List<SegmentDescriptor> knownShots = null;
+	private MediaType mediaType = MediaType.VIDEO; //there will eventually be others as well
 	private boolean entryExists = false;
 	
 	public ExtractionJobRunner(File jobFile) {
@@ -63,7 +65,7 @@ public class ExtractionJobRunner implements Runnable{
 	  if(id != null){
 	    this.inputId = id;
 	  }else{//TODO check id against database
-	    this.inputId = id = "v_" + inputName.replace(' ', '-');
+	    this.inputId = id = this.mediaType.getPrefix() + "_" + inputName.replace(' ', '-');
 	  }
 	  if(input.isFile()){
 	    this.inputFile = input;
@@ -458,7 +460,7 @@ public class ExtractionJobRunner implements Runnable{
   		PersistencyWriter<?> writer = Config.getDatabaseConfig().getWriterSupplier().get();
   		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
   		writer.open("cineast_multimediaobject");
-  		PersistentTuple tuple = writer.generateTuple(inputId, 0, inputName, inputFile.getAbsolutePath(), vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
+  		PersistentTuple tuple = writer.generateTuple(inputId, mediaType.getId(), inputName, inputFile.getAbsolutePath(), vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
   		writer.persist(tuple);
   		writer.close();
 		}else if(this.knownShots == null || this.knownShots.isEmpty()){ //check for existing shot boundaries
