@@ -12,13 +12,23 @@ import com.eclipsesource.json.JsonObject;
 
 public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
 
-	private static File baseFolder = new File(Config.getExtractorConfig().getOutputLocation(), "json");
+	private static File defaultBaseFolder = new File(Config.getExtractorConfig().getOutputLocation(), "json");
+	private File baseFolder;
 	private PrintWriter out;
 	private boolean first = true;
 
+	public JsonFileWriter(File baseFolder){
+	  this.baseFolder = baseFolder;
+	}
+	
+	public JsonFileWriter(){
+	  this(defaultBaseFolder);
+	}
+	
+	
 	@Override
 	public boolean open(String name) {
-		baseFolder.mkdirs();
+	  baseFolder.mkdirs();
 		if(this.out != null && !this.out.checkError()){
 		  return false;
 		}
@@ -65,12 +75,12 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
 		return success;
 	}
 
-	public static void setFolder(File outputFolder) {
+	public static void setDefaultFolder(File outputFolder) {
 		if (outputFolder == null) {
 			throw new NullPointerException("outputfolder cannot be null");
 		}
-		baseFolder = outputFolder;
-		baseFolder.mkdirs();
+		defaultBaseFolder = outputFolder;
+		defaultBaseFolder.mkdirs();
 	}
 
 	@Override
