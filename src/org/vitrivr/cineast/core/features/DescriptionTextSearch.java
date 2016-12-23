@@ -9,9 +9,4 @@ public class DescriptionTextSearch extends SolrTextRetriever {
     return "features_densecap";
   }
 
-  @Override
-  protected float getMaxDist() {
-    return 10;
-  }
-
 }
