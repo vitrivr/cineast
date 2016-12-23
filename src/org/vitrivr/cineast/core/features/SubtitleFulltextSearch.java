@@ -9,9 +9,4 @@ public class SubtitleFulltextSearch extends SolrTextRetriever {
     return "features_asr";
   }
 
-  @Override
-  protected float getMaxDist() {
-    return 10f;
-  }
-
 }

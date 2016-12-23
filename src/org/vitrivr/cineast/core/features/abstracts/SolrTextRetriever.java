@@ -40,7 +40,6 @@ public abstract class SolrTextRetriever implements Retriever {
   }
 
   protected abstract String getEntityName();
-  protected abstract float getMaxDist();
 
   @Override
   public void init(DBSelectorSupplier selectorSupply) {
@@ -86,6 +85,13 @@ public abstract class SolrTextRetriever implements Retriever {
     List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFromExternal("solr",
         parameters);
     
+    ArrayList<StringDoublePair> pairs = processResults(query, resultList);
+    
+    return pairs;
+  }
+
+  protected ArrayList<StringDoublePair> processResults(String query,
+      List<Map<String, PrimitiveTypeProvider>> resultList) {
     ArrayList<StringDoublePair> pairs = new ArrayList<>(resultList.size());
     
     int words = query.split("\\s+").length;
@@ -96,7 +102,6 @@ public abstract class SolrTextRetriever implements Retriever {
       
       pairs.add(new StringDoublePair(id, MathHelper.limit(score / words / 10f, 0f, 1f)));
     }
-    
     return pairs;
   }
 

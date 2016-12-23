@@ -9,9 +9,5 @@ public class OCRSearch extends SolrTextRetriever {
     return "features_ocr";
   }
 
-  @Override
-  protected float getMaxDist() {
-    return 10f;
-  }
 
 }
