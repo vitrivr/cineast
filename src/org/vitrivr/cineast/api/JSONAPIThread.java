@@ -348,13 +348,11 @@ public class JSONAPIThread extends Thread {
 				LOGGER.debug("Context API call starting");
 				JsonObject query = clientJSON.get("query").asObject();
 				JsonArray shotidlist = query.get("shotidlist").asArray();
-//				int limit = query.get("limit") == null ? 1 : query.get("limit").asInt();
-				DBSelector selector = new ADAMproSelector();
+				int limit = query.get("limit") == null ? 5 : query.get("limit").asInt();
 				SegmentLookup sl = new SegmentLookup();
 //				SegmentLookup.SegmentDescriptor descriptor;
 				this.printer.print('[');
 				
-//				PreparedStatement select = selector.createPreparedStatement("(select id, startframe, endframe from cineast.shots WHERE video=? AND startframe<? ORDER BY startframe desc LIMIT ?)UNION(select id, startframe, endframe from cineast.shots WHERE video=? AND endframe>? ORDER BY startframe asc LIMIT ?)");
 				
 				JsonObject batch = new JsonObject();
 				batch.add("type", "batch");
@@ -362,29 +360,29 @@ public class JSONAPIThread extends Thread {
 				JsonArray array = new JsonArray();
 				
 				for(int i = 0; i < shotidlist.size(); ++i){
-//					JsonValue val = shotidlist.get(i);
-//					String shotid = val.asString();
-//					descriptor = sl.lookUpShot(shotid);
+				  
+					JsonValue val = shotidlist.get(i);
+					String shotid = val.asString();
+					SegmentDescriptor descriptor = sl.lookUpShot(shotid);
 					
-//					select.setInt(1, descriptor.getVideoId());
-//					select.setInt(2, descriptor.getStartFrame());
-//					select.setInt(3, limit);
-//					select.setInt(4, descriptor.getVideoId());
-//					select.setInt(5, descriptor.getEndFrame());
-//					select.setInt(6, limit);
+					String video = descriptor.getVideoId();
+					int startSegment = Math.max(1, descriptor.getSequenceNumber() - limit);
+					int endSegment = descriptor.getSequenceNumber() + limit;
 					
-					
-//					ResultSet rset = select.executeQuery();
-//					while(rset != null && rset.next()){
-//						array.add(JSONEncoder.encodeShot(rset.getLong(1), descriptor.getVideoId(), rset.getLong(2), rset.getLong(3), false));						
-//					}					
+					List<SegmentDescriptor> all = sl.lookUpAllSegments(video);
+
+					for(SegmentDescriptor sd : all){
+					  if(sd.getSequenceNumber() >= startSegment && sd.getSequenceNumber() <= endSegment){
+					    array.add(JSONEncoder.encodeShot(sd));
+					  }
+					}
+		
 				}
 				batch.add("array", array);
 				printer.println(batch.toString());
 				this.printer.print(']');
 				this.printer.flush();
 				this.printer.close();
-				selector.close();
 				sl.close();
 				
 				LOGGER.debug("Context API call ending");
