@@ -225,7 +225,11 @@ public class JSONUtils {
 		
 		HashSet<String> videoIds = new HashSet<>();
 		for(String id : ids){
-			videoIds.add(map.get(id).getVideoId());
+		  SegmentDescriptor sd = map.get(id);
+		  if(sd == null){
+		    continue;
+		  }
+			videoIds.add(sd.getVideoId());
 		}
 		
 		String[] vids = new String[videoIds.size()];
