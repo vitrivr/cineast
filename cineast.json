@@ -51,6 +51,9 @@
 			],
 			"description": [
 				{"feature": "DescriptionTextSearch",				"weight": 1.0}
+			],
+			"meta": [
+				{"feature": "VideoMetadata",				"weight": 1.0}
 			]
 		}
 	},
