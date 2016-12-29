@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.Shot;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
@@ -165,7 +166,7 @@ public class SegmentLookup {
 	}
 	
 
-	public static class SegmentDescriptor implements ExistenceCheck{
+	public static class SegmentDescriptor implements ExistenceCheck{ //FIXME no type information
 		
 		private final String segmentId, mmobjId;
 		private final int startFrame, endFrame, number;
@@ -184,8 +185,8 @@ public class SegmentLookup {
 			this(multimediaObjectId, segmentId, segmentNumber, startFrame, endFrame, true);
 		}
 		
-		public SegmentDescriptor(String videoId, int segmentNumber, int startFrame, int endFrame) {
-			this(videoId, Shot.generateShotID(videoId, segmentNumber), segmentNumber, startFrame, endFrame, true);
+		public SegmentDescriptor(String videoId, int segmentNumber, int startFrame, int endFrame) { 
+			this(videoId, MediaType.generateId(MediaType.VIDEO, videoId, segmentNumber), segmentNumber, startFrame, endFrame, true);
 		}
 		
 		public SegmentDescriptor() {
