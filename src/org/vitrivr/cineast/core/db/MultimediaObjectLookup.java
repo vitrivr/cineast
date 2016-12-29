@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.setup.EntityCreator;
@@ -203,28 +204,29 @@ public class MultimediaObjectLookup {
   public static class MultimediaObjectDescriptor implements ExistenceCheck {
 
     private final String objectId;
-    private final int width, height, framecount, type;
+    private final int width, height, framecount;
+    private final MediaType type;
     private final float seconds;
     private final String name, path;
     private final boolean exists;
 
     public static MultimediaObjectDescriptor makeVideoDescriptor(String objectId, String name,
         String path, int width, int height, int framecount, float duration) {
-      return new MultimediaObjectDescriptor(objectId, name, path, 0, width, height, framecount,
+      return new MultimediaObjectDescriptor(objectId, name, path, MediaType.VIDEO.getId(), width, height, framecount,
           duration, true);
     }
 
-    public static MultimediaObjectDescriptor makeImageDescriptor(String objectId, String name,
-        String path, int width, int height) {
-      return new MultimediaObjectDescriptor(objectId, name, path, 1, width, height, 1, 0, true);
-    }
+//    public static MultimediaObjectDescriptor makeImageDescriptor(String objectId, String name,
+//        String path, int width, int height) {
+//      return new MultimediaObjectDescriptor(objectId, name, path, 1, width, height, 1, 0, true);
+//    }
 
     private MultimediaObjectDescriptor(String objectId, String name, String path, int type,
         int width, int height, int framecount, float duration, boolean exists) {
       this.objectId = objectId;
       this.name = name;
       this.path = path;
-      this.type = type;
+      this.type = MediaType.fromId(type);
       this.width = width;
       this.height = height;
       this.framecount = framecount;
@@ -273,6 +275,10 @@ public class MultimediaObjectLookup {
       return "MultimediaObjectDescriptor(" + objectId + ")";
     }
 
+    public MediaType getType(){
+      return this.type;
+    }
+    
     @Override
     public boolean exists() {
       return this.exists;
