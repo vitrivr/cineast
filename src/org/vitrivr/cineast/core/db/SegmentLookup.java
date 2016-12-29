@@ -1,19 +1,17 @@
 package org.vitrivr.cineast.core.db;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.ExistenceCheck;
-import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.Shot;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
-import org.vitrivr.cineast.core.setup.EntityCreator;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.ExistenceCheck;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 
 public class SegmentLookup {
 
@@ -166,7 +164,7 @@ public class SegmentLookup {
 	}
 	
 
-	public static class SegmentDescriptor implements ExistenceCheck{ //FIXME no type information
+	public static class SegmentDescriptor implements ExistenceCheck{ 
 		
 		private final String segmentId, mmobjId;
 		private final int startFrame, endFrame, number;
@@ -185,9 +183,6 @@ public class SegmentLookup {
 			this(multimediaObjectId, segmentId, segmentNumber, startFrame, endFrame, true);
 		}
 		
-		public SegmentDescriptor(String videoId, int segmentNumber, int startFrame, int endFrame) { 
-			this(videoId, MediaType.generateId(MediaType.VIDEO, videoId, segmentNumber), segmentNumber, startFrame, endFrame, true);
-		}
 		
 		public SegmentDescriptor() {
 			this("", "", 0, 0, 0, false);
