@@ -45,6 +45,8 @@ public enum MediaType {
   private static final TIntObjectHashMap<MediaType> idToType = new TIntObjectHashMap<>();
   private static final HashMap<String, MediaType> prefixToType = new HashMap<>();
   private static final HashMap<String, MediaType> nameToType = new HashMap<>();
+  
+  public static final char DELIMITER = '_';
 
   static {
     for (MediaType t : EnumSet.allOf(MediaType.class)) {
@@ -105,5 +107,45 @@ public enum MediaType {
 
   public static final boolean existsName(String name) {
     return nameToType.containsKey(name.trim().toLowerCase());
+  }
+  
+  
+  /**
+   * generates an id of the form (prefix)_(object id) assuming the delimiter is '_'
+   * @param type the type for which an id is to be generated
+   * @param objectId the globally unique id of the object
+   * @throws IllegalArgumentException if objectId is empty
+   * @throws NullPointerException if type or objectId is null
+   */
+  public static final String generateId(MediaType type, String objectId) throws IllegalArgumentException, NullPointerException{
+    if(type == null){
+      throw new NullPointerException("type cannot be null");
+    }
+    if(objectId == null){
+      throw new NullPointerException("object id cannot be null");
+    }
+    if(objectId.isEmpty()){
+      throw new IllegalArgumentException("sequenceNumber must be non-negative");
+    }
+    
+    return type.getPrefix() + DELIMITER + objectId;
+    
+  }
+  
+  /**
+   * generates an id of the form (prefix)_(object id)_(sequence number) assuming the delimiter is '_'
+   * @param type the type for which an id is to be generated
+   * @param objectId the globally unique id of the object
+   * @param sequenceNumber the number of the segment within the object
+   * @throws IllegalArgumentException if shot sequence number is negative or objectId is empty
+   * @throws NullPointerException if type or objectId is null
+   */
+  public static final String generateId(MediaType type, String objectId, long sequenceNumber) throws IllegalArgumentException, NullPointerException{
+    if(sequenceNumber < 0){
+      throw new IllegalArgumentException("sequenceNumber must be non-negative");
+    }
+    
+    return generateId(type, objectId) + DELIMITER + sequenceNumber;
+    
   }
 }

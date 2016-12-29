@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.segmenter;
 
 import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.Histogram;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.Shot;
 import org.vitrivr.cineast.core.data.providers.ShotProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
@@ -168,7 +169,7 @@ public class ShotSegmenter implements ShotProvider{
 		}
 		
 		int shotNumber = idCounter.incrementAndGet();
-		String shotId = Shot.generateShotID(movieId, shotNumber);
+		String shotId = MediaType.generateId(MediaType.VIDEO, movieId, shotNumber);
 		
 		shot.setShotId(shotId);
 		addSubtitleItems(shot);
