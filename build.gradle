@@ -1,23 +1,9 @@
 apply plugin: 'com.google.osdetector'
 apply plugin: 'de.undercouch.download'
 import de.undercouch.gradle.tasks.download.Download
-import org.gradle.internal.os.OperatingSystem
 
-switch ( OperatingSystem.current() ) {
-    case OperatingSystem.WINDOWS:
-        project.ext.lwjglNatives = "natives-windows"
-        break
-    case OperatingSystem.LINUX:
-        project.ext.lwjglNatives = "natives-linux"
-        break
-    case OperatingSystem.MAC_OS:
-        project.ext.lwjglNatives = "natives-macos"
-        break
-}
-
-project.ext.lwjglVersion = "3.1.1"
 project.ext.jomlVersion = "1.9.0"
-
+project.ext.joglVersion = "2.3.2"
 
 buildscript {
   repositories {
@@ -86,23 +72,36 @@ dependencies {
 	compile group: 'org.jgrapht', name: 'jgrapht-core', version: '1.0.0'
 
     /**
-     * LWJGL and JOML dependencies for 3D model support. Added by Ralph
+     * JOGL un JOML dependencies for 3D model support. Added by Ralph
      */
     compile "org.joml:joml:${jomlVersion}"
-    compile "org.lwjgl:lwjgl:${lwjglVersion}"
-    compile "org.lwjgl:lwjgl-assimp:${lwjglVersion}"
-    compile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
-    compile "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}"
-    compile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
-    compile "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
-    compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
-    runtime "org.lwjgl:lwjgl:${lwjglVersion}:${lwjglNatives}"
-    runtime "org.lwjgl:lwjgl-assimp:${lwjglVersion}:${lwjglNatives}"
-    runtime "org.lwjgl:lwjgl-glfw:${lwjglVersion}:${lwjglNatives}"
-    runtime "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}:${lwjglNatives}"
-    runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:${lwjglNatives}"
-    runtime "org.lwjgl:lwjgl-opengl:${lwjglVersion}:${lwjglNatives}"
-    runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:${lwjglNatives}"
+
+    compile "org.jogamp.gluegen:gluegen-rt:${joglVersion}"
+    compile "org.jogamp.jogl:jogl-all:${joglVersion}"
+
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-android-aarch64"
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-android-armv6"
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-linux-amd64"
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-linux-armv6"
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-linux-armv6hf"
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-linux-i586"
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-macosx-universal"
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-solaris-amd64"
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-solaris-i586"
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-windows-amd64"
+    runtime "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-windows-i586"
+
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-android-aarch64"
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-android-armv6"
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-linux-amd64"
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-linux-armv6"
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-linux-armv6hf"
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-linux-i586"
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-macosx-universal"
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-solaris-amd64"
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-solaris-i586"
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-windows-amd64"
+    runtime "org.jogamp.jogl:jogl-all:${joglVersion}:natives-windows-i586"
 
     /**
      * Manual Fixes for the javacpp-devs because of naming conventions & versions. Each os is handled independently

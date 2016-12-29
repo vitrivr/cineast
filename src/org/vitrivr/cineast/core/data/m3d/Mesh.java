@@ -1,15 +1,15 @@
 package org.vitrivr.cineast.core.data.m3d;
 
+import com.jogamp.opengl.GL2;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.GL_COMPILE;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static com.jogamp.opengl.GL.GL_TRIANGLES;
+import static com.jogamp.opengl.GL2.GL_COMPILE;
+import static com.jogamp.opengl.GL2ES3.GL_QUADS;
 
 /**
  * @author rgasser
@@ -49,73 +49,73 @@ public class Mesh {
      *
      * @return
      */
-    public int render() {
-        int meshList = GL11.glGenLists(1);
-        GL11.glNewList(meshList, GL_COMPILE);
+    public int render(GL2 gl) {
+        int meshList = gl.glGenLists(1);
+        gl.glNewList(meshList, GL_COMPILE);
         {
             for (Face face : this.faces) {
 
                 if (face.getType() == FaceType.TRI) {
-                    GL11.glBegin(GL_TRIANGLES);
+                    gl.glBegin(GL_TRIANGLES);
                     {
                         if (face.getNormalIndices() != null) {
                             Vector3f n1 = this.normals.get(face.getNormalIndices().x - 1);
-                            GL11.glNormal3f(n1.x, n1.y, n1.z);
+                            gl.glNormal3f(n1.x, n1.y, n1.z);
                         }
                         Vector3f v1 = this.vertices.get(face.getVertexIndices().x - 1);
-                        GL11.glVertex3f(v1.x, v1.y, v1.z);
+                        gl.glVertex3f(v1.x, v1.y, v1.z);
 
                         if (face.getNormalIndices() != null) {
                             Vector3f n2 = this.normals.get(face.getNormalIndices().y - 1);
-                            GL11.glNormal3f(n2.x, n2.y, n2.z);
+                            gl.glNormal3f(n2.x, n2.y, n2.z);
                         }
                         Vector3f v2 = this.vertices.get(face.getVertexIndices().y - 1);
-                        GL11.glVertex3f(v2.x, v2.y, v2.z);
+                        gl.glVertex3f(v2.x, v2.y, v2.z);
 
                         if (face.getNormalIndices() != null) {
                             Vector3f n3 = this.normals.get(face.getNormalIndices().z - 1);
-                            GL11.glNormal3f(n3.x, n3.y, n3.z);
+                            gl.glNormal3f(n3.x, n3.y, n3.z);
                         }
                         Vector3f v3 = this.vertices.get(face.getVertexIndices().z - 1);
-                        GL11.glVertex3f(v3.x, v3.y, v3.z);
+                        gl.glVertex3f(v3.x, v3.y, v3.z);
                     }
-                    GL11.glEnd();
+                    gl.glEnd();
                 } else if (face.getType() == FaceType.QUAD) {
-                    GL11.glBegin(GL_QUADS);
+                    gl.glBegin(GL_QUADS);
                     {
                         if (face.getNormalIndices() != null) {
                             Vector3f n1 = this.normals.get(face.getNormalIndices().x - 1);
-                            GL11.glNormal3f(n1.x, n1.y, n1.z);
+                            gl.glNormal3f(n1.x, n1.y, n1.z);
                         }
                         Vector3f v1 = this.vertices.get(face.getVertexIndices().x - 1);
-                        GL11.glVertex3f(v1.x, v1.y, v1.z);
+                        gl.glVertex3f(v1.x, v1.y, v1.z);
 
                         if (face.getNormalIndices() != null) {
                             Vector3f n2 = this.normals.get(face.getNormalIndices().y - 1);
-                            GL11.glNormal3f(n2.x, n2.y, n2.z);
+                            gl.glNormal3f(n2.x, n2.y, n2.z);
                         }
                         Vector3f v2 = this.vertices.get(face.getVertexIndices().y - 1);
-                        GL11.glVertex3f(v2.x, v2.y, v2.z);
+                        gl.glVertex3f(v2.x, v2.y, v2.z);
 
                         if (face.getNormalIndices() != null) {
                             Vector3f n3 = this.normals.get(face.getNormalIndices().z - 1);
-                            GL11.glNormal3f(n3.x, n3.y, n3.z);
+                            gl.glNormal3f(n3.x, n3.y, n3.z);
                         }
                         Vector3f v3 = this.vertices.get(face.getVertexIndices().z - 1);
-                        GL11.glVertex3f(v3.x, v3.y, v3.z);
+                        gl.glVertex3f(v3.x, v3.y, v3.z);
 
                         if (face.getNormalIndices() != null) {
                             Vector3f n4 = this.normals.get(face.getNormalIndices().w - 1);
-                            GL11.glNormal3f(n4.x, n4.y, n4.z);
+                            gl.glNormal3f(n4.x, n4.y, n4.z);
                         }
                         Vector3f v4 = this.vertices.get(face.getVertexIndices().w - 1);
-                        GL11.glVertex3f(v4.x, v3.y, v3.z);
+                        gl.glVertex3f(v4.x, v3.y, v3.z);
                     }
-                    GL11.glEnd();
+                    gl.glEnd();
                 }
             }
         }
-        GL11.glEndList();
+        gl.glEndList();
         return meshList;
     }
 }
