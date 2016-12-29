@@ -170,7 +170,7 @@ public class SegmentLookup {
 		private final int startFrame, endFrame, number;
 		private final boolean exists;
 		
-		private SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber,  int startFrame, int endFrame, boolean exists){
+		private SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber, int startFrame, int endFrame, boolean exists){
 			this.segmentId = segmentId;
 			this.mmobjId = multimediaObjectId;
 			this.number = segmentNumber;
@@ -179,7 +179,7 @@ public class SegmentLookup {
 			this.exists = exists;
 		}
 		
-		public SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber,  int startFrame, int endFrame){
+		public SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber, int startFrame, int endFrame){
 			this(multimediaObjectId, segmentId, segmentNumber, startFrame, endFrame, true);
 		}
 		
