@@ -1,6 +1,23 @@
 apply plugin: 'com.google.osdetector'
 apply plugin: 'de.undercouch.download'
 import de.undercouch.gradle.tasks.download.Download
+import org.gradle.internal.os.OperatingSystem
+
+switch ( OperatingSystem.current() ) {
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+}
+
+project.ext.lwjglVersion = "3.1.1"
+project.ext.jomlVersion = "1.9.0"
+
 
 buildscript {
   repositories {
@@ -67,6 +84,26 @@ dependencies {
     compile group: 'org.bytedeco', name: 'javacpp', version: '1.2.3'
     compile group: 'net.coobird', name: 'thumbnailator', version: '[0.4, 0.5)'
 	compile group: 'org.jgrapht', name: 'jgrapht-core', version: '1.0.0'
+
+    /**
+     * LWJGL and JOML dependencies for 3D model support. Added by Ralph
+     */
+    compile "org.joml:joml:${jomlVersion}"
+    compile "org.lwjgl:lwjgl:${lwjglVersion}"
+    compile "org.lwjgl:lwjgl-assimp:${lwjglVersion}"
+    compile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
+    compile "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}"
+    compile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
+    compile "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+    compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
+    runtime "org.lwjgl:lwjgl:${lwjglVersion}:${lwjglNatives}"
+    runtime "org.lwjgl:lwjgl-assimp:${lwjglVersion}:${lwjglNatives}"
+    runtime "org.lwjgl:lwjgl-glfw:${lwjglVersion}:${lwjglNatives}"
+    runtime "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}:${lwjglNatives}"
+    runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:${lwjglNatives}"
+    runtime "org.lwjgl:lwjgl-opengl:${lwjglVersion}:${lwjglNatives}"
+    runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:${lwjglNatives}"
+
     /**
      * Manual Fixes for the javacpp-devs because of naming conventions & versions. Each os is handled independently
      */
