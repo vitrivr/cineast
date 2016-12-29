@@ -3,27 +3,36 @@ package org.vitrivr.cineast.core.decode.m3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector4i;
-import org.vitrivr.cineast.core.data.m3d.Face;
+
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 /**
+ * Decodes Wavefront OBJ (.obj) files and returns a Mesh representation. Requires
+ * JOML to work properly.
+ *
+ * Texture information is currently discarded!
+ *
  * @author rgasser
  * @version 1.0
  * @created 29.12.16
  */
 public class OBJMeshDecoder implements MeshDecoder {
 
+    /**
+     * Path to the input file.
+     */
     private Path inputFile;
 
     /**
+     * Default constructor.
      *
      * @param inputFile
      */
@@ -32,6 +41,12 @@ public class OBJMeshDecoder implements MeshDecoder {
     }
 
 
+    /**
+     * Opens and reads a Wavefront OBJ file and returns a Mesh representation thereof.
+     *
+     * @return Mesh
+     * @throws MeshDecoderException If an IOException occurs (e.g. file could not be found).
+     */
     @Override
     public Mesh getMesh() throws MeshDecoderException {
 
@@ -72,8 +87,7 @@ public class OBJMeshDecoder implements MeshDecoder {
                             }
 
                             /* Create and add face. */
-                            Face face = new Face(vertexIndex, normalIndex);
-                            mesh.addFace(face);
+                            mesh.addFace(vertexIndex, normalIndex);
                         }
                         break;
                     default:
