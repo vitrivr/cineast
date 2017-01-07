@@ -5,9 +5,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector4i;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.jogamp.opengl.GL.GL_TRIANGLES;
 import static com.jogamp.opengl.GL2.GL_COMPILE;
@@ -18,7 +16,7 @@ import static com.jogamp.opengl.GL2ES3.GL_QUADS;
  * @version 1.0
  * @created 29.12.16
  */
-public class Mesh {
+public class Mesh implements Renderable {
     /**
      * A face defined by the normal and the vertex-indices.
      */
@@ -36,13 +34,47 @@ public class Mesh {
         public final Vector4i getNormalIndices() {
             return normalIndices;
         }
+
+        /**
+         *
+         * @return
+         */
+        public final List<Vector3f> getVertices() {
+            List<Vector3f> vertices = new ArrayList<>((this.type == FaceType.QUAD) ? 4 : 3);
+            vertices.add(Mesh.this.vertices.get(this.vertexIndices.x - 1));
+            vertices.add(Mesh.this.vertices.get(this.vertexIndices.y - 1));
+            vertices.add(Mesh.this.vertices.get(this.vertexIndices.z - 1));
+            if (this.type == FaceType.QUAD) vertices.add(Mesh.this.vertices.get(this.vertexIndices.w - 1));
+            return vertices;
+        }
+
+        /**
+         *
+         * @return
+         */
+        public final List<Vector3f> getNormals() {
+            if (this.normalIndices != null) {
+                List<Vector3f> normals = new ArrayList<>((this.type == FaceType.QUAD) ? 4 : 3);
+                normals.add(Mesh.this.normals.get(this.normalIndices.x - 1));
+                normals.add(Mesh.this.normals.get(this.normalIndices.y - 1));
+                normals.add(Mesh.this.normals.get(this.normalIndices.z - 1));
+                if (this.type == FaceType.QUAD) normals.add(Mesh.this.normals.get(this.normalIndices.w - 1));
+                return normals;
+            } else {
+                return null;
+            }
+        }
     }
 
     /**
      * Enumeration used to distinguish between triangle and quadratic faces.
      */
     public enum FaceType {
-        TRI,QUAD
+        TRI(GL_TRIANGLES),QUAD(GL_QUADS);
+        int gl_draw_type;
+        FaceType(int type) {
+            this.gl_draw_type = type;
+        }
     }
 
     private List<Vector3f> vertices = new ArrayList<>();
@@ -138,65 +170,27 @@ public class Mesh {
         gl.glNewList(meshList, GL_COMPILE);
         {
             for (Face face : this.faces) {
+                /* Extract normals and vertices. */
+                List<Vector3f> vertices = face.getVertices();
+                List<Vector3f> normals = face.getNormals();
 
-                if (face.type == FaceType.TRI) {
-                    gl.glBegin(GL_TRIANGLES);
-                    {
-                        if (face.normalIndices != null) {
-                            Vector3f n1 = this.normals.get(face.normalIndices.x - 1);
-                            gl.glNormal3f(n1.x, n1.y, n1.z);
-                        }
-                        Vector3f v1 = this.vertices.get(face.vertexIndices.x - 1);
-                        gl.glVertex3f(v1.x, v1.y, v1.z);
+                /* Drawing is handled differently depending on whether its a TRI or QUAD mesh. */
+                gl.glBegin(face.type.gl_draw_type);
+                {
+                    gl.glVertex3f(vertices.get(0).x, vertices.get(0).y, vertices.get(0).z);
+                    gl.glVertex3f(vertices.get(1).x, vertices.get(1).y, vertices.get(1).z);
+                    gl.glVertex3f(vertices.get(2).x, vertices.get(2).y, vertices.get(2).z);
+                    if (face.type == FaceType.QUAD) gl.glVertex3f(vertices.get(3).x, vertices.get(3).y, vertices.get(3).z);
 
-                        if (face.normalIndices != null) {
-                            Vector3f n2 = this.normals.get(face.normalIndices.y - 1);
-                            gl.glNormal3f(n2.x, n2.y, n2.z);
-                        }
-                        Vector3f v2 = this.vertices.get(face.vertexIndices.y - 1);
-                        gl.glVertex3f(v2.x, v2.y, v2.z);
 
-                        if (face.normalIndices != null) {
-                            Vector3f n3 = this.normals.get(face.normalIndices.z - 1);
-                            gl.glNormal3f(n3.x, n3.y, n3.z);
-                        }
-                        Vector3f v3 = this.vertices.get(face.vertexIndices.z - 1);
-                        gl.glVertex3f(v3.x, v3.y, v3.z);
+                    if (normals != null && normals.size() >= 3) {
+                        gl.glNormal3f(normals.get(0).x, normals.get(0).y, normals.get(0).z);
+                        gl.glNormal3f(normals.get(1).x, normals.get(1).y, normals.get(1).z);
+                        gl.glNormal3f(normals.get(2).x, normals.get(2).y, normals.get(2).z);
+                        if (face.type == FaceType.QUAD) gl.glNormal3f(normals.get(3).x, normals.get(3).y, normals.get(3).z);
                     }
-                    gl.glEnd();
-                } else if (face.type == FaceType.QUAD) {
-                    gl.glBegin(GL_QUADS);
-                    {
-                        if (face.normalIndices != null) {
-                            Vector3f n1 = this.normals.get(face.normalIndices.x - 1);
-                            gl.glNormal3f(n1.x, n1.y, n1.z);
-                        }
-                        Vector3f v1 = this.vertices.get(face.vertexIndices.x - 1);
-                        gl.glVertex3f(v1.x, v1.y, v1.z);
-
-                        if (face.normalIndices != null) {
-                            Vector3f n2 = this.normals.get(face.normalIndices.y - 1);
-                            gl.glNormal3f(n2.x, n2.y, n2.z);
-                        }
-                        Vector3f v2 = this.vertices.get(face.vertexIndices.y - 1);
-                        gl.glVertex3f(v2.x, v2.y, v2.z);
-
-                        if (face.normalIndices != null) {
-                            Vector3f n3 = this.normals.get(face.normalIndices.z - 1);
-                            gl.glNormal3f(n3.x, n3.y, n3.z);
-                        }
-                        Vector3f v3 = this.vertices.get(face.vertexIndices.z - 1);
-                        gl.glVertex3f(v3.x, v3.y, v3.z);
-
-                        if (face.normalIndices != null) {
-                            Vector3f n4 = this.normals.get(face.normalIndices.w - 1);
-                            gl.glNormal3f(n4.x, n4.y, n4.z);
-                        }
-                        Vector3f v4 = this.vertices.get(face.vertexIndices.w - 1);
-                        gl.glVertex3f(v4.x, v4.y, v4.z);
-                    }
-                    gl.glEnd();
                 }
+                gl.glEnd();
             }
         }
         gl.glEndList();
