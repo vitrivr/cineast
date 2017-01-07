@@ -4,8 +4,9 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
 
-import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.Renderable;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
@@ -19,7 +20,6 @@ import static com.jogamp.opengl.GL2GL3.GL_LINE;
  * @created 29.12.16
  */
 public class JOGLOffscreenRenderer {
-
     /**
      * Default GLProfile to be used. Should be GL2.
      */
@@ -71,7 +71,7 @@ public class JOGLOffscreenRenderer {
      * @param height Height in pixels.
      */
     public JOGLOffscreenRenderer(int width, int height) {
-        /* Assign widht and height. */
+        /* Assign width and height. */
         this.width = width;
         this.height = height;
         this.aspect = (float) width / (float) height;
@@ -85,6 +85,9 @@ public class JOGLOffscreenRenderer {
         /* Initialize GLU and GL2. */
         this.glu = new GLU();
         this.gl = drawable.getGL().getGL2();
+
+        /* Set default color. */
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
     /**
@@ -118,10 +121,10 @@ public class JOGLOffscreenRenderer {
      * Renders a mesh and positions the camera in its default position in [1,0,0]
      * (spherical coordinates).
      *
-     * @param mesh Mesh object to be drawn.
+     * @param renderable Renderable object to be drawn.
      */
-    public void render(Mesh mesh) {
-         this.render(mesh, 1.0f, 0.0f, 0.0f);
+    public void render(Renderable renderable) {
+         this.render(renderable, 1.0f, 0.0f, 0.0f);
     }
 
     /**
@@ -129,29 +132,29 @@ public class JOGLOffscreenRenderer {
      * that it faces the origin. Calling this methods is equivalent to calling clear(), draw() and position()
      * in this order.
      *
-     * @param mesh Mesh object to be drawn.
+     * @param renderable Renderable object to be drawn.
      * @param distance Distance of the camera from the origin (r).
      * @param polar Polar angle of the camera in degrees
      * @param azimuth Azimuth angle of the camer in degrees.
      */
-    public void render(Mesh mesh, float distance, float polar, float azimuth) {
+    public void render(Renderable renderable, float distance, float polar, float azimuth) {
         /* Clears buffers to preset-values. */
         this.clear();
 
-        /* Draws the mesh. */
-        this.draw(mesh);
-
         /* Positions the camera. */
         this.position(distance, polar, azimuth);
+
+        /* Draws the mesh. */
+        this.draw(renderable);
     }
 
     /**
      * Draws a mesh in the buffer.
      *
-     * @param mesh Mesh object to be drawn.
+     * @param renderable Renderable object to be drawn.
      */
 
-    public void draw(Mesh mesh) {
+    public void draw(Renderable renderable) {
         /* Switch matrix mode to modelview. */
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
@@ -160,9 +163,8 @@ public class JOGLOffscreenRenderer {
         gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         /* Assemble and render model */
-        int modelHandle = mesh.assemble(this.gl);
+        int modelHandle = renderable.assemble(this.gl);
         gl.glCallList(modelHandle);
-        gl.glDeleteLists(modelHandle, 1);
     }
 
     /**
@@ -178,14 +180,14 @@ public class JOGLOffscreenRenderer {
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
 
-        /* Set perspective. */
-        glu.gluPerspective(60.0f, this.aspect, 0.01f, 100.0f);
+        /* Set default perspective. */
+        glu.gluPerspective(45.0f, this.aspect, 0.01f, 100.0f);
 
         /* Move camera a distance r away from the center. */
         gl.glTranslatef(0, 0, -distance);
 
-        gl.glRotatef(polar, 0, 1, 0);
-        gl.glRotatef(azimuth, 1, 0, 0);
+        gl.glRotatef(polar, 1, 0, 0);
+        gl.glRotatef(azimuth, 0, 1, 0);
 
         /* move to center of circle. */
         gl.glTranslatef(0, 0, 0);
@@ -195,6 +197,16 @@ public class JOGLOffscreenRenderer {
      * Clears buffers to preset-values.
      */
     public final void clear() {
+        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    /**
+     * Clears buffers to preset-values and applies a user-defined background colour.
+     *
+     * @param color The background colour to be used.
+     */
+    public final void clear(Color color) {
+        gl.glClearColorIi(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
