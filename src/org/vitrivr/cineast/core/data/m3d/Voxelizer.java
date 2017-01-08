@@ -62,9 +62,9 @@ public class Voxelizer {
 
         /* Calculate bounding box of mesh. */
         float[] boundingBox = this.bounds(mesh.getVertices());
-        short sizeX = (short)Math.abs((short)Math.ceil(((boundingBox[0]-boundingBox[1])/this.resolution)));
-        short sizeY = (short)Math.abs((short)Math.ceil(((boundingBox[2]-boundingBox[3])/this.resolution)));
-        short sizeZ = (short)Math.abs((short)Math.ceil(((boundingBox[4]-boundingBox[5])/this.resolution)));
+        short sizeX = (short)(Math.abs(Math.ceil(((boundingBox[0]-boundingBox[1])/this.resolution))) + 1);
+        short sizeY = (short)(Math.abs(Math.ceil(((boundingBox[2]-boundingBox[3])/this.resolution))) + 1);
+        short sizeZ = (short)(Math.abs(Math.ceil(((boundingBox[4]-boundingBox[5])/this.resolution))) + 1);
 
         /* Initializes a new voxel-grid. */
         VoxelGrid grid = new VoxelGrid(sizeX, sizeY, sizeZ, this.resolution, false);
