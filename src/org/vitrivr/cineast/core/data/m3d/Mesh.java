@@ -52,6 +52,19 @@ public class Mesh implements Renderable {
          *
          * @return
          */
+        public final List<Vector3f> getColors() {
+            List<Vector3f> colors = new ArrayList<>((this.type == FaceType.QUAD) ? 4 : 3);
+            colors.add(Mesh.this.colors.get(this.vertexIndices.x - 1));
+            colors.add(Mesh.this.colors.get(this.vertexIndices.y - 1));
+            colors.add(Mesh.this.colors.get(this.vertexIndices.z - 1));
+            if (this.type == FaceType.QUAD) colors.add(Mesh.this.colors.get(this.vertexIndices.w - 1));
+            return colors;
+        }
+
+        /**
+         *
+         * @return
+         */
         public final List<Vector3f> getNormals() {
             if (this.normalIndices != null) {
                 List<Vector3f> normals = new ArrayList<>((this.type == FaceType.QUAD) ? 4 : 3);
@@ -79,6 +92,7 @@ public class Mesh implements Renderable {
 
     private List<Vector3f> vertices = new ArrayList<>();
     private List<Vector3f> normals = new ArrayList<>();
+    private List<Vector3f> colors = new ArrayList<>();
     private List<Face> faces = new ArrayList<>();
 
     /**
@@ -88,6 +102,34 @@ public class Mesh implements Renderable {
      */
     public void addVertex(Vector3f vertex) {
         this.vertices.add(vertex);
+        this.colors.add(new Vector3f(1.0f, 1.0f, 1.0f));
+    }
+
+    /**
+     * Adds an vector defining a vertex to the Mesh.
+     *
+     * @param vertex
+     */
+    public void addVertex(Vector3f vertex, Vector3f color) {
+        this.vertices.add(vertex);
+        this.colors.add(color);
+    }
+
+    /**
+     *
+     * @param color
+     */
+    public void updateColor(Vector3f color) {
+        for (int i = 0;i<this.colors.size();i++) {
+            this.colors.set(i, color);
+        }
+    }
+
+    /**
+     * Adds an vector defining a vertex to the Mesh.
+     */
+    public void updateColor(int vertexIndex, Vector3f color) {
+        this.colors.set(vertexIndex, color);
     }
 
     /**
@@ -135,7 +177,7 @@ public class Mesh implements Renderable {
      * @return Unmodifiable list of vertices.
      */
     public List<Vector3f> getVertices() {
-        return Collections.unmodifiableList(vertices);
+        return Collections.unmodifiableList(this.vertices);
     }
 
     /**
@@ -144,7 +186,16 @@ public class Mesh implements Renderable {
      * @return Unmodifiable list of vertex normals.
      */
     public List<Vector3f> getNormals() {
-        return Collections.unmodifiableList(normals);
+        return Collections.unmodifiableList(this.normals);
+    }
+
+    /**
+     * Returns the list of vertex-normals. The returned collection is unmodifiable.
+     *
+     * @return Unmodifiable list of vertex normals.
+     */
+    public List<Vector3f> getColors() {
+        return Collections.unmodifiableList(this.colors);
     }
 
     /**
@@ -172,16 +223,22 @@ public class Mesh implements Renderable {
             for (Face face : this.faces) {
                 /* Extract normals and vertices. */
                 List<Vector3f> vertices = face.getVertices();
+                List<Vector3f> colors = face.getColors();
                 List<Vector3f> normals = face.getNormals();
 
                 /* Drawing is handled differently depending on whether its a TRI or QUAD mesh. */
                 gl.glBegin(face.type.gl_draw_type);
                 {
+                    gl.glColor3f(colors.get(0).x, colors.get(0).y, colors.get(0).z);
                     gl.glVertex3f(vertices.get(0).x, vertices.get(0).y, vertices.get(0).z);
+                    gl.glColor3f(colors.get(1).x, colors.get(1).y, colors.get(1).z);
                     gl.glVertex3f(vertices.get(1).x, vertices.get(1).y, vertices.get(1).z);
+                    gl.glColor3f(colors.get(2).x, colors.get(2).y, colors.get(2).z);
                     gl.glVertex3f(vertices.get(2).x, vertices.get(2).y, vertices.get(2).z);
-                    if (face.type == FaceType.QUAD) gl.glVertex3f(vertices.get(3).x, vertices.get(3).y, vertices.get(3).z);
-
+                    if (face.type == FaceType.QUAD) {
+                        gl.glColor3f(colors.get(3).x, colors.get(3).y, colors.get(3).z);
+                        gl.glVertex3f(vertices.get(3).x, vertices.get(3).y, vertices.get(3).z);
+                    }
 
                     if (normals != null && normals.size() >= 3) {
                         gl.glNormal3f(normals.get(0).x, normals.get(0).y, normals.get(0).z);
