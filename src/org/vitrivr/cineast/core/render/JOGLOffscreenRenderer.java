@@ -9,10 +9,10 @@ import org.vitrivr.cineast.core.data.m3d.Renderable;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
-import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
-import static com.jogamp.opengl.GL.GL_FRONT_AND_BACK;
+import static com.jogamp.opengl.GL.*;
+import static com.jogamp.opengl.GL2GL3.GL_FILL;
 import static com.jogamp.opengl.GL2GL3.GL_LINE;
+import static com.jogamp.opengl.GL2GL3.GL_POINT;
 
 /**
  * @author rgasser
@@ -54,6 +54,11 @@ public class JOGLOffscreenRenderer {
      * Aspect-ration of the JOGLOffscreenRenderer.
      */
     private final float aspect;
+
+    /**
+     *
+     */
+    private int polygonmode = GL_FILL;
 
     /*
      * This code-block can be used to configure the off-screen renderer's capabilities.
@@ -111,11 +116,32 @@ public class JOGLOffscreenRenderer {
     /**
      * Getter for aspect.
      *
-     * @return Aspect ration of the JOGLOffscreenRenderer.
+     * @return Aspect ratio of the JOGLOffscreenRenderer.
      */
     public final float getAspect() {
         return aspect;
     }
+
+    /**
+     * Getter for polygonmode.
+     *
+     * @return Polygonmode for drawing, either GL_POINT, GL_LINE or GL_FILL.
+     */
+    public int getPolygonmode() {
+        return polygonmode;
+    }
+
+    /**
+     * Setter for polygonmode.
+     *
+     * @param polygonmode Polygonmode for drawing, either GL_POINT, GL_LINE or GL_FILL.
+     */
+    public void setPolygonmode(int polygonmode) {
+        if (polygonmode == GL_POINT || polygonmode == GL_LINE || polygonmode == GL_FILL) {
+            this.polygonmode = polygonmode;
+        }
+    }
+
 
     /**
      * Renders a mesh and positions the camera in its default position in [1,0,0]
@@ -157,10 +183,12 @@ public class JOGLOffscreenRenderer {
     public void draw(Renderable renderable) {
         /* Switch matrix mode to modelview. */
         gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glEnable(GL_DEPTH_TEST);
+        gl.glDepthFunc(GL_LESS);
         gl.glLoadIdentity();
 
         /* Set drawing-style.*/
-        gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        gl.glPolygonMode(GL_FRONT_AND_BACK, this.polygonmode);
 
         /* Assemble and render model */
         int modelHandle = renderable.assemble(this.gl);
