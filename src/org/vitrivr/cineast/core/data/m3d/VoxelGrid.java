@@ -81,7 +81,7 @@ public class VoxelGrid implements Renderable {
     private final Voxel[][][] voxelGrid;
 
     /**
-     * Defines the center of the voxel (in the world coordinate system)
+     * Defines the center of the voxel-grid (in the world coordinate system)
      */
     private final Vector3f center = new Vector3f(0f,0f,0f);
 

@@ -136,10 +136,8 @@ public class Voxelizer {
      * @return true if voxel's center is contained in cylinder, false otherwise.
      */
     private boolean edgeTest(Vector3f a, Vector3f b, VoxelGrid.Voxel voxel) {
-        Vector3f line = new Vector3f();
-        b.sub(a, line);
-        Vector3f pd = new Vector3f();
-        voxel.getCenter().sub(a, pd);
+        Vector3f line = (new Vector3f(b)).sub(a);
+        Vector3f pd = voxel.getCenter().sub(a);
 
         /* Calculate distance between a and b (Edge). */
         float lsq = a.distanceSquared(b);
@@ -170,25 +168,22 @@ public class Voxelizer {
     private boolean planeTest(Vector3f a, Vector3f b, Vector3f c, VoxelGrid.Voxel voxel) {
         /* Retrieve center and corner of voxel. */
         Vector3f vcenter = voxel.getCenter();
-        Vector3f vcorner = new Vector3f(vcenter.x + this.rc, vcenter.y + this.rc, vcenter.y + this.rc);
+        Vector3f vcorner = (new Vector3f(this.rc, this.rc, this.rc)).add(vcenter);
 
-        /* Calculate the plane-normal of the polygon. */
-        Vector3f ab = new Vector3f();
-        Vector3f ac = new Vector3f();
-        Vector3f planenorm = new Vector3f();
-        b.sub(a, ab); /* Vectors spanning the plane of the polygon. */
-        c.sub(a, ac);
-        ab.cross(ac, planenorm);
+        /* Calculate the vectors spanning the plane of the facepolyon and its plane-normal. */
+        Vector3f ab = (new Vector3f(b)).sub(a);
+        Vector3f ac = (new Vector3f(c)).sub(a);
+        Vector3f planenorm = (new Vector3f(ab)).cross(ac);
 
         /* Calculate the distance t for enclosing planes. */
-        float t = this.rc*sqrt3*vcorner.dot(voxel.getCenter());
+        float t = this.rc*sqrt3*vcorner.angleCos(voxel.getCenter());
 
-        /* Derive new, displaced plane-normals. */
+        /* Derive new displaced plane normals. */
         Vector3f planenorm_plus = new Vector3f(planenorm.x + t, planenorm.y + t, planenorm.z + t);
         Vector3f planenorm_minus = new Vector3f(planenorm.x - t, planenorm.y - t, planenorm.z - t);
 
         /* Check if the center is under the planenorm_plus and above the planenorm_minus. */
-        if (planenorm_plus.dot(voxel.getCenter()) < 0 && planenorm_minus.dot(voxel.getCenter()) > 0) {
+        if (planenorm_plus.dot(vcenter) < 0 && planenorm_minus.dot(vcenter) > 0) {
             return true;
         } else {
             return false;
@@ -243,7 +238,7 @@ public class Voxelizer {
     }
 
     /**
-     * Calculates and retruns a bounding box, given a list of vertices. The box encloses all the
+     * Calculates and reruns a bounding box, given a list of vertices. The box encloses all the
      * vertices.
      *
      * @param vertices List of vertices for which the bounding-box should be calculated.
