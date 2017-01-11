@@ -10,9 +10,16 @@ import java.util.List;
  * @version 1.0
  * @created 08.01.17
  */
-public class MeshMathUtil {
+public final class MeshMathUtil {
+
+
     /**
-     * Returns the vertex from a mesh that is farthest from a given point.
+     * Cannot be instantiated!
+     */
+    private MeshMathUtil() {}
+
+    /**
+     * Returns the vertex from a mesh that is farthest away from a given point.
      *
      * @param mesh Mesh from which the farthest vertex should be selected.
      * @param point Point to which the distance should be calculated.
