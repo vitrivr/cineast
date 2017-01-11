@@ -8,7 +8,7 @@ import java.util.Map;
 import org.vitrivr.cineast.core.data.providers.primitive.IntTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
-import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.shotboundary.TrecvidMasterShotReferenceDecoder;
 
 public class TRECVIDShotBoundaryImporter implements Importer<SegmentDescriptor> {
