@@ -70,6 +70,9 @@ dependencies {
     compile group: 'org.bytedeco', name: 'javacpp', version: '1.2.3'
     compile group: 'net.coobird', name: 'thumbnailator', version: '[0.4, 0.5)'
 	compile group: 'org.jgrapht', name: 'jgrapht-core', version: '1.0.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.5'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.5'
+    compile group: 'com.sparkjava', name: 'spark-core', version: '2.5.4'
 
     /**
      * JOGL un JOML dependencies for 3D model support. Added by Ralph
