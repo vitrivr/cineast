@@ -1,11 +1,10 @@
 package org.vitrivr.cineast.api;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
-import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
