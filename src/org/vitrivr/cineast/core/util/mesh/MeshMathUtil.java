@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util;
+package org.vitrivr.cineast.core.util.mesh;
 
 import org.joml.Vector3f;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
@@ -13,8 +13,8 @@ import java.util.List;
 public final class MeshMathUtil {
 
 
-    /**
-     * Cannot be instantiated!
+   /**
+     * Private constructor; cannot be instantiated.
      */
     private MeshMathUtil() {}
 
