@@ -6,9 +6,10 @@ import java.util.HashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 public enum MediaType {
-
-  VIDEO(0, "v");
-  
+  VIDEO(0, "v"),
+  IMAGE(1, "i"),
+  AUDIO(2, "a"),
+  MODEL(3, "m");
   
   private final int id;
   private final String prefix;
