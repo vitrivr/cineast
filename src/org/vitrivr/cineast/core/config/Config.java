@@ -5,229 +5,168 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.art.modules.visualization.Visualization;
-
-import java.io.*;
-import java.util.UUID;
-
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Config {
-
-    private Config() {
-    }
-
     private static final Logger LOGGER = LogManager.getLogger();
-
-    private static APIConfig apiConfig = new APIConfig();
-    private static DatabaseConfig databaseConfig = new DatabaseConfig();
-    private static DecoderConfig decoderConfig = new DecoderConfig();
-    private static ExtractorConfig extractorConfig = new ExtractorConfig();
-    private static ImageCacheConfig imageCacheConfig = new ImageCacheConfig();
-    private static RetrieverConfig retrieverConfig = new RetrieverConfig();
-    private static QueryConfig queryConfig = new QueryConfig().setDistance(Distance.manhattan); //FIXME remove as soon as chisquared distance works again;
-    private static NeuralNetConfig neuralNetConfig = new NeuralNetConfig();
-    private static VisualizationConfig visualizationConfig = new VisualizationConfig();
-
-    static {
-
-        try {
-            FileInputStream fin = new FileInputStream("cineast.json");
-            parse(fin);
-            fin.close();
-            LOGGER.info("config loaded");
-        } catch (FileNotFoundException e) {
-            LOGGER.warn("config file not found");
-        } catch (IOException e) {
-            LOGGER.warn("could not read config file");
-        }
-
-
-    }
-
-    public static void parse(File configFile) {
-        if (configFile == null) {
-            LOGGER.error("config file cannot be null");
-            return;
-        }
-        if (!configFile.exists() || configFile.isDirectory()) {
-            LOGGER.error("specified path is not a config file: {}", configFile.getAbsolutePath());
-            return;
-        }
-        if (!configFile.canRead()) {
-            LOGGER.error("specified config file is not readable: {}", configFile.getAbsolutePath());
-            return;
-        }
-        try {
-            FileInputStream fin = new FileInputStream("cineast.json");
-            parse(fin);
-            fin.close();
-        } catch (IOException e) {
-            LOGGER.error("an error occurred while reading the config file: {}", e.getMessage());
-        }
-    }
-
-    public static void setDatabaseConfig(JsonObject obj) {
-        try {
-            databaseConfig = DatabaseConfig.parse(obj);
-        } catch (UnsupportedOperationException | IllegalArgumentException | NullPointerException e) {
-            LOGGER.warn("could not parse 'database' config: {}", e.getMessage());
-        }
-    }
-
-    public static void setRetriverConfig(JsonObject obj) {
-        try {
-            retrieverConfig = RetrieverConfig.parse(obj);
-        } catch (UnsupportedOperationException | IllegalArgumentException | NullPointerException e) {
-            LOGGER.warn("could not parse 'retriever' config: {}", e.getMessage());
-        }
-    }
-
-    public static void setDecoderConfig(JsonObject obj) {
-        try {
-            decoderConfig = DecoderConfig.parse(obj);
-        } catch (UnsupportedOperationException | IllegalArgumentException | NullPointerException e) {
-            LOGGER.warn("could not parse 'decoder' config: {}", e.getMessage());
-        }
-    }
-
-    public static void setExtractorConfig(JsonObject obj) {
-        try {
-            extractorConfig = ExtractorConfig.parse(obj);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            LOGGER.warn("could not parse 'extractor' config: {}", e.getMessage());
-        }
-    }
-
-    public static void setImagecacheConfig(JsonObject obj) {
-        try {
-            imageCacheConfig = ImageCacheConfig.parse(obj);
-        } catch (UnsupportedOperationException | IllegalArgumentException | NullPointerException e) {
-            LOGGER.warn("could not parse 'imagecache' config: {}", e.getMessage());
-        }
-    }
-
-    public static void setNeuralNetConfig(JsonObject obj) {
-        try {
-            neuralNetConfig = NeuralNetConfig.parse(obj);
-        } catch (UnsupportedOperationException | IllegalArgumentException | NullPointerException e) {
-            LOGGER.warn("could not parse 'neuralnet' config: {}", e.getMessage());
-        }
-    }
-
-    public static void setVisualizationConfig(JsonObject obj) {
-        try {
-            visualizationConfig = VisualizationConfig.parse(obj);
-        } catch (UnsupportedOperationException | IllegalArgumentException | NullPointerException e) {
-            LOGGER.warn("could not parse 'visualization' config: {}", e.getMessage());
-        }
-    }
-
-    private static void parse(InputStream in) throws IOException {
-        JsonObject obj = null;
-        try {
-            obj = JsonValue.readFrom(new InputStreamReader(in)).asObject();
-        } catch (UnsupportedOperationException e) {
-            LOGGER.error("config file is not valid json");
-            return;
-        }
-
-        for (String name : obj.names()) {
-            switch (name.toLowerCase()) {
-                case "database": {
-                    setDatabaseConfig(obj.get("database").asObject());
-                    break;
-                }
-                case "retriever": {
-                    setRetriverConfig(obj.get("retriever").asObject());
-                    break;
-                }
-                case "decoder": {
-                    setDecoderConfig(obj.get("decoder").asObject());
-                    break;
-                }
-                case "extractor": {
-                    setExtractorConfig(obj.get("extractor").asObject());
-                    break;
-                }
-                case "imagecache": {
-                    setImagecacheConfig(obj.get("imagecache").asObject());
-                    break;
-                }
-                case "neuralnet": {
-                    setNeuralNetConfig(obj.get("neuralnet").asObject());
-                    break;
-                }
-                case "visualization": {
-                    setVisualizationConfig(obj.get("visualization").asObject());
-                    break;
-                }
-                case "api": {
-                    try {
-                        apiConfig = APIConfig.parse(obj.get("api").asObject());
-                    } catch (UnsupportedOperationException | IllegalArgumentException | NullPointerException e) {
-                        LOGGER.warn("could not parse 'api' config: {}", e.getMessage());
-                    }
-                    break;
-                }
-                default: {
-                    LOGGER.info("unrecognized parameter in config: {}, ignoring", name);
-                }
-            }
-        }
-
-    }
-
 
     public static final UUID UNIQUE_ID = UUID.randomUUID();
 
+    private static Config sharedConfig;
+
+    private APIConfig api;
+    private DatabaseConfig database;
+    private RetrieverConfig retriever;
+    private DecoderConfig decoder;
+    private ExtractorConfig extractor;
+    private ImageCacheConfig imagecache;
+    private VisualizationConfig visualization;
+    private NeuralNetConfig neuralnet;
+    private QueryConfig query = (new QueryConfig()).setDistance(QueryConfig.Distance.manhattan); //FIXME remove as soon as chisquared distance works again;
+
     /**
-     * Returns the {@link ImageCacheConfig} as specified in the config file. If nothing is specified in the configuration file, the default values are returned, see {@link ImageCacheConfig#ImageMemoryConfig()}
+     * Accessor for shared (i.e. application wide) configuration.
+     *
+     * @return Currently shared instance of Config.
+     */
+    public synchronized static Config sharedConfig() {
+        if (sharedConfig == null) loadConfig("cineast.json");
+        return sharedConfig;
+    }
+
+    /**
+     * Loads a config file and thereby replaces the shared instance of the Config.
+     *
+     * @param name Name of the config file.
+     */
+    public static synchronized void loadConfig(String name) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            LOGGER.info("Config file loaded!");
+            sharedConfig = mapper.readValue(new File("cineast.json"), Config.class);
+        } catch (FileNotFoundException e) {
+            LOGGER.warn("Config file '" + name + "' not found.");
+        } catch (IOException e) {
+            LOGGER.warn("Could not read config file '" + name + "'.");
+        }
+    }
+
+    @JsonProperty
+    public APIConfig getApi() {
+        return api;
+    }
+    public void setApi(APIConfig api) {
+        this.api = api;
+    }
+
+    @JsonProperty
+    public DatabaseConfig getDatabase() {
+        return database;
+    }
+    public void setDatabase(DatabaseConfig database) {
+        this.database = database;
+    }
+
+    @JsonProperty
+    public RetrieverConfig getRetriever() {
+        return retriever;
+    }
+    public void setRetriever(RetrieverConfig retriever) {
+        this.retriever = retriever;
+    }
+
+    @JsonProperty
+    public DecoderConfig getDecoder() {
+        return decoder;
+    }
+    public void setDecoder(DecoderConfig decoder) {
+        this.decoder = decoder;
+    }
+
+    @JsonProperty
+    public ExtractorConfig getExtractor() {
+        return extractor;
+    }
+    public void setExtractor(ExtractorConfig extractor) {
+        this.extractor = extractor;
+    }
+
+    @JsonProperty
+    public ImageCacheConfig getImagecache() {
+        return imagecache;
+    }
+    public void setImagecache(ImageCacheConfig imagecache) {
+        this.imagecache = imagecache;
+    }
+
+    @JsonProperty
+    public VisualizationConfig getVisualization() {
+        return visualization;
+    }
+    public void setVisualization(VisualizationConfig visualization) {
+        this.visualization = visualization;
+    }
+
+    @JsonProperty
+    public NeuralNetConfig getNeuralnet() {
+        return this.neuralnet;
+    }
+    public void setNeuralnet(NeuralNetConfig neuralnet) {
+        this.neuralnet = neuralnet;
+    }
+
+    @JsonProperty
+    public QueryConfig getQuery() {
+        return query;
+    }
+    public void setQuery(QueryConfig query) {
+        this.query = query;
+    }
+
+    /**
+     * Returns the {@link ImageCacheConfig} as specified in the config file. If nothing is specified in the configuration file, the default values are returned, see {@link ImageCacheConfig}
      * @return
      */
     public static ImageCacheConfig getImageMemoryConfig() {
-        return imageCacheConfig;
+        return sharedConfig().imagecache;
     }
 
     public static ExtractorConfig getExtractorConfig() {
-        return extractorConfig;
+        return  sharedConfig().extractor;
     }
 
     public static RetrieverConfig getRetrieverConfig() {
-        return retrieverConfig;
+        return  sharedConfig().retriever;
     }
 
     public static DecoderConfig getDecoderConfig() {
-        return decoderConfig;
+        return  sharedConfig().decoder;
     }
 
     public static APIConfig getApiConfig() {
-        return apiConfig;
+        return  sharedConfig().api;
     }
 
     public static DatabaseConfig getDatabaseConfig() {
-        return databaseConfig;
+        return  sharedConfig().database;
     }
 
     public static QueryConfig getQueryConfig() {
-        return queryConfig;
+        return sharedConfig().query;
     }
 
     public static NeuralNetConfig getNeuralNetConfig() {
-        return neuralNetConfig;
+        return sharedConfig().neuralnet;
     }
 
     public static VisualizationConfig getVisualizationConfig() {
-        return visualizationConfig;
+        return sharedConfig().visualization;
     }
 }

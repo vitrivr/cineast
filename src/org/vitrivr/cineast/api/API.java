@@ -22,6 +22,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.api.rest.RestfulAPI;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
@@ -57,7 +58,7 @@ public class API {
 		CommandLine commandline = handleCommandLine(args);
 		
 		if(commandline.hasOption("config")){
-			Config.parse(new File(commandline.getOptionValue("config")));
+			Config.loadConfig(commandline.getOptionValue("config"));
 		}
 		
 		boolean disableAllAPI = false;
@@ -78,6 +79,10 @@ public class API {
 			APICLIThread cli = new APICLIThread();
 			cli.start();
 		}
+
+		/* if (!disableAllAPI && Config.getApiConfig().getEnableRestAPI()) {
+			(new RestfulAPI(4567)).start();
+		} */
 		
 		if(!disableAllAPI && Config.getApiConfig().getEnableJsonAPI()){
 			try {

@@ -5,7 +5,6 @@ import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import java.util.Optional;
 
 public class QueryConfig {
-
 	public static enum Distance{
 		chisquared, correlation, cosine, hamming, jaccard, kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, minkowski, spannorm
 	}
@@ -32,25 +31,18 @@ public class QueryConfig {
 	public Optional<NeuralNet> getNet() {
 		return Optional.ofNullable(this.net);
 	}
-
 	public void setNet(NeuralNet net) {
 		this.net = net;
 	}
 
 	public Optional<Float> getCutoff() { return Optional.ofNullable(Float.isNaN(classificationCutoff) ? null : classificationCutoff);}
+	public void setClassificationCutoff(float classificationCutoff) {
+		this.classificationCutoff = classificationCutoff;
+	}
 
 	public Optional<Distance> getDistance(){
 		return Optional.ofNullable(this.distance);
 	}
-	
-	public Optional<float[]> getDistanceWeights(){
-		return Optional.ofNullable(this.distanceWeights);
-	}
-	
-	public Optional<Float> getNorm(){
-		return Optional.ofNullable(Float.isNaN(norm) ? null : norm);
-	}
-	
 	public QueryConfig setDistance(Distance distance){
 		this.distance = distance;
 		if(distance == Distance.euclidean){
@@ -64,26 +56,17 @@ public class QueryConfig {
 		}
 		return this;
 	}
-	
-	public QueryConfig setDistanceIfEmpty(Distance distance){
-	  if(this.distance == null){
-	    return setDistance(distance);
-	  }
-	  return this;
+	public Optional<float[]> getDistanceWeights(){
+		return Optional.ofNullable(this.distanceWeights);
 	}
-	
 	public QueryConfig setDistanceWeights(float[] weights){
 		this.distanceWeights = weights;
 		return this;
 	}
-	
-	public QueryConfig setDistanceWeightsIfEmpty(float[] weights){
-	  if(this.distanceWeights == null){
-	    return setDistanceWeights(weights);
-	  }
-	  return this;
+
+	public Optional<Float> getNorm(){
+		return Optional.ofNullable(Float.isNaN(norm) ? null : norm);
 	}
-	
 	public QueryConfig setNorm(float norm){
 		this.norm = norm;
 		if(Math.abs(norm - 2f) < 1e6f){
@@ -96,11 +79,25 @@ public class QueryConfig {
 		return this;
 	}
 	
-	public QueryConfig setNormIfEmty(float norm){
-	  if(Float.isNaN(this.norm)){
-	    return setNorm(norm);
+	public QueryConfig setDistanceIfEmpty(Distance distance){
+	  if(this.distance == null){
+	    return setDistance(distance);
 	  }
 	  return this;
+	}
+
+	public QueryConfig setDistanceWeightsIfEmpty(float[] weights){
+	  if(this.distanceWeights == null){
+	    return setDistanceWeights(weights);
+	  }
+	  return this;
+	}
+
+	public QueryConfig setNormIfEmty(float norm){
+		if(Float.isNaN(this.norm)){
+			return setNorm(norm);
+		}
+		return this;
 	}
 	
 	public QueryConfig clone(){

@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.config;
 
 import com.eclipsesource.json.JsonObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactory;
 import org.vitrivr.cineast.core.features.neuralnet.classification.tf.VGG16Net;
@@ -13,18 +15,20 @@ import org.vitrivr.cineast.core.features.neuralnet.classification.tf.VGG16Net;
  */
 public class NeuralNetConfig {
 
-    private final String modelPath;
-    private final float cutoff;
-    private final NeuralNetFactory neuralNetFactory;
-    private final String labelPath;
+    private static final String DEFAULT_MODEL_PATH = "resources/vgg16/vgg16.tfmodel";
+    private static final float DEFAULT_CUTOFF = 0.2f;
+    private static final String DEFAULT_LABEL_PATH = "resources/vgg16/synset.txt";
+    private static final String DEFAULT_CONCEPT_PATH = "resources/classes.csv";
+    private static final NeuralNetFactory DEFAULT_NEURAL_NET_FACTORY = () -> new VGG16Net(DEFAULT_MODEL_PATH, DEFAULT_LABEL_PATH);
+
+    private String modelPath;
+    private float cutoff;
+    private NeuralNetFactory neuralNetFactory;
+    private String labelPath;
     private String conceptsPath;
 
-    public static final String DEFAULT_MODEL_PATH = "resources/vgg16/vgg16.tfmodel";
-    public static final float DEFAULT_CUTOFF = 0.2f;
-    public static final String DEFAULT_LABEL_PATH = "resources/vgg16/synset.txt";
-    public static final String DEFAULT_CONCEPT_PATH = "resources/classes.csv";
-    public static final NeuralNetFactory DEFAULT_NEURAL_NET_FACTORY = () -> new VGG16Net(DEFAULT_MODEL_PATH, DEFAULT_LABEL_PATH);
 
+    @JsonCreator
     NeuralNetConfig() {
         this(DEFAULT_MODEL_PATH, DEFAULT_CUTOFF, DEFAULT_NEURAL_NET_FACTORY, DEFAULT_LABEL_PATH, DEFAULT_CONCEPT_PATH);
     }
@@ -37,23 +41,43 @@ public class NeuralNetConfig {
         this.conceptsPath = conceptsPath;
     }
 
+    @JsonProperty
     public String getModelPath() {
         return modelPath;
     }
+    public void setModelPath(String modelPath) {
+        this.modelPath = modelPath;
+    }
 
+    @JsonProperty
     public float getCutoff() {
         return cutoff;
     }
+    public void setCutoff(float cutoff) {
+        this.cutoff = cutoff;
+    }
 
+    @JsonProperty
     public NeuralNetFactory getNeuralNetFactory() {
         return neuralNetFactory;
     }
+    public void setNeuralNetFactory(NeuralNetFactory neuralNetFactory) {
+        this.neuralNetFactory = neuralNetFactory;
+    }
 
+    @JsonProperty
     public String getLabelPath() {
         return labelPath;
     }
+    public void setLabelPath(String labelPath) {
+        this.labelPath = labelPath;
+    }
 
+    @JsonProperty
     public String getConceptPath(){return conceptsPath;}
+    public void setConceptsPath(String conceptsPath) {
+        this.conceptsPath = conceptsPath;
+    }
 
     public static NeuralNetConfig parse(JsonObject obj) {
         if (obj == null) {

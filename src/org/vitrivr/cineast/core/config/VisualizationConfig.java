@@ -3,6 +3,8 @@ package org.vitrivr.cineast.core.config;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.*;
@@ -14,13 +16,16 @@ import java.util.*;
 
 public final class VisualizationConfig {
 
-  private final HashMap<String, List<Class<? extends Visualization>>> visualizationCategories;
-  private final String cachePath;
-  private final boolean cacheEnabled;
+
+  private static final String DEFAULT_CACHE_PATH = "cache/art/";
+  private static final HashMap<String, List<Class<? extends Visualization>>> DEFAULT_VISUALIZATION_CATEGORIES = new HashMap<>();
+  private static final boolean DEFAULT_CACHE_ENABLED = true;
+
+  private HashMap<String, List<Class<? extends Visualization>>> visualizationCategories;
+  private String cachePath;
+  private boolean cacheEnabled;
   
-  public static final String DEFAULT_CACHE_PATH = "cache/art/";
-  public static final HashMap<String, List<Class<? extends Visualization>>> DEFAULT_VISUALIZATION_CATEGORIES = new HashMap<>();
-  public static final boolean DEFAULT_CACHE_ENABLED = true;
+
   
   private static Logger LOGGER = LogManager.getLogger();
 
@@ -80,14 +85,9 @@ public final class VisualizationConfig {
     DEFAULT_VISUALIZATION_CATEGORIES.put("featureRevert", list);
   }
 
+  @JsonCreator
   public VisualizationConfig() {
-    this(DEFAULT_VISUALIZATION_CATEGORIES, DEFAULT_CACHE_PATH, DEFAULT_CACHE_ENABLED);
-  }
 
-  public VisualizationConfig(HashMap<String, List<Class<? extends Visualization>>> visualizationCategories, String cachePath, boolean cacheEnabled) {
-    this.visualizationCategories = visualizationCategories;
-    this.cachePath = cachePath;
-    this.cacheEnabled = cacheEnabled;
   }
 
   public List<Class<? extends Visualization>> getVisualizations() {
@@ -97,13 +97,20 @@ public final class VisualizationConfig {
     }
     return _return;
   }
-
-  public String getVisualizationCachePath(){
+  @JsonProperty
+  public String getCachePath() {
     return cachePath;
   }
+  public void setCachePath(String cachePath) {
+    this.cachePath = cachePath;
+  }
 
-  public boolean getCacheEnabled(){
+  @JsonProperty
+  public boolean isCacheEnabled() {
     return cacheEnabled;
+  }
+  public void setCacheEnabled(boolean cacheEnabled) {
+    this.cacheEnabled = cacheEnabled;
   }
 
   public boolean isValidVisualization(Class vizClass) {
@@ -126,88 +133,5 @@ public final class VisualizationConfig {
     ArrayList<String> _return = new ArrayList<>(keys.size());
     _return.addAll(keys);
     return _return;
-  }
-
-  public static VisualizationConfig parse(JsonObject obj) {
-    if (obj == null) {
-      throw new NullPointerException("JsonObject was null");
-    }
-
-    HashMap<String, List<Class<? extends Visualization>>> _visualizationCategories = DEFAULT_VISUALIZATION_CATEGORIES;
-    boolean _cacheEnabled = DEFAULT_CACHE_ENABLED;
-    String _cachePath = DEFAULT_CACHE_PATH;
-
-    if(obj.get("visualizations") != null){
-      try{
-        JsonObject visualizations = obj.get("visualizations").asObject();
-        HashMap<String, List<DoublePair<Class<Visualization>>>> map = new HashMap<>();
-        for(String category : visualizations.names()){
-          try{
-            HashSet<Class<Visualization>> set = parseVisualizationCategory(visualizations.get(category).asArray());
-            for (Class<Visualization> vizClass : set) {
-              LOGGER.info(vizClass.getName()+" | category: "+category);
-            }
-            map.put(category, new ArrayList(set));
-          }catch(UnsupportedOperationException notAnArray){
-            throw new IllegalArgumentException("not an array in visualization config > visualizers > " + category);
-          }
-        }
-      }catch(UnsupportedOperationException notAnObject){
-        throw new IllegalArgumentException("'visualization' was not an object in retriever configuration");
-      }
-    }
-
-    if (obj.get("cachePath") != null) {
-      try {
-        _cachePath = obj.get("cachePath").asString();
-      } catch (UnsupportedOperationException e) {
-        throw new IllegalArgumentException("'cachePath' was not a String in API configuration");
-      }
-    }
-
-    if (obj.get("cacheEnabled") != null) {
-      try {
-        _cacheEnabled= obj.get("cacheEnabled").asBoolean();
-      } catch (UnsupportedOperationException e) {
-        throw new IllegalArgumentException("'cacheEnabled' was not a String in API configuration");
-      }
-    }
-
-    return new VisualizationConfig(_visualizationCategories,_cachePath, _cacheEnabled);
-  }
-
-  private static HashSet<Class<Visualization>> parseVisualizationCategory(JsonArray jarr){
-    if(jarr == null){
-      return null;
-    }
-
-    HashSet<Class<Visualization>> classes = new HashSet<>(); //for de-duplication
-
-    for(JsonValue jval : jarr){
-      try{
-        JsonObject jobj = jval.asObject();
-        if(jobj.get("visualization") == null){
-          continue;
-        }
-        Class<Visualization> c = null;
-        try {
-          c = ReflectionHelper.getClassFromJson(jobj.get("visualization").asObject(), Visualization.class, ReflectionHelper.FEATURE_MODULE_PACKAGE);
-        } catch (IllegalArgumentException | ClassNotFoundException | InstantiationException | UnsupportedOperationException e) {
-          //ignore at this point
-        }
-
-        if(c == null || classes.contains(c)){
-          continue;
-        }
-
-        classes.add(c);
-
-      }catch(UnsupportedOperationException notAnObject){
-        org.jcodec.common.logging.Logger.warn("entry in feature list was not an object, ignoring");
-      }
-    }
-
-
-    return classes;
   }
 }
