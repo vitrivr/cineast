@@ -10,6 +10,7 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
@@ -85,10 +86,7 @@ public class MultimediaObjectLookup {
       LOGGER.info("Duration is a double, returning valid Multimediadescriptor");
     }
 
-    return new MultimediaObjectDescriptor(idProvider.getString(), nameProvider.getString(),
-        pathProvider.getString(), typeProvider.getInt(), widthProvider.getInt(),
-        heightProvider.getInt(), framecountProvider.getInt(), (float) durationProvider.getDouble(),
-        true);
+    return new MultimediaObjectDescriptor(idProvider.getString(), nameProvider.getString(), pathProvider.getString(), MediaType.fromId(typeProvider.getInt()), true);
 
   }
 
@@ -132,7 +130,7 @@ public class MultimediaObjectLookup {
 
     for (Map<String, PrimitiveTypeProvider> map : results) {
       MultimediaObjectDescriptor d = mapToDescriptor(map);
-      _return.put(d.getId(), d);
+      _return.put(d.getObjectId(), d);
     }
 
     return _return;
@@ -154,7 +152,7 @@ public class MultimediaObjectLookup {
 
     for (Map<String, PrimitiveTypeProvider> map : results) {
       MultimediaObjectDescriptor d = mapToDescriptor(map);
-      _return.put(d.getId(), d);
+      _return.put(d.getObjectId(), d);
     }
 
     return _return;

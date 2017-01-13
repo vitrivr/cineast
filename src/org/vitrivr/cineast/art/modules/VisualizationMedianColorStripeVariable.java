@@ -42,7 +42,7 @@ public class VisualizationMedianColorStripeVariable extends AbstractVisualizatio
     int[] colors = new int[segments.size()];
     int[] widths = new int[segments.size()];
     for (SegmentDescriptor segment : segments) {
-      widths[count] = (segment.getEndFrame() - segment.getStartFrame()) / 10 + 1;
+      widths[count] = (segment.getEnd() - segment.getStart()) / 10 + 1;
       totalWidth += widths[count];
       float[] arr = featureData.get(count).get("feature").getFloatArray();
       for (int i = 0; i < 8; i++) {

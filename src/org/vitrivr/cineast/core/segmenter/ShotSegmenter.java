@@ -90,10 +90,10 @@ public class ShotSegmenter implements SegmentProvider{
 		
 		SegmentDescriptor bounds = this.knownShotBoundaries.size() > 0 ? this.knownShotBoundaries.remove(0) : null;
 		
-		if (bounds != null && frame.getId() >= bounds.getStartFrame() && frame.getId() <= bounds.getEndFrame()){
+		if (bounds != null && frame.getId() >= bounds.getStart() && frame.getId() <= bounds.getEnd()){
 			
 			_return.addFrame(frame);
-			queueFrames(bounds.getEndFrame() - bounds.getStartFrame());
+			queueFrames(bounds.getEnd() - bounds.getStart());
 			do{
 				frame = this.frameQueue.poll();
 				if(frame != null){
@@ -102,7 +102,7 @@ public class ShotSegmenter implements SegmentProvider{
 					break;
 				}
 				
-			}while(frame.getId() < bounds.getEndFrame());
+			}while(frame.getId() < bounds.getEnd());
 			
 			_return.setShotId(bounds.getSegmentId());
 			addSubtitleItems(_return);

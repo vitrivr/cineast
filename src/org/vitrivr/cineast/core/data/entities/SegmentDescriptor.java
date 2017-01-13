@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.Shot;
 
@@ -10,53 +12,61 @@ import org.vitrivr.cineast.core.data.Shot;
  */
 public class SegmentDescriptor implements ExistenceCheck {
 
-    private final String segmentId, mmobjId;
-    private final int startFrame, endFrame, number;
+    private final String segmentId, objectId;
+    private final int start, end, number;
     private final boolean exists;
 
-    private SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber, int startFrame, int endFrame, boolean exists) {
+    private SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber, int start, int end, boolean exists) {
         this.segmentId = segmentId;
-        this.mmobjId = multimediaObjectId;
+        this.objectId = multimediaObjectId;
         this.number = segmentNumber;
-        this.startFrame = startFrame;
-        this.endFrame = endFrame;
+        this.start = start;
+        this.end = end;
         this.exists = exists;
     }
 
-    public SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber, int startFrame, int endFrame) {
-        this(multimediaObjectId, segmentId, segmentNumber, startFrame, endFrame, true);
-    }
-
-    public SegmentDescriptor(String videoId, int segmentNumber, int startFrame, int endFrame) {
-        this(videoId, Shot.generateShotID(videoId, segmentNumber), segmentNumber, startFrame, endFrame, true);
+    public SegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end) {
+        this(objectId, segmentId, segmentNumber, start, end, true);
     }
 
     public SegmentDescriptor() {
         this("", "", 0, 0, 0, false);
     }
 
+    @JsonProperty
     public String getSegmentId() {
-        return segmentId;
+        return this.segmentId;
     }
 
-    public String getVideoId() {
-        return mmobjId;
+    @JsonProperty
+    public String getObjectId() {
+        return this.objectId;
     }
 
+    @JsonProperty
     public int getSequenceNumber() {
         return this.number;
     }
 
-    public int getFramecount() {
-        return endFrame - startFrame + 1;
+    @JsonProperty
+    public int getCount() {
+        return end - start + 1;
     }
 
-    public int getStartFrame() {
-        return startFrame;
+    @JsonProperty
+    public int getStart() {
+        return start;
     }
 
-    public int getEndFrame() {
-        return endFrame;
+    @JsonProperty
+    public int getEnd() {
+        return end;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean exists() {
+        return this.exists;
     }
 
     @Override
@@ -64,9 +74,5 @@ public class SegmentDescriptor implements ExistenceCheck {
         return "SegmentDescriptor(" + segmentId + ")";
     }
 
-    @Override
-    public boolean exists() {
-        return this.exists;
-    }
 
 }

@@ -110,7 +110,7 @@ public class ExtractionJobRunner implements Runnable{
 		  MultimediaObjectDescriptor descriptor = lookup.lookUpObjectByName(inputName);
 		  if(descriptor.exists()){
 		    this.entryExists = true;
-		    this.inputId = descriptor.getId();
+		    this.inputId = descriptor.getObjectId();
 		    LOGGER.info("using id '{}' provided by database", this.inputId);
 		  }else{//TODO get id from external provider depending on database setting
 		    LOGGER.error("No id specified");
@@ -129,7 +129,7 @@ public class ExtractionJobRunner implements Runnable{
 		  if(descriptor.exists()){
 		    this.entryExists = true;
 		    if(!descriptor.getName().equals(this.inputName)){
-		      LOGGER.error("There exists a multimedia object with id '{}' with name '{}' which is different from the specified name '{}'", descriptor.getId(), descriptor.getName(), this.inputName);
+		      LOGGER.error("There exists a multimedia object with id '{}' with name '{}' which is different from the specified name '{}'", descriptor.getObjectId(), descriptor.getName(), this.inputName);
 		      lookup.close();
 		      return false;
 		    }
@@ -161,7 +161,7 @@ public class ExtractionJobRunner implements Runnable{
 			LOGGER.error("could not parse job config entry, entry was null");
 			return;
 		}
-		
+
 		switch(entryName.toLowerCase()){
 		
 			case "input":{
@@ -198,23 +198,23 @@ public class ExtractionJobRunner implements Runnable{
 				break;
 			}
 			case "database":{
-				Config.setDatabaseConfig(configEntry.asObject());
+				//TODO Config.setDatabaseConfig(configEntry.asObject());
 				break;
 			}
 			case "retriever":{
-				Config.setRetriverConfig(configEntry.asObject());
+				//TODO Config.setRetriverConfig(configEntry.asObject());
 				break;
 			}
 			case "decoder":{
-				Config.setDecoderConfig(configEntry.asObject());
+				//TODO Config.setDecoderConfig(configEntry.asObject());
 				break;
 			}
 			case "extractor":{
-				Config.setExtractorConfig(configEntry.asObject());
+				//TODO Config.setExtractorConfig(configEntry.asObject());
 				break;
 			}
 			case "imagecache":{
-				Config.setImagecacheConfig(configEntry.asObject());
+				//TODO Config.setImagecacheConfig(configEntry.asObject());
 				break;
 			}
 		

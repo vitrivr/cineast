@@ -7,6 +7,7 @@ import georegression.struct.point.Point2D_F32;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.QueryContainer;
@@ -229,7 +230,7 @@ public class JSONUtils {
 		  if(sd == null){
 		    continue;
 		  }
-			videoIds.add(sd.getVideoId());
+			videoIds.add(sd.getObjectId());
 		}
 		
 		String[] vids = new String[videoIds.size()];
@@ -250,12 +251,12 @@ public class JSONUtils {
 //			String shotid = resultlist.get(i).key;
 //			ShotDescriptor descriptor = sl.lookUpShot(shotid);
 //			
-//			if(videoids.contains(descriptor.getVideoId())){
+//			if(videoids.contains(descriptor.getObjectId())){
 //				continue;
 //			}
-//			videoids.add(descriptor.getVideoId());
+//			videoids.add(descriptor.getObjectId());
 //			
-//			vdList.add(vl.lookUpVideo(descriptor.getVideoId()));	
+//			vdList.add(vl.lookUpVideo(descriptor.getObjectId()));
 //			
 //		}
 		

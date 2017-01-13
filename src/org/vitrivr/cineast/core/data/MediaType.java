@@ -7,7 +7,10 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 
 public enum MediaType {
 
-  VIDEO(0, "v", "video");
+  VIDEO(0, "v", "video"),
+  IMAGE(1, "i", "image"),
+  AUDIO(2, "a", "audio"),
+  MODEL3D(3, "m", "3dmodel");
 
   private final int id;
   private final String prefix, name;

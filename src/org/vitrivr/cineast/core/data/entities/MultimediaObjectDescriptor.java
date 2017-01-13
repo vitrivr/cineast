@@ -1,84 +1,88 @@
 package org.vitrivr.cineast.core.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
+import org.vitrivr.cineast.core.data.MediaType;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 10.01.17
  */
+
+/* TODO: Review with Luca. */
 public class MultimediaObjectDescriptor implements ExistenceCheck {
     private final String objectId;
-    private final int width, height, framecount, type;
-    private final float seconds;
     private final String name, path;
     private final boolean exists;
+    private final int mediatypeId;
 
+    @Deprecated
     public static MultimediaObjectDescriptor makeVideoDescriptor(String objectId, String name, String path, int width, int height, int framecount, float duration) {
-      return new MultimediaObjectDescriptor(objectId, name, path, 0, width, height, framecount, duration, true);
+      return new MultimediaObjectDescriptor(objectId, name, path, MediaType.VIDEO, true);
     }
 
+    @Deprecated
     public static MultimediaObjectDescriptor makeImageDescriptor(String objectId, String name, String path, int width, int height) {
-      return new MultimediaObjectDescriptor(objectId, name, path, 1, width, height, 1, 0, true);
+      return new MultimediaObjectDescriptor(objectId, name, path, MediaType.IMAGE, true);
     }
 
-    public MultimediaObjectDescriptor(String objectId, String name, String path, int type, int width, int height, int framecount, float duration, boolean exists) {
+    public static MultimediaObjectDescriptor makeMultimediaDescriptor(String objectId, String name, String path, MediaType type) {
+        return new MultimediaObjectDescriptor(objectId, name, path, type, true);
+    }
+
+    /**
+     * Default constructor for an empty MultimediaObjectDescriptor.
+     */
+    public MultimediaObjectDescriptor() {
+        this("", "", "", MediaType.VIDEO, false);
+    }
+
+    /**
+     * Default constructor for an empty MultimediaObjectDescriptor.
+     */
+    public MultimediaObjectDescriptor(String objectId, String name, String path, MediaType mediatypeId, boolean exists) {
       this.objectId = objectId;
       this.name = name;
       this.path = path;
-      this.type = type;
-      this.width = width;
-      this.height = height;
-      this.framecount = framecount;
-      this.seconds = duration;
+      this.mediatypeId = mediatypeId.getId();
       this.exists = exists;
     }
 
-
-    /* TODO: @Ralph - Reiview and refactor. Move unnecessary attributes to MultimediaMetadataDescriptor. */
-    public MultimediaObjectDescriptor() {
-      this("", "", "", 0, 0, 0, 0, 0, false);
-    }
-
-    public String getId() {
+    @JsonProperty
+    public final String getObjectId() {
       return objectId;
     }
 
-    public int getWidth() {
-      return width;
-    }
-
-    public int getHeight() {
-      return height;
-    }
-
-    public int getFramecount() {
-      return framecount;
-    }
-
-    public float getSeconds() {
-      return seconds;
-    }
-
-    public String getName() {
+    @JsonProperty
+    public final String getName() {
       return name;
     }
 
-    public String getPath() {
+    @JsonProperty
+    public final String getPath() {
       return path;
     }
 
-    public float getFPS() {
-      return this.framecount / this.seconds;
+    @JsonProperty
+    public final MediaType getMediatype() {
+        return MediaType.fromId(this.mediatypeId);
+    }
+
+    @JsonIgnore
+    public final int getMediatypeId() {
+        return this.mediatypeId;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean exists() {
+        return this.exists;
     }
 
     @Override
     public String toString() {
       return "MultimediaObjectDescriptor(" + objectId + ")";
-    }
-
-    @Override
-    public boolean exists() {
-      return this.exists;
     }
 }
