@@ -189,25 +189,4 @@ public class Shot implements SegmentContainer{
 		return this.tags;
 	}
 	
-	/**
-	 * generates a shot id of the form v_(videoid)_(shot sequence numer)
-	 * @param videoId the globally unique id of the video
-	 * @param shotNumber the number of the shot within the video
-	 * @throws IllegalArgumentException if shot sequence number is negative
-	 * @throws NullPointerException if videoid is null
-	 */
-	public static final String generateShotID(String videoId, long shotNumber) throws IllegalArgumentException, NullPointerException{
-		if(shotNumber < 0){
-			throw new IllegalArgumentException("shotnumber must be non-negative");
-		}
-		if(videoId == null){
-			throw new NullPointerException("video id cannot be null");
-		}
-		StringBuilder builder = new StringBuilder();
-		builder.append(videoId);
-		builder.append('_');
-		builder.append(shotNumber);
-		return builder.toString();
-	}
-	
 }

@@ -2,8 +2,9 @@ package org.vitrivr.cineast.core.segmenter;
 
 import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.Histogram;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.Shot;
-import org.vitrivr.cineast.core.data.providers.ShotProvider;
+import org.vitrivr.cineast.core.data.providers.SegmentProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
@@ -16,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ShotSegmenter implements ShotProvider{
+public class ShotSegmenter implements SegmentProvider{
 	
 	private static final double THRESHOLD = 0.05;
 	private static final int PRE_QUEUE_LEN = 10;
@@ -63,7 +64,7 @@ public class ShotSegmenter implements ShotProvider{
 	
 	
 	
-	public Shot getNextShot(){
+	public Shot getNextSegment(){
 		if(this.frameQueue.isEmpty()){
 			queueFrames();
 		}
@@ -168,7 +169,7 @@ public class ShotSegmenter implements ShotProvider{
 		}
 		
 		int shotNumber = idCounter.incrementAndGet();
-		String shotId = Shot.generateShotID(movieId, shotNumber);
+		String shotId = MediaType.generateId(MediaType.VIDEO, movieId, shotNumber);
 		
 		shot.setShotId(shotId);
 		addSubtitleItems(shot);

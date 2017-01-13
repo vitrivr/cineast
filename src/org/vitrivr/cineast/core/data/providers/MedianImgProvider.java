@@ -4,6 +4,12 @@ import org.vitrivr.cineast.core.data.MultiImage;
 
 public interface MedianImgProvider {
 
-	MultiImage getMedianImg();
+  /**
+   * 
+   * @return the aggregated pixel-wise median of multiple images. By default, the {@link MultiImage}.EMPTY_MULTIIMAGE is returned.
+   */
+	public default MultiImage getMedianImg(){
+	  return MultiImage.EMPTY_MULTIIMAGE;
+	}
 	
 }

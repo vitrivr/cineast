@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StatElement;
-import org.vitrivr.cineast.core.data.providers.ShotProvider;
+import org.vitrivr.cineast.core.data.providers.SegmentProvider;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.util.DecodingError;
@@ -45,7 +45,7 @@ public class ShotDispatcher implements Runnable, ExecutionTimeCounter {
     }
   };
 
-  public ShotDispatcher(List<Extractor> extractorList, ExtractorInitializer initializer, ShotProvider provider){
+  public ShotDispatcher(List<Extractor> extractorList, ExtractorInitializer initializer, SegmentProvider provider){
 		this.extractors = extractorList;
 		Collections.shuffle(this.extractors);
 		LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(TASK_QUEUE_SIZE);

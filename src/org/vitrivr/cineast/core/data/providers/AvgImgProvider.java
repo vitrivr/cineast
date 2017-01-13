@@ -4,6 +4,12 @@ import org.vitrivr.cineast.core.data.MultiImage;
 
 public interface AvgImgProvider {
 
-	MultiImage getAvgImg();
+  /**
+   * 
+   * @return the aggregated pixel-wise average of multiple images. By default, the {@link MultiImage}.EMPTY_MULTIIMAGE is returned.
+   */
+	public default MultiImage getAvgImg(){
+	  return MultiImage.EMPTY_MULTIIMAGE;
+	}
 	
 }

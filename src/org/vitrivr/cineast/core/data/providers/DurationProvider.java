@@ -2,11 +2,19 @@ package org.vitrivr.cineast.core.data.providers;
 
 public interface DurationProvider {
 
-	int getStart();
+	public default int getStart(){
+	  return 0;
+	}
 	
-	int getEnd();
+	public default int getEnd(){
+	  return 0;
+	}
 	
-	float getRelativeStart();
+	public default float getRelativeStart(){
+	  return 0f;
+	}
 	
-	float getRelativeEnd();
+	public default float getRelativeEnd(){
+	  return 0f;
+	}
 }
