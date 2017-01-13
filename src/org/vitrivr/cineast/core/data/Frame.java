@@ -3,6 +3,8 @@ package org.vitrivr.cineast.core.data;
 
 public class Frame {
 
+  public static final Frame EMPTY_FRAME = new Frame(0, MultiImage.EMPTY_MULTIIMAGE);
+  
 	private final int id;
 	private MultiImage img;
 	
