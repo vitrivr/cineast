@@ -21,7 +21,7 @@ public final class MeshColoringUtil {
      *
      * @param mesh Mesh that needs coloring.
      */
-    public void color(Mesh mesh) {
+    public static void color(Mesh mesh) {
         List<Vector3f> vertices = mesh.getVertices();
         Vector3f center = MeshMathUtil.barycenter(mesh);
         Vector3f farthestVertex = MeshMathUtil.farthestVertex(mesh, center);
