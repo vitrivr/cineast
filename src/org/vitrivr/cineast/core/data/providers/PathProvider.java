@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.data.providers;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,8 +11,12 @@ import georegression.struct.point.Point2D_F32;
 
 public interface PathProvider {
 
-	List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths();
+	public default List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths(){
+	  return new ArrayList<>(0);
+	}
 	
-	List<Pair<Integer, LinkedList<Point2D_F32>>> getBgPaths();
+	public default List<Pair<Integer, LinkedList<Point2D_F32>>> getBgPaths(){
+	   return new ArrayList<>(0);
+	}
 	
 }
