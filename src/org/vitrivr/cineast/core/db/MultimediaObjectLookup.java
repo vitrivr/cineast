@@ -24,7 +24,7 @@ public class MultimediaObjectLookup {
 
   public MultimediaObjectLookup() {
     this.selector = Config.getDatabaseConfig().getSelectorSupplier().get();
-    this.selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
+    this.selector.open(MultimediaObjectDescriptor.ENTITY);
   }
 
   public MultimediaObjectDescriptor lookUpObjectById(String objectId) {
@@ -171,7 +171,7 @@ public class MultimediaObjectLookup {
 
   public List<MultimediaObjectDescriptor> getAllVideos() {
     DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
-    selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
+    selector.open(MultimediaObjectDescriptor.ENTITY);
     List<Map<String, PrimitiveTypeProvider>> all = selector.getAll();
     List<MultimediaObjectDescriptor> _return = new ArrayList<>(all.size());
     for (Map<String, PrimitiveTypeProvider> map : all) {
@@ -182,7 +182,7 @@ public class MultimediaObjectLookup {
 
   public List<String> lookUpVideoIds() {
     DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
-    selector.open(EntityCreator.CINEAST_MULTIMEDIAOBJECT);
+    selector.open(MultimediaObjectDescriptor.ENTITY);
     List<PrimitiveTypeProvider> ids = selector.getAll("id");
     Set<String> uniqueIds = new HashSet<>();
     for (PrimitiveTypeProvider l : ids) {

@@ -20,7 +20,7 @@ public class SegmentLookup {
 	
 	public SegmentLookup(){
 		this.selector = Config.getDatabaseConfig().getSelectorSupplier().get();
-		this.selector.open(EntityCreator.CINEAST_SEGMENT);
+		this.selector.open(SegmentDescriptor.ENTITY);
 	}
 	
 	public void close(){

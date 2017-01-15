@@ -2,7 +2,8 @@ package org.vitrivr.cineast.core.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.vitrivr.cineast.core.setup.AttributeDefinition;
+import org.vitrivr.cineast.core.data.providers.primitive.*;
+
 
 /**
  * @author rgasser
@@ -11,15 +12,16 @@ import org.vitrivr.cineast.core.setup.AttributeDefinition;
  */
 /* TODO: Review with Luca. */
 public class MultimediaMetadataDescriptor {
+    /** Name of the entity in the persistence layer. */
+    public static final String ENTITY = "cineast_metadata";
+
+    /** Field names in the persistence layer. */
+    public static final String[] FIELDNAMES = {"id", "mediatype", "name", "path", "preview", "segments"};
+
     /*
      * ID of the MultimediaObject this MultimediaMetadataDescriptor belongs to.
      */
     private final String objectId;
-
-    /*
-     * Type of the MetadataDescriptor. Corresponds to the type of the value property that has been set.
-     */
-    private final String type;
 
     /*
      * Key (name) of the metadata entry. Must NOT be unique for a given object.
@@ -27,17 +29,13 @@ public class MultimediaMetadataDescriptor {
     private final String key;
 
     /*
-     * Value properties for the different datatypes.
+     * Value of the MetadataDescriptor.
      */
-    private String str_value;
-    private Float flt_value;
-    private Double dbl_value;
-    private Integer int_value;
-    private Long lng_value;
+    private final PrimitiveTypeProvider value;
 
     /**
      * Constructor for MultimediaMetadataDescriptor. Tries to infer the type of the provided value by means of
-     * instance of. If the value is not compatible with the default types, the object's toString() method is
+     * instance of. If the value is not compatible with the default primitive types, the object's toString() method is
      * used to get a String representation.
      *
      * @param objectId ID of the MultimediaObject this MultimediaMetadataDescriptor belongs to.
@@ -48,32 +46,22 @@ public class MultimediaMetadataDescriptor {
         this.objectId = objectId;
         this.key = key;
         if (value instanceof Float) {
-            this.flt_value = (Float) value;
-            this.type = AttributeDefinition.AttributeType.DOUBLE.toString();
+            this.value = new FloatTypeProvider((Float)value);
         } else if (value instanceof Double) {
-            this.dbl_value = (Double) value;
-            this.type = AttributeDefinition.AttributeType.FLOAT.toString();
+            this.value = new DoubleTypeProvider((Double) value);
         } else if (value instanceof Integer) {
-            this.int_value = (Integer) value;
-            this.type = AttributeDefinition.AttributeType.INT.toString();
+            this.value = new IntTypeProvider((Integer) value);
         } else if (value instanceof Long) {
-            this.lng_value = (Long)value;
-            this.type = AttributeDefinition.AttributeType.LONG.toString();
+            this.value = new LongTypeProvider((Long) value);
         } else if (value instanceof String) {
-            this.str_value = (String) value;
-            this.type = AttributeDefinition.AttributeType.STRING.toString();
+            this.value = new StringTypeProvider((String) value);
         } else if (value != null) {
-            this.str_value = value.toString();
-            this.type = AttributeDefinition.AttributeType.STRING.toString();
+            this.value = new StringTypeProvider(value.toString());
         } else {
-            this.type = "EMPTY";
+            this.value = new NothingProvider();
         }
     }
-
-    /**
-     *
-     * @return
-     */
+    
     @JsonProperty
     public String getObjectId() {
         return objectId;
@@ -85,33 +73,8 @@ public class MultimediaMetadataDescriptor {
     }
 
     @JsonProperty
-    public String getType() {
-        return type;
-    }
-
-    @JsonProperty
-    public String getStringValue() {
-        return str_value;
-    }
-
-    @JsonProperty
-    public Double getDoubleValue() {
-        return dbl_value;
-    }
-
-    @JsonProperty
-    public Float getFloatValue() {
-        return flt_value;
-    }
-
-    @JsonProperty
-    public Integer getIntegerValue() {
-        return int_value;
-    }
-
-    @JsonProperty
-    public Long getLongValue() {
-        return lng_value;
+    public Object getValue() {
+        return PrimitiveTypeProvider.getObject(this.value);
     }
 }
 

@@ -1,9 +1,27 @@
 package org.vitrivr.cineast.core.setup;
 
+import java.util.HashMap;
+
 public class NoEntityCreator implements EntityCreator {
+
+  /**
+   * @param options
+   */
+  @Override
+  public boolean setup(HashMap<String, String> options) {
+    return false;
+  }
 
   @Override
   public boolean createMultiMediaObjectsEntity() {
+    return false;
+  }
+
+  /**
+   * Initialises the entity responsible for holding metadata information about multimedia objects.
+   */
+  @Override
+  public boolean createMetadataEntity() {
     return false;
   }
 

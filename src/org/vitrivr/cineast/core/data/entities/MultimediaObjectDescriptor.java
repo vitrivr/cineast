@@ -5,14 +5,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
 
+import java.io.File;
+import java.util.UUID;
+
 /**
  * @author rgasser
  * @version 1.0
  * @created 10.01.17
  */
 
-/* TODO: Review with Luca. */
+/*
+ * TODO #1: Review with Luca.
+ * TODO #2: Define whether assigning a UUID is a good approach. Alternative: Hash the path.
+ */
 public class MultimediaObjectDescriptor implements ExistenceCheck {
+
+
+    /** Name of the entity in the persistence layer. */
+    public static final String ENTITY = "cineast_multimediaobject";
+
+    /** Field names in the persistence layer. */
+    public static final String[] FIELDNAMES = {"id", "mediatype", "name", "path", "preview", "segments"};
+
     private final String objectId;
     private final String name, path;
     private final boolean exists;
@@ -30,6 +44,19 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
 
     public static MultimediaObjectDescriptor makeMultimediaDescriptor(String objectId, String name, String path, MediaType type) {
         return new MultimediaObjectDescriptor(objectId, name, path, type, true);
+    }
+
+    /**
+     * Convenience method to create a MultimediaObjectDescriptor marked as new. The method will assign
+     * a new ID to this MultimediaObjectDescriptor.
+     *
+     * @param file The File for which a new MultimediaObjectDescriptor should be created.
+     * @param type
+     * @return
+     */
+    public static MultimediaObjectDescriptor newMultimediaObjectDescriptor(File file, MediaType type) {
+        String objectId = UUID.randomUUID().toString();
+        return new MultimediaObjectDescriptor(objectId, file.getName(), file.getAbsolutePath(), type, false);
     }
 
     /**

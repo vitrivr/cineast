@@ -2,8 +2,10 @@ package org.vitrivr.cineast.core.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.vitrivr.cineast.core.data.ExistenceCheck;
-import org.vitrivr.cineast.core.data.Shot;
+
+import java.util.UUID;
 
 /**
  * @author rgasser
@@ -11,14 +13,33 @@ import org.vitrivr.cineast.core.data.Shot;
  * @created 10.01.17
  */
 public class SegmentDescriptor implements ExistenceCheck {
+    /** Name of the entity in the persistence layer. */
+    public static final String ENTITY  = "cineast_segment";
+
+    /** Field names in the persistence layer. */
+    public static final String[] FIELDNAMES = {"id", "objectId", "number", "start", "end"};
 
     private final String segmentId, objectId;
     private final int start, end, number;
     private final boolean exists;
 
-    private SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber, int start, int end, boolean exists) {
+    /**
+     * Convenience method to create a SegmentDescriptor marked as new. The method will assign
+     * a new ID to this SegmentDescriptor.
+     *
+     * @param objectId Object
+     * @param segmentNumber
+     * @param start
+     * @param end
+     * @return
+     */
+    public static SegmentDescriptor newSegmentDescriptor(String objectId, int segmentNumber, int start, int end) {
+        return new SegmentDescriptor(objectId, UUID.randomUUID().toString(), segmentNumber, start, end, false);
+    }
+
+    private SegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, boolean exists) {
         this.segmentId = segmentId;
-        this.objectId = multimediaObjectId;
+        this.objectId = objectId;
         this.number = segmentNumber;
         this.start = start;
         this.end = end;

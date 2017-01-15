@@ -2,56 +2,93 @@ package org.vitrivr.cineast.core.setup;
 
 import java.util.ArrayList;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.adampro.grpc.AdamGrpc.AttributeDefinitionMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.adampro.grpc.AdamGrpc.CreateEntityMessage;
+import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.ADAMproWrapper;
 
 import com.google.common.collect.ImmutableMap;
 
 public class ADAMproEntityCreator implements EntityCreator {
-
-	private static final Logger LOGGER = LogManager.getLogger();
+    /**
+     * Wrapper used to send messages to ADAM pro.
+     */
 	private ADAMproWrapper adampro = new ADAMproWrapper();
-	
-	/* (non-Javadoc)
-   * @see org.vitrivr.cineast.core.setup.IEntityCreator#createMultiMediaObjectsEntity()
-   */
-	@Override
-  public boolean createMultiMediaObjectsEntity(){
-		ArrayList<AttributeDefinitionMessage> attributes = new ArrayList<>(8);
-		
-		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
-		
-		attributes.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		attributes.add(builder.setName("type").setAttributetype(AttributeType.INT).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		attributes.add(builder.setName("name").setAttributetype(AttributeType.STRING).setPk(false).build());
-		attributes.add(builder.setName("path").setAttributetype(AttributeType.STRING).setPk(false).build());
-		attributes.add(builder.setName("width").setAttributetype(AttributeType.INT).setPk(false).build());
-		attributes.add(builder.setName("height").setAttributetype(AttributeType.INT).setPk(false).build());
-		attributes.add(builder.setName("framecount").setAttributetype(AttributeType.INT).setPk(false).build());
-		attributes.add(builder.setName("duration").setAttributetype(AttributeType.FLOAT).setPk(false).build());
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_MULTIMEDIAOBJECT).addAllAttributes(attributes).build();
-		
-		AckMessage ack = adampro.createEntityBlocking(message);
-		
-		if(ack.getCode() == AckMessage.Code.OK){
-			LOGGER.info("successfully created multimedia object entity");
-		}else{
-			LOGGER.error("error creating multimedia object entity: {}", ack.getMessage());
-		}
-		
-		return ack.getCode() == Code.OK;
+    /**
+    * Initialises the main entity holding information about multimedia objects in the ADAMpro
+    * storage engine.
+    */
+    @Override
+    public boolean createMultiMediaObjectsEntity(){
+        ArrayList<AttributeDefinitionMessage> attributes = new ArrayList<>(8);
+
+        AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
+
+        attributes.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        attributes.add(builder.setName("mediatype").setAttributetype(AttributeType.INT).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        attributes.add(builder.setName("name").setAttributetype(AttributeType.STRING).setPk(false).build());
+        attributes.add(builder.setName("path").setAttributetype(AttributeType.STRING).setPk(false).build());
+        attributes.add(builder.setName("preview").setAttributetype(AttributeType.INT).setPk(false).build());
+
+        CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaObjectDescriptor.ENTITY).addAllAttributes(attributes).build();
+
+        AckMessage ack = adampro.createEntityBlocking(message);
+
+        if(ack.getCode() == AckMessage.Code.OK){
+            LOGGER.info("Successfully created multimedia object entity.");
+        }else{
+            LOGGER.error("Error occurred during creation of multimedia object entity: {}", ack.getMessage());
+        }
+
+        return ack.getCode() == Code.OK;
+    }
+
+	/**
+	 * Initialises the entity responsible for holding metadata information about multimedia objects in a ADAMpro
+	 * storage.
+	 *
+	 * @see EntityCreator
+	 */
+	@Override
+	public boolean createMetadataEntity() {
+        ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
+
+        AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
+        fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName("objectId").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName("name").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName("type").setAttributetype(AttributeType.STRING).setPk(false).build());
+        fields.add(builder.setName("value_str").setAttributetype(AttributeType.STRING).setPk(false).build());
+        fields.add(builder.setName("value_dbl").setAttributetype(AttributeType.DOUBLE).setPk(false).build());
+        fields.add(builder.setName("value_flt").setAttributetype(AttributeType.FLOAT).setPk(false).build());
+        fields.add(builder.setName("value_lng").setAttributetype(AttributeType.LONG).setPk(false).build());
+        fields.add(builder.setName("value_int").setAttributetype(AttributeType.INT).setPk(false).build());
+
+        CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaMetadataDescriptor.ENTITY).addAllAttributes(fields).build();
+
+        AckMessage ack = adampro.createEntityBlocking(message);
+
+        if(ack.getCode() == AckMessage.Code.OK){
+            LOGGER.info("Successfully created metadata entity.");
+        }else{
+            LOGGER.error("Error occurred during creation of metadata entity: {}", ack.getMessage());
+        }
+
+        return ack.getCode() == Code.OK;
 	}
-	
-	/* (non-Javadoc)
-   * @see org.vitrivr.cineast.core.setup.IEntityCreator#createSegmentEntity()
-   */
+
+	/**
+	 * Initialises the entity responsible for holding information about segments of a multimedia object in the
+	 * ADAMpro storage engine.
+	 *
+	 * @see EntityCreator
+	 */
 	@Override
   public boolean createSegmentEntity(){
 		ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
@@ -59,23 +96,22 @@ public class ADAMproEntityCreator implements EntityCreator {
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
 		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		fields.add(builder.setName("multimediaobject").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		fields.add(builder.setName("sequencenumber").setAttributetype(AttributeType.INT).setPk(false).build());
-		fields.add(builder.setName("segmentstart").setAttributetype(AttributeType.INT).setPk(false).build());
-		fields.add(builder.setName("segmentend").setAttributetype(AttributeType.INT).setPk(false).build());
+		fields.add(builder.setName("objectId").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("segmentnumber").setAttributetype(AttributeType.INT).setPk(false).build());
+		fields.add(builder.setName("start").setAttributetype(AttributeType.INT).setPk(false).build());
+		fields.add(builder.setName("end").setAttributetype(AttributeType.INT).setPk(false).build());
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_SEGMENT).addAllAttributes(fields).build();
+		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(SegmentDescriptor.ENTITY).addAllAttributes(fields).build();
 		
 		AckMessage ack = adampro.createEntityBlocking(message);
 		
 		if(ack.getCode() == AckMessage.Code.OK){
-			LOGGER.info("successfully created segment entity");
+			LOGGER.info("Successfully created segment entity.");
 		}else{
-			LOGGER.error("error creating segment entity: {}", ack.getMessage());
+			LOGGER.error("Error occurred during creation of segment entity: {}", ack.getMessage());
 		}
 		
 		return ack.getCode() == Code.OK;
-		
 	}
 	
 	/* (non-Javadoc)
