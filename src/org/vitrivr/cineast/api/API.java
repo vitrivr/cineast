@@ -7,9 +7,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,10 +20,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.api.rest.RestfulAPI;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
-import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.run.ExtractionJobRunner;
@@ -71,7 +66,8 @@ public class API {
 		}
 		
 		if(commandline.hasOption("setup")){
-		  setup();
+			EntityCreator ec = Config.getDatabaseConfig().getEntityCreatorSupplier().get();
+			if (ec != null) ec.setup(new HashMap<>());
 		  return;
 		}
 		
@@ -140,55 +136,6 @@ public class API {
 		return initializer;
 	}
 	
-	private static void setup(){
-	  EntityCreator ec = Config.getDatabaseConfig().getEntityCreatorSupplier().get();
-    
-	  LOGGER.info("setting up basic entities...");
-    
-    ec.createMultiMediaObjectsEntity();
-    ec.createSegmentEntity();
-    
-    LOGGER.info("...done");
-    
-    
-    LOGGER.info("collecting retriever classes...");
-    
-    HashSet<Retriever> retrievers = new HashSet<>();
-    
-    for(String category : Config.getRetrieverConfig().getRetrieverCategories()){
-      retrievers.addAll(Config.getRetrieverConfig().getRetrieversByCategory(category).keySet());
-    }
-    
-    LOGGER.info("...done");
-    
-    Supplier<EntityCreator> supply = new Supplier<EntityCreator>() {
-      
-      @Override
-      public EntityCreator get() {
-        return ec;
-      }
-    };
-    
-    for(Retriever r : retrievers){
-      LOGGER.info("setting up " + r.getClass().getSimpleName());
-      r.initalizePersistentLayer(supply);
-    }
-    
-    
-    LOGGER.info("Initializing nn persistent layer");
-    NeuralNetFeature feature = new NeuralNetVGG16Feature(Config.getNeuralNetConfig());
-
-    feature.initalizePersistentLayer(Config.getDatabaseConfig().getEntityCreatorSupplier());
-    LOGGER.info("Initalizing writers");
-    feature.init(Config.getDatabaseConfig().getWriterSupplier());
-    feature.init(Config.getDatabaseConfig().getSelectorSupplier());
-    LOGGER.info("Filling labels");
-    feature.fillConcepts(Config.getNeuralNetConfig().getConceptsPath());
-    feature.fillLabels(new HashMap<>());
-
-    System.out.println("setup done.");
-	}
-	
 	private static final class APICLIThread extends Thread{
 		
 		@Override
@@ -230,9 +177,8 @@ public class API {
 						break;
 					}
 					case "setup": {
-						
-						setup();
-						
+						EntityCreator ec = Config.getDatabaseConfig().getEntityCreatorSupplier().get();
+						if (ec != null) ec.setup(new HashMap<>());
 						break;
 					}
 					case "exit":
