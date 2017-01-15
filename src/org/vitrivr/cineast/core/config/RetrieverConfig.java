@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import org.vitrivr.cineast.core.config.deserializers.FeatureCategoriesDeserializer;
 import org.vitrivr.cineast.core.data.DoublePair;
 import org.vitrivr.cineast.core.features.*;
 import org.vitrivr.cineast.core.features.exporter.QueryImageExporter;
