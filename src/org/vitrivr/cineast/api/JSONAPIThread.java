@@ -600,7 +600,7 @@ public class JSONAPIThread extends Thread {
 
 					JsonObject batch = new JsonObject();
 					batch.add("type", "explorative_tiles");
-					batch.add("result", response);
+					batch.add("response", response);
 					printer.print("[");
 					printer.println(batch.toString());
 					printer.print("]");
