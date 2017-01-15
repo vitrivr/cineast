@@ -4,19 +4,18 @@ import java.io.File;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.vitrivr.cineast.core.decode.video.FFMpegVideoDecoder;
 import org.vitrivr.cineast.core.decode.video.JCodecVideoDecoder;
 import org.vitrivr.cineast.core.decode.video.JLibAVVideoDecoder;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
-
-import com.eclipsesource.json.JsonObject;
 
 public final class DecoderConfig {
 
 	private int maxFrameWidth =  Integer.MAX_VALUE;
 	private int maxFrameHeight = Integer.MAX_VALUE;
 	private Decoder decoder = Decoder.FFMPEG;
-	
+
 	public static enum Decoder {
 		JCODEC,
 		JLIBAV,
