@@ -11,4 +11,9 @@ public class IntTypeProvider extends IntProviderImpl implements PrimitiveTypePro
 		return ProviderDataType.INT;
 	}
 	
+	@Override
+  public String getString() {
+    return "" + getInt();
+  }
+	
 }
