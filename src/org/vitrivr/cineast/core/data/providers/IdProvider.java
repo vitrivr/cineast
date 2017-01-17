@@ -12,4 +12,15 @@ public interface IdProvider {
     String getId();
 
     String getSuperId();
+
+    /**
+     * @return a unique id of this
+     */
+    void setId(String id);
+
+    /**
+     *
+     * @param id
+     */
+    void setSuperId(String id);
 }

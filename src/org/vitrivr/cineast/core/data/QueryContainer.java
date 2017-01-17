@@ -101,7 +101,15 @@ public class QueryContainer implements SegmentContainer {
 	public void setId(String id){
 		this.id = id;
 	}
-	
+
+	/**
+	 * @param id
+	 */
+	@Override
+	public void setSuperId(String id) {
+
+	}
+
 	public boolean hasId(){
 		return this.id != null;
 	}
