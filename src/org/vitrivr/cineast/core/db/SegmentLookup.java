@@ -43,8 +43,8 @@ public class SegmentLookup {
 
 	private SegmentDescriptor mapToDescriptor(Map<String, PrimitiveTypeProvider> map) {
 		PrimitiveTypeProvider idProvider = map.get("id");
-		PrimitiveTypeProvider mmobjidProvider = map.get("multimediaobject");
-		PrimitiveTypeProvider sequenceProvider = map.get("sequencenumber");
+		PrimitiveTypeProvider mmobjidProvider = map.get("objectId");
+		PrimitiveTypeProvider sequenceProvider = map.get("segmentnumber");
 		PrimitiveTypeProvider startProvider = map.get("segmentstart");
 		PrimitiveTypeProvider endProvider = map.get("segmentend");
 		
