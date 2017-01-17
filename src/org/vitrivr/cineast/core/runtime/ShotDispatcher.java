@@ -22,6 +22,7 @@ import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.util.DecodingError;
 import org.vitrivr.cineast.core.util.LogHelper;
 
+@Deprecated
 public class ShotDispatcher implements Runnable, ExecutionTimeCounter {
 
 	private static final int TASK_QUEUE_SIZE = Config.getExtractorConfig().getTaskQueueSize();

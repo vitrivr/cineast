@@ -33,6 +33,7 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+@Deprecated
 public class ExtractionJobRunner implements Runnable{
 
 	private static final Logger LOGGER = LogManager.getLogger();

@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Deprecated
 public class ShotSegmenter implements SegmentProvider{
 	
 	private static final double THRESHOLD = 0.05;
@@ -104,7 +105,7 @@ public class ShotSegmenter implements SegmentProvider{
 				
 			}while(frame.getId() < bounds.getEnd());
 			
-			_return.setShotId(bounds.getSegmentId());
+			_return.setId(bounds.getSegmentId());
 			addSubtitleItems(_return);
 			
 			idCounter.incrementAndGet();
@@ -171,7 +172,7 @@ public class ShotSegmenter implements SegmentProvider{
 		int shotNumber = idCounter.incrementAndGet();
 		String shotId = MediaType.generateId(MediaType.VIDEO, movieId, shotNumber);
 		
-		shot.setShotId(shotId);
+		shot.setId(shotId);
 		addSubtitleItems(shot);
 		
 		
@@ -203,6 +204,7 @@ public class ShotSegmenter implements SegmentProvider{
 	
 }
 
+@Deprecated
 class DoublePair<K>{
 	K first;
 	double second;
