@@ -41,11 +41,7 @@ public class MultimediaObjectLookup {
     PrimitiveTypeProvider idProvider = map.get("id");
     PrimitiveTypeProvider nameProvider = map.get("name");
     PrimitiveTypeProvider pathProvider = map.get("path");
-    PrimitiveTypeProvider widthProvider = map.get("width");
-    PrimitiveTypeProvider heightProvider = map.get("height");
-    PrimitiveTypeProvider framecountProvider = map.get("framecount");
-    PrimitiveTypeProvider typeProvider = map.get("type");
-    PrimitiveTypeProvider durationProvider = map.get("duration");
+    PrimitiveTypeProvider typeProvider = map.get("mediatype");
 
     if (!checkProvider("id", idProvider, ProviderDataType.STRING)) {
       return new MultimediaObjectDescriptor();
@@ -59,31 +55,8 @@ public class MultimediaObjectLookup {
       return new MultimediaObjectDescriptor();
     }
 
-    if (!checkProvider("width", widthProvider, ProviderDataType.INT)) {
+    if (!checkProvider("mediatype", typeProvider, ProviderDataType.INT)) {
       return new MultimediaObjectDescriptor();
-    }
-
-    if (!checkProvider("height", heightProvider, ProviderDataType.INT)) {
-      return new MultimediaObjectDescriptor();
-    }
-
-    if (!checkProvider("framecount", framecountProvider, ProviderDataType.INT)) {
-      return new MultimediaObjectDescriptor();
-    }
-
-    if (!checkProvider("type", typeProvider, ProviderDataType.INT)) {
-      return new MultimediaObjectDescriptor();
-    }
-
-    /**
-     * This is because the current setup produces a float-field as duration in the DB, but on old
-     * versions of Cineast it is a double So the code has to accomodate for both options
-     */
-    if (!checkProvider("duration", durationProvider, ProviderDataType.FLOAT)) {
-      if (!checkProvider("duration", durationProvider, ProviderDataType.DOUBLE)) {
-        return new MultimediaObjectDescriptor();
-      }
-      LOGGER.info("Duration is a double, returning valid Multimediadescriptor");
     }
 
     return new MultimediaObjectDescriptor(idProvider.getString(), nameProvider.getString(), pathProvider.getString(), MediaType.fromId(typeProvider.getInt()), true);
