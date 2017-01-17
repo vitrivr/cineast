@@ -80,13 +80,18 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
     ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
     QueryResultInfoMessage responce;
     try {
-      responce = f.get().getResponses(0);
+
+      /* TODO: Review with Luca! */
+      if (f.get().getResponsesCount() > 0) {
+        responce = f.get().getResponses(0);
+        return responce.getResultsCount() > 0;
+      }
     } catch (InterruptedException | ExecutionException e) {
       LOGGER.error("error in exists: {}", LogHelper.getStackTrace(e));
       return false;
     }
 
-    return responce.getResultsCount() > 0;
+    return false;
 
   }
 
