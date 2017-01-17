@@ -63,7 +63,6 @@ public class FFMpegAudioDecoder implements AudioDecoder {
      */
     private static final int bytes_per_sample = av_get_bytes_per_sample(target_format);
 
-
     private int currentFrameNumber = 0;
     private long framecount;
 
@@ -275,12 +274,14 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         pFormatCtx = null;
     }
 
-
-
-
+    /**
+     * Closes the FFMpegAudioDecoder if this hasn't happened yet.
+     *
+     * @throws Throwable
+     */
     @Override
     protected void finalize() throws Throwable {
-        this.clone();
+        this.close();
         super.finalize();
     }
 }

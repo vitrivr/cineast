@@ -67,7 +67,7 @@ public class FFMpegVideoDecoder implements VideoDecoder {
 
   private  AVDictionary    optionsDict = null;
   private SwsContext sws_ctx = null;
-  
+
   public FFMpegVideoDecoder(File file){
     
     if(!file.exists()){
@@ -289,7 +289,7 @@ public class FFMpegVideoDecoder implements VideoDecoder {
 
   @Override
   protected void finalize() throws Throwable {
-    this.clone();
+    this.close();
     super.finalize();
   }
 
