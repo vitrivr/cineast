@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.UUID;
 
 /**
@@ -50,13 +51,13 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
      * Convenience method to create a MultimediaObjectDescriptor marked as new. The method will assign
      * a new ID to this MultimediaObjectDescriptor.
      *
-     * @param file The File for which a new MultimediaObjectDescriptor should be created.
+     * @param path The Path that points to the file for which a new MultimediaObjectDescriptor should be created.
      * @param type
      * @return
      */
-    public static MultimediaObjectDescriptor newMultimediaObjectDescriptor(File file, MediaType type) {
+    public static MultimediaObjectDescriptor newMultimediaObjectDescriptor(Path path, MediaType type) {
         String objectId = UUID.randomUUID().toString();
-        return new MultimediaObjectDescriptor(objectId, file.getName(), file.getAbsolutePath(), type, false);
+        return new MultimediaObjectDescriptor(objectId, path.getFileName().toString(), path.toString(), type, false);
     }
 
     /**

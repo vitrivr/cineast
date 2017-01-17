@@ -34,7 +34,6 @@ public class ADAMproEntityCreator implements EntityCreator {
         attributes.add(builder.setName("mediatype").setAttributetype(AttributeType.INT).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
         attributes.add(builder.setName("name").setAttributetype(AttributeType.STRING).setPk(false).build());
         attributes.add(builder.setName("path").setAttributetype(AttributeType.STRING).setPk(false).build());
-        attributes.add(builder.setName("preview").setAttributetype(AttributeType.INT).setPk(false).build());
 
         CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaObjectDescriptor.ENTITY).addAllAttributes(attributes).build();
 
@@ -64,11 +63,8 @@ public class ADAMproEntityCreator implements EntityCreator {
         fields.add(builder.setName("objectId").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
         fields.add(builder.setName("name").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
         fields.add(builder.setName("type").setAttributetype(AttributeType.STRING).setPk(false).build());
-        fields.add(builder.setName("value_str").setAttributetype(AttributeType.STRING).setPk(false).build());
-        fields.add(builder.setName("value_dbl").setAttributetype(AttributeType.DOUBLE).setPk(false).build());
-        fields.add(builder.setName("value_flt").setAttributetype(AttributeType.FLOAT).setPk(false).build());
-        fields.add(builder.setName("value_lng").setAttributetype(AttributeType.LONG).setPk(false).build());
-        fields.add(builder.setName("value_int").setAttributetype(AttributeType.INT).setPk(false).build());
+        fields.add(builder.setName("value_string").setAttributetype(AttributeType.STRING).setPk(false).build());
+        fields.add(builder.setName("value_number").setAttributetype(AttributeType.FLOAT).setPk(false).build());
 
         CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaMetadataDescriptor.ENTITY).addAllAttributes(fields).build();
 
@@ -98,8 +94,8 @@ public class ADAMproEntityCreator implements EntityCreator {
 		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		fields.add(builder.setName("objectId").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		fields.add(builder.setName("segmentnumber").setAttributetype(AttributeType.INT).setPk(false).build());
-		fields.add(builder.setName("start").setAttributetype(AttributeType.INT).setPk(false).build());
-		fields.add(builder.setName("end").setAttributetype(AttributeType.INT).setPk(false).build());
+		fields.add(builder.setName("segmentstart").setAttributetype(AttributeType.INT).setPk(false).build());
+		fields.add(builder.setName("segmentend").setAttributetype(AttributeType.INT).setPk(false).build());
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(SegmentDescriptor.ENTITY).addAllAttributes(fields).build();
 		

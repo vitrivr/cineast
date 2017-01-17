@@ -17,7 +17,7 @@ public class SegmentDescriptor implements ExistenceCheck {
     public static final String ENTITY  = "cineast_segment";
 
     /** Field names in the persistence layer. */
-    public static final String[] FIELDNAMES = {"id", "objectId", "number", "start", "end"};
+    public static final String[] FIELDNAMES = {"id", "objectId", "segmentnumber", "segmentstart", "segmentend"};
 
     private final String segmentId, objectId;
     private final int start, end, number;
