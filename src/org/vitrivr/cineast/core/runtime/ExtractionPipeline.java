@@ -125,7 +125,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         this.startup();
 
         /* Process SegmentContainers in Queue: For each Extractor in list dispatch an extraction task. */
-        while (this.isRunning() || this.segmentQueue.size() > 0) {
+        while (this.isRunning() || !this.segmentQueue.isEmpty()) {
             try {
                 SegmentContainer s = this.segmentQueue.poll(500, TimeUnit.MILLISECONDS);
                 if (s != null) {

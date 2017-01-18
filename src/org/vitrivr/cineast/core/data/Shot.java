@@ -147,7 +147,7 @@ public class Shot implements SegmentContainer{
 	}
 
 	public int getStart(){
-		if (this.frames.size() > 0) {
+		if (!this.frames.isEmpty()) {
 			return this.frames.get(0).getId();
 		} else {
 			return 0;
@@ -155,7 +155,7 @@ public class Shot implements SegmentContainer{
 	}
 	
 	public int getEnd(){
-		if (this.frames.size() > 0) {
+		if (!this.frames.isEmpty()) {
 			return this.frames.get(this.frames.size()-1).getId();
 		} else {
 			return 0;
