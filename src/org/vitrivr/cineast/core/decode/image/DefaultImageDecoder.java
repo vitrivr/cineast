@@ -3,14 +3,18 @@ package org.vitrivr.cineast.core.decode.image;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author rgasser
@@ -25,41 +29,51 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     /** HashSet containing all the mime-types supported by this ImageDecoder instance. */
     private static HashSet<String> supportedFiles = new HashSet<>(Arrays.asList(ImageIO.getReaderMIMETypes()));
 
-    /** */
+    /** Path to the input file. */
     private Path input;
 
-    /** */
-    private volatile boolean hasImage;
+    /** Flag indicating whether or not the Decoder is done decoding and the content has been obtained. */
+    private volatile boolean complete;
 
     /**
-     *
+     * Default constructor.
+     * 
      * @param path
      */
     @Override
     public synchronized Decoder<BufferedImage> init(Path path) {
         this.input = path;
-        this.hasImage = true;
+        this.complete = false;
         return this;
     }
 
     /**
-     * Gets a result.
+     * Obtains and returns a result by decoding the image.
      *
-     * @return a result
+     * @return BufferedImage of the decoded image file or null of decoding failed.
      */
     @Override
     public BufferedImage getNext() {
-
-        synchronized(this) { this.hasImage = false; }
-
+        synchronized(this) { this.complete = true; }
+        InputStream is = null;
+        BufferedImage image = null;
         try {
-            InputStream is = Files.newInputStream(this.input, StandardOpenOption.READ);
-            BufferedImage image = ImageIO.read(is);
-            return image;
+            is = Files.newInputStream(this.input, StandardOpenOption.READ);
+            image = ImageIO.read(is);
         } catch (IOException e) {
-            LOGGER.log(org.apache.logging.log4j.Level.FATAL, String.format("Severe error occurred when trying to decode the image file under %s. Image will be skipped...", this.input.toString()), e);
+            LOGGER.fatal("Severe error occurred when trying to decode the image file under {}. Image will be skipped...", this.input.toString());
+            LogHelper.getStackTrace(e);
             return null;
+        } finally {
+            try {
+                if (is != null) is.close();
+            } catch (IOException e) {
+                LOGGER.warn("Could not close the input stream of the image file under {}.", this.input.toString());
+                LogHelper.getStackTrace(e);
+            }
         }
+
+        return image;
     }
 
     /**
@@ -69,7 +83,7 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
      * @return
      */
     @Override
-    public int count() {
+    public synchronized int count() {
         return 1;
     }
 
@@ -96,15 +110,18 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     }
 
     /**
+     * Indicates whether or not the current decoder instance is complete i.e. if there is
+     * content left that can be obtained.
      *
+     * @return true if there is still content, false otherwise.
      */
     @Override
     public synchronized boolean complete() {
-        return !hasImage;
+        return this.complete;
     }
 
     /**
-     *
+     * Nothing to close!
      */
     @Override
     public void close() {
