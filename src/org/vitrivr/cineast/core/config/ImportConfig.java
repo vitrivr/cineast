@@ -22,6 +22,8 @@ public class ImportConfig implements ExtractionContextProvider {
         private Path path;
         private String name;
         private String id;
+        private Integer depth = 1;
+        private Integer limit = Integer.MAX_VALUE;
 
         @JsonProperty
         public Path getPath() {
@@ -46,6 +48,23 @@ public class ImportConfig implements ExtractionContextProvider {
         public void setId(String id) {
             this.id = id;
         }
+
+        @JsonProperty
+        public Integer getDepth() {
+            return depth;
+        }
+        public void setDepth(Integer depth) {
+            this.depth = depth;
+        }
+
+        @JsonProperty
+        public Integer getLimit() {
+            return limit;
+        }
+        public void setLimit(Integer limit) {
+            this.limit = limit;
+        }
+
     }
 
     /** */
@@ -123,5 +142,27 @@ public class ImportConfig implements ExtractionContextProvider {
     @Override
     public MediaType sourceType() {
         return this.type;
+    }
+
+    /**
+     * Limits the number of files that should be extracted. This a predicate is applied
+     * before extraction starts. If extraction fails for some fails the effective number
+     * of extracted files may be lower.
+     *
+     * @return A number greater than zero.
+     */
+    @Override
+    public int limit() {
+        return this.input.getLimit();
+    }
+
+    /**
+     * Limits the depth of recursion when extraction folders of files.
+     *
+     * @return A number greater than zero.
+     */
+    @Override
+    public int depth() {
+        return this.input.getDepth();
     }
 }
