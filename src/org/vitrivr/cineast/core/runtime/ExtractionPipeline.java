@@ -36,11 +36,14 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     /** HashMap containing statistics about the execution of the extractors. */
     private final ConcurrentHashMap<Class<?>, StatElement> timeMap = new ConcurrentHashMap<>();
 
-    /** ExecutorService used do execute the Extractiontasks. */
+    /** ExecutorService used do execute the ExtractionTasks. */
     private final ExecutorService executorService;
 
     /** ExtractionContextProvider used to setup the Pipeline. It contains information about the Extractors. */
     private final ExtractionContextProvider context;
+
+    /** Initializer for the extractors. */
+    private final ExtractorInitializer initializer;
 
     /** Flag indicating whether or not the ExtractionPipeline is running. */
     private volatile boolean running = false;
@@ -50,13 +53,17 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
      *
      * @param context ExtractionContextProvider used to setup the pipeline.
      */
-    public ExtractionPipeline(ExtractionContextProvider context) {
+    public ExtractionPipeline(ExtractionContextProvider context, ExtractorInitializer initializer) {
         /* Store context for further reference. */
         this.context = context;
+        this.initializer = initializer;
 
-        /* Get values*/
+        /* Start the extraction pipeline. */
+        this.startup();
+
+        /* Get value for task-queue and thread-count. */
         int taskQueueSize =  Config.getExtractorConfig().getTaskQueueSize();
-        int threadCount = Config.getExtractorConfig().getThreadPoolSize();
+        int threadCount = Math.min(this.extractors.size(), Config.getExtractorConfig().getThreadPoolSize());
 
         /* Prepare and create a new ThreadPoolExecutor. */
         LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(taskQueueSize);
@@ -121,9 +128,6 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         /* Set running flag to true. */
         synchronized (this) { this.running = true; }
 
-        /* Start the extraction pipeline. */
-        this.startup();
-
         /* Process SegmentContainers in Queue: For each Extractor in list dispatch an extraction task. */
         while (this.isRunning() || !this.segmentQueue.isEmpty()) {
             try {
@@ -163,13 +167,11 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     private void startup() {
         LOGGER.info("Warming up extraction pipeline....");
 
-        /* Initialize and add extractors to list. */
-        ExtractorInitializer initializer = new DefaultExtractorInitializer();
         for (String categories : this.context.getCategories()) {
             Config.getRetrieverConfig().getRetrieversByCategory(categories).forEachKey(entry -> {
                 if (entry instanceof Extractor) {
                     Extractor extractor = (Extractor) entry;
-                    initializer.initialize(extractor);
+                    this.initializer.initialize(extractor);
                     this.extractors.add(extractor);
                 }
                 return true;
