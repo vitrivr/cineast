@@ -15,7 +15,7 @@ import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.PictureUtil;
 
-
+@Deprecated
 public class JCodecVideoDecoder implements VideoDecoder {
 
 	private static final Logger LOGGER = LogManager.getLogger();

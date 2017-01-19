@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.decode.general;
 
+import org.vitrivr.cineast.core.config.DecoderConfig;
+
 import java.nio.file.Path;
 import java.util.Set;
 
@@ -22,12 +24,13 @@ public interface Decoder<T> {
      * the decoder by means of the getNext() method.
      *
      * @param path Path to the file that should be decoded.
+     * @param config DecoderConfiguration used by the decoder.
      * @return Current instance of the decoder.
      */
-    Decoder<T> init(Path path);
+    Decoder<T> init(Path path, DecoderConfig config);
 
     /**
-     * Closes the DEcoder. This method should cleanup and relinquish all resources.
+     * Closes the Decoder. This method should cleanup and relinquish all resources.
      *
      * Note: It is unsafe to re-use a Decoder after it has been closed.
      */

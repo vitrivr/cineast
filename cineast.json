@@ -1,6 +1,6 @@
 {
 	"database": {
-		"host": "127.0.0.1",
+		"host" : "192.168.1.100",
 		"port": 5890,
 		"plaintext": true
 	},
@@ -19,7 +19,6 @@
 				{"feature": "QueryImageExporter",					"weight": 0.00001}
 			],
 			"localcolor": [
-
 				{"feature": "AverageColorRaster",					"weight": 1.0}
 			],
 			"edge": [
@@ -52,20 +51,33 @@
 			"description": [
 				{"feature": "DescriptionTextSearch",				"weight": 1.0}
 			],
+			"poi" : [
+				{"feature": "SURF",								"weight": 1.0}
+			],
 			"meta": [
 				{"feature": "VideoMetadata",				"weight": 1.0}
 			]
 		}
 	},
 	
-	"decoder": {
-		"maxFrameWidth": 640,
-		"maxFrameHeight": 480,
-		"decoder": "FFMPEG"
+	"decoders": {
+		"VIDEO":{
+			"decoder": "FFMPEG",
+			"properties": {
+				"maxFrameWidth": 640,
+				"maxFrameHeight": 480
+			}
+		},
+		"IMAGE":{
+			"decoder": "DefaultImageDecoder",
+			"properties": {
+				"bounds":1024
+			}
+		}
 	},
 	
 	"extractor": {
-		"threadPoolSize": 2
+		"threadPoolSize": 4
 	},
 	
 	"imagecache": {
@@ -75,7 +87,9 @@
 	
 	"api": {
 		"jsonApiPort": 12345,
-		"enableCLI": true
+		"enableCLI": true,
+		"enableRest": true,
+		"enableJson": true
 	},
 	
 	"visualization": {

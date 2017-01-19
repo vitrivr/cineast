@@ -1,13 +1,16 @@
 package org.vitrivr.cineast.core.decode.image;
 
+import com.twelvemonkeys.image.ResampleOp;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
+import java.awt.image.BufferedImageOp;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +26,10 @@ import java.util.Set;
  */
 public class DefaultImageDecoder implements Decoder<BufferedImage> {
 
+    /* Configuration property-names and defaults for the DefaultImageDecoder. */
+    private static final String CONFIG_BOUNDS_PROPERTY = "bounds";
+    private static final int CONFIG_BOUNDS_DEFAULT = 1024;
+
     /** Default logging facility. */
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -35,20 +42,25 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     /** Flag indicating whether or not the Decoder is done decoding and the content has been obtained. */
     private volatile boolean complete;
 
+    /** Bounds used to rescale the image. */
+    private int rescale_bounds = CONFIG_BOUNDS_DEFAULT;
+
     /**
      * Default constructor.
-     * 
+     *
      * @param path
      */
     @Override
-    public synchronized Decoder<BufferedImage> init(Path path) {
+    public synchronized Decoder<BufferedImage> init(Path path, DecoderConfig config) {
         this.input = path;
         this.complete = false;
+        this.rescale_bounds = config.namedAsInt(CONFIG_BOUNDS_PROPERTY, CONFIG_BOUNDS_DEFAULT);
         return this;
     }
 
     /**
-     * Obtains and returns a result by decoding the image.
+     * Obtains and returns a result by decoding the image. The image is re-rescaled to match the
+     * bounding box defined by RESCALE_BOUNDS.
      *
      * @return BufferedImage of the decoded image file or null of decoding failed.
      */
@@ -56,24 +68,42 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     public BufferedImage getNext() {
         synchronized(this) { this.complete = true; }
         InputStream is = null;
-        BufferedImage image = null;
+        BufferedImage output = null;
+        BufferedImage input;
         try {
             is = Files.newInputStream(this.input, StandardOpenOption.READ);
-            image = ImageIO.read(is);
+            input = ImageIO.read(is);
+
+            if (input != null) {
+                int width = input.getWidth();
+                int height = input.getHeight();
+                float ratio = 0;
+
+                if (width > rescale_bounds) {
+                    ratio = (float)rescale_bounds/(float)width;
+                    width = (int)(width * ratio);
+                    height = (int)(height * ratio);
+                }
+
+                if (height > rescale_bounds) {
+                    ratio = (float)rescale_bounds/(float)height;
+                    width = (int)(width * ratio);
+                    height = (int)(height * ratio);
+                }
+
+                BufferedImageOp resampler = new ResampleOp(width, height, ResampleOp.FILTER_LANCZOS); // A good default filter, see class documentation for more info
+                output = resampler.filter(input, null);
+            }
         } catch (IOException e) {
-            LOGGER.fatal("Severe error occurred when trying to decode the image file under {}. Image will be skipped...", this.input.toString());
-            LogHelper.getStackTrace(e);
-            return null;
+            LOGGER.fatal("Severe error occurred when trying to decode the image file under {}. Image will be skipped...", this.input.toString(), LogHelper.getStackTrace(e));
         } finally {
             try {
                 if (is != null) is.close();
             } catch (IOException e) {
-                LOGGER.warn("Could not close the input stream of the image file under {}.", this.input.toString());
-                LogHelper.getStackTrace(e);
+                LOGGER.warn("Could not close the input stream of the image file under {}.", this.input.toString(), LogHelper.getStackTrace(e));
             }
+            return output;
         }
-
-        return image;
     }
 
     /**

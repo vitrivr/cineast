@@ -1,17 +1,16 @@
 package org.vitrivr.cineast.core.config;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.HashMap;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Config {
@@ -24,12 +23,13 @@ public class Config {
     private APIConfig api;
     private DatabaseConfig database;
     private RetrieverConfig retriever;
-    private DecoderConfig decoder;
     private ExtractorConfig extractor;
     private ImageCacheConfig imagecache;
     private VisualizationConfig visualization;
     private NeuralNetConfig neuralnet;
     private QueryConfig query = (new QueryConfig()).setDistance(QueryConfig.Distance.manhattan); //FIXME remove as soon as chisquared distance works again;
+    private HashMap<MediaType, DecoderConfig> decoders;
+
 
     /**
      * Accessor for shared (i.e. application wide) configuration.
@@ -46,15 +46,13 @@ public class Config {
      *
      * @param name Name of the config file.
      */
-    public static synchronized void loadConfig(String name) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            LOGGER.info("Config file loaded!");
-            sharedConfig = mapper.readValue(new File("cineast.json"), Config.class);
-        } catch (FileNotFoundException e) {
-            LOGGER.warn("Config file '" + name + "' not found.");
-        } catch (IOException e) {
+    public static void loadConfig(String name) {
+        Config config = (new JacksonJsonProvider()).toObject(new File("cineast.json"), Config.class);
+        LOGGER.info("Config file loaded!");
+        if (config == null) {
             LOGGER.warn("Could not read config file '" + name + "'.");
+        } else {
+            synchronized (Config.class) {sharedConfig = config;}
         }
     }
 
@@ -83,11 +81,9 @@ public class Config {
     }
 
     @JsonProperty
+    @Deprecated
     public DecoderConfig getDecoder() {
-        return decoder;
-    }
-    public void setDecoder(DecoderConfig decoder) {
-        this.decoder = decoder;
+        return this.decoders.get(MediaType.VIDEO);
     }
 
     @JsonProperty
@@ -130,6 +126,15 @@ public class Config {
         this.query = query;
     }
 
+    @JsonProperty
+    public HashMap<MediaType, DecoderConfig> getDecoders() {
+        return decoders;
+    }
+    public void setDecoders(HashMap<MediaType, DecoderConfig> decoders) {
+        this.decoders = decoders;
+    }
+
+
     /**
      * Returns the {@link ImageCacheConfig} as specified in the config file. If nothing is specified in the configuration file, the default values are returned, see {@link ImageCacheConfig}
      * @return
@@ -138,34 +143,42 @@ public class Config {
         return sharedConfig().imagecache;
     }
 
+    @Deprecated
     public static ExtractorConfig getExtractorConfig() {
         return  sharedConfig().extractor;
     }
 
+    @Deprecated
     public static RetrieverConfig getRetrieverConfig() {
         return  sharedConfig().retriever;
     }
 
+    @Deprecated
     public static DecoderConfig getDecoderConfig() {
-        return  sharedConfig().decoder;
+        return  sharedConfig().getDecoder();
     }
 
+    @Deprecated
     public static APIConfig getApiConfig() {
         return  sharedConfig().api;
     }
 
+    @Deprecated
     public static DatabaseConfig getDatabaseConfig() {
         return  sharedConfig().database;
     }
 
+    @Deprecated
     public static QueryConfig getQueryConfig() {
         return sharedConfig().query;
     }
 
+    @Deprecated
     public static NeuralNetConfig getNeuralNetConfig() {
         return sharedConfig().neuralnet;
     }
 
+    @Deprecated
     public static VisualizationConfig getVisualizationConfig() {
         return sharedConfig().visualization;
     }

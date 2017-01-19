@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.decode.video;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacpp.*;
-import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.decode.general.Decoder;
@@ -31,9 +31,18 @@ import static org.bytedeco.javacpp.swscale.sws_scale;
 public class NFFMpegVideoDecoder implements Decoder<Frame> {
 
 
+    /* Configuration property-names and defaults for the DefaultImageDecoder. */
+    private static final String CONFIG_MAXWIDTH_PROPERTY = "maxFrameWidth";
+    private static final String CONFIG_HEIGHT_PROPERTY = "maxFrameHeight";
+    private final static int CONFIG_MAXWIDTH_DEFAULT = 640;
+    private final static int CONFIG_MAXHEIGHT_DEFAULT = 480;
+
     private static final Logger LOGGER = LogManager.getLogger();
 
     private int width, height, originalWidth, originalHeight, currentFrameNumber = 0;
+    private int maxWidth = CONFIG_MAXWIDTH_DEFAULT;
+    private int maxHeight = CONFIG_MAXHEIGHT_DEFAULT;
+
     private double fps;
     private long framecount;
     private byte[] bytes;
@@ -134,10 +143,15 @@ public class NFFMpegVideoDecoder implements Decoder<Frame> {
      * the decoder by means of the getNext() method.
      *
      * @param path Path to the file that should be decoded.
+     * @param config DecoderConfiguration used by the decoder.
      * @return Current instance of the decoder.
      */
     @Override
-    public Decoder<Frame> init(Path path) {
+    public Decoder<Frame> init(Path path, DecoderConfig config) {
+
+        /* Read decoder config. */
+        this.maxWidth = config.namedAsInt(CONFIG_MAXWIDTH_PROPERTY, CONFIG_MAXWIDTH_DEFAULT);
+        this.maxHeight = config.namedAsInt(CONFIG_HEIGHT_PROPERTY, CONFIG_MAXHEIGHT_DEFAULT);
 
         // Register all formats and codecs
         av_register_all();
@@ -200,8 +214,8 @@ public class NFFMpegVideoDecoder implements Decoder<Frame> {
         this.originalWidth = pCodecCtx.width();
         this.originalHeight = pCodecCtx.height();
 
-        if(this.originalWidth > Config.getDecoderConfig().getMaxFrameWidth() || this.originalHeight > Config.getDecoderConfig().getMaxFrameHeight()){
-            float scaleDown = Math.min((float)Config.getDecoderConfig().getMaxFrameWidth() / (float)this.originalWidth, (float)Config.getDecoderConfig().getMaxFrameHeight() / (float)this.originalHeight);
+        if(this.originalWidth > this.maxWidth || this.originalHeight >this.maxHeight) {
+            float scaleDown = Math.min((float)this.maxWidth / (float)this.originalWidth, (float)this.maxHeight / (float)this.originalHeight);
             this.width = Math.round(this.originalWidth * scaleDown);
             this.height = Math.round(this.originalHeight * scaleDown);
             LOGGER.debug("scaling input video down by a factor of {} from {}x{} to {}x{}", scaleDown, this.originalWidth, this.originalHeight, this.width, this.height);
