@@ -60,18 +60,33 @@ public class ImageSegment implements SegmentContainer {
         this.objectId = id;
     }
 
+    /**
+     * Returns the median image, which is the actual image.
+     *
+     * @return
+     */
     public MultiImage getAvgImg() {
        return this.image;
     }
 
+    /**
+     * Returns the average image, which is the actual image.
+     *
+     * @return
+     */
     public MultiImage getMedianImg() {
         return this.image;
     }
 
+    /**
+     * Returns a single frame - the image.
+     *
+     * @return
+     */
     @Override
     public List<Frame> getFrames() {
         ArrayList<Frame> list = new ArrayList<>(1);
-        list.add(Frame.EMPTY_FRAME);
+        list.add(new Frame(1, this.image));
         return list;
     }
 }
