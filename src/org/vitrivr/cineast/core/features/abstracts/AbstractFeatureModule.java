@@ -15,6 +15,7 @@ import org.vitrivr.cineast.core.util.MathHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
@@ -45,6 +46,14 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 	protected void persist(String shotId, ReadableFloatVector fv) {
 		PersistentTuple tuple = this.phandler.generateTuple(shotId, arrayCache = fv.toArray(arrayCache));
 		this.phandler.persist(tuple);
+	}
+
+	protected void persist(String shotId, List<ReadableFloatVector> fvs) {
+		List<PersistentTuple> tuples = fvs.stream().map(fv -> {
+			float cache[] = null;
+			return this.phandler.generateTuple(shotId, fv.toArray(cache));
+		}).collect(Collectors.toList());
+		this.phandler.persist(tuples);
 	}
 
 	protected QueryConfig setQueryConfig(QueryConfig qc){
