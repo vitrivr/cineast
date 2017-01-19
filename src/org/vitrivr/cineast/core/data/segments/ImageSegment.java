@@ -18,6 +18,8 @@ public class ImageSegment implements SegmentContainer {
 
     private MultiImage image;
 
+    private Frame frame;
+
     private String segmentId;
 
     private String objectId;
@@ -86,7 +88,17 @@ public class ImageSegment implements SegmentContainer {
     @Override
     public List<Frame> getFrames() {
         ArrayList<Frame> list = new ArrayList<>(1);
-        list.add(new Frame(1, this.image));
+        list.add(this.frame);
         return list;
+    }
+
+    /**
+     * Returns a most representative frame - the image.
+     *
+     * @return
+     */
+    public Frame getMostRepresentativeFrame() {
+        if (this.frame == null) this.frame = new Frame(1, this.image);
+        return this.frame;
     }
 }
