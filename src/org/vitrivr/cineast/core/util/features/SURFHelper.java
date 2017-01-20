@@ -32,11 +32,11 @@ public class SURFHelper {
     /** Size/width of the smallest feature/kernel in the first octave during the interest point detection step (Fast Hessian)  f SURF. Defaults to 9 for FH-9 described in [1] */
     private final static int FH_INITIAL_SIZE = 9;
 
-    /** Limits the number of features obtained per scale and thus the number features persisted during the extraction. Defaults to -1 (unlimited) for FH-9 described in [1]. */
-    private final static int FH_MAX_FEATURES_PER_SCALE = -1;
+    /** Limits the number of features obtained per scale and thus the number features persisted during the extraction. This value differs from [1] where it is unlimited. */
+    private final static int FH_MAX_FEATURES_PER_SCALE = 200;
 
     /** Configuration for FH-9 POI detector. */
-    private static final ConfigFastHessian FAST_HESSIAN = new ConfigFastHessian(0.1f, 5, FH_MAX_FEATURES_PER_SCALE, FH_INITIAL_SAMPLE_SIZE, FH_INITIAL_SIZE, FH_NUMBER_SCALES_PER_OCTAVE, FH_NUMBER_OF_OCTAVES);
+    private static final ConfigFastHessian FAST_HESSIAN = new ConfigFastHessian(0, 2, FH_MAX_FEATURES_PER_SCALE, FH_INITIAL_SAMPLE_SIZE, FH_INITIAL_SIZE, FH_NUMBER_SCALES_PER_OCTAVE, FH_NUMBER_OF_OCTAVES);
 
     /** Size of the SURF descriptor. */
     public final static int SURF_VECTOR_SIZE = 64;
