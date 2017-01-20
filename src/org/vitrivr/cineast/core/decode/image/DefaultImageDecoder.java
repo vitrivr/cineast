@@ -54,7 +54,9 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     public synchronized Decoder<BufferedImage> init(Path path, DecoderConfig config) {
         this.input = path;
         this.complete = false;
-        this.rescale_bounds = config.namedAsInt(CONFIG_BOUNDS_PROPERTY, CONFIG_BOUNDS_DEFAULT);
+        if (config != null) {
+            this.rescale_bounds = config.namedAsInt(CONFIG_BOUNDS_PROPERTY, CONFIG_BOUNDS_DEFAULT);
+        }
         return this;
     }
 
