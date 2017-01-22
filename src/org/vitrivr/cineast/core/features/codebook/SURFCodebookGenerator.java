@@ -5,7 +5,7 @@ import boofcv.struct.feature.BrightFeature;
 import boofcv.struct.image.GrayF32;
 
 import org.ddogleg.clustering.FactoryClustering;
-import org.vitrivr.cineast.core.util.features.SURFHelper;
+import org.vitrivr.cineast.core.util.images.SURFHelper;
 
 import java.awt.image.BufferedImage;
 
