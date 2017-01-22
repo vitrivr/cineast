@@ -21,9 +21,6 @@ import javax.activation.MimetypesFileTypeMap;
  */
 public interface ExtractionFileHandler<T> extends Runnable {
 
-    /** Static reference to a MimetypesFileTypeMap that can be used to lookup the mime-types of files. */
-    MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
-
     /**
      * Returns a new instance of  Decoder<T> that should be used with a concrete implementation
      * of this interface.

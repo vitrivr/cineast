@@ -8,6 +8,7 @@ import org.ddogleg.clustering.ComputeClusters;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.image.DefaultImageDecoder;
 
+import javax.activation.MimetypesFileTypeMap;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,11 +19,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.vitrivr.cineast.core.run.filehandler.ExtractionFileHandler.fileTypeMap;
-
 /**
  * Default implementation of a Codebook generator for images. Extend and add the details like
- * the features to use.
+ * the images to use.
  *
  * @author rgasser
  * @version 1.0
@@ -56,12 +55,13 @@ public abstract class ImageCodebookGenerator implements CodebookGenerator {
     public void generate(Path source, Path destination, int words) throws IOException {
         long start = System.currentTimeMillis();
         final Decoder<BufferedImage> decoder = new DefaultImageDecoder();
+        final MimetypesFileTypeMap filetypemap = new MimetypesFileTypeMap("mime.types");
 
         /* Filter the list of files and aggregate it. */
         List<Path> paths = Files.walk(source)
             .filter(path -> {
                 if (decoder.supportedFiles() != null) {
-                    String type = fileTypeMap.getContentType(path.toString());
+                    String type = filetypemap.getContentType(path.toString());
                     return decoder.supportedFiles().contains(type);
                 } else {
                     return true;

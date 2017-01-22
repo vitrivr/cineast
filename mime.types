@@ -1,0 +1,8 @@
+# comments begin with a '#'
+# the format is <mime type> <space separated file extensions>
+# for example:
+image/jpeg jpg jpeg jpe
+image/png png
+image/tiff tif tiff
+# this would map file.txt, file.text, and file.TXT to
+# the mime type "text/plain"

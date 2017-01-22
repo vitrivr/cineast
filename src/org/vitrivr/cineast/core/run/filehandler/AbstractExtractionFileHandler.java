@@ -15,7 +15,10 @@ import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.runtime.ExtractionPipeline;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
+import org.vitrivr.cineast.core.util.LogHelper;
 
+import javax.activation.MimetypesFileTypeMap;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
@@ -106,7 +109,13 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         this.executorService.execute(pipeline);
 
         /* Pre-processes the files. */
-        List<Pair<String, Path>> preprocessedFiles = this.preprocess(decoder);
+        List<Pair<String, Path>> preprocessedFiles = null;
+        try {
+            preprocessedFiles = this.preprocess(decoder);
+        } catch (IOException exception) {
+            LOGGER.fatal("Fatal error occurred during file pre-processing. Aborting...", LogHelper.getStackTrace(exception));
+            return;
+        }
 
         /*
          * Process every file in the list.
@@ -191,11 +200,12 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      *
      * @return List of Pairs mapping the new objectId to the Path.
      */
-    private List<Pair<String, Path>> preprocess(Decoder<T> decoder) {
+    private List<Pair<String, Path>> preprocess(Decoder<T> decoder) throws IOException {
+        final MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
         return this.files.parallelStream().filter( path -> {
             Set<String> supportedFiles = decoder.supportedFiles();
-            if (supportedFiles != null) {
-                String type = fileTypeMap.getContentType(path.toString());
+            if (supportedFiles != null && filetypes != null) {
+                String type = filetypes.getContentType(path.toString());
                 return decoder.supportedFiles().contains(type);
             } else {
                 return true;
