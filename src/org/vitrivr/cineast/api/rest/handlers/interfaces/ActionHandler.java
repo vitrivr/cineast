@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.api.rest.handlers.basic;
+package org.vitrivr.cineast.api.rest.handlers.interfaces;
 
 import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
 import spark.Route;

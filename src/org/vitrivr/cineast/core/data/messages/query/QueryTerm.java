@@ -1,6 +1,6 @@
-package org.vitrivr.cineast.core.data.queries;
+package org.vitrivr.cineast.core.data.messages.query;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import org.vitrivr.cineast.core.data.QueryContainer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,4 +46,10 @@ public abstract class QueryTerm {
     public float getWeight() {
         return weight;
     }
+
+    /**
+     *
+     * @return
+     */
+    public abstract QueryContainer toContainer();
 }

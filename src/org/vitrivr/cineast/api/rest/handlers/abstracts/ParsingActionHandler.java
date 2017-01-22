@@ -1,10 +1,9 @@
-package org.vitrivr.cineast.api.rest.handlers.basic;
+package org.vitrivr.cineast.api.rest.handlers.abstracts;
 
-import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
-import org.vitrivr.cineast.api.rest.handlers.basic.ActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
 import spark.Request;
 import spark.Response;
 

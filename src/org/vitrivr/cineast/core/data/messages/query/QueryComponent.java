@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.data.queries;
+package org.vitrivr.cineast.core.data.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,18 +20,18 @@ public class QueryComponent {
     /**
      * Instance of the ImageQueryTerm for this QueryComponent. Can be NULL!
      */
-    private final ImageQueryTerm imageQueryTerm;
+    private final QueryTermImage queryTermImage;
 
     /**
      *
-     * @param imageQueryTerm
+     * @param queryTermImage
      */
     @JsonCreator
-    public QueryComponent(@JsonProperty("imageQueryTerm") ImageQueryTerm imageQueryTerm) {
-        this.imageQueryTerm = imageQueryTerm;
+    public QueryComponent(@JsonProperty("imageQueryTerm") QueryTermImage queryTermImage) {
+        this.queryTermImage = queryTermImage;
 
         /* Add query-terms to the list. */
-        if (this.imageQueryTerm!=null) this.terms[0] = this.imageQueryTerm;
+        if (this.queryTermImage !=null) this.terms[0] = this.queryTermImage;
     }
 
     /**

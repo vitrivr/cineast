@@ -1,18 +1,19 @@
-package org.vitrivr.cineast.core.data.queries;
+package org.vitrivr.cineast.core.data.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.api.WebUtils;
+import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.QueryContainer;
 
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 11.01.17
  */
-public class ImageQueryTerm extends QueryTerm {
+public class QueryTermImage extends QueryTerm {
 
     /**
      * Raw image-data in base64 encoding.
@@ -30,7 +31,7 @@ public class ImageQueryTerm extends QueryTerm {
      * @param categories
      */
     @JsonCreator
-    public ImageQueryTerm(@JsonProperty("image") String imageData,
+    public QueryTermImage(@JsonProperty("image") String imageData,
                           @JsonProperty("categories") String[] categories,
                           @JsonProperty("weight") float weight) {
         super(categories, weight);
@@ -48,5 +49,14 @@ public class ImageQueryTerm extends QueryTerm {
             this.image = WebUtils.dataURLtoBufferedImage(this.imageData);
         }
         return this.image;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public QueryContainer toContainer() {
+        return new QueryContainer(MultiImageFactory.newInMemoryMultiImage(this.getImage()));
     }
 }
