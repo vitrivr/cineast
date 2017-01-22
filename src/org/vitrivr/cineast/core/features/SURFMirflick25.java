@@ -76,6 +76,6 @@ public class SURFMirflick25 extends AbstractCodebookFeatureModule {
      */
     @Override
     protected String codebook() {
-        return "mirflick25.surfcb";
+        return "mirflickr25.surfcb";
     }
 }
