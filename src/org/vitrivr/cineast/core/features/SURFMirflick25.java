@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.*;
 import org.vitrivr.cineast.core.features.abstracts.AbstractCodebookFeatureModule;
-import org.vitrivr.cineast.core.util.features.SURFHelper;
+import org.vitrivr.cineast.core.util.images.SURFHelper;
 
 import java.util.*;
 
@@ -30,7 +30,7 @@ public class SURFMirflick25 extends AbstractCodebookFeatureModule {
      * Default constructor.
      */
     public SURFMirflick25() {
-        super("features_surf_mirflick25", 2.0f);
+        super("features_surfmf25", 2.0f);
     }
 
     @Override
@@ -38,13 +38,15 @@ public class SURFMirflick25 extends AbstractCodebookFeatureModule {
         long start = System.currentTimeMillis();
         LOGGER.entry();
 
-        DetectDescribePoint<GrayF32, BrightFeature> descriptors = SURFHelper.getStableSurf(shot.getAvgImg().getBufferedImage());
+        DetectDescribePoint<GrayF32, BrightFeature> descriptors = SURFHelper.getStableSurf(shot.getMostRepresentativeFrame().getImage().getBufferedImage());
         if (descriptors != null) {
             float[] histogram_f = this.histogram(true, descriptors);
             this.persist(shot.getId(), new FloatVectorImpl(histogram_f));
+        } else {
+            LOGGER.warn("Segment {} did not have a most representative frame. No descriptor has been generated!");
         }
 
-        LOGGER.debug("SURF.processShot() done in {}ms", (System.currentTimeMillis() - start));
+        LOGGER.debug("SURFMirflick25.processShot() done in {}ms", (System.currentTimeMillis() - start));
         LOGGER.exit();
     }
 
@@ -64,7 +66,7 @@ public class SURFMirflick25 extends AbstractCodebookFeatureModule {
             results = new ArrayList<>();
         }
 
-        LOGGER.debug("SURF.getSimilar() done in {}ms", (System.currentTimeMillis() - start));
+        LOGGER.debug("SURFMirflick25.getSimilar() done in {}ms", (System.currentTimeMillis() - start));
         return LOGGER.exit(results);
     }
 
