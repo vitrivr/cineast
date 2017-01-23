@@ -1,8 +1,10 @@
 package org.vitrivr.cineast.core.run;
 
+import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -34,6 +36,41 @@ public interface ExtractionContextProvider {
      * @return List of named categories.
      */
     public List<String> getCategories();
+
+    /**
+     * Returns a list of named exporter classes that should be invoked during extraction. Exporters
+     * usually generate some representation and persistently store that information somewhere.
+     *
+     * @return List of named exporters.
+     */
+    public List<String> getExporters();
+
+    /**
+     * Returns an instance of ObjectIdGenerator that should be used to generated MultimediaObject ID's
+     * during an extraction run.
+     *
+     * @return ObjectIdGenerator
+     */
+    ObjectIdGenerator objectIdGenerator();
+
+    /**
+     * Returns the ExistenceCheck mode that should be applied during the extraction run. Can either be:
+     *
+     * NOCHECK          - No checks performed (may cause DB error).
+     * CHECK_SKIP       - Check and skip object on collision.
+     * CHECK_PROCEED    - Check and and proceed with object on collision.
+     *
+     * @return ExistenceCheck mode for current run.
+     */
+    IdConfig.ExistenceCheck existenceCheck();
+
+    /**
+     * Returns the PersistencyWriterSupplier that can be used during the extraction run to
+     * obtain PersistencyWriter instance.
+     *
+     * @return PersistencyWriterSupplier instance used obtain a PersistencyWriter.
+     */
+    PersistencyWriterSupplier persistencyWriter();
 
     /**
      * Limits the number of files that should be extracted. This a predicate is applied

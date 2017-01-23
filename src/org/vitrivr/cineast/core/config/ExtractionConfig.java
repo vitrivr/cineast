@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 
 import java.nio.file.Path;
@@ -14,58 +16,8 @@ import java.util.ArrayList;
  * @version 1.0
  * @created 13.01.17
  */
-public class ImportConfig implements ExtractionContextProvider {
-    /**
-     *
-     */
-    public class InputConfig {
-        private Path path;
-        private String name;
-        private String id;
-        private Integer depth = 1;
-        private Integer limit = Integer.MAX_VALUE;
+public class ExtractionConfig implements ExtractionContextProvider {
 
-        @JsonProperty
-        public Path getPath() {
-            return path;
-        }
-        public void setPath(Path path) {
-            this.path = path;
-        }
-
-        @JsonProperty
-        public String getName() {
-            return name;
-        }
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        @JsonProperty
-        public String getId() {
-            return id;
-        }
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        @JsonProperty
-        public Integer getDepth() {
-            return depth;
-        }
-        public void setDepth(Integer depth) {
-            this.depth = depth;
-        }
-
-        @JsonProperty
-        public Integer getLimit() {
-            return limit;
-        }
-        public void setLimit(Integer limit) {
-            this.limit = limit;
-        }
-
-    }
 
     /** */
     private MediaType type;
@@ -74,16 +26,16 @@ public class ImportConfig implements ExtractionContextProvider {
     private InputConfig input;
 
     /** */
-    private ArrayList<String> categories;
+    private ArrayList<String> categories  = new ArrayList<>();
 
     /** */
-    private ArrayList<String> exporters;
+    private ArrayList<String> exporters = new ArrayList<>();
 
-    /** */
-    private DatabaseConfig database;
+    /** Database-setting to use for import. Defaults to application settings. */
+    private DatabaseConfig database = Config.sharedConfig().getDatabase();
 
     @JsonCreator
-    public ImportConfig() {
+    public ExtractionConfig() {
 
     }
 
@@ -164,5 +116,30 @@ public class ImportConfig implements ExtractionContextProvider {
     @Override
     public int depth() {
         return this.input.getDepth();
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ObjectIdGenerator objectIdGenerator() {
+        return this.getInput().getId().getGenerator();
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public IdConfig.ExistenceCheck existenceCheck() {
+        return this.input.getId().getExistenceCheckMode();
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public PersistencyWriterSupplier persistencyWriter() {
+       return this.database.getWriterSupplier();
     }
 }

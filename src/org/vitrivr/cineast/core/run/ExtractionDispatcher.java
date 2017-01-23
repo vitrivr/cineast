@@ -2,7 +2,7 @@ package org.vitrivr.cineast.core.run;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.ImportConfig;
+import org.vitrivr.cineast.core.config.ExtractionConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.run.filehandler.ImageExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.VideoExtractionFileHandler;
@@ -39,7 +39,7 @@ public class ExtractionDispatcher {
      */
     public boolean initialize(File jobFile) throws IOException {
         JacksonJsonProvider reader = new JacksonJsonProvider();
-        this.context = reader.toObject(jobFile, ImportConfig.class);
+        this.context = reader.toObject(jobFile, ExtractionConfig.class);
 
         /* Check if context could be read and an inputpath was specified. */
         if (context == null || this.context.inputPath() == null) return false;

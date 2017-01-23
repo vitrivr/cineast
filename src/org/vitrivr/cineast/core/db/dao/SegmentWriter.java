@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.db.dao;
 
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -11,15 +10,14 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
  * @created 14.01.17
  */
 public class SegmentWriter {
-    /**
-     * PersistencyWriter instance used to persist changes.
-     */
-    private PersistencyWriter<?> writer = Config.getDatabaseConfig().getWriterSupplier().get();
+    /** PersistencyWriter instance used to persist changes. */
+    private PersistencyWriter<?> writer;
 
     /**
      * Default constructor.
      */
-    public SegmentWriter() {
+    public SegmentWriter(PersistencyWriter<?> writer) {
+        this.writer = writer;
         this.writer.setFieldNames(SegmentDescriptor.FIELDNAMES);
         this.writer.open(SegmentDescriptor.ENTITY);
     }

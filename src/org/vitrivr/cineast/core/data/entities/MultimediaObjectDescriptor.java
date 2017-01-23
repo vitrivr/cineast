@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -55,8 +56,8 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
      * @param type
      * @return
      */
-    public static MultimediaObjectDescriptor newMultimediaObjectDescriptor(Path path, MediaType type) {
-        String objectId = UUID.randomUUID().toString();
+    public static MultimediaObjectDescriptor newMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type) {
+        String objectId = generator.next(path, type);
         return new MultimediaObjectDescriptor(objectId, path.getFileName().toString(), path.toString(), type, false);
     }
 

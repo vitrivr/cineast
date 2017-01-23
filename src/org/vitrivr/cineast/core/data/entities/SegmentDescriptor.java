@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.vitrivr.cineast.core.data.ExistenceCheck;
+import org.vitrivr.cineast.core.data.MediaType;
 
 import java.util.UUID;
 
@@ -34,7 +35,8 @@ public class SegmentDescriptor implements ExistenceCheck {
      * @return
      */
     public static SegmentDescriptor newSegmentDescriptor(String objectId, int segmentNumber, int start, int end) {
-        return new SegmentDescriptor(objectId, UUID.randomUUID().toString(), segmentNumber, start, end, false);
+        String segmentId = String.format("%s_%d", objectId, segmentNumber);
+        return new SegmentDescriptor(objectId, segmentId, segmentNumber, start, end, false);
     }
 
     private SegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, boolean exists) {

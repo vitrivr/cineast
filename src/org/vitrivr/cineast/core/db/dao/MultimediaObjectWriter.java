@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.db.dao;
 
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -12,15 +11,14 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
  */
 public class MultimediaObjectWriter {
 
-    /**
-     * PersistencyWriter instance used to persist changes.
-     */
-    private PersistencyWriter<?> writer = Config.getDatabaseConfig().getWriterSupplier().get();
+    /** PersistencyWriter instance used to persist changes. */
+    private PersistencyWriter<?> writer;
 
     /**
      * Default constructor.
      */
-    public MultimediaObjectWriter() {
+    public MultimediaObjectWriter(PersistencyWriter<?> writer) {
+        this.writer = writer;
         this.writer.setFieldNames(MultimediaObjectDescriptor.FIELDNAMES);
         this.writer.open(MultimediaObjectDescriptor.ENTITY);
     }
