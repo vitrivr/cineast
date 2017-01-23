@@ -4,15 +4,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class APIConfig {
-	private int jsonApiPort = 12345;
-	private boolean enableJson = false;
-	private boolean enableRest = true;
+
+	private boolean enableWebsocket = true;
+	private boolean enableRest = false;
+	private int httpPort = 4567;
+
+	private boolean enableLegacy = false;
+	private int legacyPort = 12345;
+
 	private boolean allowExtraction = true;
 	private boolean enableCLI = false;
 
-	private enum APIMode {
-		LEGACY,WEBSOCKET,NONE
-	}
+	private int threadPoolSize = 8;
 
 	@JsonCreator
 	public APIConfig() {
@@ -20,28 +23,44 @@ public final class APIConfig {
 	}
 
 	@JsonProperty
-	public int getJsonApiPort(){
-		return this.jsonApiPort;
+	public boolean getEnableWebsocket(){
+		return this.enableWebsocket;
 	}
-	public void setJsonApiPort(int jsonApiPort) {
-		if(jsonApiPort < 1){
-			throw new IllegalArgumentException("jsonApiPort bust be > 0");
-		}
-		this.jsonApiPort = jsonApiPort;
+	public void setEnableWebsocket(boolean enableWebsocket) {
+		this.enableWebsocket = enableWebsocket;
 	}
 
 	@JsonProperty
-	public boolean getEnableJsonAPI(){
-		return this.enableJson;
-	}
-	public void setEnableJson(boolean enableJson) {
-		this.enableJson = enableJson;
-	}
-
-	@JsonProperty
-	public boolean getEnableRestAPI() {return this.enableRest;}
+	public boolean getEnableRest() {return this.enableRest;}
 	public void setEnableRest(boolean enableRest) {
 		this.enableRest = enableRest;
+	}
+
+	@JsonProperty
+	public int getHttpPort() {
+		return httpPort;
+	}
+	public void setHttpPort(int httpPort) {
+		if(httpPort < 1){
+			throw new IllegalArgumentException("httpPort must be > 0");
+		}
+		this.httpPort = httpPort;
+	}
+
+	@JsonProperty
+	public boolean getEnableLegacy() {
+		return enableLegacy;
+	}
+	public void setEnableLegacy(boolean enableLegacy) {
+		this.enableLegacy = enableLegacy;
+	}
+
+	@JsonProperty
+	public int getLegacyPort() {
+		return legacyPort;
+	}
+	public void setLegacyPort(int legacyPort) {
+		this.legacyPort = legacyPort;
 	}
 
 	@JsonProperty
@@ -58,5 +77,13 @@ public final class APIConfig {
 	}
 	public void setEnableCLI(boolean enableCLI) {
 		this.enableCLI = enableCLI;
+	}
+
+	@JsonProperty
+	public int getThreadPoolSize() {
+		return threadPoolSize;
+	}
+	public void setThreadPoolSize(int threadPoolSize) {
+		this.threadPoolSize = threadPoolSize;
 	}
 }

@@ -20,6 +20,7 @@ public class Config {
 
     private static Config sharedConfig;
 
+
     private APIConfig api;
     private DatabaseConfig database;
     private RetrieverConfig retriever;
@@ -47,10 +48,10 @@ public class Config {
      * @param name Name of the config file.
      */
     public static void loadConfig(String name) {
-        Config config = (new JacksonJsonProvider()).toObject(new File("cineast.json"), Config.class);
+        Config config = (new JacksonJsonProvider()).toObject(new File(name), Config.class);
         LOGGER.info("Config file loaded!");
         if (config == null) {
-            LOGGER.warn("Could not read config file '" + name + "'.");
+            LOGGER.warn("Could not read config file '{}'.", name);
         } else {
             synchronized (Config.class) {sharedConfig = config;}
         }
