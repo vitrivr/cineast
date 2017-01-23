@@ -37,13 +37,13 @@ public class ShotThumbNails implements Extractor {
 			imageFolder.mkdirs();
 		}
 		
-		File img = new File(imageFolder, shot.getId() + ".jpg");
+		File img = new File(imageFolder, shot.getId() + ".png");
 		if(img.exists()){
 			return;
 		}
 		BufferedImage thumb = shot.getMostRepresentativeFrame().getImage().getThumbnailImage();
 		try {
-			ImageIO.write(thumb, "JPG", img);
+			ImageIO.write(thumb, "PNG", img);
 		} catch (IOException e) {
 			LOGGER.error("Could not write thumbnail image ", LogHelper.getStackTrace(e));
 		}
