@@ -65,16 +65,21 @@ public class WebsocketAPI {
     private JacksonJsonProvider reader = new JacksonJsonProvider();
 
     /**
-     * Starts the Websocket API.
+     * Starts the WebSocket API.
      *
      * @param port Port on which the WebSocket endpoint should listen.
      * @param numberOfThreads Maximum number of threads that should be used to handle messages.
      */
     public static void start(int port, int numberOfThreads) {
-        Spark.port(port);
-        Spark.threadPool(numberOfThreads);
+        if (port > 0 && port < 65535) {
+            Spark.port(port);
+        } else {
+            LOGGER.warn("The specified port {} is not valid. Fallback to default port.", port);
+        }
+        Spark.threadPool(numberOfThreads, 2, 30000);
         Spark.webSocket(String.format("/%s/%s", CONTEXT, VERSION), WebsocketAPI.class);
         Spark.init();
+        Spark.awaitInitialization();
     }
 
     /**

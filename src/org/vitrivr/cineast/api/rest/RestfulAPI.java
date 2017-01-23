@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectAllActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectByActionHandler;
+import spark.Spark;
 
 import static spark.Spark.*;
 
@@ -37,10 +38,13 @@ public class RestfulAPI {
      * @param port Port on which the WebSocket endpoint should listen.
      * @param numberOfThreads Maximum number of threads that should be used to handle messages.
      */
-    public static void start(int port, short numberOfThreads) {
-
-        if (port > 0 && port <= 65535) port(port);
-        threadPool(numberOfThreads);
+    public static void start(int port, int numberOfThreads) {
+        if (port > 0 && port < 65535) {
+            Spark.port(port);
+        } else {
+            LOGGER.warn("The specified port {} is not valid. Fallback to default port.", port);
+        }
+        threadPool(numberOfThreads, 2, 30000);
 
         /* Register routes! */
         get(path("status"), new StatusInvokationHandler());
@@ -69,6 +73,8 @@ public class RestfulAPI {
         exception(Exception.class, (exception, request, response) -> {
             LOGGER.log(Level.ERROR, exception);
         });
+
+        Spark.awaitInitialization();
     }
 
     /**
