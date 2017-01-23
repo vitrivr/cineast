@@ -11,4 +11,9 @@ public class BooleanTypeProvider extends BooleanProviderImpl implements Primitiv
 		return ProviderDataType.BOOLEAN;
 	}
 	
+	@Override
+  public String getString() {
+    return getBoolean() ? "true" : "false";
+  }
+	
 }

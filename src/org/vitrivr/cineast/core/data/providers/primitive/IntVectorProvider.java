@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
+import java.util.Arrays;
+
 public class IntVectorProvider extends IntArrayProviderImpl implements PrimitiveTypeProvider{
 
 	public IntVectorProvider(int[] array) {
@@ -10,5 +12,10 @@ public class IntVectorProvider extends IntArrayProviderImpl implements Primitive
 	public ProviderDataType getType() {
 		return ProviderDataType.INT_ARRAY;
 	}
+	
+	@Override
+  public String getString() {
+    return Arrays.toString(getIntArray());
+  }
 	
 }

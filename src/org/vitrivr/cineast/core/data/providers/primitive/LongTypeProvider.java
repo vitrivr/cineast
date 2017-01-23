@@ -11,4 +11,9 @@ public class LongTypeProvider extends LongProviderImpl implements PrimitiveTypeP
 		return ProviderDataType.LONG;
 	}
 	
+	@Override
+  public String getString() {
+    return "" + getLong();
+  }
+	
 }

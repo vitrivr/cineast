@@ -11,4 +11,9 @@ public class DoubleTypeProvider extends DoubleProviderImpl implements PrimitiveT
 		return ProviderDataType.DOUBLE;
 	}
 	
+	@Override
+  public String getString() {
+    return "" + getDouble();
+  }
+	
 }

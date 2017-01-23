@@ -11,4 +11,9 @@ public class FloatTypeProvider extends FloatProviderImpl implements PrimitiveTyp
 		return ProviderDataType.FLOAT;
 	}
 	
+	@Override
+  public String getString() {
+    return "" + getFloat();
+  }
+	
 }
