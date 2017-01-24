@@ -19,7 +19,7 @@ import java.util.LinkedList;
  * @version 1.0
  * @created 23.01.17
  */
-public class ProvidedObjectIdGenerator implements ObjectIdGenerator {
+public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
 
     /**
      * Defines the assignment-modes for provided objectIds.
