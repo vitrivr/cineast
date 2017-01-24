@@ -11,6 +11,32 @@ Cineast can be built using [Gradle](http://gradle.org/).
 * git
 * You should install [Docker](https://docs.docker.com/engine/installation/linux/ubuntulinux/) which you will need for ADAMpro.
 
+### 3D rendering
+For 3D rendering (required in order to support 3D models) you either need a video card or Mesa 3D. The JOGL library supports both. Rendering on Headless devices has been successfully tested with Xvfb. The following steps are required to enable
+3D rendering support on a headless device without video card (Ubuntu 16.04.1 LTS)
+
+1. Install Mesa 3D (should come pre-installed on Ubuntu). Check with `dpkg -l | grep mesa`
+2. Install Xvfb:
+
+ ```
+ sudo apt-get install xvfb
+ ```
+ 
+3. Start a new screen:
+
+ ```
+ sudo Xvfb :1 -ac -screen 0 1024x768x24 &
+ ```
+ 
+4. Using the new screen, start Cineast:
+
+ ```
+ DISPLAY=:1 java -jar cineast.jar -3d
+ ```
+ 
+The -3d option will perform a 3D test. If it succeeds, cineast should generate a PNG image depicting two coloured
+triangles on a black background.
+
 ## OSVC
 * Then, you should get the OSVC data [Thumbnails](http://download-dbis.dmi.unibas.ch/thumbnails/) [OSVC](http://download-dbis.dmi.unibas.ch/OSVC/).
 * Setup for the UI is on the vitrivr-ui repo
@@ -44,6 +70,8 @@ Cineast has the following dependencies:
 * [Trove](https://bitbucket.org/trove4j/trove)
 * [Guava](https://github.com/google/guava)
 * [Log4j2](http://logging.apache.org/log4j/2.x/)
+* [Commons Math](https://commons.apache.org/proper/commons-math/)
+* [JOGL](http://jogamp.org/jogl/www/)
 
 ## Common Issues:
 
