@@ -16,19 +16,19 @@ public class InputConfig {
     private IdConfig id = new IdConfig();
 
     @JsonProperty
-    public Path getPath() {
-        return path;
-    }
-    public void setPath(Path path) {
-        this.path = path;
-    }
-
-    @JsonProperty
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    @JsonProperty(required = true)
+    public Path getPath() {
+        return path;
+    }
+    public void setPath(Path path) {
+        this.path = path;
     }
 
     @JsonProperty

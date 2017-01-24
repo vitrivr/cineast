@@ -3,74 +3,34 @@ package org.vitrivr.cineast.core.run;
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 
 import java.nio.file.Path;
 import java.util.List;
 
 /**
+ * Provides a configuration context for an extraction run.
+ *
  * @author rgasser
  * @version 1.0
  * @created 13.01.17
  */
 public interface ExtractionContextProvider {
     /**
-     * Determines the path of the input-file or folder.
-     *
-     * @return Path to the input-file or folder.
-     */
-    public Path inputPath();
-
-    /**
      * Determines the MediaType of the source material. Only one media-type
      * can be specified per ExtractionContextProvider.
      *
      * @return Media-type of the source material.
      */
-    public MediaType sourceType();
+    MediaType sourceType();
 
     /**
-     * Returns a list of named categories for which features should be extracted. These
-     * categories must exist and be configured in the config.json of Cineast!
+     * Determines the path of the input-file or folder.
      *
-     * @return List of named categories.
+     * @return Path to the input-file or folder.
      */
-    public List<String> getCategories();
-
-    /**
-     * Returns a list of named exporter classes that should be invoked during extraction. Exporters
-     * usually generate some representation and persistently store that information somewhere.
-     *
-     * @return List of named exporters.
-     */
-    public List<String> getExporters();
-
-    /**
-     * Returns an instance of ObjectIdGenerator that should be used to generated MultimediaObject ID's
-     * during an extraction run.
-     *
-     * @return ObjectIdGenerator
-     */
-    ObjectIdGenerator objectIdGenerator();
-
-    /**
-     * Returns the ExistenceCheck mode that should be applied during the extraction run. Can either be:
-     *
-     * NOCHECK          - No checks performed (may cause DB error).
-     * CHECK_SKIP       - Check and skip object on collision.
-     * CHECK_PROCEED    - Check and and proceed with object on collision.
-     *
-     * @return ExistenceCheck mode for current run.
-     */
-    IdConfig.ExistenceCheck existenceCheck();
-
-    /**
-     * Returns the PersistencyWriterSupplier that can be used during the extraction run to
-     * obtain PersistencyWriter instance.
-     *
-     * @return PersistencyWriterSupplier instance used obtain a PersistencyWriter.
-     */
-    PersistencyWriterSupplier persistencyWriter();
+    Path inputPath();
 
     /**
      * Limits the number of files that should be extracted. This a predicate is applied
@@ -88,4 +48,47 @@ public interface ExtractionContextProvider {
      * @return A number greater than zero.
      */
     int depth();
+
+    /**
+     * Returns a list of extractor classes that should be used for
+     * the extraction run!
+     *
+     * @return List of named extractors.
+     */
+    public List<Extractor> extractors();
+
+    /**
+     * Returns a list of exporter classes that should be invoked during extraction. Exporters
+     * usually generate some representation and persistently store that information somewhere.
+     *
+     * @return List of named exporters.
+     */
+    public List<Extractor> exporters();
+
+    /**
+     * Returns an instance of ObjectIdGenerator that should be used to generated MultimediaObject ID's
+     * during an extraction run.
+     *
+     * @return ObjectIdGenerator
+     */
+    ObjectIdGenerator objectIdGenerator();
+
+    /**
+     * Returns the ExistenceCheck mode that should be applied during the extraction run. Can either be:
+     *
+     * NOCHECK          - No checks performed (may cause DB error if collision occurs).
+     * CHECK_SKIP       - Check existence and skip object on collision.
+     * CHECK_PROCEED    - Check existence and proceed with object on collision.
+     *
+     * @return ExistenceCheck mode for current run.
+     */
+    IdConfig.ExistenceCheck existenceCheck();
+
+    /**
+     * Returns the PersistencyWriterSupplier that can be used during the extraction run to
+     * obtain PersistencyWriter instance.
+     *
+     * @return PersistencyWriterSupplier instance used obtain a PersistencyWriter.
+     */
+    PersistencyWriterSupplier persistencyWriter();
 }

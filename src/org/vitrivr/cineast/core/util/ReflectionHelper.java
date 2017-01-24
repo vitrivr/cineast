@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,32 +31,6 @@ public class ReflectionHelper {
 	private static final String IDGENERATOR_PACKAGE = "org.vitrivr.cineast.core.idgenerator";
 
 	/**
-	 * Tries to instantiate a new, named Exporter object. If the methods succeeds to do so,
-	 * that instance is returned by the method.
-	 *
-	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the EXPORTER_PACKAGE
-	 * is assumed and the name is treated as simple name.
-	 *
-	 * @param name Name of the Exporter.
-	 * @return Instance of Exporter or null, if instantiation fails.
-	 */
-	@SuppressWarnings("unchecked")
-	public static Extractor newExporter(String name) {
-		Class<Extractor> c = null;
-		try {
-			if (name.contains(".")) {
-				c = (Class<Extractor>) Class.forName(name);
-			} else {
-				c = getClassFromName(name, Extractor.class, EXPORTER_PACKAGE);
-			}
-			return c.newInstance();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-			LOGGER.fatal("Failed to create Exporter. Could not find class with name {}.", name, LogHelper.getStackTrace(e));
-			return null;
-		}
-	}
-
-	/**
 	 * Tries to instantiate a new, named ObjectIdGenerator object. If the methods succeeds to do so,
 	 * that instance is returned by the method.
 	 *
@@ -74,8 +49,8 @@ public class ReflectionHelper {
 			} else {
 				c = getClassFromName(name, ObjectIdGenerator.class, IDGENERATOR_PACKAGE);
 			}
-			return c.newInstance();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			return instanciate(c);
+		} catch (ClassNotFoundException | InstantiationException  e) {
 			LOGGER.fatal("Failed to create ObjectIdGenerator. Could not find class with name {}.", name, LogHelper.getStackTrace(e));
 			return null;
 		}
@@ -99,13 +74,68 @@ public class ReflectionHelper {
 			} else {
 				c = getClassFromName(name, CodebookGenerator.class, CODEBOOK_GENERATOR_PACKAGE);
 			}
-			return c.newInstance();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			return instanciate(c);
+		} catch (ClassNotFoundException | InstantiationException e) {
 			LOGGER.fatal("Failed to create CodebookGenerator. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
 
+	/**
+	 * Tries to instantiate a new, named Extractor object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the FEATURE_MODULE_PACKAGE
+	 * is assumed and the name is treated as simple name.
+	 *
+	 * @param name Name of the Exporter.
+	 * @return Instance of Exporter or null, if instantiation fails.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Extractor newExtractor(String name) {
+		Class<Extractor> c = null;
+		try {
+			if (name.contains(".")) {
+				c = (Class<Extractor>) Class.forName(name);
+			} else {
+				c = getClassFromName(name, Extractor.class, FEATURE_MODULE_PACKAGE);
+			}
+			return instanciate(c);
+		} catch (ClassNotFoundException | InstantiationException e) {
+			LOGGER.fatal("Failed to create Exporter. Could not find class with name {}.", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
+	/**
+	 * Tries to instantiate a new, named Exporter object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the EXPORTER_PACKAGE
+	 * is assumed and the name is treated as simple name.
+	 *
+	 * @param name Name of the Exporter.
+	 * @return Instance of Exporter or null, if instantiation fails.
+	 */
+	public static Extractor newExporter(String name, HashMap<String, String> configuration) {
+		Class<Extractor> c = null;
+		try {
+			if (name.contains(".")) {
+				c = (Class<Extractor>) Class.forName(name);
+			} else {
+				c = getClassFromName(name, Extractor.class, EXPORTER_PACKAGE);
+			}
+
+			if (configuration == null || configuration.isEmpty()) {
+				return instanciate(c);
+			} else {
+				return instanciate(c, configuration);
+			}
+		} catch (ClassNotFoundException | InstantiationException e) {
+			LOGGER.fatal("Failed to create CodebookGenerator. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
 
 	/**
 	 * creates a new instance of an exporter as specified by the provided json.
@@ -120,7 +150,6 @@ public class ReflectionHelper {
 		}
 		return null;
 	}
-
 
 	/**
 	 * creates a new instance of an {@link AbstractFeatureModule} as specified by the provided json.

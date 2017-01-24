@@ -12,6 +12,7 @@ import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.util.DecodingError;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +46,9 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     /** Initializer for the extractors. */
     private final ExtractorInitializer initializer;
 
+    /** */
+    private final Config applicationConfiguration;
+
     /** Flag indicating whether or not the ExtractionPipeline is running. */
     private volatile boolean running = false;
 
@@ -57,13 +61,14 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         /* Store context for further reference. */
         this.context = context;
         this.initializer = initializer;
+        this.applicationConfiguration = Config.sharedConfig();
 
         /* Start the extraction pipeline. */
         this.startup();
 
         /* Get value for task-queue and thread-count. */
         int taskQueueSize =  Config.getExtractorConfig().getTaskQueueSize();
-        int threadCount = Math.min(this.extractors.size(), Config.getExtractorConfig().getThreadPoolSize());
+        int threadCount = Config.getExtractorConfig().getThreadPoolSize();
 
         /* Prepare and create a new ThreadPoolExecutor. */
         LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(taskQueueSize);
@@ -167,15 +172,13 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     private void startup() {
         LOGGER.info("Warming up extraction pipeline....");
 
-        for (String categories : this.context.getCategories()) {
-            Config.getRetrieverConfig().getRetrieversByCategory(categories).forEachKey(entry -> {
-                if (entry instanceof Extractor) {
-                    Extractor extractor = (Extractor) entry;
-                    this.initializer.initialize(extractor);
-                    this.extractors.add(extractor);
-                }
-                return true;
-            });
+        for (Extractor extractor : this.context.extractors()) {
+            this.initializer.initialize(extractor);
+            this.extractors.add(extractor);
+        }
+
+        for (Extractor exporter : this.context.exporters()) {
+            this.extractors.add(exporter);
         }
 
         LOGGER.info("Extraction pipeline is ready with {} extractors.", this.extractors.size());

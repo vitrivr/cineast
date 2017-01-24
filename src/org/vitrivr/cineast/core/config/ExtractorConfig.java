@@ -1,50 +1,54 @@
 package org.vitrivr.cineast.core.config;
 
-import java.io.File;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public final class ExtractorConfig {
-	private int shotQueueSize = 5;
-	private int threadPoolSize = 4;
-	private int taskQueueSize = 10;
-	private File outputLocation = new File(".");
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.util.ReflectionHelper;
 
-	@JsonCreator
-	public ExtractorConfig() {
+import java.util.HashMap;
 
-	}
+/**
+ * @author rgasser
+ * @version 1.0
+ * @created 23.01.17
+ */
+public class ExtractorConfig {
+    /** Name of the Extractor. Must correspond to the simple-name or the FQN of the respective class.
+     *
+     * @see org.vitrivr.cineast.core.features.extractor.Extractor
+     */
+    private String name;
 
-	@JsonProperty
-	public int getShotQueueSize(){
-		return this.shotQueueSize;
-	}
-	public void setShotQueueSize(int shotQueueSize) {
-		this.shotQueueSize = shotQueueSize;
-	}
+    /** Properties that are being used to initialize the Extractor.
+     *
+     * @see  org.vitrivr.cineast.core.features.extractor.Extractor
+     */
+    private HashMap<String, String> properties = new HashMap<>();
 
-	@JsonProperty
-	public int getThreadPoolSize(){
-		return this.threadPoolSize;
-	}
-	public void setThreadPoolSize(int threadPoolSize) {
-		this.threadPoolSize = threadPoolSize;
-	}
+    @JsonProperty(required = true)
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@JsonProperty
-	public int getTaskQueueSize() {
-		return this.taskQueueSize;
-	}
-	public void setTaskQueueSize(int taskQueueSize) {
-		this.taskQueueSize = taskQueueSize;
-	}
+    @JsonProperty
+    public HashMap<String, String> getProperties() {
+        return properties;
+    }
+    public void setProperties(HashMap<String, String> properties) {
+        this.properties = properties;
+    }
 
-	@JsonProperty
-	public File getOutputLocation(){
-		return this.outputLocation;
-	}
-	public void setOutputLocation(String outputLocation) {
-		this.outputLocation = new File(outputLocation);
-	}
+    @JsonIgnore
+    public Extractor getExtractor() {
+        return ReflectionHelper.newExtractor(this.name);
+    }
+
+    @JsonIgnore
+    public Extractor getExporter() {
+        return ReflectionHelper.newExporter(this.name, this.properties);
+    }
 }

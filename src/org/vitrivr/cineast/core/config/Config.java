@@ -24,7 +24,7 @@ public class Config {
     private APIConfig api;
     private DatabaseConfig database;
     private RetrieverConfig retriever;
-    private ExtractorConfig extractor;
+    private ExtractionPipelineConfig extractor;
     private ImageCacheConfig imagecache;
     private VisualizationConfig visualization;
     private NeuralNetConfig neuralnet;
@@ -88,10 +88,10 @@ public class Config {
     }
 
     @JsonProperty
-    public ExtractorConfig getExtractor() {
+    public ExtractionPipelineConfig getExtractor() {
         return extractor;
     }
-    public void setExtractor(ExtractorConfig extractor) {
+    public void setExtractor(ExtractionPipelineConfig extractor) {
         this.extractor = extractor;
     }
 
@@ -145,7 +145,7 @@ public class Config {
     }
 
     @Deprecated
-    public static ExtractorConfig getExtractorConfig() {
+    public static ExtractionPipelineConfig getExtractorConfig() {
         return  sharedConfig().extractor;
     }
 

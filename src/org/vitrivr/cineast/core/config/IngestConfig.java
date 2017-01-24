@@ -5,41 +5,49 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
+ * Configures a data-ingest or extraction run, acts as an ExtractionContextProvider.
+ *
+ * A concrete instance be obtained by deserializing a JSON file that is compatible with the
+ * structure defined by this classes and its fields.
+ *
  * @author rgasser
  * @version 1.0
  * @created 13.01.17
  */
-public class ExtractionConfig implements ExtractionContextProvider {
+public class IngestConfig implements ExtractionContextProvider {
 
-
-    /** */
+    /** MediaType for the Extraction run. */
     private MediaType type;
 
-    /** */
+    /** Input configuration for the Extraction run*/
     private InputConfig input;
 
-    /** */
-    private ArrayList<String> categories  = new ArrayList<>();
+    /** List of Extractors that should be used during the Extraction run. */
+    private List<ExtractorConfig> extractors = new ArrayList<>();
 
-    /** */
-    private ArrayList<String> exporters = new ArrayList<>();
+    /** List of Exporters that should be used during the Extraction run. */
+    private List<ExtractorConfig> exporters = new ArrayList<>();
 
     /** Database-setting to use for import. Defaults to application settings. */
     private DatabaseConfig database = Config.sharedConfig().getDatabase();
 
     @JsonCreator
-    public ExtractionConfig() {
+    public IngestConfig() {
 
     }
 
-    @JsonProperty
+    @JsonProperty(required = true)
     public MediaType getType() {
         return type;
     }
@@ -47,7 +55,7 @@ public class ExtractionConfig implements ExtractionContextProvider {
         this.type = type;
     }
 
-    @JsonProperty
+    @JsonProperty(required = true)
     public InputConfig getInput() {
         return input;
     }
@@ -56,18 +64,18 @@ public class ExtractionConfig implements ExtractionContextProvider {
     }
 
     @JsonProperty
-    public ArrayList<String> getCategories() {
-        return categories;
+    public List<ExtractorConfig> getExtractors() {
+        return extractors;
     }
-    public void setCategories(ArrayList<String> categories) {
-        this.categories = categories;
+    public void setExtractors(ArrayList<ExtractorConfig> extractors) {
+        this.extractors = extractors;
     }
 
     @JsonProperty
-    public ArrayList<String > getExporters() {
+    public List<ExtractorConfig> getExporters() {
         return exporters;
     }
-    public void setExporters(ArrayList<String> exporters) {
+    public void setExporters(ArrayList<ExtractorConfig> exporters) {
         this.exporters = exporters;
     }
 
@@ -89,11 +97,42 @@ public class ExtractionConfig implements ExtractionContextProvider {
     }
 
     /**
+     * Determines the MediaType of the source material. Only one media-type
+     * can be specified per ExtractionContextProvider.
      *
+     * @return Media-type of the source material.
      */
     @Override
     public MediaType sourceType() {
         return this.type;
+    }
+
+    /**
+     * Returns a list of extractor classes that should be used for
+     * the extraction run!
+     *
+     * @return List of named extractors.
+     */
+    @Override
+    public List<Extractor> extractors() {
+        return this.extractors.stream()
+                .map(ExtractorConfig::getExtractor)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns a list of exporter classes that should be invoked during extraction. Exporters
+     * usually generate some representation and persistently store that information somewhere.
+     *
+     * @return List of named exporters.
+     */
+    @Override
+    public List<Extractor> exporters() {
+        return this.exporters.stream()
+                .map(ExtractorConfig::getExporter)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -119,7 +158,10 @@ public class ExtractionConfig implements ExtractionContextProvider {
     }
 
     /**
-     * @return
+     * Returns an instance of ObjectIdGenerator that should be used to generated MultimediaObject ID's
+     * during an extraction run.
+     *
+     * @return ObjectIdGenerator
      */
     @Override
     public ObjectIdGenerator objectIdGenerator() {
