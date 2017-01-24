@@ -75,6 +75,7 @@ public abstract class ImageCodebookGenerator implements CodebookGenerator {
         /* Prepare data-structures to track progress. */
         int max = files.size();
         int counter = 0;
+        int skipped = 0;
         char[] progressBar = new char[15];
         int update = max/progressBar.length;
 
@@ -87,9 +88,14 @@ public abstract class ImageCodebookGenerator implements CodebookGenerator {
          */
         Path path = null;
         while ((path = files.poll()) != null) {
-            this.process(decoder.init(path, null).getNext());
+            BufferedImage image = decoder.init(path, null).getNext();
+            if (image != null) {
+                this.process(image);
+            } else {
+                skipped++;
+            }
             if (counter % update == 0) this.updateProgressBar(progressBar, max, counter);
-            System.out.print(String.format("\rAdding vectors to codebook: %d/%d files processed |%s| (Memory left: %.2f/%.2f GB)", counter, max, String.valueOf(progressBar), Runtime.getRuntime().freeMemory()/1000000.0f, Runtime.getRuntime().totalMemory()/1000000.0f));
+            System.out.print(String.format("\rAdding vectors to codebook: %d/%d files processed (%d skipped) |%s| (Memory left: %.2f/%.2f GB)", counter, skipped,max, String.valueOf(progressBar), Runtime.getRuntime().freeMemory()/1000000.0f, Runtime.getRuntime().totalMemory()/1000000.0f));
             counter++;
         }
 
