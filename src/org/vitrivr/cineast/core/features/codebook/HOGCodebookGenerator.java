@@ -1,25 +1,26 @@
 package org.vitrivr.cineast.core.features.codebook;
 
-import boofcv.abst.feature.detdesc.DetectDescribePoint;
-import boofcv.struct.feature.BrightFeature;
-import boofcv.struct.image.GrayF32;
+import boofcv.abst.feature.dense.DescribeImageDense;
+
+import boofcv.struct.feature.TupleDesc_F64;
+import boofcv.struct.image.GrayU8;
 
 import org.ddogleg.clustering.FactoryClustering;
-import org.vitrivr.cineast.core.util.images.SURFHelper;
+import org.vitrivr.cineast.core.util.images.HOGHelper;
 
 import java.awt.image.BufferedImage;
 
 /**
  * @author rgasser
  * @version 1.0
- * @created 19.01.17
+ * @created 24.01.17
  */
-public class SURFCodebookGenerator extends ImageCodebookGenerator {
+public class HOGCodebookGenerator extends ImageCodebookGenerator {
     /**
      * Default constructor.
      */
-    public SURFCodebookGenerator() {
-        super(SURFHelper.SURF_VECTOR_SIZE, true);
+    public HOGCodebookGenerator() {
+        super(HOGHelper.HOG_VECTOR_SIZE, true);
     }
 
     /**
@@ -37,9 +38,9 @@ public class SURFCodebookGenerator extends ImageCodebookGenerator {
      */
     @Override
     protected void process(BufferedImage content) {
-        DetectDescribePoint<GrayF32, BrightFeature> surf = SURFHelper.getFastSurf(content);
-        for (int i=0;i<surf.getNumberOfFeatures();i++) {
-            this.cluster.addReference(surf.getDescription(i));
+        DescribeImageDense<GrayU8, TupleDesc_F64> hog = HOGHelper.getHOGDescriptors(content);
+        for (TupleDesc_F64 desc : hog.getDescriptions()) {
+            this.cluster.addReference(desc);
         }
     }
 }
