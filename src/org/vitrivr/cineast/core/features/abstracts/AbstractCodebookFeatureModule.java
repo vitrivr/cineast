@@ -4,11 +4,15 @@ import boofcv.abst.feature.detdesc.DetectDescribePoint;
 import boofcv.alg.scene.FeatureToWordHistogram_F64;
 import boofcv.io.UtilIO;
 import boofcv.struct.feature.BrightFeature;
+import boofcv.struct.feature.TupleDesc_F64;
 import boofcv.struct.image.GrayF32;
 
+import org.bridj.util.Tuple;
 import org.ddogleg.clustering.AssignCluster;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+
+import java.util.List;
 
 /**
  * An abstract feature module that leverages a named codebook and a set of features to obtain
@@ -87,6 +91,32 @@ public abstract class AbstractCodebookFeatureModule extends AbstractFeatureModul
         /* Add the features to the Histogram-Calculator... */
         for (int i=0;i<descriptors.getNumberOfFeatures();i++) {
             this.featuresToHistogram.addFeature(descriptors.getDescription(i));
+        }
+
+        /* ... and calculates and returns the histogram. */
+        this.featuresToHistogram.process();
+        return this.floatToDoubleArray(featuresToHistogram.getHistogram());
+    }
+
+    /**
+     * Returns a histogram given the provided descriptors and the assignment object loaded
+     * from the codebook.
+     *
+     * @param hard Indicates whether to use hard or soft assignment.
+     * @param descriptors Feature descriptors as List of TupleDesc_F64
+     * @return float[] array with codebook
+     */
+    protected final float[] histogram(boolean hard, List<TupleDesc_F64> descriptors) {
+        /* Reset the Histogram-Calculator. */
+        if (this.featuresToHistogram != null) {
+            this.featuresToHistogram.reset();
+        } else {
+            this.featuresToHistogram = new FeatureToWordHistogram_F64(this.assignment, hard);
+        }
+
+        /* Add the features to the Histogram-Calculator... */
+        for (TupleDesc_F64 descriptor : descriptors) {
+            this.featuresToHistogram.addFeature(descriptor);
         }
 
         /* ... and calculates and returns the histogram. */
