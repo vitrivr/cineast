@@ -95,7 +95,7 @@ public abstract class ImageCodebookGenerator implements CodebookGenerator {
                 skipped++;
             }
             if (counter % update == 0) this.updateProgressBar(progressBar, max, counter);
-            System.out.print(String.format("\rAdding vectors to codebook: %d/%d files processed (%d skipped) |%s| (Memory left: %.2f/%.2f GB)", counter, skipped,max, String.valueOf(progressBar), Runtime.getRuntime().freeMemory()/1000000.0f, Runtime.getRuntime().totalMemory()/1000000.0f));
+            System.out.print(String.format("\rAdding vectors to codebook: %d/%d files processed (%d skipped) |%s| (Memory left: %.2f/%.2f GB)", counter,max,skipped, String.valueOf(progressBar), Runtime.getRuntime().freeMemory()/1000000.0f, Runtime.getRuntime().totalMemory()/1000000.0f));
             counter++;
         }
 
