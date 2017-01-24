@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.MathHelper;
 
 /**
@@ -13,8 +11,6 @@ import org.vitrivr.cineast.core.util.MathHelper;
  * @created 18.01.17
  */
 public class SURFMirflickr25K512 extends SURF {
-    private static final Logger LOGGER = LogManager.getLogger();
-
     /**
      * Default constructor.
      */
