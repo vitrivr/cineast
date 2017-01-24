@@ -170,7 +170,7 @@ public class ShotSegmenter implements SegmentProvider{
 		}
 		
 		int shotNumber = idCounter.incrementAndGet();
-		String shotId = MediaType.generateId(MediaType.VIDEO, movieId, shotNumber);
+		String shotId = MediaType.generateSegmentId(MediaType.VIDEO, movieId, shotNumber);
 		
 		shot.setId(shotId);
 		addSubtitleItems(shot);

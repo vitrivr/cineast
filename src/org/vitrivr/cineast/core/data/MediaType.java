@@ -136,19 +136,35 @@ public enum MediaType {
   }
   
   /**
-   * generates an id of the form (prefix)_(object id)_(sequence number) assuming the delimiter is '_'
+   * generates a segment id of the form (prefix)_(object id)_(sequence number) assuming the delimiter is '_'
+   *
    * @param type the type for which an id is to be generated
-   * @param objectId the globally unique id of the object
+   * @param objectId the globally unique id of the object (without MediaType prefix)
    * @param sequenceNumber the number of the segment within the object
    * @throws IllegalArgumentException if shot sequence number is negative or objectId is empty
    * @throws NullPointerException if type or objectId is null
    */
-  public static final String generateId(MediaType type, String objectId, long sequenceNumber) throws IllegalArgumentException, NullPointerException{
+  public static final String generateSegmentId(MediaType type, String objectId, long sequenceNumber) throws IllegalArgumentException, NullPointerException{
     if(sequenceNumber < 0){
       throw new IllegalArgumentException("sequenceNumber must be non-negative");
     }
     
     return generateId(type, objectId) + DELIMITER + sequenceNumber;
     
+  }
+
+  /**
+   * generates a segment id of the form (prefix)_(object id)_(sequence number) assuming the delimiter is '_'
+   *
+   * @param objectId the globally unique id of the object (with MediaType prefix)
+   * @param sequenceNumber the number of the segment within the object
+   * @throws IllegalArgumentException if shot sequence number is negative or objectId is empty
+   * @throws NullPointerException if type or objectId is null
+   */
+  public static final String generateSegmentId(String objectId, long sequenceNumber) throws IllegalArgumentException, NullPointerException{
+    if(sequenceNumber < 0){
+      throw new IllegalArgumentException("sequenceNumber must be non-negative");
+    }
+    return objectId + DELIMITER + sequenceNumber;
   }
 }

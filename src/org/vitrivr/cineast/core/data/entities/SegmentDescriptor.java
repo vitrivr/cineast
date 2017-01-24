@@ -35,7 +35,7 @@ public class SegmentDescriptor implements ExistenceCheck {
      * @return
      */
     public static SegmentDescriptor newSegmentDescriptor(String objectId, int segmentNumber, int start, int end) {
-        String segmentId = String.format("%s_%d", objectId, segmentNumber);
+        String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
         return new SegmentDescriptor(objectId, segmentId, segmentNumber, start, end, false);
     }
 
