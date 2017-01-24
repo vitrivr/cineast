@@ -15,7 +15,7 @@ public class SURFMirflickr25K512 extends SURF {
      * Default constructor.
      */
     public SURFMirflickr25K512() {
-        super("features_surfmf25k512", (float) MathHelper.SQRT2/4.0f);
+        super("features_surfmf25k512", (float) MathHelper.SQRT2);
     }
 
     /**

@@ -53,7 +53,7 @@ public abstract class SURF extends AbstractCodebookFeatureModule {
         long start = System.currentTimeMillis();
         LOGGER.entry();
 
-        qc.setDistanceIfEmpty(QueryConfig.Distance.chisquared);
+        qc.setDistanceIfEmpty(QueryConfig.Distance.euclidean);
 
         List<StringDoublePair> results = null;
         DetectDescribePoint<GrayF32, BrightFeature> descriptors = SURFHelper.getStableSurf(sc.getAvgImg().getBufferedImage());
