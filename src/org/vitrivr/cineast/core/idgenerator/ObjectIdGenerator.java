@@ -31,11 +31,14 @@ public interface ObjectIdGenerator {
 
     /**
      * Generates the next objectId and returns it as a string. That objectId should
-     * already contain the MediaType prefix, if the ID type supports it.
+     * already contain the MediaType prefix, if the ID type supports media-type prefixing.
+     *
+     * Important: If the supply of ID's is depleted OR no ID could be generated for some reason,
+     * this method returns null!
      *
      * @param path Path to the file for which an ID should be generated.
      * @param type MediaType of the file for which an ID should be generated.
-     * @return Next ID in the sequence.
+     * @return Next ID in the sequence or null
      */
     String next(Path path, MediaType type);
 }
