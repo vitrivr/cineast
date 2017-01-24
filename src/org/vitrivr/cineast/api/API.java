@@ -87,7 +87,7 @@ public class API {
 
 			/* Start the WebSocket API if it was configured. */
 			if (Config.sharedConfig().getApi().getEnableWebsocket()) {
-                handleWebsocket();
+                handleWebsocketStart();
             }
 
 			/* Start the RESTful API if it was configured. */
@@ -117,11 +117,27 @@ public class API {
 	/**
 	 * Starts the WebSocket interface (CLI and program-argument)
 	 */
-	private static void handleWebsocket() {
-        LOGGER.info("Starting WebSocket API...");
-        int port = Config.sharedConfig().getApi().getHttpPort();
-		int threadPoolSize = Config.sharedConfig().getApi().getThreadPoolSize();
-		WebsocketAPI.start(port, threadPoolSize);
+	private static void handleWebsocketStart() {
+		if (!WebsocketAPI.isRunning()) {
+			LOGGER.info("Starting WebSocket API...");
+			int port = Config.sharedConfig().getApi().getHttpPort();
+			int threadPoolSize = Config.sharedConfig().getApi().getThreadPoolSize();
+			WebsocketAPI.start(port, threadPoolSize);
+		} else {
+			LOGGER.warn("WebSocket API is already running...");
+		}
+	}
+
+	/**
+	 * Stops the WebSocket interface (CLI)
+	 */
+	private static void handleWebsocketStop() {
+		if (WebsocketAPI.isRunning()) {
+			LOGGER.info("Stopping WebSocket API...");
+			WebsocketAPI.stop();
+		} else {
+			LOGGER.warn("WebSocket API has not been started yet...");
+		}
 	}
 
 	/**
@@ -329,7 +345,15 @@ public class API {
 						}
                         case "ws":
 						case "websocket": {
-							handleWebsocket();
+							if (commands.size() < 2) {
+								System.err.println("You must specify whether you want to start or stop the websocket (1 argument).");
+								break;
+							}
+							if (commands.get(1).toLowerCase().equals("start")) {
+								handleWebsocketStart();
+							} else {
+								handleWebsocketStop();
+							}
 							break;
 						}
 						case "exit":

@@ -18,9 +18,11 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import spark.Spark;
 
 import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -55,6 +57,9 @@ public class WebsocketAPI {
     /** List of stateless WebsocketMessageHandler classes for the API. */
     private static final HashMap<MessageTypes, WebsocketMessageHandler> STATELESS_HANDLERS = new HashMap<>();
 
+    /** Flag that indicates whether the WebSocket API is running. */
+    private static AtomicBoolean RUNNING = new AtomicBoolean(false);
+
     /* Register the MessageHandlers for the different messages. */
     static {
         STATELESS_HANDLERS.put(MessageTypes.Q_QUERY, new QueryMessageHandler());
@@ -80,6 +85,24 @@ public class WebsocketAPI {
         Spark.webSocket(String.format("/%s/%s", CONTEXT, VERSION), WebsocketAPI.class);
         Spark.init();
         Spark.awaitInitialization();
+        RUNNING.set(true);
+    }
+
+    /**
+     * Stops the WebSocket API.
+     */
+    public static void stop() {
+        Spark.stop();
+        RUNNING.set(false);
+    }
+
+    /**
+     * Indicates whether or not the WebSocket API is already running.
+     *
+     * @return true if WebSocket API is running, false otherwise.
+     */
+    public static boolean isRunning() {
+        return RUNNING.get();
     }
 
     /**
