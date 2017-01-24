@@ -23,6 +23,7 @@ import org.joml.Vector3i;
 import org.vitrivr.cineast.api.rest.RestfulAPI;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
@@ -111,7 +112,6 @@ public class API {
 	private static void handleSetup() {
 		EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
 		if (ec != null) ec.setup(new HashMap<>());
-		return;
 	}
 
 	/**
@@ -119,12 +119,13 @@ public class API {
 	 */
 	private static void handleWebsocketStart() {
 		if (!WebsocketAPI.isRunning()) {
-			LOGGER.info("Starting WebSocket API...");
+			System.out.print("Starting WebSocket API...");
 			int port = Config.sharedConfig().getApi().getHttpPort();
 			int threadPoolSize = Config.sharedConfig().getApi().getThreadPoolSize();
 			WebsocketAPI.start(port, threadPoolSize);
+			System.out.print("WebSocket API started!");
 		} else {
-			LOGGER.warn("WebSocket API is already running...");
+			System.err.print("WebSocket API is already running...");
 		}
 	}
 
@@ -133,10 +134,11 @@ public class API {
 	 */
 	private static void handleWebsocketStop() {
 		if (WebsocketAPI.isRunning()) {
-			LOGGER.info("Stopping WebSocket API...");
+			System.out.print("Stopping WebSocket API...");
 			WebsocketAPI.stop();
+			System.out.print("WebSocket API stopped!");
 		} else {
-			LOGGER.warn("WebSocket API has not been started yet...");
+			System.err.print("WebSocket API has not been started yet...");
 		}
 	}
 
@@ -144,10 +146,11 @@ public class API {
 	 * Starts the RESTful interface (CLI and program-argument)
 	 */
 	private static void handleRestful() {
-        LOGGER.info("Starting RESTful API...");
+		System.out.print("Starting RESTful API...");
         int port = Config.sharedConfig().getApi().getHttpPort();
 		int threadPoolSize = Config.sharedConfig().getApi().getThreadPoolSize();
 		RestfulAPI.start(port, threadPoolSize);
+		System.out.print("RESTful API started!");
 	}
 
     /**
@@ -155,7 +158,7 @@ public class API {
      */
     private static void handleLegacy() {
         try {
-            LOGGER.info("Starting Legacy API...");
+            System.out.print("Starting Legacy API...");
             ServerSocket ssocket  = new ServerSocket(Config.sharedConfig().getApi().getLegacyPort());
             while (running) {
                 JSONAPIThread thread = new JSONAPIThread(ssocket.accept());
@@ -163,7 +166,7 @@ public class API {
             }
             ssocket.close();
         } catch (IOException e) {
-            LOGGER.fatal("Error occurred while listening on ServerSocket.", LogHelper.getStackTrace(e));
+			System.err.println("Error occurred while listening on ServerSocket.");
         }
     }
 
@@ -185,7 +188,7 @@ public class API {
 				e.printStackTrace();
 			}
 		} else {
-			LOGGER.error("The specified codebook generator '{}' does not exist.");
+			System.err.println(String.format("The specified codebook generator '{}' does not exist.", name));
 		}
 	}
 
@@ -194,7 +197,7 @@ public class API {
 	 * to configure that extraction run. Refer to ExtractionConfig class for structural information.
 	 *
 	 * @see ExtractionDispatcher
-	 * @see org.vitrivr.cineast.core.config.ExtractionConfig
+	 * @see IngestConfig
 	 *
 	 * @param file Configuration file for the extraction.
 	 */
@@ -204,10 +207,10 @@ public class API {
             if (dispatcher.initialize(file)) {
                 dispatcher.start();
             } else {
-                LOGGER.warn("Could not start handleExtraction with configuration file '{}'. Does the file exist?", file.toString());
+                System.err.println(String.format("Could not start handleExtraction with configuration file '%s'. Does the file exist?", file.toString()));
             }
 		} catch (IOException e) {
-			LOGGER.fatal("Could not start handleExtraction with configuration file '{}' due to a serious IO error.", file.toString(), LogHelper.getStackTrace(e));
+			System.err.println(String.format("Could not start handleExtraction with configuration file '{}' due to a serious IO error.", file.toString()));
 		}
 	}
 
@@ -218,7 +221,7 @@ public class API {
      */
 	private static void handle3Dtest() {
 
-        LOGGER.info("Performing 3D test...");
+		System.out.println("Performing 3D test...");
 
         Mesh mesh = new Mesh();
         mesh.addVertex(new Vector3f(1.0f,0.0f,0.0f), new Vector3f(1.0f, 0.0f, 0.0f));
@@ -237,9 +240,9 @@ public class API {
         BufferedImage image = renderer.obtain();
         try {
             ImageIO.write(image, "PNG", new File("cineast-3dtest.png"));
-            LOGGER.info("3D test complete. Check for cineast-3dtest.png");
+            System.out.println("3D test complete. Check for cineast-3dtest.png");
         } catch (IOException e) {
-            LOGGER.fatal("Could not save rendered image due to an IO error.", LogHelper.getStackTrace(e));
+			System.err.println("Could not save rendered image due to an IO error.");
         }
     }
 
