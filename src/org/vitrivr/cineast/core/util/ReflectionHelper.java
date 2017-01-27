@@ -14,6 +14,7 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 import com.eclipsesource.json.JsonObject;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
+import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 
 public class ReflectionHelper {
 
@@ -29,6 +30,9 @@ public class ReflectionHelper {
 
 	/** Name of the package where ObjectIdGenerator classes are located by default. */
 	private static final String IDGENERATOR_PACKAGE = "org.vitrivr.cineast.core.idgenerator";
+
+	/** Name of the package where MetadataExtractor classes are located by default. */
+	private static final String METADATA_PACKAGE = "org.vitrivr.cineast.core.metadata";
 
 	/**
 	 * Tries to instantiate a new, named ObjectIdGenerator object. If the methods succeeds to do so,
@@ -132,7 +136,33 @@ public class ReflectionHelper {
 				return instanciate(c, configuration);
 			}
 		} catch (ClassNotFoundException | InstantiationException e) {
-			LOGGER.fatal("Failed to create CodebookGenerator. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create Exporter. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
+	/**
+	 * Tries to instantiate a new, named MetadataExtractor object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the METADATA_PACKAGE
+	 * is assumed and the name is treated as simple name.
+	 *
+	 * @param name Name of the MetadataExtractor.
+	 * @return Instance of MetadataExtractor or null, if instantiation fails.
+	 */
+	public static MetadataExtractor newMetadataExtractor(String name) {
+		Class<MetadataExtractor> c = null;
+		try {
+			if (name.contains(".")) {
+				c = (Class<MetadataExtractor>) Class.forName(name);
+			} else {
+				c = getClassFromName(name, MetadataExtractor.class, METADATA_PACKAGE);
+			}
+
+			return instanciate(c);
+		} catch (ClassNotFoundException | InstantiationException e) {
+			LOGGER.fatal("Failed to create MetadataExtractor. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
