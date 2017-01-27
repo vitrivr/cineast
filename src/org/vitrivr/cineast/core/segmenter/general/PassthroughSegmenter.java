@@ -4,6 +4,8 @@ import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 
 import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A simple segmenter that passes the output from the decoder straight back to the orchestrator.
@@ -23,15 +25,15 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
     private final SynchronousQueue<T> queue = new SynchronousQueue<T>();
 
     /** A flag indicating whether or not the decoder has completed its work. */
-    private volatile boolean complete;
+    private volatile AtomicBoolean complete = new AtomicBoolean(false);
 
     /**
      * @param decoder
      */
     @Override
-    public synchronized void init(Decoder<T> decoder) {
+    public void init(Decoder<T> decoder) {
         this.decoder = decoder;
-        this.complete = false;
+        this.complete.set(false);
     }
 
     /**
@@ -43,9 +45,9 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
      * @return
      */
     public SegmentContainer getNext() throws InterruptedException {
-        T content = this.queue.take();
+        T content = this.queue.poll(5, TimeUnit.SECONDS);
+        this.complete.set(this.decoder.complete());
         if (content != null) {
-            synchronized (this) { this.complete = true; }
             return this.getSegmentFromContent(content);
         } else {
             return null;
@@ -59,8 +61,8 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
      * @return true if work is complete, false otherwise.
      */
     @Override
-    public synchronized boolean complete() {
-        return this.complete;
+    public boolean complete() {
+        return this.complete.get();
     }
 
     /**
@@ -86,7 +88,8 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
     public void run() {
         while (!this.decoder.complete()) {
             try {
-                this.queue.put(this.decoder.getNext());
+                T t = this.decoder.getNext();
+                if (t != null) this.queue.put(t);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

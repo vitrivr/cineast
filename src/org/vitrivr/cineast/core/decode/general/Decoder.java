@@ -53,9 +53,9 @@ public interface Decoder<T> {
     int count();
 
     /**
-     * Indicates whether or not the current decoder has more content to return or not.
+     * Indicates whether or not the decoder has more content to return.
      *
-     * @return True if more content can be fetched, false otherwise.
+     * @return True if more content can be retrieved, false otherwise.
      */
     boolean complete();
 

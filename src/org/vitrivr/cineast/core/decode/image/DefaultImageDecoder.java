@@ -18,6 +18,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author rgasser
@@ -36,14 +37,14 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     /** HashSet containing all the mime-types supported by this ImageDecoder instance. */
     private static HashSet<String> supportedFiles = new HashSet<>(Arrays.asList(ImageIO.getReaderMIMETypes()));
 
-    /** Path to the input file. */
-    private Path input;
-
-    /** Flag indicating whether or not the Decoder is done decoding and the content has been obtained. */
-    private volatile boolean complete;
-
     /** Bounds used to rescale the image. */
     private int rescale_bounds = CONFIG_BOUNDS_DEFAULT;
+
+    /** Flag indicating whether or not the Decoder is done decoding and the content has been obtained. */
+    private AtomicBoolean complete = new AtomicBoolean(false);
+
+    /** Path to the input file. */
+    private Path input;
 
     /**
      * Default constructor.
@@ -51,9 +52,9 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
      * @param path
      */
     @Override
-    public synchronized Decoder<BufferedImage> init(Path path, DecoderConfig config) {
+    public Decoder<BufferedImage> init(Path path, DecoderConfig config) {
         this.input = path;
-        this.complete = false;
+        this.complete.set(false);
         if (config != null) {
             this.rescale_bounds = config.namedAsInt(CONFIG_BOUNDS_PROPERTY, CONFIG_BOUNDS_DEFAULT);
         }
@@ -68,7 +69,6 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
      */
     @Override
     public BufferedImage getNext() {
-        synchronized(this) { this.complete = true; }
         InputStream is = null;
         BufferedImage output = null;
         BufferedImage input;
@@ -96,16 +96,17 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
                 BufferedImageOp resampler = new ResampleOp(width, height, ResampleOp.FILTER_LANCZOS); // A good default filter, see class documentation for more info
                 output = resampler.filter(input, null);
             }
-        } catch (IOException e) {
-            LOGGER.fatal("Severe error occurred when trying to decode the image file under {}. Image will be skipped...", this.input.toString(), LogHelper.getStackTrace(e));
+        } catch (IOException | IllegalArgumentException e) {
+            LOGGER.fatal("A severe error occurred while trying to decode the image file under '{}'. Image will be skipped...", this.input.toString(), LogHelper.getStackTrace(e));
         } finally {
             try {
                 if (is != null) is.close();
             } catch (IOException e) {
                 LOGGER.warn("Could not close the input stream of the image file under {}.", this.input.toString(), LogHelper.getStackTrace(e));
             }
-            return output;
+            this.complete.set(true);
         }
+        return output;
     }
 
     /**
@@ -115,7 +116,7 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
      * @return
      */
     @Override
-    public synchronized int count() {
+    public int count() {
         return 1;
     }
 
@@ -148,8 +149,8 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
      * @return true if there is still content, false otherwise.
      */
     @Override
-    public synchronized boolean complete() {
-        return this.complete;
+    public boolean complete() {
+        return this.complete.get();
     }
 
     /**
