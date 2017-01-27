@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.providers.primitive.*;
 
 
@@ -10,28 +11,40 @@ import org.vitrivr.cineast.core.data.providers.primitive.*;
  * @version 1.0
  * @created 10.01.17
  */
-/* TODO: Review with Luca. */
-public class MultimediaMetadataDescriptor {
+public class MultimediaMetadataDescriptor implements ExistenceCheck {
     /** Name of the entity in the persistence layer. */
     public static final String ENTITY = "cineast_metadata";
 
     /** Field names in the persistence layer. */
-    public static final String[] FIELDNAMES = {"id", "mediatype", "name", "path", "preview", "segments"};
+    public static final String[] FIELDNAMES = {"metadataId", "objectId", "key", "value"};
 
-    /*
-     * ID of the MultimediaObject this MultimediaMetadataDescriptor belongs to.
-     */
+    /** ID of the MultimediaMetadataDescriptor. */
+    private String metadataId;
+
+    /** ID of the MultimediaObject this MultimediaMetadataDescriptor belongs to. */
     private final String objectId;
 
-    /*
-     * Key (name) of the metadata entry. Must NOT be unique for a given object.
-     */
+    /** Key (name) of the metadata entry. Must NOT be unique for a given object. */
     private final String key;
 
-    /*
-     * Value of the MetadataDescriptor.
-     */
+    /** Value of the MetadataDescriptor. */
     private final PrimitiveTypeProvider value;
+
+    /** */
+    private final boolean exists;
+
+    /**
+     * Convenience method to create a MultimediaMetadataDescriptor marked as new. The method will assign
+     * a new ID to this MultimediaObjectDescriptor.
+     *
+     * @param objectId The Path that points to the file for which a new MultimediaObjectDescriptor should be created.
+     * @param key
+     * @param value
+     * @return A new MultimediaMetadataDescriptor
+     */
+    public static MultimediaMetadataDescriptor newMultimediaMetadataDescriptor(String objectId, String key, Object value) {
+        return new MultimediaMetadataDescriptor(objectId, key, value, false);
+    }
 
     /**
      * Constructor for MultimediaMetadataDescriptor. Tries to infer the type of the provided value by means of
@@ -42,7 +55,7 @@ public class MultimediaMetadataDescriptor {
      * @param key Key (name) of the metadata entry.
      * @param value Value of the metadata entry. Can be any type of object, but only Double, Float, Int, Long and String are supported officialy.
      */
-    public MultimediaMetadataDescriptor(String objectId, String key, Object value) {
+    public MultimediaMetadataDescriptor(String objectId, String key, Object value, boolean exists) {
         this.objectId = objectId;
         this.key = key;
         if (value instanceof Float) {
@@ -60,8 +73,14 @@ public class MultimediaMetadataDescriptor {
         } else {
             this.value = new NothingProvider();
         }
+        this.exists = exists;
     }
-    
+
+    @JsonProperty
+    public String getMetadataId() {
+        return metadataId;
+    }
+
     @JsonProperty
     public String getObjectId() {
         return objectId;
@@ -75,6 +94,11 @@ public class MultimediaMetadataDescriptor {
     @JsonProperty
     public Object getValue() {
         return PrimitiveTypeProvider.getObject(this.value);
+    }
+
+    @Override
+    public boolean exists() {
+        return this.exists;
     }
 }
 
