@@ -30,6 +30,7 @@ public class ImageSegment implements SegmentContainer {
      */
     public ImageSegment(BufferedImage image) {
         this.image = MultiImageFactory.newMultiImage(image);
+        this.frame = new Frame(1, this.image);
     }
 
     /**
@@ -98,7 +99,6 @@ public class ImageSegment implements SegmentContainer {
      * @return
      */
     public Frame getMostRepresentativeFrame() {
-        if (this.frame == null) this.frame = new Frame(1, this.image);
         return this.frame;
     }
 }
