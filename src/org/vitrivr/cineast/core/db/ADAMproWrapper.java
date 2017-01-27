@@ -193,4 +193,18 @@ public class ADAMproWrapper {
     }
   }
 
+  public ListenableFuture<AckMessage> dropEntity(String entityName){
+    return this.definitionStub.dropEntity(EntityNameMessage.newBuilder().setEntity(entityName).build());
+  }
+
+  public boolean dropEntityBlocking(String entityName) {
+    ListenableFuture<AckMessage> future = this.dropEntity(entityName);
+    try {
+      return future.get().getCode() == AckMessage.Code.OK;
+    } catch (InterruptedException | ExecutionException e) {
+      LOGGER.error("error in dropEntityBlocking: {}", LogHelper.getStackTrace(e));
+      return false;
+    }
+  }
+
 }

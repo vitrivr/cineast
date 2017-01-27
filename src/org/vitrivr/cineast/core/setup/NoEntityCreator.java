@@ -60,4 +60,9 @@ public class NoEntityCreator implements EntityCreator {
   public void close() {
   }
 
+  @Override
+  public boolean dropEntity(String entityName) {
+    return false;
+  }
+
 }

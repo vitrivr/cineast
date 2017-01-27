@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public interface EntityCreator {
-
     /**
      * Logger instance used for logging.
      */
@@ -107,6 +106,12 @@ public interface EntityCreator {
     boolean createIdEntity(String entityName, AttributeDefinition... attributes);
 
     boolean existsEntity(String entityName);
+
+    /**
+     * drops an entity, returns <code>true</code> if the entity was successfully dropped, <code>false</code> otherwise
+     * @param entityName the entity to drop
+     */
+    boolean dropEntity(String entityName);
 
     void close();
 }
