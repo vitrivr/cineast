@@ -118,6 +118,13 @@ jar {
 	archiveName = 'cineast.jar'
 }
 
+task doc(type: Javadoc){
+	source = sourceSets.main.allJava
+	classpath += sourceSets.main.compileClasspath
+	options.linkSource true
+	failOnError false
+}
+
 task downloadExternalFiles(type: Download){
 	src 'http://download.vitrivr.org/vgg16.tfmodel'
 	dest 'resources/vgg16'
