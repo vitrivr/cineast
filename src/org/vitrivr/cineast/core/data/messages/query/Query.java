@@ -31,8 +31,9 @@ public class Query implements Message {
      * @param containers
      */
     @JsonCreator
-    public Query(@JsonProperty("containers")QueryComponent[] containers, @JsonProperty("types") MediaType[] types) {
+    public Query(@JsonProperty("containers") QueryComponent[] containers, @JsonProperty("types") MediaType[] types) {
         this.containers = containers;
+        this.types = types;
     }
 
     /**

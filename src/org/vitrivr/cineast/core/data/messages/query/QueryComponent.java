@@ -15,23 +15,15 @@ public class QueryComponent {
     /**
      * List of QueryTerm objects for this QueryComponent. This is for convenience only.
      */
-    private QueryTerm[] terms = new QueryTerm[1];
-
-    /**
-     * Instance of the ImageQueryTerm for this QueryComponent. Can be NULL!
-     */
-    private final QueryTermImage queryTermImage;
+    private final QueryTerm[] terms;
 
     /**
      *
-     * @param queryTermImage
+     * @param terms
      */
     @JsonCreator
-    public QueryComponent(@JsonProperty("imageQueryTerm") QueryTermImage queryTermImage) {
-        this.queryTermImage = queryTermImage;
-
-        /* Add query-terms to the list. */
-        if (this.queryTermImage !=null) this.terms[0] = this.queryTermImage;
+    public QueryComponent(@JsonProperty("terms") QueryTerm[] terms) {
+        this.terms = terms;
     }
 
     /**
