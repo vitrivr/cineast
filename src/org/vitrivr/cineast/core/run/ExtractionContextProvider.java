@@ -5,6 +5,7 @@ import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
+import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -42,6 +43,14 @@ public interface ExtractionContextProvider {
     int limit();
 
     /**
+     * Offset into the list of files that are being distracted.
+     *
+     * @return A positive number or zero
+     */
+    int skip();
+
+
+    /**
      *  Limits the depth of recursion when extraction folders of files. Has no
      *  effect if the inputPath points to a file.
      *
@@ -64,6 +73,14 @@ public interface ExtractionContextProvider {
      * @return List of named exporters.
      */
     public List<Extractor> exporters();
+
+    /**
+     * Returns a list of metadata extractor classes that should be invoked during extraction. MetadataExtractor's
+     * usually read some metadata from a file.
+     *
+     * @return List of named exporters.
+     */
+    public List<MetadataExtractor> metadataExtractors();
 
     /**
      * Returns an instance of ObjectIdGenerator that should be used to generated MultimediaObject ID's

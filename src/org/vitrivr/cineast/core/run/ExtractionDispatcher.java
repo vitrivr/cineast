@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.run.filehandler.ImageExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.VideoExtractionFileHandler;
+import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 import java.io.File;
@@ -46,18 +47,17 @@ public class ExtractionDispatcher {
         Path path = this.context.inputPath();
 
         /*
-         * Recursively add all files under that path to the List of files that should be processed.
-         *
-         * Uses the context-provider to limit the number of files and determine the depth of recursion.
+         * Recursively add all files under that path to the List of files that should be processed. Uses the context-provider
+         * to determine the depth of recursion, skip files and limit the number of files.
          */
         if (!Files.exists(path)) return false;
         this.paths = Files.walk(path, this.context.depth())
-                     .filter(Files::isRegularFile)
+                     .skip(this.context.skip())
                      .filter(p -> {
                          try {
-                             return !Files.isHidden(p);
+                             return Files.exists(p) && Files.isRegularFile(p) && !Files.isHidden(p) && Files.isReadable(p);
                          } catch (IOException e) {
-                             e.printStackTrace();
+                             LOGGER.error("An IO exception occurred while testing the file under {}.", p.toString(), LogHelper.getStackTrace(e));
                              return false;
                          }
                      })
@@ -68,8 +68,10 @@ public class ExtractionDispatcher {
 
     /**
      * Starts extraction by dispatching a new ExtractionFileHandler thread.
+     *
+     * @throws IOException If an error occurs during pre-processing of the files.
      */
-    public void start() {
+    public void start() throws IOException {
         if (this.fileHandlerThread == null) {
             MediaType sourceType = this.context.sourceType();
             switch (sourceType) {

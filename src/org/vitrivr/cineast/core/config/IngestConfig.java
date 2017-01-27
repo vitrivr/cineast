@@ -7,6 +7,7 @@ import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
+import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 
 import java.nio.file.Path;
@@ -33,11 +34,14 @@ public class IngestConfig implements ExtractionContextProvider {
     /** Input configuration for the Extraction run*/
     private InputConfig input;
 
-    /** List of Extractors that should be used during the Extraction run. */
+    /** List of ExtractorConfigs, one for every extractor that should be used during the Extraction run. */
     private List<ExtractorConfig> extractors = new ArrayList<>();
 
-    /** List of Exporters that should be used during the Extraction run. */
+    /** List of ExtractorConfigs, one for every exporter that should be used during the Extraction run. */
     private List<ExtractorConfig> exporters = new ArrayList<>();
+
+    /** List of MetadataConfig entries, one for each MetadataExtractor that should be used during an Extraction run. */
+    private List<MetadataConfig> metadata = new ArrayList<>();
 
     /** Database-setting to use for import. Defaults to application settings. */
     private DatabaseConfig database = Config.sharedConfig().getDatabase();
@@ -77,6 +81,14 @@ public class IngestConfig implements ExtractionContextProvider {
     }
     public void setExporters(ArrayList<ExtractorConfig> exporters) {
         this.exporters = exporters;
+    }
+
+    @JsonProperty
+    public List<MetadataConfig> getMetadata() {
+        return metadata;
+    }
+    public void setMetadata(List<MetadataConfig> metadata) {
+        this.metadata = metadata;
     }
 
     @JsonProperty
@@ -136,15 +148,17 @@ public class IngestConfig implements ExtractionContextProvider {
     }
 
     /**
-     * Limits the number of files that should be extracted. This a predicate is applied
-     * before extraction starts. If extraction fails for some fails the effective number
-     * of extracted files may be lower.
+     * Returns a list of metadata extractor classes that should be invoked during extraction. MetadataExtractor's
+     * usually read some metadata from a file.
      *
-     * @return A number greater than zero.
+     * @return List of named exporters.
      */
     @Override
-    public int limit() {
-        return this.input.getLimit();
+    public List<MetadataExtractor> metadataExtractors() {
+        return this.metadata.stream()
+                .map(MetadataConfig::getMetadataExtractor)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -155,6 +169,28 @@ public class IngestConfig implements ExtractionContextProvider {
     @Override
     public int depth() {
         return this.input.getDepth();
+    }
+
+    /**
+     * Offset into the list of files that are being distracted.
+     *
+     * @return A positive number or zero
+     */
+    @Override
+    public int skip() {
+        return this.input.getSkip();
+    }
+
+    /**
+     * Limits the number of files that should be extracted. This a predicate is applied
+     * before extraction starts. If extraction fails for some fails the effective number
+     * of extracted files may be lower.
+     *
+     * @return A number greater than zero.
+     */
+    @Override
+    public int limit() {
+        return this.input.getLimit();
     }
 
     /**

@@ -12,6 +12,8 @@ public class InputConfig {
     private Path path;
     private String name;
     private Integer depth = 1;
+
+    private Integer skip = 0;
     private Integer limit = Integer.MAX_VALUE;
     private IdConfig id = new IdConfig();
 
@@ -45,6 +47,14 @@ public class InputConfig {
     }
     public void setDepth(Integer depth) {
         this.depth = depth;
+    }
+
+    @JsonProperty
+    public Integer getSkip() {
+        return skip;
+    }
+    public void setSkip(Integer skip) {
+        this.skip = skip;
     }
 
     @JsonProperty

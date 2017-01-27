@@ -8,6 +8,7 @@ import org.vitrivr.cineast.core.segmenter.image.ImageSegmenter;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ImageExtractionFileHandler extends AbstractExtractionFileHandler<Bu
      *
      * @param
      */
-    public ImageExtractionFileHandler(List<Path> files, ExtractionContextProvider context) {
+    public ImageExtractionFileHandler(List<Path> files, ExtractionContextProvider context) throws IOException {
         super (files,context);
     }
 

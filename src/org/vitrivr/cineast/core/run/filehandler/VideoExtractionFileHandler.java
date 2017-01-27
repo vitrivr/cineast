@@ -8,6 +8,8 @@ import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.segmenter.video.VideoHistogramSegmenter;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -20,7 +22,7 @@ public class VideoExtractionFileHandler extends AbstractExtractionFileHandler<Fr
      * @param files
      * @param context
      */
-    public VideoExtractionFileHandler(List files, ExtractionContextProvider context) {
+    public VideoExtractionFileHandler(List<Path> files, ExtractionContextProvider context) throws IOException {
         super(files, context);
     }
 

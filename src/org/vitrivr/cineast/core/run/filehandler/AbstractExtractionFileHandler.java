@@ -7,17 +7,19 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.MultimediaMetadataWriter;
 import org.vitrivr.cineast.core.db.dao.MultimediaObjectWriter;
 import org.vitrivr.cineast.core.db.dao.SegmentWriter;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
+import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.runtime.ExtractionPipeline;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
@@ -26,19 +28,16 @@ import org.vitrivr.cineast.core.util.LogHelper;
 import javax.activation.MimetypesFileTypeMap;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * Abstract implementation of ExtractionFileHandler. This class should fit most media-types. However,
  * a concrete implementation must provide the correct decoder and segmenter classes.
- *
- * TODO: File and Segment processor for i.e. Thumbnail export, Metadata extraction etc. Should be configured by the ExtractionContextProvider.
- *
+ **
  * @see ExtractionFileHandler
  * @see org.vitrivr.cineast.core.run.ExtractionDispatcher
  *
@@ -56,8 +55,11 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     /** SegmentWriter used to persist SegmentDescriptors created during the extraction. */
     private final SegmentWriter segmentWriter;
 
-    /** List of files that are being extracted. */
-    private final List<Path> files;
+    /** SegmentWriter used to persist SegmentDescriptors created during the extraction. */
+    private final MultimediaMetadataWriter metadataWriter;
+
+    /** Deque of files that are being extracted. */
+    private final Deque<Path> files = new ArrayDeque<>();
 
     /** ExtractionContextProvider that is used to configure the extraction. */
     private final ExtractionContextProvider context;
@@ -68,6 +70,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         thread.setName(String.format("file-handler-thread-%s", r.getClass().getSimpleName().toLowerCase()));
         return thread;
     });
+
+    /** List of MetadataExtractors that should be executed as part of the Extraction. */
+    private final List<MetadataExtractor> metadataExtractors;
 
     /** ExtractionPipeline that extracts features from the segments. */
     private final ExtractionPipeline pipeline;
@@ -81,12 +86,17 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @param files List of files that should be extracted.
      * @param context ExtractionContextProvider that holds extraction specific configurations.
      */
-    public AbstractExtractionFileHandler(List<Path> files, ExtractionContextProvider context) {
+    public AbstractExtractionFileHandler(List<Path> files, ExtractionContextProvider context) throws IOException {
+         /* Loads the files into the Deque. */
+        this.preprocess(files);
+
+        /* Setup all the required helper classes. */
         PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
         this.objectWriter = new MultimediaObjectWriter(writerSupplier.get());
         this.segmentWriter = new SegmentWriter(writerSupplier.get());
+        this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get());
         this.pipeline = new ExtractionPipeline(context, new DefaultExtractorInitializer(writerSupplier));
-        this.files = files;
+        this.metadataExtractors = context.metadataExtractors();
         this.context = context;
     }
 
@@ -115,20 +125,12 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         /* Submit the ExtractionPipeline to the executor-service. */
         this.executorService.execute(pipeline);
 
-        /* Pre-processes the files. */
-        List<Path> preprocessedFiles = null;
-        try {
-            preprocessedFiles = this.preprocess(decoder);
-        } catch (IOException exception) {
-            LOGGER.fatal("Fatal error occurred during file pre-processing. Aborting...", LogHelper.getStackTrace(exception));
-            return;
-        }
-
         /* Instantiates some of the helper classes required by this class. */
         final ObjectIdGenerator generator = this.context.objectIdGenerator();
+        Path path = null;
 
         /* Process every file in the list. */
-        for (Path path : preprocessedFiles) {
+        while ((path = this.files.poll()) != null) {
             LOGGER.info("Processing file {}.", path);
 
             /* Create new MultimediaObjectDescriptor for new file. */
@@ -167,6 +169,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                         /* Emit container to extraction pipeline. */
                         this.pipeline.emit(container);
 
+
                          /* Increase the segment number. */
                         segmentNumber+=1;
                     }
@@ -175,6 +178,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                    break;
                 }
             }
+
+            /* Extract metadata. */
+            this.extractAndPersistMetadata(path, objectId);
 
             /*  Create new decoder pair for a new file if the decoder reports that it cannot be reused.*/
             if (!decoder.canBeReused()) {
@@ -191,10 +197,16 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * Stops the ExtractionPipeline and relinquishing all resources.
      */
     private void shutdown() {
-        LOGGER.info("File decoding and segmenting complete! Shutting down...");
-        this.executorService.shutdown();
-        this.pipeline.stop();
         try {
+            /* Wait a few seconds for the ExtractionPipeline to submit remaining tasks to the queue. */
+            Thread.sleep(5000);
+
+            /* Now shutdown the ExecutorService and tell the pipeline to stop. */
+            LOGGER.info("File decoding and segmenting complete! Shutting down...");
+            this.executorService.shutdown();
+            this.pipeline.stop();
+
+            /* Wait for pipeline to complete. */
             LOGGER.info("Waiting for ExtractionPipeline to terminate! This could take a while.");
             this.executorService.awaitTermination(30, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
@@ -207,16 +219,17 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     }
 
     /**
-     * Pre-processes the list of files by filtering unsupported types and creates MultimediaObjectDescriptors
-     * with the remaining entries afterwards.
+     * Pre-processes the list of files by filtering unsupported types. The remaining files are
+     * added to the
      *
      * ID's are generated b the ObjectIdGenerator configured.
      *
      * @return List of Pairs mapping the new objectId to the Path.
      */
-    private List<Path> preprocess(Decoder<T> decoder) throws IOException {
+    private void preprocess(List<Path> files) throws IOException {
         final MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
-        return this.files.stream().filter( path -> {
+        final Decoder<T> decoder = this.newDecoder();
+        files.stream().filter( path -> {
             Set<String> supportedFiles = decoder.supportedFiles();
             if (supportedFiles != null) {
                 String type = filetypes.getContentType(path.toString());
@@ -224,7 +237,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
             } else {
                 return true;
             }
-        }).collect(Collectors.toList());
+        }).forEach(this.files::push);
     }
 
     /**
@@ -283,6 +296,25 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         } else {
             this.segmentWriter.write(descriptor);
             return true;
+        }
+    }
+
+    /**
+     *
+     * @param path
+     * @param objectId
+     */
+    private void extractAndPersistMetadata(Path path, String objectId) {
+        for (MetadataExtractor extractor : this.metadataExtractors) {
+            try {
+                Map<String, String> metadata = extractor.extract(path);
+                for (Map.Entry<String, String> entry : metadata.entrySet()) {
+                    MultimediaMetadataDescriptor descriptor = MultimediaMetadataDescriptor.newMultimediaMetadataDescriptor(objectId, entry.getKey(), entry.getValue());
+                    this.metadataWriter.write(descriptor);
+                }
+            } catch (IOException e) {
+                LOGGER.warn("Could not extract metadata from {} due to a serious IO error.", path.toString(), LogHelper.getStackTrace(e));
+            }
         }
     }
 }

@@ -50,11 +50,12 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
 
     /**
      * Convenience method to create a MultimediaObjectDescriptor marked as new. The method will assign
-     * a new ID to this MultimediaObjectDescriptor.
+     * a new ID to this MultimediaObjectDescriptor using the provided ObjectIdGenerator.
      *
+     * @param generator ObjectIdGenerator used for ID generation.
      * @param path The Path that points to the file for which a new MultimediaObjectDescriptor should be created.
-     * @param type
-     * @return
+     * @param type MediaType of the new MultimediaObjectDescriptor
+     * @return A new MultimediaObjectDescriptor
      */
     public static MultimediaObjectDescriptor newMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type) {
         String objectId = generator.next(path, type);
