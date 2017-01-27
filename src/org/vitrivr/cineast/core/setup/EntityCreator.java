@@ -31,6 +31,12 @@ public interface EntityCreator {
 
   boolean existsEntity(String entityName);
 
+  /**
+   * drops an entity, returns <code>true</code> if the entity was successfully dropped, <code>false</code> otherwise
+   * @param entityName the entity to drop
+   */
+  boolean dropEntity(String entityName);
+  
   void close();
 
 }

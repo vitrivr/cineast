@@ -179,7 +179,12 @@ public class ADAMproEntityCreator implements EntityCreator {
 		return this.adampro.existsEntityBlocking(entityName);
 	}
 
-	/* (non-Javadoc)
+	@Override
+  public boolean dropEntity(String entityName) {
+    return this.adampro.dropEntityBlocking(entityName);
+  }
+
+  /* (non-Javadoc)
    * @see org.vitrivr.cineast.core.setup.IEntityCreator#close()
    */
 	@Override
