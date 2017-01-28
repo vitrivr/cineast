@@ -134,10 +134,14 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
 		supply.get().createFeatureEntity(this.tableName, true, "hist", "sums");
 	}
+
+	public void dropPersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().dropEntity(this.tableName);
+	}
 	
 	
-  protected QueryConfig setQueryConfig(QueryConfig qc) {
-    return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
-  }
+	protected QueryConfig setQueryConfig(QueryConfig qc) {
+		return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
+	}
 	
 }

@@ -133,4 +133,8 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
 	}
 
+	@Override
+	public void dropPersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().dropEntity(this.tableName);
+	}
 }

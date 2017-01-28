@@ -17,9 +17,6 @@ public class NoEntityCreator implements EntityCreator {
     return false;
   }
 
-  /**
-   * Initialises the entity responsible for holding metadata information about multimedia objects.
-   */
   @Override
   public boolean createMetadataEntity() {
     return false;
@@ -27,6 +24,21 @@ public class NoEntityCreator implements EntityCreator {
 
   @Override
   public boolean createSegmentEntity() {
+    return false;
+  }
+
+  @Override
+  public boolean dropMultiMediaObjectsEntity() {
+    return false;
+  }
+
+  @Override
+  public boolean dropSegmentEntity() {
+    return false;
+  }
+
+  @Override
+  public boolean dropMetadataEntity() {
     return false;
   }
 

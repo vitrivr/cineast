@@ -18,14 +18,26 @@ public interface EntityCreator {
      */
     Logger LOGGER = LogManager.getLogger();
 
+    /** Name of the 'clean' flag. */
+    public static final String SETUP_FLAG_CLEAN = "clean";
+
     /**
      * Performs the setup of the persistent layer by executing all the necessary entity
      * creation steps in a sequence.
      *
-     * @param options Optional options that can be provided for setup (currently not used). MUST NOT BE NULL!
+     * The options map supports the following flags:
+     *
+     * - clean: Drops all entities before creating new ones.
+     *
+     * @param options Options that can be provided for setup.
      * @return boolean Indicating success or failure of the setup.
      */
     default boolean setup(HashMap<String, String> options) {
+
+        if (options.containsKey(SETUP_FLAG_CLEAN)) {
+            this.dropAllEntities();
+        }
+
         LOGGER.info("Setting up basic entities...");
 
         this.createMultiMediaObjectsEntity();
@@ -38,8 +50,8 @@ public interface EntityCreator {
         LOGGER.info("Collecting retriever classes...");
 
         HashSet<Retriever> retrievers = new HashSet<>();
-        for (String category : Config.getRetrieverConfig().getRetrieverCategories()) {
-            retrievers.addAll(Config.getRetrieverConfig().getRetrieversByCategory(category).keySet());
+        for (String category : Config.sharedConfig().getRetriever().getRetrieverCategories()) {
+            retrievers.addAll(Config.sharedConfig().getRetriever().getRetrieversByCategory(category).keySet());
         }
 
         LOGGER.info("...done");
@@ -76,6 +88,30 @@ public interface EntityCreator {
 
 
     /**
+     * Drops all entities currently required by Cineast.
+     */
+    default void dropAllEntities() {
+
+        LOGGER.info("Dropping basic entities...");
+
+        this.dropMultiMediaObjectsEntity();
+        this.dropMetadataEntity();
+        this.dropSegmentEntity();
+
+        LOGGER.info("...done");
+
+        HashSet<Retriever> retrievers = new HashSet<>();
+        for (String category : Config.sharedConfig().getRetriever().getRetrieverCategories()) {
+            retrievers.addAll(Config.sharedConfig().getRetriever().getRetrieversByCategory(category).keySet());
+        }
+
+        for (Retriever r : retrievers) {
+            LOGGER.info("Dropping " + r.getClass().getSimpleName());
+            r.dropPersistentLayer(() -> this);
+        }
+    }
+
+    /**
      * Initialises the main entity holding information about multimedia objects
      */
     boolean createMultiMediaObjectsEntity();
@@ -89,6 +125,21 @@ public interface EntityCreator {
      * Initializes the entity responsible for holding information about segments of a multimedia object
      */
     boolean createSegmentEntity();
+
+    /**
+     * Drops the main entity holding information about multimedia objects
+     */
+    boolean dropMultiMediaObjectsEntity();
+
+    /**
+     * Drops the entity responsible for holding information about segments of a multimedia object
+     */
+    boolean dropSegmentEntity();
+
+    /**
+     * Drops the entity responsible for holding metadata information about multimedia objects.
+     */
+    boolean dropMetadataEntity();
 
     /**
      * Initializes an entity for a feature module with default parameters

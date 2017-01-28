@@ -58,4 +58,6 @@ public class MotionHistoryImageExporter implements Extractor {
 	@Override
 	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {}
 
+	@Override
+	public void dropPersistentLayer(Supplier<EntityCreator> supply) {}
 }

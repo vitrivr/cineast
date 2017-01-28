@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.ADAMproWrapper;
 
 import com.google.common.collect.ImmutableMap;
+import org.vitrivr.cineast.core.db.dao.MultimediaMetadataWriter;
 
 public class ADAMproEntityCreator implements EntityCreator {
     /**
@@ -107,7 +108,49 @@ public class ADAMproEntityCreator implements EntityCreator {
 		
 		return ack.getCode() == Code.OK;
 	}
-	
+
+	/**
+	 * Drops the main entity holding information about multimedia objects
+	 */
+	@Override
+	public boolean dropMultiMediaObjectsEntity() {
+		if (this.dropEntity(MultimediaObjectDescriptor.ENTITY)) {
+			LOGGER.info("Successfully dropped multimedia object entity.");
+			return true;
+		} else {
+			LOGGER.error("Error occurred while dropping multimedia object entity");
+			return false;
+		}
+	}
+
+	/**
+	 * Drops the entity responsible for holding information about segments of a multimedia object
+	 */
+	@Override
+	public boolean dropSegmentEntity() {
+		if (this.dropEntity(SegmentDescriptor.ENTITY)) {
+			LOGGER.info("Successfully dropped segment entity.");
+			return true;
+		} else {
+			LOGGER.error("Error occurred while dropping segment entity");
+			return false;
+		}
+	}
+
+	/**
+	 * Drops the entity responsible for holding metadata information about multimedia objects.
+	 */
+	@Override
+	public boolean dropMetadataEntity() {
+		if (this.dropEntity(MultimediaMetadataDescriptor.ENTITY)) {
+			LOGGER.info("Successfully dropped metadata entity.");
+			return true;
+		} else {
+			LOGGER.error("Error occurred while dropping metadata entity");
+			return false;
+		}
+	}
+
 	/* (non-Javadoc)
    * @see org.vitrivr.cineast.core.setup.IEntityCreator#createFeatureEntity(java.lang.String, boolean)
    */

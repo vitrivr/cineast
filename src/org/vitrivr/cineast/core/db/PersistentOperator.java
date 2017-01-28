@@ -7,5 +7,7 @@ import org.vitrivr.cineast.core.setup.EntityCreator;
 public interface PersistentOperator {
 
 	void initalizePersistentLayer(Supplier<EntityCreator> supply);
+
+	void dropPersistentLayer(Supplier<EntityCreator> supply);
 	
 }

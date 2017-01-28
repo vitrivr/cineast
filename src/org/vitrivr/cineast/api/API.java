@@ -82,7 +82,16 @@ public class API {
 
 			/* Handle -setup; start database setup. */
 			if (commandline.hasOption("setup")) {
-				handleSetup();
+				HashMap<String, String> options = new HashMap<>();
+				String[] flags = commandline.getOptionValue("setup").split(";");
+				for (String flag : flags) {
+					String[] pair = flag.split("=");
+					if (pair.length == 2) {
+						options.put(pair[0], pair[1]);
+					}
+				}
+
+				handleSetup(options);
 				return;
 			}
 
@@ -109,9 +118,9 @@ public class API {
 	/**
 	 * Handles the database setup option (CLI and program-argument)
 	 */
-	private static void handleSetup() {
+	private static void handleSetup(HashMap<String,String> options) {
 		EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
-		if (ec != null) ec.setup(new HashMap<>());
+		if (ec != null) ec.setup(options);
 	}
 
 	/**
@@ -259,10 +268,11 @@ public class API {
 		options.addOption(configLocation);
 		
 		Option extractionJob = new Option(null, "job", true, "job file containing settings for handleExtraction");
-		configLocation.setArgName("JOB_FILE");
+		extractionJob.setArgName("JOB_FILE");
 		options.addOption(extractionJob);
 		
 		Option setup = new Option(null, "setup", false, "initialize the underlying storage layer");
+		setup.setArgName("FLAGS");
 		options.addOption(setup);
 
 
@@ -343,7 +353,17 @@ public class API {
                             break;
                         }
 						case "setup": {
-							handleSetup();
+							HashMap<String, String> options = new HashMap<>();
+							if (commands.size() > 1) {
+								String[] flags = commands.get(1).split(";");
+								for (String flag : flags) {
+									String[] pair = flag.split("=");
+									if (pair.length == 2) {
+										options.put(pair[0], pair[1]);
+									}
+								}
+							}
+							handleSetup(options);
 							break;
 						}
                         case "ws":
