@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.db.dao;
 
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
@@ -10,40 +9,38 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
  * @version 1.0
  * @created 25.01.17
  */
-public class MultimediaMetadataWriter {
-    /** PersistencyWriter instance used to persist changes. */
-    private PersistencyWriter<?> writer;
-
+public class MultimediaMetadataWriter extends AbstractBatchedEntityWriter<MultimediaMetadataDescriptor> {
     /**
-     * Default constructor.
+     * @param writer
      */
     public MultimediaMetadataWriter(PersistencyWriter<?> writer) {
-        this.writer = writer;
+        super(writer, 1, true);
+    }
+
+    /**
+     * @param writer
+     * @param batchsize
+     */
+    public MultimediaMetadataWriter(PersistencyWriter<?> writer, int batchsize) {
+        super(writer, batchsize, true);
+    }
+
+    /**
+     *
+     */
+    @Override
+    protected void init() {
         this.writer.setFieldNames(MultimediaMetadataDescriptor.FIELDNAMES);
         this.writer.open(MultimediaMetadataDescriptor.ENTITY);
     }
 
     /**
-     * Persists the provided MultimediaMetadataDescriptor in the database.
-     *
-     * @param descriptor MultimediaMetadataDescriptor to persist
+     * @param entity
+     * @return
      */
-    public void write(MultimediaMetadataDescriptor descriptor) {
-        PersistentTuple tuple = this.writer.generateTuple(descriptor.getObjectId(), descriptor.getKey(), descriptor.getValue());
-        this.writer.persist(tuple);
-    }
+    @Override
+    protected PersistentTuple generateTuple(MultimediaMetadataDescriptor entity) {
+        return this.writer.generateTuple(entity.getMetadataId(), entity.getObjectId(), entity.getDomain(), entity.getKey(), entity.getValue());
 
-    /**
-     * Closes the writer.
-     */
-    public void close() {
-        this.writer.close();
-    }
-
-    /**
-     *
-     */
-    public void finalize() {
-        this.close();
     }
 }

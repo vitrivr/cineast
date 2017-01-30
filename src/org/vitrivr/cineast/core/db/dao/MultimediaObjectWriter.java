@@ -4,46 +4,44 @@ import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
+
 /**
  * @author rgasser
  * @version 1.0
  * @created 14.01.17
  */
-public class MultimediaObjectWriter {
-
-    /** PersistencyWriter instance used to persist changes. */
-    private PersistencyWriter<?> writer;
+public class MultimediaObjectWriter extends AbstractBatchedEntityWriter<MultimediaObjectDescriptor> {
 
     /**
-     * Default constructor.
+     * @param writer
      */
     public MultimediaObjectWriter(PersistencyWriter<?> writer) {
-        this.writer = writer;
+        super(writer, 1, true);
+    }
+
+    /**
+     * @param writer
+     * @param batchsize
+     */
+    public MultimediaObjectWriter(PersistencyWriter<?> writer, int batchsize) {
+        super(writer, batchsize, true);
+    }
+
+    /**
+     *
+     */
+    @Override
+    protected void init() {
         this.writer.setFieldNames(MultimediaObjectDescriptor.FIELDNAMES);
         this.writer.open(MultimediaObjectDescriptor.ENTITY);
     }
 
     /**
-     * Persists the provided MultimediaObjectDescriptor in the database.
-     *
-     * @param descriptor MultimediaObjectDescriptor to persist
+     * @param entity
+     * @return
      */
-    public void write(MultimediaObjectDescriptor descriptor) {
-        PersistentTuple tuple = this.writer.generateTuple(descriptor.getObjectId(), descriptor.getMediatypeId(), descriptor.getName(), descriptor.getPath());
-        this.writer.persist(tuple);
-    }
-
-    /**
-     * Closes the writer.
-     */
-    public void close() {
-        this.writer.close();
-    }
-
-    /**
-     *
-     */
-    public void finalize() {
-        this.close();
+    @Override
+    protected PersistentTuple generateTuple(MultimediaObjectDescriptor entity) {
+        return this.writer.generateTuple(entity.getObjectId(), entity.getMediatypeId(), entity.getName(), entity.getPath());
     }
 }

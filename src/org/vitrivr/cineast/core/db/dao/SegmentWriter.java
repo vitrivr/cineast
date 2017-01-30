@@ -4,43 +4,45 @@ import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
+import java.util.HashMap;
+
 /**
  * @author rgasser
  * @version 1.0
  * @created 14.01.17
  */
-public class SegmentWriter {
-    /** PersistencyWriter instance used to persist changes. */
-    private PersistencyWriter<?> writer;
-
+public class SegmentWriter extends AbstractBatchedEntityWriter<SegmentDescriptor> {
     /**
-     * Default constructor.
+     * @param writer
      */
     public SegmentWriter(PersistencyWriter<?> writer) {
-        this.writer = writer;
+        super(writer, 1, true);
+    }
+
+    /**
+     * @param writer
+     * @param batchsize
+     */
+    public SegmentWriter(PersistencyWriter<?> writer, int batchsize) {
+        super(writer, batchsize, true);
+    }
+
+    /**
+     *
+     */
+    @Override
+    protected void init() {
         this.writer.setFieldNames(SegmentDescriptor.FIELDNAMES);
         this.writer.open(SegmentDescriptor.ENTITY);
     }
 
     /**
-     * Persists the provided SegmentDescriptor in the database.
      *
-     * @param descriptor SegmentDescriptor to persist
+     * @param entity
+     * @return
      */
-    public void write(SegmentDescriptor descriptor) {
-        PersistentTuple tuple = this.writer.generateTuple(descriptor.getSegmentId(), descriptor.getObjectId(), descriptor.getSequenceNumber(), descriptor.getStart(), descriptor.getEnd());
-        this.writer.persist(tuple);
+    @Override
+    protected PersistentTuple generateTuple(SegmentDescriptor entity) {
+        return this.writer.generateTuple(entity.getSegmentId(), entity.getObjectId(), entity.getSequenceNumber(), entity.getStart(), entity.getEnd());
     }
-
-    /**
-     * Closes the writer.
-     */
-    public void close() {
-        this.writer.close();
-    }
-
-    public void finalize() {
-        this.close();
-    }
-
 }

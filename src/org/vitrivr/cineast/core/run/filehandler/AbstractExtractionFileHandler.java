@@ -67,7 +67,11 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     /** ExecutorService used to run the ExtractionPipeline and the Segmenter. */
     private final ExecutorService executorService = Executors.newFixedThreadPool(2, r -> {
         Thread thread = new Thread(r);
-        thread.setName(String.format("file-handler-thread-%s", r.getClass().getSimpleName().toLowerCase()));
+        if (r instanceof ExtractionPipeline) {
+            thread.setName("extraction-pipeline-thread");
+        } else if (r instanceof Segmenter) {
+            thread.setName("extraction-segmenter-thread");
+        }
         return thread;
     });
 
@@ -92,9 +96,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
         /* Setup all the required helper classes. */
         PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
-        this.objectWriter = new MultimediaObjectWriter(writerSupplier.get());
-        this.segmentWriter = new SegmentWriter(writerSupplier.get());
-        this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get());
+        this.objectWriter = new MultimediaObjectWriter(writerSupplier.get(),10);
+        this.segmentWriter = new SegmentWriter(writerSupplier.get(),10);
+        this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get(),10);
         this.pipeline = new ExtractionPipeline(context, new DefaultExtractorInitializer(writerSupplier));
         this.metadataExtractors = context.metadataExtractors();
         this.context = context;
@@ -306,14 +310,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      */
     private void extractAndPersistMetadata(Path path, String objectId) {
         for (MetadataExtractor extractor : this.metadataExtractors) {
-            try {
-                Map<String, String> metadata = extractor.extract(path);
-                for (Map.Entry<String, String> entry : metadata.entrySet()) {
-                    MultimediaMetadataDescriptor descriptor = MultimediaMetadataDescriptor.newMultimediaMetadataDescriptor(objectId, entry.getKey(), entry.getValue());
-                    this.metadataWriter.write(descriptor);
-                }
-            } catch (IOException e) {
-                LOGGER.warn("Could not extract metadata from {} due to a serious IO error.", path.toString(), LogHelper.getStackTrace(e));
+            List<MultimediaMetadataDescriptor> metadata = extractor.extract(objectId, path);
+            if (metadata.size() > 0) {
+                this.metadataWriter.write(metadata);
             }
         }
     }
