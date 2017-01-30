@@ -1,20 +1,16 @@
 package org.vitrivr.cineast.core.metadata;
 
-import com.twelvemonkeys.imageio.metadata.Directory;
-import com.twelvemonkeys.imageio.metadata.Entry;
-import com.twelvemonkeys.imageio.metadata.exif.EXIFReader;
-import com.twelvemonkeys.imageio.metadata.jpeg.JPEG;
-import com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegment;
-import com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegmentUtil;
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
 
-import javax.activation.MimetypesFileTypeMap;
-
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -25,116 +21,59 @@ import java.util.*;
  */
 public class EXIFMetadataExtractor implements MetadataExtractor {
 
-    /** Named key's that will be extracted from the metadata (if available). */
-    private static final String[] KEYS = {
-            "Make",
-            "Model",
-            "PixelXDimension",
-            "PixelYDimension",
-            "DateTimeOriginal",
-            "Artist",
-            "UserComment",
-            "ImageDescription"
-    };
-
-    /** */
-    private static final String PREFIX = "EXIF";
-
-    /** Set containing mime-types of all files supported by this metadata extractor. */
-    private static final Set<String> SUPPORTED = new HashSet<>();
+    private static final Logger LOGGER = LogManager.getLogger();
 
 
+    /** Named key's that will be extracted from the EXIF metadata (if available). */
+    private static final HashMap<String, Integer> FIELDS = new HashMap<>();
     static {
-        SUPPORTED.add("image/jpeg");
-        SUPPORTED.add("image/tiff");
+        FIELDS.put("Copyright", ExifSubIFDDirectory.TAG_COPYRIGHT);
+        FIELDS.put("Datetime original", ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+        FIELDS.put("Datetime digitized", ExifSubIFDDirectory.TAG_DATETIME_DIGITIZED);
+        FIELDS.put("Height", ExifSubIFDDirectory.TAG_IMAGE_HEIGHT);
+        FIELDS.put("Width", ExifSubIFDDirectory.TAG_IMAGE_WIDTH);
+        FIELDS.put("Author", ExifSubIFDDirectory.TAG_WIN_AUTHOR);
+        FIELDS.put("Keywords", ExifSubIFDDirectory.TAG_WIN_KEYWORDS);
+        FIELDS.put("Subject", ExifSubIFDDirectory.TAG_WIN_SUBJECT);
+        FIELDS.put("Title", ExifSubIFDDirectory.TAG_WIN_TITLE);
+        FIELDS.put("Comment", ExifSubIFDDirectory.TAG_USER_COMMENT);
     }
 
-    /** Instance of MimetypeFileTypeMap used to determine the mime-type of a file. */
-    private final MimetypesFileTypeMap map = new MimetypesFileTypeMap();
-
-    /** EXIF Reader instance used to read the EXIF metadata from images. */
-    private final EXIFReader reader = new EXIFReader();
-
-
-
+    /**
+     * Extracts the metadata from the specified path and returns a List of MultimediaMetadataDescriptor objects
+     * (one for each metadata entry).
+     *
+     * @param objectId ID of the multimedia object for which metadata will be generated.
+     * @param path Path to the file for which metadata should be extracted.
+     * @return List of MultimediaMetadataDescriptors. The list may be empty but must always be returned!
+     */
     @Override
-    public Map<String,String> extract(Path path) throws IOException {
-
-        String mimetype = this.map.getContentType(path.toString());
-        HashMap<String, String> metadata = new HashMap<>();
-        Directory directory = null;
-
-        switch (mimetype) {
-            case "image/jpeg":
-                directory = this.extractFromJpeg(path);
-                break;
-            case "image/tiff":
-                directory = this.extractFromTiff(path);
-                break;
-        }
-
-        if (directory == null) return metadata;
-
-        for (String key : KEYS) {
-            Entry entry = directory.getEntryByFieldName(key);
-            if (entry != null) {
-                metadata.put(PREFIX + ":" + entry.getFieldName(), entry.getValueAsString());
+    public List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
+        ArrayList<MultimediaMetadataDescriptor> list = new ArrayList<>();
+        try {
+            Metadata metadata = ImageMetadataReader.readMetadata(path.toFile());
+            ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
+            if (directory != null) {
+                for (Map.Entry<String, Integer> entry : FIELDS.entrySet()) {
+                    Object obj = directory.getObject(entry.getValue());
+                    if (obj != null) {
+                        list.add(MultimediaMetadataDescriptor.newMultimediaMetadataDescriptor(objectId, this.domain(), entry.getKey(), obj));
+                    }
+                }
             }
+        } catch (ImageProcessingException | IOException e) {
+            LOGGER.fatal("Could not extract metadata for object {} (file: {}) due to a serious error.", LogHelper.getStackTrace(e));
         }
 
-        return metadata;
+        return list;
     }
 
     /**
-     * Returns a set of the mime/types of supported files.
-     *
-     * @return Set of the mime-type of file formats that are supported by the current Decoder instance.
+     * @return
      */
     @Override
-    public Set<String> supportedFiles() {
-        return SUPPORTED;
-    }
-
-    /**
-     *
-     * @param path
-     * @return
-     * @throws IOException
-     */
-    private Directory extractFromJpeg(Path path) throws IOException {
-
-        ImageInputStream stream = ImageIO.createImageInputStream(Files.newInputStream(path));
-        List<JPEGSegment> exifSegment = JPEGSegmentUtil.readSegments(stream, JPEG.APP1, "Exif");
-        if (exifSegment.size() == 0) return null;
-        InputStream exifData = exifSegment.get(0).data();
-        exifData.read();
-
-        Directory outerDir = this.reader.read(ImageIO.createImageInputStream(exifData));
-        Directory exifDir = null;
-        if (outerDir.getEntryByFieldName("EXIF").getValue() instanceof Directory) {
-            exifDir = (Directory)outerDir.getEntryByFieldName("EXIF").getValue();
-        }
-
-        exifData.close();
-        stream.close();
-        return exifDir;
-    }
-
-    /**
-     *
-     * @param path
-     * @return
-     * @throws IOException
-     */
-    private Directory extractFromTiff(Path path) throws IOException {
-        ImageInputStream stream = ImageIO.createImageInputStream(Files.newInputStream(path));
-        Directory outerDir = this.reader.read(stream);
-        Directory exifDir = null;
-        if (outerDir.getEntryByFieldName("EXIF").getValue() instanceof Directory) {
-            exifDir = (Directory)outerDir.getEntryByFieldName("EXIF").getValue();
-        }
-        stream.close();
-        return exifDir;
+    public String domain() {
+        return "EXIF";
     }
 
 }

@@ -75,10 +75,11 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
     /**
-     * TwelveMonkey's ImageIO library for advanced image support.
+     * TwelveMonkey's ImageIO library + Metadata Extractor for advanced image support .
      */
     compile group: 'com.twelvemonkeys.imageio', name: 'imageio-jpeg', version: '3.3.1'
     compile group: 'com.twelvemonkeys.imageio', name: 'imageio-tiff', version: '3.3.1'
+    compile group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.9.1'
 
     /**
      * JOGL un JOML dependencies for 3D model support.

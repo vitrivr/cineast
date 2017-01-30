@@ -16,13 +16,16 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
     public static final String ENTITY = "cineast_metadata";
 
     /** Field names in the persistence layer. */
-    public static final String[] FIELDNAMES = {"metadataId", "objectId", "key", "value"};
+    public static final String[] FIELDNAMES = {"metadataId", "objectId", "domain", "key", "value"};
 
     /** ID of the MultimediaMetadataDescriptor. */
     private String metadataId;
 
     /** ID of the MultimediaObject this MultimediaMetadataDescriptor belongs to. */
     private final String objectId;
+
+    /** */
+    private final String domain;
 
     /** Key (name) of the metadata entry. Must NOT be unique for a given object. */
     private final String key;
@@ -42,8 +45,8 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
      * @param value
      * @return A new MultimediaMetadataDescriptor
      */
-    public static MultimediaMetadataDescriptor newMultimediaMetadataDescriptor(String objectId, String key, Object value) {
-        return new MultimediaMetadataDescriptor(objectId, key, value, false);
+    public static MultimediaMetadataDescriptor newMultimediaMetadataDescriptor(String objectId, String domain, String key, Object value) {
+        return new MultimediaMetadataDescriptor(objectId, domain, key, value, false);
     }
 
     /**
@@ -52,12 +55,15 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
      * used to get a String representation.
      *
      * @param objectId ID of the MultimediaObject this MultimediaMetadataDescriptor belongs to.
+     * @param domain
      * @param key Key (name) of the metadata entry.
      * @param value Value of the metadata entry. Can be any type of object, but only Double, Float, Int, Long and String are supported officialy.
      */
-    public MultimediaMetadataDescriptor(String objectId, String key, Object value, boolean exists) {
+    public MultimediaMetadataDescriptor(String objectId, String domain, String key, Object value, boolean exists) {
+        this.metadataId = objectId + "_" + key;
         this.objectId = objectId;
         this.key = key;
+        this.domain = domain;
         if (value instanceof Float) {
             this.value = new FloatTypeProvider((Float)value);
         } else if (value instanceof Double) {
@@ -84,6 +90,11 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
     @JsonProperty
     public String getObjectId() {
         return objectId;
+    }
+
+    @JsonProperty
+    public String getDomain() {
+        return domain;
     }
 
     @JsonProperty

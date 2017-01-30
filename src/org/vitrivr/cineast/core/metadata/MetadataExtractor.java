@@ -1,10 +1,9 @@
 package org.vitrivr.cineast.core.metadata;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 
-import java.util.Map;
-import java.util.Set;
+import java.nio.file.Path;
+import java.util.List;
 
 /**
  * @author rgasser
@@ -13,19 +12,20 @@ import java.util.Set;
  */
 public interface MetadataExtractor {
     /**
-     * Extracts the metadata from the specified path and returns a HashMap that maps the extracted
-     * fieldnames to the respective value.
+     * Extracts the metadata from the specified path and returns a List of MultimediaMetadataDescriptor objects
+     * (one for each metadata entry).
      *
+     * @param objectId ID of the multimedia object for which metadata will be generated.
      * @param path Path to the file for which metadata should be extracted.
-     * @return HashMap with metadata. May be empty.
-     * @throws IOException If an IO error occurs during meta-data extraction.
+     * @return List of MultimediaMetadataDescriptors. The list may be empty but must always be returned!
      */
-    Map<String,String> extract(Path path) throws IOException;
+    List<MultimediaMetadataDescriptor> extract(String objectId, Path path);
 
     /**
-     * Returns a set of the mime/types of supported files.
+     * Returns a name that helps to identify the metadata domain. E.g. EXIF for EXIF
+     * metadata or DC for Dublin Core.
      *
-     * @return Set of the mime-type of file formats that are supported by the current Decoder instance.
+     * @return Name of the metadata domain for which this extractor returns metadata.
      */
-    Set<String> supportedFiles();
+    String domain();
 }

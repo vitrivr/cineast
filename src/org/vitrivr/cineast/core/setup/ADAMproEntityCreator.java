@@ -60,8 +60,9 @@ public class ADAMproEntityCreator implements EntityCreator {
         ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
 
         AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
-		fields.add(builder.setName("metadataId").setAttributetype(AttributeType.AUTO).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("metadataId").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		fields.add(builder.setName("objectId").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName("domain").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
         fields.add(builder.setName("key").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
         fields.add(builder.setName("value").setAttributetype(AttributeType.STRING).setPk(false).build());
 
