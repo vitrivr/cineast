@@ -3,8 +3,6 @@ package org.vitrivr.cineast.core.run.filehandler;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
-import javax.activation.MimetypesFileTypeMap;
-
 /**
  * ExtractionFileHandlers are the second step in a media-file extraction process. They orchestrate file
  * decoding, segmenting and hand the segments to the extraction-pipeline.

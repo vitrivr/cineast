@@ -145,6 +145,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
                             LOGGER.debug("Submitted segment {} for feature {}", s.getId(), f.getClass().getSimpleName());
                         } catch (RejectedExecutionException e) {
                             this.segmentQueue.clear();
+                            LOGGER.fatal("Failed to submit segment {} for feature {}. Aborting...", s.getId(), f.getClass().getSimpleName(), LogHelper.getStackTrace(e));
                             break;
                         }
                     }
