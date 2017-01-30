@@ -36,9 +36,6 @@ public abstract class AbstractCodebookFeatureModule extends AbstractFeatureModul
     /** The folder that contains the Codebook(s). */
     private static String CODEBOOK_FOLDER = "./resources/codebooks/";
 
-    /* Histogram calculator used to obtain a feature-to-word histogram. */
-    private FeatureToWordHistogram_F64 featuresToHistogram;
-
     /**
      *
      * @param tableName
@@ -81,21 +78,17 @@ public abstract class AbstractCodebookFeatureModule extends AbstractFeatureModul
      * @return float[] array with codebook
      */
     protected final float[] histogram(boolean hard, DetectDescribePoint<GrayF32, BrightFeature> descriptors) {
-        /* Reset the Histogram-Calculator. */
-        if (this.featuresToHistogram != null) {
-            this.featuresToHistogram.reset();
-        } else {
-            this.featuresToHistogram = new FeatureToWordHistogram_F64(this.assignment, hard);
-        }
+        /* Create new  Histogram-Calculator. */
+        FeatureToWordHistogram_F64 histogram = new FeatureToWordHistogram_F64(this.assignment, hard);
 
         /* Add the features to the Histogram-Calculator... */
         for (int i=0;i<descriptors.getNumberOfFeatures();i++) {
-            this.featuresToHistogram.addFeature(descriptors.getDescription(i));
+            histogram.addFeature(descriptors.getDescription(i));
         }
 
         /* ... and calculates and returns the histogram. */
-        this.featuresToHistogram.process();
-        return this.floatToDoubleArray(featuresToHistogram.getHistogram());
+        histogram.process();
+        return this.floatToDoubleArray(histogram.getHistogram());
     }
 
     /**
@@ -107,21 +100,17 @@ public abstract class AbstractCodebookFeatureModule extends AbstractFeatureModul
      * @return float[] array with codebook
      */
     protected final float[] histogram(boolean hard, List<TupleDesc_F64> descriptors) {
-        /* Reset the Histogram-Calculator. */
-        if (this.featuresToHistogram != null) {
-            this.featuresToHistogram.reset();
-        } else {
-            this.featuresToHistogram = new FeatureToWordHistogram_F64(this.assignment, hard);
-        }
+        /* Create new  Histogram-Calculator. */
+        FeatureToWordHistogram_F64 histogram = new FeatureToWordHistogram_F64(this.assignment, hard);
 
         /* Add the features to the Histogram-Calculator... */
         for (TupleDesc_F64 descriptor : descriptors) {
-            this.featuresToHistogram.addFeature(descriptor);
+            histogram.addFeature(descriptor);
         }
 
         /* ... and calculates and returns the histogram. */
-        this.featuresToHistogram.process();
-        return this.floatToDoubleArray(featuresToHistogram.getHistogram());
+        histogram.process();
+        return this.floatToDoubleArray(histogram.getHistogram());
     }
 
     /**
