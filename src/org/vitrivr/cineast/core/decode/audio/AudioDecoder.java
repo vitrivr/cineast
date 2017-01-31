@@ -1,21 +1,16 @@
 package org.vitrivr.cineast.core.decode.audio;
 
 import org.vitrivr.cineast.core.data.audio.AudioFrame;
+import org.vitrivr.cineast.core.decode.general.Decoder;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 30.11.16
  */
-public interface AudioDecoder {
+public interface AudioDecoder extends Decoder<AudioFrame> {
 
     void seekToFrame(int frameNumber);
 
     int getFrameNumber();
-
-    AudioFrame getFrame();
-
-    int getTotalFrameCount();
-
-    void close();
 }

@@ -9,14 +9,15 @@ import static org.bytedeco.javacpp.avformat.avformat_find_stream_info;
 import static org.bytedeco.javacpp.avformat.avformat_open_input;
 
 import static org.bytedeco.javacpp.avutil.*;
-import static org.bytedeco.javacpp.avutil.av_get_channel_layout_nb_channels;
-import static org.bytedeco.javacpp.avutil.av_samples_get_buffer_size;
 
 import static org.bytedeco.javacpp.swresample.*;
 import static org.libav.avutil.bridge.AVMediaType.AVMEDIA_TYPE_AUDIO;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayDeque;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,10 +33,9 @@ import org.bytedeco.javacpp.avformat.AVFormatContext;
 import org.bytedeco.javacpp.avutil.AVDictionary;
 import org.bytedeco.javacpp.avutil.AVFrame;
 
+import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.audio.AudioFrame;
-
-
-
+import org.vitrivr.cineast.core.decode.general.Decoder;
 
 
 @SuppressWarnings("deprecation") //some of the new API replacing the deprecated one appears to be not yet available which is why the deprecated one has to be used.
@@ -43,25 +43,19 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     *
-     */
-    private static final int target_channel_layout = AV_CH_LAYOUT_MONO;
+    /** */
+    private static final String CONFIG_CHANNELS_PROPERTY = "channels";
+    private static final int CONFIG_CHANNELS_DEFAULT = 1;
 
-    /**
-     *
-     */
-    private static final int target_sample_rate = 44100;
+    /** */
+    private static final String CONFIG_SAMPLERATE_PROPERTY = "samplerate";
+    private static final int CONFIG_SAMPLERATE_DEFAULT = 44100;
 
-    /**
-     *
-     */
-    private static final int target_format = AV_SAMPLE_FMT_S16;
+    /** */
+    private static final int TARGET_FORMAT = AV_SAMPLE_FMT_S16;
 
-    /**
-     *
-     */
-    private static final int bytes_per_sample = av_get_bytes_per_sample(target_format);
+    /** */
+    private static final int BYTES_PER_SAMPLE = av_get_bytes_per_sample(TARGET_FORMAT);
 
     private int currentFrameNumber = 0;
     private long framecount;
@@ -79,86 +73,17 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
     private int[] frameFinished = new int[1];
 
-    IntPointer out_linesize = new IntPointer();
+    private IntPointer out_linesize = new IntPointer();
 
     private byte[] outBuff = new byte[1];
 
 
     private SwrContext swr_ctx = null;
 
-    public FFMpegAudioDecoder(File file){
+    private AtomicBoolean complete = new AtomicBoolean(false);
 
-        if(!file.exists()){
-            LOGGER.error("File does not exist {}", file.getAbsolutePath());
-            return;
-        }
-
-        // Register all formats and codecs
-        av_register_all();
-
-        /* Open file (pure audio or video + audio). */
-        if (avformat_open_input(this.pFormatCtx, file.getAbsolutePath(), null, null) != 0) {
-            LOGGER.error("Error while accessing file {}.", file.getAbsolutePath());
-            return;
-        }
-
-        // Retrieve stream information
-        if (avformat_find_stream_info(this.pFormatCtx, (PointerPointer<?>)null) < 0) {
-            LOGGER.error("Couldn't find stream information.");
-            return;
-        }
-
-        // Find the first audio stream
-        this.audioStream = -1;
-        for (int i = 0; i < this.pFormatCtx.nb_streams(); i++) {
-            if (this.pFormatCtx.streams(i).codec().codec_type() == AVMEDIA_TYPE_AUDIO) {
-                this.audioStream = i;
-                break;
-            }
-        }
-        if (audioStream == -1) {
-            LOGGER.error("Couldn't find a audio stream in the provided file {}.", file.getAbsolutePath());
-            return;
-        }
-
-        /* Get a pointer to the codec context for the audio stream */
-        this.pCodecCtx = this.pFormatCtx.streams(this.audioStream).codec();
-
-
-        /* Find the decoder for the video stream */
-        AVCodec pCodec = avcodec_find_decoder(this.pCodecCtx.codec_id());
-        if (pCodec == null) {
-            LOGGER.error("Unsupported codec for audio in file {}", file.getAbsolutePath());
-            return;
-        }
-
-        /* Open codec. */
-        AVDictionary optionsDict = null;
-        if (avcodec_open2(pCodecCtx, pCodec, optionsDict) < 0) {
-            LOGGER.error("Unable to open codec.");
-            return;
-        }
-
-        /* Allocate the re-sample context. */
-         this.swr_ctx = swr_alloc_set_opts(null, target_channel_layout, target_format, target_sample_rate, this.pCodecCtx.channel_layout(), this.pCodecCtx.sample_fmt(), this.pCodecCtx.sample_rate(), 0, null);
-         if(swr_init(this.swr_ctx) < 0) {
-             LOGGER.error("Error, Could not open re-sample context.");
-             return;
-         }
-
-        /* Initialize decodedFrame. */
-        this.decodedFrame = av_frame_alloc();
-
-        /* Initialize out-frame. */
-        this.resampledFrame = av_frame_alloc();
-        this.resampledFrame.channel_layout(target_channel_layout);
-        this.resampledFrame.sample_rate(target_sample_rate);
-        this.resampledFrame.channels(av_get_channel_layout_nb_channels(target_channel_layout));
-        this.resampledFrame.format(target_format);
-
-        /* Completed initialization. */
-        LOGGER.debug("{} was initialized successfully.", this.getClass().getName());
-    }
+    private int samplerate = CONFIG_SAMPLERATE_DEFAULT;
+    private int channels = CONFIG_CHANNELS_DEFAULT;
 
     /**
      *
@@ -200,20 +125,20 @@ public class FFMpegAudioDecoder implements AudioDecoder {
                             while(true) {
                                 /* Estimate number of samples that were converted. */
                                 int out_samples = swr_get_out_samples(this.swr_ctx, 0);
-                                if (out_samples < bytes_per_sample * this.resampledFrame.channels()) break; // see comments, thanks to @dajuric for fixing this
+                                if (out_samples < BYTES_PER_SAMPLE * this.resampledFrame.channels()) break;
 
                                 /* Allocate output frame and read converted samples. If no sample was read -> break (draining completed). */
-                                av_samples_alloc(this.resampledFrame.data(), out_linesize, this.resampledFrame.channels(), out_samples, target_format, 1);
+                                av_samples_alloc(this.resampledFrame.data(), out_linesize, this.resampledFrame.channels(), out_samples, TARGET_FORMAT, 1);
                                 out_samples = swr_convert(this.swr_ctx, this.resampledFrame.data(), out_samples, null, 0);
                                 if (out_samples == 0) break;
 
                                 /* Allocate output buffer... */
-                                int buffersize = out_samples *  bytes_per_sample;
+                                int buffersize = out_samples * BYTES_PER_SAMPLE * this.resampledFrame.channels();
                                 if (this.outBuff.length < buffersize) this.outBuff = new byte[buffersize];
-                                this.resampledFrame.data(0).position(0).get(outBuff);
+                                this.resampledFrame.data(0).get(outBuff);
 
                                 /* ... and add frame to queue. */
-                                this.frameQueue.add(new AudioFrame(this.currentFrameNumber, outBuff));
+                                this.frameQueue.add(new AudioFrame(this.samplerate, this.channels, outBuff));
                             }
                         }
                         readFrame = true;
@@ -241,17 +166,142 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         return this.currentFrameNumber;
     }
 
+    /**
+     * Initializes the decoder with a file. This is a necessary step before content can be retrieved from
+     * the decoder by means of the getNext() method.
+     *
+     * @param path   Path to the file that should be decoded.
+     * @param config DecoderConfiguration used by the decoder.
+     * @return Current instance of the decoder.
+     */
     @Override
-    public AudioFrame getFrame() {
-        if(this.frameQueue.isEmpty()){
-            readFrame(true);
+    public Decoder<AudioFrame> init(Path path, DecoderConfig config) {
+
+        /* Read decoder configuration. */
+        this.samplerate = config.namedAsInt(CONFIG_SAMPLERATE_PROPERTY, CONFIG_SAMPLERATE_DEFAULT);
+        this.channels = config.namedAsInt(CONFIG_CHANNELS_PROPERTY, CONFIG_CHANNELS_DEFAULT);
+
+        long channellayout = av_get_default_channel_layout(this.channels);
+
+        if(!Files.exists(path)){
+            LOGGER.error("File does not exist {}", path.toString());
+            return null;
+        }
+
+        // Register all formats and codecs
+        av_register_all();
+
+        /* Open file (pure audio or video + audio). */
+        if (avformat_open_input(this.pFormatCtx, path.toString(), null, null) != 0) {
+            LOGGER.error("Error while accessing file {}.", path.toString());
+            return null;
+        }
+
+        // Retrieve stream information
+        if (avformat_find_stream_info(this.pFormatCtx, (PointerPointer<?>)null) < 0) {
+            LOGGER.error("Couldn't find stream information.");
+            return null;
+        }
+
+        // Find the first audio stream
+        this.audioStream = -1;
+        for (int i = 0; i < this.pFormatCtx.nb_streams(); i++) {
+            if (this.pFormatCtx.streams(i).codec().codec_type() == AVMEDIA_TYPE_AUDIO) {
+                this.audioStream = i;
+                break;
+            }
+        }
+        if (audioStream == -1) {
+            LOGGER.error("Couldn't find a audio stream in the provided file {}.", path.toString());
+            return null;
+        }
+
+        this.framecount = this.pFormatCtx.streams(audioStream).nb_frames();
+
+        /* Get a pointer to the codec context for the audio stream */
+        this.pCodecCtx = this.pFormatCtx.streams(this.audioStream).codec();
+
+
+        /* Find the decoder for the video stream */
+        AVCodec pCodec = avcodec_find_decoder(this.pCodecCtx.codec_id());
+        if (pCodec == null) {
+            LOGGER.error("Unsupported codec for audio in file {}", path.toString());
+            return null;
+        }
+
+        /* Open codec. */
+        AVDictionary optionsDict = null;
+        if (avcodec_open2(pCodecCtx, pCodec, optionsDict) < 0) {
+            LOGGER.error("Unable to open codec.");
+            return null;
+        }
+
+        /* Allocate the re-sample context. */
+        this.swr_ctx = swr_alloc_set_opts(null, channellayout, TARGET_FORMAT, this.samplerate, this.pCodecCtx.channel_layout(), this.pCodecCtx.sample_fmt(), this.pCodecCtx.sample_rate(), 0, null);
+        if(swr_init(this.swr_ctx) < 0) {
+            LOGGER.error("Error, Could not open re-sample context.");
+            return null;
+        }
+
+        /* Initialize decodedFrame. */
+        this.decodedFrame = av_frame_alloc();
+
+        /* Initialize out-frame. */
+        this.resampledFrame = av_frame_alloc();
+        this.resampledFrame.channel_layout(channellayout);
+        this.resampledFrame.sample_rate(this.samplerate);
+        this.resampledFrame.channels(this.channels);
+        this.resampledFrame.format(TARGET_FORMAT);
+
+        /* Completed initialization. */
+        LOGGER.debug("{} was initialized successfully.", this.getClass().getName());
+        return this;
+    }
+
+    /**
+     * Fetches the next piece of content of type T and returns it. This method can be safely invoked until
+     * complete() returns false. From which on this method will return null.
+     *
+     * @return Content of type T.
+     */
+    @Override
+    public AudioFrame getNext() {
+        if(this.frameQueue.isEmpty() && !this.complete.get()){
+            boolean frame = readFrame(true);
+            if (!frame) this.complete.set(false);
         }
         return this.frameQueue.poll();
     }
 
+    /**
+     * Returns the total number of content pieces T this decoder can return
+     * for a given file.
+     *
+     * @return
+     */
     @Override
-    public int getTotalFrameCount() {
+    public int count() {
         return (int) this.framecount;
+    }
+
+    /**
+     * Indicates whether or not the decoder has more content to return.
+     *
+     * @return True if more content can be retrieved, false otherwise.
+     */
+    @Override
+    public boolean complete() {
+        return this.complete.get();
+    }
+
+    /**
+     * Returns a set of the mime/types of supported files.
+     *
+     * @return Set of the mime-type of file formats that are supported by the current Decoder instance.
+     */
+    @Override
+    public Set<String> supportedFiles() {
+        return null;
     }
 
     @Override

@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.decode.video.VideoDecoder;
 public final class DecoderConfig {
 
 	private String decoder = null;
-	private HashMap<String, String> properties;
+	private HashMap<String, String> properties = new HashMap<>();
 
 	@JsonCreator
 	public DecoderConfig() {
@@ -31,7 +31,7 @@ public final class DecoderConfig {
 	public HashMap<String, String> getProperties() {
 		return properties;
 	}
-	public void setDecoder(HashMap<String, String> properties) {
+	public void setProperties(HashMap<String, String> properties) {
 		this.properties = properties;
 	}
 
