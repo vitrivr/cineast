@@ -58,11 +58,12 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     private static final int BYTES_PER_SAMPLE = av_get_bytes_per_sample(TARGET_FORMAT);
 
     private int currentFrameNumber = 0;
-    private long framecount;
+    private float currentPosition = 0.0f;
+    private long framecount = 0;
 
     private ArrayDeque<AudioFrame> frameQueue = new ArrayDeque<>();
 
-    private AVFormatContext pFormatCtx = new AVFormatContext(null);
+    private AVFormatContext pFormatCtx = null;
     private int             audioStream;
     private AVCodecContext  pCodecCtx = null;
 
@@ -74,9 +75,6 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     private int[] frameFinished = new int[1];
 
     private IntPointer out_linesize = new IntPointer();
-
-    private byte[] outBuff = new byte[1];
-
 
     private SwrContext swr_ctx = null;
 
@@ -128,17 +126,20 @@ public class FFMpegAudioDecoder implements AudioDecoder {
                                 if (out_samples < BYTES_PER_SAMPLE * this.resampledFrame.channels()) break;
 
                                 /* Allocate output frame and read converted samples. If no sample was read -> break (draining completed). */
-                                av_samples_alloc(this.resampledFrame.data(), out_linesize, this.resampledFrame.channels(), out_samples, TARGET_FORMAT, 1);
+                                av_samples_alloc(this.resampledFrame.data(), out_linesize, this.resampledFrame.channels(), out_samples, TARGET_FORMAT, 0);
                                 out_samples = swr_convert(this.swr_ctx, this.resampledFrame.data(), out_samples, null, 0);
                                 if (out_samples == 0) break;
 
                                 /* Allocate output buffer... */
                                 int buffersize = out_samples * BYTES_PER_SAMPLE * this.resampledFrame.channels();
-                                if (this.outBuff.length < buffersize) this.outBuff = new byte[buffersize];
-                                this.resampledFrame.data(0).get(outBuff);
+                                byte[] buffer = new byte[buffersize];
+                                this.resampledFrame.data(0).position(0).get(buffer);
 
                                 /* ... and add frame to queue. */
-                                this.frameQueue.add(new AudioFrame(this.samplerate, this.channels, outBuff));
+                                this.frameQueue.add(new AudioFrame(this.currentFrameNumber, this.samplerate, this.channels, buffer, this.currentPosition));
+
+                                /* Proceeds the current position. */
+                                this.currentPosition += ((float)out_samples/(float)(this.resampledFrame.sample_rate()));
                             }
                         }
                         readFrame = true;
@@ -180,8 +181,10 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         /* Read decoder configuration. */
         this.samplerate = config.namedAsInt(CONFIG_SAMPLERATE_PROPERTY, CONFIG_SAMPLERATE_DEFAULT);
         this.channels = config.namedAsInt(CONFIG_CHANNELS_PROPERTY, CONFIG_CHANNELS_DEFAULT);
-
         long channellayout = av_get_default_channel_layout(this.channels);
+
+        /* Initialize the AVFormatContext. */
+        this.pFormatCtx = new AVFormatContext(null);
 
         if(!Files.exists(path)){
             LOGGER.error("File does not exist {}", path.toString());
@@ -266,9 +269,9 @@ public class FFMpegAudioDecoder implements AudioDecoder {
      */
     @Override
     public AudioFrame getNext() {
-        if(this.frameQueue.isEmpty() && !this.complete.get()){
+        if(this.frameQueue.isEmpty()){
             boolean frame = readFrame(true);
-            if (!frame) this.complete.set(false);
+            if (!frame) this.complete.set(true);
         }
         return this.frameQueue.poll();
     }
