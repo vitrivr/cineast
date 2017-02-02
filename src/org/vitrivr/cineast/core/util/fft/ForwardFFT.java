@@ -14,6 +14,9 @@ import org.apache.commons.math3.transform.TransformType;
  *     <li>All derivatives are calculated  in a lazy way i.e. the values are on access.</li>
  * </ol>
  *
+ * The inspiration for this class comes from the FFT class found in the jAudio framework (see
+ * https://github.com/dmcennis/jaudioGIT)
+ *
  * @see WindowFunction
  *
  * @author rgasser
