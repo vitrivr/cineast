@@ -25,7 +25,7 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
     private final SynchronousQueue<T> queue = new SynchronousQueue<T>();
 
     /** A flag indicating whether or not the decoder has completed its work. */
-    private volatile AtomicBoolean complete = new AtomicBoolean(false);
+    private AtomicBoolean complete = new AtomicBoolean(false);
 
     /**
      * @param decoder
