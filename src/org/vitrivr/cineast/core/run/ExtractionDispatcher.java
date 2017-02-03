@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.run.filehandler.AudioExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.ImageExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.VideoExtractionFileHandler;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -80,6 +81,9 @@ public class ExtractionDispatcher {
                     break;
                 case VIDEO:
                     this.fileHandlerThread = new Thread(new VideoExtractionFileHandler(this.paths, this.context));
+                    break;
+                case AUDIO:
+                    this.fileHandlerThread = new Thread(new AudioExtractionFileHandler(this.paths, this.context));
                     break;
                 default:
                     break;
