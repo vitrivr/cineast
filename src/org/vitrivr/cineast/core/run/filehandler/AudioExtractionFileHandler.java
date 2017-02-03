@@ -12,11 +12,15 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
+ *
+ * TODO: Make length and overlap configurable!
+ *
  * @author rgasser
  * @version 1.0
  * @created 31.01.17
  */
 public class AudioExtractionFileHandler extends AbstractExtractionFileHandler<AudioFrame> {
+
     /**
      * Default constructor used to initialize the class.
      *
@@ -46,6 +50,6 @@ public class AudioExtractionFileHandler extends AbstractExtractionFileHandler<Au
      */
     @Override
     public Segmenter<AudioFrame> newSegmenter() {
-        return new ConstantLengthAudioSegmenter(512, 32);
+        return new ConstantLengthAudioSegmenter(256, 32);
     }
 }
