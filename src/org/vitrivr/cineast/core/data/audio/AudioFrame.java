@@ -151,30 +151,30 @@ public class AudioFrame {
     }
 
     /**
-     * Returns the sample specified sample in the specified channel as float
-     * value between -1.0 and 1.0
-     *
-     * @param idx Index of the sample (zero-based)
-     * @param channel Index of the channel (zero-based)
-     * @return Sample value for the specified channel at the specified index.
-     */
-    public final float getSampleFloat(int idx, int channel) {
-        return ((float)this.getSampleInt(idx,  channel)/(float)Short.MAX_VALUE);
-    }
-
-    /**
      * Returns the sample specified sample in the specified channel as short value.
      *
      * @param idx Index of the sample (zero-based)
      * @param channel Index of the channel (zero-based)
      * @return Sample value for the specified channel at the specified index.
      */
-    public final short getSampleInt(int idx, int channel) {
+    public final short getSampleAsShort(int idx, int channel) {
         if (channel < this.channels) {
             return this.data.getShort(idx * this.channels + channel);
         } else {
             throw new IllegalArgumentException("The channel indexed must not exceed the number of channels!");
         }
+    }
+
+    /**
+     * Returns the sample specified sample in the specified channel as double
+     * value between -1.0 and 1.0.
+     *
+     * @param idx Index of the sample (zero-based)
+     * @param channel Index of the channel (zero-based)
+     * @return Sample value for the specified channel at the specified index.
+     */
+    public final double getSampleAsDouble(int idx, int channel) {
+        return ((double)this.getSampleAsShort(idx,  channel)/(double)Short.MAX_VALUE);
     }
 
     /**
@@ -184,25 +184,25 @@ public class AudioFrame {
      * @param idx Index of the sample (zero-based)
      * @return Mean value of the sample at the specified index.
      */
-    public final short getMeanSampleInt(int idx) {
+    public final short getMeanSampleAsShort(int idx) {
         int meanSample = 0;
         for (int i=0;i<this.channels;i++) {
-            meanSample += this.getSampleInt(idx, i);
+            meanSample += this.getSampleAsShort(idx, i);
         }
         return (short)(meanSample/this.channels);
     }
 
     /**
-     * Calculates and returns the mean sample value (across all channels)
-     * at the specified sample index and returns it as float value between -1.0 and 1.0
+     * Calculates and returns the mean sample value (across all channels) at the
+     * specified sample index and returns it as double value between -1.0 and 1.0
      *
      * @param idx Index of the sample (zero-based)
      * @return Mean value of the sample at the specified index as float.
      */
-    public final float getMeanSampleFloat(int idx) {
+    public final double getMeanSampleAsDouble(int idx) {
         float meanSample = 0;
         for (int i=0;i<this.channels;i++) {
-            meanSample += this.getSampleInt(idx, i);
+            meanSample += this.getSampleAsShort(idx, i);
         }
         return (meanSample/(this.channels * Short.MAX_VALUE));
     }
