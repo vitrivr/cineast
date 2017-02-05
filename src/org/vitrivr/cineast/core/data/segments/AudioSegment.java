@@ -2,10 +2,11 @@ package org.vitrivr.cineast.core.data.segments;
 
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.audio.AudioFrame;
+import org.vitrivr.cineast.core.util.fft.STFT;
+import org.vitrivr.cineast.core.util.fft.windows.WindowFunction;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javax.sound.sampled.AudioFormat;
+import java.util.*;
 
 /**
  * This AudioSegment is part of the Cineast data model and can hold an arbitrary number of AudioFrames that somehow
@@ -36,6 +37,15 @@ public class AudioSegment implements SegmentContainer {
 
     /** Total duration in secdons of the AudioSegment. */
     private float totalDuration;
+
+    /** */
+    private Integer samplingrate;
+
+    /** */
+    private Integer channels;
+
+    /** */
+    private Map<String,STFT> stft = new HashMap<>();
 
     /**
      * @return a unique id of this
@@ -87,11 +97,17 @@ public class AudioSegment implements SegmentContainer {
      * @param frame AudioFrame to add.
      */
     public void addFrame(AudioFrame frame) {
-        if (frame != null) {
-            this.totalSamples += frame.numberOfSamples();
-            this.totalDuration += frame.getDuration();
-            this.frames.add(frame);
+        if (frame == null) return;
+        if (this.channels == null && this.samplingrate == null) {
+            this.channels = frame.getChannels();
+            this.samplingrate = frame.getSampleRate();
+        } else if (this.channels != frame.getChannels() || this.samplingrate != frame.getSampleRate()) {
+            return;
         }
+
+        this.totalSamples += frame.numberOfSamples();
+        this.totalDuration += frame.getDuration();
+        this.frames.add(frame);
     }
 
 
@@ -179,6 +195,22 @@ public class AudioSegment implements SegmentContainer {
     }
 
     /**
+     *
+     * @return
+     */
+    public int getSamplingrate() {
+        return this.samplingrate;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getChannels() {
+        return this.channels;
+    }
+
+    /**
      * Getter for the frame-number of the start-frame.
      *
      * @return
@@ -230,5 +262,22 @@ public class AudioSegment implements SegmentContainer {
         } else {
             return 0;
         }
+    }
+
+    /**
+     * Calculates and returns the Short-term Fourier Transform of the
+     * current AudioSegment.
+     *
+     * @param windowsize
+     * @param overlap
+     * @param function
+     *
+     * @return STFT of the current AudioSegment.
+     */
+    @Override
+    public STFT getSTFT(int windowsize, int overlap, WindowFunction function) {
+       STFT stft = new STFT(this.getMeanSamplesAsDouble(), this.samplingrate);
+       stft.forward(windowsize, overlap, function);
+       return stft;
     }
 }

@@ -96,4 +96,24 @@ public interface AudioFrameProvider {
     default float getDuration() {
         return AudioFrame.EMPTY_FRAME.getDuration();
     }
+
+    /**
+     * Returns the sampling rate of the audio segment. Is usually determined by
+     * the first AudioFrame added to the segment and must be the same for all frames.
+     *
+     * @return Sampling rate of the audio segment.
+     */
+    default int getSamplingrate() {
+        return AudioFrame.EMPTY_FRAME.getSampleRate();
+    }
+
+    /**
+     * Returns the number of channels for the audio segment. Is usually determined by
+     * the first AudioFrame added to the segment and must be the same for all frames.
+     *
+     * @return Number of channels of the audio segment.
+     */
+    default int getChannels() {
+        return AudioFrame.EMPTY_FRAME.getChannels();
+    }
 }

@@ -21,6 +21,9 @@ public class AudioFrame {
     /** Default empty audio frame. Encodes a single, mute sample for one channel. */
     public final static AudioFrame EMPTY_FRAME = new AudioFrame(1,22050, 1, new byte[2], 0.0f);
 
+    /** Number of bits in a sample. */
+    public final static int BITS_PER_SAMPLE = 16;
+
     /** ByteBuffer holding the raw 16bit int data. */
     private final ByteBuffer data;
 
@@ -67,7 +70,7 @@ public class AudioFrame {
      * @return AudioFormat
      */
     public final AudioFormat getFormat() {
-        return new AudioFormat(this.sampleRate, 16, this.channels, true, false);
+        return new AudioFormat(this.sampleRate, BITS_PER_SAMPLE, this.channels, true, false);
     }
 
     /**
