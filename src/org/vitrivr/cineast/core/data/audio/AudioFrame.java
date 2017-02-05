@@ -159,7 +159,7 @@ public class AudioFrame {
      */
     public final short getSampleAsShort(int idx, int channel) {
         if (channel < this.channels) {
-            return this.data.getShort(idx * this.channels + channel);
+            return this.data.getShort(2*idx * this.channels + 2*channel);
         } else {
             throw new IllegalArgumentException("The channel indexed must not exceed the number of channels!");
         }
