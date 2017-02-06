@@ -24,7 +24,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.DistanceType;
 import org.vitrivr.adampro.grpc.AdamGrpc.EntityPropertiesMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ExternalHandlerQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage;
@@ -197,7 +197,7 @@ public class ADAMproSelector implements DBSelector {
   }
 
   private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column,
-      FeatureVectorMessage fvm, int k, QueryConfig qc) {
+      VectorMessage fvm, int k, QueryConfig qc) {
     synchronized (nnqmBuilder) {
       this.nnqmBuilder.clear();
       nnqmBuilder.setAttribute(column).setQuery(fvm).setK(k);
@@ -205,7 +205,7 @@ public class ADAMproSelector implements DBSelector {
       if (qc != null) {
         Optional<float[]> weights = qc.getDistanceWeights();
         if (weights.isPresent()) {
-          nnqmBuilder.setWeights(DataMessageConverter.convertFeatureVectorMessage(weights.get()));
+          nnqmBuilder.setWeights(DataMessageConverter.convertVectorMessage(weights.get()));
         }
       }
       return nnqmBuilder.build();
@@ -304,13 +304,13 @@ public class ADAMproSelector implements DBSelector {
 
       DataMessage dm = data.get(vectorName);
 
-      if (dm.getDatatypeCase() != DataMessage.DatatypeCase.FEATUREDATA) {
+      if (dm.getDatatypeCase() != DataMessage.DatatypeCase.VECTORDATA) {
         continue;
       }
 
-      FeatureVectorMessage featureData = dm.getFeatureData();
+      VectorMessage featureData = dm.getVectorData();
 
-      if (featureData.getFeatureCase() != FeatureVectorMessage.FeatureCase.DENSEVECTOR) {
+      if (featureData.getVectorCase() != VectorMessage.VectorCase.DENSEVECTOR) {
         continue; // TODO add correct handling for sparse and int vectors
       }
 
@@ -339,7 +339,7 @@ public class ADAMproSelector implements DBSelector {
   public List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column,
       QueryConfig config) {
     NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column,
-        DataMessageConverter.convertFeatureVectorMessage(vector), k, config);
+        DataMessageConverter.convertVectorMessage(vector), k, config);
     QueryMessage sqMessage = buildQueryMessage(hints, null, projectionMessage, nnqMessage);
     ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 
@@ -551,7 +551,7 @@ public class ADAMproSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
       String column, QueryConfig config) {
     NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column,
-        DataMessageConverter.convertFeatureVectorMessage(vector), k, config);
+        DataMessageConverter.convertVectorMessage(vector), k, config);
 
     QueryMessage sqMessage = buildQueryMessage(hints, null, null, nnqMessage);
 

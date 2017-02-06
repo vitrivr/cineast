@@ -51,7 +51,7 @@ public class MotionHistogramBackground extends SubDivMotionHistogram {
 
 	@Override
 	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-		supply.get().createFeatureEntity("features_MotionHistogramBackground", true, new AttributeDefinition("sum", AttributeType.FLOAT), new AttributeDefinition("hist", AttributeType.FEATURE));
+		supply.get().createFeatureEntity("features_MotionHistogramBackground", true, new AttributeDefinition("sum", AttributeType.FLOAT), new AttributeDefinition("hist", AttributeType.VECTOR));
 	}
 
 	

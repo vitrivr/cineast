@@ -61,7 +61,7 @@ public class ForegroundBoundingBox  extends AbstractFeatureModule {
 	
 	@Override
 	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-		supply.get().createFeatureEntity("features_ForegroundBoundingBox", false, new AttributeDefinition("frame", AttributeType.LONG), new AttributeDefinition("bbox", AttributeType.FEATURE));
+		supply.get().createFeatureEntity("features_ForegroundBoundingBox", false, new AttributeDefinition("frame", AttributeType.LONG), new AttributeDefinition("bbox", AttributeType.VECTOR));
 	}
 
 	@Override

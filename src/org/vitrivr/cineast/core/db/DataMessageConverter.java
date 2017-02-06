@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
@@ -32,16 +32,16 @@ public final class DataMessageConverter {
 			return new BooleanTypeProvider(message.getBooleanData());
 		case DOUBLEDATA:
 			return new DoubleTypeProvider(message.getDoubleData());
-		case FEATUREDATA:
-			FeatureVectorMessage featureVectorMessage = message.getFeatureData();
-			switch(featureVectorMessage.getFeatureCase()){
+		case VECTORDATA:
+			VectorMessage VectorMessage = message.getVectorData();
+			switch(VectorMessage.getVectorCase()){
 			case DENSEVECTOR:
-				return new FloatVectorProvider(convert(featureVectorMessage.getDenseVector()));
+				return new FloatVectorProvider(convert(VectorMessage.getDenseVector()));
 			case INTVECTOR:
-				return new IntVectorProvider(convert(featureVectorMessage.getIntVector()));
+				return new IntVectorProvider(convert(VectorMessage.getIntVector()));
 			case SPARSEVECTOR:
-				return new FloatVectorProvider(convert(featureVectorMessage.getSparseVector()));
-			case FEATURE_NOT_SET:
+				return new FloatVectorProvider(convert(VectorMessage.getSparseVector()));
+			case VECTOR_NOT_SET:
 			default:
 				return new NothingProvider();
 			}
@@ -61,7 +61,7 @@ public final class DataMessageConverter {
 	}
 	
 	private static final DataMessage.Builder builder = DataMessage.newBuilder();
-	private static final FeatureVectorMessage.Builder vectorBuilder = FeatureVectorMessage.newBuilder();
+	private static final VectorMessage.Builder vectorBuilder = VectorMessage.newBuilder();
 	private static final DenseVectorMessage.Builder denseVectorBuilder = DenseVectorMessage.newBuilder();
 	private static final IntVectorMessage.Builder intVectorBuilder = IntVectorMessage.newBuilder();
 	
@@ -138,7 +138,7 @@ public final class DataMessageConverter {
 		}
 	}
 	
-	public static FeatureVectorMessage convertFeatureVectorMessage(float[] vector){
+	public static VectorMessage convertVectorMessage(float[] vector){
 		if(vector == null){
 			vector = new float[0];
 		}
@@ -155,11 +155,11 @@ public final class DataMessageConverter {
 	public static DataMessage convert(float[] vector){
 		synchronized (builder) {
 			builder.clear();
-			return builder.setFeatureData(convertFeatureVectorMessage(vector)).build();
+			return builder.setVectorData(convertVectorMessage(vector)).build();
 		}
 	}
 	
-	public static FeatureVectorMessage convertFeatureVectorMessage(int[] vector){
+	public static VectorMessage convertVectorMessage(int[] vector){
 		if(vector == null){
 			vector = new int[0];
 		}
@@ -176,7 +176,7 @@ public final class DataMessageConverter {
 	public static DataMessage convert(int[] vector){
 		synchronized (builder) {
 			builder.clear();
-			return builder.setFeatureData(convertFeatureVectorMessage(vector)).build();
+			return builder.setVectorData(convertVectorMessage(vector)).build();
 		}
 	}
 	
@@ -194,7 +194,7 @@ public final class DataMessageConverter {
 	}
 	
 	private static float[] convert(SparseVectorMessage message) {
-		List<Integer> indexList = message.getPositionList();
+		List<Integer> indexList = message.getIndexList();
 		if(indexList == null || indexList.isEmpty()){
 			return FloatArrayProvider.DEFAULT_FLOAT_ARRAY;
 		}
@@ -206,7 +206,7 @@ public final class DataMessageConverter {
 		
 		float[] _return = new float[maxIndex + 1];
 		
-		List<Float> valueList = message.getVectorList();
+		List<Float> valueList = message.getDataList();
 		
 		for(int i = 0; i < indexList.size(); ++i){
 			_return[indexList.get(i)] = valueList.get(i);

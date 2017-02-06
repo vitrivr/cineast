@@ -5,7 +5,7 @@ import java.util.HashMap;
 import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage.Builder;
 import org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage;
@@ -40,10 +40,10 @@ public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<T
 				return insertMessageBuilder.setStringData((String)o).build();
 			}
 			if(o instanceof float[]){
-				return insertMessageBuilder.setFeatureData(generateFeatureVectorMessage(new FloatArrayIterable((float[])o))).build();
+				return insertMessageBuilder.setVectorData(generateVectorMessage(new FloatArrayIterable((float[])o))).build();
 			}
 			if(o instanceof ReadableFloatVector){
-				return insertMessageBuilder.setFeatureData(generateFeatureVectorMessage(((ReadableFloatVector)o).toList(null))).build();
+				return insertMessageBuilder.setVectorData(generateVectorMessage(((ReadableFloatVector)o).toList(null))).build();
 			}
 			if(o == null){
 				return insertMessageBuilder.setStringData("null").build();
@@ -52,31 +52,31 @@ public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<T
 		}
 	}
 	
-	private final FeatureVectorMessage.Builder featureVectorMessageBuilder = FeatureVectorMessage.newBuilder();
+	private final VectorMessage.Builder VectorMessageBuilder = VectorMessage.newBuilder();
 	private final DenseVectorMessage.Builder denseVectorMessageBuilder = DenseVectorMessage.newBuilder();
 	private final IntVectorMessage.Builder intVectorMessageBuilder = IntVectorMessage.newBuilder();
 	
-	private FeatureVectorMessage generateFeatureVectorMessage(Iterable<Float> vector){
-		synchronized (featureVectorMessageBuilder) {
-			featureVectorMessageBuilder.clear();
+	private VectorMessage generateVectorMessage(Iterable<Float> vector){
+		synchronized (VectorMessageBuilder) {
+			VectorMessageBuilder.clear();
 			DenseVectorMessage msg;
 			synchronized (denseVectorMessageBuilder) {
 				denseVectorMessageBuilder.clear();
 				msg = denseVectorMessageBuilder.addAllVector(vector).build();
 			}
-			return featureVectorMessageBuilder.setDenseVector(msg).build();
+			return VectorMessageBuilder.setDenseVector(msg).build();
 		}
 	}
 	
-	private FeatureVectorMessage generateIntFeatureVectorMessage(Iterable<Integer> vector){
-		synchronized (featureVectorMessageBuilder) {
-			featureVectorMessageBuilder.clear();
+	private VectorMessage generateIntVectorMessage(Iterable<Integer> vector){
+		synchronized (VectorMessageBuilder) {
+			VectorMessageBuilder.clear();
 			IntVectorMessage msg;
 			synchronized (intVectorMessageBuilder) {
 				intVectorMessageBuilder.clear();
 				msg = intVectorMessageBuilder.addAllVector(vector).build();
 			}
-			return featureVectorMessageBuilder.setIntVector(msg).build();
+			return VectorMessageBuilder.setIntVector(msg).build();
 		}
 	}
 	

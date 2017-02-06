@@ -27,14 +27,14 @@ public class ADAMproEntityCreator implements EntityCreator {
 		
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 		
-		attributes.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		attributes.add(builder.setName("type").setAttributetype(AttributeType.INT).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		attributes.add(builder.setName("name").setAttributetype(AttributeType.STRING).setPk(false).build());
-		attributes.add(builder.setName("path").setAttributetype(AttributeType.STRING).setPk(false).build());
-		attributes.add(builder.setName("width").setAttributetype(AttributeType.INT).setPk(false).build());
-		attributes.add(builder.setName("height").setAttributetype(AttributeType.INT).setPk(false).build());
-		attributes.add(builder.setName("framecount").setAttributetype(AttributeType.INT).setPk(false).build());
-		attributes.add(builder.setName("duration").setAttributetype(AttributeType.FLOAT).setPk(false).build());
+		attributes.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		attributes.add(builder.setName("type").setAttributetype(AttributeType.INT).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		attributes.add(builder.setName("name").setAttributetype(AttributeType.STRING).build());
+		attributes.add(builder.setName("path").setAttributetype(AttributeType.STRING).build());
+		attributes.add(builder.setName("width").setAttributetype(AttributeType.INT).build());
+		attributes.add(builder.setName("height").setAttributetype(AttributeType.INT).build());
+		attributes.add(builder.setName("framecount").setAttributetype(AttributeType.INT).build());
+		attributes.add(builder.setName("duration").setAttributetype(AttributeType.FLOAT).build());
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_MULTIMEDIAOBJECT).addAllAttributes(attributes).build();
 		
@@ -58,11 +58,11 @@ public class ADAMproEntityCreator implements EntityCreator {
 		
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		fields.add(builder.setName("multimediaobject").setAttributetype(AttributeType.STRING).setPk(false).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		fields.add(builder.setName("sequencenumber").setAttributetype(AttributeType.INT).setPk(false).build());
-		fields.add(builder.setName("segmentstart").setAttributetype(AttributeType.INT).setPk(false).build());
-		fields.add(builder.setName("segmentend").setAttributetype(AttributeType.INT).setPk(false).build());
+		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("multimediaobject").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("sequencenumber").setAttributetype(AttributeType.INT).build());
+		fields.add(builder.setName("segmentstart").setAttributetype(AttributeType.INT).build());
+		fields.add(builder.setName("segmentend").setAttributetype(AttributeType.INT).build());
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(CINEAST_SEGMENT).addAllAttributes(fields).build();
 		
@@ -96,9 +96,9 @@ public class ADAMproEntityCreator implements EntityCreator {
 		
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 		
-		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(unique).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		for(String feature : featrueNames){
-			fields.add(builder.setName(feature).setAttributetype(AttributeType.FEATURE).setPk(false).build());
+			fields.add(builder.setName(feature).setAttributetype(AttributeType.VECTOR).build());
 		}
 		
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllAttributes(fields).build();
@@ -124,10 +124,10 @@ public class ADAMproEntityCreator implements EntityCreator {
 
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(unique).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		
 		for(AttributeDefinition attribute : attributes){
-			fields.add(builder.setName(attribute.name).setAttributetype(mapAttributeType(attribute.type)).setPk(false).build());
+			fields.add(builder.setName(attribute.name).setAttributetype(mapAttributeType(attribute.type)).build());
 		}
 		
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllAttributes(fields).build();
@@ -153,9 +153,9 @@ public class ADAMproEntityCreator implements EntityCreator {
 
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-		fieldList.add(builder.setName("id").setAttributetype(AttributeType.STRING).setPk(true).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fieldList.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		for(AttributeDefinition attribute : attributes){
-			fieldList.add(builder.setName(attribute.name).setAttributetype(mapAttributeType(attribute.type)).setPk(false).build());
+			fieldList.add(builder.setName(attribute.name).setAttributetype(mapAttributeType(attribute.type)).build());
 		}
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(entityName.toLowerCase()).addAllAttributes(fieldList).build();
@@ -200,8 +200,8 @@ public class ADAMproEntityCreator implements EntityCreator {
       return AttributeType.BOOLEAN;
     case DOUBLE:
       return AttributeType.DOUBLE;
-    case FEATURE:
-      return AttributeType.FEATURE;
+    case VECTOR:
+      return AttributeType.VECTOR;
     case FLOAT:
       return AttributeType.FLOAT;
     case GEOGRAPHY:
@@ -212,8 +212,6 @@ public class ADAMproEntityCreator implements EntityCreator {
       return AttributeType.INT;
     case LONG:
       return AttributeType.LONG;
-    case SERIAL:
-      return AttributeType.SERIAL;
     case STRING:
       return AttributeType.STRING;
     case TEXT:
