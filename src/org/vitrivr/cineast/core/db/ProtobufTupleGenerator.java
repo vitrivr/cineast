@@ -10,6 +10,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage.Builder;
 import org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
+import org.vitrivr.cineast.core.data.IntArrayIterable;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 
 public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<TupleInsertMessage> {
@@ -41,6 +42,9 @@ public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<T
 			}
 			if(o instanceof float[]){
 				return insertMessageBuilder.setVectorData(generateVectorMessage(new FloatArrayIterable((float[])o))).build();
+			}
+			if(o instanceof int[]){
+			  return insertMessageBuilder.setVectorData(generateIntVectorMessage(new IntArrayIterable((int[])o))).build();
 			}
 			if(o instanceof ReadableFloatVector){
 				return insertMessageBuilder.setVectorData(generateVectorMessage(((ReadableFloatVector)o).toList(null))).build();
