@@ -14,10 +14,9 @@ public class AttributeDefinition{
 	  STRING,
 	  TEXT,
 	  BOOLEAN,
-	  FEATURE,
+	  VECTOR,
 	  GEOMETRY,
-	  GEOGRAPHY,
-	  SERIAL
+	  GEOGRAPHY
 	}
 	
 	public AttributeDefinition(String name, AttributeType type){

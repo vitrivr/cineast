@@ -56,9 +56,13 @@ public final class AdamGrpc {
      */
     BOOLEAN(8),
     /**
-     * <code>FEATURE = 9;</code>
+     * <code>VECTOR = 9;</code>
      */
-    FEATURE(9),
+    VECTOR(9),
+    /**
+     * <code>SPARSEVECTOR = 13;</code>
+     */
+    SPARSEVECTOR(13),
     /**
      * <code>GEOMETRY = 10;</code>
      */
@@ -67,10 +71,6 @@ public final class AdamGrpc {
      * <code>GEOGRAPHY = 11;</code>
      */
     GEOGRAPHY(11),
-    /**
-     * <code>SERIAL = 12;</code>
-     */
-    SERIAL(12),
     UNRECOGNIZED(-1),
     ;
 
@@ -111,9 +111,13 @@ public final class AdamGrpc {
      */
     public static final int BOOLEAN_VALUE = 8;
     /**
-     * <code>FEATURE = 9;</code>
+     * <code>VECTOR = 9;</code>
      */
-    public static final int FEATURE_VALUE = 9;
+    public static final int VECTOR_VALUE = 9;
+    /**
+     * <code>SPARSEVECTOR = 13;</code>
+     */
+    public static final int SPARSEVECTOR_VALUE = 13;
     /**
      * <code>GEOMETRY = 10;</code>
      */
@@ -122,10 +126,6 @@ public final class AdamGrpc {
      * <code>GEOGRAPHY = 11;</code>
      */
     public static final int GEOGRAPHY_VALUE = 11;
-    /**
-     * <code>SERIAL = 12;</code>
-     */
-    public static final int SERIAL_VALUE = 12;
 
 
     public final int getNumber() {
@@ -155,10 +155,10 @@ public final class AdamGrpc {
         case 6: return STRING;
         case 7: return TEXT;
         case 8: return BOOLEAN;
-        case 9: return FEATURE;
+        case 9: return VECTOR;
+        case 13: return SPARSEVECTOR;
         case 10: return GEOMETRY;
         case 11: return GEOGRAPHY;
-        case 12: return SERIAL;
         default: return null;
       }
     }
@@ -737,8 +737,8 @@ public final class AdamGrpc {
 
   }
 
-  public interface FeatureVectorMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:FeatureVectorMessage)
+  public interface VectorMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:VectorMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -768,20 +768,20 @@ public final class AdamGrpc {
      */
     org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessageOrBuilder getIntVectorOrBuilder();
 
-    public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.FeatureCase getFeatureCase();
+    public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.VectorCase getVectorCase();
   }
   /**
-   * Protobuf type {@code FeatureVectorMessage}
+   * Protobuf type {@code VectorMessage}
    */
-  public  static final class FeatureVectorMessage extends
+  public  static final class VectorMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:FeatureVectorMessage)
-      FeatureVectorMessageOrBuilder {
-    // Use FeatureVectorMessage.newBuilder() to construct.
-    private FeatureVectorMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:VectorMessage)
+      VectorMessageOrBuilder {
+    // Use VectorMessage.newBuilder() to construct.
+    private VectorMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private FeatureVectorMessage() {
+    private VectorMessage() {
     }
 
     @java.lang.Override
@@ -789,7 +789,7 @@ public final class AdamGrpc {
     getUnknownFields() {
       return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
     }
-    private FeatureVectorMessage(
+    private VectorMessage(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -811,44 +811,44 @@ public final class AdamGrpc {
             }
             case 10: {
               org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.Builder subBuilder = null;
-              if (featureCase_ == 1) {
-                subBuilder = ((org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) feature_).toBuilder();
+              if (vectorCase_ == 1) {
+                subBuilder = ((org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) vector_).toBuilder();
               }
-              feature_ =
+              vector_ =
                   input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) feature_);
-                feature_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) vector_);
+                vector_ = subBuilder.buildPartial();
               }
-              featureCase_ = 1;
+              vectorCase_ = 1;
               break;
             }
             case 18: {
               org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.Builder subBuilder = null;
-              if (featureCase_ == 2) {
-                subBuilder = ((org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) feature_).toBuilder();
+              if (vectorCase_ == 2) {
+                subBuilder = ((org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) vector_).toBuilder();
               }
-              feature_ =
+              vector_ =
                   input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) feature_);
-                feature_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) vector_);
+                vector_ = subBuilder.buildPartial();
               }
-              featureCase_ = 2;
+              vectorCase_ = 2;
               break;
             }
             case 26: {
               org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.Builder subBuilder = null;
-              if (featureCase_ == 3) {
-                subBuilder = ((org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) feature_).toBuilder();
+              if (vectorCase_ == 3) {
+                subBuilder = ((org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) vector_).toBuilder();
               }
-              feature_ =
+              vector_ =
                   input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) feature_);
-                feature_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) vector_);
+                vector_ = subBuilder.buildPartial();
               }
-              featureCase_ = 3;
+              vectorCase_ = 3;
               break;
             }
           }
@@ -864,42 +864,42 @@ public final class AdamGrpc {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_FeatureVectorMessage_descriptor;
+      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_VectorMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_FeatureVectorMessage_fieldAccessorTable
+      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_VectorMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder.class);
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder.class);
     }
 
-    private int featureCase_ = 0;
-    private java.lang.Object feature_;
-    public enum FeatureCase
+    private int vectorCase_ = 0;
+    private java.lang.Object vector_;
+    public enum VectorCase
         implements com.google.protobuf.Internal.EnumLite {
       DENSEVECTOR(1),
       SPARSEVECTOR(2),
       INTVECTOR(3),
-      FEATURE_NOT_SET(0);
+      VECTOR_NOT_SET(0);
       private final int value;
-      private FeatureCase(int value) {
+      private VectorCase(int value) {
         this.value = value;
       }
       /**
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
-      public static FeatureCase valueOf(int value) {
+      public static VectorCase valueOf(int value) {
         return forNumber(value);
       }
 
-      public static FeatureCase forNumber(int value) {
+      public static VectorCase forNumber(int value) {
         switch (value) {
           case 1: return DENSEVECTOR;
           case 2: return SPARSEVECTOR;
           case 3: return INTVECTOR;
-          case 0: return FEATURE_NOT_SET;
+          case 0: return VECTOR_NOT_SET;
           default: return null;
         }
       }
@@ -908,10 +908,10 @@ public final class AdamGrpc {
       }
     };
 
-    public FeatureCase
-    getFeatureCase() {
-      return FeatureCase.forNumber(
-          featureCase_);
+    public VectorCase
+    getVectorCase() {
+      return VectorCase.forNumber(
+          vectorCase_);
     }
 
     public static final int DENSEVECTOR_FIELD_NUMBER = 1;
@@ -919,8 +919,8 @@ public final class AdamGrpc {
      * <code>optional .DenseVectorMessage denseVector = 1;</code>
      */
     public org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage getDenseVector() {
-      if (featureCase_ == 1) {
-         return (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) feature_;
+      if (vectorCase_ == 1) {
+         return (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) vector_;
       }
       return org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.getDefaultInstance();
     }
@@ -928,8 +928,8 @@ public final class AdamGrpc {
      * <code>optional .DenseVectorMessage denseVector = 1;</code>
      */
     public org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessageOrBuilder getDenseVectorOrBuilder() {
-      if (featureCase_ == 1) {
-         return (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) feature_;
+      if (vectorCase_ == 1) {
+         return (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) vector_;
       }
       return org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.getDefaultInstance();
     }
@@ -939,8 +939,8 @@ public final class AdamGrpc {
      * <code>optional .SparseVectorMessage sparseVector = 2;</code>
      */
     public org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage getSparseVector() {
-      if (featureCase_ == 2) {
-         return (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) feature_;
+      if (vectorCase_ == 2) {
+         return (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) vector_;
       }
       return org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.getDefaultInstance();
     }
@@ -948,8 +948,8 @@ public final class AdamGrpc {
      * <code>optional .SparseVectorMessage sparseVector = 2;</code>
      */
     public org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessageOrBuilder getSparseVectorOrBuilder() {
-      if (featureCase_ == 2) {
-         return (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) feature_;
+      if (vectorCase_ == 2) {
+         return (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) vector_;
       }
       return org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.getDefaultInstance();
     }
@@ -959,8 +959,8 @@ public final class AdamGrpc {
      * <code>optional .IntVectorMessage intVector = 3;</code>
      */
     public org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage getIntVector() {
-      if (featureCase_ == 3) {
-         return (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) feature_;
+      if (vectorCase_ == 3) {
+         return (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) vector_;
       }
       return org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.getDefaultInstance();
     }
@@ -968,8 +968,8 @@ public final class AdamGrpc {
      * <code>optional .IntVectorMessage intVector = 3;</code>
      */
     public org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessageOrBuilder getIntVectorOrBuilder() {
-      if (featureCase_ == 3) {
-         return (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) feature_;
+      if (vectorCase_ == 3) {
+         return (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) vector_;
       }
       return org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.getDefaultInstance();
     }
@@ -986,14 +986,14 @@ public final class AdamGrpc {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (featureCase_ == 1) {
-        output.writeMessage(1, (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) feature_);
+      if (vectorCase_ == 1) {
+        output.writeMessage(1, (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) vector_);
       }
-      if (featureCase_ == 2) {
-        output.writeMessage(2, (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) feature_);
+      if (vectorCase_ == 2) {
+        output.writeMessage(2, (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) vector_);
       }
-      if (featureCase_ == 3) {
-        output.writeMessage(3, (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) feature_);
+      if (vectorCase_ == 3) {
+        output.writeMessage(3, (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) vector_);
       }
     }
 
@@ -1002,17 +1002,17 @@ public final class AdamGrpc {
       if (size != -1) return size;
 
       size = 0;
-      if (featureCase_ == 1) {
+      if (vectorCase_ == 1) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) feature_);
+          .computeMessageSize(1, (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) vector_);
       }
-      if (featureCase_ == 2) {
+      if (vectorCase_ == 2) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) feature_);
+          .computeMessageSize(2, (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) vector_);
       }
-      if (featureCase_ == 3) {
+      if (vectorCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) feature_);
+          .computeMessageSize(3, (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) vector_);
       }
       memoizedSize = size;
       return size;
@@ -1024,16 +1024,16 @@ public final class AdamGrpc {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage)) {
+      if (!(obj instanceof org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage)) {
         return super.equals(obj);
       }
-      org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage other = (org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) obj;
+      org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage other = (org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) obj;
 
       boolean result = true;
-      result = result && getFeatureCase().equals(
-          other.getFeatureCase());
+      result = result && getVectorCase().equals(
+          other.getVectorCase());
       if (!result) return false;
-      switch (featureCase_) {
+      switch (vectorCase_) {
         case 1:
           result = result && getDenseVector()
               .equals(other.getDenseVector());
@@ -1059,7 +1059,7 @@ public final class AdamGrpc {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptorForType().hashCode();
-      switch (featureCase_) {
+      switch (vectorCase_) {
         case 1:
           hash = (37 * hash) + DENSEVECTOR_FIELD_NUMBER;
           hash = (53 * hash) + getDenseVector().hashCode();
@@ -1080,58 +1080,58 @@ public final class AdamGrpc {
       return hash;
     }
 
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parseFrom(
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parseFrom(
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parseFrom(byte[] data)
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parseFrom(
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parseFrom(java.io.InputStream input)
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parseFrom(
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parseDelimitedFrom(java.io.InputStream input)
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parseDelimitedFrom(
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parseFrom(
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parseFrom(
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1143,7 +1143,7 @@ public final class AdamGrpc {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage prototype) {
+    public static Builder newBuilder(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -1158,25 +1158,25 @@ public final class AdamGrpc {
       return builder;
     }
     /**
-     * Protobuf type {@code FeatureVectorMessage}
+     * Protobuf type {@code VectorMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:FeatureVectorMessage)
-        org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder {
+        // @@protoc_insertion_point(builder_implements:VectorMessage)
+        org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_FeatureVectorMessage_descriptor;
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_VectorMessage_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_FeatureVectorMessage_fieldAccessorTable
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_VectorMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder.class);
+                org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder.class);
       }
 
-      // Construct using org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.newBuilder()
+      // Construct using org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1193,52 +1193,52 @@ public final class AdamGrpc {
       }
       public Builder clear() {
         super.clear();
-        featureCase_ = 0;
-        feature_ = null;
+        vectorCase_ = 0;
+        vector_ = null;
         return this;
       }
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_FeatureVectorMessage_descriptor;
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_VectorMessage_descriptor;
       }
 
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getDefaultInstanceForType() {
-        return org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getDefaultInstanceForType() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance();
       }
 
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage build() {
-        org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage result = buildPartial();
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage build() {
+        org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage buildPartial() {
-        org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage result = new org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage(this);
-        if (featureCase_ == 1) {
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage buildPartial() {
+        org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage result = new org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage(this);
+        if (vectorCase_ == 1) {
           if (denseVectorBuilder_ == null) {
-            result.feature_ = feature_;
+            result.vector_ = vector_;
           } else {
-            result.feature_ = denseVectorBuilder_.build();
+            result.vector_ = denseVectorBuilder_.build();
           }
         }
-        if (featureCase_ == 2) {
+        if (vectorCase_ == 2) {
           if (sparseVectorBuilder_ == null) {
-            result.feature_ = feature_;
+            result.vector_ = vector_;
           } else {
-            result.feature_ = sparseVectorBuilder_.build();
+            result.vector_ = sparseVectorBuilder_.build();
           }
         }
-        if (featureCase_ == 3) {
+        if (vectorCase_ == 3) {
           if (intVectorBuilder_ == null) {
-            result.feature_ = feature_;
+            result.vector_ = vector_;
           } else {
-            result.feature_ = intVectorBuilder_.build();
+            result.vector_ = intVectorBuilder_.build();
           }
         }
-        result.featureCase_ = featureCase_;
+        result.vectorCase_ = vectorCase_;
         onBuilt();
         return result;
       }
@@ -1270,17 +1270,17 @@ public final class AdamGrpc {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) {
-          return mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage)other);
+        if (other instanceof org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) {
+          return mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage other) {
-        if (other == org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance()) return this;
-        switch (other.getFeatureCase()) {
+      public Builder mergeFrom(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage other) {
+        if (other == org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance()) return this;
+        switch (other.getVectorCase()) {
           case DENSEVECTOR: {
             mergeDenseVector(other.getDenseVector());
             break;
@@ -1293,7 +1293,7 @@ public final class AdamGrpc {
             mergeIntVector(other.getIntVector());
             break;
           }
-          case FEATURE_NOT_SET: {
+          case VECTOR_NOT_SET: {
             break;
           }
         }
@@ -1309,11 +1309,11 @@ public final class AdamGrpc {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage parsedMessage = null;
+        org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) e.getUnfinishedMessage();
+          parsedMessage = (org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1322,17 +1322,17 @@ public final class AdamGrpc {
         }
         return this;
       }
-      private int featureCase_ = 0;
-      private java.lang.Object feature_;
-      public FeatureCase
-          getFeatureCase() {
-        return FeatureCase.forNumber(
-            featureCase_);
+      private int vectorCase_ = 0;
+      private java.lang.Object vector_;
+      public VectorCase
+          getVectorCase() {
+        return VectorCase.forNumber(
+            vectorCase_);
       }
 
-      public Builder clearFeature() {
-        featureCase_ = 0;
-        feature_ = null;
+      public Builder clearVector() {
+        vectorCase_ = 0;
+        vector_ = null;
         onChanged();
         return this;
       }
@@ -1345,12 +1345,12 @@ public final class AdamGrpc {
        */
       public org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage getDenseVector() {
         if (denseVectorBuilder_ == null) {
-          if (featureCase_ == 1) {
-            return (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) feature_;
+          if (vectorCase_ == 1) {
+            return (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) vector_;
           }
           return org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.getDefaultInstance();
         } else {
-          if (featureCase_ == 1) {
+          if (vectorCase_ == 1) {
             return denseVectorBuilder_.getMessage();
           }
           return org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.getDefaultInstance();
@@ -1364,12 +1364,12 @@ public final class AdamGrpc {
           if (value == null) {
             throw new NullPointerException();
           }
-          feature_ = value;
+          vector_ = value;
           onChanged();
         } else {
           denseVectorBuilder_.setMessage(value);
         }
-        featureCase_ = 1;
+        vectorCase_ = 1;
         return this;
       }
       /**
@@ -1378,12 +1378,12 @@ public final class AdamGrpc {
       public Builder setDenseVector(
           org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.Builder builderForValue) {
         if (denseVectorBuilder_ == null) {
-          feature_ = builderForValue.build();
+          vector_ = builderForValue.build();
           onChanged();
         } else {
           denseVectorBuilder_.setMessage(builderForValue.build());
         }
-        featureCase_ = 1;
+        vectorCase_ = 1;
         return this;
       }
       /**
@@ -1391,21 +1391,21 @@ public final class AdamGrpc {
        */
       public Builder mergeDenseVector(org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage value) {
         if (denseVectorBuilder_ == null) {
-          if (featureCase_ == 1 &&
-              feature_ != org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.getDefaultInstance()) {
-            feature_ = org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.newBuilder((org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) feature_)
+          if (vectorCase_ == 1 &&
+              vector_ != org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.getDefaultInstance()) {
+            vector_ = org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.newBuilder((org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) vector_)
                 .mergeFrom(value).buildPartial();
           } else {
-            feature_ = value;
+            vector_ = value;
           }
           onChanged();
         } else {
-          if (featureCase_ == 1) {
+          if (vectorCase_ == 1) {
             denseVectorBuilder_.mergeFrom(value);
           }
           denseVectorBuilder_.setMessage(value);
         }
-        featureCase_ = 1;
+        vectorCase_ = 1;
         return this;
       }
       /**
@@ -1413,15 +1413,15 @@ public final class AdamGrpc {
        */
       public Builder clearDenseVector() {
         if (denseVectorBuilder_ == null) {
-          if (featureCase_ == 1) {
-            featureCase_ = 0;
-            feature_ = null;
+          if (vectorCase_ == 1) {
+            vectorCase_ = 0;
+            vector_ = null;
             onChanged();
           }
         } else {
-          if (featureCase_ == 1) {
-            featureCase_ = 0;
-            feature_ = null;
+          if (vectorCase_ == 1) {
+            vectorCase_ = 0;
+            vector_ = null;
           }
           denseVectorBuilder_.clear();
         }
@@ -1437,11 +1437,11 @@ public final class AdamGrpc {
        * <code>optional .DenseVectorMessage denseVector = 1;</code>
        */
       public org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessageOrBuilder getDenseVectorOrBuilder() {
-        if ((featureCase_ == 1) && (denseVectorBuilder_ != null)) {
+        if ((vectorCase_ == 1) && (denseVectorBuilder_ != null)) {
           return denseVectorBuilder_.getMessageOrBuilder();
         } else {
-          if (featureCase_ == 1) {
-            return (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) feature_;
+          if (vectorCase_ == 1) {
+            return (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) vector_;
           }
           return org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.getDefaultInstance();
         }
@@ -1453,17 +1453,17 @@ public final class AdamGrpc {
           org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessageOrBuilder> 
           getDenseVectorFieldBuilder() {
         if (denseVectorBuilder_ == null) {
-          if (!(featureCase_ == 1)) {
-            feature_ = org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.getDefaultInstance();
+          if (!(vectorCase_ == 1)) {
+            vector_ = org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.getDefaultInstance();
           }
           denseVectorBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessageOrBuilder>(
-                  (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) feature_,
+                  (org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage) vector_,
                   getParentForChildren(),
                   isClean());
-          feature_ = null;
+          vector_ = null;
         }
-        featureCase_ = 1;
+        vectorCase_ = 1;
         onChanged();;
         return denseVectorBuilder_;
       }
@@ -1475,12 +1475,12 @@ public final class AdamGrpc {
        */
       public org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage getSparseVector() {
         if (sparseVectorBuilder_ == null) {
-          if (featureCase_ == 2) {
-            return (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) feature_;
+          if (vectorCase_ == 2) {
+            return (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) vector_;
           }
           return org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.getDefaultInstance();
         } else {
-          if (featureCase_ == 2) {
+          if (vectorCase_ == 2) {
             return sparseVectorBuilder_.getMessage();
           }
           return org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.getDefaultInstance();
@@ -1494,12 +1494,12 @@ public final class AdamGrpc {
           if (value == null) {
             throw new NullPointerException();
           }
-          feature_ = value;
+          vector_ = value;
           onChanged();
         } else {
           sparseVectorBuilder_.setMessage(value);
         }
-        featureCase_ = 2;
+        vectorCase_ = 2;
         return this;
       }
       /**
@@ -1508,12 +1508,12 @@ public final class AdamGrpc {
       public Builder setSparseVector(
           org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.Builder builderForValue) {
         if (sparseVectorBuilder_ == null) {
-          feature_ = builderForValue.build();
+          vector_ = builderForValue.build();
           onChanged();
         } else {
           sparseVectorBuilder_.setMessage(builderForValue.build());
         }
-        featureCase_ = 2;
+        vectorCase_ = 2;
         return this;
       }
       /**
@@ -1521,21 +1521,21 @@ public final class AdamGrpc {
        */
       public Builder mergeSparseVector(org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage value) {
         if (sparseVectorBuilder_ == null) {
-          if (featureCase_ == 2 &&
-              feature_ != org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.getDefaultInstance()) {
-            feature_ = org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.newBuilder((org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) feature_)
+          if (vectorCase_ == 2 &&
+              vector_ != org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.getDefaultInstance()) {
+            vector_ = org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.newBuilder((org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) vector_)
                 .mergeFrom(value).buildPartial();
           } else {
-            feature_ = value;
+            vector_ = value;
           }
           onChanged();
         } else {
-          if (featureCase_ == 2) {
+          if (vectorCase_ == 2) {
             sparseVectorBuilder_.mergeFrom(value);
           }
           sparseVectorBuilder_.setMessage(value);
         }
-        featureCase_ = 2;
+        vectorCase_ = 2;
         return this;
       }
       /**
@@ -1543,15 +1543,15 @@ public final class AdamGrpc {
        */
       public Builder clearSparseVector() {
         if (sparseVectorBuilder_ == null) {
-          if (featureCase_ == 2) {
-            featureCase_ = 0;
-            feature_ = null;
+          if (vectorCase_ == 2) {
+            vectorCase_ = 0;
+            vector_ = null;
             onChanged();
           }
         } else {
-          if (featureCase_ == 2) {
-            featureCase_ = 0;
-            feature_ = null;
+          if (vectorCase_ == 2) {
+            vectorCase_ = 0;
+            vector_ = null;
           }
           sparseVectorBuilder_.clear();
         }
@@ -1567,11 +1567,11 @@ public final class AdamGrpc {
        * <code>optional .SparseVectorMessage sparseVector = 2;</code>
        */
       public org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessageOrBuilder getSparseVectorOrBuilder() {
-        if ((featureCase_ == 2) && (sparseVectorBuilder_ != null)) {
+        if ((vectorCase_ == 2) && (sparseVectorBuilder_ != null)) {
           return sparseVectorBuilder_.getMessageOrBuilder();
         } else {
-          if (featureCase_ == 2) {
-            return (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) feature_;
+          if (vectorCase_ == 2) {
+            return (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) vector_;
           }
           return org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.getDefaultInstance();
         }
@@ -1583,17 +1583,17 @@ public final class AdamGrpc {
           org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessageOrBuilder> 
           getSparseVectorFieldBuilder() {
         if (sparseVectorBuilder_ == null) {
-          if (!(featureCase_ == 2)) {
-            feature_ = org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.getDefaultInstance();
+          if (!(vectorCase_ == 2)) {
+            vector_ = org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.getDefaultInstance();
           }
           sparseVectorBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessageOrBuilder>(
-                  (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) feature_,
+                  (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) vector_,
                   getParentForChildren(),
                   isClean());
-          feature_ = null;
+          vector_ = null;
         }
-        featureCase_ = 2;
+        vectorCase_ = 2;
         onChanged();;
         return sparseVectorBuilder_;
       }
@@ -1605,12 +1605,12 @@ public final class AdamGrpc {
        */
       public org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage getIntVector() {
         if (intVectorBuilder_ == null) {
-          if (featureCase_ == 3) {
-            return (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) feature_;
+          if (vectorCase_ == 3) {
+            return (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) vector_;
           }
           return org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.getDefaultInstance();
         } else {
-          if (featureCase_ == 3) {
+          if (vectorCase_ == 3) {
             return intVectorBuilder_.getMessage();
           }
           return org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.getDefaultInstance();
@@ -1624,12 +1624,12 @@ public final class AdamGrpc {
           if (value == null) {
             throw new NullPointerException();
           }
-          feature_ = value;
+          vector_ = value;
           onChanged();
         } else {
           intVectorBuilder_.setMessage(value);
         }
-        featureCase_ = 3;
+        vectorCase_ = 3;
         return this;
       }
       /**
@@ -1638,12 +1638,12 @@ public final class AdamGrpc {
       public Builder setIntVector(
           org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.Builder builderForValue) {
         if (intVectorBuilder_ == null) {
-          feature_ = builderForValue.build();
+          vector_ = builderForValue.build();
           onChanged();
         } else {
           intVectorBuilder_.setMessage(builderForValue.build());
         }
-        featureCase_ = 3;
+        vectorCase_ = 3;
         return this;
       }
       /**
@@ -1651,21 +1651,21 @@ public final class AdamGrpc {
        */
       public Builder mergeIntVector(org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage value) {
         if (intVectorBuilder_ == null) {
-          if (featureCase_ == 3 &&
-              feature_ != org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.getDefaultInstance()) {
-            feature_ = org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.newBuilder((org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) feature_)
+          if (vectorCase_ == 3 &&
+              vector_ != org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.getDefaultInstance()) {
+            vector_ = org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.newBuilder((org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) vector_)
                 .mergeFrom(value).buildPartial();
           } else {
-            feature_ = value;
+            vector_ = value;
           }
           onChanged();
         } else {
-          if (featureCase_ == 3) {
+          if (vectorCase_ == 3) {
             intVectorBuilder_.mergeFrom(value);
           }
           intVectorBuilder_.setMessage(value);
         }
-        featureCase_ = 3;
+        vectorCase_ = 3;
         return this;
       }
       /**
@@ -1673,15 +1673,15 @@ public final class AdamGrpc {
        */
       public Builder clearIntVector() {
         if (intVectorBuilder_ == null) {
-          if (featureCase_ == 3) {
-            featureCase_ = 0;
-            feature_ = null;
+          if (vectorCase_ == 3) {
+            vectorCase_ = 0;
+            vector_ = null;
             onChanged();
           }
         } else {
-          if (featureCase_ == 3) {
-            featureCase_ = 0;
-            feature_ = null;
+          if (vectorCase_ == 3) {
+            vectorCase_ = 0;
+            vector_ = null;
           }
           intVectorBuilder_.clear();
         }
@@ -1697,11 +1697,11 @@ public final class AdamGrpc {
        * <code>optional .IntVectorMessage intVector = 3;</code>
        */
       public org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessageOrBuilder getIntVectorOrBuilder() {
-        if ((featureCase_ == 3) && (intVectorBuilder_ != null)) {
+        if ((vectorCase_ == 3) && (intVectorBuilder_ != null)) {
           return intVectorBuilder_.getMessageOrBuilder();
         } else {
-          if (featureCase_ == 3) {
-            return (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) feature_;
+          if (vectorCase_ == 3) {
+            return (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) vector_;
           }
           return org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.getDefaultInstance();
         }
@@ -1713,17 +1713,17 @@ public final class AdamGrpc {
           org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessageOrBuilder> 
           getIntVectorFieldBuilder() {
         if (intVectorBuilder_ == null) {
-          if (!(featureCase_ == 3)) {
-            feature_ = org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.getDefaultInstance();
+          if (!(vectorCase_ == 3)) {
+            vector_ = org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.getDefaultInstance();
           }
           intVectorBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessageOrBuilder>(
-                  (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) feature_,
+                  (org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage) vector_,
                   getParentForChildren(),
                   isClean());
-          feature_ = null;
+          vector_ = null;
         }
-        featureCase_ = 3;
+        vectorCase_ = 3;
         onChanged();;
         return intVectorBuilder_;
       }
@@ -1738,39 +1738,39 @@ public final class AdamGrpc {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:FeatureVectorMessage)
+      // @@protoc_insertion_point(builder_scope:VectorMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:FeatureVectorMessage)
-    private static final org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:VectorMessage)
+    private static final org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage();
+      DEFAULT_INSTANCE = new org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage();
     }
 
-    public static org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getDefaultInstance() {
+    public static org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<FeatureVectorMessage>
-        PARSER = new com.google.protobuf.AbstractParser<FeatureVectorMessage>() {
-      public FeatureVectorMessage parsePartialFrom(
+    private static final com.google.protobuf.Parser<VectorMessage>
+        PARSER = new com.google.protobuf.AbstractParser<VectorMessage>() {
+      public VectorMessage parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new FeatureVectorMessage(input, extensionRegistry);
+          return new VectorMessage(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<FeatureVectorMessage> parser() {
+    public static com.google.protobuf.Parser<VectorMessage> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<FeatureVectorMessage> getParserForType() {
+    public com.google.protobuf.Parser<VectorMessage> getParserForType() {
       return PARSER;
     }
 
-    public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getDefaultInstanceForType() {
+    public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2318,30 +2318,30 @@ public final class AdamGrpc {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated float vector = 1 [packed = true];</code>
+     * <code>repeated int32 index = 2 [packed = true];</code>
      */
-    java.util.List<java.lang.Float> getVectorList();
+    java.util.List<java.lang.Integer> getIndexList();
     /**
-     * <code>repeated float vector = 1 [packed = true];</code>
+     * <code>repeated int32 index = 2 [packed = true];</code>
      */
-    int getVectorCount();
+    int getIndexCount();
     /**
-     * <code>repeated float vector = 1 [packed = true];</code>
+     * <code>repeated int32 index = 2 [packed = true];</code>
      */
-    float getVector(int index);
+    int getIndex(int index);
 
     /**
-     * <code>repeated int32 position = 2 [packed = true];</code>
+     * <code>repeated float data = 1 [packed = true];</code>
      */
-    java.util.List<java.lang.Integer> getPositionList();
+    java.util.List<java.lang.Float> getDataList();
     /**
-     * <code>repeated int32 position = 2 [packed = true];</code>
+     * <code>repeated float data = 1 [packed = true];</code>
      */
-    int getPositionCount();
+    int getDataCount();
     /**
-     * <code>repeated int32 position = 2 [packed = true];</code>
+     * <code>repeated float data = 1 [packed = true];</code>
      */
-    int getPosition(int index);
+    float getData(int index);
 
     /**
      * <code>optional int32 length = 3;</code>
@@ -2360,8 +2360,8 @@ public final class AdamGrpc {
       super(builder);
     }
     private SparseVectorMessage() {
-      vector_ = java.util.Collections.emptyList();
-      position_ = java.util.Collections.emptyList();
+      index_ = java.util.Collections.emptyList();
+      data_ = java.util.Collections.emptyList();
       length_ = 0;
     }
 
@@ -2391,43 +2391,43 @@ public final class AdamGrpc {
               break;
             }
             case 13: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                vector_ = new java.util.ArrayList<java.lang.Float>();
-                mutable_bitField0_ |= 0x00000001;
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                data_ = new java.util.ArrayList<java.lang.Float>();
+                mutable_bitField0_ |= 0x00000002;
               }
-              vector_.add(input.readFloat());
+              data_.add(input.readFloat());
               break;
             }
             case 10: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
-                vector_ = new java.util.ArrayList<java.lang.Float>();
-                mutable_bitField0_ |= 0x00000001;
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
+                data_ = new java.util.ArrayList<java.lang.Float>();
+                mutable_bitField0_ |= 0x00000002;
               }
               while (input.getBytesUntilLimit() > 0) {
-                vector_.add(input.readFloat());
+                data_.add(input.readFloat());
               }
               input.popLimit(limit);
               break;
             }
             case 16: {
-              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                position_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000002;
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                index_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000001;
               }
-              position_.add(input.readInt32());
+              index_.add(input.readInt32());
               break;
             }
             case 18: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
-                position_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000002;
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
+                index_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000001;
               }
               while (input.getBytesUntilLimit() > 0) {
-                position_.add(input.readInt32());
+                index_.add(input.readInt32());
               }
               input.popLimit(limit);
               break;
@@ -2445,11 +2445,11 @@ public final class AdamGrpc {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          vector_ = java.util.Collections.unmodifiableList(vector_);
-        }
         if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-          position_ = java.util.Collections.unmodifiableList(position_);
+          data_ = java.util.Collections.unmodifiableList(data_);
+        }
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          index_ = java.util.Collections.unmodifiableList(index_);
         }
         makeExtensionsImmutable();
       }
@@ -2467,51 +2467,51 @@ public final class AdamGrpc {
     }
 
     private int bitField0_;
-    public static final int VECTOR_FIELD_NUMBER = 1;
-    private java.util.List<java.lang.Float> vector_;
+    public static final int INDEX_FIELD_NUMBER = 2;
+    private java.util.List<java.lang.Integer> index_;
     /**
-     * <code>repeated float vector = 1 [packed = true];</code>
-     */
-    public java.util.List<java.lang.Float>
-        getVectorList() {
-      return vector_;
-    }
-    /**
-     * <code>repeated float vector = 1 [packed = true];</code>
-     */
-    public int getVectorCount() {
-      return vector_.size();
-    }
-    /**
-     * <code>repeated float vector = 1 [packed = true];</code>
-     */
-    public float getVector(int index) {
-      return vector_.get(index);
-    }
-    private int vectorMemoizedSerializedSize = -1;
-
-    public static final int POSITION_FIELD_NUMBER = 2;
-    private java.util.List<java.lang.Integer> position_;
-    /**
-     * <code>repeated int32 position = 2 [packed = true];</code>
+     * <code>repeated int32 index = 2 [packed = true];</code>
      */
     public java.util.List<java.lang.Integer>
-        getPositionList() {
-      return position_;
+        getIndexList() {
+      return index_;
     }
     /**
-     * <code>repeated int32 position = 2 [packed = true];</code>
+     * <code>repeated int32 index = 2 [packed = true];</code>
      */
-    public int getPositionCount() {
-      return position_.size();
+    public int getIndexCount() {
+      return index_.size();
     }
     /**
-     * <code>repeated int32 position = 2 [packed = true];</code>
+     * <code>repeated int32 index = 2 [packed = true];</code>
      */
-    public int getPosition(int index) {
-      return position_.get(index);
+    public int getIndex(int index) {
+      return index_.get(index);
     }
-    private int positionMemoizedSerializedSize = -1;
+    private int indexMemoizedSerializedSize = -1;
+
+    public static final int DATA_FIELD_NUMBER = 1;
+    private java.util.List<java.lang.Float> data_;
+    /**
+     * <code>repeated float data = 1 [packed = true];</code>
+     */
+    public java.util.List<java.lang.Float>
+        getDataList() {
+      return data_;
+    }
+    /**
+     * <code>repeated float data = 1 [packed = true];</code>
+     */
+    public int getDataCount() {
+      return data_.size();
+    }
+    /**
+     * <code>repeated float data = 1 [packed = true];</code>
+     */
+    public float getData(int index) {
+      return data_.get(index);
+    }
+    private int dataMemoizedSerializedSize = -1;
 
     public static final int LENGTH_FIELD_NUMBER = 3;
     private int length_;
@@ -2535,19 +2535,19 @@ public final class AdamGrpc {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (getVectorList().size() > 0) {
+      if (getDataList().size() > 0) {
         output.writeUInt32NoTag(10);
-        output.writeUInt32NoTag(vectorMemoizedSerializedSize);
+        output.writeUInt32NoTag(dataMemoizedSerializedSize);
       }
-      for (int i = 0; i < vector_.size(); i++) {
-        output.writeFloatNoTag(vector_.get(i));
+      for (int i = 0; i < data_.size(); i++) {
+        output.writeFloatNoTag(data_.get(i));
       }
-      if (getPositionList().size() > 0) {
+      if (getIndexList().size() > 0) {
         output.writeUInt32NoTag(18);
-        output.writeUInt32NoTag(positionMemoizedSerializedSize);
+        output.writeUInt32NoTag(indexMemoizedSerializedSize);
       }
-      for (int i = 0; i < position_.size(); i++) {
-        output.writeInt32NoTag(position_.get(i));
+      for (int i = 0; i < index_.size(); i++) {
+        output.writeInt32NoTag(index_.get(i));
       }
       if (length_ != 0) {
         output.writeInt32(3, length_);
@@ -2561,28 +2561,28 @@ public final class AdamGrpc {
       size = 0;
       {
         int dataSize = 0;
-        dataSize = 4 * getVectorList().size();
+        dataSize = 4 * getDataList().size();
         size += dataSize;
-        if (!getVectorList().isEmpty()) {
+        if (!getDataList().isEmpty()) {
           size += 1;
           size += com.google.protobuf.CodedOutputStream
               .computeInt32SizeNoTag(dataSize);
         }
-        vectorMemoizedSerializedSize = dataSize;
+        dataMemoizedSerializedSize = dataSize;
       }
       {
         int dataSize = 0;
-        for (int i = 0; i < position_.size(); i++) {
+        for (int i = 0; i < index_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeInt32SizeNoTag(position_.get(i));
+            .computeInt32SizeNoTag(index_.get(i));
         }
         size += dataSize;
-        if (!getPositionList().isEmpty()) {
+        if (!getIndexList().isEmpty()) {
           size += 1;
           size += com.google.protobuf.CodedOutputStream
               .computeInt32SizeNoTag(dataSize);
         }
-        positionMemoizedSerializedSize = dataSize;
+        indexMemoizedSerializedSize = dataSize;
       }
       if (length_ != 0) {
         size += com.google.protobuf.CodedOutputStream
@@ -2604,10 +2604,10 @@ public final class AdamGrpc {
       org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage other = (org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage) obj;
 
       boolean result = true;
-      result = result && getVectorList()
-          .equals(other.getVectorList());
-      result = result && getPositionList()
-          .equals(other.getPositionList());
+      result = result && getIndexList()
+          .equals(other.getIndexList());
+      result = result && getDataList()
+          .equals(other.getDataList());
       result = result && (getLength()
           == other.getLength());
       return result;
@@ -2620,13 +2620,13 @@ public final class AdamGrpc {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (getVectorCount() > 0) {
-        hash = (37 * hash) + VECTOR_FIELD_NUMBER;
-        hash = (53 * hash) + getVectorList().hashCode();
+      if (getIndexCount() > 0) {
+        hash = (37 * hash) + INDEX_FIELD_NUMBER;
+        hash = (53 * hash) + getIndexList().hashCode();
       }
-      if (getPositionCount() > 0) {
-        hash = (37 * hash) + POSITION_FIELD_NUMBER;
-        hash = (53 * hash) + getPositionList().hashCode();
+      if (getDataCount() > 0) {
+        hash = (37 * hash) + DATA_FIELD_NUMBER;
+        hash = (53 * hash) + getDataList().hashCode();
       }
       hash = (37 * hash) + LENGTH_FIELD_NUMBER;
       hash = (53 * hash) + getLength();
@@ -2748,9 +2748,9 @@ public final class AdamGrpc {
       }
       public Builder clear() {
         super.clear();
-        vector_ = java.util.Collections.emptyList();
+        index_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000001);
-        position_ = java.util.Collections.emptyList();
+        data_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000002);
         length_ = 0;
 
@@ -2779,15 +2779,15 @@ public final class AdamGrpc {
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          vector_ = java.util.Collections.unmodifiableList(vector_);
+          index_ = java.util.Collections.unmodifiableList(index_);
           bitField0_ = (bitField0_ & ~0x00000001);
         }
-        result.vector_ = vector_;
+        result.index_ = index_;
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          position_ = java.util.Collections.unmodifiableList(position_);
+          data_ = java.util.Collections.unmodifiableList(data_);
           bitField0_ = (bitField0_ & ~0x00000002);
         }
-        result.position_ = position_;
+        result.data_ = data_;
         result.length_ = length_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -2831,23 +2831,23 @@ public final class AdamGrpc {
 
       public Builder mergeFrom(org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage other) {
         if (other == org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage.getDefaultInstance()) return this;
-        if (!other.vector_.isEmpty()) {
-          if (vector_.isEmpty()) {
-            vector_ = other.vector_;
+        if (!other.index_.isEmpty()) {
+          if (index_.isEmpty()) {
+            index_ = other.index_;
             bitField0_ = (bitField0_ & ~0x00000001);
           } else {
-            ensureVectorIsMutable();
-            vector_.addAll(other.vector_);
+            ensureIndexIsMutable();
+            index_.addAll(other.index_);
           }
           onChanged();
         }
-        if (!other.position_.isEmpty()) {
-          if (position_.isEmpty()) {
-            position_ = other.position_;
+        if (!other.data_.isEmpty()) {
+          if (data_.isEmpty()) {
+            data_ = other.data_;
             bitField0_ = (bitField0_ & ~0x00000002);
           } else {
-            ensurePositionIsMutable();
-            position_.addAll(other.position_);
+            ensureDataIsMutable();
+            data_.addAll(other.data_);
           }
           onChanged();
         }
@@ -2881,133 +2881,133 @@ public final class AdamGrpc {
       }
       private int bitField0_;
 
-      private java.util.List<java.lang.Float> vector_ = java.util.Collections.emptyList();
-      private void ensureVectorIsMutable() {
+      private java.util.List<java.lang.Integer> index_ = java.util.Collections.emptyList();
+      private void ensureIndexIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          vector_ = new java.util.ArrayList<java.lang.Float>(vector_);
+          index_ = new java.util.ArrayList<java.lang.Integer>(index_);
           bitField0_ |= 0x00000001;
          }
       }
       /**
-       * <code>repeated float vector = 1 [packed = true];</code>
+       * <code>repeated int32 index = 2 [packed = true];</code>
        */
-      public java.util.List<java.lang.Float>
-          getVectorList() {
-        return java.util.Collections.unmodifiableList(vector_);
+      public java.util.List<java.lang.Integer>
+          getIndexList() {
+        return java.util.Collections.unmodifiableList(index_);
       }
       /**
-       * <code>repeated float vector = 1 [packed = true];</code>
+       * <code>repeated int32 index = 2 [packed = true];</code>
        */
-      public int getVectorCount() {
-        return vector_.size();
+      public int getIndexCount() {
+        return index_.size();
       }
       /**
-       * <code>repeated float vector = 1 [packed = true];</code>
+       * <code>repeated int32 index = 2 [packed = true];</code>
        */
-      public float getVector(int index) {
-        return vector_.get(index);
+      public int getIndex(int index) {
+        return index_.get(index);
       }
       /**
-       * <code>repeated float vector = 1 [packed = true];</code>
+       * <code>repeated int32 index = 2 [packed = true];</code>
        */
-      public Builder setVector(
-          int index, float value) {
-        ensureVectorIsMutable();
-        vector_.set(index, value);
+      public Builder setIndex(
+          int index, int value) {
+        ensureIndexIsMutable();
+        index_.set(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated float vector = 1 [packed = true];</code>
+       * <code>repeated int32 index = 2 [packed = true];</code>
        */
-      public Builder addVector(float value) {
-        ensureVectorIsMutable();
-        vector_.add(value);
+      public Builder addIndex(int value) {
+        ensureIndexIsMutable();
+        index_.add(value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated float vector = 1 [packed = true];</code>
+       * <code>repeated int32 index = 2 [packed = true];</code>
        */
-      public Builder addAllVector(
-          java.lang.Iterable<? extends java.lang.Float> values) {
-        ensureVectorIsMutable();
+      public Builder addAllIndex(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureIndexIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, vector_);
+            values, index_);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated float vector = 1 [packed = true];</code>
+       * <code>repeated int32 index = 2 [packed = true];</code>
        */
-      public Builder clearVector() {
-        vector_ = java.util.Collections.emptyList();
+      public Builder clearIndex() {
+        index_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
 
-      private java.util.List<java.lang.Integer> position_ = java.util.Collections.emptyList();
-      private void ensurePositionIsMutable() {
+      private java.util.List<java.lang.Float> data_ = java.util.Collections.emptyList();
+      private void ensureDataIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          position_ = new java.util.ArrayList<java.lang.Integer>(position_);
+          data_ = new java.util.ArrayList<java.lang.Float>(data_);
           bitField0_ |= 0x00000002;
          }
       }
       /**
-       * <code>repeated int32 position = 2 [packed = true];</code>
+       * <code>repeated float data = 1 [packed = true];</code>
        */
-      public java.util.List<java.lang.Integer>
-          getPositionList() {
-        return java.util.Collections.unmodifiableList(position_);
+      public java.util.List<java.lang.Float>
+          getDataList() {
+        return java.util.Collections.unmodifiableList(data_);
       }
       /**
-       * <code>repeated int32 position = 2 [packed = true];</code>
+       * <code>repeated float data = 1 [packed = true];</code>
        */
-      public int getPositionCount() {
-        return position_.size();
+      public int getDataCount() {
+        return data_.size();
       }
       /**
-       * <code>repeated int32 position = 2 [packed = true];</code>
+       * <code>repeated float data = 1 [packed = true];</code>
        */
-      public int getPosition(int index) {
-        return position_.get(index);
+      public float getData(int index) {
+        return data_.get(index);
       }
       /**
-       * <code>repeated int32 position = 2 [packed = true];</code>
+       * <code>repeated float data = 1 [packed = true];</code>
        */
-      public Builder setPosition(
-          int index, int value) {
-        ensurePositionIsMutable();
-        position_.set(index, value);
+      public Builder setData(
+          int index, float value) {
+        ensureDataIsMutable();
+        data_.set(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated int32 position = 2 [packed = true];</code>
+       * <code>repeated float data = 1 [packed = true];</code>
        */
-      public Builder addPosition(int value) {
-        ensurePositionIsMutable();
-        position_.add(value);
+      public Builder addData(float value) {
+        ensureDataIsMutable();
+        data_.add(value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated int32 position = 2 [packed = true];</code>
+       * <code>repeated float data = 1 [packed = true];</code>
        */
-      public Builder addAllPosition(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensurePositionIsMutable();
+      public Builder addAllData(
+          java.lang.Iterable<? extends java.lang.Float> values) {
+        ensureDataIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, position_);
+            values, data_);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated int32 position = 2 [packed = true];</code>
+       * <code>repeated float data = 1 [packed = true];</code>
        */
-      public Builder clearPosition() {
-        position_ = java.util.Collections.emptyList();
+      public Builder clearData() {
+        data_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
@@ -3667,13 +3667,13 @@ public final class AdamGrpc {
     boolean getBooleanData();
 
     /**
-     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     * <code>optional .VectorMessage vectorData = 7;</code>
      */
-    org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getFeatureData();
+    org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getVectorData();
     /**
-     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     * <code>optional .VectorMessage vectorData = 7;</code>
      */
-    org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder();
+    org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder getVectorDataOrBuilder();
 
     /**
      * <pre>
@@ -3776,14 +3776,14 @@ public final class AdamGrpc {
               break;
             }
             case 58: {
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder subBuilder = null;
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder subBuilder = null;
               if (datatypeCase_ == 7) {
-                subBuilder = ((org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) datatype_).toBuilder();
+                subBuilder = ((org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) datatype_).toBuilder();
               }
               datatype_ =
-                  input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.parser(), extensionRegistry);
+                  input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) datatype_);
+                subBuilder.mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) datatype_);
                 datatype_ = subBuilder.buildPartial();
               }
               datatypeCase_ = 7;
@@ -3834,7 +3834,7 @@ public final class AdamGrpc {
       DOUBLEDATA(4),
       STRINGDATA(5),
       BOOLEANDATA(6),
-      FEATUREDATA(7),
+      VECTORDATA(7),
       GEOGRAPHYDATA(9),
       GEOMETRYDATA(10),
       DATATYPE_NOT_SET(0);
@@ -3858,7 +3858,7 @@ public final class AdamGrpc {
           case 4: return DOUBLEDATA;
           case 5: return STRINGDATA;
           case 6: return BOOLEANDATA;
-          case 7: return FEATUREDATA;
+          case 7: return VECTORDATA;
           case 9: return GEOGRAPHYDATA;
           case 10: return GEOMETRYDATA;
           case 0: return DATATYPE_NOT_SET;
@@ -3974,24 +3974,24 @@ public final class AdamGrpc {
       return false;
     }
 
-    public static final int FEATUREDATA_FIELD_NUMBER = 7;
+    public static final int VECTORDATA_FIELD_NUMBER = 7;
     /**
-     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     * <code>optional .VectorMessage vectorData = 7;</code>
      */
-    public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getFeatureData() {
+    public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getVectorData() {
       if (datatypeCase_ == 7) {
-         return (org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) datatype_;
+         return (org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) datatype_;
       }
-      return org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
+      return org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance();
     }
     /**
-     * <code>optional .FeatureVectorMessage featureData = 7;</code>
+     * <code>optional .VectorMessage vectorData = 7;</code>
      */
-    public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
+    public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder getVectorDataOrBuilder() {
       if (datatypeCase_ == 7) {
-         return (org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) datatype_;
+         return (org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) datatype_;
       }
-      return org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
+      return org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance();
     }
 
     public static final int GEOGRAPHYDATA_FIELD_NUMBER = 9;
@@ -4124,7 +4124,7 @@ public final class AdamGrpc {
             6, (boolean)((java.lang.Boolean) datatype_));
       }
       if (datatypeCase_ == 7) {
-        output.writeMessage(7, (org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) datatype_);
+        output.writeMessage(7, (org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) datatype_);
       }
       if (datatypeCase_ == 9) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 9, datatype_);
@@ -4169,7 +4169,7 @@ public final class AdamGrpc {
       }
       if (datatypeCase_ == 7) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, (org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) datatype_);
+          .computeMessageSize(7, (org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) datatype_);
       }
       if (datatypeCase_ == 9) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, datatype_);
@@ -4226,8 +4226,8 @@ public final class AdamGrpc {
               == other.getBooleanData());
           break;
         case 7:
-          result = result && getFeatureData()
-              .equals(other.getFeatureData());
+          result = result && getVectorData()
+              .equals(other.getVectorData());
           break;
         case 9:
           result = result && getGeographyData()
@@ -4280,8 +4280,8 @@ public final class AdamGrpc {
               getBooleanData());
           break;
         case 7:
-          hash = (37 * hash) + FEATUREDATA_FIELD_NUMBER;
-          hash = (53 * hash) + getFeatureData().hashCode();
+          hash = (37 * hash) + VECTORDATA_FIELD_NUMBER;
+          hash = (53 * hash) + getVectorData().hashCode();
           break;
         case 9:
           hash = (37 * hash) + GEOGRAPHYDATA_FIELD_NUMBER;
@@ -4455,10 +4455,10 @@ public final class AdamGrpc {
           result.datatype_ = datatype_;
         }
         if (datatypeCase_ == 7) {
-          if (featureDataBuilder_ == null) {
+          if (vectorDataBuilder_ == null) {
             result.datatype_ = datatype_;
           } else {
-            result.datatype_ = featureDataBuilder_.build();
+            result.datatype_ = vectorDataBuilder_.build();
           }
         }
         if (datatypeCase_ == 9) {
@@ -4536,8 +4536,8 @@ public final class AdamGrpc {
             setBooleanData(other.getBooleanData());
             break;
           }
-          case FEATUREDATA: {
-            mergeFeatureData(other.getFeatureData());
+          case VECTORDATA: {
+            mergeVectorData(other.getVectorData());
             break;
           }
           case GEOGRAPHYDATA: {
@@ -4828,61 +4828,61 @@ public final class AdamGrpc {
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder> featureDataBuilder_;
+          org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder> vectorDataBuilder_;
       /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       * <code>optional .VectorMessage vectorData = 7;</code>
        */
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getFeatureData() {
-        if (featureDataBuilder_ == null) {
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getVectorData() {
+        if (vectorDataBuilder_ == null) {
           if (datatypeCase_ == 7) {
-            return (org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) datatype_;
+            return (org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) datatype_;
           }
-          return org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
+          return org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance();
         } else {
           if (datatypeCase_ == 7) {
-            return featureDataBuilder_.getMessage();
+            return vectorDataBuilder_.getMessage();
           }
-          return org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
+          return org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       * <code>optional .VectorMessage vectorData = 7;</code>
        */
-      public Builder setFeatureData(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage value) {
-        if (featureDataBuilder_ == null) {
+      public Builder setVectorData(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage value) {
+        if (vectorDataBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           datatype_ = value;
           onChanged();
         } else {
-          featureDataBuilder_.setMessage(value);
+          vectorDataBuilder_.setMessage(value);
         }
         datatypeCase_ = 7;
         return this;
       }
       /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       * <code>optional .VectorMessage vectorData = 7;</code>
        */
-      public Builder setFeatureData(
-          org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder builderForValue) {
-        if (featureDataBuilder_ == null) {
+      public Builder setVectorData(
+          org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder builderForValue) {
+        if (vectorDataBuilder_ == null) {
           datatype_ = builderForValue.build();
           onChanged();
         } else {
-          featureDataBuilder_.setMessage(builderForValue.build());
+          vectorDataBuilder_.setMessage(builderForValue.build());
         }
         datatypeCase_ = 7;
         return this;
       }
       /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       * <code>optional .VectorMessage vectorData = 7;</code>
        */
-      public Builder mergeFeatureData(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage value) {
-        if (featureDataBuilder_ == null) {
+      public Builder mergeVectorData(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage value) {
+        if (vectorDataBuilder_ == null) {
           if (datatypeCase_ == 7 &&
-              datatype_ != org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance()) {
-            datatype_ = org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.newBuilder((org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) datatype_)
+              datatype_ != org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance()) {
+            datatype_ = org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.newBuilder((org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) datatype_)
                 .mergeFrom(value).buildPartial();
           } else {
             datatype_ = value;
@@ -4890,18 +4890,18 @@ public final class AdamGrpc {
           onChanged();
         } else {
           if (datatypeCase_ == 7) {
-            featureDataBuilder_.mergeFrom(value);
+            vectorDataBuilder_.mergeFrom(value);
           }
-          featureDataBuilder_.setMessage(value);
+          vectorDataBuilder_.setMessage(value);
         }
         datatypeCase_ = 7;
         return this;
       }
       /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       * <code>optional .VectorMessage vectorData = 7;</code>
        */
-      public Builder clearFeatureData() {
-        if (featureDataBuilder_ == null) {
+      public Builder clearVectorData() {
+        if (vectorDataBuilder_ == null) {
           if (datatypeCase_ == 7) {
             datatypeCase_ = 0;
             datatype_ = null;
@@ -4912,49 +4912,49 @@ public final class AdamGrpc {
             datatypeCase_ = 0;
             datatype_ = null;
           }
-          featureDataBuilder_.clear();
+          vectorDataBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       * <code>optional .VectorMessage vectorData = 7;</code>
        */
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder getFeatureDataBuilder() {
-        return getFeatureDataFieldBuilder().getBuilder();
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder getVectorDataBuilder() {
+        return getVectorDataFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       * <code>optional .VectorMessage vectorData = 7;</code>
        */
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder getFeatureDataOrBuilder() {
-        if ((datatypeCase_ == 7) && (featureDataBuilder_ != null)) {
-          return featureDataBuilder_.getMessageOrBuilder();
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder getVectorDataOrBuilder() {
+        if ((datatypeCase_ == 7) && (vectorDataBuilder_ != null)) {
+          return vectorDataBuilder_.getMessageOrBuilder();
         } else {
           if (datatypeCase_ == 7) {
-            return (org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) datatype_;
+            return (org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) datatype_;
           }
-          return org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
+          return org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .FeatureVectorMessage featureData = 7;</code>
+       * <code>optional .VectorMessage vectorData = 7;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder> 
-          getFeatureDataFieldBuilder() {
-        if (featureDataBuilder_ == null) {
+          org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder> 
+          getVectorDataFieldBuilder() {
+        if (vectorDataBuilder_ == null) {
           if (!(datatypeCase_ == 7)) {
-            datatype_ = org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance();
+            datatype_ = org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance();
           }
-          featureDataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder>(
-                  (org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage) datatype_,
+          vectorDataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder>(
+                  (org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage) datatype_,
                   getParentForChildren(),
                   isClean());
           datatype_ = null;
         }
         datatypeCase_ = 7;
         onChanged();;
-        return featureDataBuilder_;
+        return vectorDataBuilder_;
       }
 
       /**
@@ -6084,11 +6084,6 @@ public final class AdamGrpc {
     org.vitrivr.adampro.grpc.AdamGrpc.AttributeType getAttributetype();
 
     /**
-     * <code>optional bool pk = 3;</code>
-     */
-    boolean getPk();
-
-    /**
      * <code>map&lt;string, string&gt; params = 7;</code>
      */
     int getParamsCount();
@@ -6146,7 +6141,6 @@ public final class AdamGrpc {
     private AttributeDefinitionMessage() {
       name_ = "";
       attributetype_ = 0;
-      pk_ = false;
       handler_ = "";
     }
 
@@ -6187,16 +6181,11 @@ public final class AdamGrpc {
               attributetype_ = rawValue;
               break;
             }
-            case 24: {
-
-              pk_ = input.readBool();
-              break;
-            }
             case 58: {
-              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
                 params_ = com.google.protobuf.MapField.newMapField(
                     ParamsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000008;
+                mutable_bitField0_ |= 0x00000004;
               }
               com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
               params__ = input.readMessage(
@@ -6294,15 +6283,6 @@ public final class AdamGrpc {
     public org.vitrivr.adampro.grpc.AdamGrpc.AttributeType getAttributetype() {
       org.vitrivr.adampro.grpc.AdamGrpc.AttributeType result = org.vitrivr.adampro.grpc.AdamGrpc.AttributeType.valueOf(attributetype_);
       return result == null ? org.vitrivr.adampro.grpc.AdamGrpc.AttributeType.UNRECOGNIZED : result;
-    }
-
-    public static final int PK_FIELD_NUMBER = 3;
-    private boolean pk_;
-    /**
-     * <code>optional bool pk = 3;</code>
-     */
-    public boolean getPk() {
-      return pk_;
     }
 
     public static final int PARAMS_FIELD_NUMBER = 7;
@@ -6433,9 +6413,6 @@ public final class AdamGrpc {
       if (attributetype_ != org.vitrivr.adampro.grpc.AdamGrpc.AttributeType.UNKOWNAT.getNumber()) {
         output.writeEnum(2, attributetype_);
       }
-      if (pk_ != false) {
-        output.writeBool(3, pk_);
-      }
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
@@ -6458,10 +6435,6 @@ public final class AdamGrpc {
       if (attributetype_ != org.vitrivr.adampro.grpc.AdamGrpc.AttributeType.UNKOWNAT.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(2, attributetype_);
-      }
-      if (pk_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, pk_);
       }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetParams().getMap().entrySet()) {
@@ -6495,8 +6468,6 @@ public final class AdamGrpc {
       result = result && getName()
           .equals(other.getName());
       result = result && attributetype_ == other.attributetype_;
-      result = result && (getPk()
-          == other.getPk());
       result = result && internalGetParams().equals(
           other.internalGetParams());
       result = result && getHandler()
@@ -6515,9 +6486,6 @@ public final class AdamGrpc {
       hash = (53 * hash) + getName().hashCode();
       hash = (37 * hash) + ATTRIBUTETYPE_FIELD_NUMBER;
       hash = (53 * hash) + attributetype_;
-      hash = (37 * hash) + PK_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getPk());
       if (!internalGetParams().getMap().isEmpty()) {
         hash = (37 * hash) + PARAMS_FIELD_NUMBER;
         hash = (53 * hash) + internalGetParams().hashCode();
@@ -6668,8 +6636,6 @@ public final class AdamGrpc {
 
         attributetype_ = 0;
 
-        pk_ = false;
-
         internalGetMutableParams().clear();
         handler_ = "";
 
@@ -6699,7 +6665,6 @@ public final class AdamGrpc {
         int to_bitField0_ = 0;
         result.name_ = name_;
         result.attributetype_ = attributetype_;
-        result.pk_ = pk_;
         result.params_ = internalGetParams();
         result.params_.makeImmutable();
         result.handler_ = handler_;
@@ -6751,9 +6716,6 @@ public final class AdamGrpc {
         }
         if (other.attributetype_ != 0) {
           setAttributetypeValue(other.getAttributetypeValue());
-        }
-        if (other.getPk() != false) {
-          setPk(other.getPk());
         }
         internalGetMutableParams().mergeFrom(
             other.internalGetParams());
@@ -6897,32 +6859,6 @@ public final class AdamGrpc {
       public Builder clearAttributetype() {
         
         attributetype_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private boolean pk_ ;
-      /**
-       * <code>optional bool pk = 3;</code>
-       */
-      public boolean getPk() {
-        return pk_;
-      }
-      /**
-       * <code>optional bool pk = 3;</code>
-       */
-      public Builder setPk(boolean value) {
-        
-        pk_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool pk = 3;</code>
-       */
-      public Builder clearPk() {
-        
-        pk_ = false;
         onChanged();
         return this;
       }
@@ -17101,23 +17037,14 @@ public final class AdamGrpc {
     int getNumberOfPartitions();
 
     /**
-     * <code>repeated string attributes = 3;</code>
+     * <code>optional string attributes = 3;</code>
      */
-    java.util.List<java.lang.String>
-        getAttributesList();
+    java.lang.String getAttributes();
     /**
-     * <code>repeated string attributes = 3;</code>
-     */
-    int getAttributesCount();
-    /**
-     * <code>repeated string attributes = 3;</code>
-     */
-    java.lang.String getAttributes(int index);
-    /**
-     * <code>repeated string attributes = 3;</code>
+     * <code>optional string attributes = 3;</code>
      */
     com.google.protobuf.ByteString
-        getAttributesBytes(int index);
+        getAttributesBytes();
 
     /**
      * <code>optional .RepartitionMessage.PartitionOptions option = 4;</code>
@@ -17205,7 +17132,7 @@ public final class AdamGrpc {
     private RepartitionMessage() {
       entity_ = "";
       numberOfPartitions_ = 0;
-      attributes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      attributes_ = "";
       option_ = 0;
       partitioner_ = 0;
     }
@@ -17248,11 +17175,8 @@ public final class AdamGrpc {
             }
             case 26: {
               java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                attributes_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              attributes_.add(s);
+
+              attributes_ = s;
               break;
             }
             case 32: {
@@ -17288,9 +17212,6 @@ public final class AdamGrpc {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          attributes_ = attributes_.getUnmodifiableView();
-        }
         makeExtensionsImmutable();
       }
     }
@@ -17588,32 +17509,37 @@ public final class AdamGrpc {
     }
 
     public static final int ATTRIBUTES_FIELD_NUMBER = 3;
-    private com.google.protobuf.LazyStringList attributes_;
+    private volatile java.lang.Object attributes_;
     /**
-     * <code>repeated string attributes = 3;</code>
+     * <code>optional string attributes = 3;</code>
      */
-    public com.google.protobuf.ProtocolStringList
-        getAttributesList() {
-      return attributes_;
+    public java.lang.String getAttributes() {
+      java.lang.Object ref = attributes_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        attributes_ = s;
+        return s;
+      }
     }
     /**
-     * <code>repeated string attributes = 3;</code>
-     */
-    public int getAttributesCount() {
-      return attributes_.size();
-    }
-    /**
-     * <code>repeated string attributes = 3;</code>
-     */
-    public java.lang.String getAttributes(int index) {
-      return attributes_.get(index);
-    }
-    /**
-     * <code>repeated string attributes = 3;</code>
+     * <code>optional string attributes = 3;</code>
      */
     public com.google.protobuf.ByteString
-        getAttributesBytes(int index) {
-      return attributes_.getByteString(index);
+        getAttributesBytes() {
+      java.lang.Object ref = attributes_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        attributes_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int OPTION_FIELD_NUMBER = 4;
@@ -17758,8 +17684,8 @@ public final class AdamGrpc {
       if (numberOfPartitions_ != 0) {
         output.writeInt32(2, numberOfPartitions_);
       }
-      for (int i = 0; i < attributes_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, attributes_.getRaw(i));
+      if (!getAttributesBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, attributes_);
       }
       if (option_ != org.vitrivr.adampro.grpc.AdamGrpc.RepartitionMessage.PartitionOptions.CREATE_NEW.getNumber()) {
         output.writeEnum(4, option_);
@@ -17787,13 +17713,8 @@ public final class AdamGrpc {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, numberOfPartitions_);
       }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < attributes_.size(); i++) {
-          dataSize += computeStringSizeNoTag(attributes_.getRaw(i));
-        }
-        size += dataSize;
-        size += 1 * getAttributesList().size();
+      if (!getAttributesBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, attributes_);
       }
       if (option_ != org.vitrivr.adampro.grpc.AdamGrpc.RepartitionMessage.PartitionOptions.CREATE_NEW.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
@@ -17833,8 +17754,8 @@ public final class AdamGrpc {
           .equals(other.getEntity());
       result = result && (getNumberOfPartitions()
           == other.getNumberOfPartitions());
-      result = result && getAttributesList()
-          .equals(other.getAttributesList());
+      result = result && getAttributes()
+          .equals(other.getAttributes());
       result = result && option_ == other.option_;
       result = result && partitioner_ == other.partitioner_;
       result = result && internalGetOptions().equals(
@@ -17853,10 +17774,8 @@ public final class AdamGrpc {
       hash = (53 * hash) + getEntity().hashCode();
       hash = (37 * hash) + NUMBEROFPARTITIONS_FIELD_NUMBER;
       hash = (53 * hash) + getNumberOfPartitions();
-      if (getAttributesCount() > 0) {
-        hash = (37 * hash) + ATTRIBUTES_FIELD_NUMBER;
-        hash = (53 * hash) + getAttributesList().hashCode();
-      }
+      hash = (37 * hash) + ATTRIBUTES_FIELD_NUMBER;
+      hash = (53 * hash) + getAttributes().hashCode();
       hash = (37 * hash) + OPTION_FIELD_NUMBER;
       hash = (53 * hash) + option_;
       hash = (37 * hash) + PARTITIONER_FIELD_NUMBER;
@@ -18009,8 +17928,8 @@ public final class AdamGrpc {
 
         numberOfPartitions_ = 0;
 
-        attributes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        attributes_ = "";
+
         option_ = 0;
 
         partitioner_ = 0;
@@ -18042,10 +17961,6 @@ public final class AdamGrpc {
         int to_bitField0_ = 0;
         result.entity_ = entity_;
         result.numberOfPartitions_ = numberOfPartitions_;
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          attributes_ = attributes_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
         result.attributes_ = attributes_;
         result.option_ = option_;
         result.partitioner_ = partitioner_;
@@ -18100,14 +18015,8 @@ public final class AdamGrpc {
         if (other.getNumberOfPartitions() != 0) {
           setNumberOfPartitions(other.getNumberOfPartitions());
         }
-        if (!other.attributes_.isEmpty()) {
-          if (attributes_.isEmpty()) {
-            attributes_ = other.attributes_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-          } else {
-            ensureAttributesIsMutable();
-            attributes_.addAll(other.attributes_);
-          }
+        if (!other.getAttributes().isEmpty()) {
+          attributes_ = other.attributes_;
           onChanged();
         }
         if (other.option_ != 0) {
@@ -18260,96 +18169,71 @@ public final class AdamGrpc {
         return this;
       }
 
-      private com.google.protobuf.LazyStringList attributes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureAttributesIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          attributes_ = new com.google.protobuf.LazyStringArrayList(attributes_);
-          bitField0_ |= 0x00000004;
-         }
-      }
+      private java.lang.Object attributes_ = "";
       /**
-       * <code>repeated string attributes = 3;</code>
+       * <code>optional string attributes = 3;</code>
        */
-      public com.google.protobuf.ProtocolStringList
-          getAttributesList() {
-        return attributes_.getUnmodifiableView();
+      public java.lang.String getAttributes() {
+        java.lang.Object ref = attributes_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          attributes_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>repeated string attributes = 3;</code>
-       */
-      public int getAttributesCount() {
-        return attributes_.size();
-      }
-      /**
-       * <code>repeated string attributes = 3;</code>
-       */
-      public java.lang.String getAttributes(int index) {
-        return attributes_.get(index);
-      }
-      /**
-       * <code>repeated string attributes = 3;</code>
+       * <code>optional string attributes = 3;</code>
        */
       public com.google.protobuf.ByteString
-          getAttributesBytes(int index) {
-        return attributes_.getByteString(index);
+          getAttributesBytes() {
+        java.lang.Object ref = attributes_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          attributes_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
-       * <code>repeated string attributes = 3;</code>
+       * <code>optional string attributes = 3;</code>
        */
       public Builder setAttributes(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureAttributesIsMutable();
-        attributes_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string attributes = 3;</code>
-       */
-      public Builder addAttributes(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureAttributesIsMutable();
-        attributes_.add(value);
+  
+        attributes_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string attributes = 3;</code>
-       */
-      public Builder addAllAttributes(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureAttributesIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, attributes_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string attributes = 3;</code>
+       * <code>optional string attributes = 3;</code>
        */
       public Builder clearAttributes() {
-        attributes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        
+        attributes_ = getDefaultInstance().getAttributes();
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string attributes = 3;</code>
+       * <code>optional string attributes = 3;</code>
        */
-      public Builder addAttributesBytes(
+      public Builder setAttributesBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        ensureAttributesIsMutable();
-        attributes_.add(value);
+        
+        attributes_ = value;
         onChanged();
         return this;
       }
@@ -34081,7 +33965,7 @@ public final class AdamGrpc {
      *query vector
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage query = 2;</code>
+     * <code>optional .VectorMessage query = 2;</code>
      */
     boolean hasQuery();
     /**
@@ -34089,24 +33973,24 @@ public final class AdamGrpc {
      *query vector
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage query = 2;</code>
+     * <code>optional .VectorMessage query = 2;</code>
      */
-    org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getQuery();
+    org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getQuery();
     /**
      * <pre>
      *query vector
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage query = 2;</code>
+     * <code>optional .VectorMessage query = 2;</code>
      */
-    org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder getQueryOrBuilder();
+    org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder getQueryOrBuilder();
 
     /**
      * <pre>
      *weights vector; the weights are element-wise multiplied when computing the distance
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     * <code>optional .VectorMessage weights = 3;</code>
      */
     boolean hasWeights();
     /**
@@ -34114,17 +33998,17 @@ public final class AdamGrpc {
      *weights vector; the weights are element-wise multiplied when computing the distance
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     * <code>optional .VectorMessage weights = 3;</code>
      */
-    org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getWeights();
+    org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getWeights();
     /**
      * <pre>
      *weights vector; the weights are element-wise multiplied when computing the distance
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     * <code>optional .VectorMessage weights = 3;</code>
      */
-    org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder getWeightsOrBuilder();
+    org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder getWeightsOrBuilder();
 
     /**
      * <pre>
@@ -34313,11 +34197,11 @@ public final class AdamGrpc {
               break;
             }
             case 18: {
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder subBuilder = null;
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder subBuilder = null;
               if (query_ != null) {
                 subBuilder = query_.toBuilder();
               }
-              query_ = input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.parser(), extensionRegistry);
+              query_ = input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(query_);
                 query_ = subBuilder.buildPartial();
@@ -34326,11 +34210,11 @@ public final class AdamGrpc {
               break;
             }
             case 26: {
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder subBuilder = null;
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder subBuilder = null;
               if (weights_ != null) {
                 subBuilder = weights_.toBuilder();
               }
-              weights_ = input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.parser(), extensionRegistry);
+              weights_ = input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(weights_);
                 weights_ = subBuilder.buildPartial();
@@ -34476,13 +34360,13 @@ public final class AdamGrpc {
     }
 
     public static final int QUERY_FIELD_NUMBER = 2;
-    private org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage query_;
+    private org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage query_;
     /**
      * <pre>
      *query vector
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage query = 2;</code>
+     * <code>optional .VectorMessage query = 2;</code>
      */
     public boolean hasQuery() {
       return query_ != null;
@@ -34492,30 +34376,30 @@ public final class AdamGrpc {
      *query vector
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage query = 2;</code>
+     * <code>optional .VectorMessage query = 2;</code>
      */
-    public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getQuery() {
-      return query_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : query_;
+    public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getQuery() {
+      return query_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance() : query_;
     }
     /**
      * <pre>
      *query vector
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage query = 2;</code>
+     * <code>optional .VectorMessage query = 2;</code>
      */
-    public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder getQueryOrBuilder() {
+    public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder getQueryOrBuilder() {
       return getQuery();
     }
 
     public static final int WEIGHTS_FIELD_NUMBER = 3;
-    private org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage weights_;
+    private org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage weights_;
     /**
      * <pre>
      *weights vector; the weights are element-wise multiplied when computing the distance
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     * <code>optional .VectorMessage weights = 3;</code>
      */
     public boolean hasWeights() {
       return weights_ != null;
@@ -34525,19 +34409,19 @@ public final class AdamGrpc {
      *weights vector; the weights are element-wise multiplied when computing the distance
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     * <code>optional .VectorMessage weights = 3;</code>
      */
-    public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getWeights() {
-      return weights_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : weights_;
+    public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getWeights() {
+      return weights_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance() : weights_;
     }
     /**
      * <pre>
      *weights vector; the weights are element-wise multiplied when computing the distance
      * </pre>
      *
-     * <code>optional .FeatureVectorMessage weights = 3;</code>
+     * <code>optional .VectorMessage weights = 3;</code>
      */
-    public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder getWeightsOrBuilder() {
+    public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder getWeightsOrBuilder() {
       return getWeights();
     }
 
@@ -35320,15 +35204,15 @@ public final class AdamGrpc {
         return this;
       }
 
-      private org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage query_ = null;
+      private org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage query_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder> queryBuilder_;
+          org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder> queryBuilder_;
       /**
        * <pre>
        *query vector
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage query = 2;</code>
+       * <code>optional .VectorMessage query = 2;</code>
        */
       public boolean hasQuery() {
         return queryBuilder_ != null || query_ != null;
@@ -35338,11 +35222,11 @@ public final class AdamGrpc {
        *query vector
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage query = 2;</code>
+       * <code>optional .VectorMessage query = 2;</code>
        */
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getQuery() {
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getQuery() {
         if (queryBuilder_ == null) {
-          return query_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : query_;
+          return query_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance() : query_;
         } else {
           return queryBuilder_.getMessage();
         }
@@ -35352,9 +35236,9 @@ public final class AdamGrpc {
        *query vector
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage query = 2;</code>
+       * <code>optional .VectorMessage query = 2;</code>
        */
-      public Builder setQuery(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage value) {
+      public Builder setQuery(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage value) {
         if (queryBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -35372,10 +35256,10 @@ public final class AdamGrpc {
        *query vector
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage query = 2;</code>
+       * <code>optional .VectorMessage query = 2;</code>
        */
       public Builder setQuery(
-          org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder builderForValue) {
+          org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder builderForValue) {
         if (queryBuilder_ == null) {
           query_ = builderForValue.build();
           onChanged();
@@ -35390,13 +35274,13 @@ public final class AdamGrpc {
        *query vector
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage query = 2;</code>
+       * <code>optional .VectorMessage query = 2;</code>
        */
-      public Builder mergeQuery(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage value) {
+      public Builder mergeQuery(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage value) {
         if (queryBuilder_ == null) {
           if (query_ != null) {
             query_ =
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.newBuilder(query_).mergeFrom(value).buildPartial();
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.newBuilder(query_).mergeFrom(value).buildPartial();
           } else {
             query_ = value;
           }
@@ -35412,7 +35296,7 @@ public final class AdamGrpc {
        *query vector
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage query = 2;</code>
+       * <code>optional .VectorMessage query = 2;</code>
        */
       public Builder clearQuery() {
         if (queryBuilder_ == null) {
@@ -35430,9 +35314,9 @@ public final class AdamGrpc {
        *query vector
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage query = 2;</code>
+       * <code>optional .VectorMessage query = 2;</code>
        */
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder getQueryBuilder() {
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder getQueryBuilder() {
         
         onChanged();
         return getQueryFieldBuilder().getBuilder();
@@ -35442,14 +35326,14 @@ public final class AdamGrpc {
        *query vector
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage query = 2;</code>
+       * <code>optional .VectorMessage query = 2;</code>
        */
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder getQueryOrBuilder() {
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder getQueryOrBuilder() {
         if (queryBuilder_ != null) {
           return queryBuilder_.getMessageOrBuilder();
         } else {
           return query_ == null ?
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : query_;
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance() : query_;
         }
       }
       /**
@@ -35457,14 +35341,14 @@ public final class AdamGrpc {
        *query vector
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage query = 2;</code>
+       * <code>optional .VectorMessage query = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder> 
+          org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder> 
           getQueryFieldBuilder() {
         if (queryBuilder_ == null) {
           queryBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder>(
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder>(
                   getQuery(),
                   getParentForChildren(),
                   isClean());
@@ -35473,15 +35357,15 @@ public final class AdamGrpc {
         return queryBuilder_;
       }
 
-      private org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage weights_ = null;
+      private org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage weights_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder> weightsBuilder_;
+          org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder> weightsBuilder_;
       /**
        * <pre>
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       * <code>optional .VectorMessage weights = 3;</code>
        */
       public boolean hasWeights() {
         return weightsBuilder_ != null || weights_ != null;
@@ -35491,11 +35375,11 @@ public final class AdamGrpc {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       * <code>optional .VectorMessage weights = 3;</code>
        */
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage getWeights() {
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage getWeights() {
         if (weightsBuilder_ == null) {
-          return weights_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : weights_;
+          return weights_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance() : weights_;
         } else {
           return weightsBuilder_.getMessage();
         }
@@ -35505,9 +35389,9 @@ public final class AdamGrpc {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       * <code>optional .VectorMessage weights = 3;</code>
        */
-      public Builder setWeights(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage value) {
+      public Builder setWeights(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage value) {
         if (weightsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -35525,10 +35409,10 @@ public final class AdamGrpc {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       * <code>optional .VectorMessage weights = 3;</code>
        */
       public Builder setWeights(
-          org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder builderForValue) {
+          org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder builderForValue) {
         if (weightsBuilder_ == null) {
           weights_ = builderForValue.build();
           onChanged();
@@ -35543,13 +35427,13 @@ public final class AdamGrpc {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       * <code>optional .VectorMessage weights = 3;</code>
        */
-      public Builder mergeWeights(org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage value) {
+      public Builder mergeWeights(org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage value) {
         if (weightsBuilder_ == null) {
           if (weights_ != null) {
             weights_ =
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.newBuilder(weights_).mergeFrom(value).buildPartial();
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.newBuilder(weights_).mergeFrom(value).buildPartial();
           } else {
             weights_ = value;
           }
@@ -35565,7 +35449,7 @@ public final class AdamGrpc {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       * <code>optional .VectorMessage weights = 3;</code>
        */
       public Builder clearWeights() {
         if (weightsBuilder_ == null) {
@@ -35583,9 +35467,9 @@ public final class AdamGrpc {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       * <code>optional .VectorMessage weights = 3;</code>
        */
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder getWeightsBuilder() {
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder getWeightsBuilder() {
         
         onChanged();
         return getWeightsFieldBuilder().getBuilder();
@@ -35595,14 +35479,14 @@ public final class AdamGrpc {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       * <code>optional .VectorMessage weights = 3;</code>
        */
-      public org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder getWeightsOrBuilder() {
+      public org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder getWeightsOrBuilder() {
         if (weightsBuilder_ != null) {
           return weightsBuilder_.getMessageOrBuilder();
         } else {
           return weights_ == null ?
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.getDefaultInstance() : weights_;
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.getDefaultInstance() : weights_;
         }
       }
       /**
@@ -35610,14 +35494,14 @@ public final class AdamGrpc {
        *weights vector; the weights are element-wise multiplied when computing the distance
        * </pre>
        *
-       * <code>optional .FeatureVectorMessage weights = 3;</code>
+       * <code>optional .VectorMessage weights = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder> 
+          org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder> 
           getWeightsFieldBuilder() {
         if (weightsBuilder_ == null) {
           weightsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.FeatureVectorMessageOrBuilder>(
+              org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.VectorMessageOrBuilder>(
                   getWeights(),
                   getParentForChildren(),
                   isClean());
@@ -53111,10 +52995,10 @@ public final class AdamGrpc {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_EmptyMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_FeatureVectorMessage_descriptor;
+    internal_static_VectorMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_FeatureVectorMessage_fieldAccessorTable;
+      internal_static_VectorMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_DenseVectorMessage_descriptor;
   private static final 
@@ -53479,258 +53363,257 @@ public final class AdamGrpc {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\ngrpc.proto\"\016\n\014EmptyMessage\"\243\001\n\024Feature" +
-      "VectorMessage\022*\n\013denseVector\030\001 \001(\0132\023.Den" +
-      "seVectorMessageH\000\022,\n\014sparseVector\030\002 \001(\0132" +
-      "\024.SparseVectorMessageH\000\022&\n\tintVector\030\003 \001" +
-      "(\0132\021.IntVectorMessageH\000B\t\n\007feature\"(\n\022De" +
-      "nseVectorMessage\022\022\n\006vector\030\001 \003(\002B\002\020\001\"O\n\023" +
-      "SparseVectorMessage\022\022\n\006vector\030\001 \003(\002B\002\020\001\022" +
-      "\024\n\010position\030\002 \003(\005B\002\020\001\022\016\n\006length\030\003 \001(\005\"&\n" +
-      "\020IntVectorMessage\022\022\n\006vector\030\001 \003(\005B\002\020\001\"\367\001" +
-      "\n\013DataMessage\022\022\n\010longData\030\001 \001(\003H\000\022\021\n\007int",
-      "Data\030\002 \001(\005H\000\022\023\n\tfloatData\030\003 \001(\002H\000\022\024\n\ndou" +
-      "bleData\030\004 \001(\001H\000\022\024\n\nstringData\030\005 \001(\tH\000\022\025\n" +
-      "\013booleanData\030\006 \001(\010H\000\022,\n\013featureData\030\007 \001(" +
-      "\0132\025.FeatureVectorMessageH\000\022\027\n\rgeographyD" +
-      "ata\030\t \001(\tH\000\022\026\n\014geometryData\030\n \001(\tH\000B\n\n\010d" +
-      "atatype\"V\n\023CreateEntityMessage\022\016\n\006entity" +
-      "\030\001 \001(\t\022/\n\nattributes\030\002 \003(\0132\033.AttributeDe" +
-      "finitionMessage\"\326\001\n\032AttributeDefinitionM" +
-      "essage\022\014\n\004name\030\001 \001(\t\022%\n\rattributetype\030\002 " +
-      "\001(\0162\016.AttributeType\022\n\n\002pk\030\003 \001(\010\0227\n\006param",
-      "s\030\007 \003(\0132\'.AttributeDefinitionMessage.Par" +
-      "amsEntry\022\017\n\007handler\030\010 \001(\t\032-\n\013ParamsEntry" +
-      "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"#\n\021Enti" +
-      "tyNameMessage\022\016\n\006entity\030\001 \001(\t\"!\n\020IndexNa" +
-      "meMessage\022\r\n\005index\030\001 \001(\t\"\221\001\n\027EntityPrope" +
-      "rtiesMessage\022\016\n\006entity\030\001 \001(\t\0226\n\007options\030" +
-      "\002 \003(\0132%.EntityPropertiesMessage.OptionsE" +
-      "ntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005val" +
-      "ue\030\002 \001(\t:\0028\001\"\252\001\n\032AttributePropertiesMess" +
-      "age\022\016\n\006entity\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\0229",
-      "\n\007options\030\003 \003(\0132(.AttributePropertiesMes" +
+      "\n\ngrpc.proto\"\016\n\014EmptyMessage\"\233\001\n\rVectorM" +
+      "essage\022*\n\013denseVector\030\001 \001(\0132\023.DenseVecto" +
+      "rMessageH\000\022,\n\014sparseVector\030\002 \001(\0132\024.Spars" +
+      "eVectorMessageH\000\022&\n\tintVector\030\003 \001(\0132\021.In" +
+      "tVectorMessageH\000B\010\n\006vector\"(\n\022DenseVecto" +
+      "rMessage\022\022\n\006vector\030\001 \003(\002B\002\020\001\"J\n\023SparseVe" +
+      "ctorMessage\022\021\n\005index\030\002 \003(\005B\002\020\001\022\020\n\004data\030\001" +
+      " \003(\002B\002\020\001\022\016\n\006length\030\003 \001(\005\"&\n\020IntVectorMes" +
+      "sage\022\022\n\006vector\030\001 \003(\005B\002\020\001\"\357\001\n\013DataMessage" +
+      "\022\022\n\010longData\030\001 \001(\003H\000\022\021\n\007intData\030\002 \001(\005H\000\022",
+      "\023\n\tfloatData\030\003 \001(\002H\000\022\024\n\ndoubleData\030\004 \001(\001" +
+      "H\000\022\024\n\nstringData\030\005 \001(\tH\000\022\025\n\013booleanData\030" +
+      "\006 \001(\010H\000\022$\n\nvectorData\030\007 \001(\0132\016.VectorMess" +
+      "ageH\000\022\027\n\rgeographyData\030\t \001(\tH\000\022\026\n\014geomet" +
+      "ryData\030\n \001(\tH\000B\n\n\010datatype\"V\n\023CreateEnti" +
+      "tyMessage\022\016\n\006entity\030\001 \001(\t\022/\n\nattributes\030" +
+      "\002 \003(\0132\033.AttributeDefinitionMessage\"\312\001\n\032A" +
+      "ttributeDefinitionMessage\022\014\n\004name\030\001 \001(\t\022" +
+      "%\n\rattributetype\030\002 \001(\0162\016.AttributeType\0227" +
+      "\n\006params\030\007 \003(\0132\'.AttributeDefinitionMess",
+      "age.ParamsEntry\022\017\n\007handler\030\010 \001(\t\032-\n\013Para" +
+      "msEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"" +
+      "#\n\021EntityNameMessage\022\016\n\006entity\030\001 \001(\t\"!\n\020" +
+      "IndexNameMessage\022\r\n\005index\030\001 \001(\t\"\221\001\n\027Enti" +
+      "tyPropertiesMessage\022\016\n\006entity\030\001 \001(\t\0226\n\007o" +
+      "ptions\030\002 \003(\0132%.EntityPropertiesMessage.O" +
+      "ptionsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t" +
+      "\022\r\n\005value\030\002 \001(\t:\0028\001\"\252\001\n\032AttributePropert" +
+      "iesMessage\022\016\n\006entity\030\001 \001(\t\022\021\n\tattribute\030" +
+      "\002 \001(\t\0229\n\007options\030\003 \003(\0132(.AttributeProper",
+      "tiesMessage.OptionsEntry\032.\n\014OptionsEntry" +
+      "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\216\001\n\026Ind" +
+      "exPropertiesMessage\022\r\n\005index\030\001 \001(\t\0225\n\007op" +
+      "tions\030\002 \003(\0132$.IndexPropertiesMessage.Opt" +
+      "ionsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r" +
+      "\n\005value\030\002 \001(\t:\0028\001\"\246\001\n\031GenerateRandomData" +
+      "Message\022\016\n\006entity\030\001 \001(\t\022\017\n\007ntuples\030\002 \001(\005" +
+      "\0228\n\007options\030\003 \003(\0132\'.GenerateRandomDataMe" +
+      "ssage.OptionsEntry\032.\n\014OptionsEntry\022\013\n\003ke" +
+      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\337\001\n\rInsertMes",
+      "sage\022\016\n\006entity\030\001 \001(\t\0221\n\006tuples\030\002 \003(\0132!.I" +
+      "nsertMessage.TupleInsertMessage\032\212\001\n\022Tupl" +
+      "eInsertMessage\0229\n\004data\030\001 \003(\0132+.InsertMes" +
+      "sage.TupleInsertMessage.DataEntry\0329\n\tDat" +
+      "aEntry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 \001(\0132\014.Dat" +
+      "aMessage:\0028\001\"1\n\016InsertsMessage\022\037\n\007insert" +
+      "s\030\001 \003(\0132\016.InsertMessage\"\245\001\n\rDeleteMessag" +
+      "e\022\016\n\006entity\030\001 \001(\t\0223\n\npredicates\030\002 \003(\0132\037." +
+      "DeleteMessage.PredicateMessage\032O\n\020Predic" +
+      "ateMessage\022\021\n\tattribute\030\001 \001(\t\022\034\n\006values\030",
+      "\002 \003(\0132\014.DataMessage\022\n\n\002op\030\003 \001(\t\"\321\001\n\014Inde" +
+      "xMessage\022\016\n\006entity\030\001 \001(\t\022\021\n\tattribute\030\002 " +
+      "\001(\t\022\035\n\tindextype\030\003 \001(\0162\n.IndexType\022\"\n\010di" +
+      "stance\030\004 \001(\0132\020.DistanceMessage\022+\n\007option" +
+      "s\030\005 \003(\0132\032.IndexMessage.OptionsEntry\032.\n\014O" +
+      "ptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:" +
+      "\0028\001\"\235\003\n\022RepartitionMessage\022\016\n\006entity\030\001 \001" +
+      "(\t\022\032\n\022numberOfPartitions\030\002 \001(\005\022\022\n\nattrib" +
+      "utes\030\003 \001(\t\0224\n\006option\030\004 \001(\0162$.Repartition" +
+      "Message.PartitionOptions\0224\n\013partitioner\030",
+      "\005 \001(\0162\037.RepartitionMessage.Partitioner\0221" +
+      "\n\007options\030\006 \003(\0132 .RepartitionMessage.Opt" +
+      "ionsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r" +
+      "\n\005value\030\002 \001(\t:\0028\001\"I\n\020PartitionOptions\022\016\n" +
+      "\nCREATE_NEW\020\000\022\024\n\020REPLACE_EXISTING\020\001\022\017\n\013C" +
+      "REATE_TEMP\020\002\"-\n\013Partitioner\022\t\n\005SPARK\020\000\022\n" +
+      "\n\006RANDOM\020\001\022\007\n\003ECP\020\006\"B\n\rWeightMessage\022\016\n\006" +
+      "entity\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\022\016\n\006weigh" +
+      "t\030\003 \001(\002\"\205\003\n\027AdaptScanMethodsMessage\022\016\n\006e" +
+      "ntity\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\0224\n\002ic\030\003 \001",
+      "(\0162(.AdaptScanMethodsMessage.IndexCollec" +
+      "tion\0224\n\002qc\030\004 \001(\0162(.AdaptScanMethodsMessa" +
+      "ge.QueryCollection\0226\n\007options\030\005 \003(\0132%.Ad" +
+      "aptScanMethodsMessage.OptionsEntry\032.\n\014Op" +
+      "tionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\002" +
+      "8\001\"8\n\017IndexCollection\022\024\n\020EXISTING_INDEXE" +
+      "S\020\000\022\017\n\013NEW_INDEXES\020\001\"9\n\017QueryCollection\022" +
+      "\022\n\016LOGGED_QUERIES\020\000\022\022\n\016RANDOM_QUERIES\020\001\"" +
+      ":\n\025SparsifyEntityMessage\022\016\n\006entity\030\001 \001(\t" +
+      "\022\021\n\tattribute\030\002 \001(\t\"S\n\rImportMessage\022\014\n\004",
+      "host\030\001 \001(\t\022\020\n\010database\030\002 \001(\t\022\020\n\010username" +
+      "\030\003 \001(\t\022\020\n\010password\030\004 \001(\t\"\"\n\022ProtoImportM" +
+      "essage\022\014\n\004path\030\001 \001(\t\"2\n\022ProtoExportMessa" +
+      "ge\022\014\n\004path\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\"B\n\026Stor" +
+      "ageHandlersMessage\022(\n\010handlers\030\001 \003(\0132\026.S" +
+      "torageHandlerMessage\"M\n\025StorageHandlerMe" +
+      "ssage\022\014\n\004name\030\001 \001(\t\022&\n\016attributetypes\030\002 " +
+      "\003(\0162\016.AttributeType\"T\n\035TransferStorageHa" +
+      "ndlerMessage\022\016\n\006entity\030\001 \001(\t\022\022\n\nattribut" +
+      "es\030\002 \003(\t\022\017\n\007handler\030\003 \001(\t\"\213\004\n\014QueryMessa",
+      "ge\022\017\n\007queryid\030\001 \001(\t\022&\n\nprojection\030\002 \001(\0132" +
+      "\022.ProjectionMessage\022\032\n\004from\030\003 \001(\0132\014.From" +
+      "Message\022 \n\002bq\030\006 \001(\0132\024.BooleanQueryMessag" +
+      "e\022*\n\003nnq\030\007 \001(\0132\035.NearestNeighbourQueryMe" +
+      "ssage\022\r\n\005hints\030\010 \003(\t\022\022\n\nnoFallback\030\t \001(\010" +
+      "\022\014\n\004time\030\n \001(\003\022\025\n\rreadFromCache\030\013 \001(\010\022\022\n" +
+      "\nputInCache\030\014 \001(\010\0223\n\013information\030\r \003(\0162\036" +
+      ".QueryMessage.InformationLevel\"\306\001\n\020Infor" +
+      "mationLevel\022\031\n\025INFORMATION_FULL_TREE\020\000\022\036" +
+      "\n\032INFORMATION_LAST_STEP_ONLY\020\001\022$\n INFORM",
+      "ATION_INTERMEDIATE_RESULTS\020\002\022)\n%WITH_PRO" +
+      "VENANCE_PARTITION_INFORMATION\020\003\022&\n\"WITH_" +
+      "PROVENANCE_SOURCE_INFORMATION\020\004\"\210\003\n\026Expr" +
+      "essionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022(\n\004l" +
+      "eft\030\002 \001(\0132\032.SubExpressionQueryMessage\0224\n" +
+      "\toperation\030\003 \001(\0162!.ExpressionQueryMessag" +
+      "e.Operation\0225\n\005order\030\004 \001(\0162&.ExpressionQ" +
+      "ueryMessage.OperationOrder\022)\n\005right\030\005 \001(" +
+      "\0132\032.SubExpressionQueryMessage\"M\n\tOperati" +
+      "on\022\020\n\014UNKNOWNEXPOP\020\000\022\t\n\005UNION\020\001\022\r\n\tINTER",
+      "SECT\020\002\022\n\n\006EXCEPT\020\003\022\010\n\004JOIN\020\004\"L\n\016Operatio" +
+      "nOrder\022\r\n\tUNKNOWNOO\020\000\022\r\n\tLEFTFIRST\020\001\022\016\n\n" +
+      "RIGHTFIRST\020\002\022\014\n\010PARALLEL\020\003\"\255\001\n\031SubExpres" +
+      "sionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\033\n\002qm\030" +
+      "\002 \001(\0132\r.QueryMessageH\000\022&\n\003eqm\030\003 \001(\0132\027.Ex" +
+      "pressionQueryMessageH\000\022,\n\004ehqm\030\004 \001(\0132\034.E" +
+      "xternalHandlerQueryMessageH\000B\014\n\nsubmessa" +
+      "ge\"\352\001\n\021ProjectionMessage\022;\n\nattributes\030\001" +
+      " \001(\0132\'.ProjectionMessage.AttributeNameMe" +
+      "ssage\022(\n\002op\030\002 \001(\0162\034.ProjectionMessage.Op",
+      "eration\032)\n\024AttributeNameMessage\022\021\n\tattri" +
+      "bute\030\001 \003(\t\"C\n\tOperation\022\021\n\rUNKNOWNPROJOP" +
+      "\020\000\022\t\n\005COUNT\020\001\022\n\n\006EXISTS\020\002\022\014\n\010DISTINCT\020\003\"" +
+      "\222\001\n\013FromMessage\022\020\n\006entity\030\001 \001(\tH\000\022\017\n\005ind" +
+      "ex\030\002 \001(\tH\000\022$\n\007indexes\030\003 \001(\0132\021.IndexListM" +
+      "essageH\000\0220\n\nexpression\030\004 \001(\0132\032.SubExpres" +
+      "sionQueryMessageH\000B\010\n\006source\"#\n\020IndexLis" +
+      "tMessage\022\017\n\007indexes\030\001 \003(\t\"\264\002\n\034NearestNei" +
+      "ghbourQueryMessage\022\021\n\tattribute\030\001 \001(\t\022\035\n" +
+      "\005query\030\002 \001(\0132\016.VectorMessage\022\037\n\007weights\030",
+      "\003 \001(\0132\016.VectorMessage\022\"\n\010distance\030\004 \001(\0132" +
+      "\020.DistanceMessage\022\t\n\001k\030\005 \001(\005\022;\n\007options\030" +
+      "\006 \003(\0132*.NearestNeighbourQueryMessage.Opt" +
+      "ionsEntry\022\021\n\tindexOnly\030\007 \001(\010\022\022\n\npartitio" +
+      "ns\030\010 \003(\005\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n" +
+      "\005value\030\002 \001(\t:\0028\001\"\215\003\n\017DistanceMessage\0223\n\014" +
+      "distancetype\030\001 \001(\0162\035.DistanceMessage.Dis" +
+      "tanceType\022.\n\007options\030\002 \003(\0132\035.DistanceMes" +
       "sage.OptionsEntry\032.\n\014OptionsEntry\022\013\n\003key" +
-      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\216\001\n\026IndexPrope" +
-      "rtiesMessage\022\r\n\005index\030\001 \001(\t\0225\n\007options\030\002" +
-      " \003(\0132$.IndexPropertiesMessage.OptionsEnt" +
-      "ry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value" +
-      "\030\002 \001(\t:\0028\001\"\246\001\n\031GenerateRandomDataMessage" +
-      "\022\016\n\006entity\030\001 \001(\t\022\017\n\007ntuples\030\002 \001(\005\0228\n\007opt" +
-      "ions\030\003 \003(\0132\'.GenerateRandomDataMessage.O" +
-      "ptionsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t",
-      "\022\r\n\005value\030\002 \001(\t:\0028\001\"\337\001\n\rInsertMessage\022\016\n" +
-      "\006entity\030\001 \001(\t\0221\n\006tuples\030\002 \003(\0132!.InsertMe" +
-      "ssage.TupleInsertMessage\032\212\001\n\022TupleInsert" +
-      "Message\0229\n\004data\030\001 \003(\0132+.InsertMessage.Tu" +
-      "pleInsertMessage.DataEntry\0329\n\tDataEntry\022" +
-      "\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 \001(\0132\014.DataMessag" +
-      "e:\0028\001\"1\n\016InsertsMessage\022\037\n\007inserts\030\001 \003(\013" +
-      "2\016.InsertMessage\"\245\001\n\rDeleteMessage\022\016\n\006en" +
-      "tity\030\001 \001(\t\0223\n\npredicates\030\002 \003(\0132\037.DeleteM" +
-      "essage.PredicateMessage\032O\n\020PredicateMess",
-      "age\022\021\n\tattribute\030\001 \001(\t\022\034\n\006values\030\002 \003(\0132\014" +
-      ".DataMessage\022\n\n\002op\030\003 \001(\t\"\321\001\n\014IndexMessag" +
-      "e\022\016\n\006entity\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\022\035\n\t" +
-      "indextype\030\003 \001(\0162\n.IndexType\022\"\n\010distance\030" +
-      "\004 \001(\0132\020.DistanceMessage\022+\n\007options\030\005 \003(\013" +
-      "2\032.IndexMessage.OptionsEntry\032.\n\014OptionsE" +
-      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\235\003\n" +
-      "\022RepartitionMessage\022\016\n\006entity\030\001 \001(\t\022\032\n\022n" +
-      "umberOfPartitions\030\002 \001(\005\022\022\n\nattributes\030\003 " +
-      "\003(\t\0224\n\006option\030\004 \001(\0162$.RepartitionMessage",
-      ".PartitionOptions\0224\n\013partitioner\030\005 \001(\0162\037" +
-      ".RepartitionMessage.Partitioner\0221\n\007optio" +
-      "ns\030\006 \003(\0132 .RepartitionMessage.OptionsEnt" +
-      "ry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value" +
-      "\030\002 \001(\t:\0028\001\"I\n\020PartitionOptions\022\016\n\nCREATE" +
-      "_NEW\020\000\022\024\n\020REPLACE_EXISTING\020\001\022\017\n\013CREATE_T" +
-      "EMP\020\002\"-\n\013Partitioner\022\t\n\005SPARK\020\000\022\n\n\006RANDO" +
-      "M\020\001\022\007\n\003ECP\020\006\"B\n\rWeightMessage\022\016\n\006entity\030" +
-      "\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\022\016\n\006weight\030\003 \001(\002" +
-      "\"\205\003\n\027AdaptScanMethodsMessage\022\016\n\006entity\030\001",
-      " \001(\t\022\021\n\tattribute\030\002 \001(\t\0224\n\002ic\030\003 \001(\0162(.Ad" +
-      "aptScanMethodsMessage.IndexCollection\0224\n" +
-      "\002qc\030\004 \001(\0162(.AdaptScanMethodsMessage.Quer" +
-      "yCollection\0226\n\007options\030\005 \003(\0132%.AdaptScan" +
-      "MethodsMessage.OptionsEntry\032.\n\014OptionsEn" +
-      "try\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"8\n\017I" +
-      "ndexCollection\022\024\n\020EXISTING_INDEXES\020\000\022\017\n\013" +
-      "NEW_INDEXES\020\001\"9\n\017QueryCollection\022\022\n\016LOGG" +
-      "ED_QUERIES\020\000\022\022\n\016RANDOM_QUERIES\020\001\":\n\025Spar" +
-      "sifyEntityMessage\022\016\n\006entity\030\001 \001(\t\022\021\n\tatt",
-      "ribute\030\002 \001(\t\"S\n\rImportMessage\022\014\n\004host\030\001 " +
-      "\001(\t\022\020\n\010database\030\002 \001(\t\022\020\n\010username\030\003 \001(\t\022" +
-      "\020\n\010password\030\004 \001(\t\"\"\n\022ProtoImportMessage\022" +
-      "\014\n\004path\030\001 \001(\t\"2\n\022ProtoExportMessage\022\014\n\004p" +
-      "ath\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\"B\n\026StorageHand" +
-      "lersMessage\022(\n\010handlers\030\001 \003(\0132\026.StorageH" +
-      "andlerMessage\"M\n\025StorageHandlerMessage\022\014" +
-      "\n\004name\030\001 \001(\t\022&\n\016attributetypes\030\002 \003(\0162\016.A" +
-      "ttributeType\"T\n\035TransferStorageHandlerMe" +
-      "ssage\022\016\n\006entity\030\001 \001(\t\022\022\n\nattributes\030\002 \003(",
-      "\t\022\017\n\007handler\030\003 \001(\t\"\213\004\n\014QueryMessage\022\017\n\007q" +
-      "ueryid\030\001 \001(\t\022&\n\nprojection\030\002 \001(\0132\022.Proje" +
-      "ctionMessage\022\032\n\004from\030\003 \001(\0132\014.FromMessage" +
-      "\022 \n\002bq\030\006 \001(\0132\024.BooleanQueryMessage\022*\n\003nn" +
-      "q\030\007 \001(\0132\035.NearestNeighbourQueryMessage\022\r" +
-      "\n\005hints\030\010 \003(\t\022\022\n\nnoFallback\030\t \001(\010\022\014\n\004tim" +
-      "e\030\n \001(\003\022\025\n\rreadFromCache\030\013 \001(\010\022\022\n\nputInC" +
-      "ache\030\014 \001(\010\0223\n\013information\030\r \003(\0162\036.QueryM" +
-      "essage.InformationLevel\"\306\001\n\020InformationL" +
-      "evel\022\031\n\025INFORMATION_FULL_TREE\020\000\022\036\n\032INFOR",
-      "MATION_LAST_STEP_ONLY\020\001\022$\n INFORMATION_I" +
-      "NTERMEDIATE_RESULTS\020\002\022)\n%WITH_PROVENANCE" +
-      "_PARTITION_INFORMATION\020\003\022&\n\"WITH_PROVENA" +
-      "NCE_SOURCE_INFORMATION\020\004\"\210\003\n\026ExpressionQ" +
-      "ueryMessage\022\017\n\007queryid\030\001 \001(\t\022(\n\004left\030\002 \001" +
-      "(\0132\032.SubExpressionQueryMessage\0224\n\toperat" +
-      "ion\030\003 \001(\0162!.ExpressionQueryMessage.Opera" +
-      "tion\0225\n\005order\030\004 \001(\0162&.ExpressionQueryMes" +
-      "sage.OperationOrder\022)\n\005right\030\005 \001(\0132\032.Sub" +
-      "ExpressionQueryMessage\"M\n\tOperation\022\020\n\014U",
-      "NKNOWNEXPOP\020\000\022\t\n\005UNION\020\001\022\r\n\tINTERSECT\020\002\022" +
-      "\n\n\006EXCEPT\020\003\022\010\n\004JOIN\020\004\"L\n\016OperationOrder\022" +
-      "\r\n\tUNKNOWNOO\020\000\022\r\n\tLEFTFIRST\020\001\022\016\n\nRIGHTFI" +
-      "RST\020\002\022\014\n\010PARALLEL\020\003\"\255\001\n\031SubExpressionQue" +
-      "ryMessage\022\017\n\007queryid\030\001 \001(\t\022\033\n\002qm\030\002 \001(\0132\r" +
-      ".QueryMessageH\000\022&\n\003eqm\030\003 \001(\0132\027.Expressio" +
-      "nQueryMessageH\000\022,\n\004ehqm\030\004 \001(\0132\034.External" +
-      "HandlerQueryMessageH\000B\014\n\nsubmessage\"\352\001\n\021" +
-      "ProjectionMessage\022;\n\nattributes\030\001 \001(\0132\'." +
-      "ProjectionMessage.AttributeNameMessage\022(",
-      "\n\002op\030\002 \001(\0162\034.ProjectionMessage.Operation" +
-      "\032)\n\024AttributeNameMessage\022\021\n\tattribute\030\001 " +
-      "\003(\t\"C\n\tOperation\022\021\n\rUNKNOWNPROJOP\020\000\022\t\n\005C" +
-      "OUNT\020\001\022\n\n\006EXISTS\020\002\022\014\n\010DISTINCT\020\003\"\222\001\n\013Fro" +
-      "mMessage\022\020\n\006entity\030\001 \001(\tH\000\022\017\n\005index\030\002 \001(" +
-      "\tH\000\022$\n\007indexes\030\003 \001(\0132\021.IndexListMessageH" +
-      "\000\0220\n\nexpression\030\004 \001(\0132\032.SubExpressionQue" +
-      "ryMessageH\000B\010\n\006source\"#\n\020IndexListMessag" +
-      "e\022\017\n\007indexes\030\001 \003(\t\"\302\002\n\034NearestNeighbourQ" +
-      "ueryMessage\022\021\n\tattribute\030\001 \001(\t\022$\n\005query\030",
-      "\002 \001(\0132\025.FeatureVectorMessage\022&\n\007weights\030" +
-      "\003 \001(\0132\025.FeatureVectorMessage\022\"\n\010distance" +
-      "\030\004 \001(\0132\020.DistanceMessage\022\t\n\001k\030\005 \001(\005\022;\n\007o" +
-      "ptions\030\006 \003(\0132*.NearestNeighbourQueryMess" +
-      "age.OptionsEntry\022\021\n\tindexOnly\030\007 \001(\010\022\022\n\np" +
-      "artitions\030\010 \003(\005\032.\n\014OptionsEntry\022\013\n\003key\030\001" +
-      " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\215\003\n\017DistanceMess" +
-      "age\0223\n\014distancetype\030\001 \001(\0162\035.DistanceMess" +
-      "age.DistanceType\022.\n\007options\030\002 \003(\0132\035.Dist" +
-      "anceMessage.OptionsEntry\032.\n\014OptionsEntry",
-      "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\344\001\n\014Dis" +
-      "tanceType\022\014\n\010UNKNOWND\020\000\022\016\n\nchisquared\020\001\022" +
-      "\017\n\013correlation\020\002\022\n\n\006cosine\020\003\022\013\n\007hamming\020" +
-      "\004\022\013\n\007jaccard\020\005\022\023\n\017kullbackleibler\020\006\022\r\n\tc" +
-      "hebyshev\020\007\022\r\n\teuclidean\020\010\022\024\n\020squaredeucl" +
-      "idean\020\t\022\r\n\tmanhattan\020\n\022\r\n\tminkowski\020\013\022\014\n" +
-      "\010spannorm\020\014\022\n\n\006modulo\020\r\"\306\001\n\023BooleanQuery" +
-      "Message\0220\n\005where\030\001 \003(\0132!.BooleanQueryMes" +
-      "sage.WhereMessage\032K\n\014WhereMessage\022\021\n\tatt" +
-      "ribute\030\001 \001(\t\022\034\n\006values\030\002 \003(\0132\014.DataMessa",
-      "ge\022\n\n\002op\030\003 \001(\t\0320\n\013JoinMessage\022\r\n\005table\030\001" +
-      " \001(\t\022\022\n\nattributes\030\002 \003(\t\"\270\001\n\033ExternalHan" +
-      "dlerQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006ent" +
-      "ity\030\002 \001(\t\022\017\n\007handler\030\003 \001(\t\0228\n\006params\030\004 \003" +
-      "(\0132(.ExternalHandlerQueryMessage.ParamsE" +
-      "ntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005valu" +
-      "e\030\002 \001(\t:\0028\001\"\'\n\024CachedResultsMessage\022\017\n\007q" +
-      "ueryid\030\001 \001(\t\"5\n\023BatchedQueryMessage\022\036\n\007q" +
-      "ueries\030\001 \003(\0132\r.QueryMessage\"+\n\016PreviewMe" +
-      "ssage\022\016\n\006entity\030\001 \001(\t\022\t\n\001n\030\002 \001(\005\"X\n\nAckM",
-      "essage\022\036\n\004code\030\001 \001(\0162\020.AckMessage.Code\022\017" +
-      "\n\007message\030\002 \001(\t\"\031\n\004Code\022\t\n\005ERROR\020\000\022\006\n\002OK" +
-      "\020\001\"=\n\017EntitiesMessage\022\030\n\003ack\030\001 \001(\0132\013.Ack" +
-      "Message\022\020\n\010entities\030\002 \003(\t\"b\n\036AvailableAt" +
-      "tributeTypesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMe" +
-      "ssage\022&\n\016attributetypes\030\002 \003(\0162\016.Attribut" +
-      "eType\"9\n\rExistsMessage\022\030\n\003ack\030\001 \001(\0132\013.Ac" +
-      "kMessage\022\016\n\006exists\030\002 \001(\010\"\252\001\n\016IndexesMess" +
-      "age\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022-\n\007indexes" +
-      "\030\002 \003(\0132\034.IndexesMessage.IndexMessage\032O\n\014",
-      "IndexMessage\022\r\n\005index\030\001 \001(\t\022\021\n\tattribute" +
-      "\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\0162\n.IndexType\"\250\001" +
-      "\n\021PropertiesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMe" +
-      "ssage\022\016\n\006entity\030\002 \001(\t\0226\n\nproperties\030\003 \003(" +
-      "\0132\".PropertiesMessage.PropertiesEntry\0321\n" +
-      "\017PropertiesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
-      " \001(\t:\0028\001\"[\n\023QueryResultsMessage\022\030\n\003ack\030\001" +
-      " \001(\0132\013.AckMessage\022*\n\tresponses\030\002 \003(\0132\027.Q" +
-      "ueryResultInfoMessage\"\376\001\n\026QueryResultInf" +
-      "oMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\017\n\007qu",
-      "eryid\030\002 \001(\t\022\022\n\nconfidence\030\003 \001(\001\022\014\n\004time\030" +
-      "\004 \001(\003\022\016\n\006source\030\005 \001(\t\022/\n\004info\030\006 \003(\0132!.Qu" +
-      "eryResultInfoMessage.InfoEntry\022)\n\007result" +
-      "s\030\007 \003(\0132\030.QueryResultTupleMessage\032+\n\tInf" +
-      "oEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\206" +
-      "\001\n\027QueryResultTupleMessage\0220\n\004data\030\001 \003(\013" +
-      "2\".QueryResultTupleMessage.DataEntry\0329\n\t" +
-      "DataEntry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 \001(\0132\014." +
-      "DataMessage:\0028\001\"[\n\025ExportDataFileMessage" +
-      "\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\026\n\016definition",
-      "file\030\002 \001(\014\022\020\n\010datafile\030\003 \001(\014\"C\n\032BatchedQ" +
-      "ueryResultsMessage\022%\n\007results\030\001 \003(\0132\024.Qu" +
-      "eryResultsMessage*\252\001\n\rAttributeType\022\014\n\010U" +
-      "NKOWNAT\020\000\022\010\n\004AUTO\020\001\022\010\n\004LONG\020\002\022\007\n\003INT\020\003\022\t" +
-      "\n\005FLOAT\020\004\022\n\n\006DOUBLE\020\005\022\n\n\006STRING\020\006\022\010\n\004TEX" +
-      "T\020\007\022\013\n\007BOOLEAN\020\010\022\013\n\007FEATURE\020\t\022\014\n\010GEOMETR" +
-      "Y\020\n\022\r\n\tGEOGRAPHY\020\013\022\n\n\006SERIAL\020\014*_\n\tIndexT" +
-      "ype\022\r\n\tUNKNOWNIT\020\000\022\007\n\003ecp\020\001\022\007\n\003lsh\020\002\022\006\n\002" +
-      "mi\020\003\022\006\n\002pq\020\004\022\006\n\002sh\020\005\022\007\n\003vaf\020\006\022\007\n\003vav\020\007\022\007" +
-      "\n\003vap\020\0102\260\014\n\016AdamDefinition\0223\n\014CreateEnti",
-      "ty\022\024.CreateEntityMessage\032\013.AckMessage\"\000\022" +
-      "K\n\027AvailableAttributeTypes\022\r.EmptyMessag" +
-      "e\032\037.AvailableAttributeTypesMessage\"\000\022*\n\005" +
-      "Count\022\022.EntityNameMessage\032\013.AckMessage\"\000" +
-      "\022/\n\nDropEntity\022\022.EntityNameMessage\032\013.Ack" +
-      "Message\"\000\0224\n\014ExistsEntity\022\022.EntityNameMe" +
-      "ssage\032\016.ExistsMessage\"\000\022\'\n\006Insert\022\016.Inse" +
-      "rtMessage\032\013.AckMessage\"\000\0221\n\014StreamInsert" +
-      "\022\016.InsertMessage\032\013.AckMessage\"\000(\0010\001\0221\n\014V" +
-      "acuumEntity\022\022.EntityNameMessage\032\013.AckMes",
-      "sage\"\000\022\'\n\006Delete\022\016.DeleteMessage\032\013.AckMe" +
-      "ssage\"\000\022%\n\005Index\022\r.IndexMessage\032\013.AckMes" +
-      "sage\"\000\0222\n\022GenerateAllIndexes\022\r.IndexMess" +
-      "age\032\013.AckMessage\"\000\022.\n\013ExistsIndex\022\r.Inde" +
-      "xMessage\032\016.ExistsMessage\"\000\022-\n\tDropIndex\022" +
-      "\021.IndexNameMessage\032\013.AckMessage\"\000\0224\n\013Lis" +
-      "tIndexes\022\022.EntityNameMessage\032\017.IndexesMe" +
-      "ssage\"\000\022?\n\022GenerateRandomData\022\032.Generate" +
-      "RandomDataMessage\032\013.AckMessage\"\000\0221\n\014List" +
-      "Entities\022\r.EmptyMessage\032\020.EntitiesMessag",
-      "e\"\000\022E\n\023GetEntityProperties\022\030.EntityPrope" +
-      "rtiesMessage\032\022.PropertiesMessage\"\000\022K\n\026Ge" +
-      "tAttributeProperties\022\033.AttributeProperti" +
-      "esMessage\032\022.PropertiesMessage\"\000\022C\n\022GetIn" +
-      "dexProperties\022\027.IndexPropertiesMessage\032\022" +
-      ".PropertiesMessage\"\000\022;\n\025RepartitionEntit" +
-      "yData\022\023.RepartitionMessage\032\013.AckMessage\"" +
-      "\000\022:\n\024RepartitionIndexData\022\023.RepartitionM" +
-      "essage\032\013.AckMessage\"\000\022;\n\020AdaptScanMethod" +
-      "s\022\030.AdaptScanMethodsMessage\032\013.AckMessage",
-      "\"\000\0227\n\016SparsifyEntity\022\026.SparsifyEntityMes" +
-      "sage\032\013.AckMessage\"\000\022+\n\nImportData\022\016.Impo" +
-      "rtMessage\032\013.AckMessage\"\000\0227\n\017ProtoImportD" +
-      "ata\022\023.ProtoImportMessage\032\013.AckMessage\"\0000" +
-      "\001\0225\n\017ProtoExportData\022\023.ProtoExportMessag" +
-      "e\032\013.AckMessage\"\000\022?\n\023ListStorageHandlers\022" +
-      "\r.EmptyMessage\032\027.StorageHandlersMessage\"" +
-      "\000\022G\n\026TransferStorageHandler\022\036.TransferSt" +
-      "orageHandlerMessage\032\013.AckMessage\"\0002\332\003\n\nA" +
-      "damSearch\022.\n\nCacheIndex\022\021.IndexNameMessa",
-      "ge\032\013.AckMessage\"\000\0220\n\013CacheEntity\022\022.Entit" +
-      "yNameMessage\032\013.AckMessage\"\000\0222\n\007Preview\022\017" +
-      ".PreviewMessage\032\024.QueryResultsMessage\"\000\022" +
-      "0\n\007DoQuery\022\r.QueryMessage\032\024.QueryResults" +
-      "Message\"\000\022=\n\020DoStreamingQuery\022\r.QueryMes" +
-      "sage\032\024.QueryResultsMessage\"\000(\0010\001\022C\n\014DoBa" +
-      "tchQuery\022\024.BatchedQueryMessage\032\033.Batched" +
-      "QueryResultsMessage\"\000\022=\n\022DoProgressiveQu" +
-      "ery\022\r.QueryMessage\032\024.QueryResultsMessage" +
-      "\"\0000\001\022A\n\020GetCachedResults\022\025.CachedResults",
-      "Message\032\024.QueryResultsMessage\"\000B$\n\030org.v" +
-      "itrivr.adampro.grpcB\010AdamGrpcb\006proto3"
+      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\344\001\n\014DistanceTy",
+      "pe\022\014\n\010UNKNOWND\020\000\022\016\n\nchisquared\020\001\022\017\n\013corr" +
+      "elation\020\002\022\n\n\006cosine\020\003\022\013\n\007hamming\020\004\022\013\n\007ja" +
+      "ccard\020\005\022\023\n\017kullbackleibler\020\006\022\r\n\tchebyshe" +
+      "v\020\007\022\r\n\teuclidean\020\010\022\024\n\020squaredeuclidean\020\t" +
+      "\022\r\n\tmanhattan\020\n\022\r\n\tminkowski\020\013\022\014\n\010spanno" +
+      "rm\020\014\022\n\n\006modulo\020\r\"\306\001\n\023BooleanQueryMessage" +
+      "\0220\n\005where\030\001 \003(\0132!.BooleanQueryMessage.Wh" +
+      "ereMessage\032K\n\014WhereMessage\022\021\n\tattribute\030" +
+      "\001 \001(\t\022\034\n\006values\030\002 \003(\0132\014.DataMessage\022\n\n\002o" +
+      "p\030\003 \001(\t\0320\n\013JoinMessage\022\r\n\005table\030\001 \001(\t\022\022\n",
+      "\nattributes\030\002 \003(\t\"\270\001\n\033ExternalHandlerQue" +
+      "ryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001" +
+      "(\t\022\017\n\007handler\030\003 \001(\t\0228\n\006params\030\004 \003(\0132(.Ex" +
+      "ternalHandlerQueryMessage.ParamsEntry\032-\n" +
+      "\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t" +
+      ":\0028\001\"\'\n\024CachedResultsMessage\022\017\n\007queryid\030" +
+      "\001 \001(\t\"5\n\023BatchedQueryMessage\022\036\n\007queries\030" +
+      "\001 \003(\0132\r.QueryMessage\"+\n\016PreviewMessage\022\016" +
+      "\n\006entity\030\001 \001(\t\022\t\n\001n\030\002 \001(\005\"X\n\nAckMessage\022" +
+      "\036\n\004code\030\001 \001(\0162\020.AckMessage.Code\022\017\n\007messa",
+      "ge\030\002 \001(\t\"\031\n\004Code\022\t\n\005ERROR\020\000\022\006\n\002OK\020\001\"=\n\017E" +
+      "ntitiesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage" +
+      "\022\020\n\010entities\030\002 \003(\t\"b\n\036AvailableAttribute" +
+      "TypesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022&" +
+      "\n\016attributetypes\030\002 \003(\0162\016.AttributeType\"9" +
+      "\n\rExistsMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessag" +
+      "e\022\016\n\006exists\030\002 \001(\010\"\252\001\n\016IndexesMessage\022\030\n\003" +
+      "ack\030\001 \001(\0132\013.AckMessage\022-\n\007indexes\030\002 \003(\0132" +
+      "\034.IndexesMessage.IndexMessage\032O\n\014IndexMe" +
+      "ssage\022\r\n\005index\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\022",
+      "\035\n\tindextype\030\003 \001(\0162\n.IndexType\"\250\001\n\021Prope" +
+      "rtiesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\016" +
+      "\n\006entity\030\002 \001(\t\0226\n\nproperties\030\003 \003(\0132\".Pro" +
+      "pertiesMessage.PropertiesEntry\0321\n\017Proper" +
+      "tiesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028" +
+      "\001\"[\n\023QueryResultsMessage\022\030\n\003ack\030\001 \001(\0132\013." +
+      "AckMessage\022*\n\tresponses\030\002 \003(\0132\027.QueryRes" +
+      "ultInfoMessage\"\376\001\n\026QueryResultInfoMessag" +
+      "e\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\017\n\007queryid\030\002" +
+      " \001(\t\022\022\n\nconfidence\030\003 \001(\001\022\014\n\004time\030\004 \001(\003\022\016",
+      "\n\006source\030\005 \001(\t\022/\n\004info\030\006 \003(\0132!.QueryResu" +
+      "ltInfoMessage.InfoEntry\022)\n\007results\030\007 \003(\013" +
+      "2\030.QueryResultTupleMessage\032+\n\tInfoEntry\022" +
+      "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\206\001\n\027Quer" +
+      "yResultTupleMessage\0220\n\004data\030\001 \003(\0132\".Quer" +
+      "yResultTupleMessage.DataEntry\0329\n\tDataEnt" +
+      "ry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 \001(\0132\014.DataMes" +
+      "sage:\0028\001\"[\n\025ExportDataFileMessage\022\030\n\003ack" +
+      "\030\001 \001(\0132\013.AckMessage\022\026\n\016definitionfile\030\002 " +
+      "\001(\014\022\020\n\010datafile\030\003 \001(\014\"C\n\032BatchedQueryRes",
+      "ultsMessage\022%\n\007results\030\001 \003(\0132\024.QueryResu" +
+      "ltsMessage*\257\001\n\rAttributeType\022\014\n\010UNKOWNAT" +
+      "\020\000\022\010\n\004AUTO\020\001\022\010\n\004LONG\020\002\022\007\n\003INT\020\003\022\t\n\005FLOAT" +
+      "\020\004\022\n\n\006DOUBLE\020\005\022\n\n\006STRING\020\006\022\010\n\004TEXT\020\007\022\013\n\007" +
+      "BOOLEAN\020\010\022\n\n\006VECTOR\020\t\022\020\n\014SPARSEVECTOR\020\r\022" +
+      "\014\n\010GEOMETRY\020\n\022\r\n\tGEOGRAPHY\020\013*_\n\tIndexTyp" +
+      "e\022\r\n\tUNKNOWNIT\020\000\022\007\n\003ecp\020\001\022\007\n\003lsh\020\002\022\006\n\002mi" +
+      "\020\003\022\006\n\002pq\020\004\022\006\n\002sh\020\005\022\007\n\003vaf\020\006\022\007\n\003vav\020\007\022\007\n\003" +
+      "vap\020\0102\260\014\n\016AdamDefinition\0223\n\014CreateEntity" +
+      "\022\024.CreateEntityMessage\032\013.AckMessage\"\000\022K\n",
+      "\027AvailableAttributeTypes\022\r.EmptyMessage\032" +
+      "\037.AvailableAttributeTypesMessage\"\000\022*\n\005Co" +
+      "unt\022\022.EntityNameMessage\032\013.AckMessage\"\000\022/" +
+      "\n\nDropEntity\022\022.EntityNameMessage\032\013.AckMe" +
+      "ssage\"\000\0224\n\014ExistsEntity\022\022.EntityNameMess" +
+      "age\032\016.ExistsMessage\"\000\022\'\n\006Insert\022\016.Insert" +
+      "Message\032\013.AckMessage\"\000\0221\n\014StreamInsert\022\016" +
+      ".InsertMessage\032\013.AckMessage\"\000(\0010\001\0221\n\014Vac" +
+      "uumEntity\022\022.EntityNameMessage\032\013.AckMessa" +
+      "ge\"\000\022\'\n\006Delete\022\016.DeleteMessage\032\013.AckMess",
+      "age\"\000\022%\n\005Index\022\r.IndexMessage\032\013.AckMessa" +
+      "ge\"\000\0222\n\022GenerateAllIndexes\022\r.IndexMessag" +
+      "e\032\013.AckMessage\"\000\022.\n\013ExistsIndex\022\r.IndexM" +
+      "essage\032\016.ExistsMessage\"\000\022-\n\tDropIndex\022\021." +
+      "IndexNameMessage\032\013.AckMessage\"\000\0224\n\013ListI" +
+      "ndexes\022\022.EntityNameMessage\032\017.IndexesMess" +
+      "age\"\000\022?\n\022GenerateRandomData\022\032.GenerateRa" +
+      "ndomDataMessage\032\013.AckMessage\"\000\0221\n\014ListEn" +
+      "tities\022\r.EmptyMessage\032\020.EntitiesMessage\"" +
+      "\000\022E\n\023GetEntityProperties\022\030.EntityPropert",
+      "iesMessage\032\022.PropertiesMessage\"\000\022K\n\026GetA" +
+      "ttributeProperties\022\033.AttributeProperties" +
+      "Message\032\022.PropertiesMessage\"\000\022C\n\022GetInde" +
+      "xProperties\022\027.IndexPropertiesMessage\032\022.P" +
+      "ropertiesMessage\"\000\022;\n\025RepartitionEntityD" +
+      "ata\022\023.RepartitionMessage\032\013.AckMessage\"\000\022" +
+      ":\n\024RepartitionIndexData\022\023.RepartitionMes" +
+      "sage\032\013.AckMessage\"\000\022;\n\020AdaptScanMethods\022" +
+      "\030.AdaptScanMethodsMessage\032\013.AckMessage\"\000" +
+      "\0227\n\016SparsifyEntity\022\026.SparsifyEntityMessa",
+      "ge\032\013.AckMessage\"\000\022+\n\nImportData\022\016.Import" +
+      "Message\032\013.AckMessage\"\000\0227\n\017ProtoImportDat" +
+      "a\022\023.ProtoImportMessage\032\013.AckMessage\"\0000\001\022" +
+      "5\n\017ProtoExportData\022\023.ProtoExportMessage\032" +
+      "\013.AckMessage\"\000\022?\n\023ListStorageHandlers\022\r." +
+      "EmptyMessage\032\027.StorageHandlersMessage\"\000\022" +
+      "G\n\026TransferStorageHandler\022\036.TransferStor" +
+      "ageHandlerMessage\032\013.AckMessage\"\0002\332\003\n\nAda" +
+      "mSearch\022.\n\nCacheIndex\022\021.IndexNameMessage" +
+      "\032\013.AckMessage\"\000\0220\n\013CacheEntity\022\022.EntityN",
+      "ameMessage\032\013.AckMessage\"\000\0222\n\007Preview\022\017.P" +
+      "reviewMessage\032\024.QueryResultsMessage\"\000\0220\n" +
+      "\007DoQuery\022\r.QueryMessage\032\024.QueryResultsMe" +
+      "ssage\"\000\022=\n\020DoStreamingQuery\022\r.QueryMessa" +
+      "ge\032\024.QueryResultsMessage\"\000(\0010\001\022C\n\014DoBatc" +
+      "hQuery\022\024.BatchedQueryMessage\032\033.BatchedQu" +
+      "eryResultsMessage\"\000\022=\n\022DoProgressiveQuer" +
+      "y\022\r.QueryMessage\032\024.QueryResultsMessage\"\000" +
+      "0\001\022A\n\020GetCachedResults\022\025.CachedResultsMe" +
+      "ssage\032\024.QueryResultsMessage\"\000B$\n\030org.vit",
+      "rivr.adampro.grpcB\010AdamGrpcb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -53750,12 +53633,12 @@ public final class AdamGrpc {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_EmptyMessage_descriptor,
         new java.lang.String[] { });
-    internal_static_FeatureVectorMessage_descriptor =
+    internal_static_VectorMessage_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_FeatureVectorMessage_fieldAccessorTable = new
+    internal_static_VectorMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_FeatureVectorMessage_descriptor,
-        new java.lang.String[] { "DenseVector", "SparseVector", "IntVector", "Feature", });
+        internal_static_VectorMessage_descriptor,
+        new java.lang.String[] { "DenseVector", "SparseVector", "IntVector", "Vector", });
     internal_static_DenseVectorMessage_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_DenseVectorMessage_fieldAccessorTable = new
@@ -53767,7 +53650,7 @@ public final class AdamGrpc {
     internal_static_SparseVectorMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SparseVectorMessage_descriptor,
-        new java.lang.String[] { "Vector", "Position", "Length", });
+        new java.lang.String[] { "Index", "Data", "Length", });
     internal_static_IntVectorMessage_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_IntVectorMessage_fieldAccessorTable = new
@@ -53779,7 +53662,7 @@ public final class AdamGrpc {
     internal_static_DataMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DataMessage_descriptor,
-        new java.lang.String[] { "LongData", "IntData", "FloatData", "DoubleData", "StringData", "BooleanData", "FeatureData", "GeographyData", "GeometryData", "Datatype", });
+        new java.lang.String[] { "LongData", "IntData", "FloatData", "DoubleData", "StringData", "BooleanData", "VectorData", "GeographyData", "GeometryData", "Datatype", });
     internal_static_CreateEntityMessage_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_CreateEntityMessage_fieldAccessorTable = new
@@ -53791,7 +53674,7 @@ public final class AdamGrpc {
     internal_static_AttributeDefinitionMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_AttributeDefinitionMessage_descriptor,
-        new java.lang.String[] { "Name", "Attributetype", "Pk", "Params", "Handler", });
+        new java.lang.String[] { "Name", "Attributetype", "Params", "Handler", });
     internal_static_AttributeDefinitionMessage_ParamsEntry_descriptor =
       internal_static_AttributeDefinitionMessage_descriptor.getNestedTypes().get(0);
     internal_static_AttributeDefinitionMessage_ParamsEntry_fieldAccessorTable = new
