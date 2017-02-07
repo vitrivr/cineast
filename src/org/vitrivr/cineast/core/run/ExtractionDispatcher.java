@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,7 +44,7 @@ public class ExtractionDispatcher {
         JacksonJsonProvider reader = new JacksonJsonProvider();
         this.context = reader.toObject(jobFile, IngestConfig.class);
 
-        /* Check if context could be read and an inputpath was specified. */
+        /* Check if context could be read and an input path was specified. */
         if (context == null || this.context.inputPath() == null) return false;
         Path path = this.context.inputPath();
 
@@ -51,14 +52,18 @@ public class ExtractionDispatcher {
          * Recursively add all files under that path to the List of files that should be processed. Uses the context-provider
          * to determine the depth of recursion, skip files and limit the number of files.
          */
-        if (!Files.exists(path)) return false;
+        if (!Files.exists(path)) {
+            LOGGER.warn("The path '{}' specified in the extraction configuration does not exist!", path.toString());
+            return false;
+        }
         this.paths = Files.walk(path, this.context.depth())
+                     .sorted()
                      .skip(this.context.skip())
                      .filter(p -> {
                          try {
                              return Files.exists(p) && Files.isRegularFile(p) && !Files.isHidden(p) && Files.isReadable(p);
                          } catch (IOException e) {
-                             LOGGER.error("An IO exception occurred while testing the file under {}.", p.toString(), LogHelper.getStackTrace(e));
+                             LOGGER.error("An IO exception occurred while testing the media file at '{}'.", p.toString(), LogHelper.getStackTrace(e));
                              return false;
                          }
                      })

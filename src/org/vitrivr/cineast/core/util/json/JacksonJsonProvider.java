@@ -9,8 +9,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -44,13 +46,13 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter{
         try {
             return MAPPER.readValue(jsonString, c);
         } catch (JsonParseException e) {
-            LOGGER.log(Level.ERROR, "Could not parse JSON file.", e);
+            LOGGER.log(Level.ERROR, "Could not parse JSON.");
             return null;
         } catch (JsonMappingException e) {
-            LOGGER.log(Level.ERROR, "Could not map JSON. Please check your object definitions.", e);
+            LOGGER.log(Level.ERROR, "Could not map JSON to POJO. Please check your object definitions.");
             return null;
         } catch (IOException e) {
-            LOGGER.log(Level.ERROR, "Could not read JSON file.", e);
+            LOGGER.log(Level.ERROR, "Could not read JSON.", e);
             return null;
         }
     }
@@ -60,13 +62,16 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter{
         try {
             return MAPPER.readValue(json, c);
         }  catch (JsonParseException e) {
-            LOGGER.log(Level.ERROR, "Could not parse JSON file.", e);
+            LOGGER.log(Level.ERROR, "Could not parse JSON file under '{}'.", json.toString());
             return null;
         } catch (JsonMappingException e) {
-            LOGGER.log(Level.ERROR, "Could not map JSON. Please check your object definitions.", e);
+            LOGGER.log(Level.ERROR, "Could not map JSON under '{}' to POJO. Please check your object definitions.", json.toString());
+            return null;
+        } catch (FileNotFoundException e) {
+            LOGGER.log(Level.WARN, "Could not find file under '{}'.", json.toString());
             return null;
         } catch (IOException e) {
-            LOGGER.log(Level.ERROR, "Could not read JSON file.", e);
+            LOGGER.log(Level.ERROR, "Could not read JSON file under '{}'.", json.toString(), LogHelper.getStackTrace(e));
             return null;
         }
     }
