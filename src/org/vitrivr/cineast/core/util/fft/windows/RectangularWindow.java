@@ -7,17 +7,21 @@ package org.vitrivr.cineast.core.util.fft.windows;
  * @version 1.0
  * @created 02.02.17
  */
-public class IdentityWindow implements WindowFunction {
+public class RectangularWindow implements WindowFunction {
     /**
      * Returns the value of the windowing function at position i.
      *
      * @param i The position for which the function value should be calculated.
-     * @param size Size of the window.
+     * @param length Size of the window.
      * @return Function value.
      */
     @Override
-    public final double value(int i, int size) {
-        return 1;
+    public final double value(int i, int length) {
+        if (i >= 0 && i <= length-1) {
+            return 1.0;
+        } else {
+            return 0.0;
+        }
     }
 
     /**
@@ -27,6 +31,6 @@ public class IdentityWindow implements WindowFunction {
      * @return Normalization factor.
      */
     public final double normalization(int length) {
-        return 1.0f;
+        return 1.0;
     }
 }

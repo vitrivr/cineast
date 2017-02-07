@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.data.providers;
 
 import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.windows.IdentityWindow;
+import org.vitrivr.cineast.core.util.fft.windows.RectangularWindow;
 import org.vitrivr.cineast.core.util.fft.windows.WindowFunction;
 
 import java.util.Arrays;
@@ -22,7 +22,7 @@ public interface AudioSTFTProvider {
         double[] data = new double[512];
         Arrays.fill(data, 0.0);
         STFT stft = new STFT(data, 22050);
-        stft.forward(128,0, new IdentityWindow());
+        stft.forward(128,0, new RectangularWindow());
         return stft;
     }
 }

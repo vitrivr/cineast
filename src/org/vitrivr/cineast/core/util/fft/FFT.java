@@ -4,7 +4,7 @@ import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
-import org.vitrivr.cineast.core.util.fft.windows.IdentityWindow;
+import org.vitrivr.cineast.core.util.fft.windows.RectangularWindow;
 import org.vitrivr.cineast.core.util.fft.windows.WindowFunction;
 
 /**
@@ -37,7 +37,7 @@ public class FFT {
     private Spectrum powerSpectrum;
 
     /** WindowFunction to apply before forward transformation. Defaults to IdentityWindows (= no window). */
-    private WindowFunction windowFunction = new IdentityWindow();
+    private WindowFunction windowFunction = new RectangularWindow();
 
     /**
      * Performs a forward fourier transformation on the provided, real valued data. The method makes sure,

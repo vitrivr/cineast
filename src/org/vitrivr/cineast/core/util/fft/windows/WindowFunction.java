@@ -27,9 +27,9 @@ public interface WindowFunction {
      */
     default double normalization(int length) {
         double normal = 0.0f;
-        for (int i =0; i<length; i++) {
-            normal += Math.pow(this.value(i, length),2);
+        for (int i=0; i<=length; i++) {
+            normal += this.value(i, length);
         }
-        return 1.0/(normal/length);
+        return normal/length;
     }
 }
