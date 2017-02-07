@@ -16,16 +16,26 @@ buildscript {
       classpath "gradle.plugin.com.google.gradle:osdetector-gradle-plugin:1.4.0"
       classpath 'gradle.plugin.com.google.protobuf:protobuf-gradle-plugin:0.8.0'
       classpath 'de.undercouch:gradle-download-task:3.1.2'
+      classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M3'
   }
 }
 
 apply plugin: 'com.google.protobuf'
 apply plugin: 'java'
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 repositories {
    mavenCentral()
    maven {
        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
+junitPlatform {
+    reportsDir file('build/test-results/junit-platform')
+    enableStandardTestTask true
+    selectors {
+        packages 'org.vitrivr.cineast.tests'
     }
 }
 
@@ -88,6 +98,12 @@ dependencies {
     compile "org.jogamp.gluegen:gluegen-rt:${joglVersion}"
     compile "org.jogamp.jogl:jogl-all:${joglVersion}"
 
+    /**
+     * Test dependencies (JUnit 5)
+     */
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0-M3'
+    testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version:'1.0.0-M3'
+    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.0.0-M3'
 
     /**
      * Manual Fixes for the javacpp-devs because of naming conventions & versions. Each os is handled independently
@@ -145,6 +161,12 @@ sourceSets {
 		proto {
 			srcDir 'adampro-grpc/src/main/protobuf'
 		}
+    }
+    test {
+        java {
+            srcDir 'src'
+            srcDir 'tests'
+        }
     }
 }
 

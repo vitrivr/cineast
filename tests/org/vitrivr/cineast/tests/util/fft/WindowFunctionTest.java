@@ -1,11 +1,14 @@
+package org.vitrivr.cineast.tests.util.fft;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import org.vitrivr.cineast.core.util.fft.windows.BlackmanHarrisWindow;
 import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
-import org.vitrivr.cineast.core.util.fft.windows.IdentityWindow;
+import org.vitrivr.cineast.core.util.fft.windows.RectangularWindow;
 import org.vitrivr.cineast.core.util.fft.windows.WindowFunction;
 
 import java.util.ArrayList;
@@ -16,19 +19,34 @@ import java.util.ArrayList;
  * @created 07.02.17
  */
 public class WindowFunctionTest {
-
-
-    private static final ArrayList<WindowFunction> FUNCTIONS = new ArrayList<>();
-    static {
-        FUNCTIONS.add(new HanningWindow());
-        FUNCTIONS.add(new IdentityWindow());
+    @Test
+    @DisplayName("Rectangular Window Test")
+    void testRectangularWindow() {
+        RectangularWindow window = new RectangularWindow();
+        this.executeTest(window, 512);
+        this.executeTest(window, 1024);
+        this.executeTest(window, 2048);
+        this.executeTest(window, 4096);
     }
 
     @Test
+    @DisplayName("Hanning Window Test")
     void testHanningWindow() {
-        this.executeTest(new HanningWindow(), 1024);
-        this.executeTest(new HanningWindow(), 2048);
-        this.executeTest(new HanningWindow(), 4096);
+        HanningWindow window = new HanningWindow();
+        this.executeTest(window, 512);
+        this.executeTest(window, 1024);
+        this.executeTest(window, 2048);
+        this.executeTest(window, 4096);
+    }
+
+    @Test
+    @DisplayName("Blackman Harris Window Test")
+    void testBlackmanHarrisWindow() {
+        BlackmanHarrisWindow window = new BlackmanHarrisWindow();
+        this.executeTest(window, 512);
+        this.executeTest(window, 1024);
+        this.executeTest(window, 2048);
+        this.executeTest(window, 4096);
     }
 
 
@@ -38,43 +56,54 @@ public class WindowFunctionTest {
      * @param length
      */
     private void executeTest(WindowFunction function, int length) {
-        assertAll("windows",
-                () -> assertTrue(testWindowFunctionZeroOutside(function, length), "The function '" + function.getClass().getSimpleName() + "' does not take zero values outside the window."),
-                () -> assertTrue(testNormalization(function, length), "The function '" + function.getClass().getSimpleName() + "' does not meet the normalization criterion.")
+        assertAll("Window Function Test (" + length +")",
+                () -> testWindowFunctionZeroOutside(function, length),
+                () -> testWindowFunctionSymmetry(function, length),
+                () -> testNormalization(function, length)
         );
     }
 
     /**
      * Tests if a given WindowFunction satisfies the condition that it must be zero outside the
-     * bounds of the window (i.e. for i < 0 or i > length).
-     *
-     * @param function WindowFunction to test
-     * @param size Length of the window.
-     * @return True if WindowFunction meets normalization criterion, false otherwise.
-     */
-    private boolean testWindowFunctionZeroOutside(WindowFunction function, int size) {
-        for (int i=-size;i<-1;i++) {
-            if (function.value(i, size) != 0) return false;
-        }
-        for (int i=size;i<2*size;i++) {
-            if (function.value(i, size) != 0) return false;
-        }
-        return true;
-    }
-
-    /**
-     * Tests if a given WindowFucntion satisfies the normalization criterion. Returns true
-     * if so and false otherwise.
+     * definition of the window interval (i.e. for i < 0 or i > length).
      *
      * @param function WindowFunction to test
      * @param length Length of the window.
      * @return True if WindowFunction meets normalization criterion, false otherwise.
      */
-    private boolean testNormalization(WindowFunction function, int length) {
-        double normal = 0.0f;
-        for (int i =0; i<length; i++) {
-            normal += Math.pow(function.value(i, length),2);
+    private boolean testWindowFunctionZeroOutside(WindowFunction function, int length) {
+        for (int i=-length;i<0;i++) {
+            assertEquals(0.0, function.value(i, length), "The function '" + function.getClass().getSimpleName() + "' does not become zero at position i=" + i);
         }
-        return normal == function.normalization(length);
+        for (int i=length+1;i<=2*length;i++) {
+            assertEquals(0.0, function.value(i, length), "The function '" + function.getClass().getSimpleName() + "' does not become zero at position i=" + i);
+        }
+        return true;
+    }
+
+    /**
+     * Tests if a given WindowFunction satisfies the symmetry condition.
+     *
+     * @param function WindowFunction to test
+     * @param length Length of the window.
+     */
+    private void testWindowFunctionSymmetry(WindowFunction function, int length) {
+        for (int i=0;i<length/2;i++) {
+            assertEquals(function.value(i, length), function.value((length-1)-i, length ), 1e-8, "The function '" + function.getClass().getSimpleName() + "' is not symmetric at position i=" + i);
+        }
+    }
+
+    /**
+     * Tests if a given WindowFunction satisfies the normalization criterion.
+     *
+     * @param function WindowFunction to test
+     * @param length Length of the window.
+     */
+    private void testNormalization(WindowFunction function, int length) {
+        double normal = 0.0;
+        for (int i=0; i<length; i++) {
+            normal += function.value(i, length);
+        }
+        assertEquals(normal/length, function.normalization(length), 1e-8, "The function '" + function.getClass().getSimpleName() + "' does not meet the normalization criterion.");
     }
 }
