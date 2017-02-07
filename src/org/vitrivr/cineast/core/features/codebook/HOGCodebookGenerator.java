@@ -20,7 +20,7 @@ public class HOGCodebookGenerator extends ImageCodebookGenerator {
      * Default constructor.
      */
     public HOGCodebookGenerator() {
-        super(HOGHelper.HOG_VECTOR_SIZE, true);
+        super(HOGHelper.hogVectorSize(HOGHelper.DEFAULT_CONFIG), true);
     }
 
     /**
