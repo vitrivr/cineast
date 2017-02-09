@@ -23,12 +23,12 @@ import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.runtime.ExtractionPipeline;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
-import org.vitrivr.cineast.core.util.LogHelper;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -82,7 +82,13 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     private final ExtractionPipeline pipeline;
 
     /** Used to measure the duration of an extraction run. */
-    private long start;
+    private long start_timestamp;
+
+    /** Total number of files that were queued for processing. */
+    private long count_files = 0;
+
+    /** Total number of files that were effectively processed. */
+    private long count_processed = 0;
 
     /**
      * Default constructor used to initialize the class.
@@ -117,8 +123,8 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      */
     @Override
     public void run() {
-        /* Get start-timestamp. */
-        this.start = System.currentTimeMillis();
+        /* Get start_timestamp-timestamp. */
+        this.start_timestamp = System.currentTimeMillis();
 
         /* Create new, initial decoder and segmenter. */
         Decoder<T> decoder = this.newDecoder();
@@ -186,6 +192,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
             /* Extract metadata. */
             this.extractAndPersistMetadata(path, objectId);
 
+            /* Increment the files counter. */
+            this.count_processed += 1;
+
             /*  Create new decoder pair for a new file if the decoder reports that it cannot be reused.*/
             if (!decoder.canBeReused()) {
                 decoder.close();
@@ -218,7 +227,8 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         } finally {
             this.segmentWriter.close();
             this.objectWriter.close();
-            LOGGER.info("File extraction complete! It took {} minutes to extract {} files.", TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis()-this.start), this.files.size());
+            Duration duration = Duration.ofMillis(System.currentTimeMillis()-this.start_timestamp);
+            LOGGER.info("File extraction complete! It took me {} to extract {} out of {} files.", duration.toString(), this.count_processed, this.count_files);
         }
     }
 
@@ -242,6 +252,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                 return true;
             }
         }).forEach(this.files::push);
+        this.count_files = this.files.size();
     }
 
     /**
