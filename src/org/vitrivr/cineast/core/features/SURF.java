@@ -23,12 +23,14 @@ import java.util.List;
 public abstract class SURF extends AbstractCodebookFeatureModule {
     private static final Logger LOGGER = LogManager.getLogger();
 
+
+    private static QueryConfig.Distance DEFAULT_DISTANCE = QueryConfig.Distance.chisquared;
+
     /**
      * @param tableName
-     * @param maxDist
      */
-    protected SURF(String tableName, float maxDist) {
-        super(tableName, maxDist);
+    protected SURF(String tableName) {
+        super(tableName, 2.0f);
     }
 
     @Override
@@ -53,7 +55,7 @@ public abstract class SURF extends AbstractCodebookFeatureModule {
         long start = System.currentTimeMillis();
         LOGGER.entry();
 
-        qc.setDistanceIfEmpty(QueryConfig.Distance.euclidean);
+        qc.setDistance(DEFAULT_DISTANCE);
 
         List<StringDoublePair> results = null;
         DetectDescribePoint<GrayF32, BrightFeature> descriptors = SURFHelper.getStableSurf(sc.getAvgImg().getBufferedImage());
