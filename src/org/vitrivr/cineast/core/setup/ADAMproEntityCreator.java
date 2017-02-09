@@ -60,8 +60,7 @@ public class ADAMproEntityCreator implements EntityCreator {
         ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
 
         AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
-		fields.add(builder.setName("metadataId").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		fields.add(builder.setName("objectId").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("objectid").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
         fields.add(builder.setName("domain").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
         fields.add(builder.setName("key").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
         fields.add(builder.setName("value").setAttributetype(AttributeType.STRING).build());
@@ -92,7 +91,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
 		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		fields.add(builder.setName("objectId").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("objectid").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		fields.add(builder.setName("segmentnumber").setAttributetype(AttributeType.INT).build());
 		fields.add(builder.setName("segmentstart").setAttributetype(AttributeType.INT).build());
 		fields.add(builder.setName("segmentend").setAttributetype(AttributeType.INT).build());

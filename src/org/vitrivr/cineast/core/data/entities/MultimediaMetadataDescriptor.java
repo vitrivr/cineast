@@ -16,7 +16,7 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
     public static final String ENTITY = "cineast_metadata";
 
     /** Field names in the persistence layer. */
-    public static final String[] FIELDNAMES = {"metadataId", "objectId", "domain", "key", "value"};
+    public static final String[] FIELDNAMES = {"objectid", "domain", "key", "value"};
 
     /** ID of the MultimediaMetadataDescriptor. */
     private String metadataId;

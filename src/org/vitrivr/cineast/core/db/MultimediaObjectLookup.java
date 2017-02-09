@@ -14,7 +14,6 @@ import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
-import org.vitrivr.cineast.core.setup.EntityCreator;
 
 public class MultimediaObjectLookup {
 
