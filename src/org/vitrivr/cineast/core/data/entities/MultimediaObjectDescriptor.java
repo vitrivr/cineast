@@ -15,11 +15,6 @@ import java.util.UUID;
  * @version 1.0
  * @created 10.01.17
  */
-
-/*
- * TODO #1: Review with Luca.
- * TODO #2: Define whether assigning a UUID is a good approach. Alternative: Hash the path.
- */
 public class MultimediaObjectDescriptor implements ExistenceCheck {
 
 
