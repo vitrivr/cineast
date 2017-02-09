@@ -19,7 +19,7 @@ import java.nio.ByteOrder;
 public class AudioFrame {
 
     /** Default empty audio frame. Encodes a single, mute sample for one channel. */
-    public final static AudioFrame EMPTY_FRAME = new AudioFrame(1,22050, 1, new byte[2], 0.0f);
+    public final static AudioFrame EMPTY_FRAME = new AudioFrame(0,22050, 1, new byte[2]);
 
     /** Number of bits in a sample. */
     public final static int BITS_PER_SAMPLE = 16;
@@ -27,11 +27,11 @@ public class AudioFrame {
     /** ByteBuffer holding the raw 16bit int data. */
     private final ByteBuffer data;
 
-    /** Incremental index of the AudioFrame usually generated in the decoding context (e.g. i-th frame of the decoded file). */
-    private final int id;
+    /** Sample-index of the AudioFrame (i.e. index of the first sample in the frame) usually generated in the decoding context (e.g. i-th frame of the decoded file). */
+    private final long idx;
 
     /** Sample rate of this AudioFrame. */
-    private final int sampleRate;
+    private final float sampleRate;
 
     /** Number of channels in this AudioFrame. */
     private final int channels;
@@ -39,28 +39,20 @@ public class AudioFrame {
     /** Number of samples per channel in this AudioFrame. */
     private final int numberOfSamples;
 
-    /** Start (in seconds) of the audio-frame, relative to the file it is contained in. */
-    private final float start;
-
-    /** End (in seconds) of the audio-frame, relative to the file it is contained in. */
-    private final float end;
-
     /**
      * Default constructor.
      *
-     * @param id Incremental ID of the new AudioFrame.
+     * @param idx Index of the first sample (pair) in the AudioFrame.
      * @param sampleRate Sample-rate of the new AudioFrame.
      * @param channels Number of channels of the new AudioFrame.
      * @param data Byte array containing 16bit signed PCM data.
      */
-    public AudioFrame(int id, int sampleRate, int channels, byte[] data, float start) {
-        this.id = id;
+    public AudioFrame(long idx, float sampleRate, int channels, byte[] data) {
+        this.idx = idx;
         this.data = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
         this.sampleRate = sampleRate;
         this.channels = channels;
         this.numberOfSamples = data.length/(2 * this.channels);
-        this.start = start;
-        this.end = this.start + (float)this.numberOfSamples/(float)this.sampleRate;
     }
 
     /**
@@ -95,8 +87,8 @@ public class AudioFrame {
      *
      * @return
      */
-    public final int getId() {
-        return id;
+    public final long getIdx() {
+        return idx;
     }
 
     /**
@@ -113,7 +105,7 @@ public class AudioFrame {
      *
      * @return Sample rate of this AudioFrame.
      */
-    public final int getSampleRate() {
+    public final float getSampleRate() {
         return this.sampleRate;
     }
 
@@ -123,7 +115,7 @@ public class AudioFrame {
      * @return
      */
     public final float getDuration() {
-        return this.end - this.start;
+        return this.numberOfSamples/this.sampleRate;
     }
 
     /**
@@ -132,7 +124,7 @@ public class AudioFrame {
      * @return
      */
     public final float getStart() {
-        return this.start;
+        return this.idx/this.sampleRate;
     }
 
     /**
@@ -141,7 +133,7 @@ public class AudioFrame {
      * @return
      */
     public final float getEnd() {
-        return this.end;
+        return (this.idx + this.numberOfSamples)/this.sampleRate;
     }
 
     /**

@@ -5,7 +5,6 @@ import org.vitrivr.cineast.core.data.audio.AudioFrame;
 import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.windows.WindowFunction;
 
-import javax.sound.sampled.AudioFormat;
 import java.util.*;
 
 /**
@@ -35,13 +34,13 @@ public class AudioSegment implements SegmentContainer {
     /** Total number of samples in the AudioSegment. */
     private int totalSamples;
 
-    /** Total duration in secdons of the AudioSegment. */
+    /** Total duration of the AudioSegment in seconds. */
     private float totalDuration;
 
-    /** */
-    private Integer samplingrate;
+    /** Sample rate of the AudioSegment. Determined by the sample rate of the first AudioFrame. */
+    private Float samplerate;
 
-    /** */
+    /** Number of channels in the AudioSegment. Determined by the number of channels in the first AudioFrame. */
     private Integer channels;
 
     /** */
@@ -98,82 +97,16 @@ public class AudioSegment implements SegmentContainer {
      */
     public void addFrame(AudioFrame frame) {
         if (frame == null) return;
-        if (this.channels == null && this.samplingrate == null) {
-            this.channels = frame.getChannels();
-            this.samplingrate = frame.getSampleRate();
-        } else if (this.channels != frame.getChannels() || this.samplingrate != frame.getSampleRate()) {
+        if (this.channels == null) this.channels = frame.getChannels();
+        if (this.samplerate == null) this.samplerate = frame.getSampleRate();
+
+        if (this.channels != frame.getChannels() || this.samplerate != frame.getSampleRate()) {
             return;
         }
 
         this.totalSamples += frame.numberOfSamples();
         this.totalDuration += frame.getDuration();
         this.frames.add(frame);
-    }
-
-
-    /**
-     * Returns the raw samples in the specified channel as short array.
-     *
-     * @return short array containing the samples.
-     */
-    public short[] getSamplesAsShort(int channel) {
-        short[] samples = new short[this.totalSamples];
-        int idx = 0;
-        for (AudioFrame frame : this.frames) {
-            for (int sample = 0; sample < frame.numberOfSamples(); sample++, idx++) {
-                samples[idx] = frame.getSampleAsShort(sample, channel);
-            }
-        }
-        return samples;
-    }
-
-    /**
-     * Returns the raw samples in the specified channel as double array.
-     *
-     * @param channel The channel for which to return the audio-data (zero-based index).
-     * @return double array containing the samples.
-     */
-    public double[] getSamplesAsDouble(int channel) {
-        double[] samples = new double[this.totalSamples];
-        int idx = 0;
-        for (AudioFrame frame : this.frames) {
-            for (int sample = 0; sample < frame.numberOfSamples(); sample++, idx++) {
-                samples[idx] = frame.getSampleAsDouble(sample, channel);
-            }
-        }
-        return samples;
-    }
-
-    /**
-     * Returns the mean samples across all channels as short array.
-     *
-     * @return short array containing the mean sample values.
-     */
-    public short[] getMeanSamplesAsShort() {
-        short[] samples = new short[this.totalSamples];
-        int idx = 0;
-        for (AudioFrame frame : this.frames) {
-            for (int sample = 0; sample < frame.numberOfSamples(); sample++, idx++) {
-                samples[idx] = frame.getMeanSampleAsShort(sample);
-            }
-        }
-        return samples;
-    }
-
-    /**
-     * Returns the mean samples across all channels as double array.
-     *
-     * @return double array containing the mean sample values.
-     */
-    public double[] getMeanSamplesAsDouble() {
-        double[] samples = new double[this.totalSamples];
-        int idx = 0;
-        for (AudioFrame frame : this.frames) {
-            for (int sample = 0; sample < frame.numberOfSamples(); sample++, idx++) {
-                samples[idx] = frame.getMeanSampleAsDouble(sample);
-            }
-        }
-        return samples;
     }
 
     /**
@@ -198,8 +131,8 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return
      */
-    public int getSamplingrate() {
-        return this.samplingrate;
+    public float getSampleRate() {
+        return this.samplerate;
     }
 
     /**
@@ -217,7 +150,7 @@ public class AudioSegment implements SegmentContainer {
      */
     public int getStart(){
         if (!this.frames.isEmpty()) {
-            return this.frames.get(0).getId();
+            return (int)this.frames.get(0).getIdx();
         } else {
             return 0;
         }
@@ -230,7 +163,7 @@ public class AudioSegment implements SegmentContainer {
      */
     public int getEnd(){
         if (!this.frames.isEmpty()) {
-            return this.frames.get(this.frames.size()-1).getId();
+            return (int)this.frames.get(this.frames.size()-1).getIdx();
         } else {
             return 0;
         }
@@ -276,7 +209,7 @@ public class AudioSegment implements SegmentContainer {
      */
     @Override
     public STFT getSTFT(int windowsize, int overlap, WindowFunction function) {
-       STFT stft = new STFT(this.getMeanSamplesAsDouble(), this.samplingrate);
+       STFT stft = new STFT(this.getMeanSamplesAsDouble(), this.samplerate);
        stft.forward(windowsize, overlap, function);
        return stft;
     }

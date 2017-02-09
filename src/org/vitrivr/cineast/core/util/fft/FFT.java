@@ -91,7 +91,7 @@ public class FFT {
      *
      * @return Array containing the magnitude for each frequency bin.
      */
-    public Spectrum getMagnitudeSpectrum(int samplingrate) {
+    public Spectrum getMagnitudeSpectrum(float samplingrate) {
         if (this.magnitudeSpectrum == null) {
             this.magnitudeSpectrum = Spectrum.createMagnitudeSpectrum(this.data, samplingrate, this.windowFunction);
         }
@@ -107,7 +107,7 @@ public class FFT {
      *
      * @return Array containing the power for each frequency bin.
      */
-    public Spectrum getPowerSpectrum(int samplingrate) {
+    public Spectrum getPowerSpectrum(float samplingrate) {
         if (this.powerSpectrum == null) {
             this.powerSpectrum = Spectrum.createPowerSpectrum(this.data, samplingrate, this.windowFunction);
         }

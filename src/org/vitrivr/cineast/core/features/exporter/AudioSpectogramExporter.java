@@ -83,7 +83,7 @@ public class AudioSpectogramExporter implements Extractor {
 
         /* Prepare STFT and Spectrum for the segment. */
         final Path directory = this.destination.resolve(shot.getSuperId());
-        final STFT stft = shot.getSTFT(4096, 64, new HanningWindow());
+        final STFT stft = shot.getSTFT(2048, 512, new HanningWindow());
         final List<Spectrum> spectrums = stft.getPowerSpectrum();
 
         /* Visualize Spectrum and write it to disc. */

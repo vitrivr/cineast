@@ -76,7 +76,7 @@ public class AudioSegmentExporter implements Extractor {
             ByteBuffer buffer = ByteBuffer.allocate(44 + data.length*2).order(ByteOrder.LITTLE_ENDIAN);
 
             /* Write header of WAV file. */
-            this.writeWaveHeader(buffer, shot.getSamplingrate(), data.length * 2);
+            this.writeWaveHeader(buffer, shot.getSampleRate(), data.length * 2);
 
             /* Write actual data. */
             for (short sample : data) {
@@ -97,7 +97,7 @@ public class AudioSegmentExporter implements Extractor {
      * @param samplingrate Samplingrate of the output file.
      * @param length Length in bytes of the audio data
      */
-    private void writeWaveHeader(ByteBuffer buffer, int samplingrate, int length) {
+    private void writeWaveHeader(ByteBuffer buffer, float samplingrate, int length) {
         /* RIFF Chunk. */
         buffer.put("RIFF".getBytes());
         buffer.putInt(36 + length + 2);
@@ -108,8 +108,8 @@ public class AudioSegmentExporter implements Extractor {
         buffer.putInt(16); /* Length of the Format chunk. */
         buffer.putShort((short)1); /* Format: 1 = Raw PCM (linear quantization). */
         buffer.putShort((short)1); /* Number of channels. */
-        buffer.putInt(samplingrate); /* Samplingrate. */
-        buffer.putInt(samplingrate * 4); /* Byte rate. */
+        buffer.putInt((int)samplingrate); /* Samplingrate. */
+        buffer.putInt((int)(samplingrate * 4)); /* Byte rate. */
         buffer.putShort((short)2); /* Size of frame. */
         buffer.putShort((short)AudioFrame.BITS_PER_SAMPLE) /* Bits per sample. */;
 

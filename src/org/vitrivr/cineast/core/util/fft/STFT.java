@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.util.fft;
 
-import org.apache.commons.math3.transform.DftNormalization;
-import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
 import org.vitrivr.cineast.core.util.fft.windows.WindowFunction;
 
@@ -20,7 +18,7 @@ public class STFT {
     private final double[] samples;
 
     /** Sampling rate with which the samples have been sampled. */
-    private final int samplingrate;
+    private final float samplingrate;
 
     /** Window function to use when calculating the FFT. */
     private WindowFunction windowFunction = new HanningWindow();
@@ -29,7 +27,7 @@ public class STFT {
     private int windowsize = 4096;
 
     /** Overlap in samples between two subsequent windows. */
-    private int overlap = 128;
+    private int overlap = 512;
 
     /** Width of the STFT (i.e. the number of timepoints or FFT's). */
     private int width;
@@ -56,7 +54,7 @@ public class STFT {
      * @param samples
      * @param samplingrate
      */
-    public STFT(double[] samples, int samplingrate) {
+    public STFT(double[] samples, float samplingrate) {
         /* Store the local variables. */
         this.samples = samples;
         this.samplingrate = samplingrate;
@@ -83,9 +81,6 @@ public class STFT {
         this.stft = new ArrayList<>(this.width);
         this.powerSpectrum = null;
         this.maginitudeSpectrum = null;
-
-        /* Prepare transformer class. */
-        FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
 
         /* Outer-loop: Create a sliding window and move it across the samples.
          *

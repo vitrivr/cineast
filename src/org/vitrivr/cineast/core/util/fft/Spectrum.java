@@ -49,7 +49,7 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
      * @param windowFunction Window function that was used when calculating the FFT.
      * @return A power spectrum.
      */
-    public static Spectrum createPowerSpectrum(Complex[] data, int samplingrate, WindowFunction windowFunction) {
+    public static Spectrum createPowerSpectrum(Complex[] data, float samplingrate, WindowFunction windowFunction) {
         int bins = data.length / 2;
         double normalizationFactor = data.length * windowFunction.normalization(data.length);
 
@@ -71,7 +71,7 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
      * @param windowFunction Window function that was used when calculating the FFT.
      * @return A magnitude spectrum.
      */
-    public static Spectrum createMagnitudeSpectrum(Complex[] data, int samplingrate, WindowFunction windowFunction) {
+    public static Spectrum createMagnitudeSpectrum(Complex[] data, float samplingrate, WindowFunction windowFunction) {
         int bins = data.length / 2;
         double normalizationFactor = data.length * windowFunction.normalization(data.length);
 

@@ -38,9 +38,14 @@ public interface AudioFrameProvider {
      * @return short array containing the samples.
      */
     default short[] getSamplesAsShort(int channel) {
-        short[] data = new short[1];
-        data[0] = AudioFrame.EMPTY_FRAME.getSampleAsShort(0,0);
-        return data;
+        short[] samples = new short[this.getNumberOfSamples()];
+        int idx = 0;
+        for (AudioFrame frame : this.getAudioFrames()) {
+            for (int sample = 0; sample < frame.numberOfSamples(); sample++, idx++) {
+                samples[idx] = frame.getSampleAsShort(sample, channel);
+            }
+        }
+        return samples;
     }
 
     /**
@@ -50,9 +55,14 @@ public interface AudioFrameProvider {
      * @return double array containing the samples.
      */
     default double[] getSamplesAsDouble(int channel) {
-        double[] data = new double[1];
-        data[0] = AudioFrame.EMPTY_FRAME.getSampleAsDouble(0,0);
-        return data;
+        double[] samples = new double[this.getNumberOfSamples()];
+        int idx = 0;
+        for (AudioFrame frame : this.getAudioFrames()) {
+            for (int sample = 0; sample < frame.numberOfSamples(); sample++, idx++) {
+                samples[idx] = frame.getSampleAsDouble(sample, channel);
+            }
+        }
+        return samples;
     }
 
     /**
@@ -61,9 +71,14 @@ public interface AudioFrameProvider {
      * @return short array containing the mean sample values.
      */
     default short[] getMeanSamplesAsShort() {
-        short[] data = new short[1];
-        data[0] = AudioFrame.EMPTY_FRAME.getSampleAsShort(0,0);
-        return data;
+        short[] samples = new short[this.getNumberOfSamples()];
+        int idx = 0;
+        for (AudioFrame frame : this.getAudioFrames()) {
+            for (int sample = 0; sample < frame.numberOfSamples(); sample++, idx++) {
+                samples[idx] = frame.getMeanSampleAsShort(sample);
+            }
+        }
+        return samples;
     }
 
     /**
@@ -72,13 +87,18 @@ public interface AudioFrameProvider {
      * @return double array containing the mean sample values.
      */
     default double[] getMeanSamplesAsDouble() {
-        double[] data = new double[1];
-        data[0] = AudioFrame.EMPTY_FRAME.getSampleAsDouble(0,0);
-        return data;
+        double[] samples = new double[this.getNumberOfSamples()];
+        int idx = 0;
+        for (AudioFrame frame : this.getAudioFrames()) {
+            for (int sample = 0; sample < frame.numberOfSamples(); sample++, idx++) {
+                samples[idx] = frame.getMeanSampleAsDouble(sample);
+            }
+        }
+        return samples;
     }
 
     /**
-     * Returns the total number of samples in the audio segment (i.e. accross
+     * Returns the total number of samples in the audio segment (i.e. across
      * all frames).
      *
      * @return Total number of samples in the segments
@@ -89,7 +109,7 @@ public interface AudioFrameProvider {
 
     /**
      * Returns the total duration  in seconds of all samples in the audio segment
-     * (i.e. accross all frames).
+     * (i.e. across all frames).
      *
      * @return Total duration in seconds.
      */
@@ -98,12 +118,12 @@ public interface AudioFrameProvider {
     }
 
     /**
-     * Returns the sampling rate of the audio segment. Is usually determined by
+     * Returns the sampling rate of the audio segment. That rate usually determined by
      * the first AudioFrame added to the segment and must be the same for all frames.
      *
      * @return Sampling rate of the audio segment.
      */
-    default int getSamplingrate() {
+    default float getSampleRate() {
         return AudioFrame.EMPTY_FRAME.getSampleRate();
     }
 

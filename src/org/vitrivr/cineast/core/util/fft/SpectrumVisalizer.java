@@ -70,7 +70,7 @@ public class SpectrumVisalizer {
      * @return
      */
     public static Color color (double min, double max, double value) {
-        if (min > max) throw new IllegalArgumentException("Mimimum must be smaller than maximum.");
+        if (min > max) throw new IllegalArgumentException("Minimum must be smaller than maximum.");
         if (value < min) return Color.BLACK;
         if (value > max) return Color.WHITE;
         return Color.getHSBColor((float)((1.0/(Math.abs(max-min))) * value), 1.0f, 1.0f);
