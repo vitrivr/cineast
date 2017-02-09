@@ -57,8 +57,8 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     /** */
     private static final int BYTES_PER_SAMPLE = av_get_bytes_per_sample(TARGET_FORMAT);
 
+    private long processedSamples = 0;
     private int currentFrameNumber = 0;
-    private float currentPosition = 0.0f;
     private long framecount = 0;
 
     private ArrayDeque<AudioFrame> frameQueue = new ArrayDeque<>();
@@ -136,10 +136,10 @@ public class FFMpegAudioDecoder implements AudioDecoder {
                                 this.resampledFrame.data(0).position(0).get(buffer);
 
                                 /* ... and add frame to queue. */
-                                this.frameQueue.add(new AudioFrame(this.currentFrameNumber, this.samplerate, this.channels, buffer, this.currentPosition));
+                                this.frameQueue.add(new AudioFrame(this.processedSamples, this.samplerate, this.channels, buffer));
 
-                                /* Proceeds the current position. */
-                                this.currentPosition += ((float)out_samples/(float)(this.resampledFrame.sample_rate()));
+                                /* Increment the number of processed samples. */
+                                this.processedSamples += out_samples;
                             }
                         }
                         readFrame = true;
