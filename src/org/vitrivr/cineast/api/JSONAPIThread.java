@@ -20,7 +20,7 @@ import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Position;
-import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBResultCache;
@@ -235,7 +235,7 @@ public class JSONAPIThread extends Thread {
 							String id = query.get("id").asString();
 							result = ContinousRetrievalLogic.retrieve(id, category.asString(), qconf);
 						} else {
-							QueryContainer qc = JSONUtils.queryContainerFromJSON(query);
+							ImageQueryContainer qc = JSONUtils.queryContainerFromJSON(query);
 							result = ContinousRetrievalLogic.retrieve(qc, category.asString(), qconf);
 						}
 						
@@ -267,18 +267,18 @@ public class JSONAPIThread extends Thread {
 				
 				DBResultCache.createIfNecessary(resultCacheName);
 				
-				HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
+				HashMap<String, ArrayList<ImageQueryContainer>> categoryMap = new HashMap<>();
 				
 				for(JsonValue jval : queryArray){
 					JsonObject jobj = jval.asObject();
-					QueryContainer qc = JSONUtils.queryContainerFromJSON(jobj);
+					ImageQueryContainer qc = JSONUtils.queryContainerFromJSON(jobj);
 					if(qc.getWeight() == 0f || jobj.get("categories") == null){
 						continue;
 					}
 					for(JsonValue c : jobj.get("categories").asArray()){
 						String category = c.asString();
 						if(!categoryMap.containsKey(category)){
-							categoryMap.put(category, new ArrayList<QueryContainer>());
+							categoryMap.put(category, new ArrayList<ImageQueryContainer>());
 						}
 						categoryMap.get(category).add(qc);
 					}
@@ -290,7 +290,7 @@ public class JSONAPIThread extends Thread {
 				List<StringDoublePair> result;
 				for(String category : categories){
 					TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
-					for(QueryContainer qc : categoryMap.get(category)){
+					for(ImageQueryContainer qc : categoryMap.get(category)){
 						
 						float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation 
 						

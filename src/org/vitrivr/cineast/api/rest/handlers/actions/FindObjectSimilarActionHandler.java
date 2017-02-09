@@ -5,11 +5,12 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.messages.query.Query;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.QueryTerm;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 
 import java.util.*;
@@ -81,7 +82,6 @@ public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> 
                 if (list.size() > MAX_RESULTS) {
                     list = list.subList(0, MAX_RESULTS);
                 }
-                //results.addResult(new SimilarityQueryResult(category, list));
             }
         }
 

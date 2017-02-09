@@ -2,9 +2,13 @@ package org.vitrivr.cineast.core.data.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
-import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.audio.AudioFrame;
+import org.vitrivr.cineast.core.data.query.containers.AudioQueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
@@ -67,7 +71,10 @@ public class QueryTerm {
         switch (this.type) {
             case IMAGE:
                 BufferedImage image = WebUtils.dataURLtoBufferedImage(this.data);
-                return new QueryContainer(MultiImageFactory.newInMemoryMultiImage(image));
+                return new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(image));
+            case AUDIO:
+                List<AudioFrame> lists = WebUtils.dataURLtoAudioFrames(this.data);
+                return new AudioQueryContainer(lists);
             default:
                 return null;
         }

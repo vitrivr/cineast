@@ -14,12 +14,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
