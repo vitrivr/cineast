@@ -11,6 +11,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
@@ -39,12 +40,13 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
   private final InsertMessage.Builder imBuilder = InsertMessage.newBuilder();
   private QueryMessage.Builder qmBuilder;
   private final WhereMessage.Builder wmBuilder = WhereMessage.newBuilder();
+  private FromMessage from;
 
   @Override
   public boolean open(String name) {
     this.entityName = name;
-    this.qmBuilder = QueryMessage.newBuilder()
-        .setFrom(AdamGrpc.FromMessage.newBuilder().setEntity(this.entityName).build());
+    this.from = AdamGrpc.FromMessage.newBuilder().setEntity(this.entityName).build();
+    this.qmBuilder = QueryMessage.newBuilder().setFrom(this.from);
     return true;
   }
 
@@ -74,7 +76,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
     tmp.add(where);
     QueryMessage qbqm;
     synchronized (this.qmBuilder) {
-      qbqm = this.qmBuilder.clear().setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp))
+      qbqm = this.qmBuilder.clear().setFrom(this.from).setBq(BooleanQueryMessage.newBuilder().addAllWhere(tmp))
           .build();
     }
     ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
