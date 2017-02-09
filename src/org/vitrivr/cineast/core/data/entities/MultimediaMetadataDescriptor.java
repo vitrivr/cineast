@@ -18,9 +18,6 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
     /** Field names in the persistence layer. */
     public static final String[] FIELDNAMES = {"objectid", "domain", "key", "value"};
 
-    /** ID of the MultimediaMetadataDescriptor. */
-    private String metadataId;
-
     /** ID of the MultimediaObject this MultimediaMetadataDescriptor belongs to. */
     private final String objectId;
 
@@ -60,7 +57,6 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
      * @param value Value of the metadata entry. Can be any type of object, but only Double, Float, Int, Long and String are supported officialy.
      */
     public MultimediaMetadataDescriptor(String objectId, String domain, String key, Object value, boolean exists) {
-        this.metadataId = objectId + "_" + key;
         this.objectId = objectId;
         this.key = key;
         this.domain = domain;
@@ -81,12 +77,7 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
         }
         this.exists = exists;
     }
-
-    @JsonProperty
-    public String getMetadataId() {
-        return metadataId;
-    }
-
+    
     @JsonProperty
     public String getObjectId() {
         return objectId;
