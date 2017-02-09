@@ -11,8 +11,6 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
  */
 public class SimpleFeatureDescriptorWriter extends AbstractBatchedEntityWriter<SimpleFeatureDescriptor>  {
 
-    private float[] arrayCache = null;
-
     private final String entityname;
 
 
@@ -47,6 +45,8 @@ public class SimpleFeatureDescriptorWriter extends AbstractBatchedEntityWriter<S
      */
     @Override
     protected PersistentTuple generateTuple(SimpleFeatureDescriptor entity) {
-        return this.writer.generateTuple(entity.getSegmentId(), arrayCache = entity.getFeature().toArray(arrayCache));
+        float[] array = new float[ entity.getFeature().getElementCount()];
+        entity.getFeature().toArray(array);
+        return this.writer.generateTuple(entity.getSegmentId(), array);
     }
 }
