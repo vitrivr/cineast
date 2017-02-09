@@ -370,7 +370,7 @@ public class ADAMproSelector implements DBSelector {
       if (id == null) {
         continue;
       }
-      _return.add(new StringDoublePair(id, msg.getDataMap().get("ap_distance").getFloatData()));
+      _return.add(new StringDoublePair(id, msg.getDataMap().get("ap_distance").getDoubleData()));
     }
 
     return _return;
