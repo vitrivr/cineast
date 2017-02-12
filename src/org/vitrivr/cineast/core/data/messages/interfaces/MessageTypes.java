@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.messages.interfaces;
 
 import org.vitrivr.cineast.core.data.messages.general.Ping;
+import org.vitrivr.cineast.core.data.messages.lookup.MetadataLookup;
 import org.vitrivr.cineast.core.data.messages.query.Query;
 import org.vitrivr.cineast.core.data.messages.result.*;
 
@@ -17,10 +18,10 @@ public enum MessageTypes {
     PING(Ping.class),
 
     /* Query  message types. */
-    Q_QUERY(Query.class),
+    Q_QUERY(Query.class), M_LOOKUP(MetadataLookup.class),
 
-    /* */
-    QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_OBJECT(ObjectQueryResult.class), QR_SEGMENT(SegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);
+    /* Query results. */
+    QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_OBJECT(ObjectQueryResult.class),  QR_METADATA(MetadataQueryResult.class), QR_SEGMENT(SegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);
 
     private Class<? extends Message> c;
 

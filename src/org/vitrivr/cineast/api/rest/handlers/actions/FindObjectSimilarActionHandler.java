@@ -5,7 +5,6 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.messages.query.Query;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;

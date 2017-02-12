@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 
+import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.QueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
@@ -64,6 +65,7 @@ public class WebsocketAPI {
     static {
         STATELESS_HANDLERS.put(MessageTypes.Q_QUERY, new QueryMessageHandler());
         STATELESS_HANDLERS.put(MessageTypes.PING, new StatusMessageHandler());
+        STATELESS_HANDLERS.put(MessageTypes.M_LOOKUP, new MetadataLookupMessageHandler());
     }
 
     /* */
