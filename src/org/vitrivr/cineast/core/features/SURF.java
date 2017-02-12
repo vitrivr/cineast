@@ -36,30 +36,30 @@ public abstract class SURF extends AbstractCodebookFeatureModule {
     @Override
     public void processShot(SegmentContainer shot) {
         long start = System.currentTimeMillis();
-        LOGGER.entry();
+        LOGGER.traceEntry();
 
         DetectDescribePoint<GrayF32, BrightFeature> descriptors = SURFHelper.getStableSurf(shot.getMostRepresentativeFrame().getImage().getBufferedImage());
-        if (descriptors != null) {
+        if (descriptors != null && descriptors.getNumberOfFeatures() > 0) {
             float[] histogram_f = this.histogram(true, descriptors);
             this.persist(shot.getId(), new FloatVectorImpl(histogram_f));
         } else {
-            LOGGER.warn("Segment {} did not have a most representative frame. No descriptor has been generated!");
+            LOGGER.warn("No SURF feature could be extracted for segment {}. This is not necessarily an error!");
         }
 
         LOGGER.debug("SURF.processShot() (codebook {}) done in {}ms", this.codebook(), (System.currentTimeMillis() - start));
-        LOGGER.exit();
+        LOGGER.traceExit();
     }
 
     @Override
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
         long start = System.currentTimeMillis();
-        LOGGER.entry();
+        LOGGER.traceEntry();
 
         qc.setDistance(DEFAULT_DISTANCE);
 
         List<StringDoublePair> results = null;
         DetectDescribePoint<GrayF32, BrightFeature> descriptors = SURFHelper.getStableSurf(sc.getAvgImg().getBufferedImage());
-        if (descriptors != null) {
+        if (descriptors != null && descriptors.getNumberOfFeatures() > 0) {
             float[] histogram_f = this.histogram(true, descriptors);
             results = this.getSimilar(histogram_f, qc);
         } else {
@@ -67,6 +67,6 @@ public abstract class SURF extends AbstractCodebookFeatureModule {
         }
 
         LOGGER.debug("SURF.getSimilar() (codebook {}) done in {}ms", this.codebook(), (System.currentTimeMillis() - start));
-        return LOGGER.exit(results);
+        return LOGGER.traceExit(results);
     }
 }
