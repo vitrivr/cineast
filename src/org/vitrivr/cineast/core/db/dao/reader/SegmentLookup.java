@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.db;
+package org.vitrivr.cineast.core.db.dao.reader;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class SegmentLookup {
 	
 	public SegmentDescriptor lookUpShot(String segmentId){
 		
-		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("id", segmentId);
+		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(SegmentDescriptor.FIELDNAMES[0], segmentId);
 		
 		if(results.isEmpty()){
 			return new SegmentDescriptor();
@@ -42,11 +43,11 @@ public class SegmentLookup {
 	}
 
 	private SegmentDescriptor mapToDescriptor(Map<String, PrimitiveTypeProvider> map) {
-		PrimitiveTypeProvider idProvider = map.get("id");
-		PrimitiveTypeProvider mmobjidProvider = map.get("objectid");
-		PrimitiveTypeProvider sequenceProvider = map.get("segmentnumber");
-		PrimitiveTypeProvider startProvider = map.get("segmentstart");
-		PrimitiveTypeProvider endProvider = map.get("segmentend");
+		PrimitiveTypeProvider idProvider = map.get(SegmentDescriptor.FIELDNAMES[0]);
+		PrimitiveTypeProvider mmobjidProvider = map.get(SegmentDescriptor.FIELDNAMES[1]);
+		PrimitiveTypeProvider sequenceProvider = map.get(SegmentDescriptor.FIELDNAMES[2]);
+		PrimitiveTypeProvider startProvider = map.get(SegmentDescriptor.FIELDNAMES[3]);
+		PrimitiveTypeProvider endProvider = map.get(SegmentDescriptor.FIELDNAMES[4]);
 		
 		if(idProvider == null){
 			LOGGER.error("no id in segment");
@@ -108,7 +109,7 @@ public class SegmentLookup {
 		
 		HashMap<String, SegmentDescriptor> _return = new HashMap<>();
 		
-		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("id", ids);
+		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(SegmentDescriptor.FIELDNAMES[0], ids);
 		
 		if(results.isEmpty()){
 			return new HashMap<>();
@@ -129,7 +130,7 @@ public class SegmentLookup {
     
     HashMap<String, SegmentDescriptor> _return = new HashMap<>();
     
-    List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("id", ids);
+    List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(SegmentDescriptor.FIELDNAMES[0], ids);
     
     if(results.isEmpty()){
       return new HashMap<>();
@@ -145,7 +146,7 @@ public class SegmentLookup {
 
 	public List<SegmentDescriptor> lookUpAllSegments(String objectId){
 		
-		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("objectId", objectId);
+		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(SegmentDescriptor.FIELDNAMES[1], objectId);
 		
 		if(results.isEmpty()){
 			return new ArrayList<>(0);

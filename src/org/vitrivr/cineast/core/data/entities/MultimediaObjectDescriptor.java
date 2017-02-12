@@ -22,7 +22,7 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
     public static final String ENTITY = "cineast_multimediaobject";
 
     /** Field names in the persistence layer. */
-    public static final String[] FIELDNAMES = {"id", "mediatype", "name", "path", "preview", "segments"};
+    public static final String[] FIELDNAMES = {"objectid", "mediatype", "name", "path"};
 
     private final String objectId;
     private final String name, path;

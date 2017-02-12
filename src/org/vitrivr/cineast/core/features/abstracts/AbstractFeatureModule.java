@@ -9,7 +9,7 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
 import org.vitrivr.cineast.core.db.*;
-import org.vitrivr.cineast.core.db.dao.SimpleFeatureDescriptorWriter;
+import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.EntityCreator;

@@ -3,7 +3,7 @@ package org.vitrivr.cineast.api.rest.handlers.actions;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
-import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 
 import java.util.List;
 import java.util.Map;

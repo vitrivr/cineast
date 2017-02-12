@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.db.dao;
+package org.vitrivr.cineast.core.db.dao.writer;
 
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;

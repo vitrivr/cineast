@@ -13,7 +13,6 @@ import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.ADAMproWrapper;
 
 import com.google.common.collect.ImmutableMap;
-import org.vitrivr.cineast.core.db.dao.MultimediaMetadataWriter;
 
 public class ADAMproEntityCreator implements EntityCreator {
     /**
@@ -31,7 +30,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 
         AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-        attributes.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        attributes.add(builder.setName("objectid").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
         attributes.add(builder.setName("mediatype").setAttributetype(AttributeType.INT).putAllParams(ImmutableMap.of("indexed", "true")).build());
         attributes.add(builder.setName("name").setAttributetype(AttributeType.STRING).build());
         attributes.add(builder.setName("path").setAttributetype(AttributeType.STRING).build());
@@ -90,7 +89,7 @@ public class ADAMproEntityCreator implements EntityCreator {
 		
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName("segmentid").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		fields.add(builder.setName("objectid").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 		fields.add(builder.setName("segmentnumber").setAttributetype(AttributeType.INT).build());
 		fields.add(builder.setName("segmentstart").setAttributetype(AttributeType.INT).build());

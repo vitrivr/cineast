@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.db;
+package org.vitrivr.cineast.core.db.dao.reader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +14,7 @@ import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.db.DBSelector;
 
 public class MultimediaObjectLookup {
 
@@ -27,7 +28,7 @@ public class MultimediaObjectLookup {
   }
 
   public MultimediaObjectDescriptor lookUpObjectById(String objectId) {
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("id", objectId);
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MultimediaObjectDescriptor.FIELDNAMES[0], objectId);
 
     if (result.isEmpty()) {
       return new MultimediaObjectDescriptor();
@@ -37,26 +38,29 @@ public class MultimediaObjectLookup {
   }
 
   private MultimediaObjectDescriptor mapToDescriptor(Map<String, PrimitiveTypeProvider> map) {
-    PrimitiveTypeProvider idProvider = map.get("id");
-    PrimitiveTypeProvider nameProvider = map.get("name");
-    PrimitiveTypeProvider pathProvider = map.get("path");
-    PrimitiveTypeProvider typeProvider = map.get("mediatype");
+    PrimitiveTypeProvider idProvider = map.get(MultimediaObjectDescriptor.FIELDNAMES[0]);
+    PrimitiveTypeProvider typeProvider = map.get(MultimediaObjectDescriptor.FIELDNAMES[1]);
+    PrimitiveTypeProvider nameProvider = map.get(MultimediaObjectDescriptor.FIELDNAMES[2]);
+    PrimitiveTypeProvider pathProvider = map.get(MultimediaObjectDescriptor.FIELDNAMES[3]);
 
-    if (!checkProvider("id", idProvider, ProviderDataType.STRING)) {
+
+    if (!checkProvider(MultimediaObjectDescriptor.FIELDNAMES[0], idProvider, ProviderDataType.STRING)) {
       return new MultimediaObjectDescriptor();
     }
 
-    if (!checkProvider("name", nameProvider, ProviderDataType.STRING)) {
+    if (!checkProvider(MultimediaObjectDescriptor.FIELDNAMES[1], typeProvider, ProviderDataType.INT)) {
       return new MultimediaObjectDescriptor();
     }
 
-    if (!checkProvider("path", pathProvider, ProviderDataType.STRING)) {
+    if (!checkProvider(MultimediaObjectDescriptor.FIELDNAMES[2], nameProvider, ProviderDataType.STRING)) {
       return new MultimediaObjectDescriptor();
     }
 
-    if (!checkProvider("mediatype", typeProvider, ProviderDataType.INT)) {
+    if (!checkProvider(MultimediaObjectDescriptor.FIELDNAMES[3], pathProvider, ProviderDataType.STRING)) {
       return new MultimediaObjectDescriptor();
     }
+
+
 
     return new MultimediaObjectDescriptor(idProvider.getString(), nameProvider.getString(), pathProvider.getString(), MediaType.fromId(typeProvider.getInt()), true);
 
@@ -78,7 +82,7 @@ public class MultimediaObjectLookup {
   }
 
   public MultimediaObjectDescriptor lookUpObjectByName(String name) {
-    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows("name", name);
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MultimediaObjectDescriptor.FIELDNAMES[2], name);
 
     if (result.isEmpty()) {
       return new MultimediaObjectDescriptor();
@@ -94,7 +98,7 @@ public class MultimediaObjectLookup {
 
     HashMap<String, MultimediaObjectDescriptor> _return = new HashMap<>();
 
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows("id", videoIds);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MultimediaObjectDescriptor.FIELDNAMES[0], videoIds);
 
     if (results.isEmpty()) {
       return new HashMap<>();
@@ -116,7 +120,7 @@ public class MultimediaObjectLookup {
 
     HashMap<String, MultimediaObjectDescriptor> _return = new HashMap<>();
 
-    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows("id", videoIds);
+    List<Map<String, PrimitiveTypeProvider>> results = selector.getRows(MultimediaObjectDescriptor.FIELDNAMES[0], videoIds);
 
     if (results.isEmpty()) {
       return new HashMap<>();
@@ -155,7 +159,7 @@ public class MultimediaObjectLookup {
   public List<String> lookUpVideoIds() {
     DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
     selector.open(MultimediaObjectDescriptor.ENTITY);
-    List<PrimitiveTypeProvider> ids = selector.getAll("id");
+    List<PrimitiveTypeProvider> ids = selector.getAll(MultimediaObjectDescriptor.FIELDNAMES[0]);
     Set<String> uniqueIds = new HashSet<>();
     for (PrimitiveTypeProvider l : ids) {
       uniqueIds.add(l.getString());
