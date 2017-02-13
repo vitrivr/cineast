@@ -144,7 +144,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
             LOGGER.info("Processing file {}.", path);
 
             /* Create new MultimediaObjectDescriptor for new file. */
-            MultimediaObjectDescriptor descriptor = MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, path, context.sourceType());
+            MultimediaObjectDescriptor descriptor = MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, this.context.inputPath().relativize(path), context.sourceType());
             if (!this.checkAndPersistMultimediaObject(descriptor)) continue;
 
             /* Pass file to decoder and decoder to segmenter. */
