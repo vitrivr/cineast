@@ -46,11 +46,11 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
         BufferedImage image = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
         if (image != null) {
             DescribeImageDense<GrayU8, TupleDesc_F64> hog = HOGHelper.getHOGDescriptors(image);
-            if (hog != null) {
+            if (hog != null && hog.getDescriptions().size() > 0) {
                 float[] histogram_f = this.histogram(true, hog.getDescriptions());
                 this.persist(shot.getId(), new FloatVectorImpl(histogram_f));
             } else {
-                LOGGER.warn("Segment {} did not have a most representative frame. No descriptor has been generated!");
+                LOGGER.warn("No HOG feature could be extracted for segment {}. This is not necessarily an error!");
             }
         }
 
@@ -75,7 +75,7 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
         BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
         if (image != null) {
             DescribeImageDense<GrayU8, TupleDesc_F64> hog = HOGHelper.getHOGDescriptors(image);
-            if (hog != null) {
+            if (hog != null && hog.getDescriptions().size() > 0) {
                 float[] histogram_f = this.histogram(true, hog.getDescriptions());
                 results.addAll(this.getSimilar(histogram_f, qc));
             }
