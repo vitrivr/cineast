@@ -19,7 +19,10 @@ import java.util.List;
  * holds either 12, 24 or 36 entries.
  *
  * [1] Gómez, E. (2006). Tonal description of polyphonic audio for music content processing.
- *    INFORMS Journal on Computing, 18(3), 294–304. http://doi.org/10.1287/ijoc.1040.0126
+ *     INFORMS Journal on Computing, 18(3), 294–304. http://doi.org/10.1287/ijoc.1040.0126
+ *
+ * [2] Kurth F. & Müller M. (2008). Efficient Index-Based Audio Matching.
+ *     IEEE TRANSACTIONS ON AUDIO, SPEECH, AND LANGUAGE PROCESSING
  *
  * @see STFT
  * @see Spectrum
@@ -138,7 +141,8 @@ public class HPCP {
 
     /**
      * Returns the raw, un-normalized HPCP float array.
-     *
+     * 
+     * @param idx Zero based index of the time-frame for which to return the HPCP.
      * @return Float array containing the HPCP.
      */
     public float[] getHpcp(int idx) {
@@ -146,9 +150,11 @@ public class HPCP {
     }
 
     /**
+     * Returns the HPCP vectorwhich has been normalized by the sum of its components as
+     * proposed in [2].
      *
-     * @param idx
-     * @return
+     * @param idx Zero based index of the time-frame for which to return the HPCP.
+     * @return float array containing the sum-normalized HPCP for the given index.
      */
     public float[] getSumNormalizedHpcp(int idx) {
         float[] normHpcp = hpcp.get(idx);
@@ -159,9 +165,11 @@ public class HPCP {
     }
 
     /**
+     * Returns the HPCP vector which has been normalized by the value of its maximum component
+     * as proposed in the original paper ([1]).
      *
-     * @param idx
-     * @return
+     * @param idx Zero based index of the time-frame for which to return the HPCP.
+     * @return float array containing the max-normalized HPCP for the given index.
      */
     public float[] getMaxNormalizedHpcp(int idx) {
         float[] normHpcp = hpcp.get(idx);
@@ -189,20 +197,6 @@ public class HPCP {
 
     /**
      *
-     */
-    public List<float[]> sorted() {
-        ArrayList<float[]> sorted = new ArrayList<>(this.hpcp);
-        final float[] normalized = this.getMeanHpcp();
-        sorted.sort((o1, o2) -> {
-            double dist1 = MathHelper.euclideanDist(o1, normalized);
-            double dist2 = MathHelper.euclideanDist(o2, normalized);
-            return (int)(dist1-dist2);
-        });
-        return sorted;
-    }
-
-    /**
-     *
      * @return
      */
     public int size() {
@@ -210,6 +204,7 @@ public class HPCP {
     }
 
     /**
+     * Getter for the HPCP resolution.
      *
      * @return
      */
