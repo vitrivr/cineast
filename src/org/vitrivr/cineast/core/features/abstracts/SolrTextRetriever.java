@@ -66,7 +66,7 @@ public abstract class SolrTextRetriever implements Retriever {
     }
 
     HashMap<String, String> parameters = new HashMap<>();
-    parameters.put("rows", Integer.toString(Config.getRetrieverConfig().getMaxResultsPerModule()));
+    parameters.put("rows", Integer.toString(Config.sharedConfig().getRetriever().getMaxResultsPerModule()));
 
     List<SubtitleItem> subItems = sc.getSubtitleItems();
     

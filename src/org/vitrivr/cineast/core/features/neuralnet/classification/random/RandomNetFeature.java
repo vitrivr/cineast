@@ -1,5 +1,11 @@
 package org.vitrivr.cineast.core.features.neuralnet.classification.random;
 
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Supplier;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
@@ -16,12 +22,6 @@ import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.TimeHelper;
-
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * RandomNet Feature Module
@@ -52,7 +52,7 @@ public class RandomNetFeature extends NeuralNetFeature {
      */
     @SuppressWarnings("unused")
     public RandomNetFeature() {
-        this(Config.getNeuralNetConfig());
+        this(Config.sharedConfig().getNeuralnet());
     }
 
     public RandomNetFeature(NeuralNetConfig neuralNetConfig) {

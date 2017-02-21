@@ -144,43 +144,4 @@ public class Config {
         return sharedConfig().imagecache;
     }
 
-    @Deprecated
-    public static ExtractionPipelineConfig getExtractorConfig() {
-        return  sharedConfig().extractor;
-    }
-
-    @Deprecated
-    public static RetrieverConfig getRetrieverConfig() {
-        return  sharedConfig().retriever;
-    }
-
-    @Deprecated
-    public static DecoderConfig getDecoderConfig() {
-        return  sharedConfig().getDecoder();
-    }
-
-    @Deprecated
-    public static APIConfig getApiConfig() {
-        return  sharedConfig().api;
-    }
-
-    @Deprecated
-    public static DatabaseConfig getDatabaseConfig() {
-        return  sharedConfig().database;
-    }
-
-    @Deprecated
-    public static QueryConfig getQueryConfig() {
-        return sharedConfig().query;
-    }
-
-    @Deprecated
-    public static NeuralNetConfig getNeuralNetConfig() {
-        return sharedConfig().neuralnet;
-    }
-
-    @Deprecated
-    public static VisualizationConfig getVisualizationConfig() {
-        return sharedConfig().visualization;
-    }
 }

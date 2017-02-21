@@ -1,24 +1,27 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
-import org.vitrivr.cineast.core.db.*;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.MathHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import gnu.trove.map.TObjectDoubleMap;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 public abstract class AbstractFeatureModule implements Extractor, Retriever {
     protected SimpleFeatureDescriptorWriter writer;
@@ -104,7 +107,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 	 */
 	protected List<StringDoublePair> getSimilar(float[] vector, QueryConfig qc) {
 	  qc = setQueryConfig(qc);
-		List<StringDoublePair> distances = this.selector.getNearestNeighbours(Config.getRetrieverConfig().getMaxResultsPerModule(), vector, "feature", qc);
+		List<StringDoublePair> distances = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector, "feature", qc);
 		if(distances == null){
 			return new ArrayList<>(1);
 		}

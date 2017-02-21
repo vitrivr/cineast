@@ -1,6 +1,9 @@
 package org.vitrivr.cineast.api;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.Reader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,27 +23,26 @@ import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Position;
-import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.db.DBResultCache;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.explorative.PlaneHandler;
+import org.vitrivr.cineast.explorative.PlaneManager;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-
-import org.vitrivr.cineast.explorative.PlaneManager;
-import org.vitrivr.cineast.explorative.PlaneHandler;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,
@@ -140,7 +142,7 @@ public class JSONAPIThread extends Thread {
 				TObjectDoubleHashMap<String> map;
 
 				//String resultCacheName = clientJSON.get("resultname") == null ? null : clientJSON.get("resultname").asString(); 
-				QueryConfig qconf = Config.getQueryConfig();
+				QueryConfig qconf = Config.sharedConfig().getQuery();
 				
 				
 				for (JsonValue category : categories) {
@@ -188,7 +190,7 @@ public class JSONAPIThread extends Thread {
 
 					Collections.sort(list, StringDoublePair.COMPARATOR);
 
-					int MAX_RESULTS = Config.getRetrieverConfig().getMaxResults();
+					int MAX_RESULTS = Config.sharedConfig().getRetriever().getMaxResults();
 
 					if (list.size() > MAX_RESULTS) {
 						list = list.subList(0, MAX_RESULTS);
@@ -220,7 +222,7 @@ public class JSONAPIThread extends Thread {
 					resultCacheName = null;
 				}
 				
-				QueryConfig qconf = Config.getQueryConfig();
+				QueryConfig qconf = Config.sharedConfig().getQuery();
 				
 				DBResultCache.createIfNecessary(resultCacheName);
 				
@@ -263,7 +265,7 @@ public class JSONAPIThread extends Thread {
 					resultCacheName = null;
 				}
 				
-				QueryConfig qconf = Config.getQueryConfig();
+				QueryConfig qconf = Config.sharedConfig().getQuery();
 				
 				DBResultCache.createIfNecessary(resultCacheName);
 				
@@ -322,7 +324,7 @@ public class JSONAPIThread extends Thread {
 
 						Collections.sort(list, StringDoublePair.COMPARATOR);
 
-						int MAX_RESULTS = Config.getRetrieverConfig().getMaxResults();
+						int MAX_RESULTS = Config.sharedConfig().getRetriever().getMaxResults();
 
 						if (list.size() > MAX_RESULTS) {
 							list = list.subList(0, MAX_RESULTS);
@@ -390,7 +392,7 @@ public class JSONAPIThread extends Thread {
 			case "getLabels":{
 				LOGGER.debug("Label API call starting");
 				JsonArray jsonConcepts = new JsonArray();
-				DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+				DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
 				selector.open(NeuralNetFeature.getClassTableName());
 
 				List<PrimitiveTypeProvider> queryRes = selector.getAll(NeuralNetFeature.getHumanLabelColName());
@@ -437,7 +439,7 @@ public class JSONAPIThread extends Thread {
 
 			case "getVisualizations":{
 				JsonArray visual = new JsonArray();
-				for(Class<? extends Visualization> visualization: Config.getVisualizationConfig().getVisualizations()){
+				for(Class<? extends Visualization> visualization: Config.sharedConfig().getVisualization().getVisualizations()){
 					Visualization obj = visualization.newInstance();
 					JsonObject element = new JsonObject();
 					element.add("className", visualization.getCanonicalName());
@@ -456,7 +458,7 @@ public class JSONAPIThread extends Thread {
 
 			case "getVisualizationCategories":{
 				JsonArray visual = new JsonArray();
-				for(String el: Config.getVisualizationConfig().getVisualizationCategories()){
+				for(String el: Config.sharedConfig().getVisualization().getVisualizationCategories()){
 					visual.add(el);
 				}
 				_return.set("visualizationCategories", visual);
@@ -472,7 +474,7 @@ public class JSONAPIThread extends Thread {
 					_return.add("visualizationError", "Invalid visualizationClass!");
 					break;
 				}
-				if(!Config.getVisualizationConfig().isValidVisualization(visualizationClass)){
+				if(!Config.sharedConfig().getVisualization().isValidVisualization(visualizationClass)){
 					_return.add("visualizationError", "Invalid visualizationClass!");
 					break;
 				}
@@ -496,7 +498,7 @@ public class JSONAPIThread extends Thread {
 				Visualization visualization = (Visualization)visualizationClass.newInstance();
 				String result = VisualizationCache.getFromCache(visualization.getDisplayName(), visualizationType, objectIds);
 				if(result == null) {
-					visualization.init(Config.getDatabaseConfig().getSelectorSupplier());
+					visualization.init(Config.sharedConfig().getDatabase().getSelectorSupplier());
 					switch(visualizationType){ //I'm not completely happy that I have to use the same switch cases again, should be possible in a better way
 						case VISUALIZATION_MULTIMEDIAOBJECT:
 							result = visualization.visualizeMultimediaobject(objectIds.get(0));

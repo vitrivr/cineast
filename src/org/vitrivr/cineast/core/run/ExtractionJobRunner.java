@@ -13,12 +13,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.shotboundary.ShotBoundaryDecoder;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
 import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
@@ -79,8 +79,8 @@ public class ExtractionJobRunner implements Runnable{
 	  
 	  Set<Extractor> rset = new HashSet<>();
 	  
-	  for(String category : Config.getRetrieverConfig().getRetrieverCategories()){
-	    for(Retriever r : Config.getRetrieverConfig().getRetrieversByCategory(category).keySet()){
+	  for(String category : Config.sharedConfig().getRetriever().getRetrieverCategories()){
+	    for(Retriever r : Config.sharedConfig().getRetriever().getRetrieversByCategory(category).keySet()){
 	      if(r instanceof Extractor){
 	        rset.add((Extractor) r);
 	      }
@@ -455,10 +455,10 @@ public class ExtractionJobRunner implements Runnable{
 			return;
 		}
 		
-		VideoDecoder vd = Config.getDecoderConfig().newVideoDecoder(this.inputFile);
+		VideoDecoder vd = Config.sharedConfig().getDecoder().newVideoDecoder(this.inputFile);
 		
 		if(!this.entryExists){
-  		PersistencyWriter<?> writer = Config.getDatabaseConfig().getWriterSupplier().get();
+  		PersistencyWriter<?> writer = Config.sharedConfig().getDatabase().getWriterSupplier().get();
   		writer.setFieldNames("id", "type", "name", "path", "width", "height", "framecount", "duration");
   		writer.open("cineast_multimediaobject");
   		PersistentTuple tuple = writer.generateTuple(inputId, mediaType.getId(), inputName, inputFile.getAbsolutePath(), vd.getWidth(), vd.getHeight(), vd.getTotalFrameCount(), vd.getTotalFrameCount() / vd.getFPS());
@@ -470,7 +470,7 @@ public class ExtractionJobRunner implements Runnable{
 		  lookup.close();
 		}
 		
-		ShotSegmenter segmenter = new ShotSegmenter(vd, inputId, Config.getDatabaseConfig().getWriterSupplier().get(), knownShots);
+		ShotSegmenter segmenter = new ShotSegmenter(vd, inputId, Config.sharedConfig().getDatabase().getWriterSupplier().get(), knownShots);
 		
 		ShotDispatcher dispatcher = new ShotDispatcher(this.extractors, new DefaultExtractorInitializer(), segmenter);
 

@@ -25,13 +25,13 @@ import org.vitrivr.cineast.core.util.LogHelper;
 @Deprecated
 public class ShotDispatcher implements Runnable, ExecutionTimeCounter {
 
-	private static final int TASK_QUEUE_SIZE = Config.getExtractorConfig().getTaskQueueSize();
-	private static final int THREAD_COUNT = Config.getExtractorConfig().getThreadPoolSize();
+	private static final int TASK_QUEUE_SIZE = Config.sharedConfig().getRetriever().getTaskQueueSize();
+	private static final int THREAD_COUNT = Config.sharedConfig().getRetriever().getThreadPoolSize();
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private List<Extractor> extractors;
-	private LinkedBlockingQueue<SegmentContainer> shotQueue = new LinkedBlockingQueue<SegmentContainer>(Config.getExtractorConfig().getShotQueueSize());
+	private LinkedBlockingQueue<SegmentContainer> shotQueue = new LinkedBlockingQueue<SegmentContainer>(Config.sharedConfig().getExtractor().getShotQueueSize());
 	private ExecutorService executor;
 	private ShotProviderThread providerThread;
 	private ExtractorInitializer initializer;

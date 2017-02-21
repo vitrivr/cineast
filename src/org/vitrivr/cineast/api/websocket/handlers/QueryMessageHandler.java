@@ -56,7 +56,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
             }
         }
 
-        QueryConfig qconf = Config.getQueryConfig();
+        QueryConfig qconf = Config.sharedConfig().getQuery();
         List<StringDoublePair> result;
         for(String category : categoryMap.keySet()){
             TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
@@ -92,7 +92,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
 
                 Collections.sort(list, StringDoublePair.COMPARATOR);
 
-                int MAX_RESULTS = Config.getRetrieverConfig().getMaxResults();
+                int MAX_RESULTS = Config.sharedConfig().getRetriever().getMaxResults();
                 if (list.size() > MAX_RESULTS) {
                     list = list.subList(0, MAX_RESULTS);
                 }

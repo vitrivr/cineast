@@ -1,9 +1,5 @@
 package org.vitrivr.cineast.art.modules.visualization;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,12 +8,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+
 /**
  * Created by sein on 15.09.16.
  */
 public class VisualizationCache {
-  private static final String cachePath = Config.getVisualizationConfig().getCachePath();
-  private static final boolean cacheEnabled = Config.getVisualizationConfig().isCacheEnabled();
+  private static final String cachePath = Config.sharedConfig().getVisualization().getCachePath();
+  private static final boolean cacheEnabled = Config.sharedConfig().getVisualization().isCacheEnabled();
 
   private static Logger LOGGER = LogManager.getLogger();
 

@@ -6,7 +6,6 @@ import java.util.List;
 import org.vitrivr.cineast.api.API;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
@@ -17,7 +16,7 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
 public class ContinousRetrievalLogic {
 
 	public static List<StringDoublePair> retrieve(QueryContainer qc, String category, QueryConfig config) {
-		TObjectDoubleHashMap<Retriever> retrievers = Config.getRetrieverConfig().getRetrieversByCategory(category);
+		TObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever().getRetrieversByCategory(category);
 		if(retrievers.isEmpty()){
 			return new ArrayList<StringDoublePair>(1);
 		}
@@ -25,7 +24,7 @@ public class ContinousRetrievalLogic {
 	}
 
 	public static List<StringDoublePair> retrieve(String id, String category, QueryConfig config) {
-		TObjectDoubleHashMap<Retriever> retrievers = Config.getRetrieverConfig().getRetrieversByCategory(category);
+		TObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever().getRetrieversByCategory(category);
 		if(retrievers.isEmpty()){
 			return new ArrayList<StringDoublePair>(1);
 		}

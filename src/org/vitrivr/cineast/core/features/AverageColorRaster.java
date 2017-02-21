@@ -213,7 +213,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
 
 	private List<StringDoublePair> getSimilar(float[] raster, float[] hist, QueryConfig qc){
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
+		int limit = Config.sharedConfig().getRetriever().getMaxResultsPerModule() * 5;
 		
 		qc = QueryConfig.notNull(qc).setDistanceIfEmpty(Distance.chisquared);
 		

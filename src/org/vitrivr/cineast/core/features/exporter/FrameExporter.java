@@ -18,7 +18,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 
 public class FrameExporter implements Extractor {
 
-	private File folder = new File(Config.getExtractorConfig().getOutputLocation(), "exportedFrames");
+	private File folder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "exportedFrames");
 	private int offset;
 	private String format = "png";
 	

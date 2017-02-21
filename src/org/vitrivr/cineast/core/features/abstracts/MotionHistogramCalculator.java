@@ -106,7 +106,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	
 	protected List<StringDoublePair> getSimilar(float[] vector, QueryConfig qc) {
 	  qc = setQueryConfig(qc);
-		List<StringDoublePair> distances = this.selector.getNearestNeighbours(Config.getRetrieverConfig().getMaxResultsPerModule(), vector, this.fieldName, qc);
+		List<StringDoublePair> distances = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector, this.fieldName, qc);
 		for(StringDoublePair sdp : distances){
 			double dist = sdp.value;
 			sdp.value = MathHelper.getScore(dist, maxDist);

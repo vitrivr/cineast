@@ -30,7 +30,7 @@ public class RepresentativeFrameExporter implements Extractor {
 		this.phandler = supply.get();
 		this.phandler.open("cineast_representativeframes");
 		this.phandler.setFieldNames("id", "frame");
-		this.folder = new File(Config.getExtractorConfig().getOutputLocation(), "representative_frames");
+		this.folder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "representative_frames");
 		this.folder.mkdirs();
 	}
 

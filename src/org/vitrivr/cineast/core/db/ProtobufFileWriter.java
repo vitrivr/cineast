@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ProtobufFileWriter extends ProtobufTupleGenerator{
 
-	private static File baseFolder = new File(Config.getExtractorConfig().getOutputLocation(), "proto");
+	private static File baseFolder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "proto");
   private static final Logger LOGGER = LogManager.getLogger();
 
 		
