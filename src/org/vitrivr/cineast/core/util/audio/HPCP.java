@@ -45,7 +45,7 @@ public class HPCP {
     }
 
     /** Reference frequency in Hz. Corresponds to the musical note A (A440 or A4) above the middle C. */
-    private static final double F_REF = 523.2511306012;
+    private static final double F_REF = 440.0f;
 
     /** Window-size parameter, which defaults to 4/3 semitones as per [1]. */
     private static final float WINDOW = 4f/3f;
