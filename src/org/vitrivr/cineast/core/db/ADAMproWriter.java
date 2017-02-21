@@ -82,18 +82,27 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
     ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
     QueryResultInfoMessage responce;
     try {
-
-      /* TODO: Review with Luca! */
-      if (f.get().getResponsesCount() > 0) {
-        responce = f.get().getResponses(0);
-        return responce.getResultsCount() > 0;
+      QueryResultsMessage qRMessage = f.get();
+      if(!qRMessage.hasAck()){
+        LOGGER.error("error in exists, no acc in QueryResultsMessage");
+        return false;
       }
+      AckMessage ack = qRMessage.getAck();
+      if(ack.getCode() != AckMessage.Code.OK){
+        LOGGER.error("error in exists: {}", ack.getMessage());
+        return false;
+      }
+      if(qRMessage.getResponsesCount() == 0){
+        LOGGER.error("error in exists, no QueryResultInfoMessage in QueryResultsMessage");
+        return false;
+      }
+      responce = qRMessage.getResponses(0);
     } catch (InterruptedException | ExecutionException e) {
       LOGGER.error("error in exists: {}", LogHelper.getStackTrace(e));
       return false;
     }
 
-    return false;
+    return responce.getResultsCount() > 0;
 
   }
 
