@@ -65,9 +65,6 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     /** */
     private static final int TARGET_FORMAT = AV_SAMPLE_FMT_S16;
 
-    /** */
-    private static final int BYTES_PER_SAMPLE = av_get_bytes_per_sample(TARGET_FORMAT);
-
     private long processedSamples = 0;
     private int currentFrameNumber = 0;
     private long framecount = 0;
@@ -121,36 +118,11 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
                         /* If queue is true; enqueue frame. */
                         if (queue) {
-                            /* Determine number of in / out samples based on codec settings. */
                             int in_samples = this.decodedFrame.nb_samples();
-
-                            /* Convert decoded frame. Break if resampling fails.*/
-                            if (swr_convert(this.swr_ctx, null, 0, this.decodedFrame.data(), in_samples) < 0) {
-                                LOGGER.error("Could not convert sample (FFMPEG swr_convert() failed).", this.getClass().getName());
-                                break;
-                            }
-
-                            /* Now drain buffer and write samples to queue. */
-                            while(true) {
-                                /* Estimate number of samples that were converted. */
-                                int out_samples = swr_get_out_samples(this.swr_ctx, 0);
-                                if (out_samples < BYTES_PER_SAMPLE * this.resampledFrame.channels()) break;
-
-                                /* Allocate output frame and read converted samples. If no sample was read -> break (draining completed). */
-                                av_samples_alloc(this.resampledFrame.data(), out_linesize, this.resampledFrame.channels(), out_samples, TARGET_FORMAT, 0);
-                                out_samples = swr_convert(this.swr_ctx, this.resampledFrame.data(), out_samples, null, 0);
-                                if (out_samples == 0) break;
-
-                                /* Allocate output buffer... */
-                                int buffersize = out_samples * BYTES_PER_SAMPLE * this.resampledFrame.channels();
-                                byte[] buffer = new byte[buffersize];
-                                this.resampledFrame.data(0).position(0).get(buffer);
-
-                                /* ... and add frame to queue. */
-                                this.frameQueue.add(new AudioFrame(this.processedSamples, this.samplerate, this.channels, buffer));
-
-                                /* Increment the number of processed samples. */
-                                this.processedSamples += out_samples;
+                            if (this.swr_ctx != null) {
+                                this.readResampled(in_samples);
+                            } else {
+                                this.readOriginal(in_samples);
                             }
                         }
                         readFrame = true;
@@ -163,6 +135,65 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
         return readFrame;
     }
+
+    /**
+     * Reads the decoded frames copies them directly into the AudioFrame data-structure.
+     *
+     * @param samples Number of samples returned by the decoder.
+     */
+    private void readOriginal(int samples) {
+        /* Allocate output buffer... */
+        int buffersize = samples * av_get_bytes_per_sample(this.decodedFrame.format()) * this.decodedFrame.channels();
+        byte[] buffer = new byte[buffersize];
+        this.decodedFrame.data(0).position(0).get(buffer);
+
+        /* ... and add frame to queue. */
+        this.frameQueue.add(new AudioFrame(this.processedSamples, this.decodedFrame.sample_rate(), this.decodedFrame.channels(), buffer));
+
+        /* Increment the number of processed samples. */
+        this.processedSamples += samples;
+    }
+
+
+    /**
+     * Reads the decoded frames and resamples them using the SWR-CTX. The resampled frames are then
+     * read to the AudioFrame data-structure.
+     *
+     * @param samples Number of samples returned by the decoder.
+     */
+    private void readResampled(int samples) {
+         /* Convert decoded frame. Break if resampling fails.*/
+        if (swr_convert(this.swr_ctx, null, 0, this.decodedFrame.data(), samples) < 0) {
+            LOGGER.error("Could not convert sample (FFMPEG swr_convert() failed).", this.getClass().getName());
+            return;
+        }
+
+        int bytes_per_sample = av_get_bytes_per_sample(TARGET_FORMAT);
+
+        /* Now drain buffer and write samples to queue. */
+        while(true) {
+            /* Estimate number of samples that were converted. */
+            int out_samples = swr_get_out_samples(this.swr_ctx, 0);
+            if (out_samples < bytes_per_sample * this.resampledFrame.channels()) break;
+
+            /* Allocate output frame and read converted samples. If no sample was read -> break (draining completed). */
+            av_samples_alloc(this.resampledFrame.data(), out_linesize, this.resampledFrame.channels(), out_samples, TARGET_FORMAT, 0);
+            out_samples = swr_convert(this.swr_ctx, this.resampledFrame.data(), out_samples, null, 0);
+            if (out_samples == 0) break;
+
+             /* Allocate output buffer... */
+            int buffersize = out_samples * bytes_per_sample * this.resampledFrame.channels();
+            byte[] buffer = new byte[buffersize];
+            this.resampledFrame.data(0).position(0).get(buffer);
+
+            /* ... and add frame to queue. */
+            this.frameQueue.add(new AudioFrame(this.processedSamples, this.samplerate, this.channels, buffer));
+
+            /* Increment the number of processed samples. */
+            this.processedSamples += out_samples;
+        }
+    }
+
 
     @Override
     public void seekToFrame(int frameNumber) {
@@ -253,8 +284,8 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         /* Allocate the re-sample context. */
         this.swr_ctx = swr_alloc_set_opts(null, channellayout, TARGET_FORMAT, this.samplerate, this.pCodecCtx.channel_layout(), this.pCodecCtx.sample_fmt(), this.pCodecCtx.sample_rate(), 0, null);
         if(swr_init(this.swr_ctx) < 0) {
-            LOGGER.error("Error, Could not open re-sample context.");
-            return null;
+            this.swr_ctx = null;
+            LOGGER.warn("Warning! Could not open re-sample context - original format will be kept!");
         }
 
         /* Initialize decodedFrame. */
@@ -327,7 +358,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         av_free(this.resampledFrame);
 
         /* Frees the SWR context. */
-        swr_free(this.swr_ctx);
+        if (this.swr_ctx != null) swr_free(this.swr_ctx);
 
         /* Close the codec */
         avcodec_close(this.pCodecCtx);
