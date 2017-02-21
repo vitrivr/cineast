@@ -26,5 +26,9 @@ public class AverageColorRasterReduced11 extends AverageColorRaster {
 	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
 		supply.get().createFeatureEntity("features_AverageColorRasterReduced11", true, "hist", "raster");
 	}
-	
+
+	@Override
+	public void dropPersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().dropEntity("features_AverageColorRasterReduced11");
+	}
 }

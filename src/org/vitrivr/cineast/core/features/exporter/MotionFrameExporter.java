@@ -92,4 +92,6 @@ private static File folder = new File(Config.getExtractorConfig().getOutputLocat
 	@Override
 	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {}
 
+	@Override
+	public void dropPersistentLayer(Supplier<EntityCreator> supply) {}
 }

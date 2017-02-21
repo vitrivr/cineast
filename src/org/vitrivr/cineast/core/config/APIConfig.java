@@ -1,110 +1,89 @@
 package org.vitrivr.cineast.core.config;
 
-import com.eclipsesource.json.JsonObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class APIConfig {
 
-	private final int jsonApiPort;
-	private final boolean enableJson;
-	private final boolean allowExtraction;
-	private final boolean enableCLI;
-	
-	public static final int DEFAULT_JSON_API_PORT = 12345;
-	public static final boolean DEFAULT_ALLOW_EXTRACTION = false;
-	public static final boolean DEFAULT_ENABLE_CLI = true;
-	public static final boolean DEFAULT_ENABLE_JSON = true;
-	
-	public APIConfig(int jsonApiPort, boolean enableJson, boolean allowExtraction, boolean enableCLI){
-		if(jsonApiPort < 1){
-			throw new IllegalArgumentException("jsonApiPort bust be > 0");
+	private boolean enableWebsocket = true;
+	private boolean enableRest = false;
+	private int httpPort = 4567;
+
+	private boolean enableLegacy = false;
+	private int legacyPort = 12345;
+
+	private boolean allowExtraction = true;
+	private boolean enableCLI = false;
+
+	private int threadPoolSize = 8;
+
+	@JsonCreator
+	public APIConfig() {
+
+	}
+
+	@JsonProperty
+	public boolean getEnableWebsocket(){
+		return this.enableWebsocket;
+	}
+	public void setEnableWebsocket(boolean enableWebsocket) {
+		this.enableWebsocket = enableWebsocket;
+	}
+
+	@JsonProperty
+	public boolean getEnableRest() {return this.enableRest;}
+	public void setEnableRest(boolean enableRest) {
+		this.enableRest = enableRest;
+	}
+
+	@JsonProperty
+	public int getHttpPort() {
+		return httpPort;
+	}
+	public void setHttpPort(int httpPort) {
+		if(httpPort < 1){
+			throw new IllegalArgumentException("httpPort must be > 0");
 		}
-		this.jsonApiPort = jsonApiPort;
-		this.enableJson = enableJson;
-		this.allowExtraction = allowExtraction;
-		this.enableCLI = enableCLI;
+		this.httpPort = httpPort;
 	}
-	
-	public APIConfig(){
-		this(DEFAULT_JSON_API_PORT, DEFAULT_ENABLE_JSON, DEFAULT_ALLOW_EXTRACTION, DEFAULT_ENABLE_CLI);
+
+	@JsonProperty
+	public boolean getEnableLegacy() {
+		return enableLegacy;
 	}
-	
-	public int getJsonApiPort(){
-		return this.jsonApiPort;
+	public void setEnableLegacy(boolean enableLegacy) {
+		this.enableLegacy = enableLegacy;
 	}
-	
-	public boolean getEnableJsonAPI(){
-		return this.enableJson;
+
+	@JsonProperty
+	public int getLegacyPort() {
+		return legacyPort;
 	}
-	
+	public void setLegacyPort(int legacyPort) {
+		this.legacyPort = legacyPort;
+	}
+
+	@JsonProperty
 	public boolean getAllowExtraction(){
 		return this.allowExtraction;
 	}
-	
+	public void setAllowExtraction(boolean allowExtraction) {
+		this.allowExtraction = allowExtraction;
+	}
+
+	@JsonProperty
 	public boolean getEnableCli(){
 		return this.enableCLI;
 	}
-	
-	/**
-	 * 
-	 * expects a json object of the follwing form:
-	 * <pre>
-	 * {
-	 * 	"jsonApiPort" : (int)
-	 * 	"enableJson" : (boolean)
-	 * 	"allowExtraction" : (boolean)
-	 * 	"enableCLI" : (boolean)
-	 * }
-	 * </pre>
-	 * @throws NullPointerException in case provided JsonObject is null
-	 * @throws IllegalArgumentException if any of the specified parameters does not have the expected type or is outside the valid range
-	 */
-	public static APIConfig parse(JsonObject obj) throws NullPointerException, IllegalArgumentException{
-		if(obj == null){
-			throw new NullPointerException("JsonObject was null");
-		}
-		
-		int jsonApiPort = DEFAULT_JSON_API_PORT;
-		if(obj.get("jsonApiPort") != null){
-			try{
-				jsonApiPort = obj.get("jsonApiPort").asInt();
-			}catch(UnsupportedOperationException e){
-				throw new IllegalArgumentException("'jsonApiPort' was not an integer in API configuration");
-			}
-			
-			if(jsonApiPort <= 0 || jsonApiPort >= 65535){
-				throw new IllegalArgumentException("'jsonApiPort' must be > 0 and < 65536");
-			}
-		}
-		
-		boolean enableJson = DEFAULT_ENABLE_JSON;
-		if(obj.get("enableJson") != null){
-			try{
-				enableJson = obj.get("enableJson").asBoolean();
-			}catch(UnsupportedOperationException e){
-				throw new IllegalArgumentException("'enableJson' was not a boolean in API configuration");
-			}
-		}
-		
-		boolean allowExtraction = DEFAULT_ALLOW_EXTRACTION;
-		if(obj.get("allowExtraction") != null){
-			try{
-				allowExtraction = obj.get("allowExtraction").asBoolean();
-			}catch(UnsupportedOperationException e){
-				throw new IllegalArgumentException("'allowExtraction' was not a boolean in API configuration");
-			}
-		}
-		
-		boolean enableCLI = DEFAULT_ENABLE_CLI;
-		if(obj.get("enableCLI") != null){
-			try{
-				enableCLI = obj.get("enableCLI").asBoolean();
-			}catch(UnsupportedOperationException e){
-				throw new IllegalArgumentException("'enableCLI' was not a boolean in API configuration");
-			}
-		}
-		
-		return new APIConfig(jsonApiPort, enableJson, allowExtraction, enableCLI);
-		
+	public void setEnableCLI(boolean enableCLI) {
+		this.enableCLI = enableCLI;
 	}
-	
+
+	@JsonProperty
+	public int getThreadPoolSize() {
+		return threadPoolSize;
+	}
+	public void setThreadPoolSize(int threadPoolSize) {
+		this.threadPoolSize = threadPoolSize;
+	}
 }

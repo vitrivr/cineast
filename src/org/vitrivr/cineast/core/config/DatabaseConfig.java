@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.config;
 
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.ADAMproWriter;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -16,12 +18,11 @@ import org.vitrivr.cineast.core.setup.NoEntityCreator;
 import com.eclipsesource.json.JsonObject;
 
 public final class DatabaseConfig {
-	
-	private final String host;
-	private final int port;
-	private final boolean plaintext;
-	private final Writer writer;
-	private final Selector selector;
+	private String host = "127.0.0.1";
+	private int port =  5890;
+	private boolean plaintext = false;
+	private Writer writer = Writer.ADAMPRO;
+	private Selector selector = Selector.ADAMPRO;
 	
 	private static final PersistencyWriterSupplier ADAMPRO_WRITER_SUPPLY = () -> new ADAMproWriter();	
 	private static final PersistencyWriterSupplier PROTO_WRITER_SUPPLY = () -> new ProtobufFileWriter();
@@ -43,54 +44,58 @@ public final class DatabaseConfig {
 	  NONE,
 		ADAMPRO
 	}
-	
-	public static final String DEFAULT_HOST = "127.0.0.1";
-	public static final int DEFAULT_PORT = 5890;
-	public static final boolean DEFAULT_PLAINTEXT = false;
-	public static final Writer DEFAULT_WRITER = Writer.ADAMPRO;
-	public static final Selector DEFAULT_SELECTOR = Selector.ADAMPRO;
-	
-	
-	public DatabaseConfig(String host, int port, boolean plaintext, Writer writer, Selector selector){
-		if(host == null){
-			throw new NullPointerException("Database location cannot be null");
-		}
-		if(port < 1 || port > 65535){
-			throw new IllegalArgumentException(port + " is outside of valid port range");
-		}
-		
-		this.host = host;
-		this.port = port;
-		this.plaintext = plaintext;
-		this.writer = writer;
-		this.selector = selector;
+
+	@JsonCreator
+	public DatabaseConfig() {
+
 	}
-	
-	public DatabaseConfig(){
-		this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_PLAINTEXT, DEFAULT_WRITER, DEFAULT_SELECTOR);
-	}
-	
-	
+
+	@JsonProperty
 	public String getHost(){
 		return this.host;
 	}
-	
+	public void setHost(String host) {
+		if(host == null){
+			throw new NullPointerException("Database location cannot be null");
+		}
+		this.host = host;
+	}
+
+	@JsonProperty
 	public int getPort(){
 		return this.port;
 	}
-	
+	public void setPort(int port) {
+		if(port < 1 || port > 65535){
+			throw new IllegalArgumentException(port + " is outside of valid port range");
+		}
+		this.port = port;
+	}
+
+	@JsonProperty
 	public boolean getPlaintext(){
 		return this.plaintext;
 	}
-	
+	public void setPlaintext(boolean plaintext) {
+		this.plaintext = plaintext;
+	}
+
+	@JsonProperty
 	public Writer getWriter(){
 		return this.writer;
 	}
-	
+	public void setWriter(Writer writer) {
+		this.writer = writer;
+	}
+
+	@JsonProperty
 	public Selector getSelector(){
 		return this.selector;
 	}
-	
+	public void setSelector(Selector selector) {
+		this.selector = selector;
+	}
+
 	public PersistencyWriterSupplier getWriterSupplier(){
 		switch(this.writer){
 		case ADAMPRO:
@@ -125,84 +130,6 @@ public final class DatabaseConfig {
       return NO_CREATOR_SUPPLY;
     default:
       throw new IllegalStateException("no supplier for EntityCreator " + this.selector);
-      
     }
-	}
-	
-	/**
-	 * 
-	 * expects a json object of the follwing form:
-	 * <pre>
-	 * {
-	 * 	"host" : (string)
-	 * 	"port" : (int)
-	 * 	"plaintext" : (boolean)
-	 *  "writer" : PROTO | JSON | ADAMPRO
-	 *  "selector" : NONE | ADAMPRO
-	 * }
-	 * </pre>
-	 * @throws NullPointerException in case provided JsonObject is null
-	 * @throws IllegalArgumentException in case one of the parameters is not of the correct type or not within the valid range
-	 */
-	public static DatabaseConfig parse(JsonObject obj) throws NullPointerException, IllegalArgumentException{
-		if(obj == null){
-			throw new NullPointerException("JsonObject was null");
-		}
-		
-		String host = DEFAULT_HOST;
-		if(obj.get("host") != null){
-			try{
-				host = obj.get("host").asString();
-			} catch(UnsupportedOperationException notastring){
-				throw new IllegalArgumentException("'host' was not a string in database configuration");
-			}
-		}
-		
-		int port = DEFAULT_PORT;
-		if(obj.get("port") != null){
-			try{
-				port = obj.get("port").asInt();
-			} catch(UnsupportedOperationException notastring){
-				throw new IllegalArgumentException("'port' was not an integer in database configuration");
-			}
-		}
-		
-		boolean plaintext = DEFAULT_PLAINTEXT;
-		if(obj.get("plaintext") != null){
-			try{
-				plaintext = obj.get("plaintext").asBoolean();
-			} catch(UnsupportedOperationException notastring){
-				throw new IllegalArgumentException("'plaintext' was not a boolean in database configuration");
-			}
-		}
-		
-		Writer writer = DEFAULT_WRITER;
-		if(obj.get("writer") != null){
-			String writerName = "";
-			try{
-				writerName = obj.get("writer").asString();
-				writer = Writer.valueOf(writerName);
-			} catch(UnsupportedOperationException notastring){
-				throw new IllegalArgumentException("'writer' was not a string in database configuration");
-			} catch(IllegalArgumentException notawriter){
-				throw new IllegalArgumentException("'" + writerName + "' is not a valid value for 'writer'");
-			}
-		}
-		
-		Selector selector = DEFAULT_SELECTOR;
-		if(obj.get("selector") != null){
-			String selectorName = "";
-			try{
-				selectorName = obj.get("selector").asString();
-				selector = Selector.valueOf(selectorName);
-			} catch(UnsupportedOperationException notastring){
-				throw new IllegalArgumentException("'selector' was not a string in database configuration");
-			} catch(IllegalArgumentException notawriter){
-				throw new IllegalArgumentException("'" + selectorName + "' is not a valid value for 'selector'");
-			}
-		}
-		
-		return new DatabaseConfig(host, port, plaintext, writer, selector);
-		
 	}
 }

@@ -7,7 +7,7 @@ import org.vitrivr.cineast.core.data.Shot;
 import org.vitrivr.cineast.core.data.providers.SegmentProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Deprecated
 public class ShotSegmenter implements SegmentProvider{
 	
 	private static final double THRESHOLD = 0.05;
@@ -90,10 +91,10 @@ public class ShotSegmenter implements SegmentProvider{
 		
 		SegmentDescriptor bounds = this.knownShotBoundaries.size() > 0 ? this.knownShotBoundaries.remove(0) : null;
 		
-		if (bounds != null && frame.getId() >= bounds.getStartFrame() && frame.getId() <= bounds.getEndFrame()){
+		if (bounds != null && frame.getId() >= bounds.getStart() && frame.getId() <= bounds.getEnd()){
 			
 			_return.addFrame(frame);
-			queueFrames(bounds.getEndFrame() - bounds.getStartFrame());
+			queueFrames(bounds.getEnd() - bounds.getStart());
 			do{
 				frame = this.frameQueue.poll();
 				if(frame != null){
@@ -102,9 +103,9 @@ public class ShotSegmenter implements SegmentProvider{
 					break;
 				}
 				
-			}while(frame.getId() < bounds.getEndFrame());
+			}while(frame.getId() < bounds.getEnd());
 			
-			_return.setShotId(bounds.getSegmentId());
+			_return.setId(bounds.getSegmentId());
 			addSubtitleItems(_return);
 			
 			idCounter.incrementAndGet();
@@ -169,9 +170,9 @@ public class ShotSegmenter implements SegmentProvider{
 		}
 		
 		int shotNumber = idCounter.incrementAndGet();
-		String shotId = MediaType.generateId(MediaType.VIDEO, movieId, shotNumber);
+		String shotId = MediaType.generateSegmentId(MediaType.VIDEO, movieId, shotNumber);
 		
-		shot.setShotId(shotId);
+		shot.setId(shotId);
 		addSubtitleItems(shot);
 		
 		
@@ -203,6 +204,7 @@ public class ShotSegmenter implements SegmentProvider{
 	
 }
 
+@Deprecated
 class DoublePair<K>{
 	K first;
 	double second;

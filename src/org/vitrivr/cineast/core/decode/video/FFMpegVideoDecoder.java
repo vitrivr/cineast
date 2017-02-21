@@ -43,6 +43,7 @@ import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 
 @SuppressWarnings("deprecation") //some of the new API replacing the deprecated one appears to be not yet available which is why the deprecated one has to be used.
+@Deprecated
 public class FFMpegVideoDecoder implements VideoDecoder {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -67,7 +68,7 @@ public class FFMpegVideoDecoder implements VideoDecoder {
 
   private  AVDictionary    optionsDict = null;
   private SwsContext sws_ctx = null;
-  
+
   public FFMpegVideoDecoder(File file){
     
     if(!file.exists()){
@@ -135,9 +136,9 @@ public class FFMpegVideoDecoder implements VideoDecoder {
     
     this.originalWidth = pCodecCtx.width();
     this.originalHeight = pCodecCtx.height();
-    
-    if(this.originalWidth > Config.getDecoderConfig().getMaxFrameWidth() || this.originalHeight > Config.getDecoderConfig().getMaxFrameHeight()){
-      float scaleDown = Math.min((float)Config.getDecoderConfig().getMaxFrameWidth() / (float)this.originalWidth, (float)Config.getDecoderConfig().getMaxFrameHeight() / (float)this.originalHeight);
+
+    if(this.originalWidth > 640|| this.originalHeight > 480){
+      float scaleDown = Math.min(640 / (float)this.originalWidth, 480 / (float)this.originalHeight);
       this.width = Math.round(this.originalWidth * scaleDown);
       this.height = Math.round(this.originalHeight * scaleDown);
       LOGGER.debug("scaling input video down by a factor of {} from {}x{} to {}x{}", scaleDown, this.originalWidth, this.originalHeight, this.width, this.height);
@@ -289,7 +290,7 @@ public class FFMpegVideoDecoder implements VideoDecoder {
 
   @Override
   protected void finalize() throws Throwable {
-    this.clone();
+    this.close();
     super.finalize();
   }
 

@@ -1,11 +1,10 @@
 package org.vitrivr.cineast.api;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
-import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -55,7 +54,7 @@ public final class JSONEncoder {
 	}
 	
 	public static JsonObject encodeShot(SegmentDescriptor sd, boolean includeType){
-		return encodeShot(sd.getSegmentId(), sd.getVideoId(), sd.getStartFrame(), sd.getEndFrame(), includeType);
+		return encodeShot(sd.getSegmentId(), sd.getObjectId(), sd.getStart(), sd.getEnd(), includeType);
 	}
 	
 	public static final JsonObject encodeShot(String shotId, String videoId, long startFrame, long endFrame){
@@ -78,7 +77,7 @@ public final class JSONEncoder {
 		return _return;
 	}
 	
-	public static final JsonObject encodeVideo(String name, String videoId, String path, int width, int height, long frames, double seconds, boolean includeType){
+	public static final JsonObject encodeVideo(String name, String videoId, String path, boolean includeType){
 		JsonObject _return = new JsonObject();
 		if(includeType){
 			_return.add("type", "video");
@@ -86,23 +85,19 @@ public final class JSONEncoder {
 		_return.add("name", name);
 		_return.add("videoid", videoId);
 		_return.add("path", path);
-		_return.add("width", width);
-		_return.add("height", height);
-		_return.add("frames", frames);
-		_return.add("seconds", Double.isNaN(seconds) ? 1 : seconds);
 		return _return;
 	}
 	
 	
 	
 	public static final JsonObject encodeVideo(String name, String videoId, String path, int width, int height, long frames, double seconds){
-		return encodeVideo(name, videoId, path, width, height, frames, seconds, true);
+		return encodeVideo(name, videoId, path, true);
 	}
 	
 
 	
 	public static final JsonObject encodeVideo(MultimediaObjectDescriptor vd, boolean includeType){
-		return encodeVideo(vd.getName(), vd.getId(), vd.getPath(), vd.getWidth(), vd.getHeight(), vd.getFramecount(), vd.getSeconds(), includeType);
+		return encodeVideo(vd.getName(), vd.getObjectId(), vd.getPath(), includeType);
 	}
 	
 	public static final JsonObject encodeVideo(MultimediaObjectDescriptor vd){

@@ -22,7 +22,7 @@ class ExtractionTask implements Runnable {
 	@Override
 	public void run() {
 		LOGGER.entry();
-		LOGGER.debug("starting {} on shotId {}", feature.getClass().getSimpleName(), shot.getId());
+		LOGGER.debug("Starting {} on segmentId {}", feature.getClass().getSimpleName(), shot.getId());
 		try{
 		  long start = System.currentTimeMillis();
 			feature.processShot(shot);

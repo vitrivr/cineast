@@ -2,11 +2,14 @@ package org.vitrivr.cineast.core.features.abstracts;
 
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
 import org.vitrivr.cineast.core.db.*;
+import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.EntityCreator;
@@ -15,13 +18,15 @@ import org.vitrivr.cineast.core.util.MathHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public abstract class AbstractFeatureModule implements Extractor, Retriever {
-
-	protected PersistencyWriter<?> phandler;
+    protected SimpleFeatureDescriptorWriter writer;
 	protected DBSelector selector;
 	protected final float maxDist;
 	protected final String tableName;
+	protected PersistencyWriter<?> phandler;
+
 
 	protected AbstractFeatureModule(String tableName, float maxDist){
 		this.tableName = tableName;
@@ -30,8 +35,8 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
 	@Override
 	public void init(PersistencyWriterSupplier phandlerSupply) {
-		this.phandler = phandlerSupply.get();
-		this.phandler.open(this.tableName);
+	    this.phandler = phandlerSupply.get();
+	    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName, 10) ;
 	}
 
 	@Override
@@ -43,8 +48,15 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 	private float[] arrayCache = null; //avoiding the creation of new arrays on every call
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void persist(String shotId, ReadableFloatVector fv) {
-		PersistentTuple tuple = this.phandler.generateTuple(shotId, arrayCache = fv.toArray(arrayCache));
-		this.phandler.persist(tuple);
+        SimpleFeatureDescriptor descriptor = new SimpleFeatureDescriptor(shotId, fv);
+		this.writer.write(descriptor);
+	}
+
+	protected void persist(String shotId, List<ReadableFloatVector> fvs) {
+		List<SimpleFeatureDescriptor> entities = fvs.stream()
+                .map(fv -> new SimpleFeatureDescriptor(shotId, fv))
+                .collect(Collectors.toList());
+		this.writer.write(entities);
 	}
 
 	protected QueryConfig setQueryConfig(QueryConfig qc){
@@ -107,10 +119,15 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
 	@Override
 	public void finish() {
-		if(this.phandler != null){
-			this.phandler.close();
-			this.phandler = null;
+		if(this.writer != null){
+			this.writer.close();
+			this.writer = null;
 		}
+
+        if(this.phandler != null){
+            this.phandler.close();
+            this.phandler = null;
+        }
 
 		if(this.selector != null){
 			this.selector.close();
@@ -124,4 +141,8 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
 	}
 
+	@Override
+	public void dropPersistentLayer(Supplier<EntityCreator> supply) {
+		supply.get().dropEntity(this.tableName);
+	}
 }

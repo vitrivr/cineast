@@ -16,8 +16,8 @@ import java.util.List;
  * Created by sein on 15.09.16.
  */
 public class VisualizationCache {
-  private static final String cachePath = Config.getVisualizationConfig().getVisualizationCachePath();
-  private static final boolean cacheEnabled = Config.getVisualizationConfig().getCacheEnabled();
+  private static final String cachePath = Config.getVisualizationConfig().getCachePath();
+  private static final boolean cacheEnabled = Config.getVisualizationConfig().isCacheEnabled();
 
   private static Logger LOGGER = LogManager.getLogger();
 

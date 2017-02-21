@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
@@ -14,6 +16,11 @@ public class ExplorativeConfig {
     private static String resultFolder = "results/html/experimental/";
     private static String treeSerializationFileName = "nn_serialized_tree.ser";
     private static String mode = "csv";
+
+    @JsonCreator
+    public ExplorativeConfig() {
+
+    }
 
     public static void readConfig(String file){
         Properties properties = new Properties();

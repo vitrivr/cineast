@@ -8,9 +8,10 @@ import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 
 import java.util.*;
 
@@ -104,11 +105,11 @@ public class ArtUtil {
 
   public static List<Map<String, PrimitiveTypeProvider>> getFeatureData(DBSelector selector, String multimediaobjectId){
     SegmentLookup segmentLookup = new SegmentLookup();
-    List<SegmentLookup.SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
+    List<SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
     List<String> segmentIds = new ArrayList();
     Map<String, Integer> sequenceMapping = new HashMap();
-    for(SegmentLookup.SegmentDescriptor segment: segments){
+    for(SegmentDescriptor segment: segments){
       segmentIds.add(segment.getSegmentId());
       sequenceMapping.put(segment.getSegmentId(), segment.getSequenceNumber());
     }
@@ -124,9 +125,9 @@ public class ArtUtil {
   }
 
   public static List<Map<String, PrimitiveTypeProvider>> getFeatureData(DBSelector selector, List<String> segmentIds){
-    Map<String, SegmentLookup.SegmentDescriptor> segments = new SegmentLookup().lookUpShots(segmentIds.toArray(new String[segmentIds.size()]));
+    Map<String, SegmentDescriptor> segments = new SegmentLookup().lookUpShots(segmentIds.toArray(new String[segmentIds.size()]));
     Map<String, Integer> sequenceMapping = new HashMap();
-    for (SegmentLookup.SegmentDescriptor segment : segments.values()) {
+    for (SegmentDescriptor segment : segments.values()) {
       segmentIds.add(segment.getSegmentId());
       sequenceMapping.put(segment.getSegmentId(), segment.getSequenceNumber());
     }

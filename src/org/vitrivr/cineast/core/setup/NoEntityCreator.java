@@ -1,6 +1,16 @@
 package org.vitrivr.cineast.core.setup;
 
+import java.util.HashMap;
+
 public class NoEntityCreator implements EntityCreator {
+
+  /**
+   * @param options
+   */
+  @Override
+  public boolean setup(HashMap<String, String> options) {
+    return false;
+  }
 
   @Override
   public boolean createMultiMediaObjectsEntity() {
@@ -8,7 +18,27 @@ public class NoEntityCreator implements EntityCreator {
   }
 
   @Override
+  public boolean createMetadataEntity() {
+    return false;
+  }
+
+  @Override
   public boolean createSegmentEntity() {
+    return false;
+  }
+
+  @Override
+  public boolean dropMultiMediaObjectsEntity() {
+    return false;
+  }
+
+  @Override
+  public boolean dropSegmentEntity() {
+    return false;
+  }
+
+  @Override
+  public boolean dropMetadataEntity() {
     return false;
   }
 

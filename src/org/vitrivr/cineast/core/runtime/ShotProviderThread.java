@@ -5,6 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.providers.SegmentProvider;
 
+@Deprecated
 class ShotProviderThread extends Thread {
 
 	private LinkedBlockingQueue<SegmentContainer> shotQueue;
@@ -28,7 +29,4 @@ class ShotProviderThread extends Thread {
 		}
 		this.provider.close();
 	}
-
-	
-	
 }

@@ -27,10 +27,19 @@ public class Shot implements SegmentContainer{
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = null;
 	private LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths = null;
 	private ArrayList<String> tags = new ArrayList<>(1);
-	private final String movieId;
-	private final int movieFrameCount;
+	private String movieId;
 	private String shotId;
-	
+
+	private final int movieFrameCount;
+
+	/**
+	 *
+	 * @param movieFrameCount
+	 */
+	public Shot(int movieFrameCount) {
+		this.movieFrameCount = movieFrameCount;
+	}
+
 	public Shot(String movieId, int movieFrameCount){
 		this.movieId = movieId;
 		this.movieFrameCount = movieFrameCount;
@@ -44,7 +53,7 @@ public class Shot implements SegmentContainer{
 	public List<Frame> getFrames() {
 		return this.frames;
 	}
-	
+
 	public void addFrame(Frame f){
 		this.frames.add(f);
 	}
@@ -138,21 +147,19 @@ public class Shot implements SegmentContainer{
 	}
 
 	public int getStart(){
-		if(this.frames.isEmpty()){
+		if (!this.frames.isEmpty()) {
+			return this.frames.get(0).getId();
+		} else {
 			return 0;
 		}
-		return this.frames.getFirst().getId();
 	}
 	
 	public int getEnd(){
-		if(this.frames.isEmpty()){
+		if (!this.frames.isEmpty()) {
+			return this.frames.get(this.frames.size()-1).getId();
+		} else {
 			return 0;
 		}
-		return this.frames.getLast().getId();
-	}
-	
-	public void setShotId(String id){
-		this.shotId = id;
 	}
 	
 	public String getId(){
@@ -162,7 +169,24 @@ public class Shot implements SegmentContainer{
 	public String getSuperId(){
 		return this.movieId;
 	}
-	
+
+	/**
+	 * @param id
+	 * @return a unique id of this
+	 */
+	@Override
+	public void setId(String id) {
+		this.shotId = id;
+	}
+
+	/**
+	 * @param id
+	 */
+	@Override
+	public void setSuperId(String id) {
+		this.movieId = id;
+	}
+
 	@Override
 	protected void finalize() throws Throwable {
 		clear();

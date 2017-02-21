@@ -59,4 +59,6 @@ public class QueryImageExporter implements Retriever {
 	@Override
 	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {}
 
+	@Override
+	public void dropPersistentLayer(Supplier<EntityCreator> supply) {}
 }

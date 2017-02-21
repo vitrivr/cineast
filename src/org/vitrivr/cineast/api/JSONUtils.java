@@ -7,15 +7,16 @@ import georegression.struct.point.Point2D_F32;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.QuerySubTitleItem;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.SegmentLookup;
-import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
-import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -30,26 +31,26 @@ public class JSONUtils {
 	private static Logger LOGGER = LogManager.getLogger();
 	private JSONUtils(){}
 	
-	public static Pair<QueryContainer, TObjectDoubleHashMap<String>> readQueryFromJSON(Reader reader){
+	public static Pair<ImageQueryContainer, TObjectDoubleHashMap<String>> readQueryFromJSON(Reader reader){
 		LOGGER.entry();
 		try {
 			JsonObject jobj_in = JsonObject.readFrom(reader);
-			QueryContainer qc = queryContainerFromJSON(jobj_in);
+			ImageQueryContainer qc = queryContainerFromJSON(jobj_in);
 			
 			String weights = jobj_in.get("weights").toString();
 			
 			TObjectDoubleHashMap<String> weightMap = getWeightsFromJsonString(weights);
 			
-			return LOGGER.exit(new Pair<QueryContainer, TObjectDoubleHashMap<String>>(qc, weightMap));
+			return LOGGER.exit(new Pair<ImageQueryContainer, TObjectDoubleHashMap<String>>(qc, weightMap));
 		} catch (IOException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
 	
-	public static QueryContainer queryContainerFromJSON(JsonObject jobj){//TODO improve robustness against wrong data types
+	public static ImageQueryContainer queryContainerFromJSON(JsonObject jobj){//TODO improve robustness against wrong data types
 		BufferedImage img = jobj.get("img") == null ? null : WebUtils.dataURLtoBufferedImage(jobj.get("img").asString());
-		QueryContainer qc = img == null ? new QueryContainer(null) : new QueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
+		ImageQueryContainer qc = img == null ? new ImageQueryContainer(null) : new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
 		if(jobj.get("subelements") != null){
 			JsonArray subs = jobj.get("subelements").asArray();
 			for(JsonValue jv : subs){
@@ -102,7 +103,7 @@ public class JSONUtils {
 		return qc;
 	}
 	
-	public static String queryContainerToJSON(QueryContainer qc){
+	public static String queryContainerToJSON(ImageQueryContainer qc){
 		JsonObject jobj = new JsonObject();
 		jobj.add("img", WebUtils.BufferedImageToDataURL(qc.getMostRepresentativeFrame().getImage().getBufferedImage(), "PNG"));
 		
@@ -229,7 +230,7 @@ public class JSONUtils {
 		  if(sd == null){
 		    continue;
 		  }
-			videoIds.add(sd.getVideoId());
+			videoIds.add(sd.getObjectId());
 		}
 		
 		String[] vids = new String[videoIds.size()];
@@ -250,12 +251,12 @@ public class JSONUtils {
 //			String shotid = resultlist.get(i).key;
 //			ShotDescriptor descriptor = sl.lookUpShot(shotid);
 //			
-//			if(videoids.contains(descriptor.getVideoId())){
+//			if(videoids.contains(descriptor.getObjectId())){
 //				continue;
 //			}
-//			videoids.add(descriptor.getVideoId());
+//			videoids.add(descriptor.getObjectId());
 //			
-//			vdList.add(vl.lookUpVideo(descriptor.getVideoId()));	
+//			vdList.add(vl.lookUpVideo(descriptor.getObjectId()));
 //			
 //		}
 		

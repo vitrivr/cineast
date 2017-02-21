@@ -8,7 +8,7 @@ import java.util.Map;
 import org.vitrivr.cineast.core.data.providers.primitive.IntTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
-import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.decode.shotboundary.TrecvidMasterShotReferenceDecoder;
 
 public class TRECVIDShotBoundaryImporter implements Importer<SegmentDescriptor> {
@@ -31,10 +31,10 @@ public class TRECVIDShotBoundaryImporter implements Importer<SegmentDescriptor> 
   public Map<String, PrimitiveTypeProvider> convert(SegmentDescriptor data) {
     HashMap<String, PrimitiveTypeProvider> _return = new HashMap<>(5);
     _return.put("id", new StringTypeProvider(data.getSegmentId()));
-    _return.put("multimediaobject", new StringTypeProvider(data.getVideoId()));
+    _return.put("multimediaobject", new StringTypeProvider(data.getObjectId()));
     _return.put("sequencenumber", new IntTypeProvider(data.getSequenceNumber()));
-    _return.put("segmentstart", new IntTypeProvider(data.getStartFrame()));
-    _return.put("segmentend", new IntTypeProvider(data.getEndFrame()));
+    _return.put("segmentstart", new IntTypeProvider(data.getStart()));
+    _return.put("segmentend", new IntTypeProvider(data.getEnd()));
     return _return;
   }
 

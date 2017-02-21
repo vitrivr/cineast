@@ -1,0 +1,15 @@
+
+
+# Image Mime Types:
+
+image/jpeg jpg jpeg jpe
+image/png png
+image/tiff tif tiff
+
+# Audio Mime Types:
+
+audio/mp4 mp4 m4a
+audio/aac aac
+audio/mpeg mp1 mp2 mp3 mpg mpeg
+audio/ogg oga ogg
+audio/wav wav

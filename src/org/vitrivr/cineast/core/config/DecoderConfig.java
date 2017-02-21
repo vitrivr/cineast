@@ -1,119 +1,89 @@
 package org.vitrivr.cineast.core.config;
 
 import java.io.File;
+import java.util.HashMap;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.vitrivr.cineast.core.decode.video.FFMpegVideoDecoder;
-import org.vitrivr.cineast.core.decode.video.JCodecVideoDecoder;
-import org.vitrivr.cineast.core.decode.video.JLibAVVideoDecoder;
 import org.vitrivr.cineast.core.decode.video.VideoDecoder;
 
-import com.eclipsesource.json.JsonObject;
+public final class DecoderConfig {
 
-public final class DecoderConfig { 
+	private String decoder = null;
+	private HashMap<String, String> properties = new HashMap<>();
 
-	private final int maxFrameWidth;
-	private final int maxFrameHeight;
-	private final Decoder decoder;
-	
-	public static enum Decoder{
-		JCODEC,
-		JLIBAV,
-		FFMPEG
+	@JsonCreator
+	public DecoderConfig() {
+
 	}
-	
-	public static final int DEFAULT_MAX_FRAME_WIDTH = Integer.MAX_VALUE;
-	public static final int DEFAULT_MAX_FRAME_HEIGHT = Integer.MAX_VALUE;
-	public static final Decoder DEFAULT_DECODER = Decoder.FFMPEG;
-	
-	public DecoderConfig(int maxFrameWidth, int maxFrameHeight, Decoder decoder){
-		this.maxFrameWidth = maxFrameWidth;
-		this.maxFrameHeight = maxFrameHeight;
+
+	@JsonProperty
+	public String getDecoder() {
+		return decoder;
+	}
+	public void setDecoder(String decoder) {
 		this.decoder = decoder;
 	}
-	
-	public DecoderConfig(){
-		this(DEFAULT_MAX_FRAME_WIDTH, DEFAULT_MAX_FRAME_HEIGHT, DEFAULT_DECODER);
+
+	@JsonProperty
+	public HashMap<String, String> getProperties() {
+		return properties;
 	}
-	
-	public int getMaxFrameWidth(){
-		return this.maxFrameWidth;
+	public void setProperties(HashMap<String, String> properties) {
+		this.properties = properties;
 	}
-	
-	public int getMaxFrameHeight(){
-		return this.maxFrameHeight;
-	}
-	
-	public VideoDecoder newVideoDecoder(File file){
-		switch(this.decoder){
-		case JCODEC:
-			return new JCodecVideoDecoder(file);
-		case JLIBAV:
-			return new JLibAVVideoDecoder(file);
-		case FFMPEG:
-		  return new FFMpegVideoDecoder(file);
-		default:
-			throw new IllegalArgumentException("trying to create invalid video decoder " + this.decoder);
-		}
-	}
-	
+
 	/**
-	 * expects a json object of the follwing form:
-	 * <pre>
-	 * {
-	 * 	"maxFrameWidth" : (int)
-	 * 	"maxFrameHeight" : (int)
-	 *  "decoder": JCODEC | JLIBAV | FFMPEG
-	 * }
-	 * </pre>
-	 * @throws NullPointerException in case the given object is null
-	 * @throws IllegalArgumentException in case the specified frame width or height are not positive integers
+	 * Returns a name decoder-property as Float. If the property is not set, the
+	 * default value passed to the method is returned instead.
+	 *
+	 * @param name Name of the property.
+	 * @param preference Preference value.
+	 * @return Float value of the named property or its preference.
 	 */
-	public static DecoderConfig parse(JsonObject obj) throws NullPointerException, IllegalArgumentException{
-		if(obj == null){
-			throw new NullPointerException("JsonObject was null");
+	public final Float namedAsFloat(String name, Float preference) {
+		if (this.properties.containsKey(name)) {
+			return Float.parseFloat(this.properties.get(name));
+		} else {
+			return preference;
 		}
-		
-		int maxFrameWidth = DEFAULT_MAX_FRAME_WIDTH;
-		if(obj.get("maxFrameWidth") != null){
-			try{
-				maxFrameWidth = obj.get("maxFrameWidth").asInt();
-			}catch(UnsupportedOperationException e){
-				throw new IllegalArgumentException("'maxFrameWidth' was not an integer in decoder configuration");
-			}
-			
-			if(maxFrameWidth <= 0){
-				throw new IllegalArgumentException("'maxFrameWidth' must be > 0");
-			}
-		}
-		
-		int maxFrameHeight = DEFAULT_MAX_FRAME_HEIGHT;
-		if(obj.get("maxFrameHeight") != null){
-			try{
-				maxFrameHeight = obj.get("maxFrameHeight").asInt();
-			}catch(UnsupportedOperationException e){
-				throw new IllegalArgumentException("'maxFrameHeight' was not an integer in decoder configuration");
-			}
-			
-			if(maxFrameHeight <= 0){
-				throw new IllegalArgumentException("'maxFrameHeight' must be > 0");
-			}
-		}
-		
-		Decoder decoder = DEFAULT_DECODER;
-		if(obj.get("decoder") != null){
-			String decoderName = "";
-			try{
-				decoderName = obj.get("decoder").asString();
-				decoder = Decoder.valueOf(decoderName);
-			} catch(UnsupportedOperationException notastring){
-				throw new IllegalArgumentException("'decoder' was not a string in decoder configuration");
-			} catch(IllegalArgumentException notawriter){
-				throw new IllegalArgumentException("'" + decoderName + "' is not a valid value for 'decoder'");
-			}
-		}
-		
-		return new DecoderConfig(maxFrameWidth, maxFrameHeight, decoder);
-		
 	}
-	
+
+	/**
+	 * Returns a name decoder-property as Integer. If the property is not set, the
+	 * default value passed to the method is returned instead.
+	 *
+	 * @param name Name of the property.
+	 * @param preference Preference value.
+	 * @return Integer value of the named property or its preference.
+	 */
+	public Integer namedAsInt(String name, Integer preference) {
+		if (this.properties.containsKey(name)) {
+			return Integer.parseInt(this.properties.get(name));
+		} else {
+			return preference;
+		}
+	}
+
+	/**
+	 * Returns a name decoder-property as String. If the property is not set, the
+	 * default value passed to the method is returned instead.
+	 *
+	 * @param name Name of the property.
+	 * @param preference Preference value.
+	 * @return String value of the named property or its preference.
+	 */
+	public String namedAsString(String name, String preference) {
+		if (this.properties.containsKey(name)) {
+			return this.properties.get(name);
+		} else {
+			return preference;
+		}
+	}
+
+	public VideoDecoder newVideoDecoder(File file) {
+		return new FFMpegVideoDecoder(file);
+	}
 }

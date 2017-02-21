@@ -7,8 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.QueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 public class RetrievalTask implements Callable<Pair<Retriever, List<StringDoublePair>>> {
@@ -32,16 +32,27 @@ public class RetrievalTask implements Callable<Pair<Retriever, List<StringDouble
 	public RetrievalTask(Retriever retriever, QueryContainer query) {
 		this(retriever, query, null);
 	}
-	
-	public RetrievalTask(Retriever retriever, String shotId, QueryConfig qc) {
+
+	/**
+	 *
+	 * @param retriever
+	 * @param segmentId
+	 * @param qc
+	 */
+	public RetrievalTask(Retriever retriever, String segmentId, QueryConfig qc) {
 		this(retriever);
-		this.shotId = shotId;
+		this.shotId = segmentId;
 		this.config = qc;
 
 	}
-	
-	public RetrievalTask(Retriever retriever, String shotId){
-		this(retriever, shotId, null);
+
+	/**
+	 *
+	 * @param retriever
+	 * @param segmentId
+	 */
+	public RetrievalTask(Retriever retriever, String segmentId){
+		this(retriever, segmentId, null);
 	}
 	
 	@Override

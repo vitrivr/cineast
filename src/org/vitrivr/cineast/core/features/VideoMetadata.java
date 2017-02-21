@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.SegmentLookup;
-import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.features.abstracts.SolrTextRetriever;
 import org.vitrivr.cineast.core.util.MathHelper;
 

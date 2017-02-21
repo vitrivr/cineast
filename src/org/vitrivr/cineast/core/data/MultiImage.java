@@ -11,7 +11,7 @@ public interface MultiImage {
     
     @Override
     public int getWidth() {
-      return 0;
+      return 1;
     }
     
     @Override
@@ -26,7 +26,7 @@ public interface MultiImage {
     
     @Override
     public int getHeight() {
-      return 0;
+      return 1;
     }
     
     @Override

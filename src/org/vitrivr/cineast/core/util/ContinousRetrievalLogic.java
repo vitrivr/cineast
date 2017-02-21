@@ -6,8 +6,9 @@ import java.util.List;
 import org.vitrivr.cineast.api.API;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.runtime.ContinousQueryDispatcher;
 

@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
@@ -36,7 +36,7 @@ public class QueryDispatcher implements Callable<List<StringDoublePair>> {
 	private static final int MAX_RESULTS = Config.getRetrieverConfig().getMaxResults();
 	
 	private HashMap<Retriever, Double> retrieverWeights;
-	private QueryContainer query = null;
+	private ImageQueryContainer query = null;
 	private ExecutorService executor;
 	private RetrieverInitializer initializer;
 	private String shotId = null;
@@ -56,7 +56,7 @@ public class QueryDispatcher implements Callable<List<StringDoublePair>> {
 		}
 	}
 	
-	public QueryDispatcher(HashMap<Retriever, Double> featureWeights, RetrieverInitializer initializer, QueryContainer query){
+	public QueryDispatcher(HashMap<Retriever, Double> featureWeights, RetrieverInitializer initializer, ImageQueryContainer query){
 		this(featureWeights, initializer);
 		this.query = query;
 	}
@@ -79,7 +79,7 @@ public class QueryDispatcher implements Callable<List<StringDoublePair>> {
 		}
 	}
 	
-	public List<StringDoublePair> retirieve(QueryContainer query){
+	public List<StringDoublePair> retirieve(ImageQueryContainer query){
 		LinkedList<Future<Pair<Retriever, List<StringDoublePair>>>> futures = new LinkedList<>();
 		double weightSum = 0;
 		Set<Retriever> features = this.retrieverWeights.keySet();

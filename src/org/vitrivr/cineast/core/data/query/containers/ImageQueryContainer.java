@@ -1,15 +1,18 @@
-package org.vitrivr.cineast.core.data;
+package org.vitrivr.cineast.core.data.query.containers;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.MathHelper;
 
 import georegression.struct.point.Point2D_F32;
 
-public class QueryContainer implements SegmentContainer {
+public class ImageQueryContainer implements QueryContainer {
 
 	private MultiImage img;
 	private Frame frame;
@@ -20,7 +23,7 @@ public class QueryContainer implements SegmentContainer {
 	private float relativeStart = 0, relativeEnd = 0, weight = 1f;
 	private String id = null;
 	
-	public QueryContainer(MultiImage img){
+	public ImageQueryContainer(MultiImage img){
 		this.img = img;
 	}
 	
@@ -101,7 +104,15 @@ public class QueryContainer implements SegmentContainer {
 	public void setId(String id){
 		this.id = id;
 	}
-	
+
+	/**
+	 * @param id
+	 */
+	@Override
+	public void setSuperId(String id) {
+
+	}
+
 	public boolean hasId(){
 		return this.id != null;
 	}

@@ -20,16 +20,15 @@ import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Position;
-import org.vitrivr.cineast.core.data.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.DBResultCache;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.db.MultimediaObjectLookup.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.db.SegmentLookup;
-import org.vitrivr.cineast.core.db.SegmentLookup.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -87,23 +86,23 @@ public class JSONAPIThread extends Thread {
 				JsonObject queryObject = clientJSON.get("query").asObject();
 				// String category = queryObject.get("category").asString();
 				String shotId = queryObject.get("shotid").asString();
-				
+
 				SegmentLookup sl = new SegmentLookup();
 				SegmentDescriptor shot = sl.lookUpShot(shotId);
-				//List<ShotDescriptor> allShots = sl.lookUpVideo(shot.getVideoId());
+				//List<ShotDescriptor> allShots = sl.lookUpVideo(shot.getObjectId());
 
 				//Send metadata
 				MultimediaObjectLookup vl = new MultimediaObjectLookup();
-				MultimediaObjectLookup.MultimediaObjectDescriptor descriptor = vl.lookUpObjectById(shot.getVideoId());
-			
+				MultimediaObjectDescriptor descriptor = vl.lookUpObjectById(shot.getObjectId());
+
 				JsonObject resultobj = JSONEncoder.encodeVideo(descriptor);
-				
+
 //				vl.close();
 				this.printer.print(resultobj.toString());
 				this.printer.print(',');
-				
+
 				sl.close();
-				vl.close();				
+				vl.close();
 				break;
 			}
 
@@ -119,7 +118,7 @@ public class JSONAPIThread extends Thread {
 					SegmentDescriptor shot = sl.lookUpShot(shotId);
 
 					JsonObject resultobj = new JsonObject();
-					resultobj.add("type", "submitShot").add("videoId", shot.getVideoId()).add("start", shot.getStartFrame()).add("end", shot.getEndFrame());
+					resultobj.add("type", "submitShot").add("videoId", shot.getObjectId()).add("start", shot.getStart()).add("end", shot.getEnd());
 
 					this.printer.print(resultobj.toString());
 					this.printer.print(',');
@@ -236,7 +235,7 @@ public class JSONAPIThread extends Thread {
 							String id = query.get("id").asString();
 							result = ContinousRetrievalLogic.retrieve(id, category.asString(), qconf);
 						} else {
-							QueryContainer qc = JSONUtils.queryContainerFromJSON(query);
+							ImageQueryContainer qc = JSONUtils.queryContainerFromJSON(query);
 							result = ContinousRetrievalLogic.retrieve(qc, category.asString(), qconf);
 						}
 						
@@ -268,18 +267,18 @@ public class JSONAPIThread extends Thread {
 				
 				DBResultCache.createIfNecessary(resultCacheName);
 				
-				HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
+				HashMap<String, ArrayList<ImageQueryContainer>> categoryMap = new HashMap<>();
 				
 				for(JsonValue jval : queryArray){
 					JsonObject jobj = jval.asObject();
-					QueryContainer qc = JSONUtils.queryContainerFromJSON(jobj);
+					ImageQueryContainer qc = JSONUtils.queryContainerFromJSON(jobj);
 					if(qc.getWeight() == 0f || jobj.get("categories") == null){
 						continue;
 					}
 					for(JsonValue c : jobj.get("categories").asArray()){
 						String category = c.asString();
 						if(!categoryMap.containsKey(category)){
-							categoryMap.put(category, new ArrayList<QueryContainer>());
+							categoryMap.put(category, new ArrayList<ImageQueryContainer>());
 						}
 						categoryMap.get(category).add(qc);
 					}
@@ -291,7 +290,7 @@ public class JSONAPIThread extends Thread {
 				List<StringDoublePair> result;
 				for(String category : categories){
 					TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
-					for(QueryContainer qc : categoryMap.get(category)){
+					for(ImageQueryContainer qc : categoryMap.get(category)){
 						
 						float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation 
 						
@@ -365,7 +364,7 @@ public class JSONAPIThread extends Thread {
 					String shotid = val.asString();
 					SegmentDescriptor descriptor = sl.lookUpShot(shotid);
 					
-					String video = descriptor.getVideoId();
+					String video = descriptor.getObjectId();
 					int startSegment = Math.max(1, descriptor.getSequenceNumber() - limit);
 					int endSegment = descriptor.getSequenceNumber() + limit;
 					
@@ -410,10 +409,10 @@ public class JSONAPIThread extends Thread {
 			}
 
 			case "getMultimediaobjects":{
-				List<MultimediaObjectLookup.MultimediaObjectDescriptor> multimediaobjectIds = new MultimediaObjectLookup().getAllVideos();
+				List<MultimediaObjectDescriptor> multimediaobjectIds = new MultimediaObjectLookup().getAllVideos();
 
 				JsonArray movies = new JsonArray();
-				for(MultimediaObjectLookup.MultimediaObjectDescriptor descriptor: multimediaobjectIds){
+				for(MultimediaObjectDescriptor descriptor: multimediaobjectIds){
 					JsonObject resultobj = JSONEncoder.encodeVideo(descriptor);
 					movies.add(resultobj);
 				}
@@ -533,7 +532,7 @@ public class JSONAPIThread extends Thread {
 			  
 			  HashSet<String> mmobjectIds = new HashSet<>();
 			  for(SegmentDescriptor descriptor : segments.values()){
-			    mmobjectIds.add(descriptor.getVideoId());
+			    mmobjectIds.add(descriptor.getObjectId());
 			  }
         
 			  MultimediaObjectLookup mmlookup = new MultimediaObjectLookup();

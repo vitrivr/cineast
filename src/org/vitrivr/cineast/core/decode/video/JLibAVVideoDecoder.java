@@ -32,6 +32,7 @@ import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.util.LogHelper;
 
+@Deprecated
 public class JLibAVVideoDecoder implements VideoDecoder {
 
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -66,9 +67,9 @@ public class JLibAVVideoDecoder implements VideoDecoder {
 		 ICodecContextWrapper codecContext = decoder.getCodecContext();
 		 this.originalWidth = codecContext.getWidth();
 	     this.originalHeight = codecContext.getHeight();
-	     
-	     if(this.originalWidth > Config.getDecoderConfig().getMaxFrameWidth() || this.originalHeight > Config.getDecoderConfig().getMaxFrameHeight()){
-	    	 float scaleDown = Math.min((float)Config.getDecoderConfig().getMaxFrameWidth() / (float)this.originalWidth, (float)Config.getDecoderConfig().getMaxFrameHeight() / (float)this.originalHeight);
+
+	     if(this.originalWidth > 640 || this.originalHeight > 480){
+	    	 float scaleDown = Math.min((float)640 / (float)this.originalWidth, (float)480 / (float)this.originalHeight);
 	    	 this.width = Math.round(this.originalWidth * scaleDown);
 	    	 this.height = Math.round(this.originalHeight * scaleDown);
 	    	 LOGGER.debug("scaling input video down by a factor of {} from {}x{} to {}x{}", scaleDown, this.originalWidth, this.originalHeight, this.width, this.height);
@@ -183,6 +184,7 @@ public class JLibAVVideoDecoder implements VideoDecoder {
 	}
 }
 
+@Deprecated
 class JLibAVFrameConsumer implements IFrameConsumer{
 
 	private static final int MAX_THUMB_SIZE = 200;

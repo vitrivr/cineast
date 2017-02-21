@@ -2,22 +2,171 @@ package org.vitrivr.cineast.core.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 import com.eclipsesource.json.JsonObject;
+import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
+import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 
 public class ReflectionHelper {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public static final String FEATURE_MODULE_PACKAGE = "org.vitrivr.cineast.core.features";
-	public static final String EXPORTER_PACKAGE = "org.vitrivr.cineast.core.features.exporter";
-	
+
+	/** Name of the package where CodebookGenerator classes are located by default. */
+	private static final String CODEBOOK_GENERATOR_PACKAGE = "org.vitrivr.cineast.core.features.codebook";
+
+	/** Name of the package where Exporter classes are located by default. */
+	private static final String EXPORTER_PACKAGE = "org.vitrivr.cineast.core.features.exporter";
+
+	/** Name of the package where ObjectIdGenerator classes are located by default. */
+	private static final String IDGENERATOR_PACKAGE = "org.vitrivr.cineast.core.idgenerator";
+
+	/** Name of the package where MetadataExtractor classes are located by default. */
+	private static final String METADATA_PACKAGE = "org.vitrivr.cineast.core.metadata";
+
+	/**
+	 * Tries to instantiate a new, named ObjectIdGenerator object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the IDGENERATOR_PACKAGE
+	 * is assumed and the name is treated as simple name.
+	 *
+	 * @param name Name of the ObjectIdGenerator.
+	 * @return Instance of ObjectIdGenerator or null, if instantiation fails.
+	 */
+	@SuppressWarnings("unchecked")
+	public static ObjectIdGenerator newIdGenerator(String name) {
+		Class<ObjectIdGenerator> c = null;
+		try {
+			if (name.contains(".")) {
+				c = (Class<ObjectIdGenerator>) Class.forName(name);
+			} else {
+				c = getClassFromName(name, ObjectIdGenerator.class, IDGENERATOR_PACKAGE);
+			}
+			return instanciate(c);
+		} catch (ClassNotFoundException | InstantiationException  e) {
+			LOGGER.fatal("Failed to create ObjectIdGenerator. Could not find class with name {}.", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
+	/**
+	 * Tries to instantiate a new, named CodebookGenerator object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the CODEBOOK_GENERATOR_PACKAGE
+	 * is assumed and the name is treated as simple name.
+	 *
+	 * @param name Name of the CodebookGenerator.
+	 * @return Instance of CodebookGenerator or null, if instantiation fails.
+	 */
+	public static CodebookGenerator newCodebookGenerator(String name) {
+		Class<CodebookGenerator> c = null;
+		try {
+			if (name.contains(".")) {
+				c = (Class<CodebookGenerator>) Class.forName(name);
+			} else {
+				c = getClassFromName(name, CodebookGenerator.class, CODEBOOK_GENERATOR_PACKAGE);
+			}
+			return instanciate(c);
+		} catch (ClassNotFoundException | InstantiationException e) {
+			LOGGER.fatal("Failed to create CodebookGenerator. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
+	/**
+	 * Tries to instantiate a new, named Extractor object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the FEATURE_MODULE_PACKAGE
+	 * is assumed and the name is treated as simple name.
+	 *
+	 * @param name Name of the Exporter.
+	 * @return Instance of Exporter or null, if instantiation fails.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Extractor newExtractor(String name) {
+		Class<Extractor> c = null;
+		try {
+			if (name.contains(".")) {
+				c = (Class<Extractor>) Class.forName(name);
+			} else {
+				c = getClassFromName(name, Extractor.class, FEATURE_MODULE_PACKAGE);
+			}
+			return instanciate(c);
+		} catch (ClassNotFoundException | InstantiationException e) {
+			LOGGER.fatal("Failed to create Exporter. Could not find class with name {}.", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
+	/**
+	 * Tries to instantiate a new, named Exporter object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the EXPORTER_PACKAGE
+	 * is assumed and the name is treated as simple name.
+	 *
+	 * @param name Name of the Exporter.
+	 * @return Instance of Exporter or null, if instantiation fails.
+	 */
+	public static Extractor newExporter(String name, HashMap<String, String> configuration) {
+		Class<Extractor> c = null;
+		try {
+			if (name.contains(".")) {
+				c = (Class<Extractor>) Class.forName(name);
+			} else {
+				c = getClassFromName(name, Extractor.class, EXPORTER_PACKAGE);
+			}
+
+			if (configuration == null || configuration.isEmpty()) {
+				return instanciate(c);
+			} else {
+				return instanciate(c, configuration);
+			}
+		} catch (ClassNotFoundException | InstantiationException e) {
+			LOGGER.fatal("Failed to create Exporter. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
+	/**
+	 * Tries to instantiate a new, named MetadataExtractor object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the METADATA_PACKAGE
+	 * is assumed and the name is treated as simple name.
+	 *
+	 * @param name Name of the MetadataExtractor.
+	 * @return Instance of MetadataExtractor or null, if instantiation fails.
+	 */
+	public static MetadataExtractor newMetadataExtractor(String name) {
+		Class<MetadataExtractor> c = null;
+		try {
+			if (name.contains(".")) {
+				c = (Class<MetadataExtractor>) Class.forName(name);
+			} else {
+				c = getClassFromName(name, MetadataExtractor.class, METADATA_PACKAGE);
+			}
+
+			return instanciate(c);
+		} catch (ClassNotFoundException | InstantiationException e) {
+			LOGGER.fatal("Failed to create MetadataExtractor. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
 	/**
 	 * creates a new instance of an exporter as specified by the provided json.
 	 * @param json see {@link #instanciateFromJson(JsonObject, Class, String)}}
@@ -31,7 +180,7 @@ public class ReflectionHelper {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * creates a new instance of an {@link AbstractFeatureModule} as specified by the provided json.
 	 * @param json see {@link #instanciateFromJson(JsonObject, Class, String)}}

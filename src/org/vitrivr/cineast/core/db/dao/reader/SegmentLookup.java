@@ -1,17 +1,18 @@
-package org.vitrivr.cineast.core.db;
+package org.vitrivr.cineast.core.db.dao.reader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.ExistenceCheck;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
-import org.vitrivr.cineast.core.setup.EntityCreator;
 
 public class SegmentLookup {
 
@@ -20,7 +21,7 @@ public class SegmentLookup {
 	
 	public SegmentLookup(){
 		this.selector = Config.getDatabaseConfig().getSelectorSupplier().get();
-		this.selector.open(EntityCreator.CINEAST_SEGMENT);
+		this.selector.open(SegmentDescriptor.ENTITY);
 	}
 	
 	public void close(){
@@ -29,7 +30,7 @@ public class SegmentLookup {
 	
 	public SegmentDescriptor lookUpShot(String segmentId){
 		
-		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("id", segmentId);
+		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(SegmentDescriptor.FIELDNAMES[0], segmentId);
 		
 		if(results.isEmpty()){
 			return new SegmentDescriptor();
@@ -42,11 +43,11 @@ public class SegmentLookup {
 	}
 
 	private SegmentDescriptor mapToDescriptor(Map<String, PrimitiveTypeProvider> map) {
-		PrimitiveTypeProvider idProvider = map.get("id");
-		PrimitiveTypeProvider mmobjidProvider = map.get("multimediaobject");
-		PrimitiveTypeProvider sequenceProvider = map.get("sequencenumber");
-		PrimitiveTypeProvider startProvider = map.get("segmentstart");
-		PrimitiveTypeProvider endProvider = map.get("segmentend");
+		PrimitiveTypeProvider idProvider = map.get(SegmentDescriptor.FIELDNAMES[0]);
+		PrimitiveTypeProvider mmobjidProvider = map.get(SegmentDescriptor.FIELDNAMES[1]);
+		PrimitiveTypeProvider sequenceProvider = map.get(SegmentDescriptor.FIELDNAMES[2]);
+		PrimitiveTypeProvider startProvider = map.get(SegmentDescriptor.FIELDNAMES[3]);
+		PrimitiveTypeProvider endProvider = map.get(SegmentDescriptor.FIELDNAMES[4]);
 		
 		if(idProvider == null){
 			LOGGER.error("no id in segment");
@@ -108,7 +109,7 @@ public class SegmentLookup {
 		
 		HashMap<String, SegmentDescriptor> _return = new HashMap<>();
 		
-		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("id", ids);
+		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(SegmentDescriptor.FIELDNAMES[0], ids);
 		
 		if(results.isEmpty()){
 			return new HashMap<>();
@@ -129,7 +130,7 @@ public class SegmentLookup {
     
     HashMap<String, SegmentDescriptor> _return = new HashMap<>();
     
-    List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("id", ids);
+    List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(SegmentDescriptor.FIELDNAMES[0], ids);
     
     if(results.isEmpty()){
       return new HashMap<>();
@@ -145,7 +146,7 @@ public class SegmentLookup {
 
 	public List<SegmentDescriptor> lookUpAllSegments(String objectId){
 		
-		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows("multimediaobject", objectId);
+		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(SegmentDescriptor.FIELDNAMES[1], objectId);
 		
 		if(results.isEmpty()){
 			return new ArrayList<>(0);
@@ -155,79 +156,18 @@ public class SegmentLookup {
 		
 		for(Map<String, PrimitiveTypeProvider> map : results){
 			SegmentDescriptor descriptor = mapToDescriptor(map);
-			if(descriptor.exists){
+			if(descriptor.exists()){
 				_return.add(descriptor);
 			}
 		}
 		
 		return _return;
 	}
-	
 
-	public static class SegmentDescriptor implements ExistenceCheck{ 
-		
-		private final String segmentId, mmobjId;
-		private final int startFrame, endFrame, number;
-		private final boolean exists;
-		
-		private SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber, int startFrame, int endFrame, boolean exists){
-			this.segmentId = segmentId;
-			this.mmobjId = multimediaObjectId;
-			this.number = segmentNumber;
-			this.startFrame = startFrame;
-			this.endFrame = endFrame;
-			this.exists = exists;
-		}
-		
-		public SegmentDescriptor(String multimediaObjectId, String segmentId, int segmentNumber, int startFrame, int endFrame){
-			this(multimediaObjectId, segmentId, segmentNumber, startFrame, endFrame, true);
-		}
-		
-		
-		public SegmentDescriptor() {
-			this("", "", 0, 0, 0, false);
-		}
-
-		public String getSegmentId() {
-			return segmentId;
-		}
-
-		public String getVideoId() {
-			return mmobjId;
-		}
-
-		public int getSequenceNumber(){
-			return this.number;
-		}
-
-		public int getFramecount() {
-			return endFrame - startFrame + 1;
-		}
-
-		public int getStartFrame() {
-			return startFrame;
-		}
-
-		public int getEndFrame() {
-			return endFrame;
-		}
-
-		@Override
-		public String toString() {
-			return "SegmentDescriptor(" + segmentId + ")";
-		}
-
-		@Override
-		public boolean exists() {
-			return this.exists;
-		}
-
-	}
 
 	@Override
 	protected void finalize() throws Throwable {
 		close();
 		super.finalize();
 	}
-	
 }
