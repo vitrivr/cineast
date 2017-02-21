@@ -49,7 +49,7 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter{
             LOGGER.log(Level.ERROR, "Could not parse JSON.");
             return null;
         } catch (JsonMappingException e) {
-            LOGGER.log(Level.ERROR, "Could not map JSON to POJO. Please check your object definitions.");
+            LOGGER.log(Level.ERROR, "Could not map JSON to POJO. Please check your object definitions.\n{}", LogHelper.getStackTrace(e));
             return null;
         } catch (IOException e) {
             LOGGER.log(Level.ERROR, "Could not read JSON.", e);
@@ -62,10 +62,10 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter{
         try {
             return MAPPER.readValue(json, c);
         }  catch (JsonParseException e) {
-            LOGGER.log(Level.ERROR, "Could not parse JSON file under '{}'.", json.toString());
+            LOGGER.log(Level.ERROR, "Could not parse JSON file under '{}'.\n{}", json.toString(), LogHelper.getStackTrace(e));
             return null;
         } catch (JsonMappingException e) {
-            LOGGER.log(Level.ERROR, "Could not map JSON under '{}' to POJO. Please check your object definitions.", json.toString());
+            LOGGER.log(Level.ERROR, "Could not map JSON under '{}' to POJO. Please check your object definitions.\n{}", json.toString(), LogHelper.getStackTrace(e));
             return null;
         } catch (FileNotFoundException e) {
             LOGGER.log(Level.WARN, "Could not find file under '{}'.", json.toString());
