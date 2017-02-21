@@ -1,13 +1,9 @@
 package org.vitrivr.cineast.core.config;
 
-import java.io.File;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.vitrivr.cineast.core.decode.video.FFMpegVideoDecoder;
-import org.vitrivr.cineast.core.decode.video.VideoDecoder;
 
 public final class DecoderConfig {
 
@@ -83,7 +79,4 @@ public final class DecoderConfig {
 		}
 	}
 
-	public VideoDecoder newVideoDecoder(File file) {
-		return new FFMpegVideoDecoder(file);
-	}
 }
