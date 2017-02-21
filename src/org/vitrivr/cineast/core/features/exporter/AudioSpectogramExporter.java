@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.util.fft.SpectrumVisalizer;
 import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -78,7 +79,7 @@ public class AudioSpectogramExporter implements Extractor {
 
     @Override
     public void processShot(SegmentContainer shot) {
-        /* IF shot has now samples, this step is skipped. */
+        /* IF shot has no samples, this step is skipped. */
         if (shot.getNumberOfSamples() == 0) return;
 
         /* Prepare STFT and Spectrum for the segment. */

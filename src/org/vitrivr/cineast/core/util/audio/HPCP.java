@@ -1,7 +1,13 @@
 package org.vitrivr.cineast.core.util.audio;
 
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.Spectrum;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * This class can be used to calculate the Harmonic Pitch Class Profile (HPCP) of a Shor-Term Fourier Transform or a single
@@ -44,7 +50,7 @@ public class HPCP {
     private static final float WINDOW = 4f/3f;
 
     /** Float array holding the HPCP data. */
-    private final float[] hpcp;
+    private final List<float[]> hpcp = new ArrayList<>();
 
     /** Minimum frequency to consider. Defaults to 100Hz as per [1]. */
     private final float minFrequency;
@@ -54,9 +60,6 @@ public class HPCP {
 
     /** Resolution of the HPCP. */
     private final Resolution resolution;
-
-    /** Number of contributions to the HPCP. Used for normalization. */
-    private int contributions = 0;
 
     /**
      * Calculates the center-frequency of a bin defined by its bin number. The bin numbers
@@ -89,7 +92,6 @@ public class HPCP {
         this.resolution = resolution;
         this.maxFrequency = maxFrequency;
         this.minFrequency = minFrequency;
-        this.hpcp = new float[resolution.bins];
     }
 
     /**
@@ -114,31 +116,23 @@ public class HPCP {
         /* Prune the PowerSpectrum and the Frequencies to the range that is interesting according to min frequency and max frequency.*/
         Spectrum pruned = spectrum.reduced(this.minFrequency, this.maxFrequency);
 
-        int[] peaks = pruned.findLocalMaxima(0.5);
+        double threshold = 1.0e-8;
+        List<Pair<Float,Double>> peaks = pruned.findLocalMaxima(threshold, true);
         float[] hpcp = new float[this.resolution.bins];
 
         /* For each of the semi-tones (according to resolution), add the contribution of every peak. */
-        float max = 0.0f;
         for (int n=0;n<this.resolution.bins;n++) {
-            for (int peak : peaks) {
+            for (Pair<Float,Double> peak : peaks) {
                 if (pruned.getType() == Spectrum.Type.POWER) {
-                    hpcp[n] += pruned.getValue(peak) * this.weight(n, pruned.getFrequeny(peak));
+                    hpcp[n] += peak.second * this.weight(n, peak.first);
                 } else if (pruned.getType() == Spectrum.Type.MAGNITUDE) {
-                    hpcp[n] += Math.pow(pruned.getValue(peak),2) * this.weight(n, pruned.getFrequeny(peak));
+                    hpcp[n] += Math.pow(peak.second,2) * this.weight(n, peak.first);
                 }
             }
-            max = Math.max(max, hpcp[n]);
         }
 
-        /* Normalize the resulting HPCP contribution so that the highest entry becomes 1.0. */
-        if (max > 0.0f) {
-            for (int n = 0; n < this.resolution.bins; n++) {
-                this.hpcp[n] += hpcp[n] / max;
-            }
-        }
-
-        /* Increases the contributions counter. */
-        this.contributions += 1;
+        /* */
+        this.hpcp.add(hpcp);
     }
 
     /**
@@ -146,22 +140,46 @@ public class HPCP {
      *
      * @return Float array containing the HPCP.
      */
-    public float[] getHpcp() {
-        return hpcp;
+    public float[] getHpcp(int idx) {
+        return hpcp.get(idx);
     }
 
     /**
-     * Returns the normalized HPCP array (i.e. the HPCP array that has been divided
-     * by the number of contributions).
+     * Returns the mean HPCP array (i.e. the HPCP arithmetic mean of all
+     * HPCP contributions).
      *
-     * @return Float array containing the normalized HPCP.
+     * @return Float array containing the mean HPCP.
      */
-    public float[] getNormalizedHpcp() {
-        float[] normalized = new float[this.hpcp.length];
-        for (int i=0;i<this.hpcp.length;i++) {
-            normalized[i] = this.hpcp[i]/(this.contributions+1);
+    public float[] getMeanHpcp() {
+        float[] normalized = new float[this.resolution.bins];
+        for (float[] hpcp : this.hpcp) {
+            for (int i=0; i< this.resolution.bins;i++) {
+                normalized[i] += hpcp[i]/(this.hpcp.size());
+            }
         }
         return normalized;
+    }
+
+    /**
+     *
+     */
+    public List<float[]> sorted() {
+        ArrayList<float[]> sorted = new ArrayList<>(this.hpcp);
+        final float[] normalized = this.getMeanHpcp();
+        sorted.sort((o1, o2) -> {
+            double dist1 = MathHelper.euclideanDist(o1, normalized);
+            double dist2 = MathHelper.euclideanDist(o2, normalized);
+            return (int)(dist1-dist2);
+        });
+        return sorted;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int size() {
+        return this.hpcp.size();
     }
 
     /**

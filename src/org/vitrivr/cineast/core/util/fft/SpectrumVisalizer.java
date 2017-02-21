@@ -11,6 +11,22 @@ import java.util.List;
  */
 public class SpectrumVisalizer {
 
+    /** YlOrRd palette used for visualization. */
+    private final static Color[] YlOrRd = {
+            new Color(255,255,255),
+            new Color(255,255,234),
+            new Color(255,237,160),
+            new Color(254,217,118),
+            new Color(254,178,76),
+            new Color(253,141,61),
+            new Color(252,78,42),
+            new Color(227,26,28),
+            new Color(189,0,38),
+            new Color(128,0,38),
+            new Color(100,0,32),
+            new Color(80,0,16),
+            new Color(0,0,0),
+    };
 
     private SpectrumVisalizer() {}
 
@@ -41,8 +57,8 @@ public class SpectrumVisalizer {
         for (int x=0;x<width;x++) {
             Spectrum spectrum = spectra.get((int)Math.floor(x * width_time_ratio));
 
-            double max = spectrum.getMaximum();
-            double min = spectrum.getMinimum();
+            double max = spectrum.getMaximum().second;
+            double min = spectrum.getMinimum().second;
             double diff = max-min;
 
             for (int y=0;y<height;y++) {
@@ -65,15 +81,19 @@ public class SpectrumVisalizer {
      * Returns the color-code for a dB value given a range that should be color-coded.
      *
      * @param min Minimal value in dB that should be color-coded.
-     * @param max Maximal value in DB should be color-coded.
+     * @param max Maximal value in db should be color-coded.
      * @param value value for which a color-code is required.
      * @return
      */
     public static Color color (double min, double max, double value) {
         if (min > max) throw new IllegalArgumentException("Minimum must be smaller than maximum.");
-        if (value < min) return Color.BLACK;
-        if (value > max) return Color.WHITE;
-        return Color.getHSBColor((float)((1.0/(Math.abs(max-min))) * value), 1.0f, 1.0f);
+        if (Double.isNaN(value) || value == 0.0f) return YlOrRd[YlOrRd.length-1];
+        double ratio = (YlOrRd.length-1)/(max-min);
+        int idx = (YlOrRd.length-1) - (int)((value-min) * ratio);
+
+        if (idx > YlOrRd.length-1) return YlOrRd[YlOrRd.length-1];
+        if (idx < 0) return YlOrRd[0];
+        return YlOrRd[idx];
     }
 
 }

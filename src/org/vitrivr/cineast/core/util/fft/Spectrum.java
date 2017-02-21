@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.util.fft;
 
 import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.util.MathArrays;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.fft.windows.WindowFunction;
 
@@ -35,10 +37,10 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
     private final Type type;
 
     /** */
-    private Double maximum;
+    private Integer maximumIndex;
 
     /** */
-    private Double minimum;
+    private Integer minimumIndex;
 
     /**
      * Calculates and returns the power spectrum for the provided, complex data input (usually
@@ -167,14 +169,14 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
      *
      * @return
      */
-    public Double getMaximum() {
-        if (this.maximum == null) {
-            this.maximum = Double.MIN_VALUE;
-            for (double entry : this.spectrum) {
-                this.maximum = Math.max(this.maximum, entry);
+    public Pair<Float,Double> getMaximum() {
+        if (this.maximumIndex == null) {
+            this.maximumIndex = 0;
+            for (int i=0;i<this.spectrum.length;i++) {
+                if (this.spectrum[i] > this.spectrum[this.maximumIndex]) this.maximumIndex = i;
             }
         }
-        return this.maximum;
+        return this.get(this.maximumIndex);
     }
 
     /**
@@ -182,14 +184,21 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
      *
      * @return
      */
-    public Double getMinimum() {
-        if (this.minimum == null) {
-            this.minimum = Double.MAX_VALUE;
-            for (double entry : this.spectrum) {
-                this.minimum = Math.min(this.minimum, entry);
+    public Pair<Float,Double> getMinimum() {
+        if (this.minimumIndex == null) {
+            this.minimumIndex = 0;
+            for (int i=0;i<this.spectrum.length;i++) {
+                if (this.spectrum[i] < this.spectrum[this.minimumIndex]) this.minimumIndex = i;
             }
         }
-        return this.minimum;
+        return this.get(this.minimumIndex);
+    }
+
+    /**
+     *
+     */
+    public void normalize() {
+        MathArrays.scaleInPlace(1.0/this.getMaximum().second, this.spectrum);
     }
 
     /**
@@ -234,19 +243,24 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
      * @param threshold Threshold for search. Values bellow that threshold won't be considered.
      * @return Array containing indices (zero-based) of local maxima.
      */
-    public int[] findLocalMaxima(double threshold) {
-        List<Integer> candidates = new ArrayList<>();
+    public List<Pair<Float, Double>> findLocalMaxima(double threshold, boolean significant) {
+        List<Pair<Float,Double>> peaks = new ArrayList<>();
         for (int i=1;i<this.spectrum.length-1;i++) {
             if (this.spectrum[i] < threshold) continue;
-            if (this.spectrum[i+1] < this.spectrum[i] && this.spectrum[i-1] < this.spectrum[i]) candidates.add(i);
+            if (spectrum[i] > Math.max(spectrum[i+1], spectrum[i-1]))peaks.add(this.get(i));
         }
 
-        int[] results = new int[candidates.size()];
-        for (int i=0; i<candidates.size();i++) {
-            results[i] = candidates.get(i);
+        if (significant) {
+            DescriptiveStatistics statistics = new DescriptiveStatistics();
+            for (Pair<Float, Double> peak : peaks) {
+                statistics.addValue(peak.second);
+            }
+            final double mean = statistics.getMean();
+            final double stddev = statistics.getStandardDeviation();
+            peaks.removeIf(p -> p.second < (mean + stddev * 2));
         }
 
-        return results;
+        return peaks;
     }
 
     /**
