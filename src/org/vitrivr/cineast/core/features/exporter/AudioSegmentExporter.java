@@ -45,7 +45,7 @@ public class AudioSegmentExporter implements Extractor {
      * in the provided HashMap. Supported parameters:
      *
      * <ol>
-     *      <li>destionation: Path where files should be stored.</li>
+     *      <li>destination: Path where files should be stored.</li>
      * </ol>
      *
      * @param properties HashMap containing named properties

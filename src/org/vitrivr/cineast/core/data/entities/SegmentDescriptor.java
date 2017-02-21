@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
 
-import java.util.UUID;
-
 /**
  * @author rgasser
  * @version 1.0
