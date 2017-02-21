@@ -50,6 +50,6 @@ public class AudioExtractionFileHandler extends AbstractExtractionFileHandler<Au
      */
     @Override
     public Segmenter<AudioFrame> newSegmenter() {
-        return new ConstantLengthAudioSegmenter(256, 32);
+        return new ConstantLengthAudioSegmenter(10.0f, 0.5f);
     }
 }

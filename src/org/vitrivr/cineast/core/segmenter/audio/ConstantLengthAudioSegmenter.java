@@ -7,14 +7,13 @@ import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 import java.util.ArrayDeque;
-
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Merges multiple AudioFrames into a single AudioSegment using a constant number of frames per AudioSegment. The length
- * of an AudioSegment in frames AND the overlap between two subsequent AudioSegments can be defined upon onstruction of the
+ * of an AudioSegment in frames AND the overlapfactor between two subsequent AudioSegments can be defined upon onstruction of the
  * ConstantLengthAudioSegmenter.
  *
  * @see AudioSegment
@@ -36,28 +35,31 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
     /** A LinkedBlockingQueue used that holds the resulting AudioSegments. */
     private final LinkedBlockingQueue<SegmentContainer> outputQueue = new LinkedBlockingQueue<SegmentContainer>(SEGMENT_QUEUE_LENGTH);
 
-    /** ArrayDeque containing AudioFrames waiting for segmentation. */
-    private final ArrayDeque<AudioFrame> enqueuedFrames;
-
     /** The length in AudioFrames of a resulting AudioSegment. */
-    private final int length;
+    private final float length;
 
-    /** The number of AudioFrames that two subsequent SegmentContainer's have in common. */
-    private final int overlap;
+    /** Length of the overlap between two segments in seconds. */
+    private final float overlap;
+
+    /** AudioSegment that is currently filled with AudioFrames. */
+    private AudioSegment currentSegment;
+
+    /** ArrayDeque holding AudioFrames that have been queued for overlap. */
+    private ArrayDeque<AudioFrame> overlapQueue = new ArrayDeque<>();
 
     /** A flag indicating whether or not the segmenter has completed its work. */
     private AtomicBoolean complete = new AtomicBoolean(false);
 
     /**
-     * Default constructor.
+     * Constructor.
      *
-     * @param length
-     * @param overlap
+     * @param length Length of an individual segment in seconds.
+     * @param overlap Overlap between to subsequent AudioSegments
      */
-    public ConstantLengthAudioSegmenter(int length, int overlap) {
+    public ConstantLengthAudioSegmenter(float length, float overlap) {
+        if (overlap >= 0.9f * length) throw new IllegalArgumentException("Overlap must be smaller than total segment length.");
         this.length = length;
         this.overlap = overlap;
-        this.enqueuedFrames = new ArrayDeque<>(length);
     }
 
     /**
@@ -117,24 +119,30 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
     /**
      * This methods pulls AudioFrames as they become available from the Decoder and adds them
      * the the Deque of AudioFrames. Once that queue holds enough AudioFrames it is drained and
-     * a AudioSegment is emmited.
+     * a AudioSegment is emmitted.
      *
-     * The overlap defines how many frames re-enter the queue once they have been added to the
+     * The overlapfactor defines how many frames re-enter the queue once they have been added to the
      * new Segment.
      *
      * @see Thread#run()
      */
     @Override
     public void run() {
+
+        this.currentSegment = new AudioSegment();
+
         while (!this.decoder.complete()) {
             AudioFrame newFrame = this.decoder.getNext();
             if (newFrame != null) {
-                this.enqueuedFrames.offer(newFrame);
-                if (this.enqueuedFrames.size() == this.length) {
-                    this.drainQueue(false);
+                this.currentSegment.addFrame(newFrame);
+                if (this.currentSegment.getDuration() >= (this.length - this.overlap)) {
+                    this.overlapQueue.offerLast(newFrame);
+                }
+                if (this.currentSegment.getDuration() >= this.length) {
+                    this.nextCycle(false);
                 }
             } else if (this.decoder.complete()) {
-                this.drainQueue(true);
+                this.nextCycle(true);
             }
         }
     }
@@ -143,15 +151,19 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
     /**
      * Drains the Deque and emits a new AudioSegment.
      */
-    private void drainQueue(boolean last) {
-        AudioSegment segment = new AudioSegment();
-        for (int i = 1; i <= this.length; i++) {
-            AudioFrame frame = this.enqueuedFrames.poll();
-            segment.addFrame(frame);
-            if (i >= (this.length - this.overlap) && !last) this.enqueuedFrames.offer(frame);
-        }
+    private void nextCycle(boolean end) {
         try {
-            this.outputQueue.put(segment);
+            this.outputQueue.put(this.currentSegment);
+            if (!end) {
+                this.currentSegment = new AudioSegment();
+                AudioFrame frame;
+                while ((frame = this.overlapQueue.poll()) != null) {
+                    this.currentSegment.addFrame(frame);
+                }
+            } else {
+                this.currentSegment = null;
+                this.overlapQueue.clear();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
