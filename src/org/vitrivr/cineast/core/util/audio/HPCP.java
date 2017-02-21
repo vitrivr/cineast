@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.util.audio;
 
+import org.apache.commons.math3.util.MathArrays;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.fft.STFT;
@@ -44,7 +45,7 @@ public class HPCP {
     }
 
     /** Reference frequency in Hz. Corresponds to the musical note A (A440 or A4) above the middle C. */
-    private static final double F_REF = 440.0000000000;
+    private static final double F_REF = 523.2511306012;
 
     /** Window-size parameter, which defaults to 4/3 semitones as per [1]. */
     private static final float WINDOW = 4f/3f;
@@ -145,6 +146,32 @@ public class HPCP {
     }
 
     /**
+     *
+     * @param idx
+     * @return
+     */
+    public float[] getSumNormalizedHpcp(int idx) {
+        float[] normHpcp = hpcp.get(idx);
+        float sum = 0.0f;
+        for (float aNormHpcp : normHpcp) sum += aNormHpcp;
+        for (int i = 0; i< normHpcp.length; i++) normHpcp[i] /= sum;
+        return normHpcp;
+    }
+
+    /**
+     *
+     * @param idx
+     * @return
+     */
+    public float[] getMaxNormalizedHpcp(int idx) {
+        float[] normHpcp = hpcp.get(idx);
+        float max = 0.0f;
+        for (float aNormHpcp : normHpcp) max = Math.max(max,aNormHpcp);
+        for (int i = 0; i< normHpcp.length; i++) normHpcp[i] /= max;
+        return normHpcp;
+    }
+
+    /**
      * Returns the mean HPCP array (i.e. the HPCP arithmetic mean of all
      * HPCP contributions).
      *
@@ -180,6 +207,14 @@ public class HPCP {
      */
     public int size() {
         return this.hpcp.size();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Resolution getResolution() {
+        return resolution;
     }
 
     /**

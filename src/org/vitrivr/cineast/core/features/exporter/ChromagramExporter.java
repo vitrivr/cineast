@@ -8,9 +8,9 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.Spectrum;
+import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.fft.AudioSignalVisualizer;
+import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
 
 import javax.imageio.ImageIO;
@@ -19,20 +19,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.List;
+import java.util.HashMap;
 import java.util.function.Supplier;
 
 /**
- * Visualizes and exporst the power spectogram (time vs. frequency vs. power) of the provided
- * AudioSegment.
- *
  * @author rgasser
  * @version 1.0
- * @created 31.01.17
+ * @created 21.02.17
  */
-public class AudioSpectogramExporter implements Extractor {
-
+public class ChromagramExporter implements Extractor {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -41,18 +36,18 @@ public class AudioSpectogramExporter implements Extractor {
     private static final String PROPERTY_NAME_WIDTH = "width";
     private static final String PROPERTY_NAME_HEIGHT = "height";
 
-    /** Destination path; can be set in the AudioWaveformExporter properties. */
+    /** Destination path; can be set in the ChromagramExporter properties. */
     private Path destination = Paths.get(Config.sharedConfig().getExtractor().getOutputLocation().toString());
 
-    /** Width of the resulting image in pixels. */
+    /** Width of the resulting chromagram image in pixels. */
     private int width = 800;
 
-    /** Height of the resulting image in pixels. */
+    /** Height of the resulting chromagram image in pixels. */
     private int height = 600;
 
 
     /**
-     * Default constructor. The AudioWaveformExporter can be configured via named properties
+     * Default constructor. The ChromagramExporter can be configured via named properties
      * in the provided HashMap. Supported parameters:
      *
      * <ol>
@@ -63,7 +58,7 @@ public class AudioSpectogramExporter implements Extractor {
      *
      * @param properties HashMap containing named properties
      */
-    public AudioSpectogramExporter(HashMap<String, String> properties) {
+    public ChromagramExporter(HashMap<String, String> properties) {
         if (properties.containsKey(PROPERTY_NAME_DESTINATION)) {
             this.destination = Paths.get(properties.get(PROPERTY_NAME_DESTINATION));
         }
@@ -82,22 +77,23 @@ public class AudioSpectogramExporter implements Extractor {
         /* IF shot has no samples, this step is skipped. */
         if (shot.getNumberOfSamples() == 0) return;
 
-        /* Prepare STFT and Spectrum for the segment. */
+        /* Prepare STFT and HPCP for the segment. */
         final Path directory = this.destination.resolve(shot.getSuperId());
         final STFT stft = shot.getSTFT(2048, 512, new HanningWindow());
-        final List<Spectrum> spectrums = stft.getPowerSpectrum();
+        final HPCP hpcp = new HPCP();
+        hpcp.addContribution(stft);
 
-        /* Visualize Spectrum and write it to disc. */
+        /* Visualize chromagram and write it to disc. */
         try {
-            BufferedImage image = AudioSignalVisualizer.visualizeSpectogram(spectrums, this.width, this.height);
+            BufferedImage image = AudioSignalVisualizer.visualizeChromagram(hpcp, this.width, this.height);
             if (image != null) {
                 Files.createDirectories(directory);
                 ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
             } else {
-                LOGGER.warn("Spectrum could not be visualized!");
+                LOGGER.warn("Chromagram could not be visualized!");
             }
         } catch (IOException exception) {
-            LOGGER.error("A serious error occurred while writing the spectrum image! ({})", LogHelper.getStackTrace(exception));
+            LOGGER.error("A serious error occurred while writing the chromagram image! ({})", LogHelper.getStackTrace(exception));
         }
     }
 
@@ -112,4 +108,5 @@ public class AudioSpectogramExporter implements Extractor {
 
     @Override
     public void dropPersistentLayer(Supplier<EntityCreator> supply) {/* Nothing to drop. */}
+
 }

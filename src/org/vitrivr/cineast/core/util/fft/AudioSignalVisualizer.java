@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.util.fft;
 
+import org.vitrivr.cineast.core.util.audio.HPCP;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.List;
  * @version 1.0
  * @created 05.02.17
  */
-public class SpectrumVisalizer {
+public class AudioSignalVisualizer {
 
     /** YlOrRd palette used for visualization. */
     private final static Color[] YlOrRd = {
@@ -28,7 +30,7 @@ public class SpectrumVisalizer {
             new Color(0,0,0),
     };
 
-    private SpectrumVisalizer() {}
+    private AudioSignalVisualizer() {}
 
 
     /**
@@ -69,12 +71,40 @@ public class SpectrumVisalizer {
                     value += spectrum.getValue(c);
                 }
                 double intensity = 10*Math.log10((value-min)/diff);
-                image.setRGB(x, (height - 1) - y, SpectrumVisalizer.color(-60, 0, intensity).getRGB());
+                image.setRGB(x, (height - 1) - y, AudioSignalVisualizer.color(-60, 0, intensity).getRGB());
             }
         }
 
         return image;
 
+    }
+
+    /**
+     * This method visualizes a chromagram that displays the temporal development of the signal's enegry in on
+     * of the twelve pitch classes.
+     *
+     * @param hpcp HPCP (Harmonic Pitch Class Profile) from which to derive the chromagram.
+     * @param width Width of chromagram in pixels.
+     * @param height Height of chromagram in pixels.
+     * @return BufferedImage containing the chromagram.
+     */
+    public static BufferedImage visualizeChromagram(HPCP hpcp, int width, int height) {
+        if (hpcp.size() == 0) return null;
+
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        final float width_time_ratio = (float)hpcp.size()/((float)width);
+        final float height_freq_ratio = hpcp.getResolution().bins/((float)height);
+        for (int x=0;x<width;x++) {
+            float[] spectrum = hpcp.getMaxNormalizedHpcp((int)Math.floor(x * width_time_ratio));
+            for (int y=0;y<height;y++) {
+                int idx = (int)Math.floor((y) * height_freq_ratio);
+                double value = spectrum[idx];
+                image.setRGB(x, (height - 1) - y, AudioSignalVisualizer.color(0.0, 1.0, value).getRGB());
+            }
+        }
+
+        return image;
     }
 
     /**
