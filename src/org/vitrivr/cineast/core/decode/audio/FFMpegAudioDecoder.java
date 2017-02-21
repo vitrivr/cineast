@@ -16,6 +16,7 @@ import static org.libav.avutil.bridge.AVMediaType.AVMEDIA_TYPE_AUDIO;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -42,6 +43,16 @@ import org.vitrivr.cineast.core.decode.general.Decoder;
 public class FFMpegAudioDecoder implements AudioDecoder {
 
     private static final Logger LOGGER = LogManager.getLogger();
+
+    private static final Set<String> supportedFiles = new HashSet<>();
+
+    static {
+        supportedFiles.add("audio/mp4");
+        supportedFiles.add("audio/aac");
+        supportedFiles.add("audio/mpeg");
+        supportedFiles.add("audio/ogg");
+        supportedFiles.add("audio/wav");
+    }
 
     /** */
     private static final String CONFIG_CHANNELS_PROPERTY = "channels";
@@ -304,7 +315,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
      */
     @Override
     public Set<String> supportedFiles() {
-        return null;
+        return supportedFiles;
     }
 
     @Override

@@ -1,8 +1,15 @@
-# comments begin with a '#'
-# the format is <mime type> <space separated file extensions>
-# for example:
+
+
+# Image Mime Types:
+
 image/jpeg jpg jpeg jpe
 image/png png
 image/tiff tif tiff
-# this would map file.txt, file.text, and file.TXT to
-# the mime type "text/plain"
+
+# Audio Mime Types:
+
+audio/mp4 mp4 m4a
+audio/aac aac
+audio/mpeg mp1 mp2 mp3 mpg mpeg
+audio/ogg oga ogg
+audio/wav wav
