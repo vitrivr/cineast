@@ -78,8 +78,11 @@ public class WebUtils {
              * - Length of a single AudioFrame (in bytes)
              * - Total length of the audio data in the AudioInputStream.
              */
-            final int framesize = 2048;
-            final long length = convertedAudio.getFrameLength() * (targetFormat.getSampleSizeInBits()/2) * targetFormat.getChannels();
+
+			final int framesize = 2048;
+			final int bytesPerSample = targetFormat.getSampleSizeInBits()/8;
+			final int bytesPerFrame = framesize * bytesPerSample;
+            final long length = convertedAudio.getFrameLength() * bytesPerSample * targetFormat.getChannels();
 
             /*
              * Read the data into constant length AudioFrames.
@@ -89,16 +92,16 @@ public class WebUtils {
             while (!done) {
                 /* Allocate a byte-array for the audio-data. */
                 byte[] data = null;
-                if (read + framesize < length) {
-                    data = new byte[framesize];
+                if (read + bytesPerFrame < length) {
+                    data = new byte[bytesPerFrame];
                 } else {
                     data = new byte[(int)(length-read)];
                     done = true;
                 }
                 /* Read audio-data and create AudioFrame. */
                 convertedAudio.read(data, 0, data.length);
-                list.add(new AudioFrame(read/((targetFormat.getSampleSizeInBits()/2) * targetFormat.getChannels()), targetFormat.getSampleRate(), targetFormat.getChannels(), data));
-                read += framesize;
+                list.add(new AudioFrame(read/(bytesPerSample * targetFormat.getChannels()), targetFormat.getSampleRate(), targetFormat.getChannels(), data));
+                read += bytesPerFrame;
             }
         } catch (UnsupportedAudioFileException e) {
             LOGGER.error("Could not create audio frames from Base64 input because the file-format is not supported. {}", LogHelper.getStackTrace(e));
