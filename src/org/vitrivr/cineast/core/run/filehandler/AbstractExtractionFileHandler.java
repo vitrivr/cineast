@@ -89,6 +89,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
     /** Total number of files that were effectively processed. */
     private long count_processed = 0;
+    
+    private MultimediaObjectLookup mlookup = new MultimediaObjectLookup();
+    private SegmentLookup slookup = new SegmentLookup();
 
     /**
      * Default constructor used to initialize the class.
@@ -269,9 +272,8 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
             return false;
         }
 
-        MultimediaObjectLookup mlookup = new MultimediaObjectLookup();
         if (this.context.existenceCheck() != IdConfig.ExistenceCheck.NOCHECK) {
-            if (!mlookup.lookUpObjectById(descriptor.getObjectId()).exists()) {
+            if (!this.mlookup.lookUpObjectById(descriptor.getObjectId()).exists()) {
                 this.objectWriter.write(descriptor);
                 return true;
             } else if (this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {
@@ -297,8 +299,8 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      */
     private boolean checkAndPersistSegment(SegmentDescriptor descriptor) {
         if (this.context.existenceCheck() != IdConfig.ExistenceCheck.NOCHECK) {
-            SegmentLookup slookup = new SegmentLookup();
-            if (!slookup.lookUpShot(descriptor.getSegmentId()).exists()) {
+            
+            if (!this.slookup.lookUpShot(descriptor.getSegmentId()).exists()) {
                 this.segmentWriter.write(descriptor);
                 return true;
             } else if (this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {

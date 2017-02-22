@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.nio.file.Path;
 
 /**
  * @author rgasser
