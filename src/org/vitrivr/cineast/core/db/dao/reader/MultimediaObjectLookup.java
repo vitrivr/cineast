@@ -90,6 +90,16 @@ public class MultimediaObjectLookup {
 
     return mapToDescriptor(result.get(0));
   }
+  
+  public MultimediaObjectDescriptor lookUpObjectByPath(String path) {
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MultimediaObjectDescriptor.FIELDNAMES[3], path);
+
+    if (result.isEmpty()) {
+      return new MultimediaObjectDescriptor();
+    }
+
+    return mapToDescriptor(result.get(0));
+  }
 
   public Map<String, MultimediaObjectDescriptor> lookUpVideos(String... videoIds) {
     if (videoIds == null || videoIds.length == 0) {

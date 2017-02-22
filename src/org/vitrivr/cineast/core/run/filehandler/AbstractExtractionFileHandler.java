@@ -147,7 +147,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
             LOGGER.info("Processing file {}.", path);
 
             /* Create new MultimediaObjectDescriptor for new file. */
-            MultimediaObjectDescriptor descriptor = MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, this.context.inputPath().relativize(path), context.sourceType());
+            MultimediaObjectDescriptor descriptor = MultimediaObjectDescriptor.getOrCreateMultimediaObjectDescriptor(generator, this.context.inputPath().relativize(path), context.sourceType());
             if (!this.checkAndPersistMultimediaObject(descriptor)) continue;
 
             /* Pass file to decoder and decoder to segmenter. */
@@ -267,6 +267,10 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @return true if object should be processed further or false if it should be skipped.
      */
     private boolean checkAndPersistMultimediaObject(MultimediaObjectDescriptor descriptor) {
+        if (descriptor.exists()) { //this is true when a descriptor is used which has previously been retrieved from the database
+          return true;
+        }
+      
         if (descriptor.getObjectId() == null) {
             LOGGER.warn("The objectId that was generated for {} is empty. This object cannot be persisted and will be skipped.", descriptor.getPath());
             return false;
