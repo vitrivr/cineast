@@ -8,7 +8,6 @@ package org.vitrivr.cineast.core.util.fft.windows;
  * @created 02.02.17
  */
 public interface WindowFunction {
-
     /**
      * Calculates and returns the value of the window function at position i.
      *
@@ -31,5 +30,19 @@ public interface WindowFunction {
             normal += this.value(i, length);
         }
         return normal/length;
+    }
+
+    /**
+     * Calculates and returns the values of a WindowFunction.
+     *
+     * @param length Size of the window.
+     * @return Array containing the values.
+     */
+    default double[] values(int length) {
+        double[] window = new double[length];
+        for (int i = 0; i<length; i++) {
+            window[i] = this.value(i, length);
+        }
+        return window;
     }
 }
