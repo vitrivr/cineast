@@ -1,13 +1,10 @@
 package org.vitrivr.cineast.core.util.audio;
 
-import org.apache.commons.math3.util.MathArrays;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.Spectrum;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -141,7 +138,7 @@ public class HPCP {
 
     /**
      * Returns the raw, un-normalized HPCP float array.
-     * 
+     *
      * @param idx Zero based index of the time-frame for which to return the HPCP.
      * @return Float array containing the HPCP.
      */
@@ -196,17 +193,18 @@ public class HPCP {
     }
 
     /**
+     * Returns the size of the HPCP which relates to the number of timepoints.
      *
-     * @return
+     * @return Size of the HPCP.
      */
     public int size() {
         return this.hpcp.size();
     }
 
     /**
-     * Getter for the HPCP resolution.
+     * Getter for the HPCP resolution which gives an indication about the number of bins per timepoint.
      *
-     * @return
+     * @return Resolution of the HPCP.
      */
     public Resolution getResolution() {
         return resolution;
