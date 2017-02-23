@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.util.fft;
 
+import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 
 import java.awt.*;
@@ -80,7 +81,7 @@ public class AudioSignalVisualizer {
     }
 
     /**
-     * This method visualizes a chromagram that displays the temporal development of the signal's enegry in on
+     * This method visualizes a chromagram that displays the temporal development of the signal's energy in one
      * of the twelve pitch classes.
      *
      * @param hpcp HPCP (Harmonic Pitch Class Profile) from which to derive the chromagram.
@@ -108,10 +109,40 @@ public class AudioSignalVisualizer {
     }
 
     /**
+     * This method visualizes a CENS chromagram, which displays the temporal development of the signal's energy in one
+     * of the twelve pitch classes.
+     *
+     * @see org.vitrivr.cineast.core.util.audio.CENS
+     *
+     * @param cens 2D array containing the CENS features.
+     * @param width Width of chromagram in pixels.
+     * @param height Height of chromagram in pixels.
+     * @return BufferedImage containing the chromagram.
+     */
+    public static BufferedImage visualizeCens(double[][] cens, int width, int height) {
+        if (cens.length == 0) return null;
+
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        final float width_time_ratio = (float)cens.length/((float)width);
+        final float height_freq_ratio = cens[0].length/((float)height);
+        for (int x=0;x<width;x++) {
+            double[] spectrum = MathHelper.normalizeL2(cens[(int)Math.floor(x * width_time_ratio)]);
+            for (int y=0;y<height;y++) {
+                int idx = (int)Math.floor((y) * height_freq_ratio);
+                double value = spectrum[idx];
+                image.setRGB(x, (height - 1) - y, AudioSignalVisualizer.color(0.0, 1.0, value).getRGB());
+            }
+        }
+
+        return image;
+    }
+
+    /**
      * Returns the color-code for a dB value given a range that should be color-coded.
      *
      * @param min Minimal value in dB that should be color-coded.
-     * @param max Maximal value in db should be color-coded.
+     * @param max Maximal value in dB should be color-coded.
      * @param value value for which a color-code is required.
      * @return
      */
