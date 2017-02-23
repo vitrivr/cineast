@@ -20,11 +20,72 @@ public class MathHelper {
 		}
 		return score;
 	}
-	
-	public static double euclideanDist(float[] v1, float[] v2){
+
+	/**
+	 * Normalizes a float array with respect to the L2 (euclidian) norm. The
+	 * method will return a new array and leave the original array unchanged.
+	 *
+	 * @param v Array that should be normalized.
+	 * @return Normalized array.
+	 */
+	public static float[] normalizeL2(float[] v) {
+		double norm = normL2(v);
+		if (norm > 0.0f) {
+			float[] vn = new float[v.length];
+			for (int i = 0; i < v.length; i++) {
+				vn[i] = (float) (v[i] / norm);
+			}
+			return vn;
+		} else {
+			return v;
+		}
+	}
+
+	/**
+	 * Normalizes a double array with respect to the L2 (euclidian) norm. The
+	 * method will return a new array and leave the original array unchanged.
+	 *
+	 * @param v Array that should be normalized.
+	 * @return Normalized array.
+	 */
+	public static double[] normalizeL2(double[] v) {
+		double norm = normL2(v);
+		if (norm > 0.0f) {
+			double[] vn = new double[v.length];
+			for (int i = 0; i < v.length; i++) {
+				vn[i] = (float) (v[i] / norm);
+			}
+			return vn;
+		} else {
+			return v;
+		}
+	}
+
+
+	/**
+	 * Calculates and returns the L2 (euclidian) norm of a float array.
+	 *
+	 * @param v Float array for which to calculate the L2 norm.
+	 * @return L2 norm
+	 */
+	public static double normL2(float[] v) {
 		float dist = 0;
-		for(int i = 0; i < Math.min(v1.length, v2.length); ++i){
-			dist += (v1[i] - v2[i]) * (v1[i] - v2[i]);
+		for(int i = 0; i < v.length; i++){
+			dist += Math.pow(v[i], 2);
+		}
+		return Math.sqrt(dist);
+	}
+
+	/**
+	 * Calculates and returns the L2 (euclidian) norm of a double array.
+	 *
+	 * @param v Double array for which to calculate the L2 norm.
+	 * @return L2 norm
+	 */
+	public static double normL2(double[] v) {
+		float dist = 0;
+		for(int i = 0; i < v.length; i++){
+			dist += Math.pow(v[i], 2);
 		}
 		return Math.sqrt(dist);
 	}
