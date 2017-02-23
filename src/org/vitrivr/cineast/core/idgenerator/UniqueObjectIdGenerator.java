@@ -5,6 +5,7 @@ import org.vitrivr.cineast.core.util.RandomStringGenerator;
 
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Generates an objectId from a random string.
@@ -20,6 +21,8 @@ public class UniqueObjectIdGenerator implements ObjectIdGenerator {
 
     /** Length of the generated ID. */
     private int length = 16;
+    
+    private HashSet<String> usedIds = new HashSet<>();
 
     /**
      * Can be used to initialize a particular ObjectIdGenerator instance by passing
@@ -44,7 +47,11 @@ public class UniqueObjectIdGenerator implements ObjectIdGenerator {
      */
     @Override
     public String next(Path path, MediaType type) {
-        String rawId = RandomStringGenerator.generateRandomString(this.length);
+        String rawId;
+        do{
+          rawId = RandomStringGenerator.generateRandomString(this.length);
+        }while(usedIds.contains(rawId));
+        usedIds.add(rawId);
         return MediaType.generateId(type, rawId);
     }
 }

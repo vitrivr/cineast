@@ -48,7 +48,7 @@ public class EdgeList {
 	
 	private static LoadingCache<Thread, CannyEdge<GrayU8, GrayS16>> cannies = CacheBuilder
 			.newBuilder()
-			.maximumSize(Config.getExtractorConfig().getThreadPoolSize() * 2)
+			.maximumSize(Config.sharedConfig().getExtractor().getThreadPoolSize() * 2)
 			.expireAfterAccess(10, TimeUnit.MINUTES)
 			.build(new CacheLoader<Thread, CannyEdge<GrayU8, GrayS16>>() {
 

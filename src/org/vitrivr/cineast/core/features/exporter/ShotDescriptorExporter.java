@@ -18,7 +18,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 
 public class ShotDescriptorExporter implements Extractor {
 
-	private static File folder = new File(Config.getExtractorConfig().getOutputLocation(), "descriptors");
+	private static File folder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "descriptors");
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	@Override

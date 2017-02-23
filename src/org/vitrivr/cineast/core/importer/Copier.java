@@ -21,7 +21,7 @@ public class Copier {
 	private final PersistencyWriter<?> writer;
 	
 	public Copier(String entityName, Importer<?> importer){
-		this(entityName, importer, Config.getDatabaseConfig().getWriterSupplier().get());
+		this(entityName, importer, Config.sharedConfig().getDatabase().getWriterSupplier().get());
 	}
 	
 	public Copier(String entityName, Importer<?> importer, PersistencyWriter<?> writer){

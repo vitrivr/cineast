@@ -64,7 +64,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
      */
     @SuppressWarnings("unused")
     public NeuralNetVGG16Feature() {
-        this(Config.getNeuralNetConfig());
+        this(Config.sharedConfig().getNeuralnet());
     }
 
     public NeuralNetVGG16Feature(NeuralNetConfig neuralNetConfig) {

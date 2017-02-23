@@ -3,7 +3,6 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.nio.file.Path;
@@ -14,10 +13,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.cli.*;
+import javax.imageio.ImageIO;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.vitrivr.cineast.api.rest.RestfulAPI;
@@ -30,10 +36,7 @@ import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
 import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
-
-import javax.imageio.ImageIO;
 
 /**
  * Entry point. 
@@ -44,7 +47,7 @@ public class API {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final RetrieverInitializer initializer = r -> r.init(Config.getDatabaseConfig().getSelectorSupplier());
+    private static final RetrieverInitializer initializer = r -> r.init(Config.sharedConfig().getDatabase().getSelectorSupplier());
 
 	private static final Pattern inputSplitPattern = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 

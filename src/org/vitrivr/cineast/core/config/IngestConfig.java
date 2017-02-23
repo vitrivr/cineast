@@ -1,7 +1,11 @@
 package org.vitrivr.cineast.core.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -10,11 +14,8 @@ import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Configures a data-ingest or extraction run, acts as an ExtractionContextProvider.
@@ -102,7 +103,7 @@ public class IngestConfig implements ExtractionContextProvider {
     @Override
     public Path inputPath() {
         if (this.input != null) {
-            return this.input.getPath();
+            return Paths.get(this.input.getPath());
         } else {
             return null;
         }

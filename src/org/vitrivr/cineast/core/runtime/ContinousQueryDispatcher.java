@@ -31,9 +31,9 @@ public class ContinousQueryDispatcher {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	private static final int TASK_QUEUE_SIZE = Config.getRetrieverConfig().getTaskQueueSize();
-	private static final int THREAD_COUNT = Config.getRetrieverConfig().getThreadPoolSize();
-	private static final int MAX_RESULTS = Config.getRetrieverConfig().getMaxResults();
+	private static final int TASK_QUEUE_SIZE = Config.sharedConfig().getRetriever().getTaskQueueSize();
+	private static final int THREAD_COUNT = Config.sharedConfig().getRetriever().getThreadPoolSize();
+	private static final int MAX_RESULTS = Config.sharedConfig().getRetriever().getMaxResults();
 	
 	
 	private static ExecutorService executor = null;

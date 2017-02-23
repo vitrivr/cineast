@@ -1,14 +1,14 @@
 package org.vitrivr.cineast.core.data.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.nio.file.Path;
+
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author rgasser
@@ -24,20 +24,12 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
     /** Field names in the persistence layer. */
     public static final String[] FIELDNAMES = {"objectid", "mediatype", "name", "path"};
 
+    private static MultimediaObjectLookup mlookup = new MultimediaObjectLookup();
+
     private final String objectId;
     private final String name, path;
     private final boolean exists;
     private final int mediatypeId;
-
-    @Deprecated
-    public static MultimediaObjectDescriptor makeVideoDescriptor(String objectId, String name, String path, int width, int height, int framecount, float duration) {
-      return new MultimediaObjectDescriptor(objectId, name, path, MediaType.VIDEO, true);
-    }
-
-    @Deprecated
-    public static MultimediaObjectDescriptor makeImageDescriptor(String objectId, String name, String path, int width, int height) {
-      return new MultimediaObjectDescriptor(objectId, name, path, MediaType.IMAGE, true);
-    }
 
     public static MultimediaObjectDescriptor makeMultimediaDescriptor(String objectId, String name, String path, MediaType type) {
         return new MultimediaObjectDescriptor(objectId, name, path, type, true);
@@ -57,6 +49,24 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
         return new MultimediaObjectDescriptor(objectId, path.getFileName().toString(), path.toString(), type, false);
     }
 
+    /**
+     * 
+     * Convenience method to lookup a MultimediaObjectDescriptor for a given path and type or create a new one if needed.
+     * If a new descriptor is required, newMultimediaObjectDescriptor is used.
+     * 
+     * @param generator ObjectIdGenerator used for ID generation.
+     * @param path The Path that points to the file for which a new MultimediaObjectDescriptor should be created.
+     * @param type MediaType of the new MultimediaObjectDescriptor
+     * @return the existing or a new MultimediaObjectDescriptor
+     */
+    public static MultimediaObjectDescriptor getOrCreateMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type){
+      MultimediaObjectDescriptor descriptor = mlookup.lookUpObjectByPath(path.getFileName().toString());
+      if(descriptor.exists() && descriptor.getMediatype() == type){
+        return descriptor;
+      }
+      return newMultimediaObjectDescriptor(generator, path, type);
+    }
+    
     /**
      * Default constructor for an empty MultimediaObjectDescriptor.
      */

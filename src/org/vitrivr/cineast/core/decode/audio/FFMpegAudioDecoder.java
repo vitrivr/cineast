@@ -11,7 +11,6 @@ import static org.bytedeco.javacpp.avformat.avformat_open_input;
 import static org.bytedeco.javacpp.avutil.*;
 
 import static org.bytedeco.javacpp.swresample.*;
-import static org.libav.avutil.bridge.AVMediaType.AVMEDIA_TYPE_AUDIO;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

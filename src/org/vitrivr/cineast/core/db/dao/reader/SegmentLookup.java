@@ -1,5 +1,10 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
@@ -7,12 +12,6 @@ import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.setup.EntityCreator;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class SegmentLookup {
 
@@ -20,7 +19,7 @@ public class SegmentLookup {
 	private final DBSelector selector;
 	
 	public SegmentLookup(){
-		this.selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+		this.selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
 		this.selector.open(SegmentDescriptor.ENTITY);
 	}
 	

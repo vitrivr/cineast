@@ -24,7 +24,7 @@ import georegression.struct.point.Point2D_F32;
 
 public class MotionFrameExporter implements Extractor {
 
-private static File folder = new File(Config.getExtractorConfig().getOutputLocation(), "motionframes");
+private static File folder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "motionframes");
 	
 	@Override
 	public void init(PersistencyWriterSupplier phandlerSupply) {

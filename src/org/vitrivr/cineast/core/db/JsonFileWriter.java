@@ -12,7 +12,7 @@ import com.eclipsesource.json.JsonObject;
 
 public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
 
-	private static File defaultBaseFolder = new File(Config.getExtractorConfig().getOutputLocation(), "json");
+	private static File defaultBaseFolder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "json");
 	private File baseFolder;
 	private PrintWriter out;
 	private boolean first = true;

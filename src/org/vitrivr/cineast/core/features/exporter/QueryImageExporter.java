@@ -25,7 +25,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 
 public class QueryImageExporter implements Retriever {
 
-	private File folder = new File(Config.getExtractorConfig().getOutputLocation(), "queryImages");
+	private File folder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "queryImages");
 	private DateFormat df = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss-SSS");
 	private static final Logger LOGGER = LogManager.getLogger();
 	

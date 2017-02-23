@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.db;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by silvan on 13.09.16.
@@ -21,9 +21,9 @@ public class NeuralNetLookup {
     private Map<String, String[]> labelMapping = new HashMap<>();
 
     public NeuralNetLookup(NeuralNetFeature feature) {
-        this.selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+        this.selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
         this.selector.open(NeuralNetFeature.getClassTableName());
-        this.classificationSelector = Config.getDatabaseConfig().getSelectorSupplier().get();
+        this.classificationSelector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
         this.classificationSelector.open(feature.getClassificationTable());
         this.feature = feature;
     }

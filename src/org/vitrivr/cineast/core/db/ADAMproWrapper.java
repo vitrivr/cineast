@@ -46,7 +46,7 @@ public class ADAMproWrapper {
   private static final int maxMessageSize = 10_000_000;
   
   public ADAMproWrapper() {
-    DatabaseConfig config = Config.getDatabaseConfig();
+    DatabaseConfig config = Config.sharedConfig().getDatabase();
     this.channel = NettyChannelBuilder.forAddress(config.getHost(), config.getPort())
         .maxMessageSize(maxMessageSize).usePlaintext(config.getPlaintext()).build();
     this.definitionStub = AdamDefinitionGrpc.newFutureStub(channel);
