@@ -24,6 +24,7 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.RetrievalResultListener;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 
@@ -38,6 +39,8 @@ public class ContinousQueryDispatcher {
 	
 	private static ExecutorService executor = null;
 	private static LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(TASK_QUEUE_SIZE);
+	
+	private static ArrayList<RetrievalResultListener> resultListeners = new ArrayList<>();
 	
 	
 	public static void init(){
@@ -60,7 +63,7 @@ public class ContinousQueryDispatcher {
 		if(executor == null || executor.isShutdown()){
 			init();
 		}
-		LinkedList<Future<Pair<Retriever, List<StringDoublePair>>>> futures = new LinkedList<>();
+		LinkedList<Future<Pair<RetrievalTask, List<StringDoublePair>>>> futures = new LinkedList<>();
 		double wheightSum = 0;
 		Set<Retriever> features = retrievers.keySet();
 		for(Retriever r : features){
@@ -79,7 +82,7 @@ public class ContinousQueryDispatcher {
 		if(executor == null || executor.isShutdown()){
 			init();
 		}
-		LinkedList<Future<Pair<Retriever, List<StringDoublePair>>>> futures = new LinkedList<>();
+		LinkedList<Future<Pair<RetrievalTask, List<StringDoublePair>>>> futures = new LinkedList<>();
 		double wheightSum = 0;
 		Set<Retriever> features = retrievers.keySet();
 		for(Retriever r : features){
@@ -95,20 +98,23 @@ public class ContinousQueryDispatcher {
 	}
 	
 	
-	private static List<StringDoublePair> handleFutures(LinkedList<Future<Pair<Retriever, List<StringDoublePair>>>> futures, TObjectDoubleHashMap<Retriever> retrievers, double wheightSum) {
+	private static List<StringDoublePair> handleFutures(LinkedList<Future<Pair<RetrievalTask, List<StringDoublePair>>>> futures, TObjectDoubleHashMap<Retriever> retrievers, double wheightSum) {
 		TObjectDoubleHashMap<String> result = new TObjectDoubleHashMap<>();
 
 		while (!futures.isEmpty()) {
-			Iterator<Future<Pair<Retriever, List<StringDoublePair>>>> iter = futures.iterator();
+			Iterator<Future<Pair<RetrievalTask, List<StringDoublePair>>>> iter = futures.iterator();
 			while (iter.hasNext()) {
-				Future<Pair<Retriever, List<StringDoublePair>>> future = iter.next();
+				Future<Pair<RetrievalTask, List<StringDoublePair>>> future = iter.next();
 				if (future.isDone()) {
 					try {
-						Pair<Retriever, List<StringDoublePair>> pair = future.get();
+						Pair<RetrievalTask, List<StringDoublePair>> pair = future.get();
 						double weight = retrievers.get(pair.first);
 						List<StringDoublePair> list = pair.second;
 						if(list == null){
 							continue;
+						}
+						for(int i = 0; i < resultListeners.size(); ++i){
+						  resultListeners.get(i).notify(pair.second, pair.first);
 						}
 						for (StringDoublePair sdp : list) {
 							if (Double.isInfinite(sdp.value) || Double.isNaN(sdp.value)) {
@@ -155,5 +161,21 @@ public class ContinousQueryDispatcher {
 		}
 		
 		return _return;
+	}
+	
+	public static void addRetrievalResultListener(RetrievalResultListener listener){
+	  if(listener == null){
+	    return;
+	  }
+	  if(!resultListeners.contains(listener)){
+	    resultListeners.add(listener);
+	  }
+	}
+	
+	public static void removeRetrievalResultListener(RetrievalResultListener listener){
+	  if(listener == null){
+      return;
+    }
+	  resultListeners.remove(listener);
 	}
 }

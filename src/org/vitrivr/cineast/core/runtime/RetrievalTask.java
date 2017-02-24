@@ -11,53 +11,42 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 
-public class RetrievalTask implements Callable<Pair<Retriever, List<StringDoublePair>>> {
+public class RetrievalTask implements Callable<Pair<RetrievalTask, List<StringDoublePair>>> {
 
-	private Retriever retriever;
-	private QueryContainer query = null;
-	private String shotId = null;
+	private final Retriever retriever;
+	private final QueryContainer query;
+	private final String shotId;
 	private static final Logger LOGGER = LogManager.getLogger();
-	private QueryConfig config = null; //TODO
+	private final QueryConfig config;
 		
-	private RetrievalTask(Retriever retriever){
-		this.retriever = retriever;
-	}
 	
 	public RetrievalTask(Retriever retriever, QueryContainer query, QueryConfig qc) {
-		this(retriever);
+		this.retriever = retriever;
 		this.query = query;
 		this.config = qc;
+		this.shotId = null;
 	}
 	
 	public RetrievalTask(Retriever retriever, QueryContainer query) {
 		this(retriever, query, null);
 	}
 
-	/**
-	 *
-	 * @param retriever
-	 * @param segmentId
-	 * @param qc
-	 */
+
 	public RetrievalTask(Retriever retriever, String segmentId, QueryConfig qc) {
-		this(retriever);
+		this.retriever = retriever;
 		this.shotId = segmentId;
 		this.config = qc;
+		this.query = null;
 
 	}
 
-	/**
-	 *
-	 * @param retriever
-	 * @param segmentId
-	 */
 	public RetrievalTask(Retriever retriever, String segmentId){
 		this(retriever, segmentId, null);
 	}
 	
 	@Override
-	public Pair<Retriever, List<StringDoublePair>> call() throws Exception {
-		LOGGER.entry();
+	public Pair<RetrievalTask, List<StringDoublePair>> call() throws Exception {
+		LOGGER.traceEntry();
 		LOGGER.debug("starting {}", retriever.getClass().getSimpleName());
 		List<StringDoublePair> result;
 		if(this.query == null){
@@ -65,8 +54,67 @@ public class RetrievalTask implements Callable<Pair<Retriever, List<StringDouble
 		}else{
 			result = this.retriever.getSimilar(this.query, this.config);
 		}
-		return LOGGER.exit(new Pair<Retriever, List<StringDoublePair>>(this.retriever, result));
+		return LOGGER.traceExit(new Pair<RetrievalTask, List<StringDoublePair>>(this, result));
 	}
+
+  public Retriever getRetriever() {
+    return retriever;
+  }
+
+  public QueryContainer getQuery() {
+    return query;
+  }
+
+  public String getSegmentId() {
+    return shotId;
+  }
+
+  public QueryConfig getConfig() {
+    return config;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((config == null) ? 0 : config.hashCode());
+    result = prime * result + ((query == null) ? 0 : query.hashCode());
+    result = prime * result + ((retriever == null) ? 0 : retriever.hashCode());
+    result = prime * result + ((shotId == null) ? 0 : shotId.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    RetrievalTask other = (RetrievalTask) obj;
+    if (config == null) {
+      if (other.config != null)
+        return false;
+    } else if (!config.equals(other.config))
+      return false;
+    if (query == null) {
+      if (other.query != null)
+        return false;
+    } else if (!query.equals(other.query))
+      return false;
+    if (retriever == null) {
+      if (other.retriever != null)
+        return false;
+    } else if (!retriever.equals(other.retriever))
+      return false;
+    if (shotId == null) {
+      if (other.shotId != null)
+        return false;
+    } else if (!shotId.equals(other.shotId))
+      return false;
+    return true;
+  }
 
 
 }
