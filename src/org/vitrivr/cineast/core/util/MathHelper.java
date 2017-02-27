@@ -89,7 +89,34 @@ public class MathHelper {
 		}
 		return Math.sqrt(dist);
 	}
-	
+
+
+	/**
+	 * Checks whether the provided array is a zero array or not.
+	 *
+	 * @param array Array to check
+	 * @return true if array is not zero, false otherwise.
+	 */
+	public static boolean checkNotZero(double[] array) {
+		for (double v : array) {
+			if (v > 0.0 || v < 0.0) return true;
+		}
+		return false;
+	}
+
+    /**
+     * Checks whether the provided array is a zero array or not.
+     *
+     * @param array Array to check
+     * @return true if array is not zero, false otherwise.
+     */
+	public static boolean checkNotZero(float[] array) {
+		for (float v : array) {
+			if (v > 0.0 || v < 0.0) return true;
+		}
+		return false;
+	}
+
 	public static float limit(float val, float min, float max){
 		val = val > max ? max : val;
 		val = val < min ? min : val;
