@@ -31,6 +31,14 @@ public class ContinousRetrievalLogic {
 		return ContinousQueryDispatcher.retrieve(id, retrievers, API.getInitializer(), config);
 	}
 	
+	public static void addRetrievalResultListener(RetrievalResultListener listener){
+	  ContinousQueryDispatcher.addRetrievalResultListener(listener);
+  }
+  
+  public static void removeRetrievalResultListener(RetrievalResultListener listener){
+    ContinousQueryDispatcher.removeRetrievalResultListener(listener);
+  }
+	
 	public static void shutdown(){
 		ContinousQueryDispatcher.shutdown();
 	}
