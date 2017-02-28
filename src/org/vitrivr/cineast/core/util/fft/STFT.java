@@ -48,7 +48,7 @@ public class STFT {
     private List <Spectrum> powerSpectrum;
 
     /** List containing the magnitude spectrum of the FFT per timepoint. Lazily calculated! */
-    private List <Spectrum> maginitudeSpectrum;
+    private List <Spectrum> magnitudeSpectrum;
 
     /**
      * @param samples
@@ -80,7 +80,7 @@ public class STFT {
         this.time = FFTUtil.time(this.width, windowsize, samplingrate);
         this.stft = new ArrayList<>(this.width);
         this.powerSpectrum = null;
-        this.maginitudeSpectrum = null;
+        this.magnitudeSpectrum = null;
 
         /* Outer-loop: Create a sliding window and move it across the samples.
          *
@@ -124,14 +124,14 @@ public class STFT {
      *
      * @return
      */
-    public List<Spectrum> getMaginitudeSpectrum() {
-        if (this.maginitudeSpectrum == null) {
-            this.maginitudeSpectrum = new ArrayList<>(this.stft.size());
+    public List<Spectrum> getMagnitudeSpectrum() {
+        if (this.magnitudeSpectrum == null) {
+            this.magnitudeSpectrum = new ArrayList<>(this.stft.size());
             for (FFT fft : this.stft) {
-                this.maginitudeSpectrum.add(fft.getMagnitudeSpectrum(this.samplingrate));
+                this.magnitudeSpectrum.add(fft.getMagnitudeSpectrum(this.samplingrate));
             }
         }
-        return Collections.unmodifiableList(this.powerSpectrum);
+        return Collections.unmodifiableList(this.magnitudeSpectrum);
     }
 
     /**
