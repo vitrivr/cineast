@@ -21,10 +21,10 @@ import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.features.listener.RetrievalResultListener;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.RetrievalResultListener;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 

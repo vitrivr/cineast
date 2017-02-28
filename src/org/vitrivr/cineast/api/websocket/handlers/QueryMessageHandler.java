@@ -56,7 +56,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
             }
         }
 
-        QueryConfig qconf = Config.sharedConfig().getQuery();
+        QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
         List<StringDoublePair> result;
         for(String category : categoryMap.keySet()){
             TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
