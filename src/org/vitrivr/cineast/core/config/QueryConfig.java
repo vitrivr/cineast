@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.config;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class QueryConfig {
 	public static enum Distance{
@@ -12,20 +13,29 @@ public class QueryConfig {
 	private Distance distance = null;
 	private float[] distanceWeights = null;
 	private float norm = Float.NaN;
-	private NeuralNet net = null;
-	private float classificationCutoff = Float.NaN;
+	private NeuralNet net = null; //TODO remove from here
+	private float classificationCutoff = Float.NaN; //TODO find better place
+	private final UUID queryId;
 	
-	public QueryConfig(){}
+	private QueryConfig(){
+	  this.queryId = UUID.randomUUID();
+	}
+	
+	private QueryConfig(QueryConfig qc, UUID uuid){
+	  this.queryId = (uuid == null) ? UUID.randomUUID() : uuid;
+	  if(qc == null){
+	    return;
+	  }
+	  this.distance = qc.distance;
+    this.distanceWeights = qc.distanceWeights;
+    this.norm = qc.norm;
+    this.net = qc.net;
+    this.classificationCutoff = qc.classificationCutoff;
+    
+	}
 	
 	public QueryConfig(QueryConfig qc){
-		if(qc == null){
-			return;
-		}
-		this.distance = qc.distance;
-		this.distanceWeights = qc.distanceWeights;
-		this.norm = qc.norm;
-		this.net = qc.net;
-		this.classificationCutoff = qc.classificationCutoff;
+		this(qc, qc == null ? null : qc.queryId);
 	}
 
 	public Optional<NeuralNet> getNet() {
@@ -100,8 +110,20 @@ public class QueryConfig {
 		return this;
 	}
 	
+	public UUID getQueryId(){
+	  return this.queryId;
+	}
+	
 	public QueryConfig clone(){
 		return new QueryConfig(this);
+	}
+	
+	public QueryConfig cloneWithNewQueryId(){
+	  return new QueryConfig(this, UUID.randomUUID());
+	}
+	
+	public static QueryConfig create(){
+	  return new QueryConfig();
 	}
 	
 	public static QueryConfig clone(QueryConfig qc){
@@ -113,5 +135,11 @@ public class QueryConfig {
       return new QueryConfig();
     }
     return qc;
+  }
+  /**
+   * creates a new {@link QueryConfig} which is identical to the provided one except for the query id
+   */
+  public static QueryConfig newQueryConfigFromOther(QueryConfig qc){
+    return new QueryConfig(qc, null);
   }
 }

@@ -28,7 +28,7 @@ public class Config {
     private ImageCacheConfig imagecache;
     private VisualizationConfig visualization;
     private NeuralNetConfig neuralnet;
-    private QueryConfig query = (new QueryConfig()).setDistance(QueryConfig.Distance.manhattan); //FIXME remove as soon as chisquared distance works again;
+    private QueryConfig query;
     private HashMap<MediaType, DecoderConfig> decoders;
 
 
@@ -79,12 +79,6 @@ public class Config {
     }
     public void setRetriever(RetrieverConfig retriever) {
         this.retriever = retriever;
-    }
-
-    @JsonProperty
-    @Deprecated
-    public DecoderConfig getDecoder() {
-        return this.decoders.get(MediaType.VIDEO);
     }
 
     @JsonProperty

@@ -142,7 +142,7 @@ public class JSONAPIThread extends Thread {
 				TObjectDoubleHashMap<String> map;
 
 				//String resultCacheName = clientJSON.get("resultname") == null ? null : clientJSON.get("resultname").asString(); 
-				QueryConfig qconf = Config.sharedConfig().getQuery();
+				QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
 				
 				
 				for (JsonValue category : categories) {
@@ -222,7 +222,7 @@ public class JSONAPIThread extends Thread {
 					resultCacheName = null;
 				}
 				
-				QueryConfig qconf = Config.sharedConfig().getQuery();
+				QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
 				
 				DBResultCache.createIfNecessary(resultCacheName);
 				
@@ -265,7 +265,7 @@ public class JSONAPIThread extends Thread {
 					resultCacheName = null;
 				}
 				
-				QueryConfig qconf = Config.sharedConfig().getQuery();
+				QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
 				
 				DBResultCache.createIfNecessary(resultCacheName);
 				
