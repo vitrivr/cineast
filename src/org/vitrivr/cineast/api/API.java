@@ -1,9 +1,6 @@
 package org.vitrivr.cineast.api;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +30,7 @@ import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
+import org.vitrivr.cineast.core.importer.DataImportHandler;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
 import org.vitrivr.cineast.core.setup.EntityCreator;
@@ -200,7 +198,7 @@ public class API {
 				e.printStackTrace();
 			}
 		} else {
-			System.err.println(String.format("The specified codebook generator '{}' does not exist.", name));
+			System.err.println(String.format("The specified codebook generator '%s' does not exist.", name));
 		}
 	}
 
@@ -222,11 +220,23 @@ public class API {
                 System.err.println(String.format("Could not start handleExtraction with configuration file '%s'. Does the file exist?", file.toString()));
             }
 		} catch (IOException e) {
-			System.err.println(String.format("Could not start handleExtraction with configuration file '{}' due to a serious IO error.", file.toString()));
+			System.err.println(String.format("Could not start handleExtraction with configuration file '%s' due to a serious IO error.", file.toString()));
 		}
 	}
 
+
     /**
+     * Starts the DataImportHandler for PROTO files.
+     *
+     * @param path Path to the file or folder that should be imported.
+     * @param batchsize Batch size to use with the DataImportHandler
+     */
+	private static void handleImport(Path path, int batchsize) {
+        DataImportHandler handler = new DataImportHandler(2, batchsize);
+        handler.importProto(path);
+	}
+
+	/**
      * Performs a test of the JOGLOffscreenRenderer class. If the environment supports OpenGL rendering, an image
      * should be generated depicting two colored triangles on black background. If OpenGL rendering is not supported,
      * an exception will be thrown.
@@ -257,7 +267,6 @@ public class API {
 			System.err.println("Could not save rendered image due to an IO error.");
         }
     }
-
 
 	private static CommandLine handleCommandLine(String[] args) {
 		Options options = new Options();
@@ -355,6 +364,18 @@ public class API {
                             handle3Dtest();
                             break;
                         }
+						case "import": {
+							if (commands.size() < 2) {
+								System.err.println("You must specify the path to data file/folder.");
+								break;
+							}
+							Path path = Paths.get(commands.get(1));
+                            int batchsize = 100;
+                            if (commands.size() == 3) batchsize = Integer.parseInt(commands.get(2));
+
+							handleImport(path, batchsize);
+							break;
+						}
 						case "setup": {
 							HashMap<String, String> options = new HashMap<>();
 							if (commands.size() > 1) {
