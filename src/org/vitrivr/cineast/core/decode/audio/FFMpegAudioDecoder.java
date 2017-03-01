@@ -51,6 +51,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         supportedFiles.add("audio/mpeg");
         supportedFiles.add("audio/ogg");
         supportedFiles.add("audio/wav");
+        supportedFiles.add("audio/flac");
     }
 
     /** */
