@@ -19,7 +19,7 @@ public class CENS12BasslineShingle extends CENS {
     /**
      *
      */
-    private final static float MIN_FREQUENCY = 5.0f;
+    private final static float MIN_FREQUENCY = 10.0f;
 
     /**
      *
