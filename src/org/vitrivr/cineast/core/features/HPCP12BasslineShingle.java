@@ -18,7 +18,7 @@ import org.vitrivr.cineast.core.util.audio.HPCP;
  */
 public class HPCP12BasslineShingle extends HPCPShingle {
 
-    private final static float MIN_FREQUENCY = 5.0f;
+    private final static float MIN_FREQUENCY = 10.0f;
 
     private final static float MAX_FREQUENCY = 262.0f;
 

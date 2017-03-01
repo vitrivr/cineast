@@ -2,20 +2,15 @@ package org.vitrivr.cineast.core.features;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.ReadableFloatVector;
-import org.vitrivr.cineast.core.data.SegmentContainer;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.*;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.windows.BlackmanHarrisWindow;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * An Extraction and Retrieval module that leverages pure HPCP shingles according to [1]. These shingles can be used
@@ -31,10 +26,10 @@ import java.util.Map;
 public abstract class HPCPShingle extends AbstractFeatureModule {
 
     /** Size of the window during STFT in samples. */
-    private final static int WINDOW_SIZE = 4096;
+    private final static int WINDOW_SIZE = 8192;
 
     /** Overlap between two subsequent frames during STFT in samples. */
-    private final static int WINDOW_OVERLAP = 1024;
+    private final static int WINDOW_OVERLAP = 2205;
 
     /** Size of a shingle in number of HPCP features.
      *
@@ -51,9 +46,6 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
     /** HPCP resolution (12, 24, 36 bins). */
     private final HPCP.Resolution resolution;
 
-    /** The maximum distance at which partial results are still counted towards the final result. */
-    private final float threshold;
-
     /**
      * Default constructor.
      *
@@ -69,7 +61,6 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
         this.min_frequency = min_frequency;
         this.max_frequency = max_frequency;
         this.resolution = resolution;
-        this.threshold = 3.0f*this.maxDist/4.0f;
     }
 
     /**
@@ -81,33 +72,27 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
      */
     @Override
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-
-        STFT stft = sc.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
-        HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);
-        hpcps.addContribution(stft);
+        /* Get list of features. */
+        List<float[]> features = this.getFeatures(sc);
 
         /* Distance is always Cosine-Distance. */
-        qc.setDistance(QueryConfig.Distance.cosine);
+        qc.setDistance(QueryConfig.Distance.euclidean);
 
-        /* Get list of HPCP vectors sorted by distance from mean HPCP. */
-        List<StringDoublePair> results = new ArrayList<>();
-        HashMap<String, Double> map = new HashMap<>();
-        int vectors = hpcps.size() - SHINGLE_SIZE;
-        double max = 0.0;
-        for (int n = 0; n < vectors; n++) {
-            float[] feature = this.getHPCPShingle(hpcps, n);
-            if (feature != null) {
-                List<StringDoublePair> partial = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), MathHelper.normalizeL2(feature), "feature", qc);
-                for (StringDoublePair hit : partial) {
-                    double distance = hit.value;
-                    if (distance < threshold) {
-                        if (map.containsKey(hit.key)) {
-                            map.put(hit.key, map.get(hit.key) + 1.0);
-                        } else {
-                            map.put(hit.key, 1.0);
-                        }
-                        max = Math.max(map.get(hit.key), max);
-                    }
+        /* Prepare helper data-structures. */
+        final List<StringDoublePair> results = new ArrayList<>();
+        final HashMap<String, Double> map = new HashMap<>();
+        final HashSet<String> seen = new HashSet<>();
+
+        double max = 0.0f;
+        for (float[] feature : features) {
+            List<StringDoublePair> partial = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), feature, "feature", qc);
+            seen.clear();
+            for (StringDoublePair hit : partial) {
+                if (!map.containsKey(hit.key)) map.put(hit.key, 0.0);
+                if (!seen.contains(hit.key) ) {
+                    map.put(hit.key, map.get(hit.key) + (this.maxDist - hit.value));
+                    seen.add(hit.key);
+                    max = Math.max(map.get(hit.key), max);
                 }
             }
         }
@@ -116,6 +101,7 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
         for (Map.Entry<String, Double> entry : map.entrySet()) {
             results.add(new StringDoublePair(entry.getKey(), entry.getValue() / max));
         }
+
         return results;
     }
 
@@ -126,22 +112,33 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
      * @param segment SegmentContainer to process.
      */
     public void processShot(SegmentContainer segment) {
+        List<float[]> list = this.getFeatures(segment);
+        list.forEach(f -> this.persist(segment.getId(), new FloatVectorImpl(f)));
+    }
+
+    /**
+     * Returns a list of feature vectors given a SegmentContainer.
+     *
+     * @param segment SegmentContainer for which to calculate the feature vectors.
+     * @return List of HPCP Shingle feature vectors.
+     */
+    private List<float[]> getFeatures(SegmentContainer segment) {
         STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
         HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);
         hpcps.addContribution(stft);
 
-        List<ReadableFloatVector> list = new ArrayList<>();
+        int vectors = Math.max(hpcps.size() - SHINGLE_SIZE, 1);
+        double powers = 1.0f;
 
-        int vectors = hpcps.size() - SHINGLE_SIZE;
+        List<Pair<Double, float[]>> features = new ArrayList<>(vectors);
         for (int n = 0; n < vectors; n++) {
-            float[] feature = this.getHPCPShingle(hpcps, n);
-            if (feature != null) {
-                list.add(new FloatVectorImpl(MathHelper.normalizeL2(feature)));
-            }
+            Pair<Double, float[]> feature = this.getHPCPShingle(hpcps, n);
+            features.add(feature);
+            powers *= feature.first;
         }
 
-        /* Persist most representative HPCP vector. */
-        this.persist(segment.getId(), list);
+        final double threshold = (Math.pow(powers, 1.0/features.size()) / 4.0);
+        return features.stream().filter(f -> (f.first > threshold)).map(f -> f.second).collect(Collectors.toList());
     }
 
 
@@ -153,18 +150,14 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
      * @param shift The index to shift the HPCP's by.
      * @return HPCP shingle (feature vector) or null.
      */
-    private float[] getHPCPShingle(HPCP hpcps, int shift) {
+    private Pair<Double, float[]> getHPCPShingle(HPCP hpcps, int shift) {
         float[] feature = new float[SHINGLE_SIZE * this.resolution.bins];
-
-        for (int i = shift; i < SHINGLE_SIZE; i++) {
-            float[] hpcp =  hpcps.getHpcp(i);
-            System.arraycopy(hpcp, 0, feature, (i-shift) * this.resolution.bins, hpcp.length);
+        for (int i = shift; i < SHINGLE_SIZE + shift; i++) {
+            if (i < hpcps.size()) {
+                float[] hpcp = hpcps.getHpcp(i);
+                System.arraycopy(hpcp, 0, feature, (i - shift) * this.resolution.bins, hpcp.length);
+            }
         }
-
-        if (MathHelper.checkNotZero(feature)) {
-            return MathHelper.normalizeL2(feature);
-        } else {
-            return null;
-        }
+        return new Pair<>(MathHelper.normL2(feature), MathHelper.normalizeL2(feature));
     }
 }
