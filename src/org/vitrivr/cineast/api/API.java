@@ -222,7 +222,8 @@ public class API {
                 System.err.println(String.format("Could not start handleExtraction with configuration file '%s'. Does the file exist?", file.toString()));
             }
 		} catch (IOException e) {
-			System.err.println(String.format("Could not start handleExtraction with configuration file '{}' due to a serious IO error.", file.toString()));
+			System.err.println(String.format("Could not start handleExtraction with configuration file '%s' due to a serious IO error.", file.toString()));
+			e.printStackTrace();
 		}
 	}
 
