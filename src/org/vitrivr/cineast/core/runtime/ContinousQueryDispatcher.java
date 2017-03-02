@@ -108,7 +108,7 @@ public class ContinousQueryDispatcher {
 				if (future.isDone()) {
 					try {
 						Pair<RetrievalTask, List<StringDoublePair>> pair = future.get();
-						double weight = retrievers.get(pair.first);
+						double weight = retrievers.get(pair.first.getRetriever());
 						List<StringDoublePair> list = pair.second;
 						if(list == null){
 							continue;
