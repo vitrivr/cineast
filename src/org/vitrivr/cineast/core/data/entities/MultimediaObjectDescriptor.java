@@ -16,15 +16,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @created 10.01.17
  */
 public class MultimediaObjectDescriptor implements ExistenceCheck {
-
-
     /** Name of the entity in the persistence layer. */
     public static final String ENTITY = "cineast_multimediaobject";
 
     /** Field names in the persistence layer. */
     public static final String[] FIELDNAMES = {"objectid", "mediatype", "name", "path"};
-
-    private static MultimediaObjectLookup mlookup = new MultimediaObjectLookup();
 
     private final String objectId;
     private final String name, path;
@@ -47,24 +43,6 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
     public static MultimediaObjectDescriptor newMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type) {
         String objectId = generator.next(path, type);
         return new MultimediaObjectDescriptor(objectId, path.getFileName().toString(), path.toString(), type, false);
-    }
-
-    /**
-     * 
-     * Convenience method to lookup a MultimediaObjectDescriptor for a given path and type or create a new one if needed.
-     * If a new descriptor is required, newMultimediaObjectDescriptor is used.
-     * 
-     * @param generator ObjectIdGenerator used for ID generation.
-     * @param path The Path that points to the file for which a new MultimediaObjectDescriptor should be created.
-     * @param type MediaType of the new MultimediaObjectDescriptor
-     * @return the existing or a new MultimediaObjectDescriptor
-     */
-    public static MultimediaObjectDescriptor getOrCreateMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type){
-      MultimediaObjectDescriptor descriptor = mlookup.lookUpObjectByPath(path.getFileName().toString());
-      if(descriptor.exists() && descriptor.getMediatype() == type){
-        return descriptor;
-      }
-      return newMultimediaObjectDescriptor(generator, path, type);
     }
     
     /**

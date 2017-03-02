@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
@@ -16,16 +14,24 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.db.DBSelector;
 
-public class MultimediaObjectLookup {
+public class MultimediaObjectLookup extends AbstractEntityReader {
 
-  private static final Logger LOGGER = LogManager.getLogger();
+    /**
+     * Default constructor
+     */
+    public MultimediaObjectLookup() {
+        this(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
+    }
 
-  private final DBSelector selector;
-
-  public MultimediaObjectLookup() {
-    this.selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-    this.selector.open(MultimediaObjectDescriptor.ENTITY);
-  }
+    /**
+     * Constructor for MultimediaObjectLookup
+     *
+     * @param selector DBSelector to use for the MultimediaMetadataReader instance.
+     */
+    public MultimediaObjectLookup(DBSelector selector) {
+      super(selector);
+      this.selector.open(MultimediaObjectDescriptor.ENTITY);
+    }
 
   public MultimediaObjectDescriptor lookUpObjectById(String objectId) {
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MultimediaObjectDescriptor.FIELDNAMES[0], objectId);
@@ -143,16 +149,6 @@ public class MultimediaObjectLookup {
 
     return _return;
 
-  }
-
-  public void close() {
-    this.selector.close();
-  }
-
-  @Override
-  protected void finalize() throws Throwable {
-    this.close();
-    super.finalize();
   }
 
   public List<MultimediaObjectDescriptor> getAllVideos() {

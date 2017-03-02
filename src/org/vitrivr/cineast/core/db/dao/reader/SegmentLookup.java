@@ -5,27 +5,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.db.DBSelector;
 
-public class SegmentLookup {
-
-	private static final Logger LOGGER = LogManager.getLogger();
-	private final DBSelector selector;
-	
+public class SegmentLookup extends AbstractEntityReader {
+    /**
+     * Default constructor.
+     */
 	public SegmentLookup(){
-		this.selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-		this.selector.open(SegmentDescriptor.ENTITY);
+		this(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 	}
-	
-	public void close(){
-		this.selector.close();
-	}
+
+    /**
+     * Constructor for SegmentLookup
+     *
+     * @param selector DBSelector to use for the MultimediaMetadataReader instance.
+     */
+	public SegmentLookup(DBSelector selector) {
+	    super(selector);
+        this.selector.open(SegmentDescriptor.ENTITY);
+    }
 	
 	public SegmentDescriptor lookUpShot(String segmentId){
 		
@@ -184,12 +186,5 @@ public class SegmentLookup {
 		}
 		
 		return _return;
-	}
-
-
-	@Override
-	protected void finalize() throws Throwable {
-		close();
-		super.finalize();
 	}
 }

@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -22,18 +19,22 @@ import java.util.Map;
  * @version 1.0
  * @created 10.02.17
  */
-public class MultimediaMetadataReader {
-
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    /** DBSelector instance used to perform the DB lookup. */
-    private final DBSelector selector;
+public class MultimediaMetadataReader extends AbstractEntityReader {
 
     /**
      * Default constructor.
      */
     public MultimediaMetadataReader(){
-        this.selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+        this(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
+    }
+
+    /**
+     * Constructor for MultimediaMetadataReader
+     *
+     * @param selector DBSelector to use for the MultimediaMetadataReader instance.
+     */
+    public MultimediaMetadataReader(DBSelector selector) {
+        super(selector);
         this.selector.open(MultimediaMetadataDescriptor.ENTITY);
     }
 
