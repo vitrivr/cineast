@@ -22,7 +22,7 @@ public abstract class AbstractEntityReader {
      * @param selector DBSelector to use for the MultimediaMetadataReader instance.
      */
     public AbstractEntityReader(DBSelector selector) {
-        this.selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+        this.selector = selector;
     }
 
     /**
