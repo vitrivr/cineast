@@ -43,9 +43,6 @@ public class AudioSegment implements SegmentContainer {
     /** Number of channels in the AudioSegment. Determined by the number of channels in the first AudioFrame. */
     private Integer channels;
 
-    /** */
-    private Map<String,STFT> stft = new HashMap<>();
-
     /**
      * @return a unique id of this
      */
@@ -94,19 +91,22 @@ public class AudioSegment implements SegmentContainer {
      * the number of frames and the duration of the segment.
      *
      * @param frame AudioFrame to add.
+     * @return boolean True if frame was added, false otherwise.
      */
-    public void addFrame(AudioFrame frame) {
-        if (frame == null) return;
+    public boolean addFrame(AudioFrame frame) {
+        if (frame == null) return false;
         if (this.channels == null) this.channels = frame.getChannels();
         if (this.samplerate == null) this.samplerate = frame.getSampleRate();
 
         if (this.channels != frame.getChannels() || this.samplerate != frame.getSampleRate()) {
-            return;
+            return false;
         }
 
         this.totalSamples += frame.numberOfSamples();
         this.totalDuration += frame.getDuration();
         this.frames.add(frame);
+
+        return true;
     }
 
     /**
@@ -170,12 +170,11 @@ public class AudioSegment implements SegmentContainer {
     }
 
     /**
-     * Getter for the start (in seconds) relative to the audio-file this
-     * segment belongs to.
+     * Getter for the start (in seconds) of this segment.
      *
      * @return
      */
-    public float getRelativeStart(){
+    public float getAbsoluteStart(){
         if (!this.frames.isEmpty()) {
             return this.frames.get(0).getStart();
         } else {
@@ -184,12 +183,11 @@ public class AudioSegment implements SegmentContainer {
     }
 
     /**
-     * Getter for the end (in seconds) relative to the audio-file this
-     * segment belongs to.
+     * Getter for the end (in seconds) of this segment.
      *
      * @return
      */
-    public float getRelativeEnd(){
+    public float getAbsoluteEnd(){
         if (!this.frames.isEmpty()) {
             return this.frames.get(this.frames.size()-1).getEnd();
         } else {

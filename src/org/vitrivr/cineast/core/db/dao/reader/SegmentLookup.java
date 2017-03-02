@@ -47,7 +47,10 @@ public class SegmentLookup {
 		PrimitiveTypeProvider sequenceProvider = map.get(SegmentDescriptor.FIELDNAMES[2]);
 		PrimitiveTypeProvider startProvider = map.get(SegmentDescriptor.FIELDNAMES[3]);
 		PrimitiveTypeProvider endProvider = map.get(SegmentDescriptor.FIELDNAMES[4]);
-		
+		PrimitiveTypeProvider startabsProvider = map.get(SegmentDescriptor.FIELDNAMES[5]);
+		PrimitiveTypeProvider endabsProvider = map.get(SegmentDescriptor.FIELDNAMES[6]);
+
+
 		if(idProvider == null){
 			LOGGER.error("no id in segment");
 			return new SegmentDescriptor();
@@ -96,8 +99,28 @@ public class SegmentLookup {
 			LOGGER.error("invalid data type for field segmentend in segment, expected int, got {}", endProvider.getType());
 			return new SegmentDescriptor();
 		}
-		
-		return new SegmentDescriptor(mmobjidProvider.getString(), idProvider.getString(), sequenceProvider.getInt(), startProvider.getInt(), endProvider.getInt());
+
+		if(startabsProvider.getType() == null) {
+			LOGGER.error("No absolute startpoint found in segment.");
+			return new SegmentDescriptor();
+		}
+
+		if(startabsProvider.getType() != ProviderDataType.FLOAT){
+			LOGGER.error("Invalid data type for absolute startpoint in segment, expected float, got {}.", startabsProvider.getType());
+			return new SegmentDescriptor();
+		}
+
+		if(endabsProvider.getType() == null) {
+			LOGGER.error("No absolute endpoint found in segment.");
+			return new SegmentDescriptor();
+		}
+
+		if(endabsProvider.getType() != ProviderDataType.FLOAT){
+			LOGGER.error("Invalid data type for absolute endpoint in segment, expected float, got {}.", endabsProvider.getType());
+			return new SegmentDescriptor();
+		}
+
+		return new SegmentDescriptor(mmobjidProvider.getString(), idProvider.getString(), sequenceProvider.getInt(), startProvider.getInt(), endProvider.getInt(), startabsProvider.getFloat(), endabsProvider.getFloat());
 	}
 	
 	public Map<String, SegmentDescriptor> lookUpShots(String...ids){

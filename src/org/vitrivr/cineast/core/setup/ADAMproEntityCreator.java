@@ -89,11 +89,13 @@ public class ADAMproEntityCreator implements EntityCreator {
 		
 		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-		fields.add(builder.setName("segmentid").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		fields.add(builder.setName("objectid").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		fields.add(builder.setName("segmentnumber").setAttributetype(AttributeType.INT).build());
-		fields.add(builder.setName("segmentstart").setAttributetype(AttributeType.INT).build());
-		fields.add(builder.setName("segmentend").setAttributetype(AttributeType.INT).build());
+		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.INT).build());
+		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.INT).build());
+		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[4]).setAttributetype(AttributeType.INT).build());
+		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[5]).setAttributetype(AttributeType.FLOAT).build());
+		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[6]).setAttributetype(AttributeType.FLOAT).build());
 
 		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(SegmentDescriptor.ENTITY).addAllAttributes(fields).build();
 		

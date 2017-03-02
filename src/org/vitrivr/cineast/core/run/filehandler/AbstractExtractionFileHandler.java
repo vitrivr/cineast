@@ -133,7 +133,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         Decoder<T> decoder = this.newDecoder();
         Segmenter<T> segmenter = this.newSegmenter();
 
-        LOGGER.info("Starting image extraction with {} files.", this.files.size());
+        LOGGER.info("Starting extraction with {} files.", this.files.size());
 
         /* Submit the ExtractionPipeline to the executor-service. */
         this.executorService.execute(pipeline);
@@ -172,7 +172,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                     SegmentContainer container = segmenter.getNext();
                     if (container != null) {
                         /* Create segment-descriptor and try to persist it. */
-                        SegmentDescriptor segmentDescriptor = SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd());
+                        SegmentDescriptor segmentDescriptor = SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd());
                         if (!this.checkAndPersistSegment(segmentDescriptor)) continue;
 
                         /* Update container ID's. */
@@ -181,7 +181,6 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
                         /* Emit container to extraction pipeline. */
                         this.pipeline.emit(container);
-
 
                          /* Increase the segment number. */
                         segmentNumber+=1;
