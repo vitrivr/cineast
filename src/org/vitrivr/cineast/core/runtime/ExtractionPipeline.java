@@ -179,6 +179,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         }
 
         for (Extractor exporter : this.context.exporters()) {
+            this.initializer.initialize(exporter);
             this.extractors.add(exporter);
         }
 

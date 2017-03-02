@@ -62,7 +62,6 @@ public class ShotThumbNails implements Extractor {
      */
 	@Override
 	public void init(PersistencyWriterSupplier supply) {
-		this.folder = new File( Config.sharedConfig().getExtractor().getOutputLocation(), "thumbnails");
 		if(!this.folder.exists()){
 			this.folder.mkdirs();
 		}
