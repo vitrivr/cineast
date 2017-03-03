@@ -2,7 +2,7 @@ package org.vitrivr.cineast.core.run.filehandler;
 
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.decode.general.Decoder;
-import org.vitrivr.cineast.core.decode.video.NFFMpegVideoDecoder;
+import org.vitrivr.cineast.core.decode.video.FFMpegVideoDecoder;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
@@ -34,7 +34,7 @@ public class VideoExtractionFileHandler extends AbstractExtractionFileHandler<Vi
      */
     @Override
     public Decoder<VideoFrame> newDecoder() {
-        return new NFFMpegVideoDecoder();
+        return new FFMpegVideoDecoder();
     }
 
     /**
