@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;

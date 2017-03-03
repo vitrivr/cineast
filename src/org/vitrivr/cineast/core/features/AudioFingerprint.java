@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.*;
 
 import org.vitrivr.cineast.core.features.extractor.Extractor;

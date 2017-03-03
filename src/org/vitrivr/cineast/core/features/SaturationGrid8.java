@@ -12,10 +12,10 @@ import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StatElement;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -84,10 +84,10 @@ public class SaturationGrid8 extends AbstractFeatureModule {
 			for(int i = 0; i < 64; ++i){
 				stats.add(new StatElement());
 			}
-			List<Frame> frames = shot.getFrames();
+			List<VideoFrame> videoFrames = shot.getVideoFrames();
 			ArrayList<Float> saturations = null;
 			int width = 0, height = 0;
-			for(Frame f : frames){
+			for(VideoFrame f : videoFrames){
 				if(saturations == null){
 					width = f.getImage().getWidth();
 					height = f.getImage().getHeight();

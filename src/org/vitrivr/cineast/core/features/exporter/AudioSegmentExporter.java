@@ -3,8 +3,8 @@ package org.vitrivr.cineast.core.features.exporter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.SegmentContainer;
-import org.vitrivr.cineast.core.data.audio.AudioFrame;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
@@ -24,7 +24,7 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
 /**
- * Exports a given audio-segment as mono WAV file.
+ * Exports the audio in a given segment as mono WAV file.
  *
  * @author rgasser
  * @version 1.0
@@ -86,7 +86,7 @@ public class AudioSegmentExporter implements Extractor {
             stream.write(buffer.array());
             stream.close();
         } catch (IOException | BufferOverflowException e) {
-            LOGGER.fatal("Could not export audio segment {} due to a serious IO error.", shot.getId(), LogHelper.getStackTrace(e));
+            LOGGER.fatal("Could not export frames segment {} due to a serious IO error.", shot.getId(), LogHelper.getStackTrace(e));
         }
     }
 
@@ -95,7 +95,7 @@ public class AudioSegmentExporter implements Extractor {
      *
      * @param buffer
      * @param samplingrate Samplingrate of the output file.
-     * @param length Length in bytes of the audio data
+     * @param length Length in bytes of the frames data
      */
     private void writeWaveHeader(ByteBuffer buffer, float samplingrate, int length) {
         /* RIFF Chunk. */

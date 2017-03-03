@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ColorLayoutDescriptor;

@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.providers;
 
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
 public interface SegmentProvider {
 

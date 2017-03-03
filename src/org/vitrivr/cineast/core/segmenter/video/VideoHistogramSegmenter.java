@@ -2,6 +2,9 @@ package org.vitrivr.cineast.core.segmenter.video;
 
 import org.vitrivr.cineast.core.data.*;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.VideoSegment;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.segmenter.FuzzyColorHistogramCalculator;
@@ -18,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @created 17.01.17
  */
-public class VideoHistogramSegmenter implements Segmenter<Frame> {
+public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
 
     private static final double THRESHOLD = 0.05;
 
@@ -31,11 +34,11 @@ public class VideoHistogramSegmenter implements Segmenter<Frame> {
     private static final int SEGMENT_POLLING_TIMEOUT = 1000;
 
 
-    private Decoder<Frame> decoder;
+    private Decoder<VideoFrame> decoder;
 
-    private LinkedList<Frame> frameList = new LinkedList<>();
+    private LinkedList<VideoFrame> videoFrameList = new LinkedList<>();
 
-    private LinkedList<Pair<Frame,Double>> preShotList = new LinkedList<>();
+    private LinkedList<Pair<VideoFrame,Double>> preShotList = new LinkedList<>();
 
     private LinkedBlockingQueue<SegmentContainer> segments = new LinkedBlockingQueue<>(SEGMENT_QUEUE_LENGTH);
 
@@ -76,7 +79,7 @@ public class VideoHistogramSegmenter implements Segmenter<Frame> {
      * @param f
      * @return
      */
-    private static Histogram getHistogram(Frame f){
+    private static Histogram getHistogram(VideoFrame f){
         return FuzzyColorHistogramCalculator.getSubdividedHistogramNormalized(f.getImage().getThumbnailImage(), 3);
     }
 
@@ -87,13 +90,13 @@ public class VideoHistogramSegmenter implements Segmenter<Frame> {
      * @param decoder Decoder used for media-decoding.
      */
     @Override
-    public synchronized void init(Decoder<Frame> decoder) {
+    public synchronized void init(Decoder<VideoFrame> decoder) {
         if (!this.isrunning) {
             this.decoder = decoder;
             this.complete = false;
             this.preShotList.clear();
             this.segments.clear();
-            this.frameList.clear();
+            this.videoFrameList.clear();
         }
     }
 
@@ -149,43 +152,43 @@ public class VideoHistogramSegmenter implements Segmenter<Frame> {
         }
 
         while (!this.decoder.complete()) {
-            if (this.frameList.isEmpty()) queueFrames();
+            if (this.videoFrameList.isEmpty()) queueFrames();
 
-            Shot _return = null;
+            VideoSegment _return = null;
 
             if (!preShotList.isEmpty()) {
-                _return = new Shot(this.decoder.count());
+                _return = new VideoSegment(this.decoder.count());
                 while (!preShotList.isEmpty()) {
                     _return.addFrame(preShotList.removeFirst().first);
                 }
             }
 
-            if (this.frameList.isEmpty()) {
+            if (this.videoFrameList.isEmpty()) {
                 this.segments.offer(_return);
                 continue; //no more shots to segment
             }
 
             if (_return == null) {
-                _return = new Shot(this.decoder.count());
+                _return = new VideoSegment(this.decoder.count());
             }
 
 
-            Frame frame = this.frameList.poll();
+            VideoFrame videoFrame = this.videoFrameList.poll();
 
             SegmentDescriptor bounds = this.knownShotBoundaries.size() > 0 ? this.knownShotBoundaries.remove(0) : null;
 
-            if (bounds != null && frame.getId() >= bounds.getStart() && frame.getId() <= bounds.getEnd()) {
+            if (bounds != null && videoFrame.getId() >= bounds.getStart() && videoFrame.getId() <= bounds.getEnd()) {
 
-                _return.addFrame(frame);
+                _return.addFrame(videoFrame);
                 queueFrames(bounds.getEnd() - bounds.getStart());
                 do {
-                    frame = this.frameList.poll();
-                    if (frame != null) {
-                        _return.addFrame(frame);
+                    videoFrame = this.videoFrameList.poll();
+                    if (videoFrame != null) {
+                        _return.addFrame(videoFrame);
                     } else {
                         break;
                     }
-                } while (frame.getId() < bounds.getEnd());
+                } while (videoFrame.getId() < bounds.getEnd());
 
                 //addSubtitleItems(_return);
 
@@ -193,26 +196,26 @@ public class VideoHistogramSegmenter implements Segmenter<Frame> {
                 continue;
 
             } else {
-                Histogram hPrev, h = getHistogram(frame);
-                _return.addFrame(frame);
+                Histogram hPrev, h = getHistogram(videoFrame);
+                _return.addFrame(videoFrame);
                 while (true) {
-                    if ((frame = this.frameList.poll()) == null) {
+                    if ((videoFrame = this.videoFrameList.poll()) == null) {
                         queueFrames();
-                        if ((frame = this.frameList.poll()) == null) {
+                        if ((videoFrame = this.videoFrameList.poll()) == null) {
                             this.segments.offer(_return);
                             break;
                         }
                     }
                     hPrev = h;
-                    h = getHistogram(frame);
+                    h = getHistogram(videoFrame);
                     double distance = hPrev.getDistance(h);
 
-                    preShotList.offer(new Pair<Frame,Double>(frame, distance));
+                    preShotList.offer(new Pair<VideoFrame,Double>(videoFrame, distance));
 
                     if (preShotList.size() > PRESHOT_QUEUE_LENGTH) {
                         double max = 0;
                         int index = -1, i = 0;
-                        for (Pair<Frame, Double> pair : preShotList) {
+                        for (Pair<VideoFrame, Double> pair : preShotList) {
                             if (pair.second > max) {
                                 index = i;
                                 max = pair.second;
@@ -220,7 +223,7 @@ public class VideoHistogramSegmenter implements Segmenter<Frame> {
                             i++;
                         }
                         if (max <= THRESHOLD && _return.getNumberOfFrames() < MAX_SHOT_LENGTH) { //no cut
-                            for (Pair<Frame, Double> pair : preShotList) {
+                            for (Pair<VideoFrame, Double> pair : preShotList) {
                                 _return.addFrame(pair.first);
                             }
                             preShotList.clear();
@@ -257,12 +260,12 @@ public class VideoHistogramSegmenter implements Segmenter<Frame> {
      */
     private  boolean queueFrames(int number) {
         for(int i = 0; i < number; ++i){
-            Frame f = this.decoder.getNext();
+            VideoFrame f = this.decoder.getNext();
             if (f == null) { //no more frames
                 return false;
             } else {
                 synchronized (this) {
-                    this.frameList.offer(f);
+                    this.videoFrameList.offer(f);
                 }
             }
         }
