@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.segmenter.audio;
 
-import org.vitrivr.cineast.core.data.SegmentContainer;
-import org.vitrivr.cineast.core.data.audio.AudioFrame;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.segments.AudioSegment;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
@@ -66,7 +66,7 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
      * Method used to initialize the Segmenter. A class implementing the Decoder interface
      * with the same type must be provided.
      *
-     * @param decoder Decoder used for audio-decoding.
+     * @param decoder Decoder used for frames-decoding.
      */
     @Override
     public void init(Decoder<AudioFrame> decoder) {
@@ -135,10 +135,10 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
             AudioFrame newFrame = this.decoder.getNext();
             if (newFrame != null) {
                 this.currentSegment.addFrame(newFrame);
-                if (this.currentSegment.getDuration() >= (this.length - this.overlap)) {
+                if (this.currentSegment.getAudioDuration() >= (this.length - this.overlap)) {
                     this.overlapQueue.offerLast(newFrame);
                 }
-                if (this.currentSegment.getDuration() >= this.length) {
+                if (this.currentSegment.getAudioDuration() >= this.length) {
                     this.nextCycle(false);
                 }
             } else if (this.decoder.complete()) {

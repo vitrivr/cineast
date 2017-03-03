@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.data.segments;
 
-import org.vitrivr.cineast.core.data.SegmentContainer;
-import org.vitrivr.cineast.core.data.audio.AudioFrame;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.windows.WindowFunction;
 
@@ -11,7 +10,7 @@ import java.util.*;
  * This AudioSegment is part of the Cineast data model and can hold an arbitrary number of AudioFrames that somehow
  * belong together. The class itself is agnostic to how segmenting is organized.
  *
- * The AudioSegment implements the SegmentContainer interface and provides access to different, audio-related data.
+ * The AudioSegment implements the SegmentContainer interface and provides access to different, frames-related data.
  *
  *
  * @TODO:
@@ -123,7 +122,7 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return
      */
-    public float getDuration() {
+    public float getAudioDuration() {
         return totalDuration;
     }
 
@@ -201,16 +200,20 @@ public class AudioSegment implements SegmentContainer {
      * Calculates and returns the Short-term Fourier Transform of the
      * current AudioSegment.
      *
-     * @param windowsize
-     * @param overlap
-     * @param function
+     * @param windowsize Size of the window used during STFT. Must be a power of two.
+     * @param overlap Overlap in samples between two subsequent windows.
+     * @param function WindowFunction to apply before calculating the STFT.
      *
-     * @return STFT of the current AudioSegment.
+     * @return STFT of the current AudioSegment or null if the segment is empty.
      */
     @Override
     public STFT getSTFT(int windowsize, int overlap, WindowFunction function) {
-       STFT stft = new STFT(this.getMeanSamplesAsDouble(), this.samplerate);
-       stft.forward(windowsize, overlap, function);
-       return stft;
+        if (this.frames.size() > 0) {
+            STFT stft = new STFT(this.getMeanSamplesAsDouble(), this.samplerate);
+            stft.forward(windowsize, overlap, function);
+            return stft;
+        } else {
+            return null;
+        }
     }
 }

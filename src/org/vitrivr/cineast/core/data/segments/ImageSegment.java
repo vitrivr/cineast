@@ -1,9 +1,8 @@
 package org.vitrivr.cineast.core.data.segments;
 
-import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
-import org.vitrivr.cineast.core.data.SegmentContainer;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class ImageSegment implements SegmentContainer {
 
     private MultiImage image;
 
-    private Frame frame;
+    private VideoFrame videoFrame;
 
     private String segmentId;
 
@@ -30,7 +29,7 @@ public class ImageSegment implements SegmentContainer {
      */
     public ImageSegment(BufferedImage image) {
         this.image = MultiImageFactory.newMultiImage(image);
-        this.frame = new Frame(1, this.image);
+        this.videoFrame = new VideoFrame(1, this.image);
     }
 
     /**
@@ -86,10 +85,9 @@ public class ImageSegment implements SegmentContainer {
      *
      * @return
      */
-    @Override
-    public List<Frame> getFrames() {
-        ArrayList<Frame> list = new ArrayList<>(1);
-        list.add(this.frame);
+    public List<VideoFrame> getVideoFrames() {
+        ArrayList<VideoFrame> list = new ArrayList<>(1);
+        list.add(this.videoFrame);
         return list;
     }
 
@@ -98,7 +96,7 @@ public class ImageSegment implements SegmentContainer {
      *
      * @return
      */
-    public Frame getMostRepresentativeFrame() {
-        return this.frame;
+    public VideoFrame getMostRepresentativeFrame() {
+        return this.videoFrame;
     }
 }

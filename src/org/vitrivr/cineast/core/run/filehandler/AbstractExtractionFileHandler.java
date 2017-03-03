@@ -6,10 +6,12 @@ import org.apache.logging.log4j.Logger;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IdConfig;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
@@ -58,6 +60,12 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     /** SegmentWriter used to persist SegmentDescriptors created during the extraction. */
     private final MultimediaMetadataWriter metadataWriter;
 
+    /** MultimediaObjectLookup used to lookup existing MultimediaObjectDescriptors during the extraction. */
+    private final MultimediaObjectLookup objectReader;
+
+    /** SegmentLookup used to lookup existing SegmentDescriptors during the extraction. */
+    private final SegmentLookup segmentReader;
+
     /** Deque of files that are being extracted. */
     private final Deque<Path> files = new ArrayDeque<>();
 
@@ -100,13 +108,22 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
          /* Loads the files into the Deque. */
         this.preprocess(files);
 
-        /* Setup all the required helper classes. */
+        /* Setup the required persistence-writer classes. */
         PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
         this.objectWriter = new MultimediaObjectWriter(writerSupplier.get(),10);
         this.segmentWriter = new SegmentWriter(writerSupplier.get(),10);
         this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get(),10);
+
+        /* Setup the required persistence-reader classes. */
+        DBSelectorSupplier readerSupplier = context.persistencyReader();
+        this.objectReader = new MultimediaObjectLookup(readerSupplier.get());
+        this.segmentReader = new SegmentLookup(readerSupplier.get());
+
+        /* Setup the ExtractionPipeline and the metadata extractors. */
         this.pipeline = new ExtractionPipeline(context, new DefaultExtractorInitializer(writerSupplier));
         this.metadataExtractors = context.metadataExtractors();
+
+        /* Store the context. */
         this.context = context;
     }
 
@@ -130,7 +147,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         Decoder<T> decoder = this.newDecoder();
         Segmenter<T> segmenter = this.newSegmenter();
 
-        LOGGER.info("Starting image extraction with {} files.", this.files.size());
+        LOGGER.info("Starting extraction with {} files.", this.files.size());
 
         /* Submit the ExtractionPipeline to the executor-service. */
         this.executorService.execute(pipeline);
@@ -143,8 +160,8 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         while ((path = this.files.poll()) != null) {
             LOGGER.info("Processing file {}.", path);
 
-            /* Create new MultimediaObjectDescriptor for new file. */
-            MultimediaObjectDescriptor descriptor = MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, this.context.inputPath().relativize(path), context.sourceType());
+            /* Create / lookup MultimediaObjectDescriptor for new file. */
+            MultimediaObjectDescriptor descriptor = this.getOrCreateMultimediaObjectDescriptor(generator, this.context.inputPath().relativize(path), context.sourceType());
             if (!this.checkAndPersistMultimediaObject(descriptor)) continue;
 
             /* Pass file to decoder and decoder to segmenter. */
@@ -169,7 +186,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                     SegmentContainer container = segmenter.getNext();
                     if (container != null) {
                         /* Create segment-descriptor and try to persist it. */
-                        SegmentDescriptor segmentDescriptor = SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd());
+                        SegmentDescriptor segmentDescriptor = SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd());
                         if (!this.checkAndPersistSegment(segmentDescriptor)) continue;
 
                         /* Update container ID's. */
@@ -178,7 +195,6 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
                         /* Emit container to extraction pipeline. */
                         this.pipeline.emit(container);
-
 
                          /* Increase the segment number. */
                         segmentNumber+=1;
@@ -264,14 +280,17 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @return true if object should be processed further or false if it should be skipped.
      */
     private boolean checkAndPersistMultimediaObject(MultimediaObjectDescriptor descriptor) {
+        if (descriptor.exists()) { //this is true when a descriptor is used which has previously been retrieved from the database
+          return true;
+        }
+      
         if (descriptor.getObjectId() == null) {
             LOGGER.warn("The objectId that was generated for {} is empty. This object cannot be persisted and will be skipped.", descriptor.getPath());
             return false;
         }
 
-        MultimediaObjectLookup mlookup = new MultimediaObjectLookup();
         if (this.context.existenceCheck() != IdConfig.ExistenceCheck.NOCHECK) {
-            if (!mlookup.lookUpObjectById(descriptor.getObjectId()).exists()) {
+            if (!this.objectReader.lookUpObjectById(descriptor.getObjectId()).exists()) {
                 this.objectWriter.write(descriptor);
                 return true;
             } else if (this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {
@@ -297,8 +316,8 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      */
     private boolean checkAndPersistSegment(SegmentDescriptor descriptor) {
         if (this.context.existenceCheck() != IdConfig.ExistenceCheck.NOCHECK) {
-            SegmentLookup slookup = new SegmentLookup();
-            if (!slookup.lookUpShot(descriptor.getSegmentId()).exists()) {
+            
+            if (!this.segmentReader.lookUpShot(descriptor.getSegmentId()).exists()) {
                 this.segmentWriter.write(descriptor);
                 return true;
             } else if (this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {
@@ -315,9 +334,27 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     }
 
     /**
+     * Convenience method to lookup a MultimediaObjectDescriptor for a given path and type or create a new one if needed.
+     * If a new descriptor is required, newMultimediaObjectDescriptor is used.
      *
-     * @param path
-     * @param objectId
+     * @param generator ObjectIdGenerator used for ID generation.
+     * @param path The Path that points to the file for which a new MultimediaObjectDescriptor should be created.
+     * @param type MediaType of the new MultimediaObjectDescriptor
+     * @return the existing or a new MultimediaObjectDescriptor
+     */
+    public MultimediaObjectDescriptor getOrCreateMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type){
+        MultimediaObjectDescriptor descriptor = this.objectReader.lookUpObjectByPath(path.getFileName().toString());
+        if (descriptor.exists() && descriptor.getMediatype() == this.context.sourceType()){
+            return descriptor;
+        }
+        return MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, path, type);
+    }
+
+    /**
+     * Extracts metadata from a file by handing it down the list of MetadataExtractor objects.
+     *
+     * @param path Path to the file for which metadata must be extracted.
+     * @param objectId ObjectId of the MediaObjectDescriptor associated with the path.
      */
     private void extractAndPersistMetadata(Path path, String objectId) {
         for (MetadataExtractor extractor : this.metadataExtractors) {

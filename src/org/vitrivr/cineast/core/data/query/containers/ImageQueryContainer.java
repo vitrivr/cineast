@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
@@ -15,7 +15,7 @@ import georegression.struct.point.Point2D_F32;
 public class ImageQueryContainer implements QueryContainer {
 
 	private MultiImage img;
-	private Frame frame;
+	private VideoFrame videoFrame;
 	private ArrayList<SubtitleItem> subitem = new ArrayList<SubtitleItem>(1);
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
@@ -38,12 +38,12 @@ public class ImageQueryContainer implements QueryContainer {
 	}
 
 	@Override
-	public Frame getMostRepresentativeFrame() {
-		if(this.frame == null){
+	public VideoFrame getMostRepresentativeFrame() {
+		if(this.videoFrame == null){
 			int id = (getStart() + getEnd()) /2; 
-			this.frame = new Frame(id, this.img);
+			this.videoFrame = new VideoFrame(id, this.img);
 		}
-		return this.frame;
+		return this.videoFrame;
 	}
 
 	@Override
@@ -89,10 +89,9 @@ public class ImageQueryContainer implements QueryContainer {
 		return this.bgPaths;
 	}
 
-	@Override
-	public List<Frame> getFrames() {
-		ArrayList<Frame> _return = new ArrayList<Frame>(1);
-		_return.add(this.frame);
+	public List<VideoFrame> getVideoFrames() {
+		ArrayList<VideoFrame> _return = new ArrayList<VideoFrame>(1);
+		_return.add(this.videoFrame);
 		return _return;
 	}
 

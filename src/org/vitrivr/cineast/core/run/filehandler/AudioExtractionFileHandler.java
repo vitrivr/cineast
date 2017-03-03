@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.run.filehandler;
 
-import org.vitrivr.cineast.core.data.audio.AudioFrame;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.decode.audio.FFMpegAudioDecoder;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;

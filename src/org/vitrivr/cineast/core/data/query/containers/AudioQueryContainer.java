@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
-import org.vitrivr.cineast.core.data.audio.AudioFrame;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.MathHelper;
 
 import java.util.List;
@@ -111,7 +111,7 @@ public class AudioQueryContainer implements QueryContainer {
      *
      * @return
      */
-    public float getDuration() {
+    public float getAudioDuration() {
         return totalDuration;
     }
 }
