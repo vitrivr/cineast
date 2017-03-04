@@ -66,13 +66,15 @@
 				{"feature": "AudioFingerprint",					"weight": 1.0}
 			],
 			"audiobassline" : [
-				{"feature": "CENS12BasslineShingle",			"weight": 2.5},
+				{"feature": "CENS12BasslineShingle",			"weight": 1.5},
 				{"feature": "HPCP12BasslineShingle",			"weight": 1.0}
 			],
 			"audiomelody" : [
-				{"feature": "CENS12MelodyShingle",				"weight": 2.5},
+				{"feature": "CENS12MelodyShingle",				"weight": 1.5},
 				{"feature": "HPCP12MelodyShingle",				"weight": 1.0}
-
+			],
+			"mfcc" : [
+				{"feature": "MFCCShingle",						"weight": 1.0}
 			]
 		}
 	},
