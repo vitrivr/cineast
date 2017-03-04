@@ -88,6 +88,8 @@ public class WebUtils {
              * Read the data into constant length AudioFrames.
              */
             int read = 0;
+            int idx = 0;
+            long timestamp = 0;
 			boolean done = false;
             while (!done) {
                 /* Allocate a byte-array for the frames-data. */
@@ -99,9 +101,11 @@ public class WebUtils {
                     done = true;
                 }
                 /* Read frames-data and create AudioFrame. */
-                convertedAudio.read(data, 0, data.length);
-                list.add(new AudioFrame(read/(bytesPerSample * targetFormat.getChannels()), targetFormat.getSampleRate(), targetFormat.getChannels(), data));
-                read += bytesPerFrame;
+                int len = convertedAudio.read(data, 0, data.length);
+                list.add(new AudioFrame(idx, timestamp, targetFormat.getSampleRate(), targetFormat.getChannels(), data));
+				timestamp += (len*1000.0f)/(bytesPerSample * targetFormat.getChannels() * targetFormat.getSampleRate());
+                idx += 1;
+                read += len;
             }
         } catch (UnsupportedAudioFileException e) {
             LOGGER.error("Could not create frames frames from Base64 input because the file-format is not supported. {}", LogHelper.getStackTrace(e));
