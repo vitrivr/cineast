@@ -208,6 +208,24 @@ public class Mesh implements Renderable {
     }
 
     /**
+     * Returns the number of normal vectors in this Mesh.
+     *
+     * @return Number of normal vectors.
+     */
+    public final int numberOfNormals() {
+        return this.normals.size();
+    }
+
+    /**
+     * Returns the number of vertices in this Mesh.
+     *
+     * @return Number of vertices.
+     */
+    public final int numberOfVertices() {
+        return this.vertices.size();
+    }
+
+    /**
      * Assembles a mesh into a new glDisplayList. The method returns a handle for this
      * newly created glDisplayList. To actually render the list - by executing the commands it contains -
      * the glCallList function must be called!

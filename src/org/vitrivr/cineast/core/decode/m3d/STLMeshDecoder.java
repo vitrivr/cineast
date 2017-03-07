@@ -4,44 +4,36 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
-import org.joml.Vector4i;
-
 import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import javax.imageio.ImageIO;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Decodes Wavefront OBJ (.obj) files and returns a Mesh representation. Requires
+ * Decodes STereoLithography (.stl) files and returns a Mesh representation. Requires
  * JOML to work properly.
- *
- * Texture information is currently discarded!
  *
  * @author rgasser
  * @version 1.0
  * @created 29.12.16
  */
-public class OBJMeshDecoder implements MeshDecoder {
+public class STLMeshDecoder implements MeshDecoder {
     /** Default logging facility. */
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** HashSet containing all the mime-types supported by this ImageDecoder instance. */
     private static HashSet<String> supportedFiles = new HashSet<>();
     static {
-        supportedFiles.add("text/plain");
+        supportedFiles.add("application/vnd.ms-pkist");
     }
 
     /** Path to the input file. */
@@ -76,56 +68,68 @@ public class OBJMeshDecoder implements MeshDecoder {
         Mesh mesh = new Mesh();
         try {
             InputStream is = Files.newInputStream(this.inputFile);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                String[] tokens = line.split("\\s+");
-                switch (tokens[0]) {
-                    case "v":
-                        mesh.addVertex(new Vector3f(Float.parseFloat(tokens[1]),Float.parseFloat(tokens[2]),Float.parseFloat(tokens[3])));
-                        break;
-                    case "vn":
-                        mesh.addNormal(new Vector3f(Float.parseFloat(tokens[1]),Float.parseFloat(tokens[2]),Float.parseFloat(tokens[3])));
-                        break;
-                    case "f":
-                        boolean quad = (tokens.length == 5);
-                        String[] p1 = tokens[1].split("/");
-                        String[] p2 = tokens[2].split("/");
-                        String[] p3 = tokens[3].split("/");
-
-                        if (quad) {
-                            String[] p4 = tokens[4].split("/");
-
-                            Vector4i vertexIndex = new Vector4i(Integer.parseInt(p1[0]),Integer.parseInt(p2[0]),Integer.parseInt(p3[0]),Integer.parseInt(p4[0]));
-                            Vector4i normalIndex = null;
-                            if (p1.length == 3 && p2.length == 3 && p3.length == 3  && p4.length == 3) {
-                                normalIndex = new Vector4i(Integer.parseInt(p1[2]),Integer.parseInt(p2[2]),Integer.parseInt(p3[2]),Integer.parseInt(p4[2]));
-                            }
-                        } else {
-                            /* Prepare Vertex-Index and Normal-Index vectors for Tri face. */
-                            Vector3i vertexIndex = new Vector3i(Integer.parseInt(p1[0]),Integer.parseInt(p2[0]),Integer.parseInt(p3[0]));
-                            Vector3i normalIndex = null;
-                            if (p1.length == 3 && p2.length == 3 && p3.length == 3) {
-                                normalIndex = new Vector3i(Integer.parseInt(p1[2]),Integer.parseInt(p2[2]),Integer.parseInt(p3[2]));
-                            }
-
-                            /* Create and add face. */
-                            mesh.addFace(vertexIndex, normalIndex);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            br.close(); /* Closes the input stream. */
+            this.readBinary(mesh, is);
         } catch (IOException e) {
-            LOGGER.error("Could not decode OBJ file {} due to an IO exception ({})", this.inputFile.toString(), LogHelper.getStackTrace(e));
+            LOGGER.error("Could not decode STL file {} due to an IO exception ({})", this.inputFile.toString(), LogHelper.getStackTrace(e));
         } finally {
             this.complete.set(true);
         }
-
         return mesh;
+    }
+
+    /**
+     *
+     * @param stream
+     * @return
+     * @throws IOException
+     */
+    private void readAscii(Mesh mesh, InputStream stream)  throws IOException {
+        InputStream is = Files.newInputStream(this.inputFile);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String line = null;
+        while ((line = br.readLine()) != null) {
+
+        }
+    }
+
+    /**
+     * Reads a binary STL file.
+     *
+     * @param mesh Mesh to which normals and vertices should be added.
+     * @param is InputStream to read from.
+     * @throws IOException If an error occurs during reading.
+     */
+    private void readBinary(Mesh mesh, InputStream is) throws IOException {
+        /* Prepare a ByteBuffer to read the rest of the STL file. */
+        byte[] bytes = new byte[48];
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+        /* Skip 80 bytes (the STL header). */
+        is.skip(80);
+
+        /* Read the number of triangles in the mesh. */
+        is.read(bytes, 0, 4);
+        int triangles = buffer.getInt();
+
+        /* Now add all triangles. */
+        for (int i=0; i<triangles; i++) {
+            /* Ready 48 bytes from the stream. */
+            buffer.rewind();
+            is.read(bytes);
+
+            /* Add the vertices and the vertex-normal to the mesh. */
+            mesh.addNormal(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
+            mesh.addVertex(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
+            mesh.addVertex(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
+            mesh.addVertex(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
+
+            /* Add a new face to the Mesh. */
+            mesh.addFace(new Vector3i(3*i + 1, 3*i + 2, 3*i + 3), new Vector3i(i + 1, i + 1, i + 1));
+
+            /* Read 2 bytes from the stream and discard them. */
+            is.read(bytes, 0, 2);
+        }
     }
 
     /**
