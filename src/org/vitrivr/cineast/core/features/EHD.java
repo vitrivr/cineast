@@ -8,9 +8,9 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.QueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
@@ -44,13 +44,13 @@ public class EHD extends AbstractFeatureModule {
 	public void processShot(SegmentContainer shot) {
 		LOGGER.entry();
 		if (!phandler.idExists(shot.getId())) {
-			List<VideoFrame> videoFrames = shot.getVideoFrames();
+			List<Frame> frames = shot.getFrames();
 			float[] hist = new float[80];
-			for(VideoFrame f : videoFrames){
+			for(Frame f : frames){
 				MultiImage img = f.getImage();
 				hist = process(img, hist);
 			}
-			float count = videoFrames.size();
+			float count = frames.size();
 			for(int i = 0; i < 80; ++i){
 				hist[i] /= count;
 			}

@@ -16,7 +16,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.frames.AudioFrame;
+import org.vitrivr.cineast.core.data.audio.AudioFrame;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 public class WebUtils {
@@ -76,7 +76,7 @@ public class WebUtils {
 
             /* Constants:
              * - Length of a single AudioFrame (in bytes)
-             * - Total length of the frames data in the AudioInputStream.
+             * - Total length of the audio data in the AudioInputStream.
              */
 
 			final int framesize = 2048;
@@ -90,7 +90,7 @@ public class WebUtils {
             int read = 0;
 			boolean done = false;
             while (!done) {
-                /* Allocate a byte-array for the frames-data. */
+                /* Allocate a byte-array for the audio-data. */
                 byte[] data = null;
                 if (read + bytesPerFrame < length) {
                     data = new byte[bytesPerFrame];
@@ -98,15 +98,15 @@ public class WebUtils {
                     data = new byte[(int)(length-read)];
                     done = true;
                 }
-                /* Read frames-data and create AudioFrame. */
+                /* Read audio-data and create AudioFrame. */
                 convertedAudio.read(data, 0, data.length);
                 list.add(new AudioFrame(read/(bytesPerSample * targetFormat.getChannels()), targetFormat.getSampleRate(), targetFormat.getChannels(), data));
                 read += bytesPerFrame;
             }
         } catch (UnsupportedAudioFileException e) {
-            LOGGER.error("Could not create frames frames from Base64 input because the file-format is not supported. {}", LogHelper.getStackTrace(e));
+            LOGGER.error("Could not create audio frames from Base64 input because the file-format is not supported. {}", LogHelper.getStackTrace(e));
         } catch (IOException e) {
-            LOGGER.error("Could not create frames frames from Base64 input due to a serious IO error: {}", LogHelper.getStackTrace(e));
+            LOGGER.error("Could not create audio frames from Base64 input due to a serious IO error: {}", LogHelper.getStackTrace(e));
         }
 
         return list;
@@ -114,7 +114,7 @@ public class WebUtils {
 
 	/**
 	 * Converts a base 64 data URL to a byte array and returns it. Only supported types of
-     * data URLs are currently converted (i.e. images and frames).
+     * data URLs are currently converted (i.e. images and audio).
 	 *
 	 * @param dataUrl String containing the data url.
 	 * @return Byte array of the data.
@@ -131,10 +131,10 @@ public class WebUtils {
 		/* Check if data URL is of supported type. */
 		if (dataUrl.substring(5, 11).equals("image/")) {
 			LOGGER.info("Data URL has been identified as image.");
-		} else if (dataUrl.substring(5, 11).equals("frames/")) {
-			LOGGER.info("Data URL has been identified as frames.");
+		} else if (dataUrl.substring(5, 11).equals("audio/")) {
+			LOGGER.info("Data URL has been identified as audio.");
 		} else {
-			LOGGER.warn("Type of data URL is neither image nor frames and therefore not supported.");
+			LOGGER.warn("Type of data URL is neither image nor audio and therefore not supported.");
 			return null;
 		}
 

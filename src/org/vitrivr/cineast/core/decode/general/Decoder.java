@@ -7,8 +7,8 @@ import java.util.Set;
 
 /**
  * General interface for Decoder classes. These classes take a file as input and return one to many
- * content items of type T. Depending on what file-type this may be a single image, a set of audio samples,
- * video frames etc.
+ * content items of type T. Depending on what file-type this may be a single image, and set of audio
+ * frames etc.
  *
  * Decoders are initialized with the init() method and closed with the close() method. Some decoders
  * may be reusable, which means that they can be re-initialized by calling init() again. Use the reusable()

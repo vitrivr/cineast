@@ -3,8 +3,8 @@ package org.vitrivr.cineast.core.features.exporter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.data.frames.AudioFrame;
+import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.audio.AudioFrame;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * Visualizes and export the audio-waveform of the audio data in a given Segment.
+ * Visualizes and export the audio-waveform of the provided AudioSegment.
  *
  * @author rgasser
  * @version 1.0
@@ -80,7 +80,7 @@ public class AudioWaveformExporter implements Extractor {
     }
 
     /**
-     * Processes a SegmentContainer: Extracts audio-data and visualizes its waveform.
+     * Processes a SegmentContainer: Extracts audio-data visualizes its waveform.
      *
      * @param shot SegmentContainer to process.
      */
@@ -127,7 +127,7 @@ public class AudioWaveformExporter implements Extractor {
 
             ImageIO.write(image, "JPEG", directory.resolve(shot.getId()+".jpg").toFile());
         } catch (IOException exception) {
-            LOGGER.fatal("Could not export waveform image for frames segment {} due to a serious IO error.", shot.getId(), LogHelper.getStackTrace(exception));
+            LOGGER.fatal("Could not export waveform image for audio segment {} due to a serious IO error.", shot.getId(), LogHelper.getStackTrace(exception));
         }
     }
 

@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.segmenter.general;
 
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 
 import java.util.concurrent.SynchronousQueue;

@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.segmenter.image;
 
 import org.vitrivr.cineast.core.data.segments.ImageSegment;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.segmenter.general.PassthroughSegmenter;
 
 import java.awt.image.BufferedImage;

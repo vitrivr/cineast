@@ -3,9 +3,9 @@ package org.vitrivr.cineast.core.util;
 import java.util.ArrayList;
 
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.SegmentContainer;
 
 public class MotionHistoryImage {
 
@@ -42,12 +42,12 @@ public class MotionHistoryImage {
 	 * @return
 	 */
 	public static MotionHistoryImage motionHistoryImage(SegmentContainer container, int lifeTime, int threshold, boolean useThumbnails){
-		if(container.getVideoFrames().isEmpty()){
+		if(container.getFrames().isEmpty()){
 			return null;
 		}
 		
-		ArrayList<int[]> images = new ArrayList<int[]>(container.getVideoFrames().size());
-		for(VideoFrame f : container.getVideoFrames()){
+		ArrayList<int[]> images = new ArrayList<int[]>(container.getFrames().size());
+		for(Frame f : container.getFrames()){
 			if(useThumbnails){
 				images.add(f.getImage().getThumbnailColors());
 			}else{
@@ -55,13 +55,13 @@ public class MotionHistoryImage {
 			}
 		}
 		
-		MultiImage first = container.getVideoFrames().get(0).getImage();
+		MultiImage first = container.getFrames().get(0).getImage();
 		
 		MotionHistoryImage _return = new MotionHistoryImage(
 				useThumbnails ? first.getThumbnailImage().getWidth() : first.getWidth(),
 				useThumbnails ? first.getThumbnailImage().getHeight() : first.getHeight());
 		
-		if(container.getVideoFrames().size() == 1){
+		if(container.getFrames().size() == 1){
 			return _return;
 		}
 		

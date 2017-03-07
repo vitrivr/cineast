@@ -10,7 +10,7 @@ import org.ddogleg.nn.FactoryNearestNeighbor;
 import org.ddogleg.nn.NearestNeighbor;
 import org.ddogleg.nn.NnData;
 import org.ddogleg.struct.FastQueue;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.descriptor.PathList;
 
@@ -34,20 +34,20 @@ public class MaskGenerator {
 
 	private MaskGenerator(){}
 
-	public static ArrayList<Pair<Long,ArrayList<Float>>> getNormalizedBbox(List<VideoFrame> videoFrames,
+	public static ArrayList<Pair<Long,ArrayList<Float>>> getNormalizedBbox(List<Frame> frames,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){
 		
-		if (videoFrames == null || videoFrames.isEmpty() || foregroundPaths == null) {
+		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
 			return null;
 		}
 		
 		ArrayList<Pair<Long,ArrayList<Float>>> bboxWithIdx = new ArrayList<Pair<Long,ArrayList<Float>>>();
 		
-		ArrayList<ImageRectangle> rects = MaskGenerator.getFgBoundingBox(videoFrames, foregroundPaths, backgroundPaths);
+		ArrayList<ImageRectangle> rects = MaskGenerator.getFgBoundingBox(frames, foregroundPaths, backgroundPaths);
 		
-		int width = videoFrames.get(0).getImage().getWidth();
-		int height = videoFrames.get(0).getImage().getHeight();
+		int width = frames.get(0).getImage().getWidth();
+		int height = frames.get(0).getImage().getHeight();
 		
 		long frameIdx = 0;
 		
@@ -69,16 +69,16 @@ public class MaskGenerator {
 		return norm;
 	}
 	
-	public static ArrayList<ImageRectangle> getFgBoundingBox(List<VideoFrame> videoFrames,
+	public static ArrayList<ImageRectangle> getFgBoundingBox(List<Frame> frames,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){
 		
-		if (videoFrames == null || videoFrames.isEmpty() || foregroundPaths == null) {
+		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
 			return null;
 		}
 		
 		ArrayList<ImageRectangle> rects = new ArrayList<ImageRectangle>();
-		ArrayList<GrayU8> masks = getFgMasksByNN(videoFrames, foregroundPaths, backgroundPaths);
+		ArrayList<GrayU8> masks = getFgMasksByNN(frames, foregroundPaths, backgroundPaths);
 		
 		for(GrayU8 mask : masks){
 			ImageRectangle rect = getLargestBoundingBox(mask);
@@ -119,20 +119,20 @@ public class MaskGenerator {
 		return rects;
 	}
 	
-	public static ArrayList<GrayU8> getFgMasksByFilter(List<VideoFrame> videoFrames,
+	public static ArrayList<GrayU8> getFgMasksByFilter(List<Frame> frames,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths) {
 
-		if (videoFrames == null || videoFrames.isEmpty() || foregroundPaths == null) {
+		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
 			return null;
 		}
 		
-		ArrayList<GrayU8> masksScaled = generateScaledMasksFromPath(videoFrames, foregroundPaths);
+		ArrayList<GrayU8> masksScaled = generateScaledMasksFromPath(frames, foregroundPaths);
 
 		ArrayList<GrayU8> masksScaledSmoothed1 = createNewMasks(masksScaled);
 		smoothMasks(masksScaled, masksScaledSmoothed1, 4, 2, 64, 26);
 		
-		ArrayList<GrayU8> masks = scaleUpMasks(masksScaledSmoothed1, videoFrames.get(0).getImage().getBufferedImage().getWidth(), videoFrames.get(0).getImage().getBufferedImage().getHeight());
+		ArrayList<GrayU8> masks = scaleUpMasks(masksScaledSmoothed1, frames.get(0).getImage().getBufferedImage().getWidth(), frames.get(0).getImage().getBufferedImage().getHeight());
 		
 		ArrayList<GrayU8> masksSmoothed1 = createNewMasks(masks);
 		smoothMasks(masks, masksSmoothed1, 5, 2, 64, 10);
@@ -144,15 +144,15 @@ public class MaskGenerator {
 		return masksSmoothed2;
 	}
 	
-	public static ArrayList<GrayU8> getFgMasksByNN(List<VideoFrame> videoFrames,
+	public static ArrayList<GrayU8> getFgMasksByNN(List<Frame> frames,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths) {
 
-		if (videoFrames == null || videoFrames.isEmpty() || foregroundPaths == null) {
+		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
 			return null;
 		}
 
-		ArrayList<GrayU8> masks = generateMasksFromPath(videoFrames, foregroundPaths, backgroundPaths);
+		ArrayList<GrayU8> masks = generateMasksFromPath(frames, foregroundPaths, backgroundPaths);
 				
 		ArrayList<GrayU8> masksSmoothed1 = createNewMasks(masks);
 		smoothMasks(masks, masksSmoothed1, 21, 2, 64, 26);
@@ -164,24 +164,24 @@ public class MaskGenerator {
 		return masksSmoothed2;
 	}
 	
-	public static ArrayList<GrayU8> generateMasksFromPath(List<VideoFrame> videoFrames,
+	public static ArrayList<GrayU8> generateMasksFromPath(List<Frame> frames,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){
 		
-		if (videoFrames == null || videoFrames.isEmpty() || foregroundPaths == null) {
+		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
 			return null;
 		}
 
 		ArrayList<GrayU8> masks = new ArrayList<GrayU8>();
 
-		int width = videoFrames.get(0).getImage().getBufferedImage().getWidth();
-		int height = videoFrames.get(0).getImage().getBufferedImage().getHeight();
+		int width = frames.get(0).getImage().getBufferedImage().getWidth();
+		int height = frames.get(0).getImage().getBufferedImage().getHeight();
 
 		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> fgPathItor = foregroundPaths.listIterator();
 		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> bgPathItor = backgroundPaths.listIterator();
 
 		int cnt = 0;
-		for (int frameIdx = 0; frameIdx < videoFrames.size(); ++frameIdx) {
+		for (int frameIdx = 0; frameIdx < frames.size(); ++frameIdx) {
 			if (cnt >= PathList.frameInterval) {
 				cnt = 0;
 				continue;
@@ -239,22 +239,22 @@ public class MaskGenerator {
 		
 	}
 	
-	public static ArrayList<GrayU8> generateScaledMasksFromPath(List<VideoFrame> videoFrames,
+	public static ArrayList<GrayU8> generateScaledMasksFromPath(List<Frame> frames,
 			List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths) {
 		
-		if (videoFrames == null || videoFrames.isEmpty() || foregroundPaths == null) {
+		if (frames == null || frames.isEmpty() || foregroundPaths == null) {
 			return null;
 		}
 
 		ArrayList<GrayU8> masks = new ArrayList<GrayU8>();
 
-		int width = videoFrames.get(0).getImage().getBufferedImage().getWidth();
-		int height = videoFrames.get(0).getImage().getBufferedImage().getHeight();
+		int width = frames.get(0).getImage().getBufferedImage().getWidth();
+		int height = frames.get(0).getImage().getBufferedImage().getHeight();
 
 		ListIterator<Pair<Integer, LinkedList<Point2D_F32>>> fgPathItor = foregroundPaths.listIterator();
 
 		int cnt = 0;
-		for (int frameIdx = 0; frameIdx < videoFrames.size(); ++frameIdx) {
+		for (int frameIdx = 0; frameIdx < frames.size(); ++frameIdx) {
 			if (cnt >= PathList.frameInterval) {
 				cnt = 0;
 				continue;

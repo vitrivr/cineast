@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.run.filehandler;
 
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.video.NFFMpegVideoDecoder;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
@@ -17,7 +17,7 @@ import java.util.List;
  * @version 1.0
  * @created 17.01.17
  */
-public class VideoExtractionFileHandler extends AbstractExtractionFileHandler<VideoFrame> {
+public class VideoExtractionFileHandler extends AbstractExtractionFileHandler<Frame> {
     /**
      * @param files
      * @param context
@@ -33,7 +33,7 @@ public class VideoExtractionFileHandler extends AbstractExtractionFileHandler<Vi
      * @return Decoder
      */
     @Override
-    public Decoder<VideoFrame> newDecoder() {
+    public Decoder<Frame> newDecoder() {
         return new NFFMpegVideoDecoder();
     }
 
@@ -44,7 +44,7 @@ public class VideoExtractionFileHandler extends AbstractExtractionFileHandler<Vi
      * @return
      */
     @Override
-    public Segmenter<VideoFrame> newSegmenter() {
+    public Segmenter<Frame> newSegmenter() {
         return new VideoHistogramSegmenter();
     }
 }

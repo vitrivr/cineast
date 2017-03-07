@@ -10,7 +10,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -34,7 +34,7 @@ public class ForegroundBoundingBox  extends AbstractFeatureModule {
 		TimeHelper.tic();
 		LOGGER.entry();
 		if(!phandler.idExists(shot.getId())){
-			ArrayList<Pair<Long,ArrayList<Float>>> bboxs = MaskGenerator.getNormalizedBbox(shot.getVideoFrames(), shot.getPaths(), shot.getBgPaths());
+			ArrayList<Pair<Long,ArrayList<Float>>> bboxs = MaskGenerator.getNormalizedBbox(shot.getFrames(), shot.getPaths(), shot.getBgPaths());
 			for(Pair<Long,ArrayList<Float>> bbox : bboxs){
 				FloatVectorImpl fv = new FloatVectorImpl(bbox.second);
 				persist(shot.getId(), bbox.first, fv);
@@ -47,7 +47,7 @@ public class ForegroundBoundingBox  extends AbstractFeatureModule {
 
 	@Override
 	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-		ArrayList<Pair<Long,ArrayList<Float>>> bboxs = MaskGenerator.getNormalizedBbox(sc.getVideoFrames(), sc.getPaths(), sc.getBgPaths());
+		ArrayList<Pair<Long,ArrayList<Float>>> bboxs = MaskGenerator.getNormalizedBbox(sc.getFrames(), sc.getPaths(), sc.getBgPaths());
 		FloatVectorImpl fv = new FloatVectorImpl(bboxs.get(0).second);
 		
 		return getSimilar(fv.toArray(null), qc);

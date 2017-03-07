@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.RGBContainer;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.util.DecodingError;
@@ -22,11 +22,11 @@ public class MedianImg {
 	
 	private MedianImg(){}
 	
-	public static MultiImage getMedian(List<VideoFrame> videoFrames){
+	public static MultiImage getMedian(List<Frame> frames){
 		
 		LOGGER.entry();
 		
-		MultiImage first = videoFrames.get(0).getImage();
+		MultiImage first = frames.get(0).getImage();
 		int width = first.getWidth(), height = first.getHeight();
 		
 		short[] buffer = new short[width * height * 128];
@@ -35,7 +35,7 @@ public class MedianImg {
 		
 		//red pass
 		try{
-			for(VideoFrame f : videoFrames){
+			for(Frame f : frames){
 				int[] colors = f.getImage().getColors();
 				for(int i = 0; i < colors.length; ++i){
 					buffer[128 * i + (RGBContainer.getRed(colors[i])) / 2]++;
@@ -57,7 +57,7 @@ public class MedianImg {
 		
 		Arrays.fill(buffer, (short)0);
 		try{
-			for(VideoFrame f : videoFrames){
+			for(Frame f : frames){
 				int[] colors = f.getImage().getColors();
 				for(int i = 0; i < colors.length; ++i){
 					buffer[128 * i + (RGBContainer.getGreen(colors[i])) / 2]++;
@@ -78,7 +78,7 @@ public class MedianImg {
 		//blue pass
 		Arrays.fill(buffer, (short)0);
 		try{
-			for(VideoFrame f : videoFrames){
+			for(Frame f : frames){
 				int[] colors = f.getImage().getColors();
 				for(int i = 0; i < colors.length; ++i){
 					buffer[128 * i + (RGBContainer.getBlue(colors[i])) / 2]++;

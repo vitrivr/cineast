@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.ddogleg.fitting.modelset.ModelMatcher;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.Pair;
 
 import boofcv.abst.filter.derivative.ImageGradient;
@@ -52,18 +52,18 @@ public class PathList {
 		ShowImages.showWindow(out,"Output");
 	}
 	
-	public static void separateFgBgPaths(List<VideoFrame> videoFrames,
+	public static void separateFgBgPaths(List<Frame> frames,
 										 LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths,
 										 List<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 										 List<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths){	
 		
 		ModelMatcher<Homography2D_F64,AssociatedPair> robustF = FactoryMultiViewRobust.homographyRansac(null, new ConfigRansac(200,3.0f));
-		if (allPaths == null || videoFrames == null || videoFrames.isEmpty()){
+		if (allPaths == null || frames == null || frames.isEmpty()){
 			return;
 		}
 		
-		int width = videoFrames.get(0).getImage().getWidth();
-		int height = videoFrames.get(0).getImage().getHeight();
+		int width = frames.get(0).getImage().getWidth();
+		int height = frames.get(0).getImage().getHeight();
 		int maxTracksNumber = (width * height) / (samplingInterval*samplingInterval);
 		int failedFrameCount = 0;
 		
@@ -124,8 +124,8 @@ public class PathList {
 		return;
 	}
 	
-	public static LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> getDensePaths(List<VideoFrame> videoFrames){
-		if(videoFrames.size() < 2){
+	public static LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> getDensePaths(List<Frame> frames){
+		if(frames.size() < 2){
 			return null;
 		}
 
@@ -146,7 +146,7 @@ public class PathList {
 		GrayU8 gray = null;
 		int frameIdx = 0;
 		int cnt = 0;
-		for (VideoFrame videoFrame : videoFrames){
+		for (Frame frame : frames){
 			++frameIdx;
 			
 			if(cnt >= frameInterval){
@@ -155,7 +155,7 @@ public class PathList {
 			}
 			cnt += 1;
 			
-			gray = ConvertBufferedImage.convertFrom(videoFrame.getImage().getBufferedImage(), gray);
+			gray = ConvertBufferedImage.convertFrom(frame.getImage().getBufferedImage(), gray);		
 			ArrayList<AssociatedPair> tracksPairs = new ArrayList<AssociatedPair>();
 			
 			if (frameIdx == 0){

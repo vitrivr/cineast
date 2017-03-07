@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.RGBContainer;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.Frame;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.util.DecodingError;
@@ -17,16 +17,16 @@ public class AvgImg {
 	
 	private AvgImg(){}
 	
-	public static MultiImage getAvg(List<VideoFrame> videoFrames){
+	public static MultiImage getAvg(List<Frame> frames){
 		TimeHelper.tic();
 		LOGGER.entry();
-		MultiImage first = videoFrames.get(0).getImage();
+		MultiImage first = frames.get(0).getImage();
 		int width = first.getWidth(), height = first.getHeight();
 		double[] buffer = new double[width * height * 3];
 		int[] colors;
 		try{
-			for(VideoFrame videoFrame : videoFrames){
-				colors = videoFrame.getImage().getColors();
+			for(Frame frame : frames){
+				colors = frame.getImage().getColors();
 				if((colors.length * 3) != buffer.length){
 					throw new DecodingError();
 				}
@@ -42,7 +42,7 @@ public class AvgImg {
 		}
 		
 		
-		int size = videoFrames.size();
+		int size = frames.size();
 		
 		//BufferedImage _return = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		

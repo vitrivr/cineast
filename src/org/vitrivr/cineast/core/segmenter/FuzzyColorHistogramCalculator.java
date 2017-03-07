@@ -6,13 +6,13 @@ import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.FuzzyColorHistogramQuantizer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.Frame;
 
 public class FuzzyColorHistogramCalculator {
 
 	private FuzzyColorHistogramCalculator(){}
 	
-	public static FuzzyColorHistogram getHistogram(VideoFrame f){
+	public static FuzzyColorHistogram getHistogram(Frame f){
 		return getHistogram(f.getImage().getBufferedImage());
 	}
 	
@@ -34,7 +34,7 @@ public class FuzzyColorHistogramCalculator {
 		return _return;
 	}
 	
-	public static FuzzyColorHistogram getHistogramNormalized(VideoFrame f){
+	public static FuzzyColorHistogram getHistogramNormalized(Frame f){
 		FuzzyColorHistogram _return = getHistogram(f);
 		_return.normalize();
 		return _return;

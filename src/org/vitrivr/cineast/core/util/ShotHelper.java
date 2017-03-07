@@ -7,8 +7,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
-import org.vitrivr.cineast.core.data.segments.VideoSegment;
+import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.Shot;
 
 public class ShotHelper {
 
@@ -16,7 +16,7 @@ public class ShotHelper {
 	
 	private ShotHelper(){}
 	
-	public static void shotToFolder(VideoSegment videoSegment, File folder){
+	public static void shotToFolder(Shot shot, File folder){
 		if(!folder.exists()){
 			if(!folder.mkdirs()){
 				LOGGER.warn("cannot create folder {}", folder.getPath());
@@ -27,7 +27,7 @@ public class ShotHelper {
 			return;
 		}
 		
-		for(VideoFrame f : videoSegment.getVideoFrames()){
+		for(Frame f : shot.getFrames()){
 			try {
 				ImageIO.write(f.getImage().getBufferedImage(), "jpg", new File(folder, f.getId() + ".jpg"));
 			} catch (IOException e) {
@@ -38,7 +38,7 @@ public class ShotHelper {
 		
 	}
 	
-	public static void shotToThubnailSequence(VideoSegment videoSegment, File folder, int shotId){
+	public static void shotToThubnailSequence(Shot shot, File folder, int shotId){
 		if(!folder.exists()){
 			if(!folder.mkdirs()){
 				LOGGER.warn("cannot create folder {}", folder.getPath());
@@ -49,7 +49,7 @@ public class ShotHelper {
 			return;
 		}
 		
-		for(VideoFrame f : videoSegment.getVideoFrames()){
+		for(Frame f : shot.getFrames()){
 			try {
 				ImageIO.write(f.getImage().getThumbnailImage(), "jpg", new File(folder, String.format("%06d",f.getId()) + "(" + shotId + ").jpg"));
 			} catch (IOException e) {

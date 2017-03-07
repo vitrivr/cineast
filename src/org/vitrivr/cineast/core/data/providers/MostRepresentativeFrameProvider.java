@@ -1,15 +1,15 @@
 package org.vitrivr.cineast.core.data.providers;
 
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.Frame;
 
 public interface MostRepresentativeFrameProvider {
   
   /**
    * 
-   * @return the frame which best represents a sequence of frames. By default, the {@link VideoFrame}.EMPTY_FRAME is returned
+   * @return the frame which best represents a sequence of frames. By default, the {@link Frame}.EMPTY_FRAME is returned
    */
-	public default VideoFrame getMostRepresentativeFrame(){
-	  return VideoFrame.EMPTY_VIDEO_FRAME;
+	public default Frame getMostRepresentativeFrame(){
+	  return Frame.EMPTY_FRAME;
 	}
 	
 }
