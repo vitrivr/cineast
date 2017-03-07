@@ -17,4 +17,22 @@ public interface DurationProvider {
 	public default float getRelativeEnd(){
 	  return 0f;
 	}
+
+	/**
+	 * Returns the absolute start in seconds.
+	 *
+	 * @return
+	 */
+	public default float getAbsoluteStart(){
+		return 0f;
+	}
+
+	/**
+	 * Returns the absolute end in seconds.
+	 *
+	 * @return
+	 */
+	public default float getAbsoluteEnd(){
+		return 0f;
+	}
 }

@@ -23,7 +23,7 @@ public class BlackmanHarrisWindow implements WindowFunction {
     @Override
     public double value(int i, int length) {
         if (i >= 0 && i <= length-1) {
-            return a0 + a1 * Math.cos((2 * Math.PI * i) / (length - 1)) + a2 * Math.cos((4 * Math.PI * i) / (length - 1)) + a3 * Math.cos((6 * Math.PI * i) / (length - 1));
+            return a0 - a1 * Math.cos((2 * Math.PI * i) / (length - 1)) + a2 * Math.cos((4 * Math.PI * i) / (length - 1)) - a3 * Math.cos((6 * Math.PI * i) / (length - 1));
         } else {
             return 0.0;
         }

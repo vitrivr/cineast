@@ -5,27 +5,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.db.DBSelector;
 
-public class SegmentLookup {
-
-	private static final Logger LOGGER = LogManager.getLogger();
-	private final DBSelector selector;
-	
+public class SegmentLookup extends AbstractEntityReader {
+    /**
+     * Default constructor.
+     */
 	public SegmentLookup(){
-		this.selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-		this.selector.open(SegmentDescriptor.ENTITY);
+		this(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 	}
-	
-	public void close(){
-		this.selector.close();
-	}
+
+    /**
+     * Constructor for SegmentLookup
+     *
+     * @param selector DBSelector to use for the MultimediaMetadataReader instance.
+     */
+	public SegmentLookup(DBSelector selector) {
+	    super(selector);
+        this.selector.open(SegmentDescriptor.ENTITY);
+    }
 	
 	public SegmentDescriptor lookUpShot(String segmentId){
 		
@@ -47,7 +49,10 @@ public class SegmentLookup {
 		PrimitiveTypeProvider sequenceProvider = map.get(SegmentDescriptor.FIELDNAMES[2]);
 		PrimitiveTypeProvider startProvider = map.get(SegmentDescriptor.FIELDNAMES[3]);
 		PrimitiveTypeProvider endProvider = map.get(SegmentDescriptor.FIELDNAMES[4]);
-		
+		PrimitiveTypeProvider startabsProvider = map.get(SegmentDescriptor.FIELDNAMES[5]);
+		PrimitiveTypeProvider endabsProvider = map.get(SegmentDescriptor.FIELDNAMES[6]);
+
+
 		if(idProvider == null){
 			LOGGER.error("no id in segment");
 			return new SegmentDescriptor();
@@ -96,8 +101,28 @@ public class SegmentLookup {
 			LOGGER.error("invalid data type for field segmentend in segment, expected int, got {}", endProvider.getType());
 			return new SegmentDescriptor();
 		}
-		
-		return new SegmentDescriptor(mmobjidProvider.getString(), idProvider.getString(), sequenceProvider.getInt(), startProvider.getInt(), endProvider.getInt());
+
+		if(startabsProvider.getType() == null) {
+			LOGGER.error("No absolute startpoint found in segment.");
+			return new SegmentDescriptor();
+		}
+
+		if(startabsProvider.getType() != ProviderDataType.FLOAT){
+			LOGGER.error("Invalid data type for absolute startpoint in segment, expected float, got {}.", startabsProvider.getType());
+			return new SegmentDescriptor();
+		}
+
+		if(endabsProvider.getType() == null) {
+			LOGGER.error("No absolute endpoint found in segment.");
+			return new SegmentDescriptor();
+		}
+
+		if(endabsProvider.getType() != ProviderDataType.FLOAT){
+			LOGGER.error("Invalid data type for absolute endpoint in segment, expected float, got {}.", endabsProvider.getType());
+			return new SegmentDescriptor();
+		}
+
+		return new SegmentDescriptor(mmobjidProvider.getString(), idProvider.getString(), sequenceProvider.getInt(), startProvider.getInt(), endProvider.getInt(), startabsProvider.getFloat(), endabsProvider.getFloat());
 	}
 	
 	public Map<String, SegmentDescriptor> lookUpShots(String...ids){
@@ -161,12 +186,5 @@ public class SegmentLookup {
 		}
 		
 		return _return;
-	}
-
-
-	@Override
-	protected void finalize() throws Throwable {
-		close();
-		super.finalize();
 	}
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
-import org.vitrivr.cineast.core.data.audio.AudioFrame;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.query.containers.AudioQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;

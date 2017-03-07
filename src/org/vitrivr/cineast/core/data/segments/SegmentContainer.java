@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.data;
+package org.vitrivr.cineast.core.data.segments;
 
 import org.vitrivr.cineast.core.data.providers.*;
 

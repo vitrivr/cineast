@@ -3,13 +3,14 @@ package org.vitrivr.cineast.core.features.exporter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.Spectrum;
-import org.vitrivr.cineast.core.util.fft.SpectrumVisalizer;
+import org.vitrivr.cineast.core.util.fft.AudioSignalVisualizer;
 import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
 
 import javax.imageio.ImageIO;
@@ -78,7 +79,7 @@ public class AudioSpectogramExporter implements Extractor {
 
     @Override
     public void processShot(SegmentContainer shot) {
-        /* IF shot has now samples, this step is skipped. */
+        /* IF shot has no samples, this step is skipped. */
         if (shot.getNumberOfSamples() == 0) return;
 
         /* Prepare STFT and Spectrum for the segment. */
@@ -88,11 +89,15 @@ public class AudioSpectogramExporter implements Extractor {
 
         /* Visualize Spectrum and write it to disc. */
         try {
-            BufferedImage image = SpectrumVisalizer.visualizeSpectogram(spectrums, this.width, this.height);
-            Files.createDirectories(directory);
-            ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
+            BufferedImage image = AudioSignalVisualizer.visualizeSpectogram(spectrums, this.width, this.height);
+            if (image != null) {
+                Files.createDirectories(directory);
+                ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
+            } else {
+                LOGGER.warn("Spectrum could not be visualized!");
+            }
         } catch (IOException exception) {
-            exception.printStackTrace();
+            LOGGER.error("A serious error occurred while writing the spectrum image! ({})", LogHelper.getStackTrace(exception));
         }
     }
 

@@ -1,4 +1,5 @@
-package org.vitrivr.cineast.core.data.audio;
+package org.vitrivr.cineast.core.data.frames;
+
 
 import javax.sound.sampled.AudioFormat;
 import java.nio.ByteBuffer;
@@ -18,17 +19,17 @@ import java.nio.ByteOrder;
  */
 public class AudioFrame {
 
-    /** Default empty audio frame. Encodes a single, mute sample for one channel. */
-    public final static AudioFrame EMPTY_FRAME = new AudioFrame(0,22050, 1, new byte[2]);
+    /** Default empty frames frame. Encodes a single, mute sample for one channel. */
+    public final static AudioFrame EMPTY_FRAME = new AudioFrame(0,0,22050, 1, new byte[2]);
 
     /** Number of bits in a sample. */
     public final static int BITS_PER_SAMPLE = 16;
 
-    /** ByteBuffer holding the raw 16bit int data. */
-    private final ByteBuffer data;
-
-    /** Sample-index of the AudioFrame (i.e. index of the first sample in the frame) usually generated in the decoding context (e.g. i-th frame of the decoded file). */
+    /** Index of the AudioFrame usually generated in the decoding context (e.g. i-th frame of the decoded file). */
     private final long idx;
+
+    /** Timestamp in milliseconds of the first sample in the AudioFrame (relative to the whole file). */
+    private final long starttimepstamp;
 
     /** Sample rate of this AudioFrame. */
     private final float sampleRate;
@@ -37,26 +38,30 @@ public class AudioFrame {
     private final int channels;
 
     /** Number of samples per channel in this AudioFrame. */
-    private final int numberOfSamples;
+    private int numberOfSamples;
+
+    /** ByteBuffer holding the raw 16bit int data. */
+    private ByteBuffer data;
 
     /**
      * Default constructor.
      *
      * @param idx Index of the first sample (pair) in the AudioFrame.
+     * @param starttimestamp Index of the first sample.
      * @param sampleRate Sample-rate of the new AudioFrame.
      * @param channels Number of channels of the new AudioFrame.
      * @param data Byte array containing 16bit signed PCM data.
      */
-    public AudioFrame(long idx, float sampleRate, int channels, byte[] data) {
+    public AudioFrame(long idx, long starttimestamp, float sampleRate, int channels, byte[] data) {
         this.idx = idx;
-        this.data = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
-        this.sampleRate = sampleRate;
         this.channels = channels;
-        this.numberOfSamples = data.length/(2 * this.channels);
+        this.sampleRate = sampleRate;
+        this.starttimepstamp = starttimestamp;
+        this.setData(data);
     }
 
     /**
-     * Returns a Java AudioFormat object that specifies the arrangement of the audio-data in the
+     * Returns a Java AudioFormat object that specifies the arrangement of the frames-data in the
      * current AudioFrame.
      *
      * @return AudioFormat
@@ -66,7 +71,7 @@ public class AudioFrame {
     }
 
     /**
-     * Returns the size of the audio data in bytes.
+     * Returns the size of the frames data in bytes.
      *
      * @return
      */
@@ -94,7 +99,7 @@ public class AudioFrame {
     /**
      * Getter for the raw byte array.
      *
-     * @return Byte array containing the audio data of this AudioFrame.
+     * @return Byte array containing the frames data of this AudioFrame.
      */
     public final byte[] getData() {
         return data.array();
@@ -124,7 +129,7 @@ public class AudioFrame {
      * @return
      */
     public final float getStart() {
-        return this.idx/this.sampleRate;
+        return this.starttimepstamp/1000.0f;
     }
 
     /**
@@ -133,7 +138,7 @@ public class AudioFrame {
      * @return
      */
     public final float getEnd() {
-        return (this.idx + this.numberOfSamples)/this.sampleRate;
+        return this.getStart() + this.numberOfSamples/this.sampleRate;
     }
 
     /**
@@ -201,4 +206,47 @@ public class AudioFrame {
         }
         return (meanSample/(this.channels * Short.MAX_VALUE));
     }
+
+    /**
+     * Appends an AudioFrame to the current AudioFrame if the two frames have the same specs in
+     * terms of sampleRate and number of channels. The raw bytes of the other AudioFrame are
+     * appended to the byte-array of the current AudioFrame.
+     *
+     * @param that The AudioFrame to append to the current frame.
+     * @param numberOfSamples The number of samples to append. Must be smaller than the size of the other AudioFrame!
+     * @return true if appending was successful, false otherwise.
+     */
+    public boolean append(AudioFrame that, int numberOfSamples) {
+        if (this.sampleRate != that.sampleRate && this.channels != that.channels) return false;
+        int bytes = that.channels * numberOfSamples * (BITS_PER_SAMPLE/8);
+        if (bytes > that.data.capacity()) return false;
+
+        /* Copy data. */
+        byte[] data = new byte[this.data.capacity() + bytes];
+        System.arraycopy(this.data.array(), 0, data, 0, this.data.capacity());
+        System.arraycopy(that.data.array(), 0, data, this.data.capacity(), bytes);
+
+        /* Update local ByteBuffer reference. */
+        this.setData(data);
+        return true;
+    }
+
+    /**
+     *
+     * @param that
+     * @return
+     */
+    public boolean append(AudioFrame that) {
+        return this.append(that, that.numberOfSamples);
+    }
+
+    /**
+     *
+     * @param data
+     */
+    private void setData(byte[] data) {
+        this.data = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
+        this.numberOfSamples = data.length/(2 * this.channels);
+    }
+
 }

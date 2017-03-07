@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.descriptor.PathList;
 
@@ -28,7 +28,7 @@ public class VisualizationUtil {
 	
 	public static ImagePanel gui = new ImagePanel();
 	
-	public static void visualize(List<Frame> frames, 
+	public static void visualize(List<VideoFrame> videoFrames,
 			ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> foregroundPaths,
 			ArrayList<Pair<Integer, LinkedList<Point2D_F32>>> backgroundPaths,
 			ArrayList<GrayU8> masks,ArrayList<GrayU8> masks2,
@@ -37,7 +37,7 @@ public class VisualizationUtil {
 		BufferedImage track = null;
 		BufferedImage mask = null;
 
-		track = frames.get(0).getImage().getBufferedImage();
+		track = videoFrames.get(0).getImage().getBufferedImage();
 		int width = track.getWidth();
 		int height = track.getHeight();
 		int imageType = track.getType();
@@ -54,15 +54,15 @@ public class VisualizationUtil {
 		ListIterator<ImageRectangle> rectIter = rects.listIterator();
 
 		int cnt = 0;
-		for (int frameIdx = 0; frameIdx < frames.size(); ++frameIdx) {
+		for (int frameIdx = 0; frameIdx < videoFrames.size(); ++frameIdx) {
 			if (cnt >= PathList.frameInterval) {
 				cnt = 0;
 				continue;
 			}
 			cnt += 1;
 
-			Frame frame = frames.get(frameIdx);
-			track = frame.getImage().getBufferedImage();
+			VideoFrame videoFrame = videoFrames.get(frameIdx);
+			track = videoFrame.getImage().getBufferedImage();
 			Graphics2D g2 = bufferedImage.createGraphics();
 			g2.drawImage(track, null, 0, 0);
 			while (fgPathItor.hasNext()) {

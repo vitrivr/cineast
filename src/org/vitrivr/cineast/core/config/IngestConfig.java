@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
@@ -215,10 +216,24 @@ public class IngestConfig implements ExtractionContextProvider {
     }
 
     /**
-     * @return
+     * Returns the PersistencyWriterSupplier that can be used during the extraction run to
+     * obtain PersistencyWriter instance.
+     *
+     * @return PersistencyWriterSupplier instance used obtain a PersistencyWriter.
      */
     @Override
     public PersistencyWriterSupplier persistencyWriter() {
        return this.database.getWriterSupplier();
+    }
+
+    /**
+     * Returns the DBSelectorSupplier that can be used during the extraction run to obtain
+     * a DBSelector instance.
+     *
+     * @return DBSelectorSupplier instance used obtain a DBSelector.
+     */
+    @Override
+    public DBSelectorSupplier persistencyReader() {
+        return this.database.getSelectorSupplier();
     }
 }

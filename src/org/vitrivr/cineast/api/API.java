@@ -33,6 +33,7 @@ import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
+import org.vitrivr.cineast.core.importer.DataImportHandler;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
 import org.vitrivr.cineast.core.setup.EntityCreator;
@@ -227,7 +228,18 @@ public class API {
 		}
 	}
 
-    /**
+	/**
+	 * Starts the DataImportHandler for PROTO files.
+	 *
+	 * @param path Path to the file or folder that should be imported.
+	 * @param batchsize Batch size to use with the DataImportHandler
+	 */
+	private static void handleImport(Path path, int batchsize) {
+		DataImportHandler handler = new DataImportHandler(2, batchsize);
+		handler.importProto(path);
+	}
+
+	/**
      * Performs a test of the JOGLOffscreenRenderer class. If the environment supports OpenGL rendering, an image
      * should be generated depicting two colored triangles on black background. If OpenGL rendering is not supported,
      * an exception will be thrown.
@@ -351,7 +363,19 @@ public class API {
 							API.handleCodebook(codebookGenerator, src, dst, words);
 							break;
 						}
-                        case "3d":
+						case "import": {
+							if (commands.size() < 2) {
+								System.err.println("You must specify the path to data file/folder.");
+								break;
+							}
+							Path path = Paths.get(commands.get(1));
+							int batchsize = 100;
+							if (commands.size() == 3) batchsize = Integer.parseInt(commands.get(2));
+
+							handleImport(path, batchsize);
+							break;
+						}
+						case "3d":
                         case "test3d": {
                             handle3Dtest();
                             break;

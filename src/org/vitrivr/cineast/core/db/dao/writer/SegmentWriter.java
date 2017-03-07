@@ -41,6 +41,6 @@ public class SegmentWriter extends AbstractBatchedEntityWriter<SegmentDescriptor
      */
     @Override
     protected PersistentTuple generateTuple(SegmentDescriptor entity) {
-        return this.writer.generateTuple(entity.getSegmentId(), entity.getObjectId(), entity.getSequenceNumber(), entity.getStart(), entity.getEnd());
+        return this.writer.generateTuple(entity.getSegmentId(), entity.getObjectId(), entity.getSequenceNumber(), entity.getStart(), entity.getEnd(), entity.getStartabs(), entity.getEndabs());
     }
 }
