@@ -1,14 +1,14 @@
 package org.vitrivr.cineast.core.data.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.nio.file.Path;
+
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author rgasser
@@ -16,8 +16,6 @@ import java.util.UUID;
  * @created 10.01.17
  */
 public class MultimediaObjectDescriptor implements ExistenceCheck {
-
-
     /** Name of the entity in the persistence layer. */
     public static final String ENTITY = "cineast_multimediaobject";
 
@@ -28,16 +26,6 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
     private final String name, path;
     private final boolean exists;
     private final int mediatypeId;
-
-    @Deprecated
-    public static MultimediaObjectDescriptor makeVideoDescriptor(String objectId, String name, String path, int width, int height, int framecount, float duration) {
-      return new MultimediaObjectDescriptor(objectId, name, path, MediaType.VIDEO, true);
-    }
-
-    @Deprecated
-    public static MultimediaObjectDescriptor makeImageDescriptor(String objectId, String name, String path, int width, int height) {
-      return new MultimediaObjectDescriptor(objectId, name, path, MediaType.IMAGE, true);
-    }
 
     public static MultimediaObjectDescriptor makeMultimediaDescriptor(String objectId, String name, String path, MediaType type) {
         return new MultimediaObjectDescriptor(objectId, name, path, type, true);
@@ -56,7 +44,7 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
         String objectId = generator.next(path, type);
         return new MultimediaObjectDescriptor(objectId, path.getFileName().toString(), path.toString(), type, false);
     }
-
+    
     /**
      * Default constructor for an empty MultimediaObjectDescriptor.
      */

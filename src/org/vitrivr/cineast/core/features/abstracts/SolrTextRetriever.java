@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.ADAMproSelector;
@@ -66,7 +66,7 @@ public abstract class SolrTextRetriever implements Retriever {
     }
 
     HashMap<String, String> parameters = new HashMap<>();
-    parameters.put("rows", Integer.toString(Config.getRetrieverConfig().getMaxResultsPerModule()));
+    parameters.put("rows", Integer.toString(Config.sharedConfig().getRetriever().getMaxResultsPerModule()));
 
     List<SubtitleItem> subItems = sc.getSubtitleItems();
     

@@ -1,20 +1,22 @@
 package org.vitrivr.cineast.core.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Configures a data-ingest or extraction run, acts as an ExtractionContextProvider.
@@ -102,7 +104,7 @@ public class IngestConfig implements ExtractionContextProvider {
     @Override
     public Path inputPath() {
         if (this.input != null) {
-            return this.input.getPath();
+            return Paths.get(this.input.getPath());
         } else {
             return null;
         }
@@ -214,10 +216,24 @@ public class IngestConfig implements ExtractionContextProvider {
     }
 
     /**
-     * @return
+     * Returns the PersistencyWriterSupplier that can be used during the extraction run to
+     * obtain PersistencyWriter instance.
+     *
+     * @return PersistencyWriterSupplier instance used obtain a PersistencyWriter.
      */
     @Override
     public PersistencyWriterSupplier persistencyWriter() {
        return this.database.getWriterSupplier();
+    }
+
+    /**
+     * Returns the DBSelectorSupplier that can be used during the extraction run to obtain
+     * a DBSelector instance.
+     *
+     * @return DBSelectorSupplier instance used obtain a DBSelector.
+     */
+    @Override
+    public DBSelectorSupplier persistencyReader() {
+        return this.database.getSelectorSupplier();
     }
 }

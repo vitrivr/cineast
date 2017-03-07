@@ -23,11 +23,13 @@ public class SegmentDescriptor implements ExistenceCheck {
      *  - segmentnumber
      *  - segmentstart
      *  - segmentend
+     *  - startabs
      */
-    public static final String[] FIELDNAMES = {"segmentid", "objectid", "segmentnumber", "segmentstart", "segmentend"};
+    public static final String[] FIELDNAMES = {"segmentid", "objectid", "segmentnumber", "segmentstart", "segmentend", "segmentstartabs", "segmentendabs"};
 
     private final String segmentId, objectId;
     private final int start, end, number;
+    private final float startabs, endabs;
     private final boolean exists;
 
     /**
@@ -40,26 +42,28 @@ public class SegmentDescriptor implements ExistenceCheck {
      * @param end
      * @return
      */
-    public static SegmentDescriptor newSegmentDescriptor(String objectId, int segmentNumber, int start, int end) {
+    public static SegmentDescriptor newSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs) {
         String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
-        return new SegmentDescriptor(objectId, segmentId, segmentNumber, start, end, false);
+        return new SegmentDescriptor(objectId, segmentId, segmentNumber, start, end, startabs, endabs, false);
     }
 
-    private SegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, boolean exists) {
+    private SegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs, boolean exists) {
         this.segmentId = segmentId;
         this.objectId = objectId;
         this.number = segmentNumber;
         this.start = start;
         this.end = end;
+        this.startabs = startabs;
+        this.endabs = endabs;
         this.exists = exists;
     }
 
-    public SegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end) {
-        this(objectId, segmentId, segmentNumber, start, end, true);
+    public SegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs) {
+        this(objectId, segmentId, segmentNumber, start, end, startabs, endabs, true);
     }
 
     public SegmentDescriptor() {
-        this("", "", 0, 0, 0, false);
+        this("", "", 0, 0, 0, 0.0f, 0.0f, false);
     }
 
     @JsonProperty
@@ -90,6 +94,16 @@ public class SegmentDescriptor implements ExistenceCheck {
     @JsonProperty
     public int getEnd() {
         return end;
+    }
+
+    @JsonProperty
+    public float getStartabs() {
+        return this.startabs;
+    }
+
+    @JsonProperty
+    public float getEndabs() {
+        return this.endabs;
     }
 
     @JsonIgnore

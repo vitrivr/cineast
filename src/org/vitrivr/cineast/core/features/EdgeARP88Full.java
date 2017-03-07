@@ -9,9 +9,9 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StatElement;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.descriptor.EdgeImg;
@@ -34,9 +34,9 @@ public class EdgeARP88Full extends AbstractFeatureModule {
 			for(int i = 0; i < 64; ++i){
 				stats[i] = new StatElement();
 			}
-			List<Frame> frames = shot.getFrames();
+			List<VideoFrame> videoFrames = shot.getVideoFrames();
 			List<Boolean> edgePixels = new ArrayList<>();
-			for(Frame f : frames){
+			for(VideoFrame f : videoFrames){
 				MultiImage img = f.getImage();
 				edgePixels = EdgeImg.getEdgePixels(img, edgePixels);
 				ArrayList<LinkedList<Boolean>> partition = ARPartioner.partition(edgePixels, img.getWidth(), img.getHeight(), 8, 8);

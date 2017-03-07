@@ -16,7 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
@@ -25,7 +25,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 
 public class QueryImageExporter implements Retriever {
 
-	private File folder = new File(Config.getExtractorConfig().getOutputLocation(), "queryImages");
+	private File folder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "queryImages");
 	private DateFormat df = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss-SSS");
 	private static final Logger LOGGER = LogManager.getLogger();
 	

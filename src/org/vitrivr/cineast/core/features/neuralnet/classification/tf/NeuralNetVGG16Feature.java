@@ -15,7 +15,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.NeuralNetConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -64,7 +64,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
      */
     @SuppressWarnings("unused")
     public NeuralNetVGG16Feature() {
-        this(Config.getNeuralNetConfig());
+        this(Config.sharedConfig().getNeuralnet());
     }
 
     public NeuralNetVGG16Feature(NeuralNetConfig neuralNetConfig) {

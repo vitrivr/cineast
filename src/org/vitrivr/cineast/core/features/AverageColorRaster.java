@@ -19,7 +19,7 @@ import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -213,7 +213,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
 
 	private List<StringDoublePair> getSimilar(float[] raster, float[] hist, QueryConfig qc){
-		int limit = Config.getRetrieverConfig().getMaxResultsPerModule() * 5;
+		int limit = Config.sharedConfig().getRetriever().getMaxResultsPerModule() * 5;
 		
 		qc = QueryConfig.notNull(qc).setDistanceIfEmpty(Distance.chisquared);
 		

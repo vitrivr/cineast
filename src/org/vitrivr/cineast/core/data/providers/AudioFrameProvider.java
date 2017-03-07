@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.data.providers;
 
-import org.vitrivr.cineast.core.data.audio.AudioFrame;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
- * This interface should be implemented by segments that provides access to audio-data in the form of AudioFrames.
+ * This interface should be implemented by segments that provides access to frames-data in the form of AudioFrames.
  *
  * Currently, one AudioFrame holds an arbitrary number of samples and channels (as returned by the respective decoder). An
  * audio-segment groups multiple such frames and the methods defined in this interface facilitate easy access to the
@@ -34,7 +34,7 @@ public interface AudioFrameProvider {
     /**
      * Returns the raw samples in the specified channel as short array.
      *
-     * @param channel The channel for which to return the audio-data (zero-based index).
+     * @param channel The channel for which to return the frames-data (zero-based index).
      * @return short array containing the samples.
      */
     default short[] getSamplesAsShort(int channel) {
@@ -51,7 +51,7 @@ public interface AudioFrameProvider {
     /**
      * Returns the raw samples in the specified channel as double array.
      *
-     * @param channel The channel for which to return the audio-data (zero-based index).
+     * @param channel The channel for which to return the frames-data (zero-based index).
      * @return double array containing the samples.
      */
     default double[] getSamplesAsDouble(int channel) {
@@ -98,7 +98,7 @@ public interface AudioFrameProvider {
     }
 
     /**
-     * Returns the total number of samples in the audio segment (i.e. across
+     * Returns the total number of samples in the frames segment (i.e. across
      * all frames).
      *
      * @return Total number of samples in the segments
@@ -108,30 +108,30 @@ public interface AudioFrameProvider {
     }
 
     /**
-     * Returns the total duration  in seconds of all samples in the audio segment
+     * Returns the total duration  in seconds of all samples in the frames segment
      * (i.e. across all frames).
      *
      * @return Total duration in seconds.
      */
-    default float getDuration() {
+    default float getAudioDuration() {
         return AudioFrame.EMPTY_FRAME.getDuration();
     }
 
     /**
-     * Returns the sampling rate of the audio segment. That rate usually determined by
+     * Returns the sampling rate of the frames segment. That rate usually determined by
      * the first AudioFrame added to the segment and must be the same for all frames.
      *
-     * @return Sampling rate of the audio segment.
+     * @return Sampling rate of the frames segment.
      */
     default float getSampleRate() {
         return AudioFrame.EMPTY_FRAME.getSampleRate();
     }
 
     /**
-     * Returns the number of channels for the audio segment. Is usually determined by
+     * Returns the number of channels for the frames segment. Is usually determined by
      * the first AudioFrame added to the segment and must be the same for all frames.
      *
-     * @return Number of channels of the audio segment.
+     * @return Number of channels of the frames segment.
      */
     default int getChannels() {
         return AudioFrame.EMPTY_FRAME.getChannels();

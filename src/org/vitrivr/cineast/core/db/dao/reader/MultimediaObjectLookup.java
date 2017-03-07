@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
@@ -16,16 +14,24 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.db.DBSelector;
 
-public class MultimediaObjectLookup {
+public class MultimediaObjectLookup extends AbstractEntityReader {
 
-  private static final Logger LOGGER = LogManager.getLogger();
+    /**
+     * Default constructor
+     */
+    public MultimediaObjectLookup() {
+        this(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
+    }
 
-  private final DBSelector selector;
-
-  public MultimediaObjectLookup() {
-    this.selector = Config.getDatabaseConfig().getSelectorSupplier().get();
-    this.selector.open(MultimediaObjectDescriptor.ENTITY);
-  }
+    /**
+     * Constructor for MultimediaObjectLookup
+     *
+     * @param selector DBSelector to use for the MultimediaMetadataReader instance.
+     */
+    public MultimediaObjectLookup(DBSelector selector) {
+      super(selector);
+      this.selector.open(MultimediaObjectDescriptor.ENTITY);
+    }
 
   public MultimediaObjectDescriptor lookUpObjectById(String objectId) {
     List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MultimediaObjectDescriptor.FIELDNAMES[0], objectId);
@@ -90,6 +96,16 @@ public class MultimediaObjectLookup {
 
     return mapToDescriptor(result.get(0));
   }
+  
+  public MultimediaObjectDescriptor lookUpObjectByPath(String path) {
+    List<Map<String, PrimitiveTypeProvider>> result = selector.getRows(MultimediaObjectDescriptor.FIELDNAMES[3], path);
+
+    if (result.isEmpty()) {
+      return new MultimediaObjectDescriptor();
+    }
+
+    return mapToDescriptor(result.get(0));
+  }
 
   public Map<String, MultimediaObjectDescriptor> lookUpVideos(String... videoIds) {
     if (videoIds == null || videoIds.length == 0) {
@@ -135,18 +151,8 @@ public class MultimediaObjectLookup {
 
   }
 
-  public void close() {
-    this.selector.close();
-  }
-
-  @Override
-  protected void finalize() throws Throwable {
-    this.close();
-    super.finalize();
-  }
-
   public List<MultimediaObjectDescriptor> getAllVideos() {
-    DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+    DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(MultimediaObjectDescriptor.ENTITY);
     List<Map<String, PrimitiveTypeProvider>> all = selector.getAll();
     List<MultimediaObjectDescriptor> _return = new ArrayList<>(all.size());
@@ -157,7 +163,7 @@ public class MultimediaObjectLookup {
   }
 
   public List<String> lookUpVideoIds() {
-    DBSelector selector = Config.getDatabaseConfig().getSelectorSupplier().get();
+    DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(MultimediaObjectDescriptor.ENTITY);
     List<PrimitiveTypeProvider> ids = selector.getAll(MultimediaObjectDescriptor.FIELDNAMES[0]);
     Set<String> uniqueIds = new HashSet<>();

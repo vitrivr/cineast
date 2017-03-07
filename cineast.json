@@ -1,6 +1,6 @@
 {
 	"database": {
-		"host" : "192.168.1.100",
+		"host" : "127.0.0.1",
 		"port": 5890,
 		"plaintext": true
 	},
@@ -52,10 +52,27 @@
 				{"feature": "DescriptionTextSearch",				"weight": 1.0}
 			],
 			"localfeatures" : [
-				{"feature": "SURFMirflick25",						"weight": 1.0}
+				{"feature": "SURFMirflickr25K512",					"weight": 1.75},
+				{"feature": "HOGMirflickr25K512",					"weight": 1.0}
+			],
+			"localfeatures_fast" : [
+				{"feature": "SURFMirflickr25K256",					"weight": 1.75},
+				{"feature": "HOGMirflickr25K256",					"weight": 1.0}
 			],
 			"meta": [
-				{"feature": "VideoMetadata",				"weight": 1.0}
+				{"feature": "VideoMetadata",					"weight": 1.0}
+			],
+			"audiofingerprint": [
+				{"feature": "AudioFingerprint",					"weight": 1.0}
+			],
+			"audiobassline" : [
+				{"feature": "CENS12BasslineShingle",			"weight": 2.5},
+				{"feature": "HPCP12BasslineShingle",			"weight": 1.0}
+			],
+			"audiomelody" : [
+				{"feature": "CENS12MelodyShingle",				"weight": 2.5},
+				{"feature": "HPCP12MelodyShingle",				"weight": 1.0}
+
 			]
 		}
 	},
@@ -73,12 +90,19 @@
 			"properties": {
 				"bounds":1024
 			}
+		},
+		"AUDIO":{
+			"decoder": "FFMpegAudioDecoder",
+			"properties": {
+				"samplerate":22050,
+				"channels":2
+			}
 		}
 	},
 	
 	"extractor": {
-		"threadPoolSize": 4,
-		"outputLocation": "/Users/rgasser/workbench/thumbnails"
+		"threadPoolSize": 1,
+		"outputLocation": "/Users/rgasser/workbench"
 	},
 	
 	"imagecache": {

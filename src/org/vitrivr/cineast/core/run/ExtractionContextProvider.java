@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.run;
 
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
@@ -108,4 +109,12 @@ public interface ExtractionContextProvider {
      * @return PersistencyWriterSupplier instance used obtain a PersistencyWriter.
      */
     PersistencyWriterSupplier persistencyWriter();
+
+    /**
+     * Returns the DBSelectorSupplier that can be used during the extraction run to obtain
+     * a DBSelector instance.
+     *
+     * @return DBSelectorSupplier instance used obtain a DBSelector.
+     */
+    DBSelectorSupplier persistencyReader();
 }

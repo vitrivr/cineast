@@ -56,6 +56,8 @@ public class ExtractionDispatcher {
             LOGGER.warn("The path '{}' specified in the extraction configuration does not exist!", path.toString());
             return false;
         }
+        
+        LOGGER.info("collecting file paths...");
         this.paths = Files.walk(path, this.context.depth())
                      .sorted()
                      .skip(this.context.skip())
@@ -69,6 +71,7 @@ public class ExtractionDispatcher {
                      })
                      .limit(this.context.limit())
                      .collect(Collectors.toList());
+        LOGGER.info("done collecting file paths.");
         return true;
     }
 

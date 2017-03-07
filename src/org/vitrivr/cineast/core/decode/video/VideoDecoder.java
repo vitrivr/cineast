@@ -1,14 +1,15 @@
 package org.vitrivr.cineast.core.decode.video;
 
-import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 
+@Deprecated
 public interface VideoDecoder {
 
 	void seekToFrame(int frameNumber);
 
 	int getFrameNumber();
 
-	Frame getFrame();
+	VideoFrame getFrame();
 	
 	int getTotalFrameCount();
 	

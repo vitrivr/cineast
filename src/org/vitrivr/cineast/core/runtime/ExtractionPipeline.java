@@ -1,22 +1,25 @@
 package org.vitrivr.cineast.core.runtime;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.LimitedQueue;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StatElement;
-import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.util.DecodingError;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.ReflectionHelper;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.*;
 
 /**
  * @author rgasser
@@ -32,7 +35,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     private final List<Extractor> extractors = new LinkedList<>();
 
     /** Blocking queue holding the SegmentContainers that are pending extraction. */
-    private final LinkedBlockingQueue<SegmentContainer> segmentQueue = new LinkedBlockingQueue<SegmentContainer>(Config.getExtractorConfig().getShotQueueSize());
+    private final LinkedBlockingQueue<SegmentContainer> segmentQueue = new LinkedBlockingQueue<SegmentContainer>(Config.sharedConfig().getExtractor().getShotQueueSize());
 
     /** HashMap containing statistics about the execution of the extractors. */
     private final ConcurrentHashMap<Class<?>, StatElement> timeMap = new ConcurrentHashMap<>();
@@ -46,9 +49,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     /** Initializer for the extractors. */
     private final ExtractorInitializer initializer;
 
-    /** */
-    private final Config applicationConfiguration;
-
+    
     /** Flag indicating whether or not the ExtractionPipeline is running. */
     private volatile boolean running = false;
 
@@ -61,14 +62,13 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         /* Store context for further reference. */
         this.context = context;
         this.initializer = initializer;
-        this.applicationConfiguration = Config.sharedConfig();
-
+       
         /* Start the extraction pipeline. */
         this.startup();
 
         /* Get value for task-queue and thread-count. */
-        int taskQueueSize =  Config.getExtractorConfig().getTaskQueueSize();
-        int threadCount = Config.getExtractorConfig().getThreadPoolSize();
+        int taskQueueSize =  Config.sharedConfig().getExtractor().getTaskQueueSize();
+        int threadCount = Config.sharedConfig().getExtractor().getThreadPoolSize();
 
         /* Prepare and create a new ThreadPoolExecutor. */
         LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(taskQueueSize);
@@ -179,6 +179,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         }
 
         for (Extractor exporter : this.context.exporters()) {
+            this.initializer.initialize(exporter);
             this.extractors.add(exporter);
         }
 

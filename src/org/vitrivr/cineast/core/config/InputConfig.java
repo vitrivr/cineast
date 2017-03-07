@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.nio.file.Path;
 
 /**
  * @author rgasser
@@ -9,7 +8,7 @@ import java.nio.file.Path;
  * @created 23.01.17
  */
 public class InputConfig {
-    private Path path;
+    private String path;
     private String name;
     private Integer depth = 1;
 
@@ -26,10 +25,10 @@ public class InputConfig {
     }
 
     @JsonProperty(required = true)
-    public Path getPath() {
+    public String getPath() {
         return path;
     }
-    public void setPath(Path path) {
+    public void setPath(String path) {
         this.path = path;
     }
 

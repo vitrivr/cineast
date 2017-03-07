@@ -61,20 +61,20 @@ public interface EntityCreator {
             r.initalizePersistentLayer(() -> this);
         }
 
-        NeuralNetConfig nnconfig = Config.getNeuralNetConfig();
+        NeuralNetConfig nnconfig = Config.sharedConfig().getNeuralnet();
         if (nnconfig != null) {
             LOGGER.info("Initializing NeuralNet persistent layer...");
-            NeuralNetFeature feature = new NeuralNetVGG16Feature(Config.getNeuralNetConfig());
+            NeuralNetFeature feature = new NeuralNetVGG16Feature(Config.sharedConfig().getNeuralnet());
             feature.initalizePersistentLayer(() -> this);
             LOGGER.info("...done");
 
             LOGGER.info("Initializing writer...");
-            feature.init(Config.getDatabaseConfig().getWriterSupplier());
-            feature.init(Config.getDatabaseConfig().getSelectorSupplier());
+            feature.init(Config.sharedConfig().getDatabase().getWriterSupplier());
+            feature.init(Config.sharedConfig().getDatabase().getSelectorSupplier());
             LOGGER.info("...done");
 
             LOGGER.info("Filling labels...");
-            feature.fillConcepts(Config.getNeuralNetConfig().getConceptsPath());
+            feature.fillConcepts(Config.sharedConfig().getNeuralnet().getConceptsPath());
             feature.fillLabels(new HashMap<>());
             LOGGER.info("...done");
         } else {

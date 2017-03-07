@@ -10,7 +10,7 @@ import org.jcodec.api.JCodecException;
 import org.jcodec.common.FileChannelWrapper;
 import org.jcodec.common.NIOUtils;
 import org.jcodec.common.model.Picture;
-import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.PictureUtil;
@@ -75,7 +75,7 @@ public class JCodecVideoDecoder implements VideoDecoder {
 	 * @see cineast.core.decode.video.VideoDecoder#getFrame()
 	 */
 	@Override
-	public Frame getFrame(){
+	public VideoFrame getFrame(){
 		Picture p = null;
 		int width = 0, height = 0;
 		int[] _return = null;
@@ -93,7 +93,7 @@ public class JCodecVideoDecoder implements VideoDecoder {
 		if(_return == null){
 			return null;
 		}
-		return new Frame((int)this.fg.getCurrentFrameNum(), MultiImageFactory.newMultiImage(width, height, _return));
+		return new VideoFrame((int)this.fg.getCurrentFrameNum(), MultiImageFactory.newMultiImage(width, height, _return));
 	}
 	
 	/* (non-Javadoc)

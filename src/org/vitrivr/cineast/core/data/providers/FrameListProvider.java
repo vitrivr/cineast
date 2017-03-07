@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.providers;
 
-import org.vitrivr.cineast.core.data.Frame;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.List;
  * @created 11.01.17
  */
 public interface FrameListProvider {
-    default List<Frame> getFrames() {
-        ArrayList<Frame> list = new ArrayList<>(1);
-        list.add(Frame.EMPTY_FRAME);
+    default List<VideoFrame> getVideoFrames() {
+        ArrayList<VideoFrame> list = new ArrayList<>(1);
+        list.add(VideoFrame.EMPTY_VIDEO_FRAME);
         return list;
     }
 }

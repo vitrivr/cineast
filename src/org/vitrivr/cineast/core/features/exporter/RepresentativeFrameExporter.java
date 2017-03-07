@@ -9,8 +9,8 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.Frame;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -30,7 +30,7 @@ public class RepresentativeFrameExporter implements Extractor {
 		this.phandler = supply.get();
 		this.phandler.open("cineast_representativeframes");
 		this.phandler.setFieldNames("id", "frame");
-		this.folder = new File(Config.getExtractorConfig().getOutputLocation(), "representative_frames");
+		this.folder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "representative_frames");
 		this.folder.mkdirs();
 	}
 
@@ -39,7 +39,7 @@ public class RepresentativeFrameExporter implements Extractor {
 		File outFolder = new File(this.folder, segment.getSuperId());
 		outFolder.mkdirs();
 		File outFile = new File(outFolder, segment.getId() + ".png");
-		Frame f = segment.getMostRepresentativeFrame();
+		VideoFrame f = segment.getMostRepresentativeFrame();
 		try {
 			ImageIO.write(f.getImage().getBufferedImage(), "PNG", outFile);
 		} catch (IOException e) {

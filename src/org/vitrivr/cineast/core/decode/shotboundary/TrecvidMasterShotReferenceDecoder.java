@@ -58,9 +58,9 @@ public class TrecvidMasterShotReferenceDecoder {
 				}
 				
 				++shotCounter;
-				
-				_return.add(new SegmentDescriptor(videoId, MediaType.generateSegmentId(MediaType.VIDEO, videoId, shotCounter), shotCounter, start, end));
-				
+
+				/* TODO: Derive absolute start and end position of SegmentDescriptor. */
+				_return.add(new SegmentDescriptor(videoId, MediaType.generateSegmentId(MediaType.VIDEO, videoId, shotCounter), shotCounter, start, end, -1.0f, -1.0f));
 			}
 			
 			reader.close();

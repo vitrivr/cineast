@@ -13,3 +13,4 @@ audio/aac aac
 audio/mpeg mp1 mp2 mp3 mpg mpeg
 audio/ogg oga ogg
 audio/wav wav
+audio/flac flac

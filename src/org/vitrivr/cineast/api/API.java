@@ -3,7 +3,6 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.nio.file.Path;
@@ -14,10 +13,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.cli.*;
+import javax.imageio.ImageIO;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.vitrivr.cineast.api.rest.RestfulAPI;
@@ -27,13 +33,11 @@ import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
+import org.vitrivr.cineast.core.importer.DataImportHandler;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
 import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
-
-import javax.imageio.ImageIO;
 
 /**
  * Entry point. 
@@ -44,7 +48,7 @@ public class API {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final RetrieverInitializer initializer = r -> r.init(Config.getDatabaseConfig().getSelectorSupplier());
+    private static final RetrieverInitializer initializer = r -> r.init(Config.sharedConfig().getDatabase().getSelectorSupplier());
 
 	private static final Pattern inputSplitPattern = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 
@@ -219,11 +223,23 @@ public class API {
                 System.err.println(String.format("Could not start handleExtraction with configuration file '%s'. Does the file exist?", file.toString()));
             }
 		} catch (IOException e) {
-			System.err.println(String.format("Could not start handleExtraction with configuration file '{}' due to a serious IO error.", file.toString()));
+			System.err.println(String.format("Could not start handleExtraction with configuration file '%s' due to a serious IO error.", file.toString()));
+			e.printStackTrace();
 		}
 	}
 
-    /**
+	/**
+	 * Starts the DataImportHandler for PROTO files.
+	 *
+	 * @param path Path to the file or folder that should be imported.
+	 * @param batchsize Batch size to use with the DataImportHandler
+	 */
+	private static void handleImport(Path path, int batchsize) {
+		DataImportHandler handler = new DataImportHandler(2, batchsize);
+		handler.importProto(path);
+	}
+
+	/**
      * Performs a test of the JOGLOffscreenRenderer class. If the environment supports OpenGL rendering, an image
      * should be generated depicting two colored triangles on black background. If OpenGL rendering is not supported,
      * an exception will be thrown.
@@ -347,7 +363,19 @@ public class API {
 							API.handleCodebook(codebookGenerator, src, dst, words);
 							break;
 						}
-                        case "3d":
+						case "import": {
+							if (commands.size() < 2) {
+								System.err.println("You must specify the path to data file/folder.");
+								break;
+							}
+							Path path = Paths.get(commands.get(1));
+							int batchsize = 100;
+							if (commands.size() == 3) batchsize = Integer.parseInt(commands.get(2));
+
+							handleImport(path, batchsize);
+							break;
+						}
+						case "3d":
                         case "test3d": {
                             handle3Dtest();
                             break;

@@ -9,8 +9,8 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.Frame;
-import org.vitrivr.cineast.core.data.SegmentContainer;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
@@ -18,7 +18,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 
 public class FrameExporter implements Extractor {
 
-	private File folder = new File(Config.getExtractorConfig().getOutputLocation(), "exportedFrames");
+	private File folder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "exportedFrames");
 	private int offset;
 	private String format = "png";
 	
@@ -42,7 +42,7 @@ public class FrameExporter implements Extractor {
 
 	@Override
 	public void processShot(SegmentContainer shot) {
-		for(Frame f : shot.getFrames()){
+		for(VideoFrame f : shot.getVideoFrames()){
 			if(f.getId() % this.offset == 0){
 				try {
 					ImageIO.write(f.getImage().getBufferedImage(), this.format, new File(folder, String.format("%06d",(f.getId() / this.offset)) + "." + this.format));
