@@ -139,10 +139,11 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
                 if (frameFinished[0] > 0) {
                     /* If queue is true; enqueue frame. */
                     if (queue) {
+                        int in_samples = this.pFrame.nb_samples();
                         if (this.swr_ctx != null) {
-                            this.readResampled(this.pFrame.nb_samples());
+                            this.readResampled(in_samples);
                         } else {
-                            this.readOriginal(this.pFrame.nb_samples());
+                            this.readOriginal(in_samples);
                         }
                     }
                     readFrame = true;
@@ -179,8 +180,8 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         this.pFrame.data(0).position(0).get(buffer);
 
         /* Prepare frame and associated timestamp and add it to output queue. */
+        AudioFrame frame = new AudioFrame(this.pCodecCtxAudio.frame_number(), this.pFrame.sample_rate(), this.pFrame.channels(), buffer);
         Long timestamp = this.getFrameTimestamp(this.audioStream);
-        AudioFrame frame = new AudioFrame(this.pCodecCtxAudio.frame_number(), timestamp, this.pFrame.sample_rate(), this.pFrame.channels(), buffer);
         this.audioFrameQueue.add(new Pair<>(timestamp, frame));
     }
 
@@ -219,14 +220,14 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
             try {
                 stream.write(buffer);
             } catch (IOException e) {
-                LOGGER.error("Could not write re-sampled frame to ByteArrayOutputStream due to an exception ({}).", LogHelper.getStackTrace(e));
+                LOGGER.error("Could not write resampled frame to ByteArrayOutputStream due to an exception ({}).", LogHelper.getStackTrace(e));
                 break;
             }
         }
 
         /* Prepare frame and associated timestamp and add it to output queue. */
+        AudioFrame frame = new AudioFrame(this.pCodecCtxAudio.frame_number(), this.resampledFrame.sample_rate(), this.resampledFrame.channels(), stream.toByteArray());
         Long timestamp = this.getFrameTimestamp(this.audioStream);
-        AudioFrame frame = new AudioFrame(this.pCodecCtxAudio.frame_number(), timestamp, this.resampledFrame.sample_rate(), this.resampledFrame.channels(), stream.toByteArray());
         this.audioFrameQueue.add(new Pair<>(timestamp, frame));
     }
 
