@@ -216,6 +216,16 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                 decoder.close();
                 decoder = this.newDecoder();
             }
+            
+            /*
+             * Trigger garbage collection once in a while.
+             * This is specially relevant when many small files are processed, since
+             * unused allocated memory could accumulate and trigger swapping. 
+             */
+            if(this.count_processed % 50 == 0){
+              System.gc();
+            }
+            
         }
 
         /* Shutdown the FileHandler. */
