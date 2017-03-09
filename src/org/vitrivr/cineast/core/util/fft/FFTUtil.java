@@ -12,37 +12,37 @@ public class FFTUtil {
     private FFTUtil() { }
 
     /**
-     * Returns frequency labels in Hz for a FFT of the specified size and samplingrate.
+     * Returns frequency labels in Hz for a FFT of the specified size and samplerate.
      *
      * @param size Size of the FFT (i.e. number of frequency bins).
-     * @param samplingrate Samplingrate at which the original data has been sampled.
+     * @param samplerate Samplerate at which the original data has been sampled.
      *
      * @return Array containing the frequency labels in Hz in ascending order.
      */
-    public static float[] binFrequencies(int size, float samplingrate) {
-        int bins = size / 2;
-        float bin_width = (samplingrate / size);
-        float[] labels = new float[bins];
+    public static float[] binFrequencies(int size, float samplerate) {
+        double bin_width = (samplerate / size);
+        double offset = bin_width/2.0;
+        float[] labels = new float[size/2];
         for (int bin = 0; bin < labels.length; bin++) {
-            labels[bin] = bin * bin_width;
+            labels[bin] = (float)((bin * bin_width) + offset);
         }
         return labels;
     }
 
     /**
      * Returns time labels in seconds for a STFT of given width using the provided
-     * window size and sampling rate.
+     * window size and samplerate.
      *
      * @param width Size of the STFT (i.e. number of time bins).
      * @param windowsize Used for FFT (i.e. number of samples per time bin).
-     * @param samplingrate  Samplingrate at which the original data has been sampled.
+     * @param samplerate Samplerate at which the original data has been sampled.
      *
      * @return Array containing the time labels for the STFT in seconds in ascending order.
      */
-    public static float[] time(int width, int windowsize, float samplingrate) {
+    public static float[] time(int width, int windowsize, float samplerate) {
         float[] labels = new float[width];
         for (int i=0;i<labels.length;i++) {
-            labels[i] = i*(windowsize/samplingrate);
+            labels[i] = i*(windowsize/samplerate);
         }
         return labels;
     }
