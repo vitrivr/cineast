@@ -26,14 +26,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version 1.0
  * @created 29.12.16
  */
-public class STLMeshDecoder implements MeshDecoder {
+public class STLMeshDecoder implements Decoder<Mesh> {
     /** Default logging facility. */
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** HashSet containing all the mime-types supported by this ImageDecoder instance. */
     private static HashSet<String> supportedFiles = new HashSet<>();
     static {
-        supportedFiles.add("application/vnd.ms-pkist");
+        supportedFiles.add("application/3d-stl");
     }
 
     /** Path to the input file. */
@@ -70,7 +70,7 @@ public class STLMeshDecoder implements MeshDecoder {
             InputStream is = Files.newInputStream(this.inputFile);
             byte[] header = new byte[6];
             if (is.read(header) == 6) {
-                if ((new String(header)).equals("solid ")) {
+                if ((new String(header)).contains("solid ")) {
                     LOGGER.info("Found term 'solid' in header. Treating the STL file as ASCII STL file!");
                     this.readAscii(mesh, is);
                 } else {

@@ -17,5 +17,5 @@ audio/flac flac
 
 # 3D Mime types:
 
-application/vnd.ms-pkist stl
-text/plain obj
+application/3d-stl stl
+application/3d-obj obj

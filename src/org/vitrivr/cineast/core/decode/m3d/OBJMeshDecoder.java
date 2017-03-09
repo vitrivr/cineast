@@ -11,7 +11,6 @@ import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import javax.imageio.ImageIO;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +18,6 @@ import java.io.InputStreamReader;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,14 +32,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version 1.0
  * @created 29.12.16
  */
-public class OBJMeshDecoder implements MeshDecoder {
+public class OBJMeshDecoder implements Decoder<Mesh> {
     /** Default logging facility. */
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** HashSet containing all the mime-types supported by this ImageDecoder instance. */
     private static HashSet<String> supportedFiles = new HashSet<>();
     static {
-        supportedFiles.add("text/plain");
+        supportedFiles.add("application/3d-obj");
     }
 
     /** Path to the input file. */
