@@ -72,6 +72,7 @@ public class STFT {
         /* Store the window size and window function. */
         this.windowFunction = function;
         this.windowsize = windowsize;
+        this.overlap = overlap;
 
         /* Derive properties from the available information. */
         this.width = (int) Math.ceil((float) this.samples.length / (windowsize - overlap));
@@ -135,12 +136,19 @@ public class STFT {
     }
 
     /**
-     * Getter for frequency labels.
+     * Getter for frequency bin labels.
      *
      * @return
      */
     public final float[] getFrequencies() {
         return frequencies;
+    }
+
+    /**
+     * Returns the number of frequency-bins.
+     */
+    public final int getNumberOfBins() {
+        return this.frequencies.length;
     }
 
     /**
