@@ -5,10 +5,12 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.*;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.filter.audio.PreEmphasisFilter;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.MFCC;
 import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
+import org.vitrivr.cineast.core.util.fft.windows.RectangularWindow;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,7 +78,7 @@ public class MFCCShingle extends AbstractFeatureModule {
     }
 
     /**
-     *
+     * 
      * @param sc
      */
     @Override
@@ -86,36 +88,27 @@ public class MFCCShingle extends AbstractFeatureModule {
     }
 
     /**
+     * Derives and returns a list of MFCC features for a SegmentContainer.
      *
-     * @param segment
-     * @return
+     * @param segment SegmentContainer to derive the MFCC features from.
+     * @return List of MFCC shingles.
      */
     private List<float[]> getFeatures(SegmentContainer segment) {
         STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new HanningWindow());
         List<MFCC> mfccs = MFCC.calculate(stft);
-
         int vectors = mfccs.size() - SHINGLE_SIZE;
-        double powers = 1.0f;
 
+        List<float[]> features = new ArrayList<>(Math.max(1, vectors));
         if (vectors > 0) {
-            List<Pair<Double, float[]>> features = new ArrayList<>(vectors);
-
             for (int i = 0; i < vectors; i++) {
                 float[] feature = new float[SHINGLE_SIZE * 13];
                 for (int j = 0; j < SHINGLE_SIZE; j++) {
                     MFCC mfcc = mfccs.get(i + j);
                     System.arraycopy(mfcc.getCepstra(), 0, feature, 13 * j, 13);
                 }
-
-                Pair<Double, float[]> fp = new Pair<>(MathHelper.normL2(feature), MathHelper.normalizeL2(feature));
-                features.add(fp);
-                powers *= fp.first;
+                features.add(MathHelper.normalizeL2(feature));
             }
-
-            final double threshold = (Math.pow(powers, 1.0/features.size()) / 4.0);
-            return features.stream().filter(f -> (f.first > threshold)).map(f -> f.second).collect(Collectors.toList());
         }
-
-        return new ArrayList<>(0);
+        return features;
     }
 }

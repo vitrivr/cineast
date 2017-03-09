@@ -7,6 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This class calculates Mel-frequency cepstral coefficient (MFCC) features from the STFT of an audio signal.
+ * The code was partially taken from the OrangeCow Volume project. See [1]
+ *
+ * [1] S. Pfeiffer, and C. Parker, and T. Vincent. 2005.
+ *      OC Volume: Java speech recognition engine. 2005. [March 8th, 2017].
+ *
+ * [2]
+ *
  * @author rgasser
  * @version 1.0
  * @created 07.02.17
@@ -22,16 +30,20 @@ public class MFCC {
     /** Array holding the cepstrum coefficients (cepstra). Defaults to 13 as per [1]. */
     private float[] cepstra;
 
-    /** */
+    /**
+     * Default constructor for MFCC class with 13 cepstra, a Mel-Filter bank of size
+     * 13 and a minimum frequency of 133.0f Hz.
+     */
     public MFCC() {
         this(13, 23, 133.0f);
     }
 
     /**
+     * Constructor for MFCC.
      *
-     * @param cepstra
-     * @param melfilters
-     * @param minFrequency
+     * @param cepstra The number of cepstra to obtain for the MFCC feature.
+     * @param melfilters The number of triangular mel-filters (size of the mel-filter bank).
+     * @param minFrequency Minimum frequency to consider for MFCC feature.
      */
     public MFCC(int cepstra, int melfilters, float minFrequency) {
         this.melfilters = melfilters;
@@ -40,30 +52,36 @@ public class MFCC {
     }
 
     /**
+     * Returns a list of MFCC features for the provided STFT using the default settings.
      *
-     * @param stft
+     * @param stft STFT to derive the MFCC features from.
      */
     public static List<MFCC> calculate(STFT stft) {
         List<Spectrum> spectra = stft.getMagnitudeSpectrum();
         List<MFCC> list = new ArrayList<>(spectra.size());
         for (Spectrum spectrum : spectra) {
             MFCC mfcc = new MFCC();
-            mfcc.calculate(spectrum, stft.getSamplingrate(), stft.getWindowsize());
+            mfcc.calculate(spectrum, stft.getSamplingrate(), stft.getNumberOfBins());
             list.add(mfcc);
         }
         return list;
     }
 
     /**
+     * Returns a list of MFCC features for the provided STFT using the provided settings.
      *
-     * @param stft
+     * @param stft STFT to derive the MFCC features from.
+     * @param cepstra The number of cepstra to obtain for the MFCC feature.
+     * @param melfilters The number of triangular mel-filters (size of the mel-filter bank).
+     * @param minFrequency Minimum frequency to consider for MFCC feature.
+     * @return
      */
     public static List<MFCC> calculate(STFT stft, int cepstra, int melfilters, float minFrequency) {
         List<Spectrum> spectra = stft.getMagnitudeSpectrum();
         List<MFCC> list = new ArrayList<>(spectra.size());
         for (Spectrum spectrum : spectra) {
             MFCC mfcc = new MFCC(cepstra, melfilters, minFrequency);
-            mfcc.calculate(spectrum, stft.getSamplingrate(), stft.getWindowsize());
+            mfcc.calculate(spectrum, stft.getSamplingrate(), stft.getNumberOfBins());
            list.add(mfcc);
         }
         return list;
@@ -87,18 +105,18 @@ public class MFCC {
     }
 
     /**
-     * Transforms a normal frequency into a corresponding frequency on the mel scale
-     * and returns the value of that mel frequency.
+     * Transforms a frequency in Hz into a corresponding frequency on the mel scale and
+     * returns the value of that mel frequency.
      *
      * @param frequency Frequency to transform.
      * @return Frequency on the mel scale corresponding to the normal frequency.
      */
     public static double frequencyToMel(double frequency) {
-        return 2595 * Math.log10(1 + frequency/700);
+        return 2595 * Math.log10(1 + frequency/700.0);
     }
 
     /**
-     * Transforms a mel frequency into a normal frequency and returns the value of that
+     * Transforms a mel frequency into a frequency in Hz and returns the value of that
      * frequency.
      *
      * @param mel Mel frequency to transform.
@@ -142,8 +160,8 @@ public class MFCC {
      */
     public int[] melFrequencyBins(float samplingrate, int windowsize) {
         int[] bins = new int[this.melfilters + 2];
-        bins[0] = Math.round(this.minFrequency / (samplingrate * windowsize));
-        bins[bins.length -1] = (windowsize/2)-1;
+        bins[0] = Math.round(this.minFrequency / samplingrate * windowsize);
+        bins[bins.length -1] = (windowsize/2);
         for (int i = 1; i <= this.melfilters; i++){
             double f = centerFrequency(i, this.melfilters, samplingrate, this.minFrequency);
             bins[i] = (int)Math.round(f / samplingrate * windowsize);
@@ -152,23 +170,24 @@ public class MFCC {
     }
 
     /**
+     * Applies the triangular Mel-filters to the magnutude-spectrum
      *
-     * @param powers
-     * @param indices
-     * @return
+     * @param magnitudes Linear magnitude spectrum to apply the mel-filters to.
+     * @param indices Indices to use as center-frequencies.
+     * @return Mel-scaled magnitude spectrum.
      */
-    public double[] melFilter(double powers[], int indices[]){
+    private double[] melFilter(double magnitudes[], int indices[]){
         double temp[] = new double[this.melfilters + 2];
 
         for (int k = 1; k <= this.melfilters; k++){
             double num1 = 0, num2 = 0;
 
             for (int i = indices[k - 1]; i <= indices[k]; i++){
-                num1 += ((i - indices[k - 1] + 1) / (indices[k] - indices[k-1] + 1)) * powers[i];
+                num1 += ((i - indices[k - 1] + 1) / (indices[k] - indices[k-1] + 1)) * magnitudes[i];
             }
 
             for (int i = indices[k] + 1; i <= indices[k + 1]; i++){
-                num2 += (1 - ((i - indices[k]) / (indices[k + 1] - indices[k] + 1))) * powers[i];
+                num2 += (1 - ((i - indices[k]) / (indices[k + 1] - indices[k] + 1))) * magnitudes[i];
             }
 
             temp[k] = num1 + num2;
@@ -184,8 +203,9 @@ public class MFCC {
     }
 
     /**
+     * Getter for the cepstra.
      *
-     * @return
+     * @return List of cepstra for the current MFCC.
      */
     public float[] getCepstra() {
         return cepstra;
