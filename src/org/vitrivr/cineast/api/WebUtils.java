@@ -135,10 +135,10 @@ public class WebUtils {
 		/* Check if data URL is of supported type. */
 		if (dataUrl.substring(5, 11).equals("image/")) {
 			LOGGER.info("Data URL has been identified as image.");
-		} else if (dataUrl.substring(5, 11).equals("frames/")) {
+		} else if (dataUrl.substring(5, 11).equals("audio/")) {
 			LOGGER.info("Data URL has been identified as frames.");
 		} else {
-			LOGGER.warn("Type of data URL is neither image nor frames and therefore not supported.");
+			LOGGER.warn("Type of data URL is neither image nor audio and therefore not supported.");
 			return null;
 		}
 
