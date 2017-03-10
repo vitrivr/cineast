@@ -1,7 +1,14 @@
 package org.vitrivr.cineast.core.run;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Iterator;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.run.filehandler.AudioExtractionFileHandler;
@@ -9,14 +16,6 @@ import org.vitrivr.cineast.core.run.filehandler.ImageExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.VideoExtractionFileHandler;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author rgasser
@@ -31,7 +30,7 @@ public class ExtractionDispatcher {
     private ExtractionContextProvider context;
 
     /** List of files due for extraction. */
-    private List<Path> paths;
+    private Iterator<Path> paths;
 
     /** Reference to the thread that is being used to run the ExtractionFileHandler. */
     private Thread fileHandlerThread;
@@ -41,13 +40,24 @@ public class ExtractionDispatcher {
      * @param jobFile
      */
     public boolean initialize(File jobFile) throws IOException {
+        File outputLocation = Config.sharedConfig().getExtractor().getOutputLocation();
+        if(outputLocation == null){
+          LOGGER.error("invalid output location specified in config");
+          return false;
+        }
+        outputLocation.mkdirs();
+        if(!outputLocation.canWrite()){
+          LOGGER.error("cannot write to specified output location: '{}'", outputLocation.getAbsolutePath());
+          return false;
+        }
+      
         JacksonJsonProvider reader = new JacksonJsonProvider();
         this.context = reader.toObject(jobFile, IngestConfig.class);
-
+        
         /* Check if context could be read and an input path was specified. */
         if (context == null || this.context.inputPath() == null) return false;
         Path path = this.context.inputPath();
-
+        
         /*
          * Recursively add all files under that path to the List of files that should be processed. Uses the context-provider
          * to determine the depth of recursion, skip files and limit the number of files.
@@ -56,11 +66,7 @@ public class ExtractionDispatcher {
             LOGGER.warn("The path '{}' specified in the extraction configuration does not exist!", path.toString());
             return false;
         }
-        
-        LOGGER.info("collecting file paths...");
         this.paths = Files.walk(path, this.context.depth())
-                     .sorted()
-                     .skip(this.context.skip())
                      .filter(p -> {
                          try {
                              return Files.exists(p) && Files.isRegularFile(p) && !Files.isHidden(p) && Files.isReadable(p);
@@ -68,10 +74,7 @@ public class ExtractionDispatcher {
                              LOGGER.error("An IO exception occurred while testing the media file at '{}'.", p.toString(), LogHelper.getStackTrace(e));
                              return false;
                          }
-                     })
-                     .limit(this.context.limit())
-                     .collect(Collectors.toList());
-        LOGGER.info("done collecting file paths.");
+                     }).iterator();
         return true;
     }
 
