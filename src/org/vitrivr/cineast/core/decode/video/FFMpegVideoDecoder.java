@@ -58,6 +58,18 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     private static final int BYTES_PER_SAMPLE = av_get_bytes_per_sample(TARGET_FORMAT);
 
     private static final Logger LOGGER = LogManager.getLogger();
+    
+    /** Lists the mimetypes supported by the FFMpegAudioDecoder. Hint: List may not be complete yet. */
+    private static final Set<String> supportedFiles;
+    static {
+        HashSet<String> tmp = new HashSet<>();
+        tmp.add("video/mp4");
+        tmp.add("video/mpeg");
+        tmp.add("video/x-msvideo"); //avi
+        tmp.add("video/x-matroska");
+        tmp.add("video/webm");
+        supportedFiles = Collections.unmodifiableSet(tmp);
+    }
 
     private int width;
     private int height;
@@ -533,6 +545,6 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      */
     @Override
     public Set<String> supportedFiles() {
-        return null;
+        return supportedFiles;
     }
 }

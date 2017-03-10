@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -41,14 +42,16 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Lists the mimetypes supported by the FFMpegAudioDecoder. Hint: List may not be complete yet. */
-    private static final Set<String> supportedFiles = new HashSet<>();
+    private static final Set<String> supportedFiles;
     static {
-        supportedFiles.add("audio/mp4");
-        supportedFiles.add("audio/aac");
-        supportedFiles.add("audio/mpeg");
-        supportedFiles.add("audio/ogg");
-        supportedFiles.add("audio/wav");
-        supportedFiles.add("audio/flac");
+        HashSet<String> tmp = new HashSet<>();
+        tmp.add("audio/mp4");
+        tmp.add("audio/aac");
+        tmp.add("audio/mpeg");
+        tmp.add("audio/ogg");
+        tmp.add("audio/wav");
+        tmp.add("audio/flac");
+        supportedFiles = Collections.unmodifiableSet(tmp);
     }
 
     /** Property name and default value for channel settings. */
