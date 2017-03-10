@@ -41,6 +41,7 @@ public interface ExtractionContextProvider {
      *
      * @return A number greater than zero.
      */
+    @Deprecated
     int limit();
 
     /**
@@ -48,6 +49,7 @@ public interface ExtractionContextProvider {
      *
      * @return A positive number or zero
      */
+    @Deprecated
     int skip();
 
 

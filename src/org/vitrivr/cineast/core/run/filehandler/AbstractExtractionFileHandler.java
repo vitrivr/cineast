@@ -66,8 +66,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     /** SegmentLookup used to lookup existing SegmentDescriptors during the extraction. */
     private final SegmentLookup segmentReader;
 
-    /** Deque of files that are being extracted. */
-    private final Deque<Path> files = new ArrayDeque<>();
+    private final Iterator<Path> files;
 
     /** ExtractionContextProvider that is used to configure the extraction. */
     private final ExtractionContextProvider context;
@@ -92,11 +91,10 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     /** Used to measure the duration of an extraction run. */
     private long start_timestamp;
 
-    /** Total number of files that were queued for processing. */
-    private long count_files = 0;
-
     /** Total number of files that were effectively processed. */
     private long count_processed = 0;
+    
+    private final MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
 
     /**
      * Default constructor used to initialize the class.
@@ -104,9 +102,8 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @param files List of files that should be extracted.
      * @param context ExtractionContextProvider that holds extraction specific configurations.
      */
-    public AbstractExtractionFileHandler(List<Path> files, ExtractionContextProvider context) throws IOException {
-         /* Loads the files into the Deque. */
-        this.preprocess(files);
+    public AbstractExtractionFileHandler(Iterator<Path> files, ExtractionContextProvider context) throws IOException {
+         this.files = files;
 
         /* Setup the required persistence-writer classes. */
         PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
@@ -147,7 +144,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         Decoder<T> decoder = this.newDecoder();
         Segmenter<T> segmenter = this.newSegmenter();
 
-        LOGGER.info("Starting extraction with {} files.", this.files.size());
+        LOGGER.info("Starting extraction.");
 
         /* Submit the ExtractionPipeline to the executor-service. */
         this.executorService.execute(pipeline);
@@ -157,7 +154,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         Path path = null;
 
         /* Process every file in the list. */
-        while ((path = this.files.poll()) != null) {
+        while ((path = this.nextPath(decoder)) != null) {
             LOGGER.info("Processing file {}.", path);
 
             /* Create / lookup MultimediaObjectDescriptor for new file. */
@@ -197,7 +194,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                         this.pipeline.emit(container);
 
                          /* Increase the segment number. */
-                        segmentNumber+=1;
+                        segmentNumber += 1;
                     }
                 } catch (InterruptedException e) {
                    LOGGER.log(Level.ERROR, "Thread was interrupted while the extraction process was running. Aborting...");
@@ -254,31 +251,23 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
             this.segmentWriter.close();
             this.objectWriter.close();
             Duration duration = Duration.ofMillis(System.currentTimeMillis()-this.start_timestamp);
-            LOGGER.info("File extraction complete! It took me {} to extract {} out of {} files.", duration.toString(), this.count_processed, this.count_files);
+            LOGGER.info("File extraction complete! It took {} to extract {} out files.", duration.toString(), this.count_processed);
         }
     }
-
+   
+    
     /**
-     * Pre-processes the list of files by filtering unsupported types. The remaining files are
-     * added to the
-     *
-     * ID's are generated b the ObjectIdGenerator configured.
-     *
-     * @return List of Pairs mapping the new objectId to the Path.
+     * returns the next file which can be decoded by the decoder or <code>null</code> if there are no more files
      */
-    private void preprocess(List<Path> files) throws IOException {
-        final MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
-        final Decoder<T> decoder = this.newDecoder();
-        files.stream().filter( path -> {
-            Set<String> supportedFiles = decoder.supportedFiles();
-            if (supportedFiles != null) {
-                String type = filetypes.getContentType(path.toString());
-                return decoder.supportedFiles().contains(type);
-            } else {
-                return true;
-            }
-        }).forEach(this.files::push);
-        this.count_files = this.files.size();
+    private Path nextPath(final Decoder<T> decoder){
+      while(this.files != null && this.files.hasNext()){
+        Path path = files.next();
+        String type = this.filetypes.getContentType(path.toString());
+        if(decoder.supportedFiles().contains(type)){
+          return path;
+        }
+      }
+      return null;
     }
 
     /**
