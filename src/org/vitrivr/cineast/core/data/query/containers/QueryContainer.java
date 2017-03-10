@@ -13,6 +13,14 @@ public interface QueryContainer extends SegmentContainer {
      *
      * @return
      */
+    default boolean hasId() {
+        return this.getId() != null;
+    }
+
+    /**
+     *
+     * @return
+     */
     float getWeight();
 
     /**
@@ -20,12 +28,4 @@ public interface QueryContainer extends SegmentContainer {
      * @param weight
      */
     void setWeight(float weight);
-
-    /**
-     *
-     * @return
-     */
-    default boolean hasId() {
-        return this.getId() != null;
-    }
 }

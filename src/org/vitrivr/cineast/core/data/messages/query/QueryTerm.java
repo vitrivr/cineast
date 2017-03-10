@@ -3,12 +3,16 @@ package org.vitrivr.cineast.core.data.messages.query;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
+import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.query.containers.AudioQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.ModelQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.util.web.ImageParser;
+import org.vitrivr.cineast.core.util.web.MeshParser;
+import org.vitrivr.cineast.core.util.web.AudioParser;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
@@ -26,15 +30,15 @@ public class QueryTerm {
      */
     private final String[] categories;
 
-    /**
-     *
-     */
+    /** Denotes the type of QueryTerm. */
     private final QueryTermType type;
 
-    /**
-     *
-     */
+    /** Base64 encoded representation of the query-object associated with this query term. */
     private final String data;
+
+
+    /** Cached version of the QueryContainer representation of this QueryTerm. */
+    private QueryContainer cachedQueryContainer;
 
     /**
      *
@@ -48,7 +52,8 @@ public class QueryTerm {
     }
 
     /**
-     *
+     * Getter for categories.
+     * 
      * @return
      */
     public List<String> getCategories() {
@@ -56,6 +61,7 @@ public class QueryTerm {
     }
 
     /**
+     * Getter for type.
      *
      * @return
      */
@@ -64,19 +70,33 @@ public class QueryTerm {
     }
 
     /**
+     * Converts the QueryTerm to a QueryContainer that can be processed by the retrieval pipeline. This includes
+     * conversion of query-objects from the Base64 encoded representation.
      *
-     * @return
+     * IMPORTANT: Subsequent calls to this method will return a cached version of the original
+     * QueryContainer.
+     *
+     * @return QueryContainer representation of the QueryTerm.
      */
     public QueryContainer toContainer() {
-        switch (this.type) {
-            case IMAGE:
-                BufferedImage image = WebUtils.dataURLtoBufferedImage(this.data);
-                return new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(image));
-            case AUDIO:
-                List<AudioFrame> lists = WebUtils.dataURLtoAudioFrames(this.data);
-                return new AudioQueryContainer(lists);
-            default:
-                return null;
+        if (this.cachedQueryContainer == null) {
+            switch (this.type) {
+                case IMAGE:
+                    BufferedImage image = ImageParser.dataURLtoBufferedImage(this.data);
+                    this.cachedQueryContainer = new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(image));
+                    break;
+                case AUDIO:
+                    List<AudioFrame> lists = AudioParser.parseWaveAudio(this.data, 22050.0f, 1);
+                    this.cachedQueryContainer =  new AudioQueryContainer(lists);
+                    break;
+                case MODEL:
+                    Mesh mesh = MeshParser.parseThreeJSV4Geometry(this.data);
+                    this.cachedQueryContainer =  new ModelQueryContainer(mesh);
+                    break;
+                default:
+                    break;
+            }
         }
+        return this.cachedQueryContainer;
     }
 }
