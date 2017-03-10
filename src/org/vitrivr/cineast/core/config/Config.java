@@ -129,13 +129,4 @@ public class Config {
         this.decoders = decoders;
     }
 
-
-    /**
-     * Returns the {@link ImageCacheConfig} as specified in the config file. If nothing is specified in the configuration file, the default values are returned, see {@link ImageCacheConfig}
-     * @return
-     */
-    public static ImageCacheConfig getImageMemoryConfig() {
-        return sharedConfig().imagecache;
-    }
-
 }
