@@ -47,7 +47,7 @@ public class WebsocketAPI {
     private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 
     /** Maximum size of a text-message. Should be large enough so as to be able to support transmission of image/audio data. */
-    private static final int MAX_TEXT_MESSAGE_SIZE = 2048 * 1000;
+    private static final int MAX_TEXT_MESSAGE_SIZE = 4096 * 1000;
 
     /** Named context of the endpoint. Will be appended to the endpoint URL. */
     private static final String CONTEXT = "api";
@@ -145,7 +145,6 @@ public class WebsocketAPI {
         sessions.remove(session);
         LOGGER.debug("Connection of session closed (Code: {}, Reason: {}).", statusCode, reason);
     }
-
 
     /**
      * TODO: Handle errors properly.
