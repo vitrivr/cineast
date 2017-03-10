@@ -2,12 +2,12 @@ package org.vitrivr.cineast.art.modules;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
-import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.util.ArtUtil;
+import org.vitrivr.cineast.core.util.web.ImageParser;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -55,7 +55,7 @@ public class VisualizationAverageColorGradient extends AbstractVisualizationModu
       e.printStackTrace();
     }
 
-    return WebUtils.BufferedImageToDataURL(image, "png");
+    return ImageParser.BufferedImageToDataURL(image, "png");
   }
 
   @Override
