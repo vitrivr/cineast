@@ -132,13 +132,13 @@ public class API {
 	 */
 	private static void handleWebsocketStart() {
 		if (!WebsocketAPI.isRunning()) {
-			System.out.print("Starting WebSocket API...");
+			System.out.println("Starting WebSocket API...");
 			int port = Config.sharedConfig().getApi().getHttpPort();
 			int threadPoolSize = Config.sharedConfig().getApi().getThreadPoolSize();
 			WebsocketAPI.start(port, threadPoolSize);
-			System.out.print("WebSocket API started!");
+			System.out.println("WebSocket API started!");
 		} else {
-			System.err.print("WebSocket API is already running...");
+			System.err.println("WebSocket API is already running...");
 		}
 	}
 
@@ -147,11 +147,11 @@ public class API {
 	 */
 	private static void handleWebsocketStop() {
 		if (WebsocketAPI.isRunning()) {
-			System.out.print("Stopping WebSocket API...");
+			System.out.println("Stopping WebSocket API...");
 			WebsocketAPI.stop();
-			System.out.print("WebSocket API stopped!");
+			System.out.println("WebSocket API stopped!");
 		} else {
-			System.err.print("WebSocket API has not been started yet...");
+			System.err.println("WebSocket API has not been started yet...");
 		}
 	}
 
@@ -159,11 +159,11 @@ public class API {
 	 * Starts the RESTful interface (CLI and program-argument)
 	 */
 	private static void handleRestful() {
-		System.out.print("Starting RESTful API...");
+		System.out.println("Starting RESTful API...");
         int port = Config.sharedConfig().getApi().getHttpPort();
 		int threadPoolSize = Config.sharedConfig().getApi().getThreadPoolSize();
 		RestfulAPI.start(port, threadPoolSize);
-		System.out.print("RESTful API started!");
+		System.out.println("RESTful API started!");
 	}
 
     /**
@@ -171,7 +171,7 @@ public class API {
      */
     private static void handleLegacy() {
         try {
-            System.out.print("Starting Legacy API...");
+            System.out.println("Starting Legacy API...");
             ServerSocket ssocket  = new ServerSocket(Config.sharedConfig().getApi().getLegacyPort());
             while (running) {
                 JSONAPIThread thread = new JSONAPIThread(ssocket.accept());
