@@ -104,7 +104,7 @@
 	
 	"extractor": {
 		"threadPoolSize": 1,
-		"outputLocation": "/Users/rgasser/workbench"
+		"outputLocation": "out"
 	},
 	
 	"imagecache": {
