@@ -14,6 +14,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,9 +32,11 @@ public class STLMeshDecoder implements Decoder<Mesh> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** HashSet containing all the mime-types supported by this ImageDecoder instance. */
-    private static HashSet<String> supportedFiles = new HashSet<>();
+    private static final Set<String> supportedFiles;
     static {
-        supportedFiles.add("application/3d-stl");
+        HashSet<String> tmp = new HashSet<>();
+        tmp.add("application/3d-stl");
+        supportedFiles = Collections.unmodifiableSet(tmp);
     }
 
     /** Path to the input file. */

@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.run.filehandler.AudioExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.ImageExtractionFileHandler;
+import org.vitrivr.cineast.core.run.filehandler.ModelExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.VideoExtractionFileHandler;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -96,10 +97,13 @@ public class ExtractionDispatcher {
                 case AUDIO:
                     this.fileHandlerThread = new Thread(new AudioExtractionFileHandler(this.paths, this.context));
                     break;
+                case MODEL3D:
+                    this.fileHandlerThread = new Thread(new ModelExtractionFileHandler(this.paths, this.context));
+                    break;
                 default:
                     break;
             }
-            if (fileHandlerThread != null) {
+            if (this.fileHandlerThread != null) {
                 this.fileHandlerThread.setName("extraction-file-handler-thread");
                 this.fileHandlerThread.start();
             }
