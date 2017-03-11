@@ -12,6 +12,10 @@ import static com.jogamp.opengl.GL2ES3.GL_QUADS;
  * @created 06.01.17
  */
 public class VoxelGrid implements Renderable {
+
+    /** The default, empty VoxelGrid. */
+    public static final VoxelGrid EMPTY = new VoxelGrid(5,5,5,0.1f);
+
     /**
      * A single Voxel.
      */
@@ -45,49 +49,31 @@ public class VoxelGrid implements Renderable {
         }
     }
 
-    /**
-     * Determines the size of a single voxel.
-     */
+    /** Determines the size of a single voxel. */
     private float resolution;
 
-    /**
-     * Determines the half size of a single voxel.
-     */
+    /** Determines the half size of a single voxel. */
     private float halfResolution;
 
-    /**
-     * The size of the voxel grid in X direction.
-     */
-    private final short sizeX;
+    /** The size of the voxel grid in X direction. */
+    private final int sizeX;
 
-    /**
-     * The size of the voxel grid in X direction.
-     */
-    private final short sizeY;
+    /** The size of the voxel grid in X direction. */
+    private final int sizeY;
 
-    /**
-     * The size of the voxel grid in X direction.
-     */
-    private final short sizeZ;
+    /** The size of the voxel grid in X direction. */
+    private final int sizeZ;
 
-    /**
-     * The total lenght ot the voxel grid (i.e. the number of voxels in the grid).
-     */
+    /** The total length ot the voxel grid (i.e. the number of voxels in the grid). */
     private final int length;
 
-    /**
-     * Array holding the actual voxels.
-     */
+    /** Array holding the actual voxels. */
     private final Voxel[][][] voxelGrid;
 
-    /**
-     * Defines the center of the voxel-grid (in the world coordinate system)
-     */
+    /** Defines the center of the voxel-grid (in the world coordinate system). */
     private final Vector3f center = new Vector3f(0f,0f,0f);
 
-    /**
-     * Handle of the vertex-list.
-     */
+    /** Handle of the vertex-list. */
     private int vertexList = -1;
 
     /**
@@ -98,7 +84,7 @@ public class VoxelGrid implements Renderable {
      * @param sizeZ Z-size of the new voxel grid.
      * @param resolution Resolution of the grid, i.e. size of a single voxel.
      */
-    public VoxelGrid(short sizeX, short sizeY, short sizeZ, float resolution) {
+    public VoxelGrid(int sizeX, int sizeY, int sizeZ, float resolution) {
         this(sizeX, sizeY, sizeZ, resolution, true);
     }
 
@@ -111,7 +97,7 @@ public class VoxelGrid implements Renderable {
      * @param resolution Resolution of the grid, i.e. size of a single voxel.
      * @param active Indicates whether the grid should be initialized with active or inactive voxels.
      */
-    public VoxelGrid(short sizeX, short sizeY, short sizeZ, float resolution, boolean active) {
+    public VoxelGrid(int sizeX, int sizeY, int sizeZ, float resolution, boolean active) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.sizeZ = sizeZ;
@@ -133,7 +119,7 @@ public class VoxelGrid implements Renderable {
      *
      * @return X-size of the voxel grid.
      */
-    public final short getSizeX() {
+    public final int getSizeX() {
         return sizeX;
     }
 
@@ -142,7 +128,7 @@ public class VoxelGrid implements Renderable {
      *
      * @return Y-size of the voxel grid.
      */
-    public final short getSizeY() {
+    public final int getSizeY() {
         return sizeY;
     }
 
@@ -151,7 +137,7 @@ public class VoxelGrid implements Renderable {
      *
      * @return Z-size of the voxel grid.
      */
-    public final short getSizeZ() {
+    public final int getSizeZ() {
         return sizeZ;
     }
 

@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.m3d;
 
 import com.jogamp.opengl.GL2;
+
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector4i;
@@ -17,6 +18,10 @@ import static com.jogamp.opengl.GL2ES3.GL_QUADS;
  * @created 29.12.16
  */
 public class Mesh implements Renderable {
+
+    /** The default, empty mesh. */
+    public static final Mesh EMPTY = new Mesh();
+
     /**
      * A face defined by the normal and the vertex-indices.
      */
@@ -79,9 +84,7 @@ public class Mesh implements Renderable {
         }
     }
 
-    /**
-     * Enumeration used to distinguish between triangle and quadratic faces.
-     */
+    /** Enumeration used to distinguish between triangular and quadratic faces. */
     public enum FaceType {
         TRI(GL_TRIANGLES),QUAD(GL_QUADS);
         int gl_draw_type;
@@ -90,10 +93,20 @@ public class Mesh implements Renderable {
         }
     }
 
+    /** List of vertices in the Mesh. */
     private List<Vector3f> vertices = new ArrayList<>();
+
+    /** List of vertex normals in the Mesh. */
     private List<Vector3f> normals = new ArrayList<>();
-    private List<Vector3f> colors = new ArrayList<>();
+
+    /** List of faces in the mesh. */
     private List<Face> faces = new ArrayList<>();
+
+    /**
+     * List of color vectors in the mesh. Each vector contains an RGB color and the color indices
+     * correspond to the indices of the vertices (i.e. color at position 1 belongs to vertex at same position).
+     */
+    private List<Vector3f> colors = new ArrayList<>();
 
     /**
      * Adds an vector defining a vertex to the Mesh.
@@ -157,7 +170,7 @@ public class Mesh implements Renderable {
     }
 
     /**
-     * Adds a new quadratic face to the Mesh.  Faces index vertices and
+     * Adds a new quadratic face to the Mesh. Faces index vertices and
      * vertex normals.
      *
      * @param vertices Vector4i containing the indices of the vertices.
@@ -223,6 +236,24 @@ public class Mesh implements Renderable {
      */
     public final int numberOfVertices() {
         return this.vertices.size();
+    }
+
+    /**
+     * Returns the number of faces in this Mesh.
+     *
+     * @return Number of faces.
+     */
+    public final int numberOfFaces() {
+        return this.faces.size();
+    }
+
+    /**
+     * Indicates, whether the mesh is an empty Mesh or not
+     *
+     * @return True if mesh is empty, false otherwise.
+     */
+    public final boolean isEmpty() {
+        return this.faces.isEmpty();
     }
 
     /**

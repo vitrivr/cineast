@@ -81,6 +81,16 @@ public final class MeshMathUtil {
      * @return Float-array spanning the bounds: {max_x, min_x, max_y, min_y, max_z, min_z}
      */
     public static float[] bounds(Mesh mesh) {
+       return bounds(mesh.getVertices());
+    }
+
+    /**
+     * Calculates and returns the bounds for the provided mesh.
+     *
+     * @param vertices Vertices for which bounds should be calculated.
+     * @return Float-array spanning the bounds: {max_x, min_x, max_y, min_y, max_z, min_z}
+     */
+    public static float[] bounds(List<Vector3f> vertices) {
         /* Initialize the bounding-box. */
         float bounds[] = {
                 -Float.MAX_VALUE, Float.MAX_VALUE,
@@ -89,7 +99,7 @@ public final class MeshMathUtil {
         };
 
         /* Find max and min y-values. */
-        for(Vector3f vertex : mesh.getVertices()) {
+        for(Vector3f vertex : vertices) {
             if (vertex.x() > bounds[0]) bounds[0] = vertex.x();
             if (vertex.x() < bounds[1]) bounds[1] = vertex.x();
             if (vertex.y() > bounds[2]) bounds[2] = vertex.y();

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.joml.Vector3f;
+import org.vitrivr.cineast.core.util.mesh.MeshMathUtil;
 
 import java.util.*;
 
@@ -14,31 +15,20 @@ import java.util.*;
  * @created 06.01.17
  */
 public class Voxelizer {
-    /**
-     *
-     */
+    /** */
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     * Constant: Square-root of 3.
-     */
+    /** Constant: Square-root of 3. */
     private static final float sqrt3 =  (float)Math.sqrt(3);
 
-    /**
-     * Resolution, i.e. size of a single voxel.
-     */
+    /** Resolution, i.e. size of a single voxel. */
     private final float resolution;
 
-    /**
-     * Half of the resolution. Pre-calculated for convenience.
-     */
+    /** Half of the resolution. Pre-calculated for convenience. */
     private final float rc;
 
-    /**
-     * Half the resolution squared. Pre-calculated for convenience.
-     */
+    /** Half the resolution squared. Pre-calculated for convenience. */
     private final float rcsq;
-
 
     /**
      * Default constructor. Defines the resolution of the Voxelizer.
@@ -61,7 +51,7 @@ public class Voxelizer {
         long start =  System.currentTimeMillis();
 
         /* Calculate bounding box of mesh. */
-        float[] boundingBox = this.bounds(mesh.getVertices());
+        float[] boundingBox = MeshMathUtil.bounds(mesh);
         short sizeX = (short)(Math.abs(Math.ceil(((boundingBox[0]-boundingBox[1])/this.resolution))) + 1);
         short sizeY = (short)(Math.abs(Math.ceil(((boundingBox[2]-boundingBox[3])/this.resolution))) + 1);
         short sizeZ = (short)(Math.abs(Math.ceil(((boundingBox[4]-boundingBox[5])/this.resolution))) + 1);
@@ -183,25 +173,21 @@ public class Voxelizer {
         Vector3f planenorm_minus = new Vector3f(planenorm.x - t, planenorm.y - t, planenorm.z - t);
 
         /* Check if the center is under the planenorm_plus and above the planenorm_minus. */
-        if (planenorm_plus.dot(vcenter) < 0 && planenorm_minus.dot(vcenter) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return planenorm_plus.dot(vcenter) < 0 && planenorm_minus.dot(vcenter) > 0;
     }
 
     /**
      * Calculates and returns the enclosing grid, i.e. a list of voxels from the
      * grid that enclose the list of provided vertices.
      *
-     * @param vertices The vertices for which an enclosing grid needs to be found.
+     * @param vertices The Vertices for which an enclosing grid needs to be found.
      * @param boundingBox Bounding-box of the mesh. Used for calculations.
      * @param grid VoxelGrid to select voxels from.
      * @return List of voxels that confine the provided vertices.
      */
     private List<VoxelGrid.Voxel> enclosingGrid(List<Vector3f> vertices, float[] boundingBox, VoxelGrid grid) {
         /* Calculate bounding box for provided vertices. */
-        float bounds[] = this.bounds(vertices);
+        float bounds[] = MeshMathUtil.bounds(vertices);
 
         /* Derive max and min voxel-indices from bounding-boxes. */
         int max_x = Math.abs((int)Math.ceil(((boundingBox[1]-bounds[0])/this.resolution)));
@@ -235,34 +221,5 @@ public class Voxelizer {
 
         /* Return list of enclosing voxels. */
         return enclosing;
-    }
-
-    /**
-     * Calculates and reruns a bounding box, given a list of vertices. The box encloses all the
-     * vertices.
-     *
-     * @param vertices List of vertices for which the bounding-box should be calculated.
-     * @return Float-array spanning the bounding-box {max_x, min_x, max_y, min_y, max_z, min_z}
-     */
-    private float[] bounds(List<Vector3f> vertices) {
-        /* Initialize the bounding-box. */
-        float bounds[] = {
-          -Float.MAX_VALUE, Float.MAX_VALUE,
-          -Float.MAX_VALUE, Float.MAX_VALUE,
-          -Float.MAX_VALUE, Float.MAX_VALUE
-        };
-
-        /* Find max and min y-values. */
-        for(Vector3f vertex : vertices) {
-            if (vertex.x() > bounds[0]) bounds[0] = vertex.x();
-            if (vertex.x() < bounds[1]) bounds[1] = vertex.x();
-            if (vertex.y() > bounds[2]) bounds[2] = vertex.y();
-            if (vertex.y() < bounds[3]) bounds[3] = vertex.y();
-            if (vertex.z() > bounds[4]) bounds[4] = vertex.z();
-            if (vertex.z() < bounds[5]) bounds[5] = vertex.z();
-        }
-
-        /* Return bounding-box. */
-        return bounds;
     }
 }
