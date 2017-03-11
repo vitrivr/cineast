@@ -20,7 +20,7 @@ import net.coobird.thumbnailator.Thumbnails;
 
 public class CachedMultiImage implements MultiImage {
 	
-	private static final File FRAME_CACHE = new File(Config.getImageMemoryConfig().getCacheLocation(), "framecache_" + Config.UNIQUE_ID.toString());
+	private static final File FRAME_CACHE = new File(Config.sharedConfig().getImagecache().getCacheLocation(), "framecache_" + Config.UNIQUE_ID.toString());
 	
 	
 	private static final Logger LOGGER = LogManager.getLogger();

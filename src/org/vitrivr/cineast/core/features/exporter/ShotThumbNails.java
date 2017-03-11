@@ -34,7 +34,7 @@ public class ShotThumbNails implements Extractor {
 	 * Default constructor - no parameters.
 	 */
 	public ShotThumbNails() {
-		this.folder = Config.sharedConfig().getExtractor().getOutputLocation();
+		this.folder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "thumbnails");
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class ShotThumbNails implements Extractor {
 		if (properties.containsKey(PROPERTY_NAME_DESTINATION)) {
 			this.folder = new File(properties.get(PROPERTY_NAME_DESTINATION));
 		} else {
-			this.folder = Config.sharedConfig().getExtractor().getOutputLocation();
+			this.folder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "thumbnails");
 		}
 
 		if (properties.containsKey(PROPERTY_NAME_FORMAT)) {

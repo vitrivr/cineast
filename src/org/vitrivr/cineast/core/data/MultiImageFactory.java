@@ -41,7 +41,7 @@ public class MultiImageFactory {
 	}
 	
 	public static MultiImage newInMemoryMultiImage(BufferedImage bimg){
-		if(Config.getImageMemoryConfig().getCachingPolicy() == Policy.FORCE_DISK_CACHE){
+		if(Config.sharedConfig().getImagecache().getCachingPolicy() == Policy.FORCE_DISK_CACHE){
 			LOGGER.warn("creating cached instead of in memory MultiImage because of policy");
 			return new CachedMultiImage(bimg);
 		}
@@ -55,9 +55,9 @@ public class MultiImageFactory {
 	private static boolean keepInMemory(){
 		long freeMemory = Runtime.getRuntime().freeMemory();
 		
-		Policy cachePolicy = Config.getImageMemoryConfig().getCachingPolicy();
-		long hardMinMemory = Config.getImageMemoryConfig().getHardMinMemory();
-		long softMinMemory = Config.getImageMemoryConfig().getSoftMinMemory();
+		Policy cachePolicy = Config.sharedConfig().getImagecache().getCachingPolicy();
+		long hardMinMemory = Config.sharedConfig().getImagecache().getHardMinMemory();
+		long softMinMemory = Config.sharedConfig().getImagecache().getSoftMinMemory();
 		
 		if(cachePolicy == Policy.AVOID_CACHE){
 			if(freeMemory > hardMinMemory){

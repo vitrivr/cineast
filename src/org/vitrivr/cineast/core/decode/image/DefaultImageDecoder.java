@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,7 +36,7 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** HashSet containing all the mime-types supported by this ImageDecoder instance. */
-    private static HashSet<String> supportedFiles = new HashSet<>(Arrays.asList(ImageIO.getReaderMIMETypes()));
+    private static Set<String> supportedFiles = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ImageIO.getReaderMIMETypes())));
 
     /** Bounds used to rescale the image. */
     private int rescale_bounds = CONFIG_BOUNDS_DEFAULT;
