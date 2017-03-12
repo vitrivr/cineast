@@ -4,8 +4,6 @@ import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 import org.vitrivr.cineast.core.data.m3d.Voxelizer;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 /**
  * @author rgasser
  * @version 1.0

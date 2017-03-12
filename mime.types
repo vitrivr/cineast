@@ -17,5 +17,5 @@ audio/flac flac
 
 # 3D Mime types:
 
-application/3d-stl stl
-application/3d-obj obj
+application/3d-stl stl STL
+application/3d-obj obj OBJ
