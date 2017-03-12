@@ -26,7 +26,8 @@ public class Model3DSegment implements SegmentContainer {
     private final Mesh mesh;
 
     /** The 3D VoxelGrid associated with the Model3DSegment. This grid is created lazily. */
-    private AtomicReference<VoxelGrid> grid = new AtomicReference<>();
+    private final Object gridLock = new Object();
+    private VoxelGrid grid;
 
     /**
      * Default constructor for Model3DSegment
@@ -87,9 +88,11 @@ public class Model3DSegment implements SegmentContainer {
      * @return VoxelGrid
      */
     public final VoxelGrid getGrid() {
-        if (this.grid.get() == null) {
-            this.grid.set(DEFAULT_VOXELIZER.voxelize(this.mesh));
+        synchronized (this.gridLock) {
+            if (this.grid == null) {
+                this.grid = DEFAULT_VOXELIZER.voxelize(this.mesh);
+            }
         }
-        return this.grid.get();
+        return this.grid;
     }
 }
