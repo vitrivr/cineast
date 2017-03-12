@@ -4,6 +4,8 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.m3d.Renderable;
 
 import java.awt.*;
@@ -13,6 +15,8 @@ import static com.jogamp.opengl.GL.*;
 import static com.jogamp.opengl.GL2GL3.GL_FILL;
 import static com.jogamp.opengl.GL2GL3.GL_LINE;
 import static com.jogamp.opengl.GL2GL3.GL_POINT;
+import static com.jogamp.opengl.GLContext.CONTEXT_CURRENT;
+import static com.jogamp.opengl.GLContext.CONTEXT_CURRENT_NEW;
 
 /**
  * @author rgasser
@@ -20,45 +24,34 @@ import static com.jogamp.opengl.GL2GL3.GL_POINT;
  * @created 29.12.16
  */
 public class JOGLOffscreenRenderer {
-    /**
-     * Default GLProfile to be used. Should be GL2.
-     */
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    /** Default GLProfile to be used. Should be GL2. */
     private static final GLProfile glprofile = GLProfile.get(GLProfile.GL2);
 
-    /**
-     * GLCapabilities. Can be used to enable/disable hardware acceleration etc.
-     */
+    /** GLCapabilities. Can be used to enable/disable hardware acceleration etc. */
     private static final GLCapabilities capabilities = new GLCapabilities(glprofile);
 
-    /**
-     * OpenGL Utility Library reference
-     */
+    /** OpenGL Utility Library reference */
     private final GLU glu;
 
-    /**
-     * OpenGL context reference used for drawing.
-     */
+    /** OpenGL context reference used for drawing. */
     private final GL2 gl;
 
-    /**
-     * Width of the JOGLOffscreenRenderer in pixels.
-     */
+    /** Width of the JOGLOffscreenRenderer in pixels. */
     private final int width;
 
-    /**
-     * Height of the JOGLOffscreenRenderer in pixels.
-     */
+    /** Height of the JOGLOffscreenRenderer in pixels. */
     private final int height;
 
-    /**
-     * Aspect-ration of the JOGLOffscreenRenderer.
-     */
+    /** Aspect-ratio of the JOGLOffscreenRenderer. */
     private final float aspect;
 
-    /**
-     *
-     */
+    /** Polygon-mode used during rendering. */
     private int polygonmode = GL_FILL;
+
+    /** Reference to the Thread that is currently holding the GLContext of this JOGLOffscreenRenderer. */
+    private Thread currentThread;
 
     /*
      * This code-block can be used to configure the off-screen renderer's capabilities.
@@ -85,7 +78,6 @@ public class JOGLOffscreenRenderer {
         GLDrawableFactory factory = GLDrawableFactory.getFactory(glprofile);
         GLOffscreenAutoDrawable drawable = factory.createOffscreenAutoDrawable(null,capabilities,null,width,height);
         drawable.display();
-        drawable.getContext().makeCurrent();
 
         /* Initialize GLU and GL2. */
         this.glu = new GLU();
@@ -136,7 +128,7 @@ public class JOGLOffscreenRenderer {
      *
      * @param polygonmode Polygonmode for drawing, either GL_POINT, GL_LINE or GL_FILL.
      */
-    public void setPolygonmode(int polygonmode) {
+    public synchronized void setPolygonmode(int polygonmode) {
         if (polygonmode == GL_POINT || polygonmode == GL_LINE || polygonmode == GL_FILL) {
             this.polygonmode = polygonmode;
         }
@@ -181,6 +173,9 @@ public class JOGLOffscreenRenderer {
      */
 
     public void draw(Renderable renderable) {
+        /* Check context. */
+        if (!this.checkContext()) return;
+
         /* Switch matrix mode to modelview. */
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glEnable(GL_DEPTH_TEST);
@@ -204,6 +199,9 @@ public class JOGLOffscreenRenderer {
      * @param azimuth Azimuth angle of the camer in degrees.
      */
     public final void position(float distance, float polar, float azimuth) {
+        /* Check context. */
+        if (!this.checkContext()) return;
+
         /* Switch matrix mode to projection. */
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
@@ -225,6 +223,7 @@ public class JOGLOffscreenRenderer {
      * Clears buffers to preset-values.
      */
     public final void clear() {
+        if (!this.checkContext()) return;
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
@@ -234,6 +233,7 @@ public class JOGLOffscreenRenderer {
      * @param color The background colour to be used.
      */
     public final void clear(Color color) {
+        if (!this.checkContext()) return;
         gl.glClearColorIi(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
@@ -245,7 +245,56 @@ public class JOGLOffscreenRenderer {
      */
     public final BufferedImage obtain() {
         /* Create and return a BufferedImage from buffer. */
+        if (!this.checkContext()) return null;
         AWTGLReadBufferUtil glReadBufferUtil = new AWTGLReadBufferUtil(gl.getGL2().getGLProfile(), false);
         return glReadBufferUtil.readPixelsToBufferedImage(gl.getGL2(), true);
+    }
+
+    /**
+     * Makes the current thread try to retain the GLContext of this JOGLOffscreenRenderer. The
+     * method returns true upon success and false otherwise.
+     *
+     * <b>Important: </b> Only one thread can retain a GLContext at a time. Relinquish the thread by
+     * calling release().
+     *
+     * @return True if GLContext was retained and false otherwise.
+     */
+    public synchronized final boolean retain() {
+        int result = this.gl.getContext().makeCurrent();
+        if (result == CONTEXT_CURRENT_NEW || result == CONTEXT_CURRENT) {
+            this.currentThread = Thread.currentThread();
+            return true;
+        } else {
+            LOGGER.error("Thread '{}' failed to retain JOGLOffscreenRenderer.", Thread.currentThread().getName());
+            return false;
+        }
+
+    }
+
+    /**
+     * Makes the current thread release its ownership of the current JOGLOffscreenRenderer's GLContext.
+     */
+    public synchronized final void release() {
+        if (this.checkContext()) {
+            this.gl.getContext().release();
+            this.currentThread = null;
+        }
+    }
+
+    /**
+     * Checks if the thread the GLContext is assigned to is equal to the Thread the current
+     * code is being executed in.
+     *
+     * @return True if context-thread is equal to current thread and false otherwise,
+     */
+    private boolean checkContext() {
+        synchronized (this) {
+            if (this.currentThread != Thread.currentThread()) {
+                LOGGER.error("Cannot access JOGLOffscreenRenderer because current thread '{}' does not own its GLContext.", Thread.currentThread().getName());
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 }
