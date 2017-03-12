@@ -127,7 +127,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
             }
 
             /* Free the packet that was allocated by av_read_frame. */
-            av_packet_unref(packet);
+            av_packet_unref(this.packet);
         }
 
         return readFrame;
@@ -352,11 +352,17 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
     @Override
     public void close() {
-        if (pFormatCtx == null) return;
+        if (this.pFormatCtx == null) return;
 
         /* Free the YUV frame */
         av_free(this.decodedFrame);
         av_free(this.resampledFrame);
+        this.decodedFrame = null;
+        this.resampledFrame = null;
+
+        /* Free the packet. */
+        av_packet_unref(this.packet);
+        this.packet = null;
 
         /* Frees the SWR context. */
         if (this.swr_ctx != null) {
@@ -370,7 +376,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
         /* Close the video file */
         avformat_close_input(this.pFormatCtx);
-        pFormatCtx = null;
+        this.pFormatCtx = null;
     }
 
     /**
