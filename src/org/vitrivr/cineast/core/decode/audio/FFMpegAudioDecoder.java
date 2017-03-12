@@ -36,7 +36,6 @@ import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-@SuppressWarnings("deprecation") //some of the new API replacing the deprecated one appears to be not yet available which is why the deprecated one has to be used.
 public class FFMpegAudioDecoder implements AudioDecoder {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -72,12 +71,10 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     private AVCodecContext  pCodecCtx = null;
     private int             audioStream = -1;
 
-    private AVPacket        packet = new AVPacket();
+    private AVPacket        packet = null;
 
     private AVFrame decodedFrame = null;
     private AVFrame resampledFrame = null;
-
-    private int[] frameFinished = new int[1];
 
     private IntPointer out_linesize = new IntPointer();
 
@@ -96,25 +93,27 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         boolean readFrame = false;
 
         /* Outer loop: Read packet (frame) from stream. */
-        while (!readFrame && av_read_frame(this.pFormatCtx, this.packet) >= 0) {
+        do {
+            int read_results = av_read_frame(this.pFormatCtx, this.packet);
+            if (read_results < 0 && !(read_results == AVERROR_EOF)) {
+                LOGGER.error("Error occurred while reading packet. FFMPEG av_read_frame() returned code {}.", read_results);
+                break;
+            }
+
             if (this.packet.stream_index() == this.audioStream) {
-                /* Counter: Size of packet (frame). */
-                int remaining = this.packet.size();
+                /* Send packet to decoder. If no packet was read, send null to flush the buffer. */
+                int decode_results = avcodec_send_packet(this.pCodecCtx, read_results == AVERROR_EOF ? null : this.packet);
+                if (decode_results < 0) {
+                    LOGGER.error("Error occurred while decoding frames from packet. FFMPEG avcodec_send_packet() returned code {}.", decode_results);
+                    av_packet_unref(this.packet);
+                    break;
+                }
 
                 /* Because a packet can theoretically contain more than one frame; repeat decoding until no samples are
                  * remaining in the packet.
                  */
-                while (remaining > 0) {
-                    int result = avcodec_decode_audio4(this.pCodecCtx, this.decodedFrame, this.frameFinished, this.packet);
-                    if (result < 0) {
-                        LOGGER.error("Error occurred while decoding frames from packet. FFMPEG avcodec_decode_audio4() returned code {}.", result);
-                        break;
-                    }
-                    remaining -= result;
-                }
-
-                if (this.frameFinished[0] > 0) {
-                    /* If queue is true; enqueue frame. */
+                while (avcodec_receive_frame(this.pCodecCtx, this.decodedFrame) == 0) {
+                  /* If queue is true; enqueue frame. */
                     if (queue) {
                         if (this.swr_ctx != null) {
                             this.readResampled(this.decodedFrame.nb_samples());
@@ -128,7 +127,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
             /* Free the packet that was allocated by av_read_frame. */
             av_packet_unref(this.packet);
-        }
+        } while(!readFrame);
 
         return readFrame;
     }
@@ -198,6 +197,8 @@ public class FFMpegAudioDecoder implements AudioDecoder {
                 LOGGER.error("Could not write resampled frame to ByteArrayOutputStream due to an exception ({}).", LogHelper.getStackTrace(e));
                 break;
             }
+
+            av_freep(this.resampledFrame.data());
         }
 
         /* ... and add frame to queue. */
@@ -250,9 +251,9 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         long channellayout = av_get_default_channel_layout(channels);
 
         /* Initialize the AVFormatContext. */
-        this.pFormatCtx = new AVFormatContext(null);
+        this.pFormatCtx = avformat_alloc_context();
 
-        // Register all formats and codecs
+        /* Register all formats and codecs. */
         av_register_all();
 
         /* Open file (pure frames or video + frames). */
@@ -261,7 +262,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
             return null;
         }
 
-        // Retrieve stream information
+        /* Retrieve stream information. */
         if (avformat_find_stream_info(this.pFormatCtx, (PointerPointer<?>)null) < 0) {
             LOGGER.error("Couldn't find stream information.");
             return null;
@@ -275,19 +276,30 @@ public class FFMpegAudioDecoder implements AudioDecoder {
             return null;
         }
 
-        /* Get a pointer to the codec context for the frames stream and open it. */
-        this.pCodecCtx = this.pFormatCtx.streams(this.audioStream).codec();
-        if (avcodec_open2(this.pCodecCtx, codec, new AVDictionary()) < 0) {
+        /* Allocate new codec-context for codec returned by av_find_best_stream(). */
+        this.pCodecCtx = avcodec_alloc_context3(codec);
+
+        /* Initialize context with stream's codec settings. */
+        this.pCodecCtx.sample_rate(this.pFormatCtx.streams(this.audioStream).codecpar().sample_rate());
+        this.pCodecCtx.channels(this.pFormatCtx.streams(this.audioStream).codecpar().channels());
+        this.pCodecCtx.channel_layout(this.pFormatCtx.streams(this.audioStream).codecpar().channel_layout());
+        this.pCodecCtx.sample_fmt(this.pFormatCtx.streams(this.audioStream).codecpar().format());
+
+        /* Open the code context. */
+        if (avcodec_open2(this.pCodecCtx, codec, (AVDictionary) null) < 0) {
             LOGGER.error("Error, Could not open frames codec");
             return null;
         }
-
+        
         /* Allocate the re-sample context. */
         this.swr_ctx = swr_alloc_set_opts(null, channellayout, TARGET_FORMAT, samplerate, this.pCodecCtx.channel_layout(), this.pCodecCtx.sample_fmt(), this.pCodecCtx.sample_rate(), 0, null);
         if(swr_init(this.swr_ctx) < 0) {
             this.swr_ctx = null;
             LOGGER.warn("Warning! Could not open re-sample context - original format will be kept!");
         }
+
+        /* Initialize the packet. */
+        this.packet = av_packet_alloc();
 
         /* Initialize decodedFrame. */
         this.decodedFrame = av_frame_alloc();
@@ -323,7 +335,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
      * Returns the total number of content pieces T this decoder can return for a given file. May be
      * zero if the decoder cannot determine that number.
      *
-     * @return
+     * @return Number of frames in the audio-stream (if known).
      */
     @Override
     public int count() {
@@ -354,14 +366,14 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     public void close() {
         if (this.pFormatCtx == null) return;
 
-        /* Free the YUV frame */
-        av_free(this.decodedFrame);
-        av_free(this.resampledFrame);
+        /* Free the audio f */
+        av_frame_free(this.decodedFrame);
+        av_frame_free(this.resampledFrame);
         this.decodedFrame = null;
         this.resampledFrame = null;
 
         /* Free the packet. */
-        av_packet_unref(this.packet);
+        av_packet_free(this.packet);
         this.packet = null;
 
         /* Frees the SWR context. */
@@ -370,11 +382,11 @@ public class FFMpegAudioDecoder implements AudioDecoder {
             this.swr_ctx = null;
         }
 
-        /* Close the codec */
-        avcodec_close(this.pCodecCtx);
+        /* Close the codec context. */
+        avcodec_free_context(this.pCodecCtx);
         this.pCodecCtx = null;
 
-        /* Close the video file */
+        /* Close the audio file context. */
         avformat_close_input(this.pFormatCtx);
         this.pFormatCtx = null;
     }
@@ -382,7 +394,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     /**
      * Closes the FFMpegAudioDecoder if this hasn't happened yet.
      *
-     * @throws Throwable
+     * @throws Throwable On error
      */
     @Override
     protected void finalize() throws Throwable {
