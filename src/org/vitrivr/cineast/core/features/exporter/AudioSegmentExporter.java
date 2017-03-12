@@ -86,7 +86,7 @@ public class AudioSegmentExporter implements Extractor {
             stream.write(buffer.array());
             stream.close();
         } catch (IOException | BufferOverflowException e) {
-            LOGGER.fatal("Could not export frames segment {} due to a serious IO error.", shot.getId(), LogHelper.getStackTrace(e));
+            LOGGER.fatal("Could not export audio segment {} due to a serious IO error ({}).", shot.getId(), LogHelper.getStackTrace(e));
         }
     }
 

@@ -29,8 +29,6 @@ import java.util.function.Supplier;
  * @created 31.01.17
  */
 public class AudioWaveformExporter implements Extractor {
-
-
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Property names that can be used in the configuration hash map. */
@@ -127,7 +125,7 @@ public class AudioWaveformExporter implements Extractor {
 
             ImageIO.write(image, "JPEG", directory.resolve(shot.getId()+".jpg").toFile());
         } catch (IOException exception) {
-            LOGGER.fatal("Could not export waveform image for frames segment {} due to a serious IO error.", shot.getId(), LogHelper.getStackTrace(exception));
+            LOGGER.fatal("Could not export waveform image for audio segment {} due to a serious IO error ({}).", shot.getId(), LogHelper.getStackTrace(exception));
         }
     }
 
