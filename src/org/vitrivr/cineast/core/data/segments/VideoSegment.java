@@ -172,7 +172,7 @@ public class VideoSegment implements SegmentContainer {
      */
     @Override
     public STFT getSTFT(int windowsize, int overlap, WindowFunction function) {
-        if (this.audioFrames.size() > 0) {
+        if (this.getNumberOfSamples() >= windowsize) {
             STFT stft = new STFT(this.getMeanSamplesAsDouble(), this.samplerate);
             stft.forward(windowsize, overlap, function);
             return stft;
