@@ -124,7 +124,10 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
      * @return List of HPCP Shingle feature vectors.
      */
     private List<float[]> getFeatures(SegmentContainer segment) {
+        /* Create STFT. IF this fails, return empty list. */
         STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
+        if (stft == null) return new ArrayList<>();
+
         HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);
         hpcps.addContribution(stft);
 

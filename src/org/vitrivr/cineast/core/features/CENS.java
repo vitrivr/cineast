@@ -86,14 +86,17 @@ public abstract class CENS extends AbstractFeatureModule {
      */
     @Override
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+        /* Prepare empty list of results. */
+        List<StringDoublePair> results = new ArrayList<>();
 
+        /* Create STFT. IF this fails, return empty list. */
         STFT stft = sc.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
+        if (stft == null) return results;
+
+        /* Derive HPCP features. */
         HPCP hpcps = new HPCP(HPCP.Resolution.FULLSEMITONE, this.minFrequency, this.maxFrequency);
         hpcps.addContribution(stft);
-
         qc.setDistance(QueryConfig.Distance.cosine);
-
-        List<StringDoublePair> results = new ArrayList<>();
 
         HashMap<String, Double> map = new HashMap<>();
         double max = 0.0;
@@ -139,7 +142,13 @@ public abstract class CENS extends AbstractFeatureModule {
      * @return List of CENS Shingle feature vectors.
      */
     private List<float[]> getFeatures(SegmentContainer segment, int w, int downsample) {
+        /* Prepare empty list of results. */
+        List<float[]> features = new ArrayList<>();
+
+        /* Create STFT. If this fails, return empty list. */
         STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
+        if (stft == null) return features;
+
         HPCP hpcps = new HPCP(HPCP.Resolution.FULLSEMITONE, minFrequency, maxFrequency);
         hpcps.addContribution(stft);
 
@@ -147,7 +156,7 @@ public abstract class CENS extends AbstractFeatureModule {
         double[][] cens = org.vitrivr.cineast.core.util.audio.CENS.cens(hpcps, w, downsample);
         int numberoffeatures = cens.length - SHINGLE_SIZE + 1;
 
-        List<float[]> features = new ArrayList<>();
+
 
         for (int i = 0; i < numberoffeatures; i++) {
             float[] feature = new float[SHINGLE_SIZE * HPCP.Resolution.FULLSEMITONE.bins];

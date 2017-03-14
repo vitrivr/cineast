@@ -156,12 +156,13 @@ public class AudioFingerprint implements Extractor, Retriever {
      * @return
      */
     private List<Pair<Float, Double>> filterSpectrum(SegmentContainer segment) {
-        /* Perform STFT and extract the Spectra. */
-        STFT stft = segment.getSTFT(4096, 0, new HanningWindow());
-        List<Spectrum> spectra = stft.getPowerSpectrum();
-
-        /* List of candidates for filtered spectrum. */
+        /* Prepare empty list of candidates for filtered spectrum. */
         List<Pair<Float, Double>> candidates = new ArrayList<>();
+
+        /* Perform STFT and extract the Spectra. If this fails, return empty list. */
+        STFT stft = segment.getSTFT(4096, 0, new HanningWindow());
+        if (stft == null) return candidates;
+        List<Spectrum> spectra = stft.getPowerSpectrum();
 
         /* Foreach spectrum; find peak-values in the defined ranges. */
         for (Spectrum spectrum : spectra) {
