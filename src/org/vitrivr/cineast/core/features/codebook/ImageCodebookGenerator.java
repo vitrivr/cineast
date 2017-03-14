@@ -88,9 +88,13 @@ public abstract class ImageCodebookGenerator implements CodebookGenerator {
          */
         Path path = null;
         while ((path = files.poll()) != null) {
-            BufferedImage image = decoder.init(path, null).getNext();
-            if (image != null) {
-                this.process(image);
+            if (decoder.init(path, null)) {
+                BufferedImage image = decoder.getNext();
+                if (image != null) {
+                    this.process(image);
+                } else {
+                    skipped++;
+                }
             } else {
                 skipped++;
             }

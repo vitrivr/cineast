@@ -320,16 +320,16 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      *
      * @param path Path to the file that should be decoded.
      * @param config DecoderConfiguration used by the decoder.
-     * @return Current instance of the decoder.
+     * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public Decoder<VideoFrame> init(Path path, DecoderConfig config) {
+    public boolean init(Path path, DecoderConfig config) {
         /* Initialize the AVFormatContext. */
         this.pFormatCtx = new AVFormatContext(null);
 
         if(!Files.exists(path)){
             LOGGER.error("File does not exist {}", path.toString());
-            return null;
+            return false;
         }
 
         // Register all formats and codecs
@@ -338,21 +338,21 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         // Open video file
         if (avformat_open_input(this.pFormatCtx, path.toString(), null, null) != 0) {
             LOGGER.error("Error while accessing file {}", path.toString());
-            return null;
+            return false;
         }
 
         // Retrieve stream information
         if (avformat_find_stream_info(pFormatCtx, (PointerPointer<?>)null) < 0) {
             LOGGER.error("Error, Couldn't find stream information");
-            return null;
+            return false;
         }
 
 
         if (this.initVideo(path, config) && this.initAudio(path, config)) {
             LOGGER.debug("FFMpegVideoDecoder successfully initialized");
-            return this;
+            return true;
         } else {
-            return null;
+            return false;
         }
     }
 

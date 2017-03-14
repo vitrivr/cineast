@@ -51,13 +51,13 @@ public class STLMeshDecoder implements Decoder<Mesh> {
      *
      * @param path   Path to the file that should be decoded.
      * @param config DecoderConfiguration used by the decoder.
-     * @return Current instance of the decoder.
+     * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public Decoder<Mesh> init(Path path, DecoderConfig config) {
+    public boolean init(Path path, DecoderConfig config) {
         this.inputFile = path;
         this.complete.set(false);
-        return this;
+        return true;
     }
 
     /**

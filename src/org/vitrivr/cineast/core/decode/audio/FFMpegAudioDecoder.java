@@ -40,7 +40,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /** Lists the mimetypes supported by the FFMpegAudioDecoder. Hint: List may not be complete yet. */
+    /** Lists the mime-types supported by the FFMpegAudioDecoder. Hint: List may not be complete yet. */
     private static final Set<String> supportedFiles;
     static {
         HashSet<String> tmp = new HashSet<>();
@@ -97,6 +97,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
             int read_results = av_read_frame(this.pFormatCtx, this.packet);
             if (read_results < 0 && !(read_results == AVERROR_EOF)) {
                 LOGGER.error("Error occurred while reading packet. FFMPEG av_read_frame() returned code {}.", read_results);
+                av_packet_unref(this.packet);
                 break;
             }
 
@@ -239,10 +240,10 @@ public class FFMpegAudioDecoder implements AudioDecoder {
      * @return Current instance of the decoder.
      */
     @Override
-    public Decoder<AudioFrame> init(Path path, DecoderConfig config) {
+    public boolean init(Path path, DecoderConfig config) {
         if(!Files.exists(path)){
             LOGGER.error("File does not exist {}", path.toString());
-            return null;
+            return false;
         }
 
         /* Read decoder configuration. */
@@ -259,13 +260,13 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         /* Open file (pure frames or video + frames). */
         if (avformat_open_input(this.pFormatCtx, path.toString(), null, null) != 0) {
             LOGGER.error("Error while accessing file {}.", path.toString());
-            return null;
+            return false;
         }
 
         /* Retrieve stream information. */
         if (avformat_find_stream_info(this.pFormatCtx, (PointerPointer<?>)null) < 0) {
             LOGGER.error("Couldn't find stream information.");
-            return null;
+            return false;
         }
 
         /* Find the best frames stream. */
@@ -273,7 +274,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         this.audioStream = av_find_best_stream(this.pFormatCtx, AVMEDIA_TYPE_AUDIO,-1, -1, codec, 0);
         if (this.audioStream == -1) {
             LOGGER.error("Couldn't find a supported frames stream.");
-            return null;
+            return false;
         }
 
         /* Allocate new codec-context for codec returned by av_find_best_stream(). */
@@ -288,7 +289,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         /* Open the code context. */
         if (avcodec_open2(this.pCodecCtx, codec, (AVDictionary) null) < 0) {
             LOGGER.error("Error, Could not open frames codec");
-            return null;
+            return false;
         }
         
         /* Allocate the re-sample context. */
@@ -313,7 +314,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
         /* Completed initialization. */
         LOGGER.debug("{} was initialized successfully.", this.getClass().getName());
-        return this;
+        return true;
     }
 
     /**
@@ -362,19 +363,29 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         return supportedFiles;
     }
 
+    /**
+     *
+     */
     @Override
     public void close() {
         if (this.pFormatCtx == null) return;
 
-        /* Free the audio f */
-        av_frame_free(this.decodedFrame);
-        av_frame_free(this.resampledFrame);
-        this.decodedFrame = null;
-        this.resampledFrame = null;
+        /* Free the audio frames */
+        if (this.decodedFrame != null) {
+            av_frame_free(this.decodedFrame);
+            this.decodedFrame = null;
+        }
+
+        if (this.resampledFrame != null) {
+            av_frame_free(this.resampledFrame);
+            this.resampledFrame = null;
+        }
 
         /* Free the packet. */
-        av_packet_free(this.packet);
-        this.packet = null;
+        if (this.packet != null) {
+            av_packet_free(this.packet);
+            this.packet = null;
+        }
 
         /* Frees the SWR context. */
         if (this.swr_ctx != null) {
@@ -383,8 +394,10 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         }
 
         /* Close the codec context. */
-        avcodec_free_context(this.pCodecCtx);
-        this.pCodecCtx = null;
+        if (this.pCodecCtx != null) {
+            avcodec_free_context(this.pCodecCtx);
+            this.pCodecCtx = null;
+        }
 
         /* Close the audio file context. */
         avformat_close_input(this.pFormatCtx);
