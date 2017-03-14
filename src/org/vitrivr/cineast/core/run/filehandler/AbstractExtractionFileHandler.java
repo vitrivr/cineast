@@ -157,53 +157,57 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         while ((path = this.nextPath(decoder)) != null) {
             LOGGER.info("Processing file {}.", path);
 
-            /* Create / lookup MultimediaObjectDescriptor for new file. */
-            MultimediaObjectDescriptor descriptor = this.getOrCreateMultimediaObjectDescriptor(generator, this.context.inputPath().relativize(path), context.sourceType());
-            if (!this.checkAndPersistMultimediaObject(descriptor)) continue;
-
             /* Pass file to decoder and decoder to segmenter. */
-            decoder.init(path, Config.sharedConfig().getDecoders().get(this.context.sourceType()));
-            segmenter.init(decoder);
+            if (decoder.init(path, Config.sharedConfig().getDecoders().get(this.context.sourceType()))) {
+                segmenter.init(decoder);
 
-            /* Store objectId for further reference and initialize a new segment number. */
-            String objectId = descriptor.getObjectId();
-            int segmentNumber = 1;
+                /* Create / lookup MultimediaObjectDescriptor for new file. */
+                MultimediaObjectDescriptor descriptor = this.getOrCreateMultimediaObjectDescriptor(generator, this.context.inputPath().relativize(path), context.sourceType());
+                if (!this.checkAndPersistMultimediaObject(descriptor)) continue;
 
-            /* Pass segmenter (runnable) to executor service. */
-            this.executorService.execute(segmenter);
+                /* Store objectId for further reference and initialize a new segment number. */
+                String objectId = descriptor.getObjectId();
+                int segmentNumber = 1;
 
-            /* Poll for output from the segmenter until that segmenter reports that no more output
-             * is going to be generated.
-             *
-             * For every segment: Increase the segment-number, persist a segment descriptor and emit the segment
-             * to the ExtractionPipeline!
-             */
-            while (!segmenter.complete()) {
-                try {
-                    SegmentContainer container = segmenter.getNext();
-                    if (container != null) {
-                        /* Create segment-descriptor and try to persist it. */
-                        SegmentDescriptor segmentDescriptor = SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd());
-                        if (!this.checkAndPersistSegment(segmentDescriptor)) continue;
+                /* Pass segmenter (runnable) to executor service. */
+                this.executorService.execute(segmenter);
 
-                        /* Update container ID's. */
-                        container.setId(segmentDescriptor.getSegmentId());
-                        container.setSuperId(segmentDescriptor.getObjectId());
+                /* Poll for output from the segmenter until that segmenter reports that no more output
+                 * is going to be generated.
+                 *
+                 * For every segment: Increase the segment-number, persist a segment descriptor and emit the segment
+                 * to the ExtractionPipeline!
+                 */
+                while (!segmenter.complete()) {
+                    try {
+                        SegmentContainer container = segmenter.getNext();
+                        if (container != null) {
+                            /* Create segment-descriptor and try to persist it. */
+                            SegmentDescriptor segmentDescriptor = SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd());
+                            if (!this.checkAndPersistSegment(segmentDescriptor)) continue;
 
-                        /* Emit container to extraction pipeline. */
-                        this.pipeline.emit(container);
+                            /* Update container ID's. */
+                            container.setId(segmentDescriptor.getSegmentId());
+                            container.setSuperId(segmentDescriptor.getObjectId());
 
-                         /* Increase the segment number. */
-                        segmentNumber += 1;
+                            /* Emit container to extraction pipeline. */
+                            this.pipeline.emit(container);
+
+                             /* Increase the segment number. */
+                            segmentNumber += 1;
+                        }
+                    } catch (InterruptedException e) {
+                       LOGGER.log(Level.ERROR, "Thread was interrupted while the extraction process was running. Aborting...");
+                       break;
                     }
-                } catch (InterruptedException e) {
-                   LOGGER.log(Level.ERROR, "Thread was interrupted while the extraction process was running. Aborting...");
-                   break;
                 }
+
+                /* Extract metadata. */
+                this.extractAndPersistMetadata(path, objectId);
+            } else {
+                LOGGER.error("Failed to initialize decoder. File is being skipped...");
             }
 
-            /* Extract metadata. */
-            this.extractAndPersistMetadata(path, objectId);
 
             /* Increment the files counter. */
             this.count_processed += 1;
@@ -213,16 +217,14 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                 decoder.close();
                 decoder = this.newDecoder();
             }
-            
+
             /*
-             * Trigger garbage collection once in a while.
-             * This is specially relevant when many small files are processed, since
+             * Trigger garbage collection once in a while. This is specially relevant when many small files are processed, since
              * unused allocated memory could accumulate and trigger swapping. 
              */
-            if(this.count_processed % 50 == 0){
-              System.gc();
+            if (this.count_processed % 50 == 0){
+                System.gc();
             }
-            
         }
 
         /* Shutdown the FileHandler. */
