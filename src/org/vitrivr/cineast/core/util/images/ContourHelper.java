@@ -93,7 +93,7 @@ public class ContourHelper {
         }
 
         double[] distance = new double[size];
-        for (int i = 1;i<size;i++) {
+        for (int i = 0;i<size;i++) {
             if (i < contour.size()) {
                 Point2D_I32 point = contour.get(i);
                 distance[i] = Math.sqrt(Math.pow(point.x - centroid.x, 2) + Math.pow(point.y - centroid.y, 2));
