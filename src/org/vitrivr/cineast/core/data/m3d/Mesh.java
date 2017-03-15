@@ -17,14 +17,12 @@ import static com.jogamp.opengl.GL2ES3.GL_QUADS;
  * @version 1.0
  * @created 29.12.16
  */
-public class Mesh implements Renderable {
+public class Mesh implements Renderable, WritableMesh {
 
     /** The default, empty mesh. */
-    public static final Mesh EMPTY = new Mesh();
+    public static final Mesh EMPTY = new Mesh(1,1,1);
 
-    /**
-     * A face defined by the normal and the vertex-indices.
-     */
+    /** A face defined by the normal and the vertex-indices. */
     public class Face {
         private FaceType type;
         private Vector4i vertexIndices;
@@ -84,6 +82,8 @@ public class Mesh implements Renderable {
         }
     }
 
+
+
     /** Enumeration used to distinguish between triangular and quadratic faces. */
     public enum FaceType {
         TRI(GL_TRIANGLES),QUAD(GL_QUADS);
@@ -94,19 +94,62 @@ public class Mesh implements Renderable {
     }
 
     /** List of vertices in the Mesh. */
-    private List<Vector3f> vertices = new ArrayList<>();
+    private final List<Vector3f> vertices;
 
     /** List of vertex normals in the Mesh. */
-    private List<Vector3f> normals = new ArrayList<>();
+    private final List<Vector3f> normals;
 
     /** List of faces in the mesh. */
-    private List<Face> faces = new ArrayList<>();
+    private final List<Face> faces;
 
     /**
      * List of color vectors in the mesh. Each vector contains an RGB color and the color indices
-     * correspond to the indices of the vertices (i.e. color at position 1 belongs to vertex at same position).
+     * correspond to the indices of the vertices (i.e. color at positionCamera 1 belongs to vertex at same positionCamera).
      */
     private List<Vector3f> colors = new ArrayList<>();
+
+    /**
+     * Copy constructor for Mesh.
+     *
+     * @param mesh Mesh that should be copied.
+     */
+    public Mesh(Mesh mesh) {
+        this(mesh.numberOfFaces(), mesh.numberOfNormals(), mesh.numberOfVertices());
+
+        for (Vector3f vertex : mesh.vertices) {
+            this.vertices.add(new Vector3f(vertex));
+        }
+
+        for (Vector3f normal : mesh.normals) {
+            this.normals.add(new Vector3f(normal));
+        }
+
+        for (Vector3f color : mesh.colors) {
+            this.colors.add(new Vector3f(color));
+        }
+
+        for (Face face : mesh.faces) {
+            Mesh.Face newFace = new Face();
+            newFace.type = face.type;
+            newFace.vertexIndices = new Vector4i(face.vertexIndices.x, face.vertexIndices.y, face.vertexIndices.z, face.vertexIndices.w);
+            if (face.normalIndices != null) newFace.normalIndices = new Vector4i(face.normalIndices.x, face.normalIndices.y, face.normalIndices.z, face.normalIndices.w);
+            this.faces.add(newFace);
+        }
+    }
+
+    /**
+     * Default constructor.
+     *
+     * @param faces Expected number of faces (not a fixed limit).
+     * @param normals Expected number of vertex normals (not a fixed limit).
+     * @param vertices  Expected number of vertices (not a fixed limit).
+     */
+    public Mesh(int faces, int normals, int vertices) {
+        this.faces = new ArrayList<>(faces);
+        this.vertices = new ArrayList<>(normals);
+        this.normals = new ArrayList<>(vertices);
+        this.colors = new ArrayList<>(vertices);
+    }
 
     /**
      * Adds an vector defining a vertex to the Mesh.

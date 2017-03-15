@@ -68,40 +68,42 @@ public class STLMeshDecoder implements Decoder<Mesh> {
      */
     @Override
     public Mesh getNext() {
-        Mesh mesh = new Mesh();
         try {
             InputStream is = Files.newInputStream(this.inputFile);
             byte[] header = new byte[6];
             if (is.read(header) == 6) {
                 if ((new String(header)).contains("solid ")) {
                     LOGGER.info("Found term 'solid' in header. Treating the STL file as ASCII STL file!");
-                    this.readAscii(mesh, is);
+                    return this.readAscii(is);
                 } else {
                     LOGGER.info("Did not find term 'solid' in header. Treating the STL file as binary STL file!");
-                    this.readBinary(mesh, is, 74);
+                    return this.readBinary(is, 74);
                 }
             } else {
                 LOGGER.warn("Could not read the first 10 bytes of the file {}. This is probably not an STL file.", this.inputFile.toString());
+                return Mesh.EMPTY;
             }
         } catch (IOException e) {
             LOGGER.error("Could not decode STL file {} due to an IO exception ({})", this.inputFile.toString(), LogHelper.getStackTrace(e));
+            this.complete.set(true);
+            return Mesh.EMPTY;
         } finally {
             this.complete.set(true);
         }
-        return mesh;
     }
 
     /**
      * Reads an ASCII STL file.
      *
-     * @param mesh Mesh to which normals and vertices should be added.
      * @param is InputStream to read from.
+     * @return Mesh
      * @throws IOException If an error occurs during reading.
      */
-    private void readAscii(Mesh mesh, InputStream is)  throws IOException {
+    private Mesh readAscii(InputStream is)  throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         String line = null;
         int idx = 0;
+        Mesh mesh = new Mesh(100,100,100);
         while ((line = br.readLine()) != null && !line.startsWith("endsolid")) {
             if (line.startsWith("facet normal ")) {
                 String[] splitNormal = line.split("\\s+");
@@ -128,20 +130,21 @@ public class STLMeshDecoder implements Decoder<Mesh> {
         if (mesh.numberOfVertices() == 0 && mesh.numberOfNormals() == 0) {
             LOGGER.warn("The provided ASCII STL file does not seem to contain any normals or vertices. Trying to decode it as binary STL even though it was marked as being ASCII.");
             InputStream newIs = Files.newInputStream(this.inputFile);
-            this.readBinary(mesh, newIs, 80);
-            newIs.close();
+            return this.readBinary(newIs, 80);
+        } else {
+            return mesh;
         }
     }
 
     /**
      * Reads a binary STL file.
      *
-     * @param mesh Mesh to which normals and vertices should be added.
      * @param is InputStream to read from.
      * @param skip Number of bytes to skip before reading the STL file.
+     * @return Mesh
      * @throws IOException If an error occurs during reading.
      */
-    private void readBinary(Mesh mesh, InputStream is, int skip) throws IOException {
+    private Mesh readBinary(InputStream is, int skip) throws IOException {
         /* Prepare a ByteBuffer to read the rest of the STL file. */
         byte[] bytes = new byte[48];
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
@@ -154,6 +157,8 @@ public class STLMeshDecoder implements Decoder<Mesh> {
         byte[] sizeBytes = new byte[4];
         is.read(sizeBytes, 0, 4);
         long triangles = ((sizeBytes[0] & 0xFF)) | ((sizeBytes[1] & 0xFF) << 8) | ((sizeBytes[2] & 0xFF) << 16) | ((sizeBytes[3] & 0xFF) << 24);
+
+        Mesh mesh = new Mesh((int)triangles, (int)triangles * 3, (int)triangles * 3);
 
         /* Now add all triangles. */
         for (int i=0; i<triangles; i++) {
@@ -176,6 +181,7 @@ public class STLMeshDecoder implements Decoder<Mesh> {
 
         /* Closes the InputStream. */
         is.close();
+        return mesh;
     }
 
     /**

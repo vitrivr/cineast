@@ -81,7 +81,6 @@ public class ModularMeshDecoder implements MeshDecoder {
      */
     @Override
     public Mesh getNext() {
-        Mesh mesh;
         try {
             MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
             String contenttype = filetypes.getContentType(this.inputFile.toFile());
@@ -95,22 +94,19 @@ public class ModularMeshDecoder implements MeshDecoder {
             /* If decoder is still null, return an emtpy Mesh. */
             if (decoder == null) {
                 LOGGER.warn("Could not find mesh decoder for provided contenttype {}.", contenttype);
-                return new Mesh();
+                return Mesh.EMPTY;
             } else {
                 this.cachedDecoders.put(contenttype, decoder);
             }
 
             /* Initialize the decoder and return the decoded mesh. */
             decoder.init(this.inputFile, null);
-            mesh = decoder.getNext();
+            return decoder.getNext();
         } catch (IOException e) {
             LOGGER.error("Could not decode mesh file {} due to an IO exception ({})", this.inputFile.toString(), LogHelper.getStackTrace(e));
-            mesh = new Mesh();
-        } finally {
             this.complete.set(true);
+            return Mesh.EMPTY;
         }
-
-        return mesh;
     }
 
     /**

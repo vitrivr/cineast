@@ -74,7 +74,7 @@ public class OBJMeshDecoder implements Decoder<Mesh> {
      */
     @Override
     public Mesh getNext() {
-        Mesh mesh = new Mesh();
+        Mesh mesh = new Mesh(100,100,100);
         try {
             InputStream is = Files.newInputStream(this.inputFile);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
