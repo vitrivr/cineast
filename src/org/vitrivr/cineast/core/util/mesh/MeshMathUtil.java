@@ -6,6 +6,9 @@ import org.vitrivr.cineast.core.data.m3d.Mesh;
 import java.util.List;
 
 /**
+ * A collection of utilities surrounding Mesh mathematics. Includes methods to calculate the barycenter or the
+ * bounding box of a Mesh.
+ *
  * @author rgasser
  * @version 1.0
  * @created 08.01.17
@@ -61,7 +64,7 @@ public final class MeshMathUtil {
     }
 
     /**
-     * Calculates the center of mass (barycenter) of a mesh based on its vertices.
+     * Calculates the centerInPlace of mass (barycenter) of a mesh based on its vertices.
      *
      * @param mesh The mesh for which the barycenter should be calculated.
      * @return Coordinates of the barycenter.
