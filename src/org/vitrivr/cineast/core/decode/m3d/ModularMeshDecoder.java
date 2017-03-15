@@ -101,7 +101,9 @@ public class ModularMeshDecoder implements MeshDecoder {
 
             /* Initialize the decoder and return the decoded mesh. */
             decoder.init(this.inputFile, null);
-            return decoder.getNext();
+            Mesh mesh = decoder.getNext();
+            this.complete.set(true);
+            return mesh;
         } catch (IOException e) {
             LOGGER.error("Could not decode mesh file {} due to an IO exception ({})", this.inputFile.toString(), LogHelper.getStackTrace(e));
             this.complete.set(true);

@@ -90,7 +90,7 @@ public final class MeshTransformUtil {
             covariance.add(0,2, vm.z * vm.x);
             covariance.add(1,0, vm.y * vm.x);
             covariance.add(1,1, vm.y * vm.y);
-            covariance.add(0,2, vm.y * vm.z);
+            covariance.add(1,2, vm.y * vm.z);
             covariance.add(2,0, vm.z * vm.x);
             covariance.add(2,1, vm.z * vm.y);
             covariance.add(2,2, vm.z * vm.z);
