@@ -52,7 +52,6 @@ public class Model3DExtractionFileHandler extends AbstractExtractionFileHandler<
         return new PassthroughSegmenter<Mesh>() {
             @Override
             protected SegmentContainer getSegmentFromContent(Mesh content) {
-                MeshTransformUtil.normalize(content, 1.0f);
                 return new Model3DSegment(content);
             }
         };
