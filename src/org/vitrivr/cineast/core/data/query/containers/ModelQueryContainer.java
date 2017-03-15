@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.data.query.containers;
 
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.mesh.MeshTransformUtil;
 
 /**
  * @author rgasser
@@ -10,19 +11,22 @@ import org.vitrivr.cineast.core.util.MathHelper;
  */
 public class ModelQueryContainer implements QueryContainer {
 
-    /** */
+    /** Original Mesh as transferred by the client. */
     private final Mesh mesh;
+
+    /** KHL transformed version of the original Mesh. */
+    private final Mesh normalizedMesh;
 
     /** */
     private float weight = 1.0f;
-
 
     /**
      *
      * @param mesh
      */
     public ModelQueryContainer(Mesh mesh) {
-        this.mesh = mesh;
+        this.mesh = new Mesh(mesh);
+        this.normalizedMesh = MeshTransformUtil.khlTransform(mesh, 1.0f);
     }
 
 
@@ -54,6 +58,22 @@ public class ModelQueryContainer implements QueryContainer {
     @Override
     public void setSuperId(String id) {
 
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Mesh getMesh() {
+        return this.mesh;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Mesh getNormalizedMesh() {
+        return this.normalizedMesh;
     }
 
     /**
