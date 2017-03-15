@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.mesh.MeshColoringUtil;
+import org.vitrivr.cineast.core.util.mesh.MeshTransformUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -51,10 +52,10 @@ public class Model3DThumbnailExporter implements Extractor {
     private float distance = 2.0f;
 
     /** */
-    private float polar = 90.0f;
+    private float polar = 20.0f;
 
     /** */
-    private float azimut = 0.0f;
+    private float azimut = 40.0f;
 
     /** */
     private final JOGLOffscreenRenderer renderer;
@@ -115,12 +116,17 @@ public class Model3DThumbnailExporter implements Extractor {
         Path directory = this.destination.resolve(shot.getSuperId());
         try {
             Files.createDirectories(directory);
-            Mesh mesh = shot.getMesh();
+            Mesh mesh = shot.copyNormalizedMesh();
+
             if (!mesh.isEmpty()) {
+                /* Colors the mesh. */
                 MeshColoringUtil.color(mesh);
+
                 BufferedImage image = null;
                 if (this.renderer.retain()) {
-                    this.renderer.render(mesh, this.distance, this.polar, this.azimut);
+                    this.renderer.positionCameraPolar( this.distance, this.polar, this.azimut, 0.0, 0.0, 0.0);
+                    this.renderer.render(mesh);
+                    image = this.renderer.obtain();
                     this.renderer.release();
                 } else {
                     LOGGER.error("Could not export thumbnail image for model {} because renderer could not be retained by current thread.", shot.getId());
