@@ -248,7 +248,7 @@ public class API {
 
 		System.out.println("Performing 3D test...");
 
-        Mesh mesh = new Mesh();
+        Mesh mesh = new Mesh(2, 6, 6);
         mesh.addVertex(new Vector3f(1.0f,0.0f,0.0f), new Vector3f(1.0f, 0.0f, 0.0f));
         mesh.addVertex(new Vector3f(0.0f,1.0f,0.0f), new Vector3f(0.0f, 1.0f, 0.0f));
         mesh.addVertex(new Vector3f(0.0f,0.0f,1.0f), new Vector3f(0.0f, 0.0f, 1.0f));
@@ -261,7 +261,8 @@ public class API {
         mesh.addFace(new Vector3i(4,5,6), null);
 
         JOGLOffscreenRenderer renderer = new JOGLOffscreenRenderer(250, 250);
-        renderer.render(mesh, 2.0f,0.0f,0.0f);
+        renderer.positionCameraPolar(2.0f,0.0f,0.0f,0.0f,0.0f,0.0f);
+        renderer.render(mesh);
         BufferedImage image = renderer.obtain();
         try {
             ImageIO.write(image, "PNG", new File("cineast-3dtest.png"));
