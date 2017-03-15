@@ -19,6 +19,20 @@ import static com.jogamp.opengl.GLContext.CONTEXT_CURRENT;
 import static com.jogamp.opengl.GLContext.CONTEXT_CURRENT_NEW;
 
 /**
+ * This class can be used to render 3D models (Meshes or Voxel-models) using the JOGL rendering environment. It
+ * currently has the following features:
+ *
+ * - Rendering of single Mesh or VoxelGrid
+ * - Free positioning of the camera in terms of either Carthesian or Polar coordinate
+ * - Snapshot of the rendered image can be obtained at any time.
+ *
+ * The class supports offscreen rendering and can be accessed by multipled Threads. However, the multithreading
+ * model of JOGL requires a thread to retain() and release() the JOGLOffscreenRenderer before rendering anything
+ * by calling the respective function.
+ *
+ * @see org.vitrivr.cineast.core.data.m3d.Mesh
+ * @see org.vitrivr.cineast.core.data.m3d.VoxelGrid
+ *
  * @author rgasser
  * @version 1.0
  * @created 29.12.16
@@ -134,33 +148,16 @@ public class JOGLOffscreenRenderer {
         }
     }
 
-
     /**
-     * Renders a mesh and positions the camera in its default position in [1,0,0]
-     * (spherical coordinates).
+     * Renders a mesh and positions the camera according to the specified, spherical coordinates so
+     * that it faces the origin. Calling this methods is equivalent to calling clear(), draw() and positionCamera()
+     * in this order.
      *
      * @param renderable Renderable object to be drawn.
      */
     public void render(Renderable renderable) {
-         this.render(renderable, 1.0f, 0.0f, 0.0f);
-    }
-
-    /**
-     * Renders a mesh and positions the camera according to the specified, spherical coordinates so
-     * that it faces the origin. Calling this methods is equivalent to calling clear(), draw() and position()
-     * in this order.
-     *
-     * @param renderable Renderable object to be drawn.
-     * @param distance Distance of the camera from the origin (r).
-     * @param polar Polar angle of the camera in degrees
-     * @param azimuth Azimuth angle of the camer in degrees.
-     */
-    public void render(Renderable renderable, float distance, float polar, float azimuth) {
         /* Clears buffers to preset-values. */
         this.clear();
-
-        /* Positions the camera. */
-        this.position(distance, polar, azimuth);
 
         /* Draws the mesh. */
         this.draw(renderable);
@@ -191,14 +188,16 @@ public class JOGLOffscreenRenderer {
     }
 
     /**
-     * Changes the position of the camera. The camera can be freely rotated around the origin [1,0,0] (cartesian
-     * coordinates) and it can take any distance from that same origin.
+     * Changes the positionCamera of the camera.
      *
-     * @param distance Distance of the camera from the origin (r).
-     * @param polar Polar angle of the camera in degrees
-     * @param azimuth Azimuth angle of the camer in degrees.
+     * @param ex x Position of the Camera
+     * @param ey y Position of the Camera
+     * @param ez z Position of the Camera
+     * @param cx x Position of the object of interest (i.e. the point at which the camera looks).
+     * @param cy y Position of the object of interest (i.e. the point at which the camera looks).
+     * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
      */
-    public final void position(float distance, float polar, float azimuth) {
+    public final void positionCamera(double ex, double ey, double ez, double cx, double cy, double cz) {
         /* Check context. */
         if (!this.checkContext()) return;
 
@@ -209,14 +208,84 @@ public class JOGLOffscreenRenderer {
         /* Set default perspective. */
         glu.gluPerspective(45.0f, this.aspect, 0.01f, 100.0f);
 
-        /* Move camera a distance r away from the center. */
-        gl.glTranslatef(0, 0, -distance);
+        /* Update camera position. */
+        glu.gluLookAt(ex,ey,ez,cx,cy,cz,0.0,-1.0,0.0);
+    }
 
-        gl.glRotatef(polar, 1, 0, 0);
-        gl.glRotatef(azimuth, 0, 1, 0);
+    /**
+     * Changes the positionCamera of the camera. This method makes sur, that camera always points towards
+     * the origin [0,0,0]
+     *
+     * @param ex x Position of the Camera
+     * @param ey y Position of the Camera
+     * @param ez z Position of the Camera
+     */
+    public final void positionCamera(double ex, double ey, double ez) {
+        this.positionCamera(ex,ey,ez,0.0,0.0,0.0);
+    }
 
-        /* move to center of circle. */
-        gl.glTranslatef(0, 0, 0);
+    /**
+     * Changes the positionCamera of the camera. This method makes sur, that camera always points towards
+     * the origin [0,0,0]
+     *
+     * @param ex x Position of the Camera
+     * @param ey y Position of the Camera
+     * @param ez z Position of the Camera
+     */
+    public final void positionCamera(float ex, float ey, float ez) {
+        this.positionCamera(ex,ey,ez,0.0,0.0,0.0);
+    }
+
+    /**
+     * Changes the positionCamera of the camera. The camera can be freely rotated around the origin [1,0,0] (cartesian
+     * coordinates) and it can take any distance from that same origin.
+     *
+     * @param ex x Position of the Camera
+     * @param ey y Position of the Camera
+     * @param ez z Position of the Camera
+     * @param cx x Position of the object of interest (i.e. the point at which the camera looks).
+     * @param cy y Position of the object of interest (i.e. the point at which the camera looks).
+     * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
+     */
+    public final void positionCamera(float ex, float ey, float ez, float cx, float cy, float cz) {
+        this.positionCamera((double)ex,(double)ey,(double)ez,(double)cx,(double)cy,(double)cz);
+    }
+
+    /**
+     * Changes the positionCamera of the camera. The camera can be freely rotated around the origin [1,0,0] (cartesian
+     * coordinates) and it can take any distance from that same origin.
+     *
+     * @param r Distance of the camera from (0,0,0)
+     * @param theta Polar angle of the camera (i.e. angle between vector and z-axis) in degree
+     * @param phi z Azimut angle of the camera (i.e. angle between vector and x-axis) in degree
+     * @param cx x Position of the object of interest (i.e. the point at which the camera looks).
+     * @param cy y Position of the object of interest (i.e. the point at which the camera looks).
+     * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
+     */
+    public final void positionCameraPolar(double r, double theta, double phi, double cx, double cy, double cz) {
+        double theta_rad = Math.toRadians(theta);
+        double phi_rad = Math.toRadians(phi);
+
+        double x = r * Math.sin(theta_rad) * Math.cos(phi_rad);
+        double y = r * Math.sin(theta_rad) * Math.sin(phi_rad);
+        double z = r * Math.cos(theta_rad);
+
+        positionCamera((float)x,(float)y,(float)z,cx,cy,cz);
+    }
+
+    /**
+     * Changes the positionCamera of the camera. The camera can be freely rotated around the origin [1,0,0] (cartesian
+     * coordinates) and it can take any distance from that same origin.
+     *
+     * @param r Distance of the camera from (0,0,0)
+     * @param theta Polar angle of the camera (i.e. angle between vector and z-axis) in degree
+     * @param phi z Azimut angle of the camera (i.e. angle between vector and x-axis) in degree
+     * @param cx x Position of the object of interest (i.e. the point at which the camera looks).
+     * @param cy y Position of the object of interest (i.e. the point at which the camera looks).
+     * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
+     */
+    public final void positionCameraPolar(float r, float theta, float phi, float cx, float cy, float cz) {
+        this.positionCamera((double)r,(double)theta,(double)phi, (double)cx,(double)cy,(double)cz);
     }
 
     /**
