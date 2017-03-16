@@ -54,7 +54,7 @@ public final class ZernikeMoments {
      * @param y Y axis coordinate.
      * @return Value of Rnm(p).
      */
-    public static double RadialPolynomial(int n, int m_in, double x, double y){
+    public static double radialPolynomial(int n, int m_in, double x, double y){
 
         long a; // (n-s)!
         int b; //   s!
@@ -105,12 +105,12 @@ public final class ZernikeMoments {
      * @param y Y axis coordinate.
      * @return Complex number for V(n,m,x,y).
      */
-    public static Complex ZernikeBasisFunction(int n, int m, double x, double y) {
+    public static Complex zernikeBasisFunction(int n, int m, double x, double y) {
         if ((x * x + y * y) > 1.0) {
             return new Complex(0.0, 0.0);
         }
         else {
-            double r = RadialPolynomial(n,m,x,y);
+            double r = radialPolynomial(n,m,x,y);
             double arg = m * Math.atan2(y,x);
             double real = r * Math.cos(arg);
             double imag = r * Math.sin(arg);
@@ -128,7 +128,7 @@ public final class ZernikeMoments {
      * @param m Moment order.
      * @return Zernike moment.
      */
-    public static Complex ZernikeMoments(double[] x, double[] y, int nPoints, int n, int m){
+    public static Complex zernikeMoments(double[] x, double[] y, int nPoints, int n, int m){
         int diff = n-Math.abs(m);
         if ((n<0) || (Math.abs(m) > n) || (diff%2!=0)){
             throw new IllegalArgumentException("zer_mom: n="+n+", m="+m+", n-|m|="+diff);
@@ -149,7 +149,7 @@ public final class ZernikeMoments {
         double h = ymax-ymin;//height
         double cx = xmin+w/2;
         double cy = ymin+h/2;
-        return ZernikeMoments(x, y, nPoints, w, h, cx, cy, n, m);
+        return zernikeMoments(x, y, nPoints, w, h, cx, cy, n, m);
     }
 
     /**
@@ -165,7 +165,7 @@ public final class ZernikeMoments {
      * @param m Moment order.
      * @return Zernike moment.
      */
-    public static Complex ZernikeMoments(double[] x, double[] y, int nPoints, double w, double h, double cx, double cy, int n, int m){
+    public static Complex zernikeMoments(double[] x, double[] y, int nPoints, double w, double h, double cx, double cy, int n, int m){
         double i_0, j_0;
         double i_scale, j_scale;
         double X,Y;
@@ -189,7 +189,7 @@ public final class ZernikeMoments {
             X = (x[i]-i_0)/i_scale;
             Y = (y[i]-j_0)/j_scale;
             if (((X*X + Y*Y) <= 1.0)){// we ignore (x,y) not in the unit circle
-                v = ZernikeBasisFunction(n,m,X,Y);
+                v = zernikeBasisFunction(n,m,X,Y);
                 res = res.add(v);
             }
         }
@@ -205,7 +205,7 @@ public final class ZernikeMoments {
      * @param npoints Indicates the total number of points in the digitized shape.
      * @return Zernike`s moments.
      */
-    public static Complex[] ZernikeMoments(int order, double[] x, double[] y, int npoints){
+    public static Complex[] zernikeMoments(int order, double[] x, double[] y, int npoints){
         double xmin = Double.MAX_VALUE;
         double ymin = Double.MAX_VALUE;
         double xmax = Double.MIN_VALUE;
@@ -220,7 +220,7 @@ public final class ZernikeMoments {
         double hh = ymax-ymin;//height
         double cx = xmin+ww/2;
         double cy = ymin+hh/2;
-        return ZernikeMoments(order, x, y, npoints, ww, hh, cx, cy);
+        return zernikeMoments(order, x, y, npoints, ww, hh, cx, cy);
     }
 
     /**
@@ -235,13 +235,13 @@ public final class ZernikeMoments {
      * @param cy Y axis of centroid point of the shape.
      * @return Set of Zernike's moments.
      */
-    public static Complex[] ZernikeMoments(int order, double[] x, double[] y, int npoints, double w, double h, double cx, double cy){
+    public static Complex[] zernikeMoments(int order, double[] x, double[] y, int npoints, double w, double h, double cx, double cy){
         ArrayList<Complex> list = new ArrayList<>(order);
         int ct=0;
         for(int n=0; n<=order; n++){
             for(int m=0; m<=n; m++){
                 if((n-Math.abs(m))%2 == 0){
-                    Complex v = ZernikeMoments(x,y,npoints,w,h,cx,cy,n,m);
+                    Complex v = zernikeMoments(x,y,npoints,w,h,cx,cy,n,m);
                     list.add(ct, v);
                     list.add(v);
                     ct++;
