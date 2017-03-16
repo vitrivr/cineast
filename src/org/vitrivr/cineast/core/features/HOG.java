@@ -50,7 +50,7 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
                 float[] histogram_f = this.histogram(true, hog.getDescriptions());
                 this.persist(shot.getId(), new FloatVectorImpl(histogram_f));
             } else {
-                LOGGER.warn("No HOG feature could be extracted for segment {}. This is not necessarily an error!");
+                LOGGER.warn("No HOG feature could be extracted for segment {}. This is not necessarily an error!", shot.getId());
             }
         }
 
