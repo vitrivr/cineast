@@ -9,6 +9,13 @@ public final class MathConstants {
     /** Definition of the golden ratio PHI. */
     public static final double PHI = ((1.0+Math.sqrt(5.0))/2.0);
 
+
+    /** Defines the vertices of a regular Cube. */
+    public static final double[][] VERTICES_3D_CUBE = {
+            {1,1,1},{-1,-1,-1},{1,-1,-1},{-1,-1,1},
+            {-1,1,-1},{-1,1,1},{1,-1,1},{1,1,-1},
+    };
+
     /** Defines the vertices of a regular Dodecahedron. */
     public static final double[][] VERTICES_3D_DODECAHEDRON = {
             {1,1,1},{-1,-1,-1},{1,-1,-1},{-1,-1,1},

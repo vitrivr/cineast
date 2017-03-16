@@ -94,6 +94,11 @@ public final class MeshMathUtil {
      * @return Float-array spanning the bounds: {max_x, min_x, max_y, min_y, max_z, min_z}
      */
     public static float[] bounds(List<Vector3f> vertices) {
+        /* If no vertices are in the list, the box is zero. */
+        if (vertices.isEmpty()) {
+            return new float[6];
+        }
+
         /* Initialize the bounding-box. */
         float bounds[] = {
                 -Float.MAX_VALUE, Float.MAX_VALUE,
