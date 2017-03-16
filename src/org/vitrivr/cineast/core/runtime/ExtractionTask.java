@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.util.DecodingError;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 class ExtractionTask implements Runnable {
 
@@ -21,19 +21,20 @@ class ExtractionTask implements Runnable {
 	
 	@Override
 	public void run() {
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		LOGGER.debug("Starting {} on segmentId {}", feature.getClass().getSimpleName(), shot.getId());
+		long start = System.currentTimeMillis();		
 		try{
-		  long start = System.currentTimeMillis();
+		  
 			feature.processShot(shot);
-			if(this.etc != null){
-			  this.etc.reportExecutionTime(this.feature.getClass(), (System.currentTimeMillis() - start));
-			}
-		}catch(DecodingError e){
-			LOGGER.fatal("DECODING ERROR");
-			throw e;
+			
+		}catch(Exception e){
+			LOGGER.fatal("EXTRACTION ERROR in {}:\n{}", feature.getClass().getSimpleName(), LogHelper.getStackTrace(e));
 		}
-		LOGGER.exit();
+		if(this.etc != null){
+      this.etc.reportExecutionTime(this.feature.getClass(), (System.currentTimeMillis() - start));
+    }
+		LOGGER.traceExit();
 	}
 
 }
