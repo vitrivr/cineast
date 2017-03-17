@@ -54,16 +54,10 @@ public class ZernikeBasisFunction implements UnivariateComplexFunction {
 
         /* Calculate value of Zernike Basis Function at point. */
         double r = this.radialPolynomial.value(value.abs());
-        double a = 0.0;
-        double b = 0.0;
-
-        if (m >= 0) {
-            a = r * FastMath.cos(value.getArgument() * this.m);
-        } else {
-            b = r * FastMath.sin(value.getArgument() * this.m);
-        }
-
-        return new Complex(a, b).multiply(this.normalization());
+        double arg = value.getArgument() * this.m;
+        double a = r * FastMath.cos(arg);
+        double b = r * FastMath.sin(arg);
+        return new Complex(a, b);
     }
 
     /**
@@ -73,16 +67,6 @@ public class ZernikeBasisFunction implements UnivariateComplexFunction {
      */
     public final PolynomialFunction getRadialPolynomial() {
         return this.radialPolynomial;
-    }
-
-
-    /**
-     * Normaliztion factor for ANSI Zernike Polynomials.
-     *
-     * @return Normalization factor.
-     */
-    public final double normalization() {
-        return FastMath.sqrt((2*this.n + 2)/(1 + MathHelper.kronecker(0, this.m)));
     }
 
     /**
