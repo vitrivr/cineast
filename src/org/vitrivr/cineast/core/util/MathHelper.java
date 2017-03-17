@@ -122,5 +122,19 @@ public class MathHelper {
 		val = val < min ? min : val;
 		return val;
 	}
-	
+
+	/**
+	 * Kronecker-Delta function. Returns 1 if i=j and 0 otherwise.
+	 *
+	 * @param i Value of i
+	 * @param j Value of j
+	 * @return Result of Kronecker-Delta.
+	 */
+	public static int kronecker(int i, int j) {
+		if (j == i) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 }
