@@ -81,7 +81,7 @@ public class RadialPolynomial {
     }
 
     /**
-     * Tests Orthogonality relation of radial polynoms.
+     * Tests Orthogonality relation of radial polynomials.
      */
     @Test
     @DisplayName("Test Orthogonality")
