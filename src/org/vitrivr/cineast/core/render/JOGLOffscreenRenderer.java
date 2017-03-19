@@ -10,6 +10,7 @@ import org.vitrivr.cineast.core.data.m3d.Renderable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static com.jogamp.opengl.GL.*;
 import static com.jogamp.opengl.GL2GL3.GL_FILL;
@@ -64,8 +65,8 @@ public class JOGLOffscreenRenderer {
     /** Polygon-mode used during rendering. */
     private int polygonmode = GL_FILL;
 
-    /** Reference to the Thread that is currently holding the GLContext of this JOGLOffscreenRenderer. */
-    private Thread currentThread;
+    /** Lock that makes sure that only a single Thread is using the classes rendering facility at a time. */
+    private ReentrantLock lock = new ReentrantLock(true);
 
     /*
      * This code-block can be used to configure the off-screen renderer's capabilities.
@@ -301,7 +302,7 @@ public class JOGLOffscreenRenderer {
      *
      * @param color The background colour to be used.
      */
-    public final void clear(Color color) {
+    public void clear(Color color) {
         if (!this.checkContext()) return;
         gl.glClearColorIi(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -328,12 +329,13 @@ public class JOGLOffscreenRenderer {
      *
      * @return True if GLContext was retained and false otherwise.
      */
-    public synchronized final boolean retain() {
+    public final boolean retain() {
+        this.lock.lock();
         int result = this.gl.getContext().makeCurrent();
         if (result == CONTEXT_CURRENT_NEW || result == CONTEXT_CURRENT) {
-            this.currentThread = Thread.currentThread();
             return true;
         } else {
+            this.lock.unlock();
             LOGGER.error("Thread '{}' failed to retain JOGLOffscreenRenderer.", Thread.currentThread().getName());
             return false;
         }
@@ -343,10 +345,10 @@ public class JOGLOffscreenRenderer {
     /**
      * Makes the current thread release its ownership of the current JOGLOffscreenRenderer's GLContext.
      */
-    public synchronized final void release() {
+    public final void release() {
         if (this.checkContext()) {
             this.gl.getContext().release();
-            this.currentThread = null;
+            this.lock.unlock();
         }
     }
 
@@ -357,13 +359,11 @@ public class JOGLOffscreenRenderer {
      * @return True if context-thread is equal to current thread and false otherwise,
      */
     private boolean checkContext() {
-        synchronized (this) {
-            if (this.currentThread != Thread.currentThread()) {
-                LOGGER.error("Cannot access JOGLOffscreenRenderer because current thread '{}' does not own its GLContext.", Thread.currentThread().getName());
-                return false;
-            } else {
-                return true;
-            }
+        if (!this.lock.isHeldByCurrentThread()) {
+            LOGGER.error("Cannot access JOGLOffscreenRenderer because current thread '{}' does not own its GLContext.", Thread.currentThread().getName());
+            return false;
+        } else {
+            return true;
         }
     }
 }
