@@ -22,13 +22,12 @@ import java.util.List;
  * @version 1.0
  * @created 22.01.17
  */
-public class ContourHelper {
+public final class ContourHelper {
 
     /**
-     *
+     * Private constructor; do not instantiate!
      */
     private ContourHelper() {
-
     }
 
     /**
@@ -56,9 +55,10 @@ public class ContourHelper {
     }
 
     /**
+     * Calculates and returns the position of the centroid given a contour.
      *
-     * @param contour
-     * @return
+     * @param contour List of points that make up the contour.
+     * @return Coordinates of the centroid.
      */
     public static Point2D_I32 centroid(List<Point2D_I32> contour) {
         Point2D_I32 centroid = new Point2D_I32();
@@ -73,9 +73,13 @@ public class ContourHelper {
         return centroid;
     }
 
-
     /**
+     * Calculates and returns the Centroid Distance Function for the provided contour. I.e. the
+     * distance of each point from the centroid of the shape described by the contour.
      *
+     * @param contour List of points that make up the contour.
+     * @param pad True if the returned list should be padded so that its size is a power of 2 (for FFT).
+     * @return List of centroid distance for each point.
      */
     public static double[] centroidDistance(List<Point2D_I32> contour, boolean pad) {
         Point2D_I32 centroid = centroid(contour);
@@ -103,5 +107,32 @@ public class ContourHelper {
         }
 
         return distance;
+    }
+
+    /**
+     * Calculates and returns the bounds for the provided 2D shape.
+     *
+     * @param vertices List of vertices that make up the shape for which bounds should be calculated.
+     * @return Float-array spanning the bounds: {max_x, min_x, max_y, min_y}
+     */
+    public static int[] bounds(List<Point2D_I32> vertices) {
+        /* If no vertices are in the list, the box is zero. */
+        if (vertices.isEmpty()) {
+            return new int[4];
+        }
+
+        /* Initialize the bounding-box. */
+        int[] bounds = {Integer.MAX_VALUE, -Integer.MAX_VALUE, Integer.MAX_VALUE, -Integer.MAX_VALUE};
+
+        /* Find max and min y-values. */
+        for(Point2D_I32 vertex : vertices) {
+            if (vertex.x < bounds[0]) bounds[0] = vertex.x;
+            if (vertex.x > bounds[1]) bounds[1] = vertex.x;
+            if (vertex.y < bounds[2]) bounds[2] = vertex.y;
+            if (vertex.y > bounds[3]) bounds[3] = vertex.y;
+        }
+
+        /* Return bounding-box. */
+        return bounds;
     }
 }
