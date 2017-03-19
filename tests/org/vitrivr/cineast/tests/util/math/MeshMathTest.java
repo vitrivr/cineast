@@ -1,9 +1,10 @@
 package org.vitrivr.cineast.tests.util.math;
 
-import org.bytedeco.javacpp.opencv_ml;
 import org.joml.Vector3f;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.util.math.MathConstants;
 import org.vitrivr.cineast.core.util.mesh.MeshMathUtil;
@@ -23,6 +24,7 @@ public class MeshMathTest {
     private static final Mesh CUBE = new Mesh(6, 20, 20);
     private static final Mesh DODECAHEDRON = new Mesh(12, 20, 20);
     private static final Mesh ANY = new Mesh(10,10,10);
+
     static {
         Random random = new Random();
         for (double[] vertex : MathConstants.VERTICES_3D_CUBE) {
@@ -106,7 +108,7 @@ public class MeshMathTest {
     void testAnyBarycenter() {
         Vector3f barycenter = MeshMathUtil.barycenter(ANY);
         assertNotEquals(0.0f, barycenter.x, "X-Coordinate of ANY barycenter is not supposed to be 0.0.");
-        assertNotEquals(0.0f, barycenter.y, "X-Coordinate of ANY barycenter is not supposed to be 0.0.");
-        assertNotEquals(0.0f, barycenter.y,"X-Coordinate of ANY barycenter is not supposed to be 0.0.");
+        assertNotEquals(0.0f, barycenter.y, "Y-Coordinate of ANY barycenter is not supposed to be 0.0.");
+        assertNotEquals(0.0f, barycenter.y,"Z-Coordinate of ANY barycenter is not supposed to be 0.0.");
     }
 }
