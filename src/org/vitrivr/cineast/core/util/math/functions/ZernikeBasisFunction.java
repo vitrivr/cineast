@@ -4,7 +4,6 @@ import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.complex.Complex;
 
 import org.apache.commons.math3.util.FastMath;
-import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.math.functions.factories.PolynomialFunctionFactory;
 import org.vitrivr.cineast.core.util.math.functions.interfaces.UnivariateComplexFunction;
 
@@ -31,11 +30,16 @@ public class ZernikeBasisFunction implements UnivariateComplexFunction {
      * Constructs a new ZernikeBasisFunction given the 1st and 2nd moment used
      * to construct the radial polynomial associated with it.
      *
-     * @param n 1st moment of the radial polynomial.
-     * @param m 2nd moment of the radial polynomial.
-     * @return PolynomialFunction representing R_nm
+     * @param n 1st moment of the Zernike Basis Function.
+     * @param m 2nd moment of the Zernike Basis Function.
+     * @return ZernikeBasisFunction Z_nm
+     * @throws IllegalArgumentException If |m| > n, m <'0 or (n-|m| % 2) = 1
      */
     public ZernikeBasisFunction(int n, int m) {
+        if (n < 0) throw new IllegalArgumentException("Zernike Basis Functions are only defined for n > 0");
+        if ((n-Math.abs(m)) < 0) throw new IllegalArgumentException("Zernike Basis Functions are only defined for |m|<=n");
+        if ((n-Math.abs(m)) % 2 != 0) throw new IllegalArgumentException("Zernike Basis Functions are only defined for (n-|m| % 2) = 0.");
+
         this.radialPolynomial = PolynomialFunctionFactory.createRadialPolynomial(n,m);
         this.n = n;
         this.m = m;
