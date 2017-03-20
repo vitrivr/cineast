@@ -73,7 +73,7 @@ public class ADAMproSelector implements DBSelector {
   private String entityName;
 
   private static final DistanceMessage chisquared, correlation, cosine, hamming, jaccard,
-      kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, spannorm;
+      kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, spannorm, haversine;
 
   static {
 
@@ -97,6 +97,7 @@ public class ADAMproSelector implements DBSelector {
     squaredeuclidean = dmBuilder.clear().setDistancetype(DistanceType.squaredeuclidean).build();
     manhattan = dmBuilder.clear().setDistancetype(DistanceType.manhattan).build();
     spannorm = dmBuilder.clear().setDistancetype(DistanceType.spannorm).build();
+    haversine = dmBuilder.clear().setDistancetype(DistanceType.haversine).build();
 
   }
 
@@ -263,6 +264,8 @@ public class ADAMproSelector implements DBSelector {
       return spannorm;
     case squaredeuclidean:
       return squaredeuclidean;
+    case haversine:
+      return haversine;
     default:
       return manhattan;
     }

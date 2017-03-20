@@ -36254,6 +36254,10 @@ public final class AdamGrpc {
        * <code>modulo = 13;</code>
        */
       modulo(13),
+      /**
+       * <code>haversine = 14;</code>
+       */
+      haversine(14),
       UNRECOGNIZED(-1),
       ;
 
@@ -36317,6 +36321,10 @@ public final class AdamGrpc {
        * <code>modulo = 13;</code>
        */
       public static final int modulo_VALUE = 13;
+      /**
+       * <code>haversine = 14;</code>
+       */
+      public static final int haversine_VALUE = 14;
 
 
       public final int getNumber() {
@@ -36351,6 +36359,7 @@ public final class AdamGrpc {
           case 11: return minkowski;
           case 12: return spannorm;
           case 13: return modulo;
+          case 14: return haversine;
           default: return null;
         }
       }
@@ -53498,122 +53507,123 @@ public final class AdamGrpc {
       "\006 \003(\0132*.NearestNeighbourQueryMessage.Opt" +
       "ionsEntry\022\021\n\tindexOnly\030\007 \001(\010\022\022\n\npartitio" +
       "ns\030\010 \003(\005\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n" +
-      "\005value\030\002 \001(\t:\0028\001\"\215\003\n\017DistanceMessage\0223\n\014" +
+      "\005value\030\002 \001(\t:\0028\001\"\234\003\n\017DistanceMessage\0223\n\014" +
       "distancetype\030\001 \001(\0162\035.DistanceMessage.Dis" +
       "tanceType\022.\n\007options\030\002 \003(\0132\035.DistanceMes" +
       "sage.OptionsEntry\032.\n\014OptionsEntry\022\013\n\003key" +
-      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\344\001\n\014DistanceTy",
+      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\363\001\n\014DistanceTy",
       "pe\022\014\n\010UNKNOWND\020\000\022\016\n\nchisquared\020\001\022\017\n\013corr" +
       "elation\020\002\022\n\n\006cosine\020\003\022\013\n\007hamming\020\004\022\013\n\007ja" +
       "ccard\020\005\022\023\n\017kullbackleibler\020\006\022\r\n\tchebyshe" +
       "v\020\007\022\r\n\teuclidean\020\010\022\024\n\020squaredeuclidean\020\t" +
       "\022\r\n\tmanhattan\020\n\022\r\n\tminkowski\020\013\022\014\n\010spanno" +
-      "rm\020\014\022\n\n\006modulo\020\r\"\306\001\n\023BooleanQueryMessage" +
-      "\0220\n\005where\030\001 \003(\0132!.BooleanQueryMessage.Wh" +
-      "ereMessage\032K\n\014WhereMessage\022\021\n\tattribute\030" +
-      "\001 \001(\t\022\034\n\006values\030\002 \003(\0132\014.DataMessage\022\n\n\002o" +
-      "p\030\003 \001(\t\0320\n\013JoinMessage\022\r\n\005table\030\001 \001(\t\022\022\n",
-      "\nattributes\030\002 \003(\t\"\270\001\n\033ExternalHandlerQue" +
-      "ryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006entity\030\002 \001" +
-      "(\t\022\017\n\007handler\030\003 \001(\t\0228\n\006params\030\004 \003(\0132(.Ex" +
-      "ternalHandlerQueryMessage.ParamsEntry\032-\n" +
-      "\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t" +
-      ":\0028\001\"\'\n\024CachedResultsMessage\022\017\n\007queryid\030" +
-      "\001 \001(\t\"5\n\023BatchedQueryMessage\022\036\n\007queries\030" +
-      "\001 \003(\0132\r.QueryMessage\"+\n\016PreviewMessage\022\016" +
-      "\n\006entity\030\001 \001(\t\022\t\n\001n\030\002 \001(\005\"X\n\nAckMessage\022" +
-      "\036\n\004code\030\001 \001(\0162\020.AckMessage.Code\022\017\n\007messa",
-      "ge\030\002 \001(\t\"\031\n\004Code\022\t\n\005ERROR\020\000\022\006\n\002OK\020\001\"=\n\017E" +
-      "ntitiesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage" +
-      "\022\020\n\010entities\030\002 \003(\t\"b\n\036AvailableAttribute" +
-      "TypesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022&" +
-      "\n\016attributetypes\030\002 \003(\0162\016.AttributeType\"9" +
-      "\n\rExistsMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessag" +
-      "e\022\016\n\006exists\030\002 \001(\010\"\252\001\n\016IndexesMessage\022\030\n\003" +
-      "ack\030\001 \001(\0132\013.AckMessage\022-\n\007indexes\030\002 \003(\0132" +
-      "\034.IndexesMessage.IndexMessage\032O\n\014IndexMe" +
-      "ssage\022\r\n\005index\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\022",
-      "\035\n\tindextype\030\003 \001(\0162\n.IndexType\"\250\001\n\021Prope" +
-      "rtiesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\016" +
-      "\n\006entity\030\002 \001(\t\0226\n\nproperties\030\003 \003(\0132\".Pro" +
-      "pertiesMessage.PropertiesEntry\0321\n\017Proper" +
-      "tiesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028" +
-      "\001\"[\n\023QueryResultsMessage\022\030\n\003ack\030\001 \001(\0132\013." +
-      "AckMessage\022*\n\tresponses\030\002 \003(\0132\027.QueryRes" +
-      "ultInfoMessage\"\376\001\n\026QueryResultInfoMessag" +
-      "e\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\017\n\007queryid\030\002" +
-      " \001(\t\022\022\n\nconfidence\030\003 \001(\001\022\014\n\004time\030\004 \001(\003\022\016",
-      "\n\006source\030\005 \001(\t\022/\n\004info\030\006 \003(\0132!.QueryResu" +
-      "ltInfoMessage.InfoEntry\022)\n\007results\030\007 \003(\013" +
-      "2\030.QueryResultTupleMessage\032+\n\tInfoEntry\022" +
-      "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\206\001\n\027Quer" +
-      "yResultTupleMessage\0220\n\004data\030\001 \003(\0132\".Quer" +
-      "yResultTupleMessage.DataEntry\0329\n\tDataEnt" +
-      "ry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 \001(\0132\014.DataMes" +
-      "sage:\0028\001\"[\n\025ExportDataFileMessage\022\030\n\003ack" +
-      "\030\001 \001(\0132\013.AckMessage\022\026\n\016definitionfile\030\002 " +
-      "\001(\014\022\020\n\010datafile\030\003 \001(\014\"C\n\032BatchedQueryRes",
-      "ultsMessage\022%\n\007results\030\001 \003(\0132\024.QueryResu" +
-      "ltsMessage*\257\001\n\rAttributeType\022\014\n\010UNKOWNAT" +
-      "\020\000\022\010\n\004AUTO\020\001\022\010\n\004LONG\020\002\022\007\n\003INT\020\003\022\t\n\005FLOAT" +
-      "\020\004\022\n\n\006DOUBLE\020\005\022\n\n\006STRING\020\006\022\010\n\004TEXT\020\007\022\013\n\007" +
-      "BOOLEAN\020\010\022\n\n\006VECTOR\020\t\022\020\n\014SPARSEVECTOR\020\r\022" +
-      "\014\n\010GEOMETRY\020\n\022\r\n\tGEOGRAPHY\020\013*_\n\tIndexTyp" +
-      "e\022\r\n\tUNKNOWNIT\020\000\022\007\n\003ecp\020\001\022\007\n\003lsh\020\002\022\006\n\002mi" +
-      "\020\003\022\006\n\002pq\020\004\022\006\n\002sh\020\005\022\007\n\003vaf\020\006\022\007\n\003vav\020\007\022\007\n\003" +
-      "vap\020\0102\260\014\n\016AdamDefinition\0223\n\014CreateEntity" +
-      "\022\024.CreateEntityMessage\032\013.AckMessage\"\000\022K\n",
-      "\027AvailableAttributeTypes\022\r.EmptyMessage\032" +
-      "\037.AvailableAttributeTypesMessage\"\000\022*\n\005Co" +
-      "unt\022\022.EntityNameMessage\032\013.AckMessage\"\000\022/" +
-      "\n\nDropEntity\022\022.EntityNameMessage\032\013.AckMe" +
-      "ssage\"\000\0224\n\014ExistsEntity\022\022.EntityNameMess" +
-      "age\032\016.ExistsMessage\"\000\022\'\n\006Insert\022\016.Insert" +
-      "Message\032\013.AckMessage\"\000\0221\n\014StreamInsert\022\016" +
-      ".InsertMessage\032\013.AckMessage\"\000(\0010\001\0221\n\014Vac" +
-      "uumEntity\022\022.EntityNameMessage\032\013.AckMessa" +
-      "ge\"\000\022\'\n\006Delete\022\016.DeleteMessage\032\013.AckMess",
-      "age\"\000\022%\n\005Index\022\r.IndexMessage\032\013.AckMessa" +
-      "ge\"\000\0222\n\022GenerateAllIndexes\022\r.IndexMessag" +
-      "e\032\013.AckMessage\"\000\022.\n\013ExistsIndex\022\r.IndexM" +
-      "essage\032\016.ExistsMessage\"\000\022-\n\tDropIndex\022\021." +
-      "IndexNameMessage\032\013.AckMessage\"\000\0224\n\013ListI" +
-      "ndexes\022\022.EntityNameMessage\032\017.IndexesMess" +
-      "age\"\000\022?\n\022GenerateRandomData\022\032.GenerateRa" +
-      "ndomDataMessage\032\013.AckMessage\"\000\0221\n\014ListEn" +
-      "tities\022\r.EmptyMessage\032\020.EntitiesMessage\"" +
-      "\000\022E\n\023GetEntityProperties\022\030.EntityPropert",
-      "iesMessage\032\022.PropertiesMessage\"\000\022K\n\026GetA" +
-      "ttributeProperties\022\033.AttributeProperties" +
-      "Message\032\022.PropertiesMessage\"\000\022C\n\022GetInde" +
-      "xProperties\022\027.IndexPropertiesMessage\032\022.P" +
-      "ropertiesMessage\"\000\022;\n\025RepartitionEntityD" +
-      "ata\022\023.RepartitionMessage\032\013.AckMessage\"\000\022" +
-      ":\n\024RepartitionIndexData\022\023.RepartitionMes" +
-      "sage\032\013.AckMessage\"\000\022;\n\020AdaptScanMethods\022" +
-      "\030.AdaptScanMethodsMessage\032\013.AckMessage\"\000" +
-      "\0227\n\016SparsifyEntity\022\026.SparsifyEntityMessa",
-      "ge\032\013.AckMessage\"\000\022+\n\nImportData\022\016.Import" +
-      "Message\032\013.AckMessage\"\000\0227\n\017ProtoImportDat" +
-      "a\022\023.ProtoImportMessage\032\013.AckMessage\"\0000\001\022" +
-      "5\n\017ProtoExportData\022\023.ProtoExportMessage\032" +
-      "\013.AckMessage\"\000\022?\n\023ListStorageHandlers\022\r." +
-      "EmptyMessage\032\027.StorageHandlersMessage\"\000\022" +
-      "G\n\026TransferStorageHandler\022\036.TransferStor" +
-      "ageHandlerMessage\032\013.AckMessage\"\0002\332\003\n\nAda" +
-      "mSearch\022.\n\nCacheIndex\022\021.IndexNameMessage" +
-      "\032\013.AckMessage\"\000\0220\n\013CacheEntity\022\022.EntityN",
-      "ameMessage\032\013.AckMessage\"\000\0222\n\007Preview\022\017.P" +
-      "reviewMessage\032\024.QueryResultsMessage\"\000\0220\n" +
-      "\007DoQuery\022\r.QueryMessage\032\024.QueryResultsMe" +
-      "ssage\"\000\022=\n\020DoStreamingQuery\022\r.QueryMessa" +
-      "ge\032\024.QueryResultsMessage\"\000(\0010\001\022C\n\014DoBatc" +
-      "hQuery\022\024.BatchedQueryMessage\032\033.BatchedQu" +
-      "eryResultsMessage\"\000\022=\n\022DoProgressiveQuer" +
-      "y\022\r.QueryMessage\032\024.QueryResultsMessage\"\000" +
-      "0\001\022A\n\020GetCachedResults\022\025.CachedResultsMe" +
-      "ssage\032\024.QueryResultsMessage\"\000B$\n\030org.vit",
-      "rivr.adampro.grpcB\010AdamGrpcb\006proto3"
+      "rm\020\014\022\n\n\006modulo\020\r\022\r\n\thaversine\020\016\"\306\001\n\023Bool" +
+      "eanQueryMessage\0220\n\005where\030\001 \003(\0132!.Boolean" +
+      "QueryMessage.WhereMessage\032K\n\014WhereMessag" +
+      "e\022\021\n\tattribute\030\001 \001(\t\022\034\n\006values\030\002 \003(\0132\014.D" +
+      "ataMessage\022\n\n\002op\030\003 \001(\t\0320\n\013JoinMessage\022\r\n",
+      "\005table\030\001 \001(\t\022\022\n\nattributes\030\002 \003(\t\"\270\001\n\033Ext" +
+      "ernalHandlerQueryMessage\022\017\n\007queryid\030\001 \001(" +
+      "\t\022\016\n\006entity\030\002 \001(\t\022\017\n\007handler\030\003 \001(\t\0228\n\006pa" +
+      "rams\030\004 \003(\0132(.ExternalHandlerQueryMessage" +
+      ".ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t" +
+      "\022\r\n\005value\030\002 \001(\t:\0028\001\"\'\n\024CachedResultsMess" +
+      "age\022\017\n\007queryid\030\001 \001(\t\"5\n\023BatchedQueryMess" +
+      "age\022\036\n\007queries\030\001 \003(\0132\r.QueryMessage\"+\n\016P" +
+      "reviewMessage\022\016\n\006entity\030\001 \001(\t\022\t\n\001n\030\002 \001(\005" +
+      "\"X\n\nAckMessage\022\036\n\004code\030\001 \001(\0162\020.AckMessag",
+      "e.Code\022\017\n\007message\030\002 \001(\t\"\031\n\004Code\022\t\n\005ERROR" +
+      "\020\000\022\006\n\002OK\020\001\"=\n\017EntitiesMessage\022\030\n\003ack\030\001 \001" +
+      "(\0132\013.AckMessage\022\020\n\010entities\030\002 \003(\t\"b\n\036Ava" +
+      "ilableAttributeTypesMessage\022\030\n\003ack\030\001 \001(\013" +
+      "2\013.AckMessage\022&\n\016attributetypes\030\002 \003(\0162\016." +
+      "AttributeType\"9\n\rExistsMessage\022\030\n\003ack\030\001 " +
+      "\001(\0132\013.AckMessage\022\016\n\006exists\030\002 \001(\010\"\252\001\n\016Ind" +
+      "exesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022-\n" +
+      "\007indexes\030\002 \003(\0132\034.IndexesMessage.IndexMes" +
+      "sage\032O\n\014IndexMessage\022\r\n\005index\030\001 \001(\t\022\021\n\ta",
+      "ttribute\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\0162\n.Inde" +
+      "xType\"\250\001\n\021PropertiesMessage\022\030\n\003ack\030\001 \001(\013" +
+      "2\013.AckMessage\022\016\n\006entity\030\002 \001(\t\0226\n\npropert" +
+      "ies\030\003 \003(\0132\".PropertiesMessage.Properties" +
+      "Entry\0321\n\017PropertiesEntry\022\013\n\003key\030\001 \001(\t\022\r\n" +
+      "\005value\030\002 \001(\t:\0028\001\"[\n\023QueryResultsMessage\022" +
+      "\030\n\003ack\030\001 \001(\0132\013.AckMessage\022*\n\tresponses\030\002" +
+      " \003(\0132\027.QueryResultInfoMessage\"\376\001\n\026QueryR" +
+      "esultInfoMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessa" +
+      "ge\022\017\n\007queryid\030\002 \001(\t\022\022\n\nconfidence\030\003 \001(\001\022",
+      "\014\n\004time\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022/\n\004info\030\006 " +
+      "\003(\0132!.QueryResultInfoMessage.InfoEntry\022)" +
+      "\n\007results\030\007 \003(\0132\030.QueryResultTupleMessag" +
+      "e\032+\n\tInfoEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001" +
+      "(\t:\0028\001\"\206\001\n\027QueryResultTupleMessage\0220\n\004da" +
+      "ta\030\001 \003(\0132\".QueryResultTupleMessage.DataE" +
+      "ntry\0329\n\tDataEntry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030" +
+      "\002 \001(\0132\014.DataMessage:\0028\001\"[\n\025ExportDataFil" +
+      "eMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\026\n\016de" +
+      "finitionfile\030\002 \001(\014\022\020\n\010datafile\030\003 \001(\014\"C\n\032",
+      "BatchedQueryResultsMessage\022%\n\007results\030\001 " +
+      "\003(\0132\024.QueryResultsMessage*\257\001\n\rAttributeT" +
+      "ype\022\014\n\010UNKOWNAT\020\000\022\010\n\004AUTO\020\001\022\010\n\004LONG\020\002\022\007\n" +
+      "\003INT\020\003\022\t\n\005FLOAT\020\004\022\n\n\006DOUBLE\020\005\022\n\n\006STRING\020" +
+      "\006\022\010\n\004TEXT\020\007\022\013\n\007BOOLEAN\020\010\022\n\n\006VECTOR\020\t\022\020\n\014" +
+      "SPARSEVECTOR\020\r\022\014\n\010GEOMETRY\020\n\022\r\n\tGEOGRAPH" +
+      "Y\020\013*_\n\tIndexType\022\r\n\tUNKNOWNIT\020\000\022\007\n\003ecp\020\001" +
+      "\022\007\n\003lsh\020\002\022\006\n\002mi\020\003\022\006\n\002pq\020\004\022\006\n\002sh\020\005\022\007\n\003vaf" +
+      "\020\006\022\007\n\003vav\020\007\022\007\n\003vap\020\0102\260\014\n\016AdamDefinition\022" +
+      "3\n\014CreateEntity\022\024.CreateEntityMessage\032\013.",
+      "AckMessage\"\000\022K\n\027AvailableAttributeTypes\022" +
+      "\r.EmptyMessage\032\037.AvailableAttributeTypes" +
+      "Message\"\000\022*\n\005Count\022\022.EntityNameMessage\032\013" +
+      ".AckMessage\"\000\022/\n\nDropEntity\022\022.EntityName" +
+      "Message\032\013.AckMessage\"\000\0224\n\014ExistsEntity\022\022" +
+      ".EntityNameMessage\032\016.ExistsMessage\"\000\022\'\n\006" +
+      "Insert\022\016.InsertMessage\032\013.AckMessage\"\000\0221\n" +
+      "\014StreamInsert\022\016.InsertMessage\032\013.AckMessa" +
+      "ge\"\000(\0010\001\0221\n\014VacuumEntity\022\022.EntityNameMes" +
+      "sage\032\013.AckMessage\"\000\022\'\n\006Delete\022\016.DeleteMe",
+      "ssage\032\013.AckMessage\"\000\022%\n\005Index\022\r.IndexMes" +
+      "sage\032\013.AckMessage\"\000\0222\n\022GenerateAllIndexe" +
+      "s\022\r.IndexMessage\032\013.AckMessage\"\000\022.\n\013Exist" +
+      "sIndex\022\r.IndexMessage\032\016.ExistsMessage\"\000\022" +
+      "-\n\tDropIndex\022\021.IndexNameMessage\032\013.AckMes" +
+      "sage\"\000\0224\n\013ListIndexes\022\022.EntityNameMessag" +
+      "e\032\017.IndexesMessage\"\000\022?\n\022GenerateRandomDa" +
+      "ta\022\032.GenerateRandomDataMessage\032\013.AckMess" +
+      "age\"\000\0221\n\014ListEntities\022\r.EmptyMessage\032\020.E" +
+      "ntitiesMessage\"\000\022E\n\023GetEntityProperties\022",
+      "\030.EntityPropertiesMessage\032\022.PropertiesMe" +
+      "ssage\"\000\022K\n\026GetAttributeProperties\022\033.Attr" +
+      "ibutePropertiesMessage\032\022.PropertiesMessa" +
+      "ge\"\000\022C\n\022GetIndexProperties\022\027.IndexProper" +
+      "tiesMessage\032\022.PropertiesMessage\"\000\022;\n\025Rep" +
+      "artitionEntityData\022\023.RepartitionMessage\032" +
+      "\013.AckMessage\"\000\022:\n\024RepartitionIndexData\022\023" +
+      ".RepartitionMessage\032\013.AckMessage\"\000\022;\n\020Ad" +
+      "aptScanMethods\022\030.AdaptScanMethodsMessage" +
+      "\032\013.AckMessage\"\000\0227\n\016SparsifyEntity\022\026.Spar",
+      "sifyEntityMessage\032\013.AckMessage\"\000\022+\n\nImpo" +
+      "rtData\022\016.ImportMessage\032\013.AckMessage\"\000\0227\n" +
+      "\017ProtoImportData\022\023.ProtoImportMessage\032\013." +
+      "AckMessage\"\0000\001\0225\n\017ProtoExportData\022\023.Prot" +
+      "oExportMessage\032\013.AckMessage\"\000\022?\n\023ListSto" +
+      "rageHandlers\022\r.EmptyMessage\032\027.StorageHan" +
+      "dlersMessage\"\000\022G\n\026TransferStorageHandler" +
+      "\022\036.TransferStorageHandlerMessage\032\013.AckMe" +
+      "ssage\"\0002\332\003\n\nAdamSearch\022.\n\nCacheIndex\022\021.I" +
+      "ndexNameMessage\032\013.AckMessage\"\000\0220\n\013CacheE",
+      "ntity\022\022.EntityNameMessage\032\013.AckMessage\"\000" +
+      "\0222\n\007Preview\022\017.PreviewMessage\032\024.QueryResu" +
+      "ltsMessage\"\000\0220\n\007DoQuery\022\r.QueryMessage\032\024" +
+      ".QueryResultsMessage\"\000\022=\n\020DoStreamingQue" +
+      "ry\022\r.QueryMessage\032\024.QueryResultsMessage\"" +
+      "\000(\0010\001\022C\n\014DoBatchQuery\022\024.BatchedQueryMess" +
+      "age\032\033.BatchedQueryResultsMessage\"\000\022=\n\022Do" +
+      "ProgressiveQuery\022\r.QueryMessage\032\024.QueryR" +
+      "esultsMessage\"\0000\001\022A\n\020GetCachedResults\022\025." +
+      "CachedResultsMessage\032\024.QueryResultsMessa",
+      "ge\"\000B$\n\030org.vitrivr.adampro.grpcB\010AdamGr" +
+      "pcb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
