@@ -252,6 +252,14 @@ public final class ColorConverter {
 		
 	}
 	
+	/**
+	 * can be used to collapse Lab values which are equivalent in RGB into consistent representation
+	 */
+	public static ReadableLabContainer toRGBandBack(ReadableLabContainer lab){
+	  ReadableRGBContainer rgb = LabtoRGB(lab);
+	  return cachedRGBtoLab(rgb.toIntColor());
+	}
+	
 	private static TIntObjectMap<ReadableLabContainer> rgbToLabCache = TCollections.synchronizedMap( new TIntObjectHashMap<ReadableLabContainer>(100000));
 	
 	public static ReadableLabContainer cachedRGBtoLab(int rgb) {
