@@ -77,7 +77,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
                 if(t != null){
                     LOGGER.fatal("Decoding Error detected, shutting down");
                     LOGGER.fatal(LogHelper.getStackTrace(t));
-                    this.shutdownNow();
+                    //this.shutdownNow();
                 }
                 super.afterExecute(r, null);
             }
