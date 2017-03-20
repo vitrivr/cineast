@@ -124,8 +124,10 @@ public class Model3DThumbnailExporter implements Extractor {
 
                 BufferedImage image = null;
                 if (this.renderer.retain()) {
+                    this.renderer.clear();
                     this.renderer.positionCameraPolar( this.distance, this.polar, this.azimut, 0.0, 0.0, 0.0);
-                    this.renderer.render(mesh);
+                    this.renderer.assemble(mesh);
+                    this.renderer.render();
                     image = this.renderer.obtain();
                     this.renderer.release();
                 } else {

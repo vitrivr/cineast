@@ -1,29 +1,22 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
-import com.twelvemonkeys.image.ImageUtil;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.QueryConfig;
+
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
+import org.vitrivr.cineast.core.render.Renderer;
 import org.vitrivr.cineast.core.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.MathHelper;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import static org.vitrivr.cineast.core.util.math.MathConstants.VERTICES_3D_DODECAHEDRON;
@@ -50,13 +43,13 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
      *  - First index indicates the position-index
      *  - Second index can be used to address the x,y and z coordinates.
      *
-     *  The array must be 1x3 at least, eexcess elements in the second dimension
+     *  The array must be 1x3 at least, excess elements in the second dimension
      *  are being ignored.
      */
     protected final double[][] camerapositions;
 
     /** Offscreen rendering environment used to create Lightfield images. */
-    private final JOGLOffscreenRenderer renderer;
+    private final Renderer renderer;
 
     /**
      *
@@ -111,10 +104,14 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
         /* Retains the renderer and returns if retention fails. */
         if (!this.renderer.retain()) return features;
 
-        /* Obtain rendered image from configured perspective. */
+        /* Clears the renderer and assembles a new Mesh. */
+        this.renderer.clear();
+        this.renderer.assemble(mesh);
+
+        /* Obtains rendered image from configured perspective. */
         for (int i=0;i<VERTICES_3D_DODECAHEDRON.length;i++) {
             this.renderer.positionCamera((float)this.camerapositions[i][0], (float)this.camerapositions[i][1], (float)this.camerapositions[i][2]);
-            this.renderer.render(mesh);
+            this.renderer.render();
             BufferedImage image = this.renderer.obtain();
             if (image == null) {
                 LOGGER.error("Could not generate feature for {} because no image could be obtained from JOGOffscreenRenderer.", this.getClass().getSimpleName());

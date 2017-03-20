@@ -261,9 +261,13 @@ public class API {
         mesh.addFace(new Vector3i(4,5,6), null);
 
         JOGLOffscreenRenderer renderer = new JOGLOffscreenRenderer(250, 250);
+        renderer.retain();
         renderer.positionCameraPolar(2.0f,0.0f,0.0f,0.0f,0.0f,0.0f);
-        renderer.render(mesh);
+        renderer.assemble(mesh);
+        renderer.render();
         BufferedImage image = renderer.obtain();
+        renderer.clear();
+        renderer.release();
         try {
             ImageIO.write(image, "PNG", new File("cineast-3dtest.png"));
             System.out.println("3D test complete. Check for cineast-3dtest.png");

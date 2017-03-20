@@ -1,17 +1,13 @@
 package org.vitrivr.cineast.core.data.m3d;
 
-import com.jogamp.opengl.GL2;
 import org.joml.Vector3f;
-
-import static com.jogamp.opengl.GL2.GL_COMPILE;
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 06.01.17
  */
-public class VoxelGrid implements Renderable {
+public class VoxelGrid {
 
     /** The default, empty VoxelGrid. */
     public static final VoxelGrid EMPTY = new VoxelGrid(5,5,5,0.1f);
@@ -52,9 +48,6 @@ public class VoxelGrid implements Renderable {
     /** Determines the size of a single voxel. */
     private float resolution;
 
-    /** Determines the half size of a single voxel. */
-    private float halfResolution;
-
     /** The size of the voxel grid in X direction. */
     private final int sizeX;
 
@@ -72,9 +65,6 @@ public class VoxelGrid implements Renderable {
 
     /** Defines the center of the voxel-grid (in the world coordinate system). */
     private final Vector3f center = new Vector3f(0f,0f,0f);
-
-    /** Handle of the vertex-list. */
-    private int vertexList = -1;
 
     /**
      * Default constructor: Initializes a new, fully active Voxel-Grid
@@ -102,7 +92,6 @@ public class VoxelGrid implements Renderable {
         this.sizeY = sizeY;
         this.sizeZ = sizeZ;
         this.resolution = resolution;
-        this.halfResolution = resolution/2;
         this.length = sizeX * sizeY * sizeZ;
         this.voxelGrid = new Voxel[sizeX][sizeY][sizeZ];
         for (short i = 0;i<this.sizeX;i++) {
@@ -152,6 +141,17 @@ public class VoxelGrid implements Renderable {
     }
 
     /**
+     * Getter for the center of the voxel-grid.
+     *
+     * @return Vector pointing to the center of the grid.
+     */
+    public Vector3f getCenter() {
+        return center;
+    }
+
+    /**
+     * Returns the resolution of the Voxel, i.e. the size of a single
+     * Voxel.
      *
      * @return
      */
@@ -160,11 +160,13 @@ public class VoxelGrid implements Renderable {
     }
 
     /**
+     * Returns half the resolution of the Voxel, i.e. the size of
+     * half a Voxel.
      *
      * @return
      */
     public final float getHalfResolution() {
-        return halfResolution;
+        return this.resolution/2.0f;
     }
 
     /**
@@ -187,123 +189,5 @@ public class VoxelGrid implements Renderable {
      */
     public final void toggle(boolean visible, int x, int y, int z) {
         this.voxelGrid[x][y][z].visible = visible;
-    }
-
-
-    /**
-     * Assembles a mesh into a new glDisplayList. The method returns a handle for this
-     * newly created glDisplayList. To actually render the list - by executing the commands it contains -
-     * the glCallList function must be called!
-     *
-     * IMPORTANT: The glDisplayList bust be deleted once its not used anymore by calling glDeleteLists
-
-     * @return Handle for the newly created glDisplayList.
-     */
-    public int assemble(GL2 gl) {
-        if (this.vertexList > 0) return this.vertexList;
-        this.vertexList = gl.glGenLists(1);
-        gl.glNewList(this.vertexList, GL_COMPILE);
-        {
-            boolean[] visible = {true, true, true, true, true, true};
-
-            for (int i = 0; i < this.sizeX; i++) {
-                for (int j = 0; j < this.sizeY; j++) {
-                    for (int k = 0; k < this.sizeZ; k++) {
-                        /* Skip Voxel if its inactive. */
-                        if (!this.voxelGrid[i][j][k].visible) continue;
-
-                        /* Extract center of the voxel. */
-                        float x = this.center.x + this.voxelGrid[i][j][k].getCenter().x;
-                        float y = this.center.y + this.voxelGrid[i][j][k].getCenter().y;
-                        float z = this.center.z + this.voxelGrid[i][j][k].getCenter().z;
-
-                        /* Determine which faces to draw: Faced that are covered by another active voxel are switched off. */
-                        if(i > 0) visible[0] = !this.voxelGrid[i-1][j][k].visible;
-                        if(i < this.getSizeX()-1) visible[1] = !this.voxelGrid[i+1][j][k].visible;
-                        if(j > 0) visible[2] = !this.voxelGrid[i][j-1][k].visible;
-                        if(j < this.getSizeY()-1) visible[3] = !this.voxelGrid[i][j+1][k].visible;
-                        if(k > 0) visible[4] = !this.voxelGrid[i][j][k-1].visible;
-                        if(k < this.getSizeZ()-1) visible[5] = !this.voxelGrid[i][j][k+1].visible;
-
-                        /* Draw the cube. */
-                        this.drawCube(gl, x,y,z,visible);
-                    }
-                }
-            }
-        }
-
-        gl.glEndList();
-        return  this.vertexList;
-    }
-
-    /**
-     *
-     * @param gl
-     */
-    public void clear(GL2 gl) {
-        gl.glDeleteLists(this.vertexList, 1);
-        this.vertexList = -1;
-    }
-
-    /**
-     *
-     * @param gl
-     * @param x
-     * @param y
-     * @param z
-     * @param visible
-     */
-    private final void drawCube(GL2 gl, float x, float y, float z, boolean[] visible) {
-        gl.glBegin(GL_QUADS);
-        {
-            /* 1 */
-            if (visible[0]) {
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z - halfResolution);
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z - halfResolution);
-            }
-
-            /* 2 */
-            if (visible[1]) {
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z + halfResolution);
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z + halfResolution);
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z + halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z + halfResolution);
-            }
-
-            /* 3 */
-            if (visible[2]) {
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z + halfResolution);
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z - halfResolution);
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z + halfResolution);
-            }
-
-            /* 4 */
-            if (visible[3]) {
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z + halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z + halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z - halfResolution);
-            }
-
-            /* 5 */
-            if (visible[4]) {
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z + halfResolution);
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z + halfResolution);
-            }
-
-            /* 6 */
-            if (visible[5]) {
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z - halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z - halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z + halfResolution);
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z + halfResolution);
-            }
-        }
-        gl.glEnd();
     }
 }

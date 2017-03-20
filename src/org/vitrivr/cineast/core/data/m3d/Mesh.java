@@ -1,23 +1,17 @@
 package org.vitrivr.cineast.core.data.m3d;
 
-import com.jogamp.opengl.GL2;
-
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector4i;
 
 import java.util.*;
 
-import static com.jogamp.opengl.GL.GL_TRIANGLES;
-import static com.jogamp.opengl.GL2.GL_COMPILE;
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
-
 /**
  * @author rgasser
  * @version 1.0
  * @created 29.12.16
  */
-public class Mesh implements Renderable, WritableMesh {
+public class Mesh implements WritableMesh {
 
     /** The default, empty mesh. */
     public static final Mesh EMPTY = new Mesh(1,1,1);
@@ -86,11 +80,7 @@ public class Mesh implements Renderable, WritableMesh {
 
     /** Enumeration used to distinguish between triangular and quadratic faces. */
     public enum FaceType {
-        TRI(GL_TRIANGLES),QUAD(GL_QUADS);
-        int gl_draw_type;
-        FaceType(int type) {
-            this.gl_draw_type = type;
-        }
+        TRI,QUAD;
     }
 
     /** List of vertices in the Mesh. */
@@ -297,52 +287,5 @@ public class Mesh implements Renderable, WritableMesh {
      */
     public final boolean isEmpty() {
         return this.faces.isEmpty();
-    }
-
-    /**
-     * Assembles a mesh into a new glDisplayList. The method returns a handle for this
-     * newly created glDisplayList. To actually render the list - by executing the commands it contains -
-     * the glCallList function must be called!
-     *
-     * IMPORTANT: The glDisplayList bust be deleted once its not used anymore by calling glDeleteLists
-
-     * @return Handle for the newly created glDisplayList.
-     */
-    public int assemble(GL2 gl) {
-        int meshList = gl.glGenLists(1);
-        gl.glNewList(meshList, GL_COMPILE);
-        {
-            for (Face face : this.faces) {
-                /* Extract normals and vertices. */
-                List<Vector3f> vertices = face.getVertices();
-                List<Vector3f> colors = face.getColors();
-                List<Vector3f> normals = face.getNormals();
-
-                /* Drawing is handled differently depending on whether its a TRI or QUAD mesh. */
-                gl.glBegin(face.type.gl_draw_type);
-                {
-                    gl.glColor3f(colors.get(0).x, colors.get(0).y, colors.get(0).z);
-                    gl.glVertex3f(vertices.get(0).x, vertices.get(0).y, vertices.get(0).z);
-                    gl.glColor3f(colors.get(1).x, colors.get(1).y, colors.get(1).z);
-                    gl.glVertex3f(vertices.get(1).x, vertices.get(1).y, vertices.get(1).z);
-                    gl.glColor3f(colors.get(2).x, colors.get(2).y, colors.get(2).z);
-                    gl.glVertex3f(vertices.get(2).x, vertices.get(2).y, vertices.get(2).z);
-                    if (face.type == FaceType.QUAD) {
-                        gl.glColor3f(colors.get(3).x, colors.get(3).y, colors.get(3).z);
-                        gl.glVertex3f(vertices.get(3).x, vertices.get(3).y, vertices.get(3).z);
-                    }
-
-                    if (normals != null && normals.size() >= 3) {
-                        gl.glNormal3f(normals.get(0).x, normals.get(0).y, normals.get(0).z);
-                        gl.glNormal3f(normals.get(1).x, normals.get(1).y, normals.get(1).z);
-                        gl.glNormal3f(normals.get(2).x, normals.get(2).y, normals.get(2).z);
-                        if (face.type == FaceType.QUAD) gl.glNormal3f(normals.get(3).x, normals.get(3).y, normals.get(3).z);
-                    }
-                }
-                gl.glEnd();
-            }
-        }
-        gl.glEndList();
-        return meshList;
     }
 }

@@ -6,13 +6,19 @@ import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.m3d.Renderable;
+import org.joml.Vector3f;
+import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static com.jogamp.opengl.GL.*;
+import static com.jogamp.opengl.GL2.GL_COMPILE;
+import static com.jogamp.opengl.GL2ES3.GL_QUADS;
 import static com.jogamp.opengl.GL2GL3.GL_FILL;
 import static com.jogamp.opengl.GL2GL3.GL_LINE;
 import static com.jogamp.opengl.GL2GL3.GL_POINT;
@@ -24,7 +30,7 @@ import static com.jogamp.opengl.GLContext.CONTEXT_CURRENT_NEW;
  * currently has the following features:
  *
  * - Rendering of single Mesh or VoxelGrid
- * - Free positioning of the camera in terms of either Carthesian or Polar coordinate
+ * - Free positioning of the camera in terms of either cartesian or polar coordinate
  * - Snapshot of the rendered image can be obtained at any time.
  *
  * The class supports offscreen rendering and can be accessed by multipled Threads. However, the multithreading
@@ -38,7 +44,7 @@ import static com.jogamp.opengl.GLContext.CONTEXT_CURRENT_NEW;
  * @version 1.0
  * @created 29.12.16
  */
-public class JOGLOffscreenRenderer {
+public class JOGLOffscreenRenderer implements Renderer {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Default GLProfile to be used. Should be GL2. */
@@ -67,6 +73,9 @@ public class JOGLOffscreenRenderer {
 
     /** Lock that makes sure that only a single Thread is using the classes rendering facility at a time. */
     private ReentrantLock lock = new ReentrantLock(true);
+
+    /** List of object handles that should be rendered. */
+    private final List<Integer> objects = new ArrayList<>();
 
     /*
      * This code-block can be used to configure the off-screen renderer's capabilities.
@@ -150,42 +159,158 @@ public class JOGLOffscreenRenderer {
     }
 
     /**
-     * Renders a mesh and positions the camera according to the specified, spherical coordinates so
-     * that it faces the origin. Calling this methods is equivalent to calling clear(), draw() and positionCamera()
-     * in this order.
      *
-     * @param renderable Renderable object to be drawn.
      */
-    public void render(Renderable renderable) {
-        /* Clears buffers to preset-values. */
-        this.clear();
-
-        /* Draws the mesh. */
-        this.draw(renderable);
-    }
-
-    /**
-     * Draws a mesh in the buffer.
-     *
-     * @param renderable Renderable object to be drawn.
-     */
-
-    public void draw(Renderable renderable) {
-        /* Check context. */
-        if (!this.checkContext()) return;
-
+    public void render() {
         /* Switch matrix mode to modelview. */
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glEnable(GL_DEPTH_TEST);
         gl.glDepthFunc(GL_LESS);
         gl.glLoadIdentity();
-
-        /* Set drawing-style.*/
         gl.glPolygonMode(GL_FRONT_AND_BACK, this.polygonmode);
 
-        /* Assemble and render model */
-        int modelHandle = renderable.assemble(this.gl);
-        gl.glCallList(modelHandle);
+        /* Call list. */
+        for (Integer handle : this.objects) {
+            gl.glCallList(handle);
+        }
+    }
+
+    /**
+     * Renders a new Mesh object and thereby removes any previously rendered object
+     *
+     * @param mesh Mesh that should be rendered
+     */
+    public void assemble(Mesh mesh) {
+        int meshList = gl.glGenLists(1);
+        this.objects.add(meshList);
+        gl.glNewList(meshList, GL_COMPILE);
+        {
+            for (Mesh.Face face : mesh.getFaces()) {
+                /* Extract normals and vertices. */
+                java.util.List<Vector3f> vertices = face.getVertices();
+                java.util.List<Vector3f> colors = face.getColors();
+                java.util.List<Vector3f> normals = face.getNormals();
+
+                /* Determine gl_draw_type. */
+                int gl_draw_type = GL_TRIANGLES;
+                if (face.getType() == Mesh.FaceType.QUAD) gl_draw_type = GL_QUADS;
+
+                /* Drawing is handled differently depending on whether its a TRI or QUAD mesh. */
+                gl.glBegin(gl_draw_type);
+                {
+                    gl.glColor3f(colors.get(0).x, colors.get(0).y, colors.get(0).z);
+                    gl.glVertex3f(vertices.get(0).x, vertices.get(0).y, vertices.get(0).z);
+                    gl.glColor3f(colors.get(1).x, colors.get(1).y, colors.get(1).z);
+                    gl.glVertex3f(vertices.get(1).x, vertices.get(1).y, vertices.get(1).z);
+                    gl.glColor3f(colors.get(2).x, colors.get(2).y, colors.get(2).z);
+                    gl.glVertex3f(vertices.get(2).x, vertices.get(2).y, vertices.get(2).z);
+                    if (face.getType() == Mesh.FaceType.QUAD) {
+                        gl.glColor3f(colors.get(3).x, colors.get(3).y, colors.get(3).z);
+                        gl.glVertex3f(vertices.get(3).x, vertices.get(3).y, vertices.get(3).z);
+                    }
+
+                    if (normals != null && normals.size() >= 3) {
+                        gl.glNormal3f(normals.get(0).x, normals.get(0).y, normals.get(0).z);
+                        gl.glNormal3f(normals.get(1).x, normals.get(1).y, normals.get(1).z);
+                        gl.glNormal3f(normals.get(2).x, normals.get(2).y, normals.get(2).z);
+                        if (face.getType() == Mesh.FaceType.QUAD) gl.glNormal3f(normals.get(3).x, normals.get(3).y, normals.get(3).z);
+                    }
+                }
+                gl.glEnd();
+            }
+        }
+        gl.glEndList();
+    }
+
+    /**
+     * Assembles a new VoxelGrid object and thereby adds it to the list of objects that
+     * should be rendered.
+     *
+     * @param grid VoxelGrid that should be rendered.
+     */
+    public void assemble(VoxelGrid grid) {
+        int meshList = gl.glGenLists(1);
+        this.objects.add(meshList);
+        gl.glNewList(meshList, GL_COMPILE);
+        {
+            boolean[] visible = {true, true, true, true, true, true};
+
+            for (int i = 0; i < grid.getSizeX(); i++) {
+                for (int j = 0; j < grid.getSizeY(); j++) {
+                    for (int k = 0; k < grid.getSizeZ(); k++) {
+                        /* Skip Voxel if its inactive. */
+                        if (!grid.get(i,j,k).getVisible()) continue;
+
+                        /* Extract center of the voxel. */
+                        float x = grid.getCenter().x + grid.get(i,j,k).getCenter().x;
+                        float y = grid.getCenter().y + grid.get(i,j,k).getCenter().y;
+                        float z = grid.getCenter().z + grid.get(i,j,k).getCenter().z;
+
+                        /* Determine which faces to draw: Faced that are covered by another active voxel are switched off. */
+                        if(i > 0) visible[0] = !grid.get(i-1,j,k).getVisible();
+                        if(i < grid.getSizeX()-1) visible[1] = !grid.get(i+1,j,k).getVisible();
+                        if(j > 0) visible[2] = !grid.get(i,j-1,k).getVisible();
+                        if(j < grid.getSizeY()-1) visible[3] = !grid.get(i,j+1,k).getVisible();
+                        if(k > 0) visible[4] = !grid.get(i,j,k-1).getVisible();
+                        if(k < grid.getSizeZ()-1) visible[5] = !grid.get(i,j,k+1).getVisible();
+
+                        /* Draw the cube. */
+                        gl.glBegin(GL_QUADS);
+                        {
+                            /* 1 */
+                            if (visible[0]) {
+                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
+                            }
+
+                            /* 2 */
+                            if (visible[1]) {
+                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
+                            }
+
+                            /* 3 */
+                            if (visible[2]) {
+                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
+                            }
+
+                            /* 4 */
+                            if (visible[3]) {
+                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
+                            }
+
+                            /* 5 */
+                            if (visible[4]) {
+                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
+                            }
+
+                            /* 6 */
+                            if (visible[5]) {
+                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
+                            }
+                        }
+                        gl.glEnd();
+                    }
+                }
+            }
+        }
+        gl.glEndList();
     }
 
     /**
@@ -214,87 +339,10 @@ public class JOGLOffscreenRenderer {
     }
 
     /**
-     * Changes the positionCamera of the camera. This method makes sur, that camera always points towards
-     * the origin [0,0,0]
-     *
-     * @param ex x Position of the Camera
-     * @param ey y Position of the Camera
-     * @param ez z Position of the Camera
-     */
-    public final void positionCamera(double ex, double ey, double ez) {
-        this.positionCamera(ex,ey,ez,0.0,0.0,0.0);
-    }
-
-    /**
-     * Changes the positionCamera of the camera. This method makes sur, that camera always points towards
-     * the origin [0,0,0]
-     *
-     * @param ex x Position of the Camera
-     * @param ey y Position of the Camera
-     * @param ez z Position of the Camera
-     */
-    public final void positionCamera(float ex, float ey, float ez) {
-        this.positionCamera(ex,ey,ez,0.0,0.0,0.0);
-    }
-
-    /**
-     * Changes the positionCamera of the camera. The camera can be freely rotated around the origin [1,0,0] (cartesian
-     * coordinates) and it can take any distance from that same origin.
-     *
-     * @param ex x Position of the Camera
-     * @param ey y Position of the Camera
-     * @param ez z Position of the Camera
-     * @param cx x Position of the object of interest (i.e. the point at which the camera looks).
-     * @param cy y Position of the object of interest (i.e. the point at which the camera looks).
-     * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
-     */
-    public final void positionCamera(float ex, float ey, float ez, float cx, float cy, float cz) {
-        this.positionCamera((double)ex,(double)ey,(double)ez,(double)cx,(double)cy,(double)cz);
-    }
-
-    /**
-     * Changes the positionCamera of the camera. The camera can be freely rotated around the origin [1,0,0] (cartesian
-     * coordinates) and it can take any distance from that same origin.
-     *
-     * @param r Distance of the camera from (0,0,0)
-     * @param theta Polar angle of the camera (i.e. angle between vector and z-axis) in degree
-     * @param phi z Azimut angle of the camera (i.e. angle between vector and x-axis) in degree
-     * @param cx x Position of the object of interest (i.e. the point at which the camera looks).
-     * @param cy y Position of the object of interest (i.e. the point at which the camera looks).
-     * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
-     */
-    public final void positionCameraPolar(double r, double theta, double phi, double cx, double cy, double cz) {
-        double theta_rad = Math.toRadians(theta);
-        double phi_rad = Math.toRadians(phi);
-
-        double x = r * Math.sin(theta_rad) * Math.cos(phi_rad);
-        double y = r * Math.sin(theta_rad) * Math.sin(phi_rad);
-        double z = r * Math.cos(theta_rad);
-
-        positionCamera((float)x,(float)y,(float)z,cx,cy,cz);
-    }
-
-    /**
-     * Changes the positionCamera of the camera. The camera can be freely rotated around the origin [1,0,0] (cartesian
-     * coordinates) and it can take any distance from that same origin.
-     *
-     * @param r Distance of the camera from (0,0,0)
-     * @param theta Polar angle of the camera (i.e. angle between vector and z-axis) in degree
-     * @param phi z Azimut angle of the camera (i.e. angle between vector and x-axis) in degree
-     * @param cx x Position of the object of interest (i.e. the point at which the camera looks).
-     * @param cy y Position of the object of interest (i.e. the point at which the camera looks).
-     * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
-     */
-    public final void positionCameraPolar(float r, float theta, float phi, float cx, float cy, float cz) {
-        this.positionCamera((double)r,(double)theta,(double)phi, (double)cx,(double)cy,(double)cz);
-    }
-
-    /**
      * Clears buffers to preset-values.
      */
     public final void clear() {
-        if (!this.checkContext()) return;
-        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this.clear(Color.BLACK);
     }
 
     /**
@@ -304,8 +352,12 @@ public class JOGLOffscreenRenderer {
      */
     public void clear(Color color) {
         if (!this.checkContext()) return;
+        for (Integer handle : this.objects) {
+            gl.glDeleteLists(handle, 1);
+        }
         gl.glClearColorIi(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this.objects.clear();
     }
 
     /**
