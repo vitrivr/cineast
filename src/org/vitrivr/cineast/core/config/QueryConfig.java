@@ -7,7 +7,7 @@ import java.util.Optional;
 public class QueryConfig {
 
 	public static enum Distance{
-		chisquared, correlation, cosine, hamming, jaccard, kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, minkowski, spannorm
+		chisquared, correlation, cosine, hamming, jaccard, kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, minkowski, spannorm, haversine
 	}
 	
 	private Distance distance = null;
