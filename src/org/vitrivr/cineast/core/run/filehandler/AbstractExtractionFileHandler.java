@@ -25,6 +25,7 @@ import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.runtime.ExtractionPipeline;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.IOException;
@@ -357,9 +358,14 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      */
     private void extractAndPersistMetadata(Path path, String objectId) {
         for (MetadataExtractor extractor : this.metadataExtractors) {
-            List<MultimediaMetadataDescriptor> metadata = extractor.extract(objectId, path);
-            if (metadata.size() > 0) {
-                this.metadataWriter.write(metadata);
+            try{
+              List<MultimediaMetadataDescriptor> metadata = extractor.extract(objectId, path);
+            
+              if (metadata.size() > 0) {
+                  this.metadataWriter.write(metadata);
+              }
+            }catch(Exception e){
+              LOGGER.error("exception during metadata extraction: {}", LogHelper.getStackTrace(e));
             }
         }
     }
