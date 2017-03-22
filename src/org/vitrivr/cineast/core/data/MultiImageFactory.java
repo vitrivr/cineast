@@ -77,7 +77,7 @@ public class MultiImageFactory {
 		
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 		for(StackTraceElement element : stackTraceElements){
-			if(element.getClassName().toLowerCase().contains("videodecoder")){
+			if(element.getClassName().toLowerCase().contains("decoder")){
 				isVideoDecoder = true;
 				break;
 			}

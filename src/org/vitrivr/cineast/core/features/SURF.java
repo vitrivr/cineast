@@ -43,7 +43,7 @@ public abstract class SURF extends AbstractCodebookFeatureModule {
             float[] histogram_f = this.histogram(true, descriptors);
             this.persist(shot.getId(), new FloatVectorImpl(histogram_f));
         } else {
-            LOGGER.warn("No SURF feature could be extracted for segment {}. This is not necessarily an error!");
+            LOGGER.warn("No SURF feature could be extracted for segment {}. This is not necessarily an error!", shot.getId());
         }
 
         LOGGER.debug("SURF.processShot() (codebook {}) done in {}ms", this.codebook(), (System.currentTimeMillis() - start));
