@@ -40,6 +40,9 @@ public class MeshMathTest {
         }
     }
 
+    /**
+     * Tests the bounding-box of a cube mesh which should be the cube itself.
+     */
     @Test
     @DisplayName("Cube Bounding Box Test")
     void testCubeBoundingBox() {
@@ -52,6 +55,9 @@ public class MeshMathTest {
         assertEquals(-1.0f, bounds[5],1e-6, "Bounding box of CUBE should be the cube itself!");
     }
 
+    /**
+     * Tests the bounding-box of a regular, dodecahedral mesh which should be cube with side-length 2*PHI.
+     */
     @Test
     @DisplayName("Dodecahedron Bounding Box Test")
     void testDodecahedronBoundingBox() {
@@ -64,6 +70,9 @@ public class MeshMathTest {
         assertEquals(-MathConstants.PHI, bounds[5],1e-6, "Bounding box of DODECAHEDRON should range from PHI to -PHI!");
     }
 
+    /**
+     * Tests the bounding-box of an empty mesh, which should be zero.
+     */
     @Test
     @DisplayName("Empty Bounding Box Test")
     void testEmptyBoundingBox() {
