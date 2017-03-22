@@ -16,25 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @version 1.0
  * @created 16.03.17
  */
-public class ZernikePolynomials {
-    /**
-     * Test Z_00, which must be equal to 1.0 + 0.0i for all values ofs r
-     * and theta.
-     */
-    @Test
-    @DisplayName("Test Z_00")
-    void testZ00() {
-        final ZernikeBasisFunction ZF1 = new ZernikeBasisFunction(0, 0);
-        final double increment = 1e-3;
-        for (double r = 0.0; r <= 1.0f; r += increment) {
-            for (double theta = 0; theta <= 2*Math.PI; theta += increment) {
-                Complex v = new Complex(r * FastMath.cos(theta), r * FastMath.sin(theta));
-                assertEquals(1.0, ZF1.value(v).abs(), 1e-8);
-                assertEquals(0.0, ZF1.value(v).getArgument(), 1e-8);
-            }
-        }
-    }
-
+public class ZernikePolynomialsTest {
     /**
      * Tests definition of Zernike Polynomials, which are only defined
      * for n > 0, |m| <= n and n-|m| = even
@@ -56,14 +38,15 @@ public class ZernikePolynomials {
     }
 
     /**
-     * Tests Orthogonality relation of Zernike Polynoms
+     * Tests if orthogonality relation that exists between two Zernike Polynoms holds true
+     * for all n between 1 and 5.
      */
-    //@Test
+    @Test
     @DisplayName("Test Orthogonality")
     void testOrthogonality() {
         final double increment = 0.25e-2;
         final double n_max = 5;
-        for (int n1=1;n1<n_max;n1++) {
+        for (int n1=1;n1<=n_max;n1++) {
             for (int m1=0; m1<=n1;m1++) {
                 for (int n2=1;n2<=n_max;n2++) {
                     for (int m2=0;m2<=n2;m2++) {
@@ -90,6 +73,24 @@ public class ZernikePolynomials {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Test Z_00, which must be equal to 1.0 + 0.0i for all values ofs r
+     * and theta.
+     */
+    @Test
+    @DisplayName("Test Z_00")
+    void testZ00() {
+        final ZernikeBasisFunction ZF1 = new ZernikeBasisFunction(0, 0);
+        final double increment = 1e-3;
+        for (double r = 0.0; r <= 1.0f; r += increment) {
+            for (double theta = 0; theta <= 2*Math.PI; theta += increment) {
+                Complex v = new Complex(r * FastMath.cos(theta), r * FastMath.sin(theta));
+                assertEquals(1.0, ZF1.value(v).abs(), 1e-8);
+                assertEquals(0.0, ZF1.value(v).getArgument(), 1e-8);
             }
         }
     }
