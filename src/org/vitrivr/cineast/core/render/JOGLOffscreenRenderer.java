@@ -162,6 +162,9 @@ public class JOGLOffscreenRenderer implements Renderer {
      *
      */
     public void render() {
+        /* Clear context. */
+        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         /* Switch matrix mode to modelview. */
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glEnable(GL_DEPTH_TEST);
