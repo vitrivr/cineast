@@ -242,70 +242,74 @@ public class JOGLOffscreenRenderer implements Renderer {
                 for (int j = 0; j < grid.getSizeY(); j++) {
                     for (int k = 0; k < grid.getSizeZ(); k++) {
                         /* Skip Voxel if its inactive. */
-                        if (!grid.get(i,j,k).getVisible()) continue;
+                        if (grid.get(i,j,k) == VoxelGrid.Voxel.INVISIBLE) continue;
+
+                        Vector3f voxelCenter = grid.getVoxelCenter(i,j,k);
 
                         /* Extract center of the voxel. */
-                        float x = grid.getCenter().x + grid.get(i,j,k).getCenter().x;
-                        float y = grid.getCenter().y + grid.get(i,j,k).getCenter().y;
-                        float z = grid.getCenter().z + grid.get(i,j,k).getCenter().z;
+                        float x = grid.getVoxelCenter().x + voxelCenter.x;
+                        float y = grid.getVoxelCenter().y + voxelCenter.y;
+                        float z = grid.getVoxelCenter().z + voxelCenter.z;
 
                         /* Determine which faces to draw: Faced that are covered by another active voxel are switched off. */
-                        if(i > 0) visible[0] = !grid.get(i-1,j,k).getVisible();
-                        if(i < grid.getSizeX()-1) visible[1] = !grid.get(i+1,j,k).getVisible();
-                        if(j > 0) visible[2] = !grid.get(i,j-1,k).getVisible();
-                        if(j < grid.getSizeY()-1) visible[3] = !grid.get(i,j+1,k).getVisible();
-                        if(k > 0) visible[4] = !grid.get(i,j,k-1).getVisible();
-                        if(k < grid.getSizeZ()-1) visible[5] = !grid.get(i,j,k+1).getVisible();
+                        if(i > 0) visible[0] = !grid.isVisible(i-1,j,k);
+                        if(i < grid.getSizeX()-1) visible[1] = !grid.isVisible(i+1,j,k);
+                        if(j > 0) visible[2] = !grid.isVisible(i,j-1,k);
+                        if(j < grid.getSizeY()-1) visible[3] = !grid.isVisible(i,j+1,k);
+                        if(k > 0) visible[4] = !grid.isVisible(i,j,k-1);
+                        if(k < grid.getSizeZ()-1) visible[5] = !grid.isVisible(i,j,k+1);
 
                         /* Draw the cube. */
                         gl.glBegin(GL_QUADS);
                         {
+                            final float halfresolution = grid.getResolution()/2.0f;
+
                             /* 1 */
                             if (visible[0]) {
-                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
-                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
-                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
-                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x + halfresolution, y - halfresolution, z - halfresolution);
+                                gl.glVertex3f(x - halfresolution, y - halfresolution, z - halfresolution);
+                                gl.glVertex3f(x - halfresolution, y + halfresolution, z - halfresolution);
+                                gl.glVertex3f(x + halfresolution, y + halfresolution, z - halfresolution);
                             }
 
                             /* 2 */
                             if (visible[1]) {
-                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
-                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
-                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
-                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x - halfresolution, y - halfresolution, z + halfresolution);
+                                gl.glVertex3f(x + halfresolution, y - halfresolution, z + halfresolution);
+                                gl.glVertex3f(x + halfresolution, y + halfresolution, z + halfresolution);
+                                gl.glVertex3f(x - halfresolution, y + halfresolution, z + halfresolution);
                             }
 
                             /* 3 */
                             if (visible[2]) {
-                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
-                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
-                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
-                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x + halfresolution, y - halfresolution, z + halfresolution);
+                                gl.glVertex3f(x + halfresolution, y - halfresolution, z - halfresolution);
+                                gl.glVertex3f(x + halfresolution, y + halfresolution, z - halfresolution);
+                                gl.glVertex3f(x + halfresolution, y + halfresolution, z + halfresolution);
                             }
 
                             /* 4 */
                             if (visible[3]) {
-                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
-                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
-                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
-                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
+                                gl.glVertex3f(x - halfresolution, y - halfresolution, z - halfresolution);
+                                gl.glVertex3f(x - halfresolution, y - halfresolution, z + halfresolution);
+                                gl.glVertex3f(x - halfresolution, y + halfresolution, z + halfresolution);
+                                gl.glVertex3f(x - halfresolution, y + halfresolution, z - halfresolution);
                             }
 
                             /* 5 */
                             if (visible[4]) {
-                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
-                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z - grid.getHalfResolution());
-                                gl.glVertex3f(x + grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
-                                gl.glVertex3f(x - grid.getHalfResolution(), y - grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x - halfresolution, y - halfresolution, z - halfresolution);
+                                gl.glVertex3f(x + halfresolution, y - halfresolution, z - halfresolution);
+                                gl.glVertex3f(x + halfresolution, y - halfresolution, z + halfresolution);
+                                gl.glVertex3f(x - halfresolution, y - halfresolution, z + halfresolution);
                             }
 
                             /* 6 */
                             if (visible[5]) {
-                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
-                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z - grid.getHalfResolution());
-                                gl.glVertex3f(x - grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
-                                gl.glVertex3f(x + grid.getHalfResolution(), y + grid.getHalfResolution(), z + grid.getHalfResolution());
+                                gl.glVertex3f(x + halfresolution, y + halfresolution, z - halfresolution);
+                                gl.glVertex3f(x - halfresolution, y + halfresolution, z - halfresolution);
+                                gl.glVertex3f(x - halfresolution, y + halfresolution, z + halfresolution);
+                                gl.glVertex3f(x + halfresolution, y + halfresolution, z + halfresolution);
                             }
                         }
                         gl.glEnd();

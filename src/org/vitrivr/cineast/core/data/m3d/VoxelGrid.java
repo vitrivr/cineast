@@ -3,46 +3,19 @@ package org.vitrivr.cineast.core.data.m3d;
 import org.joml.Vector3f;
 
 /**
+ * This class represents a Voxel grid, i.e. a 3-dimensional grid of 3D pixels (called Voxels).
+ *
  * @author rgasser
  * @version 1.0
  * @created 06.01.17
  */
 public class VoxelGrid {
-
     /** The default, empty VoxelGrid. */
     public static final VoxelGrid EMPTY = new VoxelGrid(5,5,5,0.1f);
 
-    /**
-     * A single Voxel.
-     */
-    public class Voxel {
-        private final short x;
-        private final short y;
-        private final short z;
-        private boolean visible;
-
-        public short getX() {
-            return x;
-        }
-        public short getY() {
-            return y;
-        }
-        public short getZ() {
-            return z;
-        }
-        public Vector3f getCenter() {
-            return new Vector3f((x-VoxelGrid.this.sizeX/2) * VoxelGrid.this.resolution, (y-VoxelGrid.this.sizeY/2)*VoxelGrid.this.resolution, (z-VoxelGrid.this.sizeZ/2)*VoxelGrid.this.resolution);
-        }
-        public boolean getVisible() {
-            return visible;
-        }
-
-        public Voxel(short x, short y, short z, boolean visible) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.visible = visible;
-        }
+    /** Represents a single Voxel which can either can be visible or invisible. */
+    public enum Voxel {
+        VISIBLE, INVISIBLE
     }
 
     /** Determines the size of a single voxel. */
@@ -59,6 +32,12 @@ public class VoxelGrid {
 
     /** The total length ot the voxel grid (i.e. the number of voxels in the grid). */
     private final int length;
+
+    /** Number of visible Voxels in the grid. */
+    private int visible = 0;
+
+    /** Number of invisible Voxels in the grid. */
+    private int invisible = 0;
 
     /** Array holding the actual voxels. */
     private final Voxel[][][] voxelGrid;
@@ -85,7 +64,7 @@ public class VoxelGrid {
      * @param sizeY Y-size of the new voxel grid.
      * @param sizeZ Z-size of the new voxel grid.
      * @param resolution Resolution of the grid, i.e. size of a single voxel.
-     * @param active Indicates whether the grid should be initialized with active or inactive voxels.
+     * @param active Indicates whether the grid should be initialized with active or inactive Voxels.
      */
     public VoxelGrid(int sizeX, int sizeY, int sizeZ, float resolution, boolean active) {
         this.sizeX = sizeX;
@@ -97,7 +76,13 @@ public class VoxelGrid {
         for (short i = 0;i<this.sizeX;i++) {
             for (short j = 0;j<this.sizeY;j++) {
                 for (short k = 0;k<this.sizeZ;k++) {
-                    this.voxelGrid[i][j][k] = new Voxel(i,j,k, active);
+                    if (active) {
+                        this.voxelGrid[i][j][k] = Voxel.VISIBLE;
+                        this.visible += 1;
+                    } else {
+                        this.voxelGrid[i][j][k] = Voxel.INVISIBLE;
+                        this.invisible += 1;
+                    }
                 }
             }
         }
@@ -134,7 +119,7 @@ public class VoxelGrid {
      * Getter for the length of the voxel-grid i.e. the number of voxels
      * in the grid.
      *
-     * @return Number of voxels in the grid.
+     * @return Number of Voxels in the grid.
      */
     public final int getLength() {
         return length;
@@ -145,49 +130,104 @@ public class VoxelGrid {
      *
      * @return Vector pointing to the center of the grid.
      */
-    public Vector3f getCenter() {
+    public final Vector3f getVoxelCenter() {
         return center;
     }
 
     /**
-     * Returns the resolution of the Voxel, i.e. the size of a single
-     * Voxel.
+     * Getter for the number of visible Voxels in the grid.
+     *
+     * @return Number of visible Voxels in the grid.
+     */
+    public final int getVisible() {
+        return visible;
+    }
+
+    /**
+     * Getter for the number of invisible Voxels in the grid.
+     *
+     * @return Number of invisible Voxels in the grid.
+     */
+    public final int getInvisible() {
+        return invisible;
+    }
+
+    /**
+     * Returns true if VoxelGrid is visible (i.e. there is at least one
+     * visible Voxel) and false otherwise.
      *
      * @return
+     */
+    public final boolean isVisible() {
+        return this.visible > 0;
+    }
+
+    /**
+     * Returns the resolution of the Voxel grid, i.e. the size of a single
+     * Voxel.
+     *
+     * @return Size of a single voxel.
      */
     public final float getResolution() {
         return resolution;
     }
 
     /**
-     * Returns half the resolution of the Voxel, i.e. the size of
-     * half a Voxel.
+     * Returns the Voxel at the specified position.
      *
-     * @return
-     */
-    public final float getHalfResolution() {
-        return this.resolution/2.0f;
-    }
-
-    /**
-     *
-     * @param x
-     * @param y
-     * @param z
-     * @return
+     * @param x x position of the Voxel.
+     * @param y y position of the Voxel.
+     * @param z z position of the Voxel.
+     * @throws ArrayIndexOutOfBoundsException If one of the three indices is larger than the grid.
      */
     public final Voxel get(int x, int y, int z) {
         return this.voxelGrid[x][y][z];
     }
 
     /**
+     * Returns true, if the Voxel at the specified position is visible and false otherwise.
      *
-     * @param visible
-     * @param x
-     * @param y
-     * @param z
+     * @param x x position of the Voxel.
+     * @param y y position of the Voxel.
+     * @param z z position of the Voxel.
+     * @throws ArrayIndexOutOfBoundsException If one of the three indices is larger than the grid.
      */
-    public final void toggle(boolean visible, int x, int y, int z) {
-        this.voxelGrid[x][y][z].visible = visible;
+    public final boolean isVisible(int x, int y, int z) {
+        return this.voxelGrid[x][y][z] == Voxel.VISIBLE;
+    }
+
+    /**
+     * Calculates and returns the center of the Voxel in a 3D coordinate system using the grids
+     * resolution property.
+     *
+     * @param x x position of the Voxel.
+     * @param y y position of the Voxel.
+     * @param z z position of the Voxel.
+     * @return Vector3f containing the center of the voxel.
+     * @throws ArrayIndexOutOfBoundsException If one of the three indices is larger than the grid.
+     */
+    public Vector3f getVoxelCenter(int x, int y, int z) {
+        return new Vector3f((x-VoxelGrid.this.sizeX/2) * VoxelGrid.this.resolution, (y-VoxelGrid.this.sizeY/2)*VoxelGrid.this.resolution, (z-VoxelGrid.this.sizeZ/2)*VoxelGrid.this.resolution);
+    }
+
+    /**
+     * Toggles the Voxel at the specified position.
+     *
+     * @param visible If true, the new Voxel position will become visible.
+     * @param x x position of the Voxel.
+     * @param y y position of the Voxel.
+     * @param z z position of the Voxel.
+     * @throws ArrayIndexOutOfBoundsException If one of the three indices is larger than the grid.
+     */
+    public final void toggleVoxel(boolean visible, int x, int y, int z) {
+        if (visible && this.voxelGrid[x][y][z] == Voxel.INVISIBLE) {
+            this.voxelGrid[x][y][z] = Voxel.VISIBLE;
+            this.invisible -= 1;
+            this.visible += 1;
+        } else if (!visible && this.voxelGrid[x][y][z] == Voxel.VISIBLE) {
+            this.voxelGrid[x][y][z] = Voxel.INVISIBLE;
+            this.invisible += 1;
+            this.visible -= 1;
+        }
     }
 }
