@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.data.m3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector4i;
+import org.vitrivr.cineast.core.util.mesh.MeshMathUtil;
 
 import java.util.*;
 
@@ -75,8 +76,6 @@ public class Mesh implements WritableMesh {
             }
         }
     }
-
-
 
     /** Enumeration used to distinguish between triangular and quadratic faces. */
     public enum FaceType {
@@ -215,6 +214,24 @@ public class Mesh implements WritableMesh {
         face.vertexIndices = vertices;
         face.normalIndices = normals;
         this.faces.add(face);
+    }
+
+    /**
+     * Calculates and returns the Mesh bounding-box
+     *
+     * @return Bounding-box of the mesh.
+     */
+    public float[] getBoundingBox() {
+        return MeshMathUtil.bounds(this);
+    }
+
+    /**
+     * Calculates and returns the Mesh barycenter.
+     *
+     * @return Barycenter of the Mesh.
+     */
+    public Vector3f getBarycenter() {
+        return MeshMathUtil.barycenter(this);
     }
 
     /**
