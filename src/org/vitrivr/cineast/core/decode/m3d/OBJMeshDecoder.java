@@ -96,12 +96,14 @@ public class OBJMeshDecoder implements Decoder<Mesh> {
 
                         if (quad) {
                             String[] p4 = tokens[4].split("/");
-
                             Vector4i vertexIndex = new Vector4i(Integer.parseInt(p1[0]),Integer.parseInt(p2[0]),Integer.parseInt(p3[0]),Integer.parseInt(p4[0]));
                             Vector4i normalIndex = null;
                             if (p1.length == 3 && p2.length == 3 && p3.length == 3  && p4.length == 3) {
                                 normalIndex = new Vector4i(Integer.parseInt(p1[2]),Integer.parseInt(p2[2]),Integer.parseInt(p3[2]),Integer.parseInt(p4[2]));
                             }
+
+                            /* Create and add face. */
+                            mesh.addFace(vertexIndex, normalIndex);
                         } else {
                             /* Prepare Vertex-Index and Normal-Index vectors for Tri face. */
                             Vector3i vertexIndex = new Vector3i(Integer.parseInt(p1[0]),Integer.parseInt(p2[0]),Integer.parseInt(p3[0]));
@@ -122,6 +124,10 @@ public class OBJMeshDecoder implements Decoder<Mesh> {
             br.close(); /* Closes the input stream. */
         } catch (IOException e) {
             LOGGER.error("Could not decode OBJ file {} due to an IO exception ({})", this.inputFile.toString(), LogHelper.getStackTrace(e));
+            mesh = null;
+        } catch (NumberFormatException e) {
+            LOGGER.error("Could not decode OBJ file {} because one of the tokens could not be converted to a valid number.", this.inputFile.toString(), LogHelper.getStackTrace(e));
+            mesh = null;
         } finally {
             this.complete.set(true);
         }
