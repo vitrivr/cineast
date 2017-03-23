@@ -5,7 +5,7 @@ public interface IntArrayProvider {
 	public static final int[] DEFAULT_INT_ARRAY = new int[]{};
 	
 	default int[] getIntArray(){
-		return DEFAULT_INT_ARRAY;
+	  throw new UnsupportedOperationException("No int array specified");
 	}
 	
 }

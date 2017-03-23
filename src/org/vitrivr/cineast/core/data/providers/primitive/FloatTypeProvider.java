@@ -13,7 +13,7 @@ public class FloatTypeProvider extends FloatProviderImpl implements PrimitiveTyp
 	
 	@Override
   public String getString() {
-    return "" + getFloat();
+    return Float.toString(getFloat());
   }
 	
 }

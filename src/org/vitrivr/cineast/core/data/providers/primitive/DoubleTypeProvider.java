@@ -13,7 +13,7 @@ public class DoubleTypeProvider extends DoubleProviderImpl implements PrimitiveT
 	
 	@Override
   public String getString() {
-    return "" + getDouble();
+    return Double.toString(getDouble());
   }
 	
 }

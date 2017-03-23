@@ -13,7 +13,7 @@ public class IntTypeProvider extends IntProviderImpl implements PrimitiveTypePro
 	
 	@Override
   public String getString() {
-    return "" + getInt();
+    return Integer.toString(getInt());
   }
 	
 }

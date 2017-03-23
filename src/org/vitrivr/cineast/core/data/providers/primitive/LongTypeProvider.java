@@ -13,7 +13,7 @@ public class LongTypeProvider extends LongProviderImpl implements PrimitiveTypeP
 	
 	@Override
   public String getString() {
-    return "" + getLong();
+    return Long.toString(getLong());
   }
 	
 }
