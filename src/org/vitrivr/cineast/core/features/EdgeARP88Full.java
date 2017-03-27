@@ -6,14 +6,14 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StatElement;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.descriptor.EdgeImg;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ARPartioner;
@@ -28,7 +28,7 @@ public class EdgeARP88Full extends AbstractFeatureModule {
 	
 	@Override
 	public void processShot(SegmentContainer shot) {
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		if (!phandler.idExists(shot.getId())) {
 			StatElement[] stats = new StatElement[64];
 			for(int i = 0; i < 64; ++i){
@@ -54,7 +54,7 @@ public class EdgeARP88Full extends AbstractFeatureModule {
 			}
 			persist(shot.getId(), new FloatVectorImpl(result));
 		}
-		LOGGER.exit();
+		LOGGER.traceExit();
 	}
 
 	private static FloatVector getEdges(MultiImage img){
@@ -80,7 +80,7 @@ public class EdgeARP88Full extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		FloatVector query = getEdges(sc.getMostRepresentativeFrame().getImage());
 		return getSimilar(query.toArray(null), qc);
 	}

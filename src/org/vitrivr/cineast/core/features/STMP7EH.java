@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StatElement;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 
 public class STMP7EH extends EHD {
@@ -25,7 +25,7 @@ public class STMP7EH extends EHD {
 	
 	@Override
 	public void processShot(SegmentContainer shot) {
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		if (!phandler.idExists(shot.getId())) {
 			List<VideoFrame> videoFrames = shot.getVideoFrames();
 			float[] hist = new float[80];
@@ -49,17 +49,17 @@ public class STMP7EH extends EHD {
 			}
 			persist(shot.getId(), new FloatVectorImpl(vec));
 		}
-		LOGGER.exit();
+		LOGGER.traceExit();
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		// TODO Auto-generated method stub
 		return super.getSimilar(sc, qc);
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(String shotId, ReadableQueryConfig qc) {
 		// TODO Auto-generated method stub
 		return super.getSimilar(shotId, qc);
 	}

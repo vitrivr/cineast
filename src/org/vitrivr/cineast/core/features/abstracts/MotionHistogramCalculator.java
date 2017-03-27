@@ -8,7 +8,8 @@ import java.util.function.Supplier;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.QueryConfig.Distance;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -104,7 +105,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 				histList);
 	}
 	
-	protected List<StringDoublePair> getSimilar(float[] vector, QueryConfig qc) {
+	protected List<StringDoublePair> getSimilar(float[] vector, ReadableQueryConfig qc) {
 	  qc = setQueryConfig(qc);
 		List<StringDoublePair> distances = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector, this.fieldName, qc);
 		for(StringDoublePair sdp : distances){
@@ -115,7 +116,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	}
 	
 	@Override
-	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(String shotId, ReadableQueryConfig qc) {
 		List<float[]> list = this.selector.getFeatureVectors("id", shotId, this.fieldName);
 		if(list.isEmpty()){
 			return new ArrayList<>(1);
@@ -140,7 +141,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 	}
 	
 	
-	protected QueryConfig setQueryConfig(QueryConfig qc) {
+	protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
 		return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
 	}
 	

@@ -1,17 +1,24 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.MFCC;
 import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author rgasser
@@ -41,7 +48,7 @@ public class MFCCShingle extends AbstractFeatureModule {
     }
 
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Extract MFCC shingle features from QueryObject. */
         List<float[]> features = this.getFeatures(sc);
 
@@ -50,7 +57,7 @@ public class MFCCShingle extends AbstractFeatureModule {
         final HashMap<String, Integer> map = new HashMap<>();
         final HashSet<String> seen = new HashSet<>(250);
 
-        qc.setDistance(QueryConfig.Distance.euclidean);
+        qc = setQueryConfig(qc);
 
         int stepsize = Math.max((int)Math.floor(features.size()/10), 1);
 
@@ -117,5 +124,10 @@ public class MFCCShingle extends AbstractFeatureModule {
         }
 
         return new ArrayList<>(0);
+    }
+    
+    @Override
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+      return new QueryConfig(qc).setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 }

@@ -1,17 +1,24 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.windows.BlackmanHarrisWindow;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * An Extraction and Retrieval module that leverages pure HPCP shingles according to [1]. These shingles can be used
@@ -72,12 +79,12 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
      * @return
      */
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Get list of features. */
         List<float[]> features = this.getFeatures(sc);
 
         /* Distance is always Cosine-Distance. */
-        qc.setDistance(QueryConfig.Distance.euclidean);
+        qc = setQueryConfig(qc);
 
         /* Prepare helper data-structures. */
         final List<StringDoublePair> results = new ArrayList<>();
@@ -160,5 +167,10 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
             }
         }
         return new Pair<>(MathHelper.normL2(feature), MathHelper.normalizeL2(feature));
+    }
+    
+    @Override
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+      return new QueryConfig(qc).setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 }

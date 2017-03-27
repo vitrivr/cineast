@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.db;
 
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-
 import java.util.List;
 import java.util.Map;
+
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 
 public interface DBSelector {
 
@@ -17,10 +17,10 @@ public interface DBSelector {
    * @return a list of pairs containing an id and the distance to the query vector
    */
   List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column,
-      QueryConfig config);
+      ReadableQueryConfig config);
 
   List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
-      String column, QueryConfig config);
+      String column, ReadableQueryConfig config);
 
   List<float[]> getFeatureVectors(String fieldName, String value, String vectorName);
 

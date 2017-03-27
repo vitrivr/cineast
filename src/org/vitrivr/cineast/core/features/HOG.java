@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -65,11 +65,11 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
      * @return
      */
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig rqc) {
         long start = System.currentTimeMillis();
         LOGGER.traceEntry();
 
-        qc.setDistanceIfEmpty(QueryConfig.Distance.euclidean);
+        ReadableQueryConfig qc = setQueryConfig(rqc);
 
         List<StringDoublePair> results = null;
         BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();

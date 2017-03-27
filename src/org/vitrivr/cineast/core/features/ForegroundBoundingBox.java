@@ -6,12 +6,12 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -32,7 +32,7 @@ public class ForegroundBoundingBox  extends AbstractFeatureModule {
 	@Override
 	public void processShot(SegmentContainer shot) {
 		TimeHelper.tic();
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		if(!phandler.idExists(shot.getId())){
 			ArrayList<Pair<Long,ArrayList<Float>>> bboxs = MaskGenerator.getNormalizedBbox(shot.getVideoFrames(), shot.getPaths(), shot.getBgPaths());
 			for(Pair<Long,ArrayList<Float>> bbox : bboxs){
@@ -42,11 +42,11 @@ public class ForegroundBoundingBox  extends AbstractFeatureModule {
 			LOGGER.debug("ForegroundBoundingBox.processShot() done in {}",
 					TimeHelper.toc());
 		}
-		LOGGER.exit();
+		LOGGER.traceExit();
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		ArrayList<Pair<Long,ArrayList<Float>>> bboxs = MaskGenerator.getNormalizedBbox(sc.getVideoFrames(), sc.getPaths(), sc.getBgPaths());
 		FloatVectorImpl fv = new FloatVectorImpl(bboxs.get(0).second);
 		

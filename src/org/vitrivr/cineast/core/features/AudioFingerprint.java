@@ -1,11 +1,21 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Supplier;
+
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.*;
-
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.AttributeDefinition;
@@ -15,15 +25,12 @@ import org.vitrivr.cineast.core.util.fft.STFT;
 import org.vitrivr.cineast.core.util.fft.Spectrum;
 import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
 
-import java.util.*;
-import java.util.function.Supplier;
-
 /**
  * @author rgasser
  * @version 1.0
  * @created 14.02.17
  */
-public class AudioFingerprint implements Extractor, Retriever {
+public class AudioFingerprint implements Extractor, Retriever { //FIXME why is this not an AbstractFratureModule?
 
     /** Field names in the data-store. */
     private static final String[] FIELDS = {"id", "fingerprint"};
@@ -82,18 +89,19 @@ public class AudioFingerprint implements Extractor, Retriever {
 
 
     @Override
-    public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
-        return null;
+    public List<StringDoublePair> getSimilar(String shotId, ReadableQueryConfig qc) {
+        return null; //FIXME this should so something..?
     }
 
 
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig rqc) {
         HashMap<String,Double> map = new HashMap<>();
         List<StringDoublePair> results = new ArrayList<>();
 
+        QueryConfig qc = new QueryConfig(rqc);
 
-        qc.setDistance(QueryConfig.Distance.hamming);
+        qc.setDistanceIfEmpty(QueryConfig.Distance.hamming);
 
         List<Pair<Float, Double>> filteredSpectrum = this.filterSpectrum(sc);
         int lookups = filteredSpectrum.size() / FINGERPRINT;

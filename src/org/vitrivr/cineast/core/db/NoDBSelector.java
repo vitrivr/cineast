@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.db;
 
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 
 /**
  * 
@@ -29,13 +29,13 @@ public class NoDBSelector implements DBSelector {
 
   @Override
   public List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column,
-      QueryConfig config) {
+      ReadableQueryConfig config) {
     return new ArrayList<>(0);
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
-      String column, QueryConfig config) {
+      String column, ReadableQueryConfig config) {
     return new ArrayList<>(0);
   }
 

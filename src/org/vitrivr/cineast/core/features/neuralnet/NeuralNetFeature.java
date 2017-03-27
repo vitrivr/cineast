@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
@@ -72,8 +72,8 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
      * Might perform knn on the 1k-vector in the future.
      * It's also not clear yet if we could combine labels and input image
      */
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc, DBSelector classificationSelector, float defaultCutoff) {
-        LOGGER.entry();
+    public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc, DBSelector classificationSelector, float defaultCutoff) {
+        LOGGER.traceEntry();
         TimeHelper.tic();
         List<StringDoublePair> _return = new ArrayList<>();
         if (!sc.getTags().isEmpty()) {
@@ -111,7 +111,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         _return = MaxPool.maxPoolStringId(_return);
         LOGGER.trace("NeuralNetFeature.getSimilar() done in {}",
                 TimeHelper.toc());
-        return LOGGER.exit(_return);
+        return LOGGER.traceExit(_return);
     }
 
     protected abstract NeuralNet getNet();

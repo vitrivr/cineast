@@ -15,9 +15,9 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.EntityCreator;
@@ -41,7 +41,7 @@ public class QueryImageExporter implements Retriever {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		BufferedImage bimg = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
 		try {
 			ImageIO.write(bimg, "PNG", new File(folder, this.df.format(Calendar.getInstance().getTime()) + ".png"));
@@ -52,7 +52,7 @@ public class QueryImageExporter implements Retriever {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(String shotId, ReadableQueryConfig qc) {
 		return new LinkedList<StringDoublePair>();
 	}
 

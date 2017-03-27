@@ -9,10 +9,10 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -60,7 +60,7 @@ public abstract class SolrTextRetriever implements Retriever {
   }
 
   @Override
-  public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+  public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     if (this.selector == null) {
       return new ArrayList<>(0);
     }
@@ -110,7 +110,7 @@ public abstract class SolrTextRetriever implements Retriever {
   }
 
   @Override
-  public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
+  public List<StringDoublePair> getSimilar(String shotId, ReadableQueryConfig qc) {
     return new ArrayList<>(0); // currently not supported
   }
 

@@ -1,19 +1,21 @@
 package org.vitrivr.cineast.core.features;
 
-import boofcv.abst.feature.detdesc.DetectDescribePoint;
-import boofcv.struct.feature.BrightFeature;
-import boofcv.struct.image.GrayF32;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractCodebookFeatureModule;
 import org.vitrivr.cineast.core.util.images.SURFHelper;
 
-import java.util.ArrayList;
-import java.util.List;
+import boofcv.abst.feature.detdesc.DetectDescribePoint;
+import boofcv.struct.feature.BrightFeature;
+import boofcv.struct.image.GrayF32;
 
 /**
  * @author rgasser
@@ -51,11 +53,11 @@ public abstract class SURF extends AbstractCodebookFeatureModule {
     }
 
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         long start = System.currentTimeMillis();
         LOGGER.traceEntry();
 
-        qc.setDistance(DEFAULT_DISTANCE);
+        qc = setQueryConfig(qc);
 
         List<StringDoublePair> results = null;
         DetectDescribePoint<GrayF32, BrightFeature> descriptors = SURFHelper.getStableSurf(sc.getAvgImg().getBufferedImage());
@@ -68,5 +70,10 @@ public abstract class SURF extends AbstractCodebookFeatureModule {
 
         LOGGER.debug("SURF.getSimilar() (codebook {}) done in {}ms", this.codebook(), (System.currentTimeMillis() - start));
         return LOGGER.traceExit(results);
+    }
+    
+    @Override
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+      return new QueryConfig(qc).setDistanceIfEmpty(DEFAULT_DISTANCE);
     }
 }

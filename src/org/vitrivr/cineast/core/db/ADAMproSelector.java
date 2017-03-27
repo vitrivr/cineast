@@ -24,7 +24,6 @@ import org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.DistanceType;
 import org.vitrivr.adampro.grpc.AdamGrpc.EntityPropertiesMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ExternalHandlerQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage;
@@ -35,8 +34,10 @@ import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultInfoMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultTupleMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.QueryConfig.Distance;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.DefaultValueHashMap;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
@@ -198,7 +199,7 @@ public class ADAMproSelector implements DBSelector {
   }
 
   private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column,
-      VectorMessage fvm, int k, QueryConfig qc) {
+      VectorMessage fvm, int k, ReadableQueryConfig qc) {
     synchronized (nnqmBuilder) {
       this.nnqmBuilder.clear();
       nnqmBuilder.setAttribute(column).setQuery(fvm).setK(k);
@@ -213,7 +214,7 @@ public class ADAMproSelector implements DBSelector {
     }
   }
 
-  private DistanceMessage buildDistanceMessage(QueryConfig qc) {
+  private DistanceMessage buildDistanceMessage(ReadableQueryConfig qc) {
     if (qc == null) {
       return manhattan;
     }
@@ -340,7 +341,7 @@ public class ADAMproSelector implements DBSelector {
 
   @Override
   public List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column,
-      QueryConfig config) {
+      ReadableQueryConfig config) {
     NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column,
         DataMessageConverter.convertVectorMessage(vector), k, config);
     QueryMessage sqMessage = buildQueryMessage(hints, null, projectionMessage, nnqMessage);
@@ -552,7 +553,7 @@ public class ADAMproSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
-      String column, QueryConfig config) {
+      String column, ReadableQueryConfig config) {
     NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column,
         DataMessageConverter.convertVectorMessage(vector), k, config);
 

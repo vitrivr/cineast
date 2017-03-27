@@ -14,14 +14,15 @@ import org.vitrivr.cineast.core.color.FuzzyColorHistogramQuantizer.Color;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.QueryConfig.Distance;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -212,10 +213,10 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	}
 
 
-	private List<StringDoublePair> getSimilar(float[] raster, float[] hist, QueryConfig qc){
+	private List<StringDoublePair> getSimilar(float[] raster, float[] hist, ReadableQueryConfig rqc){
 		int limit = Config.sharedConfig().getRetriever().getMaxResultsPerModule() * 5;
 		
-		qc = QueryConfig.notNull(qc).setDistanceIfEmpty(Distance.chisquared);
+		QueryConfig qc = new QueryConfig(rqc).setDistanceIfEmpty(Distance.chisquared);
 		
 		List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getNearestNeighbourRows(limit, hist, "hist", qc);
 		
@@ -231,7 +232,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	}
 	
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		
 		Pair<float[], float[]> pair = computeRaster(sc);
 		
@@ -239,7 +240,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(String shotId, ReadableQueryConfig qc) {
 		List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", shotId);
 		
 		if(rows.isEmpty()){

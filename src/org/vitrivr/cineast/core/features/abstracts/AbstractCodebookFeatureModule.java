@@ -1,18 +1,19 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import java.util.List;
+
+import org.ddogleg.clustering.AssignCluster;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+
 import boofcv.abst.feature.detdesc.DetectDescribePoint;
 import boofcv.alg.scene.FeatureToWordHistogram_F64;
 import boofcv.io.UtilIO;
 import boofcv.struct.feature.BrightFeature;
 import boofcv.struct.feature.TupleDesc_F64;
 import boofcv.struct.image.GrayF32;
-
-import org.bridj.util.Tuple;
-import org.ddogleg.clustering.AssignCluster;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-
-import java.util.List;
 
 /**
  * An abstract feature module that leverages a named codebook and a set of features to obtain
@@ -134,4 +135,9 @@ public abstract class AbstractCodebookFeatureModule extends AbstractFeatureModul
      * @return
      */
     protected abstract String codebook();
+
+    @Override
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+      return new QueryConfig(qc).setDistanceIfEmpty(QueryConfig.Distance.euclidean);
+    }
 }

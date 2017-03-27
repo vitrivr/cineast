@@ -3,12 +3,12 @@ package org.vitrivr.cineast.core.features;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
 import org.vitrivr.cineast.core.util.MathHelper;
 
@@ -38,7 +38,7 @@ public class SubDivMotionHistogramBackground2 extends SubDivMotionHistogram {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(2, sc.getBgPaths());
 		ArrayList<Float> tmp = new ArrayList<Float>(2 * 2 * 8);
 		for(List<Float> l : pair.second){
