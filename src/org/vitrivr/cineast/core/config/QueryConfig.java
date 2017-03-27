@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.config;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
@@ -15,41 +14,8 @@ public class QueryConfig extends ReadableQueryConfig {
     super(qc, uuid);
   }
 
-  public void setNet(NeuralNet net) {
-    this.net = net;
-  }
-
-  public void setClassificationCutoff(float classificationCutoff) {
-    this.classificationCutoff = classificationCutoff;
-  }
-
-  public QueryConfig setDistance(Distance distance) {
-    this.distance = distance;
-    if (distance == Distance.euclidean) {
-      this.norm = 2f;
-    } else if (distance == Distance.manhattan) {
-      this.norm = 1f;
-    } else if (distance == Distance.chebyshev) {
-      this.norm = Float.POSITIVE_INFINITY;
-    }
-    return this;
-  }
-
-  
   public QueryConfig setDistanceWeights(float[] weights) {
     this.distanceWeights = weights;
-    return this;
-  }
-
-  public QueryConfig setNorm(float norm) {
-    this.norm = norm;
-    if (Math.abs(norm - 2f) < 1e6f) {
-      this.distance = Distance.euclidean;
-    } else if (Math.abs(norm - 1f) < 1e6f) {
-      this.distance = Distance.manhattan;
-    } else if (Float.isInfinite(norm) && norm > 0) {
-      this.distance = Distance.chebyshev;
-    }
     return this;
   }
 
@@ -99,5 +65,37 @@ public class QueryConfig extends ReadableQueryConfig {
    */
   public static QueryConfig newQueryConfigFromOther(QueryConfig qc) {
     return new QueryConfig(qc, null);
+  }
+
+  protected void setNet(NeuralNet net) {
+    this.net = net;
+  }
+
+  protected QueryConfig setDistance(Distance distance) {
+    this.distance = distance;
+    if (distance == Distance.euclidean) {
+      this.norm = 2f;
+    } else if (distance == Distance.manhattan) {
+      this.norm = 1f;
+    } else if (distance == Distance.chebyshev) {
+      this.norm = Float.POSITIVE_INFINITY;
+    }
+    return this;
+  }
+
+  protected QueryConfig setNorm(float norm) {
+    this.norm = norm;
+    if (Math.abs(norm - 2f) < 1e6f) {
+      this.distance = Distance.euclidean;
+    } else if (Math.abs(norm - 1f) < 1e6f) {
+      this.distance = Distance.manhattan;
+    } else if (Float.isInfinite(norm) && norm > 0) {
+      this.distance = Distance.chebyshev;
+    }
+    return this;
+  }
+
+  protected void setClassificationCutoff(float classificationCutoff) {
+    this.classificationCutoff = classificationCutoff;
   }
 }
