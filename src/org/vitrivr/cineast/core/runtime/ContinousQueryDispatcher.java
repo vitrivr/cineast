@@ -14,9 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -59,7 +58,7 @@ public class ContinousQueryDispatcher {
 		
 	}
 	
-	public static List<StringDoublePair> retrieve(QueryContainer query, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, QueryConfig qc){
+	public static List<StringDoublePair> retrieve(QueryContainer query, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, ReadableQueryConfig qc){
 		if(executor == null || executor.isShutdown()){
 			init();
 		}
@@ -78,7 +77,7 @@ public class ContinousQueryDispatcher {
 		return handleFutures(futures, retrievers, wheightSum);
 	}
 	
-	public static List<StringDoublePair> retrieve(String shotId, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, QueryConfig qc){
+	public static List<StringDoublePair> retrieve(String shotId, TObjectDoubleHashMap<Retriever> retrievers, RetrieverInitializer initializer, ReadableQueryConfig qc){
 		if(executor == null || executor.isShutdown()){
 			init();
 		}
