@@ -75,6 +75,65 @@ public class Mesh implements WritableMesh {
                 return null;
             }
         }
+
+        /**
+         * Calculates and returns the area of a face.
+         *
+         * @return Area of the face.
+         */
+        public double area() {
+            if (this.type == FaceType.TRI) {
+                /* Extract vertices. */
+                Vector3f v1 = Mesh.this.vertices.get(this.vertexIndices.x - 1);
+                Vector3f v2 = Mesh.this.vertices.get(this.vertexIndices.y - 1);
+                Vector3f v3 = Mesh.this.vertices.get(this.vertexIndices.z - 1);
+
+                /* Calculates and returns the area of the face using Heron's Formula. */
+                Vector3f s1 = new Vector3f(v1).sub(v2);
+                Vector3f s2 = new Vector3f(v2).sub(v3);
+                Vector3f s3 = new Vector3f(v3).sub(v1);
+                double s = (s1.length() + s2.length() + s3.length())/2.0f;
+                return Math.sqrt(s*(s-s1.length())*(s-s2.length())*(s-s1.length()));
+            } else {
+                /* Extract vertices. */
+                Vector3f v1 = Mesh.this.vertices.get(this.vertexIndices.x - 1);
+                Vector3f v2 = Mesh.this.vertices.get(this.vertexIndices.y - 1);
+                Vector3f v3 = Mesh.this.vertices.get(this.vertexIndices.z - 1);
+                Vector3f v4 = Mesh.this.vertices.get(this.vertexIndices.w - 1);
+
+                /* Calculates the area of the face using Bretschneider's Formula. */
+                Vector3f s1 = new Vector3f(v1).sub(v2);
+                Vector3f s2 = new Vector3f(v2).sub(v3);
+                Vector3f s3 = new Vector3f(v3).sub(v4);
+                Vector3f s4 = new Vector3f(v4).sub(v1);
+
+                Vector3f d1 = new Vector3f(v1).sub(v3);
+                Vector3f d2 = new Vector3f(v2).sub(v4);
+                return (1.0/4.0)*Math.sqrt(4*Math.pow(d1.length(),2)*Math.pow(d2.length(),2) - Math.pow((Math.pow(s2.length(),2) + Math.pow(s4.length(),2)-Math.pow(s1.length(),2)-Math.pow(s3.length(),2)),2));
+            }
+        }
+
+        /**
+         * Calculates and returns the centroid of the face.
+         *
+         * @return Centroid of the face.
+         */
+        public Vector3f centroid() {
+            Vector3f centroid = new Vector3f(0f,0f,0f);
+            centroid.add(Mesh.this.vertices.get(this.vertexIndices.x - 1));
+            centroid.add(Mesh.this.vertices.get(this.vertexIndices.y - 1));
+            centroid.add(Mesh.this.vertices.get(this.vertexIndices.z - 1));
+            if (this.type == FaceType.QUAD) centroid.add(Mesh.this.vertices.get(this.vertexIndices.w - 1));
+
+
+            if (this.type == FaceType.TRI) {
+                centroid.div(3.0f);
+            } else {
+                centroid.div(4.0f);
+            }
+
+            return centroid;
+        }
     }
 
     /** Enumeration used to distinguish between triangular and quadratic faces. */
@@ -196,8 +255,8 @@ public class Mesh implements WritableMesh {
     public void addFace(Vector3i vertices, Vector3i normals) {
         Mesh.Face face = new Face();
         face.type = FaceType.TRI;
-        face.vertexIndices = new Vector4i(vertices, 0);
-        if (normals!= null) face.normalIndices = new Vector4i(normals, 0);
+        face.vertexIndices = new Vector4i(vertices, -1);
+        if (normals!= null) face.normalIndices = new Vector4i(normals, -1);
         this.faces.add(face);
     }
 
@@ -295,6 +354,19 @@ public class Mesh implements WritableMesh {
      */
     public final int numberOfFaces() {
         return this.faces.size();
+    }
+
+    /**
+     * Returns the total surface area of the Mesh.
+     *
+     * @return Surface area of the mesh.
+     */
+    public final double surfaceArea() {
+        double area = 0.0;
+        for (Face face : this.faces) {
+            area += face.area();
+        }
+        return area;
     }
 
     /**
