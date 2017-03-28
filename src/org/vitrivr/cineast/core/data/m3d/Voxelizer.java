@@ -103,10 +103,13 @@ public class Voxelizer {
 
         long start =  System.currentTimeMillis();
 
-        /* Prepare emtpy HashSets. */
+        /* Calculate the bounding-box of the mesh. */
+        float[] boundingbox =  mesh.getBoundingBox();
+
+        /* Process the faces and perform all the relevant tests described in [1]. */
         for (Mesh.Face face : mesh.getFaces()) {
             List<Vector3f> vertices = face.getVertices();
-            List<Pair<Vector3i,Vector3f>> enclosings = Voxelizer.this.enclosingGrid(vertices, mesh.getBoundingBox(), grid);
+            List<Pair<Vector3i,Vector3f>> enclosings = Voxelizer.this.enclosingGrid(vertices, boundingbox, grid);
             for (Pair<Vector3i,Vector3f> enclosing : enclosings) {
                 /* Perform vertex-tests. */
                 if (Voxelizer.this.vertextTest(vertices.get(0), enclosing)) {
