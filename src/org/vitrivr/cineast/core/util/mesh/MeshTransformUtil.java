@@ -14,11 +14,11 @@ import org.vitrivr.cineast.core.data.m3d.Mesh;
 import java.util.*;
 
 /**
- * A collection of utilities surrounding transformation of Meshes. Includes methods to scale, center or apply the
- * Karhunen–Loève (KHL) Transformation [1] for pose estimation.
+ * A collection of utilities surrounding transformation of Meshes. Includes methods to scale, move, center or apply the
+ * Karhunen–Loève (KHL) Transformation [1] for pose normalisation.
  *
- * [1] Vranic, D. V., Saupe, D., & Richter, J. (2001).
- *  Tools for 3D-object retrieval: Karhunen-Loeve transform and\nspherical harmonics. 2001 IEEE Fourth Workshop on Multimedia Signal Processing (Cat. No.01TH8564), 0–5. http://doi.org/10.1109/MMSP.2001.962749
+ * [1] Vranic, D. V., Saupe, D., & Richter, J. (2001). Tools for 3D-object retrieval: Karhunen-Loeve transform and\nspherical harmonics.
+ *  2001 IEEE Fourth Workshop on Multimedia Signal Processing (Cat. No.01TH8564), 0–5. http://doi.org/10.1109/MMSP.2001.962749
  *
  * @author rgasser
  * @version 1.0
@@ -81,19 +81,27 @@ public final class MeshTransformUtil {
         /* Prepare an empty covariance matrix. */
         DenseMatrix64F covariance = new DenseMatrix64F(3,3);
 
-        Matrix3f cov = new Matrix3f(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f);
-        List<Vector3f> vertices = mesh.getVertices();
-        for (Vector3f v : vertices) {
-            Vector3f vm = (new Vector3f(v)).sub(barycenter).div(vertices.size());
-            covariance.add(0,0, vm.x * vm.x);
-            covariance.add(0,1, vm.y * vm.x);
-            covariance.add(0,2, vm.z * vm.x);
-            covariance.add(1,0, vm.y * vm.x);
-            covariance.add(1,1, vm.y * vm.y);
-            covariance.add(1,2, vm.y * vm.z);
-            covariance.add(2,0, vm.z * vm.x);
-            covariance.add(2,1, vm.z * vm.y);
-            covariance.add(2,2, vm.z * vm.z);
+        List<Mesh.Face> faces = mesh.getFaces();
+        long vertices = 0;
+        for (Mesh.Face face : faces) {
+            for (Vector3f v : face.getVertices()) {
+                Vector3f vm = (new Vector3f(v)).sub(barycenter);
+                covariance.add(0,0, vm.x * vm.x);
+                covariance.add(0,1, vm.y * vm.x);
+                covariance.add(0,2, vm.z * vm.x);
+                covariance.add(1,0, vm.y * vm.x);
+                covariance.add(1,1, vm.y * vm.y);
+                covariance.add(1,2, vm.y * vm.z);
+                covariance.add(2,0, vm.z * vm.x);
+                covariance.add(2,1, vm.z * vm.y);
+                covariance.add(2,2, vm.z * vm.z);
+                vertices++;
+            }
+        }
+
+        /* Normalizes the matrix. */
+        for (int i=0; i<covariance.data.length; i++) {
+            covariance.data[i] /= vertices;
         }
 
         /* 2a) List of eigenvectors sorted by eigenvalue in descending order. */
@@ -160,6 +168,36 @@ public final class MeshTransformUtil {
     }
 
     /**
+     * Moves a mesh along the direction of the provided translation vector. This
+     * transformation is done on a copy of the Mesh, which is returned. The original Mesh
+     * is not affected by the operation.
+     *
+     * @param mesh Mesh that should be moved.
+     * @param translation Vector3f describing the translation in space.
+     * @return Moved mesh
+     */
+    public static Mesh move(Mesh mesh, Vector3f translation) {
+        Mesh copy = new Mesh(mesh);
+        moveInPlace(copy, translation);
+        return copy;
+    }
+
+    /**
+     * Moves a mesh along the direction of the provided translation vector.
+     *
+     * *<strong>Important:</strong> This transformation is done in place and affects the original Mesh.
+     *
+     * @param mesh Mesh that should be moved.
+     * @param translation Vector3f describing the translation in space.
+     */
+    public static void moveInPlace(Mesh mesh, Vector3f translation) {
+        Matrix4f translationMatrix = new Matrix4f().translation(translation);
+        for (Vector3f vertex : mesh.getVertices()) {
+            vertex.mulPosition(translationMatrix);
+        }
+    }
+
+    /**
      * Moves the provided Mesh so that its barycenter is positioned at the origin [0,0,0]. This
      * transformation is done on a copy of the Mesh, which is returned. The original Mesh is not
      * affected by the operation.
@@ -178,14 +216,11 @@ public final class MeshTransformUtil {
      *
      *<strong>Important:</strong> This transformation is done in place and affects the original Mesh.
      *
-     * @param mesh Mesh that should be centered.
+     * @param mesh Centered Mesh.
      */
     public static void centerInPlace(Mesh mesh) {
         Vector3f center = MeshMathUtil.barycenter(mesh);
-        Matrix4f translation = new Matrix4f().translation(center.negate());
-        for (Vector3f vertex : mesh.getVertices()) {
-            vertex.mulPosition(translation);
-        }
+        moveInPlace(mesh, center.negate());
     }
 
     /**

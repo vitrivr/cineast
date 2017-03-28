@@ -3,11 +3,14 @@ package org.vitrivr.cineast.core.util.mesh;
 import org.joml.Vector3f;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A collection of utilities surrounding Mesh mathematics. Includes methods to calculate the barycenter or the
  * bounding box of a Mesh.
+ *
+ * [1] Vranić, D. and D. S. (n.d.). 3D Model Retrieval.
  *
  * @author rgasser
  * @version 1.0
@@ -64,18 +67,25 @@ public final class MeshMathUtil {
     }
 
     /**
-     * Calculates the centerInPlace of mass (barycenter) of a mesh based on its vertices.
+     * Calculates the center of mass (barycenter) of a polyhedral mesh by obtaining
+     * the mean of the Mesh's face centroids weighted by the area of the respective face as
+     * described in [1].
      *
      * @param mesh The mesh for which the barycenter should be calculated.
      * @return Coordinates of the barycenter.
      */
     public static Vector3f barycenter(Mesh mesh) {
-        List<Vector3f> vertices = mesh.getVertices();
-        Vector3f center = new Vector3f(0f,0f,0f);
-        for (Vector3f v : vertices) center.add(v);
-        center.div(vertices.size());
-        return center;
+        Vector3f barycenter = new Vector3f(0f,0f,0f);
+        double total = 0.0;
+        for (Mesh.Face face : mesh.getFaces()) {
+            double area = face.area();
+            total += area;
+            barycenter.add(face.centroid().mul((float)area));
+        }
+        barycenter.div((float)total);
+        return barycenter;
     }
+
 
     /**
      * Calculates and returns the bounds for the provided mesh.
@@ -84,7 +94,15 @@ public final class MeshMathUtil {
      * @return Float-array spanning the bounds: {max_x, min_x, max_y, min_y, max_z, min_z}
      */
     public static float[] bounds(Mesh mesh) {
-       return bounds(mesh.getVertices());
+        /* Extract all vertices that are part of a face. */
+        List<Vector3f> vertices = new ArrayList<>(mesh.numberOfVertices());
+        for (Mesh.Face face : mesh.getFaces()) {
+            for (Vector3f vertex : face.getVertices()) {
+                vertices.add(vertex);
+            }
+        }
+
+       return bounds(vertices);
     }
 
     /**
