@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.ExtractionPipelineConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.StatElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -34,7 +35,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     private final List<Extractor> extractors = new LinkedList<>();
 
     /** Blocking queue holding the SegmentContainers that are pending extraction. */
-    private final LinkedBlockingQueue<SegmentContainer> segmentQueue = new LinkedBlockingQueue<SegmentContainer>(Config.sharedConfig().getExtractor().getShotQueueSize());
+    private final LinkedBlockingQueue<SegmentContainer> segmentQueue;
 
     /** HashMap containing statistics about the execution of the extractors. */
     private final ConcurrentHashMap<Class<?>, StatElement> timeMap = new ConcurrentHashMap<>();
@@ -47,7 +48,6 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
 
     /** Initializer for the extractors. */
     private final ExtractorInitializer initializer;
-
     
     /** Flag indicating whether or not the ExtractionPipeline is running. */
     private volatile boolean running = false;
@@ -65,9 +65,13 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         /* Start the extraction pipeline. */
         this.startup();
 
-        /* Get value for task-queue and thread-count. */
-        int taskQueueSize =  Config.sharedConfig().getExtractor().getTaskQueueSize();
-        int threadCount = Config.sharedConfig().getExtractor().getThreadPoolSize();
+        /* Get value for size task-queue and number of threads. */
+        int taskQueueSize =  context.taskQueueSize() > 0 ? context.taskQueueSize() : ExtractionPipelineConfig.DEFAULT_TASKQUEUE_SIZE;
+        int threadCount = context.threadPoolSize() > 0 ? context.threadPoolSize() : ExtractionPipelineConfig.DEFAULT_THREADPOOL_SIZE;
+        int segmentQueueSize = context.segmentQueueSize() > 0 ? context.segmentQueueSize() : ExtractionPipelineConfig.DEFAULT_SEGMENTQUEUE_SIZE;
+
+        /* Initialize the segment queue. */
+        this.segmentQueue = new LinkedBlockingQueue<>(segmentQueueSize);
 
         /* Prepare and create a new ThreadPoolExecutor. */
         LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(taskQueueSize);
@@ -75,7 +79,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
             @Override
             protected void afterExecute(Runnable r, Throwable t) {
                 if(t != null){
-                    LOGGER.fatal("Decoding Error detected, shutting down");
+                    LOGGER.fatal("Decoding Error detected!");
                     LOGGER.fatal(LogHelper.getStackTrace(t));
                     //this.shutdownNow();
                 }

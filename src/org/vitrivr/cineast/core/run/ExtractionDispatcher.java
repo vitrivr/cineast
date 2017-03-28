@@ -41,23 +41,24 @@ public class ExtractionDispatcher {
      * @param jobFile
      */
     public boolean initialize(File jobFile) throws IOException {
-        File outputLocation = Config.sharedConfig().getExtractor().getOutputLocation();
-        if(outputLocation == null){
-          LOGGER.error("invalid output location specified in config");
-          return false;
-        }
-        outputLocation.mkdirs();
-        if(!outputLocation.canWrite()){
-          LOGGER.error("cannot write to specified output location: '{}'", outputLocation.getAbsolutePath());
-          return false;
-        }
-      
         JacksonJsonProvider reader = new JacksonJsonProvider();
         this.context = reader.toObject(jobFile, IngestConfig.class);
         
         /* Check if context could be read and an input path was specified. */
         if (context == null || this.context.inputPath() == null) return false;
         Path path = this.context.inputPath();
+
+        /* Initializes the output-location defined in the configuration. */
+        File outputLocation = this.context.outputLocation();
+        if(outputLocation == null){
+            LOGGER.error("invalid output location specified in config");
+            return false;
+        }
+        outputLocation.mkdirs();
+        if(!outputLocation.canWrite()){
+            LOGGER.error("cannot write to specified output location: '{}'", outputLocation.getAbsolutePath());
+            return false;
+        }
         
         /*
          * Recursively add all files under that path to the List of files that should be processed. Uses the context-provider

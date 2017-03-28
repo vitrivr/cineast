@@ -18,8 +18,8 @@ public class Config {
 
     public static final UUID UNIQUE_ID = UUID.randomUUID();
 
+    /** Global, shared instance of the Config object. Gets loading during application startup. */
     private static Config sharedConfig;
-
 
     private APIConfig api;
     private DatabaseConfig database;
