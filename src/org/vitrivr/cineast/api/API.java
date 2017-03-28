@@ -237,6 +237,7 @@ public class API {
 	private static void handleImport(Path path, int batchsize) {
 		DataImportHandler handler = new DataImportHandler(2, batchsize);
 		handler.importProto(path);
+		handler.importJson(path);
 	}
 
 	/**

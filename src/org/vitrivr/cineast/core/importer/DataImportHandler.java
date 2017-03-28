@@ -101,7 +101,9 @@ public class DataImportHandler {
             LOGGER.info("Starting data import with JSON files in: {}", path.toString());
             Files.walk(path, 2).forEach(p -> {
                 try {
-                    this.futures.add(this.service.submit(new DataImportRunner(new JsonObjectImporter(p.toFile()), p)));
+                    if(p.toString().toLowerCase().endsWith(".json")){
+                      this.futures.add(this.service.submit(new DataImportRunner(new JsonObjectImporter(p.toFile()), p)));
+                    }
                 } catch (IOException e) {
                     LOGGER.error("Could not start data import for file '{}'. Skipping...?", p.toString());
                 }
@@ -124,7 +126,9 @@ public class DataImportHandler {
             LOGGER.info("Starting data import with PROTO files in: {}", path.toString());
             Files.walk(path, 2).forEach(p -> {
                 try {
-                    this.futures.add(this.service.submit(new DataImportRunner(new TupleInsertMessageImporter(p.toFile()), p)));
+                    if(p.toString().toLowerCase().endsWith(".bin")){
+                      this.futures.add(this.service.submit(new DataImportRunner(new TupleInsertMessageImporter(p.toFile()), p)));
+                    }
                 } catch (FileNotFoundException e) {
                     LOGGER.error("Could not start data import for file '{}'. Skipping...?", p.toString());
                 }
