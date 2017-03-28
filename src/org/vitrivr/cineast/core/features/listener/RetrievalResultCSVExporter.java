@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.runtime.RetrievalTask;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -19,7 +19,7 @@ public class RetrievalResultCSVExporter implements RetrievalResultListener {
 
   @Override
   public void notify(List<StringDoublePair> resultList, RetrievalTask task) {
-    QueryConfig qc = task.getConfig();
+    ReadableQueryConfig qc = task.getConfig();
     String queryIdString;
     if (qc == null || qc.getQueryId() == null) {
       LOGGER.error("could not determine query id, using 'null'");

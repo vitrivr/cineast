@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
@@ -17,10 +18,10 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<StringDo
 	private final QueryContainer query;
 	private final String shotId;
 	private static final Logger LOGGER = LogManager.getLogger();
-	private final QueryConfig config;
+	private final ReadableQueryConfig config;
 		
 	
-	public RetrievalTask(Retriever retriever, QueryContainer query, QueryConfig qc) {
+	public RetrievalTask(Retriever retriever, QueryContainer query, ReadableQueryConfig qc) {
 		this.retriever = retriever;
 		this.query = query;
 		this.config = qc;
@@ -32,7 +33,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<StringDo
 	}
 
 
-	public RetrievalTask(Retriever retriever, String segmentId, QueryConfig qc) {
+	public RetrievalTask(Retriever retriever, String segmentId, ReadableQueryConfig qc) {
 		this.retriever = retriever;
 		this.shotId = segmentId;
 		this.config = qc;
@@ -69,7 +70,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<StringDo
     return shotId;
   }
 
-  public QueryConfig getConfig() {
+  public ReadableQueryConfig getConfig() {
     return config;
   }
 
