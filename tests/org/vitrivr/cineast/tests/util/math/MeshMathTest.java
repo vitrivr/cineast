@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
  */
 public class MeshMathTest {
 
-    private static final Mesh CUBE = new Mesh(6, 20, 20);
-    private static final Mesh ANY = new Mesh(10,10,10);
+    private static final Mesh CUBE = new Mesh(6, 20);
+    private static final Mesh ANY = new Mesh(10,10);
 
     static {
         Random random = new Random();
@@ -33,12 +33,12 @@ public class MeshMathTest {
             CUBE.addVertex(new Vector3f((float)vertex[0], (float)vertex[1], (float)vertex[2]));
         }
 
-        CUBE.addFace(new Vector4i(2, 5, 6, 4), new Vector4i(0,0,0,0));
-        CUBE.addFace(new Vector4i(5, 8, 1, 6), new Vector4i(0,0,0,0));
-        CUBE.addFace(new Vector4i(6, 1, 7, 4), new Vector4i(0,0,0,0));
-        CUBE.addFace(new Vector4i(2, 3, 7, 4), new Vector4i(0,0,0,0));
-        CUBE.addFace(new Vector4i(2, 5, 8, 3), new Vector4i(0,0,0,0));
-        CUBE.addFace(new Vector4i(8, 1, 7, 3), new Vector4i(0,0,0,0));
+        CUBE.addFace(new Vector4i(2, 5, 6, 4));
+        CUBE.addFace(new Vector4i(5, 8, 1, 6));
+        CUBE.addFace(new Vector4i(6, 1, 7, 4));
+        CUBE.addFace(new Vector4i(2, 3, 7, 4));
+        CUBE.addFace(new Vector4i(2, 5, 8, 3));
+        CUBE.addFace(new Vector4i(8, 1, 7, 3));
 
         for (int i=0;i<100;i++) {
             ANY.addVertex(new Vector3f(random.nextFloat(), random.nextFloat(), random.nextFloat()));
@@ -51,7 +51,7 @@ public class MeshMathTest {
     @Test
     @DisplayName("Cube Bounding Box Test")
     void testCubeBoundingBox() {
-        float[] bounds = MeshMathUtil.bounds(CUBE);
+        float[] bounds = CUBE.bounds();
         assertEquals(1.0f, bounds[0],1e-6, "Bounding box of CUBE should be the cube itself!");
         assertEquals(-1.0f, bounds[1],1e-6, "Bounding box of CUBE should be the cube itself!");
         assertEquals(1.0f, bounds[2],1e-6, "Bounding box of CUBE should be the cube itself!");
@@ -66,7 +66,7 @@ public class MeshMathTest {
     @Test
     @DisplayName("Empty Bounding Box Test")
     void testEmptyBoundingBox() {
-        float[] bounds = MeshMathUtil.bounds(Mesh.EMPTY);
+        float[] bounds = Mesh.EMPTY.bounds();
         assertEquals(0.0f, bounds[0],1e-6, "Bounding box of EMPTY should be zero.");
         assertEquals(0.0f, bounds[1],1e-6, "Bounding box of EMPTY should be zero.");
         assertEquals(0.0f, bounds[2],1e-6, "Bounding box of EMPTY should be zero.");
@@ -87,8 +87,9 @@ public class MeshMathTest {
     @Test
     @DisplayName("Cube Barycenter Test")
     void testMovedCubeBaryCenter() {
-        Mesh movedCube = MeshTransformUtil.move(CUBE, new Vector3f(1.0f, 1.0f,1.0f));
-        Vector3f barycenter = MeshMathUtil.barycenter(movedCube);
+        Mesh movedCube = new Mesh(CUBE);
+        movedCube.move(new Vector3f(1.0f, 1.0f,1.0f));
+        Vector3f barycenter = movedCube.barycenter();
         assertEquals(1.0f, barycenter.x, 1e-6, "X-Coordinate of CUBE barycenter is off (expected 0.0).");
         assertEquals(1.0f, barycenter.y, 1e-6, "Y-Coordinate of CUBE barycenter is off (expected 0.0).");
         assertEquals(1.0f, barycenter.z, 1e-6, "Z-Coordinate of CUBE barycenter is off (expected 0.0).");

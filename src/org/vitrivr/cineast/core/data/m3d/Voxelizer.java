@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.joml.Vector3i;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.math.MathConstants;
@@ -63,9 +64,9 @@ public class Voxelizer {
      * @param mesh Mesh that should be voxelized.
      * @return VoxelGrid representation of the mesh.
      */
-    public VoxelGrid voxelize(Mesh mesh) {
+    public VoxelGrid voxelize(ReadableMesh mesh) {
         /* Calculate bounding box of mesh. */
-        float[] boundingBox = mesh.getBoundingBox();
+        float[] boundingBox = mesh.bounds();
         short sizeX = (short)(Math.abs(Math.ceil(((boundingBox[0]-boundingBox[1])/this.resolution))) + 1);
         short sizeY = (short)(Math.abs(Math.ceil(((boundingBox[2]-boundingBox[3])/this.resolution))) + 1);
         short sizeZ = (short)(Math.abs(Math.ceil(((boundingBox[4]-boundingBox[5])/this.resolution))) + 1);
@@ -84,7 +85,7 @@ public class Voxelizer {
      * @param sizeZ Number of Voxels in Z direction.
      * @return VoxelGrid representation of the mesh.
      */
-    public VoxelGrid voxelize(Mesh mesh, int sizeX, int sizeY, int sizeZ) {
+    public VoxelGrid voxelize(ReadableMesh mesh, int sizeX, int sizeY, int sizeZ) {
          /* Initializes a new voxel-grid. */
         VoxelGrid grid = new VoxelGrid(sizeX, sizeY, sizeZ, this.resolution, false);
 
@@ -99,16 +100,16 @@ public class Voxelizer {
      * @param grid VoxelGrid to use for voxelization.
      * @return VoxelGrid representation of the mesh.
      */
-    public VoxelGrid voxelize(Mesh mesh, VoxelGrid grid) {
+    public VoxelGrid voxelize(ReadableMesh mesh, VoxelGrid grid) {
 
         long start =  System.currentTimeMillis();
 
         /* Calculate the bounding-box of the mesh. */
-        float[] boundingbox =  mesh.getBoundingBox();
+        float[] boundingbox =  mesh.bounds();
 
         /* Process the faces and perform all the relevant tests described in [1]. */
         for (Mesh.Face face : mesh.getFaces()) {
-            List<Vector3f> vertices = face.getVertices();
+            List<Mesh.Vertex> vertices = face.getVertices();
             List<Pair<Vector3i,Vector3f>> enclosings = Voxelizer.this.enclosingGrid(vertices, boundingbox, grid);
             for (Pair<Vector3i,Vector3f> enclosing : enclosings) {
                 /* Perform vertex-tests. */
@@ -159,8 +160,8 @@ public class Voxelizer {
      * @param voxel Voxel to be tested.
      * @return true if the voxel's center is within the circle, false otherwise.
      */
-    private boolean vertextTest(Vector3f vertex, Pair<Vector3i,Vector3f> voxel) {
-       return vertex.distanceSquared(voxel.second) > this.rcsq;
+    private boolean vertextTest(Mesh.Vertex vertex, Pair<Vector3i,Vector3f> voxel) {
+       return vertex.getPosition().distanceSquared(voxel.second) > this.rcsq;
     }
 
     /**
@@ -172,12 +173,12 @@ public class Voxelizer {
      * @param voxel Voxel to be tested.
      * @return true if voxel's center is contained in cylinder, false otherwise.
      */
-    private boolean edgeTest(Vector3f a, Vector3f b, Pair<Vector3i,Vector3f> voxel) {
-        Vector3f line = (new Vector3f(b)).sub(a);
-        Vector3f pd = voxel.second.sub(a);
+    private boolean edgeTest(Mesh.Vertex a, Mesh.Vertex b, Pair<Vector3i,Vector3f> voxel) {
+        Vector3f line = (new Vector3f(b.getPosition())).sub(a.getPosition());
+        Vector3f pd = voxel.second.sub(a.getPosition());
 
         /* Calculate distance between a and b (Edge). */
-        float lsq = a.distanceSquared(b);
+        float lsq = a.getPosition().distanceSquared(b.getPosition());
         float dot = line.dot(pd);
 
         if (dot < 0.0f || dot > lsq) {
@@ -201,14 +202,14 @@ public class Voxelizer {
      * @param voxel Voxel to be tested.
      * @return true if voxel's center is contained in the area, false otherwise.
      */
-    private boolean planeTest(Vector3f a, Vector3f b, Vector3f c, Pair<Vector3i,Vector3f> voxel) {
+    private boolean planeTest(Mesh.Vertex a, Mesh.Vertex b, Mesh.Vertex c, Pair<Vector3i,Vector3f> voxel) {
         /* Retrieve center and corner of voxel. */
         Vector3f vcenter = voxel.second;
         Vector3f vcorner = (new Vector3f(this.rc, this.rc, this.rc)).add(vcenter);
 
         /* Calculate the vectors spanning the plane of the facepolyon and its plane-normal. */
-        Vector3f ab = (new Vector3f(b)).sub(a);
-        Vector3f ac = (new Vector3f(c)).sub(a);
+        Vector3f ab = (new Vector3f(b.getPosition())).sub(a.getPosition());
+        Vector3f ac = (new Vector3f(c.getPosition())).sub(a.getPosition());
         Vector3f planenorm = (new Vector3f(ab)).cross(ac);
 
         /* Calculate the distance t for enclosing planes. */
@@ -231,9 +232,14 @@ public class Voxelizer {
      * @param grid VoxelGrid to select voxels from.
      * @return List of voxels that confine the provided vertices.
      */
-    private List<Pair<Vector3i,Vector3f>> enclosingGrid(List<Vector3f> vertices, float[] boundingBox, VoxelGrid grid) {
+    private List<Pair<Vector3i,Vector3f>> enclosingGrid(List<Mesh.Vertex> vertices, float[] boundingBox, VoxelGrid grid) {
         /* Calculate bounding box for provided vertices. */
-        float bounds[] = MeshMathUtil.bounds(vertices);
+        ArrayList<Vector3fc> positions = new ArrayList<>(vertices.size());
+        for (Mesh.Vertex vertex : vertices) {
+            positions.add(vertex.getPosition());
+        }
+
+        float bounds[] = MeshMathUtil.bounds(positions);
 
         /* Derive max and min voxel-indices from bounding-boxes. */
         int max_x = Math.abs((int)Math.ceil(((boundingBox[1]-bounds[0])/this.resolution)));

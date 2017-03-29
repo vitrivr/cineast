@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -76,7 +77,7 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
     @Override
     public void processShot(SegmentContainer sc) {
         /* If Mesh is empty, no feature is persisted. */
-        Mesh mesh = sc.getNormalizedMesh();
+        ReadableMesh mesh = sc.getNormalizedMesh();
         if (mesh == null || mesh.isEmpty()) {
             return;
         }
@@ -97,7 +98,7 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
      * @param mesh Mesh for which to extract the Lightfield Fourier descriptors.
      * @return List of descriptors for mesh.
      */
-    protected List<Pair<Integer,float[]>> featureVectorsFromMesh(Mesh mesh) {
+    protected List<Pair<Integer,float[]>> featureVectorsFromMesh(ReadableMesh mesh) {
         /* Prepare empty list of features. */
         List<Pair<Integer,float[]>> features = new ArrayList<>(20);
 

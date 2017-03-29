@@ -18,6 +18,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractLightfieldDescriptor;
@@ -52,7 +53,7 @@ public class LightfieldFourier extends AbstractLightfieldDescriptor {
     private final FastFourierTransformer transformer;
 
     /**
-     * Default constructor for LightfieldDescriptor.
+     * Default constructor for LightfieldFourier class.
      */
     public LightfieldFourier() {
         super("features_lightfieldfourier", 2.0f, MathConstants.VERTICES_3D_DODECAHEDRON);
@@ -81,7 +82,7 @@ public class LightfieldFourier extends AbstractLightfieldDescriptor {
         List<Pair<Integer,float[]>> features;
 
         /* Extract features from either the provided Mesh (1) or image (2). */
-        Mesh mesh = sc.getNormalizedMesh();
+        ReadableMesh mesh = sc.getNormalizedMesh();
         if (mesh.isEmpty()) {
             BufferedImage image = ImageUtil.createResampled(sc.getAvgImg().getBufferedImage(), SIZE, SIZE, Image.SCALE_SMOOTH);
             features = this.featureVectorsFromImage(image,POSEIDX_UNKNOWN);
@@ -101,7 +102,7 @@ public class LightfieldFourier extends AbstractLightfieldDescriptor {
 
 
                 if (poseidx != feature.first && feature.first != POSEIDX_UNKNOWN) {
-                    score /= 2.0f;
+                    score *= 0.9;
                 }
 
                 double newValue = Math.max(partialMap.get(id), score);

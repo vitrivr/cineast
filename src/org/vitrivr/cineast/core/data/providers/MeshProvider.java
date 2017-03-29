@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.data.providers;
 
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
+import org.vitrivr.cineast.core.data.m3d.WritableMesh;
 
 /**
  * @author rgasser
@@ -18,7 +20,7 @@ public interface MeshProvider {
      *
      * @return Original mesh.
      */
-    default Mesh getMesh() {
+    default ReadableMesh getMesh() {
         return Mesh.EMPTY;
     }
 
@@ -27,7 +29,7 @@ public interface MeshProvider {
      *
      * @return Copy of the original 3D mesh.
      */
-    default Mesh copyMesh() {
+    default WritableMesh copyMesh() {
         return new Mesh(this.getMesh());
     }
 
@@ -41,7 +43,7 @@ public interface MeshProvider {
      *
      * @return KHL transformed mesh.
      */
-    default Mesh getNormalizedMesh() {
+    default ReadableMesh getNormalizedMesh() {
         return Mesh.EMPTY;
     }
 
@@ -50,7 +52,7 @@ public interface MeshProvider {
      *
      * @return Copy of the KHL transformed 3D mesh.
      */
-    default Mesh copyNormalizedMesh() {
+    default WritableMesh copyNormalizedMesh() {
         return new Mesh(this.getNormalizedMesh());
     }
 }

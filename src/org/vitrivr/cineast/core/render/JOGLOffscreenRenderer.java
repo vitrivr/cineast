@@ -7,7 +7,9 @@ import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
+import org.joml.Vector4i;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 
 import java.awt.*;
@@ -183,16 +185,14 @@ public class JOGLOffscreenRenderer implements Renderer {
      *
      * @param mesh Mesh that should be rendered
      */
-    public void assemble(Mesh mesh) {
+    public void assemble(ReadableMesh mesh) {
         int meshList = gl.glGenLists(1);
         this.objects.add(meshList);
         gl.glNewList(meshList, GL_COMPILE);
         {
             for (Mesh.Face face : mesh.getFaces()) {
                 /* Extract normals and vertices. */
-                java.util.List<Vector3f> vertices = face.getVertices();
-                java.util.List<Vector3f> colors = face.getColors();
-                java.util.List<Vector3f> normals = face.getNormals();
+                List<Mesh.Vertex> vertices = face.getVertices();
 
                 /* Determine gl_draw_type. */
                 int gl_draw_type = GL_TRIANGLES;
@@ -201,22 +201,10 @@ public class JOGLOffscreenRenderer implements Renderer {
                 /* Drawing is handled differently depending on whether its a TRI or QUAD mesh. */
                 gl.glBegin(gl_draw_type);
                 {
-                    gl.glColor3f(colors.get(0).x, colors.get(0).y, colors.get(0).z);
-                    gl.glVertex3f(vertices.get(0).x, vertices.get(0).y, vertices.get(0).z);
-                    gl.glColor3f(colors.get(1).x, colors.get(1).y, colors.get(1).z);
-                    gl.glVertex3f(vertices.get(1).x, vertices.get(1).y, vertices.get(1).z);
-                    gl.glColor3f(colors.get(2).x, colors.get(2).y, colors.get(2).z);
-                    gl.glVertex3f(vertices.get(2).x, vertices.get(2).y, vertices.get(2).z);
-                    if (face.getType() == Mesh.FaceType.QUAD) {
-                        gl.glColor3f(colors.get(3).x, colors.get(3).y, colors.get(3).z);
-                        gl.glVertex3f(vertices.get(3).x, vertices.get(3).y, vertices.get(3).z);
-                    }
-
-                    if (normals != null && normals.size() >= 3) {
-                        gl.glNormal3f(normals.get(0).x, normals.get(0).y, normals.get(0).z);
-                        gl.glNormal3f(normals.get(1).x, normals.get(1).y, normals.get(1).z);
-                        gl.glNormal3f(normals.get(2).x, normals.get(2).y, normals.get(2).z);
-                        if (face.getType() == Mesh.FaceType.QUAD) gl.glNormal3f(normals.get(3).x, normals.get(3).y, normals.get(3).z);
+                    for (Mesh.Vertex vertex : vertices) {
+                        gl.glColor3f(vertex.getColor().x(), vertex.getColor().y(), vertex.getColor().z());
+                        gl.glVertex3f(vertex.getPosition().x(), vertex.getPosition().y(), vertex.getPosition().z());
+                        gl.glNormal3f(vertex.getNormal().x(), vertex.getNormal().y(), vertex.getNormal().z());
                     }
                 }
                 gl.glEnd();

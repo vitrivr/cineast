@@ -1,11 +1,13 @@
 package org.vitrivr.cineast.core.data.m3d;
 
-import org.joml.Vector3f;
-import org.joml.Vector3i;
-import org.joml.Vector4i;
+import org.apache.commons.math3.util.FastMath;
+import org.joml.*;
+
 import org.vitrivr.cineast.core.util.mesh.MeshMathUtil;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author rgasser
@@ -15,65 +17,184 @@ import java.util.*;
 public class Mesh implements WritableMesh {
 
     /** The default, empty mesh. */
-    public static final Mesh EMPTY = new Mesh(1,1,1);
+    public static final Mesh EMPTY = new Mesh(1,1);
 
-    /** A face defined by the normal and the vertex-indices. */
+    /**
+     * A single vertex, which contains all the information about position, normal and color.
+     */
+    public class Vertex {
+        /** Position of the vertex in 3D space. */
+        private final Vector3f position;
+
+        /** The vertex-normal. */
+        private final Vector3f normal;
+
+        /** Color of the vertex. */
+        private final Vector3f color;
+
+        /** List of faces the current vertex participates in. */
+        private final List<Face> faces = new ArrayList<>();
+
+        /**
+         *
+         * @param position
+         */
+        public Vertex(Vector3f position) {
+            this(position, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
+        }
+
+        /**
+         *
+         * @param position
+         * @param normal
+         * @param color
+         */
+        public Vertex(Vector3f position, Vector3f normal, Vector3f color) {
+            this.position = position;
+            this.normal = normal;
+            this.color = color;
+        }
+
+        /**
+         * Returns the number of faces this vertex participates in.
+         *
+         * @return Number of faces.
+         */
+        public int numberOfFaces() {
+            return this.faces.size();
+        }
+
+
+        /**
+         * Getter to the position vector.
+         *
+         * @return Immutable version of the position vector.
+         */
+        public Vector3fc getPosition() {
+            return this.position;
+        }
+
+        /**
+         *  Getter to the vertex normal.
+         *
+         * @return Immutable version of the vertex normal.
+         */
+        public Vector3fc getNormal() {
+            return this.normal;
+        }
+
+        /**
+         * Getter to the vertex color.
+         *
+         * @return Immutable version of the vertex normal.
+         */
+        public Vector3fc getColor() {
+            return this.color;
+        }
+
+        /**
+         * Attaches the vertex to a face, which causes the vertex-normal
+         * to be re-calculated.
+         *
+         * @param face Face to which the vertex should be attached.
+         */
+        private void attachToFace(Face face) {
+            if (!this.faces.contains(face)) {
+                this.faces.add(face);
+                this.rebuild();
+            }
+        }
+
+        /**
+         * Detaches the vertex from a face, which causes the vertex-normal
+         * to be re-calculated.
+         *
+         * @param face Face to which the vertex should be attached.
+         */
+        private void detachFromFace(Face face) {
+            if (!this.faces.contains(face)) {
+                this.faces.remove(face);
+                this.rebuild();
+            }
+        }
+
+        /**
+         * Re-calculates the vertex-normal by calculating the weighted mean of all
+         * face-normals this vertex participates in.
+         */
+        private void rebuild() {
+            this.normal.x = 0.0f;
+            this.normal.y = 0.0f;
+            this.normal.z = 0.0f;
+
+            for (Face face : this.faces) {
+                Vector3f fn = face.normal();
+                if (!Float.isNaN(fn.x) && !Float.isNaN(fn.y) && !Float.isNaN(fn.z)) {
+                    this.normal.x += fn.x / this.numberOfFaces();
+                    this.normal.y += fn.y / this.numberOfFaces();
+                    this.normal.z += fn.z / this.numberOfFaces();
+                }
+            }
+        }
+    }
+
+    /**
+     * A face defined that is made up by either three or four vertices.
+     */
     public class Face {
-        private FaceType type;
-        private Vector4i vertexIndices;
-        private Vector4i normalIndices;
+        /** Type of face, defaults to TRI (= three vertices). */
+        private final FaceType type;
 
+        /** List of vertices in this face. */
+        private final List<Vertex> vertices = new ArrayList<>();
+
+        /** Vertex indices. */
+        private final Vector4i vertexIndices;
+
+        /**
+         * Getter for the face's type.
+         *
+         * @return Type of the face.
+         */
         public final FaceType getType() {
             return type;
         }
-        public final Vector4i getVertexIndices() {
-            return vertexIndices;
-        }
-        public final Vector4i getNormalIndices() {
-            return normalIndices;
-        }
 
         /**
+         * Constructor for a face.
          *
-         * @return
+         * @param indices
          */
-        public final List<Vector3f> getVertices() {
-            List<Vector3f> vertices = new ArrayList<>((this.type == FaceType.QUAD) ? 4 : 3);
-            vertices.add(Mesh.this.vertices.get(this.vertexIndices.x - 1));
-            vertices.add(Mesh.this.vertices.get(this.vertexIndices.y - 1));
-            vertices.add(Mesh.this.vertices.get(this.vertexIndices.z - 1));
-            if (this.type == FaceType.QUAD) vertices.add(Mesh.this.vertices.get(this.vertexIndices.w - 1));
-            return vertices;
-        }
-
-        /**
-         *
-         * @return
-         */
-        public final List<Vector3f> getColors() {
-            List<Vector3f> colors = new ArrayList<>((this.type == FaceType.QUAD) ? 4 : 3);
-            colors.add(Mesh.this.colors.get(this.vertexIndices.x - 1));
-            colors.add(Mesh.this.colors.get(this.vertexIndices.y - 1));
-            colors.add(Mesh.this.colors.get(this.vertexIndices.z - 1));
-            if (this.type == FaceType.QUAD) colors.add(Mesh.this.colors.get(this.vertexIndices.w - 1));
-            return colors;
-        }
-
-        /**
-         *
-         * @return
-         */
-        public final List<Vector3f> getNormals() {
-            if (this.normalIndices != null) {
-                List<Vector3f> normals = new ArrayList<>((this.type == FaceType.QUAD) ? 4 : 3);
-                normals.add(Mesh.this.normals.get(this.normalIndices.x - 1));
-                normals.add(Mesh.this.normals.get(this.normalIndices.y - 1));
-                normals.add(Mesh.this.normals.get(this.normalIndices.z - 1));
-                if (this.type == FaceType.QUAD) normals.add(Mesh.this.normals.get(this.normalIndices.w - 1));
-                return normals;
+        private Face(Vector4i indices) {
+            /* If the w-index is greater than -1 a QUAD face is created. */
+            if (indices.w > -1) {
+                this.type = FaceType.QUAD;
             } else {
-                return null;
+                this.type = FaceType.TRI;
             }
+
+            /* Add vertices to face. */
+            this.vertices.add(Mesh.this.vertices.get(indices.x - 1));
+            this.vertices.add(Mesh.this.vertices.get(indices.y - 1));
+            this.vertices.add(Mesh.this.vertices.get(indices.z - 1));
+            if (this.getType() == FaceType.QUAD) this.vertices.add(Mesh.this.vertices.get(indices.w - 1));
+
+            /* Attach face to vertices. */
+            Mesh.this.vertices.get(indices.x - 1).attachToFace(this);
+            Mesh.this.vertices.get(indices.y - 1).attachToFace(this);
+            Mesh.this.vertices.get(indices.z - 1).attachToFace(this);
+            if (this.getType() == FaceType.QUAD) Mesh.this.vertices.get(indices.w - 1).attachToFace(this);
+
+            this.vertexIndices = indices;
+        }
+
+        /**
+         * Returns the list of vertices that make up this face.
+         *
+         * @return Unmodifiable list of vertices.
+         */
+        public final List<Vertex> getVertices() {
+            return Collections.unmodifiableList(this.vertices);
         }
 
         /**
@@ -84,22 +205,44 @@ public class Mesh implements WritableMesh {
         public double area() {
             if (this.type == FaceType.TRI) {
                 /* Extract vertices. */
-                Vector3f v1 = Mesh.this.vertices.get(this.vertexIndices.x - 1);
-                Vector3f v2 = Mesh.this.vertices.get(this.vertexIndices.y - 1);
-                Vector3f v3 = Mesh.this.vertices.get(this.vertexIndices.z - 1);
+                Vector3f v1 = this.vertices.get(0).position;
+                Vector3f v2 = this.vertices.get(1).position;
+                Vector3f v3 = this.vertices.get(2).position;
 
-                /* Calculates and returns the area of the face using Heron's Formula. */
-                Vector3f s1 = new Vector3f(v1).sub(v2);
-                Vector3f s2 = new Vector3f(v2).sub(v3);
-                Vector3f s3 = new Vector3f(v3).sub(v1);
-                double s = (s1.length() + s2.length() + s3.length())/2.0f;
-                return Math.sqrt(s*(s-s1.length())*(s-s2.length())*(s-s1.length()));
+                /* Generate the edges and sort them in ascending order. */
+                List<Vector3f> edges = new ArrayList<>();
+                edges.add(new Vector3f(v1).sub(v2));
+                edges.add(new Vector3f(v2).sub(v3));
+                edges.add(new Vector3f(v3).sub(v1));
+
+                edges.sort((o1, o2) -> {
+                    float difference = o1.length() - o2.length();
+                    if (difference < 0) {
+                        return -1;
+                    } else if (difference > 0) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+
+                float a = edges.get(2).length();
+                float b = edges.get(1).length();
+                float c = edges.get(0).length();
+
+                /* Returns the area of the triangle according to Heron's Formula. */
+                double area = 0.25 * FastMath.sqrt((a+(b+c)) * (c-(a-b)) * (c+(a-b)) * (a+(b-c)));
+                if (Double.isNaN(area)) {
+                    return 0.0f;
+                } else {
+                    return area;
+                }
             } else {
                 /* Extract vertices. */
-                Vector3f v1 = Mesh.this.vertices.get(this.vertexIndices.x - 1);
-                Vector3f v2 = Mesh.this.vertices.get(this.vertexIndices.y - 1);
-                Vector3f v3 = Mesh.this.vertices.get(this.vertexIndices.z - 1);
-                Vector3f v4 = Mesh.this.vertices.get(this.vertexIndices.w - 1);
+                Vector3f v1 = this.vertices.get(0).position;
+                Vector3f v2 = this.vertices.get(1).position;
+                Vector3f v3 = this.vertices.get(2).position;
+                Vector3f v4 = this.vertices.get(3).position;
 
                 /* Calculates the area of the face using Bretschneider's Formula. */
                 Vector3f s1 = new Vector3f(v1).sub(v2);
@@ -109,8 +252,19 @@ public class Mesh implements WritableMesh {
 
                 Vector3f d1 = new Vector3f(v1).sub(v3);
                 Vector3f d2 = new Vector3f(v2).sub(v4);
-                return (1.0/4.0)*Math.sqrt(4*Math.pow(d1.length(),2)*Math.pow(d2.length(),2) - Math.pow((Math.pow(s2.length(),2) + Math.pow(s4.length(),2)-Math.pow(s1.length(),2)-Math.pow(s3.length(),2)),2));
+                return 0.25 * FastMath.sqrt(4*FastMath.pow(d1.length(),2)*FastMath.pow(d2.length(),2) - FastMath.pow((FastMath.pow(s2.length(),2) + FastMath.pow(s4.length(),2)-FastMath.pow(s1.length(),2)-FastMath.pow(s3.length(),2)),2));
             }
+        }
+
+        /**
+         * Calculates and returns the face normal.
+         *
+         * @return
+         */
+        public Vector3f normal() {
+            Vector3f e1 = new Vector3f(this.vertices.get(1).position).sub(this.vertices.get(0).position);
+            Vector3f e2 = new Vector3f(this.vertices.get(2).position).sub(this.vertices.get(0).position);
+            return e1.cross(e2).normalize();
         }
 
         /**
@@ -120,11 +274,9 @@ public class Mesh implements WritableMesh {
          */
         public Vector3f centroid() {
             Vector3f centroid = new Vector3f(0f,0f,0f);
-            centroid.add(Mesh.this.vertices.get(this.vertexIndices.x - 1));
-            centroid.add(Mesh.this.vertices.get(this.vertexIndices.y - 1));
-            centroid.add(Mesh.this.vertices.get(this.vertexIndices.z - 1));
-            if (this.type == FaceType.QUAD) centroid.add(Mesh.this.vertices.get(this.vertexIndices.w - 1));
-
+            for (Vertex vertex : this.vertices) {
+                centroid.add(vertex.position);
+            }
 
             if (this.type == FaceType.TRI) {
                 centroid.div(3.0f);
@@ -142,46 +294,34 @@ public class Mesh implements WritableMesh {
     }
 
     /** List of vertices in the Mesh. */
-    private final List<Vector3f> vertices;
-
-    /** List of vertex normals in the Mesh. */
-    private final List<Vector3f> normals;
+    private final List<Vertex> vertices;
 
     /** List of faces in the mesh. */
     private final List<Face> faces;
 
-    /**
-     * List of color vectors in the mesh. Each vector contains an RGB color and the color indices
-     * correspond to the indices of the vertices (i.e. color at positionCamera 1 belongs to vertex at same positionCamera).
-     */
-    private List<Vector3f> colors = new ArrayList<>();
+    /** The position of the Mesh's barycenter. Its value is lazily calculated during invocation of the @see barycenter() method. */
+    private Vector3f barycenter;
+
+    /** The surface-area of the mesh. Its value is lazily calculated during invocation of the @see surfaceArea() method. */
+    private Double surfaceArea;
+
+    /** The bounding box of the mesh. Its value is lazily calculated during invocation of the @see bounds() method. */
+    private float[] boundingbox;
 
     /**
      * Copy constructor for Mesh.
      *
      * @param mesh Mesh that should be copied.
      */
-    public Mesh(Mesh mesh) {
-        this(mesh.numberOfFaces(), mesh.numberOfNormals(), mesh.numberOfVertices());
+    public Mesh(ReadableMesh mesh) {
+        this(mesh.numberOfFaces(), mesh.numberOfVertices());
 
-        for (Vector3f vertex : mesh.vertices) {
-            this.vertices.add(new Vector3f(vertex));
+        for (Vertex vertex : mesh.getVertices()) {
+            this.addVertex(new Vector3f(vertex.position), new Vector3f(vertex.color), new Vector3f(vertex.normal));
         }
 
-        for (Vector3f normal : mesh.normals) {
-            this.normals.add(new Vector3f(normal));
-        }
-
-        for (Vector3f color : mesh.colors) {
-            this.colors.add(new Vector3f(color));
-        }
-
-        for (Face face : mesh.faces) {
-            Mesh.Face newFace = new Face();
-            newFace.type = face.type;
-            newFace.vertexIndices = new Vector4i(face.vertexIndices.x, face.vertexIndices.y, face.vertexIndices.z, face.vertexIndices.w);
-            if (face.normalIndices != null) newFace.normalIndices = new Vector4i(face.normalIndices.x, face.normalIndices.y, face.normalIndices.z, face.normalIndices.w);
-            this.faces.add(newFace);
+        for (Face face : mesh.getFaces()) {
+            this.addFace(face.vertexIndices);
         }
     }
 
@@ -189,14 +329,11 @@ public class Mesh implements WritableMesh {
      * Default constructor.
      *
      * @param faces Expected number of faces (not a fixed limit).
-     * @param normals Expected number of vertex normals (not a fixed limit).
      * @param vertices  Expected number of vertices (not a fixed limit).
      */
-    public Mesh(int faces, int normals, int vertices) {
+    public Mesh(int faces, int vertices) {
         this.faces = new ArrayList<>(faces);
-        this.vertices = new ArrayList<>(normals);
-        this.normals = new ArrayList<>(vertices);
-        this.colors = new ArrayList<>(vertices);
+        this.vertices = new ArrayList<>(vertices);
     }
 
     /**
@@ -205,8 +342,7 @@ public class Mesh implements WritableMesh {
      * @param vertex
      */
     public void addVertex(Vector3f vertex) {
-        this.vertices.add(vertex);
-        this.colors.add(new Vector3f(1.0f, 1.0f, 1.0f));
+        this.addVertex(vertex, new Vector3f(1.0f, 1.0f, 1.0f));
     }
 
     /**
@@ -215,34 +351,16 @@ public class Mesh implements WritableMesh {
      * @param vertex
      */
     public void addVertex(Vector3f vertex, Vector3f color) {
-        this.vertices.add(vertex);
-        this.colors.add(color);
-    }
-
-    /**
-     *
-     * @param color
-     */
-    public void updateColor(Vector3f color) {
-        for (int i = 0;i<this.colors.size();i++) {
-            this.colors.set(i, color);
-        }
+        this.addVertex(vertex, color, new Vector3f(0.0f, 0.0f, 0.0f));
     }
 
     /**
      * Adds an vector defining a vertex to the Mesh.
-     */
-    public void updateColor(int vertexIndex, Vector3f color) {
-        this.colors.set(vertexIndex, color);
-    }
-
-    /**
-     * Adds a vector defining a vertex normal to the Mesh.
      *
-     * @param normal Vector defining the vertex-normal.
+     * @param vertex
      */
-    public void addNormal(Vector3f normal) {
-        this.normals.add(normal);
+    public void addVertex(Vector3f vertex, Vector3f color, Vector3f normal) {
+        this.vertices.add(new Vertex(vertex, color, normal));
     }
 
     /**
@@ -250,13 +368,9 @@ public class Mesh implements WritableMesh {
      * vertex normals.
      *
      * @param vertices Vector3i containing the indices of the vertices.
-     * @param normals Vector3i containing the indices of the normal vectors. May be null.
      */
-    public void addFace(Vector3i vertices, Vector3i normals) {
-        Mesh.Face face = new Face();
-        face.type = FaceType.TRI;
-        face.vertexIndices = new Vector4i(vertices, -1);
-        if (normals!= null) face.normalIndices = new Vector4i(normals, -1);
+    public void addFace(Vector3i vertices) {
+        Mesh.Face face = new Face(new Vector4i(vertices, -1));
         this.faces.add(face);
     }
 
@@ -265,32 +379,20 @@ public class Mesh implements WritableMesh {
      * vertex normals.
      *
      * @param vertices Vector4i containing the indices of the vertices.
-     * @param normals Vector4i containing the indices of the normal vectors. May be null.
      */
-    public void addFace(Vector4i vertices, Vector4i normals) {
-        Mesh.Face face = new Face();
-        face.type = FaceType.QUAD;
-        face.vertexIndices = vertices;
-        face.normalIndices = normals;
+    public void addFace(Vector4i vertices) {
+        Mesh.Face face = new Face(vertices);
         this.faces.add(face);
     }
 
     /**
-     * Calculates and returns the Mesh bounding-box
+     * Accessor for an individual vertex.
      *
-     * @return Bounding-box of the mesh.
+     * @param vertexIndex Index of the vertex that should be returned.
+     * @return Vertex.
      */
-    public float[] getBoundingBox() {
-        return MeshMathUtil.bounds(this);
-    }
-
-    /**
-     * Calculates and returns the Mesh barycenter.
-     *
-     * @return Barycenter of the Mesh.
-     */
-    public Vector3f getBarycenter() {
-        return MeshMathUtil.barycenter(this);
+    public Vertex getVertex(int vertexIndex) {
+        return this.vertices.get(vertexIndex);
     }
 
     /**
@@ -298,26 +400,8 @@ public class Mesh implements WritableMesh {
      *
      * @return Unmodifiable list of vertices.
      */
-    public List<Vector3f> getVertices() {
+    public List<Vertex> getVertices() {
         return Collections.unmodifiableList(this.vertices);
-    }
-
-    /**
-     * Returns the list of vertex-normals. The returned collection is unmodifiable.
-     *
-     * @return Unmodifiable list of vertex normals.
-     */
-    public List<Vector3f> getNormals() {
-        return Collections.unmodifiableList(this.normals);
-    }
-
-    /**
-     * Returns the list of vertex-normals. The returned collection is unmodifiable.
-     *
-     * @return Unmodifiable list of vertex normals.
-     */
-    public List<Vector3f> getColors() {
-        return Collections.unmodifiableList(this.colors);
     }
 
     /**
@@ -327,15 +411,6 @@ public class Mesh implements WritableMesh {
      */
     public List<Face> getFaces() {
         return Collections.unmodifiableList(faces);
-    }
-
-    /**
-     * Returns the number of normal vectors in this Mesh.
-     *
-     * @return Number of normal vectors.
-     */
-    public final int numberOfNormals() {
-        return this.normals.size();
     }
 
     /**
@@ -357,24 +432,114 @@ public class Mesh implements WritableMesh {
     }
 
     /**
-     * Returns the total surface area of the Mesh.
-     *
-     * @return Surface area of the mesh.
-     */
-    public final double surfaceArea() {
-        double area = 0.0;
-        for (Face face : this.faces) {
-            area += face.area();
-        }
-        return area;
-    }
-
-    /**
      * Indicates, whether the mesh is an empty Mesh or not
      *
      * @return True if mesh is empty, false otherwise.
      */
     public final boolean isEmpty() {
         return this.faces.isEmpty();
+    }
+
+    /**
+     * Returns the total surface area of the Mesh.
+     *
+     * @return Surface area of the mesh.
+     */
+    public final double surfaceArea() {
+        if (this.surfaceArea == null) {
+            this.surfaceArea = 0.0;
+            for (Face face : this.faces) {
+                this.surfaceArea += face.area();
+            }
+        }
+        return this.surfaceArea;
+    }
+
+    /**
+     * Calculates and returns the Mesh's bounding-box
+     *
+     * @return Bounding-box of the mesh.
+     */
+    public float[] bounds() {
+        if (this.boundingbox == null) {
+            this.boundingbox = MeshMathUtil.bounds(this);
+        }
+        return this.boundingbox;
+    }
+
+    /**
+     * Calculates and returns the Mesh's barycenter.
+     *
+     * @return Barycenter of the Mesh.
+     */
+    public Vector3f barycenter() {
+        if (this.barycenter == null) {
+            this.barycenter = MeshMathUtil.barycenter(this);
+        }
+        return this.barycenter;
+    }
+
+    /**
+     * Moves the Mesh in the direction of the provided vector.
+     *
+     * @param translation Vector describing the translation in the three directions.
+     */
+    public final void move(Vector3f translation) {
+        Matrix4f translationMatrix = new Matrix4f().translation(translation);
+        for (Mesh.Vertex v : this.vertices) {
+            v.position.mulPosition(translationMatrix);
+        }
+        if (this.barycenter != null) {
+            this.barycenter.mulPosition(translationMatrix);
+        }
+    }
+
+    /**
+     * Scales the Mesh by the provided factor. This will reset the surfaceArea and bounding-box property.
+     *
+     * @param factor Factor by which the Mesh should be scaled. Values < 1.0 will cause the Mesh to shrink.
+     */
+    public final void scale(float factor) {
+        Matrix4f scaling = new Matrix4f().scale(factor);
+        for (Mesh.Vertex v : this.vertices) {
+            v.position.mulPosition(scaling);
+        }
+
+        /* Reset surface-area and bounding box, which are not invariant under scaling. */
+        this.surfaceArea = null;
+        this.boundingbox = null;
+    }
+
+    /**
+     * Applies a transformation matrix on the Mesh by applying it to all its vertices.
+     *
+     * <strong>Important: </strong> Because transformation matrices may invalidate all derived properties
+     * like barycenter or surfaceArea, all this fields are reset when invoking this method.
+     *
+     * @param transformation Transformation matrix that should be applied.
+     */
+    public final void transform(Matrix4f transformation) {
+        for (Mesh.Vertex v : this.vertices) {
+            v.position.mulPosition(transformation);
+        }
+
+        /* Reset surface-area and bounding box, which are not invariant under scaling. */
+        this.surfaceArea = null;
+        this.boundingbox = null;
+        this.barycenter = null;
+    }
+
+    /**
+     * Updates the color of a vertex.
+     *
+     * @param vertexIndex Index of the vertex that should be upadated.
+     * @param color New color of the vertex.
+     */
+    @Override
+    public void updateColor(int vertexIndex, Color color) {
+        Vertex vertex = this.vertices.get(vertexIndex);
+        vertex.color.x = color.getRed()/255.0f;
+        vertex.color.y = color.getBlue()/255.0f;
+        vertex.color.z = color.getGreen()/255.0f;
     }
 }

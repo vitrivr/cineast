@@ -1,8 +1,12 @@
 package org.vitrivr.cineast.core.util.mesh;
 
 import org.joml.Vector3f;
+import org.joml.Vector3i;
+import org.joml.Vector4i;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.WritableMesh;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -21,17 +25,34 @@ public final class MeshColoringUtil {
      *
      * @param mesh Mesh that needs coloring.
      */
-    public static void color(Mesh mesh) {
-        List<Vector3f> vertices = mesh.getVertices();
-        Vector3f center = MeshMathUtil.barycenter(mesh);
-        Vector3f farthestVertex = MeshMathUtil.farthestVertex(mesh, center);
-        float ds_max = center.distance(farthestVertex);
-        int i = 0;
-        for (Vector3f v : vertices) {
-            float ds = center.distance(v);
-            float colour =  ds/ds_max;
-            mesh.updateColor(i, new Vector3f(colour, colour, colour));
-            i++;
+    public static void color(WritableMesh mesh) {
+        Vector3f center = mesh.barycenter();
+        Mesh.Vertex farthestVertex = MeshMathUtil.farthestVertex(mesh, center);
+        float ds_max = center.distance(farthestVertex.getPosition());
+        for (int i=0; i<mesh.numberOfVertices(); i++) {
+            float gray = center.distance(mesh.getVertex(i).getPosition())/ds_max;
+            Color color =  new Color(gray,gray,gray);
+            mesh.updateColor(i, color);
+        }
+    }
+
+    /**
+     *
+     * @param mesh
+     */
+    public static void normalColoring(WritableMesh mesh) {
+        Vector3f axis = new Vector3f(1.0f,0.0f, 0.0f);
+
+        Vector3f center = mesh.barycenter();
+        Mesh.Vertex farthestVertex = MeshMathUtil.farthestVertex(mesh, center);
+        float ds_max = center.distance(farthestVertex.getPosition());
+
+        for (int i=0; i<mesh.numberOfVertices(); i++) {
+            float hue = (float)(axis.angle(mesh.getVertex(i).getNormal())/Math.PI);
+            float saturation = center.distance(mesh.getVertex(i).getPosition())/ds_max;
+
+            Color color = Color.getHSBColor(hue, saturation, 1.0f);
+            mesh.updateColor(i, color);
         }
     }
 }

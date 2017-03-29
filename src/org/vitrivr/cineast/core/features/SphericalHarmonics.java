@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 import org.vitrivr.cineast.core.data.m3d.Voxelizer;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -49,12 +50,11 @@ public class SphericalHarmonics extends AbstractFeatureModule {
     @Override
     public void processShot(SegmentContainer shot) {
         /* Get the normalized Mesh. */
-        Mesh mesh = shot.getNormalizedMesh();
+        ReadableMesh mesh = shot.getNormalizedMesh();
         if (mesh == null || mesh.isEmpty()) return;
 
         /* Extract feature and persist it. */
-        float[] feature = this.featureVectorsFromMesh(mesh, shot.getId()
-        );
+        float[] feature = this.featureVectorsFromMesh(mesh, shot.getId());
         this.persist(shot.getId(), new FloatVectorImpl(feature));
     }
 
@@ -67,7 +67,7 @@ public class SphericalHarmonics extends AbstractFeatureModule {
     @Override
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
         /* Get the normalized Mesh. */
-        Mesh mesh = sc.getNormalizedMesh();
+        ReadableMesh mesh = sc.getNormalizedMesh();
         if (mesh == null || mesh.isEmpty()) new ArrayList<>();
 
         /* This feature module always uses the Euclidian Distance!. */
@@ -101,7 +101,7 @@ public class SphericalHarmonics extends AbstractFeatureModule {
      * @param mesh
      * @return
      */
-    private float[] featureVectorsFromMesh(Mesh mesh, String id) {
+    private float[] featureVectorsFromMesh(ReadableMesh mesh, String id) {
 
         final int halfGridSize = GRID_SIZE/2;
         final float radiusincrement = 0.125f; /* Increment of the radius during calculation of the descriptors. Results in 7 different radii. */

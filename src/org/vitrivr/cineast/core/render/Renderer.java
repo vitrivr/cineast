@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.render;
 
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 
 import java.awt.*;
@@ -31,7 +32,7 @@ public interface Renderer {
      *
      * @param mesh Mesh that should be rendered
      */
-    void assemble(Mesh mesh);
+    void assemble(ReadableMesh mesh);
 
     /**
      * Assembles a new VoxelGrid object and thereby adds it to the list of objects that

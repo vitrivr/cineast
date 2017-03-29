@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.WritableMesh;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -116,11 +117,11 @@ public class Model3DThumbnailExporter implements Extractor {
         Path directory = this.destination.resolve(shot.getSuperId());
         try {
             Files.createDirectories(directory);
-            Mesh mesh = shot.copyNormalizedMesh();
+            WritableMesh mesh = shot.copyNormalizedMesh();
 
             if (!mesh.isEmpty()) {
                 /* Colors the mesh. */
-                MeshColoringUtil.color(mesh);
+                MeshColoringUtil.normalColoring(mesh);
 
                 BufferedImage image = null;
                 if (this.renderer.retain()) {

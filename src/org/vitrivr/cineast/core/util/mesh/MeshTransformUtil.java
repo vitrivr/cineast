@@ -10,6 +10,8 @@ import org.joml.Vector3f;
 
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
+import org.vitrivr.cineast.core.data.m3d.WritableMesh;
 
 import java.util.*;
 
@@ -71,12 +73,12 @@ public final class MeshTransformUtil {
      * @param mesh Mesh that should be transformed.
      * @param size Length of the longest edge of the mesh's bounding box (for scaling).
      */
-    public static void khlTransformInPlace(Mesh mesh, float size) {
+    public static void khlTransformInPlace(WritableMesh mesh, float size) {
         /* 1) Center the mesh. */
         MeshTransformUtil.centerInPlace(mesh);
 
         /* 2) Rotate the mesh along its PCA axis. */
-        Vector3f barycenter = MeshMathUtil.barycenter(mesh);
+        Vector3f barycenter = mesh.barycenter();
 
         /* Prepare an empty covariance matrix. */
         DenseMatrix64F covariance = new DenseMatrix64F(3,3);
@@ -84,8 +86,8 @@ public final class MeshTransformUtil {
         List<Mesh.Face> faces = mesh.getFaces();
         long vertices = 0;
         for (Mesh.Face face : faces) {
-            for (Vector3f v : face.getVertices()) {
-                Vector3f vm = (new Vector3f(v)).sub(barycenter);
+            for (Mesh.Vertex v : face.getVertices()) {
+                Vector3f vm = (new Vector3f(v.getPosition())).sub(barycenter);
                 covariance.add(0,0, vm.x * vm.x);
                 covariance.add(0,1, vm.y * vm.x);
                 covariance.add(0,2, vm.z * vm.x);
@@ -119,14 +121,7 @@ public final class MeshTransformUtil {
         /* 2c) Apply second rotation: Second largest spread should occur along the y-axis. */
         float angleY = yaxis.angle(eigenvectors.get(1).second);
         rotation.rotate(angleY, xaxis);
-
-        for (Vector3f vertex : mesh.getVertices()) {
-            vertex.mulPosition(rotation);
-        }
-
-        for (Vector3f normal : mesh.getNormals()) {
-            normal.mulPosition(rotation);
-        }
+        mesh.transform(rotation);
 
         /* Scale the mesh. */
         MeshTransformUtil.scaleInPlace(mesh, size);
@@ -141,7 +136,7 @@ public final class MeshTransformUtil {
      * @param size Length of the longest edge of the mesh's bounding box.
      * @return Scaled copy of the original Mesh
      */
-    public static Mesh scale(Mesh mesh, float size) {
+    public static Mesh scale(ReadableMesh mesh, float size) {
         Mesh copy = new Mesh(mesh);
         scaleInPlace(copy, size);
         return copy;
@@ -156,45 +151,10 @@ public final class MeshTransformUtil {
      * @param mesh Mesh that should be scaled.
      * @param size Length of the longest edge of the mesh's bounding box.
      */
-    public static void scaleInPlace(Mesh mesh, float size) {
+    public static void scaleInPlace(WritableMesh mesh, float size) {
         float[] bounds = MeshMathUtil.bounds(mesh);
         float max = Math.max(bounds[0]-bounds[1], Math.max(bounds[2]-bounds[3], bounds[4]-bounds[5]));
-        float factor = size/max;
-
-        Matrix4f scaling = new Matrix4f().scale(factor);
-        for (Vector3f vertex : mesh.getVertices()) {
-            vertex.mulPosition(scaling);
-        }
-    }
-
-    /**
-     * Moves a mesh along the direction of the provided translation vector. This
-     * transformation is done on a copy of the Mesh, which is returned. The original Mesh
-     * is not affected by the operation.
-     *
-     * @param mesh Mesh that should be moved.
-     * @param translation Vector3f describing the translation in space.
-     * @return Moved mesh
-     */
-    public static Mesh move(Mesh mesh, Vector3f translation) {
-        Mesh copy = new Mesh(mesh);
-        moveInPlace(copy, translation);
-        return copy;
-    }
-
-    /**
-     * Moves a mesh along the direction of the provided translation vector.
-     *
-     * *<strong>Important:</strong> This transformation is done in place and affects the original Mesh.
-     *
-     * @param mesh Mesh that should be moved.
-     * @param translation Vector3f describing the translation in space.
-     */
-    public static void moveInPlace(Mesh mesh, Vector3f translation) {
-        Matrix4f translationMatrix = new Matrix4f().translation(translation);
-        for (Vector3f vertex : mesh.getVertices()) {
-            vertex.mulPosition(translationMatrix);
-        }
+        mesh.scale(size/max);
     }
 
     /**
@@ -205,7 +165,7 @@ public final class MeshTransformUtil {
      * @param mesh Mesh that should be centered.
      * @return Centered copy of the original Mesh
      */
-    public static Mesh center(Mesh mesh) {
+    public static Mesh center(ReadableMesh mesh) {
         Mesh copy = new Mesh(mesh);
         centerInPlace(copy);
         return copy;
@@ -218,9 +178,9 @@ public final class MeshTransformUtil {
      *
      * @param mesh Centered Mesh.
      */
-    public static void centerInPlace(Mesh mesh) {
-        Vector3f center = MeshMathUtil.barycenter(mesh);
-        moveInPlace(mesh, center.negate());
+    public static void centerInPlace(WritableMesh mesh) {
+        Vector3f center = mesh.barycenter();
+        mesh.move(center.negate());
     }
 
     /**

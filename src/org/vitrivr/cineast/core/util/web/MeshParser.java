@@ -62,25 +62,24 @@ public class MeshParser extends DataURLParser {
             }
 
             /* Create new Mesh. */
-            Mesh mesh = new Mesh(vertices.size()/3, vertices.size(),vertices.size());
+            Mesh mesh = new Mesh(vertices.size()/3, vertices.size());
 
             /* Add all the vertices and normals in the structure. */
             for (int i=0; i<(vertices.size()/3); i++) {
                 int idx = 3*i;
                 Vector3f vertex = new Vector3f((float)vertices.get(idx).asDouble(), (float)vertices.get(idx+1).asDouble(),(float)vertices.get(idx+2).asDouble());
-                mesh.addVertex(vertex);
-            }
-
-            for (int i=0; i<(normals.size()/3); i++) {
-                int idx = 3*i;
-                Vector3f normal = new Vector3f((float)normals.get(idx).asDouble(), (float)normals.get(idx+1).asDouble(),(float)normals.get(idx+2).asDouble());
-                mesh.addNormal(normal);
+                if (i < normals.size()) {
+                    Vector3f normal = new Vector3f((float)normals.get(idx).asDouble(), (float)normals.get(idx+1).asDouble(),(float)normals.get(idx+2).asDouble());
+                    mesh.addVertex(vertex, new Vector3f(1.0f, 1.0f, 1.0f), normal);
+                } else {
+                    mesh.addVertex(vertex, new Vector3f(1.0f, 1.0f, 1.0f));
+                }
             }
 
             /* Add the faces to the mesh. */
             for (int i = 0; i<mesh.numberOfVertices()/3; i++) {
                 int idx = 3*i;
-                mesh.addFace(new Vector3i(idx+1, idx+2, idx+3), new Vector3i(idx+1, idx+2, idx+3));
+                mesh.addFace(new Vector3i(idx+1, idx+2, idx+3));
             }
 
             return mesh;

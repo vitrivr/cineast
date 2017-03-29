@@ -103,11 +103,10 @@ public class STLMeshDecoder implements Decoder<Mesh> {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         String line = null;
         int idx = 0;
-        Mesh mesh = new Mesh(100,100,100);
+        Mesh mesh = new Mesh(100,100);
         while ((line = br.readLine()) != null && !line.startsWith("endsolid")) {
             if (line.startsWith("facet normal ")) {
                 String[] splitNormal = line.split("\\s+");
-                mesh.addNormal(new Vector3f(Float.parseFloat(splitNormal[2]),Float.parseFloat(splitNormal[3]), Float.parseFloat(splitNormal[4])));
                 while (!(line = br.readLine()).equals("endfacet")) {
                     String[] splitVertex = line.split("\\s+");
                     if (line.startsWith("vertex")) {
@@ -116,7 +115,7 @@ public class STLMeshDecoder implements Decoder<Mesh> {
                 }
 
                  /* Add a new face to the Mesh. */
-                mesh.addFace(new Vector3i(3*idx + 1, 3*idx + 2, 3*idx + 3), new Vector3i(idx + 1, idx + 1, idx + 1));
+                mesh.addFace(new Vector3i(3*idx + 1, 3*idx + 2, 3*idx + 3));
 
                 /* Increment index. */
                 idx += 1;
@@ -127,7 +126,7 @@ public class STLMeshDecoder implements Decoder<Mesh> {
         br.close();
 
         /* This covers the case, where the file starts with 'solid ' but is not an ASCII file. Unfortunately, such files do exist. */
-        if (mesh.numberOfVertices() == 0 && mesh.numberOfNormals() == 0) {
+        if (mesh.numberOfVertices() == 0) {
             LOGGER.warn("The provided ASCII STL file does not seem to contain any normals or vertices. Trying to decode it as binary STL even though it was marked as being ASCII.");
             InputStream newIs = Files.newInputStream(this.inputFile);
             return this.readBinary(newIs, 80);
@@ -158,7 +157,7 @@ public class STLMeshDecoder implements Decoder<Mesh> {
         is.read(sizeBytes, 0, 4);
         long triangles = ((sizeBytes[0] & 0xFF)) | ((sizeBytes[1] & 0xFF) << 8) | ((sizeBytes[2] & 0xFF) << 16) | ((sizeBytes[3] & 0xFF) << 24);
 
-        Mesh mesh = new Mesh((int)triangles, (int)triangles * 3, (int)triangles * 3);
+        Mesh mesh = new Mesh((int)triangles, (int)triangles * 3);
 
         /* Now add all triangles. */
         for (int i=0; i<triangles; i++) {
@@ -166,14 +165,17 @@ public class STLMeshDecoder implements Decoder<Mesh> {
             buffer.rewind();
             is.read(bytes);
 
+            float nx = buffer.getFloat();
+            nx = buffer.getFloat();
+            nx = buffer.getFloat();
+
             /* Add the vertices and the vertex-normal to the mesh. */
-            mesh.addNormal(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
             mesh.addVertex(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
             mesh.addVertex(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
             mesh.addVertex(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
 
             /* Add a new face to the Mesh. */
-            mesh.addFace(new Vector3i(3*i + 1, 3*i + 2, 3*i + 3), new Vector3i(i + 1, i + 1, i + 1));
+            mesh.addFace(new Vector3i(3*i + 1, 3*i + 2, 3*i + 3));
 
             /* Read 2 bytes from the stream and discard them. */
             is.read(bytes, 0, 2);

@@ -8,6 +8,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
@@ -32,7 +33,7 @@ import java.util.Map;
 public class LightfieldZernike extends AbstractLightfieldDescriptor {
 
     /**
-     *
+     * Default constructor for LightfieldZernike class.
      */
     public LightfieldZernike() {
         super("features_lightfieldzernike", 2.0f, MathConstants.VERTICES_3D_DODECAHEDRON);
@@ -59,7 +60,7 @@ public class LightfieldZernike extends AbstractLightfieldDescriptor {
         List<Pair<Integer,float[]>> features;
 
         /* Extract features from either the provided Mesh (1) or image (2). */
-        Mesh mesh = sc.getNormalizedMesh();
+        ReadableMesh mesh = sc.getNormalizedMesh();
         if (mesh.isEmpty()) {
             BufferedImage image = ImageUtil.createResampled(sc.getAvgImg().getBufferedImage(), SIZE, SIZE, Image.SCALE_SMOOTH);
             features = this.featureVectorsFromImage(image,POSEIDX_UNKNOWN);
