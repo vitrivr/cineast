@@ -29,7 +29,7 @@ public class SegmentLookup extends AbstractEntityReader {
         this.selector.open(SegmentDescriptor.ENTITY);
     }
 	
-	public SegmentDescriptor lookUpShot(String segmentId){
+	public SegmentDescriptor lookUpSegment(String segmentId){
 		
 		List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(SegmentDescriptor.FIELDNAMES[0], segmentId);
 		
@@ -125,7 +125,7 @@ public class SegmentLookup extends AbstractEntityReader {
 		return new SegmentDescriptor(mmobjidProvider.getString(), idProvider.getString(), sequenceProvider.getInt(), startProvider.getInt(), endProvider.getInt(), startabsProvider.getFloat(), endabsProvider.getFloat());
 	}
 	
-	public Map<String, SegmentDescriptor> lookUpShots(String...ids){
+	public Map<String, SegmentDescriptor> lookUpSegments(String...ids){
 		
 		if(ids == null || ids.length == 0){
 			return new HashMap<>();
@@ -147,7 +147,7 @@ public class SegmentLookup extends AbstractEntityReader {
 		return _return;
 	}
 	
-	public Map<String, SegmentDescriptor> lookUpShots(Iterable<String> ids){
+	public Map<String, SegmentDescriptor> lookUpSegments(Iterable<String> ids){
 	  if(ids == null){
       return new HashMap<>();
     }

@@ -90,7 +90,7 @@ public class JSONAPIThread extends Thread {
 				String shotId = queryObject.get("shotid").asString();
 
 				SegmentLookup sl = new SegmentLookup();
-				SegmentDescriptor shot = sl.lookUpShot(shotId);
+				SegmentDescriptor shot = sl.lookUpSegment(shotId);
 				//List<ShotDescriptor> allShots = sl.lookUpVideo(shot.getObjectId());
 
 				//Send metadata
@@ -117,7 +117,7 @@ public class JSONAPIThread extends Thread {
 					String shotId = clientJSON.get("shotid").asString();
 
 					SegmentLookup sl = new SegmentLookup();
-					SegmentDescriptor shot = sl.lookUpShot(shotId);
+					SegmentDescriptor shot = sl.lookUpSegment(shotId);
 
 					JsonObject resultobj = new JsonObject();
 					resultobj.add("type", "submitShot").add("videoId", shot.getObjectId()).add("start", shot.getStart()).add("end", shot.getEnd());
@@ -364,7 +364,7 @@ public class JSONAPIThread extends Thread {
 				  
 					JsonValue val = shotidlist.get(i);
 					String shotid = val.asString();
-					SegmentDescriptor descriptor = sl.lookUpShot(shotid);
+					SegmentDescriptor descriptor = sl.lookUpSegment(shotid);
 					
 					String video = descriptor.getObjectId();
 					int startSegment = Math.max(1, descriptor.getSequenceNumber() - limit);
@@ -529,7 +529,7 @@ public class JSONAPIThread extends Thread {
           ids.add(v.asString());
         }
         SegmentLookup lookup = new SegmentLookup();
-			  Map<String, SegmentDescriptor> segments = lookup.lookUpShots(ids);
+			  Map<String, SegmentDescriptor> segments = lookup.lookUpSegments(ids);
 			  lookup.close();
 			  
 			  HashSet<String> mmobjectIds = new HashSet<>();

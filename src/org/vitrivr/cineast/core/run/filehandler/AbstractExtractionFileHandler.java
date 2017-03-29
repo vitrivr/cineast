@@ -317,7 +317,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     private boolean checkAndPersistSegment(SegmentDescriptor descriptor) {
         if (this.context.existenceCheck() != IdConfig.ExistenceCheck.NOCHECK) {
             
-            if (!this.segmentReader.lookUpShot(descriptor.getSegmentId()).exists()) {
+            if (!this.segmentReader.lookUpSegment(descriptor.getSegmentId()).exists()) {
                 this.segmentWriter.write(descriptor);
                 return true;
             } else if (this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {

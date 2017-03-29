@@ -185,7 +185,7 @@ public class JSONUtils {
 			ids[i++] = sdp.key;
 		}
 		
-		Map<String, SegmentDescriptor> map = sl.lookUpShots(ids);
+		Map<String, SegmentDescriptor> map = sl.lookUpSegments(ids);
 		
 		for(String id : ids){
 			SegmentDescriptor sd = map.get(id);
@@ -222,7 +222,7 @@ public class JSONUtils {
 			ids[i++] = sdp.key;
 		}
 		
-		Map<String, SegmentDescriptor> map = sl.lookUpShots(ids);
+		Map<String, SegmentDescriptor> map = sl.lookUpSegments(ids);
 		
 		HashSet<String> videoIds = new HashSet<>();
 		for(String id : ids){
