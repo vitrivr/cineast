@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.providers.primitive.BooleanTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.DoubleTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatTypeProvider;
@@ -16,21 +18,25 @@ import org.vitrivr.cineast.core.data.providers.primitive.LongTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.ParseException;
 
 public class JsonObjectImporter implements Importer<JsonObject> {
 
 	private JsonArray array;
 	private int cursor = 0;
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	public JsonObjectImporter(File input) throws FileNotFoundException, IOException {
 		try{
 			this.array = JsonValue.readFrom(new FileReader(input)).asArray();
-		}catch(UnsupportedOperationException e){
+		}catch(UnsupportedOperationException | ParseException e){
 			this.array = new JsonArray();
+			LOGGER.error("Error while reading json file: {}, {}",input.getAbsolutePath(),  LogHelper.getStackTrace(e));
 		}
 	} 
 	
