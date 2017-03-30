@@ -49,7 +49,7 @@ public class Mesh implements WritableMesh {
          * @param normal
          * @param color
          */
-        public Vertex(Vector3f position, Vector3f normal, Vector3f color) {
+        public Vertex(Vector3f position,Vector3f color, Vector3f normal) {
             this.position = position;
             this.normal = normal;
             this.color = color;
@@ -321,7 +321,7 @@ public class Mesh implements WritableMesh {
         }
 
         for (Face face : mesh.getFaces()) {
-            this.addFace(face.vertexIndices);
+            this.addFace(new Vector4i(face.vertexIndices));
         }
     }
 
