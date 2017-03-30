@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -14,13 +13,12 @@ import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.Renderer;
 import org.vitrivr.cineast.core.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-
-import static org.vitrivr.cineast.core.util.math.MathConstants.VERTICES_3D_DODECAHEDRON;
 
 /**
  * @author rgasser
@@ -105,24 +103,33 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
         /* Retains the renderer and returns if retention fails. */
         if (!this.renderer.retain()) return features;
 
-        /* Clears the renderer and assembles a new Mesh. */
-        this.renderer.clear();
-        this.renderer.assemble(mesh);
+        /* Everything happens in the try-catch block so as to make sure, that if any exception occurs,
+         * the renderer is released again.
+         */
+        try {
+            /* Clears the renderer and assembles a new Mesh. */
+            this.renderer.clear();
+            this.renderer.assemble(mesh);
 
-        /* Obtains rendered image from configured perspective. */
-        for (int i=0;i<VERTICES_3D_DODECAHEDRON.length;i++) {
-            this.renderer.positionCamera((float)this.camerapositions[i][0], (float)this.camerapositions[i][1], (float)this.camerapositions[i][2]);
-            this.renderer.render();
-            BufferedImage image = this.renderer.obtain();
-            if (image == null) {
-                LOGGER.error("Could not generate feature for {} because no image could be obtained from JOGOffscreenRenderer.", this.getClass().getSimpleName());
-                return features;
+            /* Obtains rendered image from configured perspective. */
+            for (int i = 0; i < this.camerapositions.length; i++) {
+                /* Adjust the camera and render the image. */
+                this.renderer.positionCamera((float) this.camerapositions[i][0], (float) this.camerapositions[i][1], (float) this.camerapositions[i][2]);
+                this.renderer.render();
+                BufferedImage image = this.renderer.obtain();
+                if (image == null) {
+                    LOGGER.error("Could not generate feature for {} because no image could be obtained from JOGOffscreenRenderer.", this.getClass().getSimpleName());
+                    return features;
+                }
+                features.addAll(this.featureVectorsFromImage(image, i));
             }
-            features.addAll(this.featureVectorsFromImage(image, i));
-        }
 
-        /* Release the rendering context. */
-        this.renderer.release();
+        } catch (Exception exception) {
+            LOGGER.error("Could not generate feature for {} because an unknown exception occurred ({}).", this.getClass().getSimpleName(), LogHelper.getStackTrace(exception));
+        } finally {
+            /* Release the rendering context. */
+            this.renderer.release();
+        }
 
         /* Extract and persist the feature descriptors. */
         return features;
