@@ -67,7 +67,7 @@ public interface Renderer {
      * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
      */
     default void positionCamera(double ex, double ey, double ez, double cx, double cy, double cz) {
-        positionCamera(ex, ex, ez, cx,cy,cz,0.0,1.0,0.0);
+        positionCamera(ex, ey, ez, cx,cy,cz,0.0,1.0,0.0);
     }
 
     /**
@@ -163,7 +163,7 @@ public interface Renderer {
      * @param cz z Position of the object of interest (i.e. the point at which the camera looks) in cartesian coordinates.
      */
     default void positionCameraPolar(float r, float theta, float phi, float cx, float cy, float cz) {
-        this.positionCamera((double)r,(double)theta,(double)phi, (double)cx,(double)cy,(double)cz);
+        this.positionCamera((double)r,(double)theta,(double)phi,(double)cx,(double)cy,(double)cz);
     }
 
     /**
