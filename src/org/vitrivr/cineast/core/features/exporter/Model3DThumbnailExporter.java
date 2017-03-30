@@ -34,38 +34,30 @@ public class Model3DThumbnailExporter implements Extractor {
 
     /** Property names that can be used in the configuration hash map. */
     private static final String PROPERTY_NAME_DESTINATION = "destination";
-    private static final String PROPERTY_NAME_WIDTH = "width";
-    private static final String PROPERTY_NAME_HEIGHT = "height";
-    private static final String PROPERTY_NAME_DISTANCE = "distance";
-    private static final String PROPERTY_NAME_POLAR = "polar";
-    private static final String PROPERTY_NAME_AZIMUT = "azimut";
+    private static final String PROPERTY_NAME_SIZE = "size";
+
+    /** List of perspective that should be rendered. Azimuth and polar angles in degree. */
+    private static final float[][] PERSPECTIVES = {
+            {0.0f,90.0f},
+            {45.0f,135.0f},
+            {-135.0f,-225.0f},
+            {0.0f,-90.0f}
+    };
+
+    /** Distance of camera from object. */
+    private static final float DISTANCE = 2.0f;
 
     /** Destination path; can be set in the AudioWaveformExporter properties. */
     private Path destination = Paths.get(Config.sharedConfig().getExtractor().getOutputLocation().toString());
 
-    /** Width of the resulting image in pixels. */
-    private int width = 800;
+    /** Size of the resulting image in pixels (image will have dimension size x size). */
+    private int size = 800;
 
-    /** Height of the resulting image in pixels. */
-    private int height = 800;
-
-    /** */
-    private float distance = 2.0f;
-
-    /** */
-    private float polar = 20.0f;
-
-    /** */
-    private float azimut = 40.0f;
-
-    /** */
+    /** Offscreen rendering context. */
     private final JOGLOffscreenRenderer renderer;
 
     /** Background color of the resulting image. */
     private Color backgroundColor = Color.lightGray;
-
-    /** Foreground color of the resulting image (used to draw the waveform). */
-    private Color foregroundColor = Color.darkGray;
 
     /**
      * Default constructor. The AudioWaveformExporter can be configured via named properties
@@ -84,27 +76,11 @@ public class Model3DThumbnailExporter implements Extractor {
             this.destination = Paths.get(properties.get(PROPERTY_NAME_DESTINATION));
         }
 
-        if (properties.containsKey(PROPERTY_NAME_WIDTH)) {
-            this.width = Integer.parseInt(properties.get(PROPERTY_NAME_WIDTH));
+        if (properties.containsKey(PROPERTY_NAME_SIZE)) {
+            this.size = Integer.parseInt(properties.get(PROPERTY_NAME_SIZE));
         }
 
-        if (properties.containsKey(PROPERTY_NAME_HEIGHT)) {
-            this.height = Integer.parseInt(properties.get(PROPERTY_NAME_HEIGHT));
-        }
-
-        if (properties.containsKey(PROPERTY_NAME_DISTANCE)) {
-            this.distance = Float.parseFloat(properties.get(PROPERTY_NAME_DISTANCE));
-        }
-
-        if (properties.containsKey(PROPERTY_NAME_POLAR)) {
-            this.polar = Float.parseFloat(properties.get(PROPERTY_NAME_POLAR));
-        }
-
-        if (properties.containsKey(PROPERTY_NAME_AZIMUT)) {
-            this.azimut = Float.parseFloat(properties.get(PROPERTY_NAME_AZIMUT));
-        }
-
-        this.renderer = new JOGLOffscreenRenderer(this.width, this.height);
+        this.renderer = new JOGLOffscreenRenderer(this.size/2, this.size/2);
     }
 
     /**
@@ -123,21 +99,37 @@ public class Model3DThumbnailExporter implements Extractor {
                 /* Colors the mesh. */
                 MeshColoringUtil.normalColoring(mesh);
 
-                BufferedImage image = null;
+                BufferedImage buffer = null;
+                BufferedImage image = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
+                Graphics graphics = image.getGraphics();
+
+
                 if (this.renderer.retain()) {
-                    this.renderer.clear();
-                    this.renderer.positionCameraPolar( this.distance, this.polar, this.azimut, 0.0, 0.0, 0.0);
+                    this.renderer.clear(this.backgroundColor);
                     this.renderer.assemble(mesh);
-                    this.renderer.render();
-                    image = this.renderer.obtain();
-                    this.renderer.release();
+
+                    for (int i=0; i<4; i++) {
+                        this.renderer.positionCameraPolar( DISTANCE, PERSPECTIVES[i][0], PERSPECTIVES[i][1], 0.0, 0.0, 0.0);
+                        this.renderer.render();
+                        buffer = this.renderer.obtain();
+
+                        int idx = i % 2;
+                        int idy = i < 2 ? 0 : 1;
+                        int sz = this.size/2;
+
+                        graphics.drawImage(buffer, idx * sz, idy*sz, null);
+                    }
                 } else {
                     LOGGER.error("Could not export thumbnail image for model {} because renderer could not be retained by current thread.", shot.getId());
                 }
-                if (image != null) ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
+                ImageIO.write(image, "JPEG", directory.resolve(shot.getId() + ".jpg").toFile());
             }
         } catch (IOException exception) {
             LOGGER.fatal("Could not export thumbnail image for model {} due to a serious IO error ({}).", shot.getId(), LogHelper.getStackTrace(exception));
+        } catch (Exception exception) {
+            LOGGER.error("Could not export thumbnail image for model {} because an unknown exception occurred ({}).", shot.getId(), LogHelper.getStackTrace(exception));
+        } finally {
+            this.renderer.release();
         }
     }
 
