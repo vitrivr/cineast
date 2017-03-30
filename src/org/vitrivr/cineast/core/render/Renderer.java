@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.render;
 
-import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 
@@ -51,8 +50,25 @@ public interface Renderer {
      * @param cx x Position of the object of interest (i.e. the point at which the camera looks).
      * @param cy y Position of the object of interest (i.e. the point at which the camera looks).
      * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
+     * @param upx x-direction of the camera's UP position.
+     * @param upy y-direction of the camera's UP position.
+     * @param upz z-direction of the camera's UP position.
      */
-    void positionCamera(double ex, double ey, double ez, double cx, double cy, double cz);
+    void positionCamera(double ex, double ey, double ez, double cx, double cy, double cz, double upx, double upy, double upz);
+
+    /**
+     * Changes the positionCamera of the camera.
+     *
+     * @param ex x Position of the Camera
+     * @param ey y Position of the Camera
+     * @param ez z Position of the Camera
+     * @param cx x Position of the object of interest (i.e. the point at which the camera looks).
+     * @param cy y Position of the object of interest (i.e. the point at which the camera looks).
+     * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
+     */
+    default void positionCamera(double ex, double ey, double ez, double cx, double cy, double cz) {
+        positionCamera(ex, ex, ez, cx,cy,cz,0.0,1.0,0.0);
+    }
 
     /**
      * Changes the positionCamera of the camera. The camera can be freely rotated around the origin [1,0,0] (cartesian
@@ -95,7 +111,7 @@ public interface Renderer {
 
     /**
      * Changes the positionCamera of the camera. The camera can be freely rotated around the origin [0,0,0]
-     * (cartesian coordinates) and it can take any distance from that same origin.
+     * (cartesian coordinates) and it can take any distance from that same origin (Arc Ball camera).
      *
      * @param r Distance of the camera from the origin at [0,0,0]
      * @param theta Polar angle of the camera (i.e. angle between vector and z-axis) in degree
@@ -108,11 +124,31 @@ public interface Renderer {
         double theta_rad = Math.toRadians(theta);
         double phi_rad = Math.toRadians(phi);
 
-        double x = r * Math.sin(theta_rad) * Math.cos(phi_rad);
-        double y = r * Math.sin(theta_rad) * Math.sin(phi_rad);
-        double z = r * Math.cos(theta_rad);
+        double x = r * Math.cos(theta_rad) * Math.cos(phi_rad);
+        double y = r * Math.sin(theta_rad);
+        double z = r * Math.cos(theta_rad) * Math.sin(phi_rad);
 
-        positionCamera((float)x,(float)y,(float)z,cx,cy,cz);
+        /* Calculate the RIGHT and the UP vector. */
+        double[] look = {x-cx,y-cy,z-cz};
+        double[] right = {
+                look[1] * 0.0f - look[2] * 1.0f,
+                look[2] * 0.0f - look[0] * 0.0f,
+                look[0] * 1.0f - look[1] * 0.0f
+        };
+        double[] up = {
+                look[1] * right[2] - look[2] * right[1],
+                look[2] *  right[0] - look[0] * right[2],
+                look[0] *  right[1] - look[1] *  right[0]
+        };
+
+        /* Normalize the UP vector. */
+        double abs = Math.sqrt(Math.pow(up[0], 2) + Math.pow(up[1], 2) + Math.pow(up[2], 2));
+        up[0] /= abs;
+        up[1] /= abs;
+        up[2] /= abs;
+
+        /* Re-position the camera. */
+        positionCamera((float)x,(float)y,(float)z,cx,cy,cz,up[0],up[1],up[2]);
     }
 
     /**

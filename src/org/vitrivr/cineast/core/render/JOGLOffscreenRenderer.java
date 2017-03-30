@@ -317,8 +317,11 @@ public class JOGLOffscreenRenderer implements Renderer {
      * @param cx x Position of the object of interest (i.e. the point at which the camera looks).
      * @param cy y Position of the object of interest (i.e. the point at which the camera looks).
      * @param cz z Position of the object of interest (i.e. the point at which the camera looks).
+     * @param upx x-direction of the camera's UP position.
+     * @param upy y-direction of the camera's UP position.
+     * @param upz z-direction of the camera's UP position.
      */
-    public final void positionCamera(double ex, double ey, double ez, double cx, double cy, double cz) {
+    public final void positionCamera(double ex, double ey, double ez, double cx, double cy, double cz, double upx, double upy, double upz) {
         /* Check context. */
         if (!this.checkContext()) return;
 
@@ -330,7 +333,7 @@ public class JOGLOffscreenRenderer implements Renderer {
         glu.gluPerspective(45.0f, this.aspect, 0.01f, 100.0f);
 
         /* Update camera position. */
-        glu.gluLookAt(ex,ey,ez,cx,cy,cz,0.0,-1.0,0.0);
+        glu.gluLookAt(ex,ey,ez,cx,cy,cz,upx,upy,upz);
     }
 
     /**
