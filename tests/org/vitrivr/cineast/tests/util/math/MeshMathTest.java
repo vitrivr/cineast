@@ -33,12 +33,12 @@ public class MeshMathTest {
             CUBE.addVertex(new Vector3f((float)vertex[0], (float)vertex[1], (float)vertex[2]));
         }
 
-        CUBE.addFace(new Vector4i(2, 5, 6, 4));
-        CUBE.addFace(new Vector4i(5, 8, 1, 6));
-        CUBE.addFace(new Vector4i(6, 1, 7, 4));
-        CUBE.addFace(new Vector4i(2, 3, 7, 4));
-        CUBE.addFace(new Vector4i(2, 5, 8, 3));
-        CUBE.addFace(new Vector4i(8, 1, 7, 3));
+        CUBE.addFace(new Vector4i(1, 4, 5, 3));
+        CUBE.addFace(new Vector4i(4, 7, 0, 5));
+        CUBE.addFace(new Vector4i(5, 0, 6, 3));
+        CUBE.addFace(new Vector4i(1, 2, 6, 3));
+        CUBE.addFace(new Vector4i(1, 4, 7, 2));
+        CUBE.addFace(new Vector4i(7, 0, 6, 2));
 
         for (int i=0;i<100;i++) {
             ANY.addVertex(new Vector3f(random.nextFloat(), random.nextFloat(), random.nextFloat()));
@@ -79,9 +79,9 @@ public class MeshMathTest {
     @DisplayName("Cube Barycenter Test")
     void testCubeBaryCenter() {
         Vector3f barycenter = MeshMathUtil.barycenter(CUBE);
-        assertEquals(0.0f, barycenter.x, 1e-6, "X-Coordinate of CUBE barycenter is off (expected 0.0).");
-        assertEquals(0.0f, barycenter.y, 1e-6, "Y-Coordinate of CUBE barycenter is off (expected 0.0).");
-        assertEquals(0.0f, barycenter.z, 1e-6, "Z-Coordinate of CUBE barycenter is off (expected 0.0).");
+        assertEquals(0.0f, barycenter.x, 1e-6, "X-Coordinate of CUBE barycenter is off.");
+        assertEquals(0.0f, barycenter.y, 1e-6, "Y-Coordinate of CUBE barycenter is off.");
+        assertEquals(0.0f, barycenter.z, 1e-6, "Z-Coordinate of CUBE barycenter is off.");
     }
 
     @Test
@@ -90,9 +90,9 @@ public class MeshMathTest {
         Mesh movedCube = new Mesh(CUBE);
         movedCube.move(new Vector3f(1.0f, 1.0f,1.0f));
         Vector3f barycenter = movedCube.barycenter();
-        assertEquals(1.0f, barycenter.x, 1e-6, "X-Coordinate of CUBE barycenter is off (expected 0.0).");
-        assertEquals(1.0f, barycenter.y, 1e-6, "Y-Coordinate of CUBE barycenter is off (expected 0.0).");
-        assertEquals(1.0f, barycenter.z, 1e-6, "Z-Coordinate of CUBE barycenter is off (expected 0.0).");
+        assertEquals(1.0f, barycenter.x, 1e-6, "X-Coordinate of CUBE barycenter is off.");
+        assertEquals(1.0f, barycenter.y, 1e-6, "Y-Coordinate of CUBE barycenter is off.");
+        assertEquals(1.0f, barycenter.z, 1e-6, "Z-Coordinate of CUBE barycenter is off.");
     }
 
     @Test
