@@ -30,13 +30,17 @@ import org.vitrivr.cineast.api.rest.RestfulAPI;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.importer.DataImportHandler;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
+import org.vitrivr.cineast.core.runtime.ContinousQueryDispatcher;
 import org.vitrivr.cineast.core.setup.EntityCreator;
+import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 /**
@@ -407,6 +411,27 @@ public class API {
 								handleWebsocketStop();
 							}
 							break;
+						}
+						case "retrieve": {
+						  if(commands.size() < 3){
+						    System.err.println("You must specify the segment id to be used as a query and the category of retrievers.");
+						    break;
+						  }
+						  
+						  String segmentId = commands.get(1);
+						  String category = commands.get(2);
+						  
+						  List<StringDoublePair> results = ContinousRetrievalLogic.retrieve(segmentId, category, QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()));
+						  
+						  System.out.println("results:");
+						  for(StringDoublePair result : results){
+						    System.out.print(result.key);
+						    System.out.print(": ");
+						    System.out.println(result.value);
+						  }
+						  System.out.println();
+						  
+						  break;
 						}
 						case "exit":
 						case "quit": {
