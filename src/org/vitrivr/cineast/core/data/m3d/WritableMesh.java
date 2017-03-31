@@ -18,16 +18,18 @@ public interface WritableMesh extends ReadableMesh {
      * vertex normals.
      *
      * @param vertices Vector3i containing the indices of the vertices.
+     * @return true if face could be added and false otherwise (e.g. if indices point to non-existing vertex)
      */
-    void addFace(Vector3i vertices);
+    boolean addFace(Vector3i vertices);
 
     /**
      * Adds a new quadratic face to the Mesh. Faces index vertices and
      * vertex normals.
      *
      * @param vertices Vector4i containing the indices of the vertices.
+     * @return true if face could be added and false otherwise (e.g. if indices point to non-existing vertex)
      */
-    void addFace(Vector4i vertices);
+    boolean addFace(Vector4i vertices);
 
     /**
      * Scales the Mesh by the provided factor. This will reset the surfaceArea and bounding-box property.

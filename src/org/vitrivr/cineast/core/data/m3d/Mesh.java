@@ -174,16 +174,16 @@ public class Mesh implements WritableMesh {
             }
 
             /* Add vertices to face. */
-            this.vertices.add(Mesh.this.vertices.get(indices.x - 1));
-            this.vertices.add(Mesh.this.vertices.get(indices.y - 1));
-            this.vertices.add(Mesh.this.vertices.get(indices.z - 1));
-            if (this.getType() == FaceType.QUAD) this.vertices.add(Mesh.this.vertices.get(indices.w - 1));
+            this.vertices.add(Mesh.this.vertices.get(indices.x));
+            this.vertices.add(Mesh.this.vertices.get(indices.y));
+            this.vertices.add(Mesh.this.vertices.get(indices.z));
+            if (this.getType() == FaceType.QUAD) this.vertices.add(Mesh.this.vertices.get(indices.w));
 
             /* Attach face to vertices. */
-            Mesh.this.vertices.get(indices.x - 1).attachToFace(this);
-            Mesh.this.vertices.get(indices.y - 1).attachToFace(this);
-            Mesh.this.vertices.get(indices.z - 1).attachToFace(this);
-            if (this.getType() == FaceType.QUAD) Mesh.this.vertices.get(indices.w - 1).attachToFace(this);
+            Mesh.this.vertices.get(indices.x).attachToFace(this);
+            Mesh.this.vertices.get(indices.y).attachToFace(this);
+            Mesh.this.vertices.get(indices.z).attachToFace(this);
+            if (this.getType() == FaceType.QUAD) Mesh.this.vertices.get(indices.w).attachToFace(this);
 
             this.vertexIndices = indices;
         }
@@ -369,9 +369,15 @@ public class Mesh implements WritableMesh {
      *
      * @param vertices Vector3i containing the indices of the vertices.
      */
-    public void addFace(Vector3i vertices) {
-        Mesh.Face face = new Face(new Vector4i(vertices, -1));
-        this.faces.add(face);
+    public boolean addFace(Vector3i vertices) {
+        int limit = this.vertices.size();
+        if (vertices.x < limit && vertices.y < limit && vertices.z < limit) {
+            Mesh.Face face = new Face(new Vector4i(vertices, -1));
+            this.faces.add(face);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -380,9 +386,15 @@ public class Mesh implements WritableMesh {
      *
      * @param vertices Vector4i containing the indices of the vertices.
      */
-    public void addFace(Vector4i vertices) {
-        Mesh.Face face = new Face(vertices);
-        this.faces.add(face);
+    public boolean addFace(Vector4i vertices) {
+        int limit = this.vertices.size();
+        if (vertices.x < limit && vertices.y < limit && vertices.z < limit && vertices.w < limit) {
+            Mesh.Face face = new Face(vertices);
+            this.faces.add(face);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

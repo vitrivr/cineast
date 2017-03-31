@@ -90,17 +90,17 @@ public class OBJMeshDecoder implements Decoder<Mesh> {
                         String[] p1 = tokens[1].split("/");
                         String[] p2 = tokens[2].split("/");
                         String[] p3 = tokens[3].split("/");
-
                         if (quad) {
                             String[] p4 = tokens[4].split("/");
-                            Vector4i vertexIndex = new Vector4i(Integer.parseInt(p1[0]),Integer.parseInt(p2[0]),Integer.parseInt(p3[0]),Integer.parseInt(p4[0]));
-
-                            /* Create and add face. */
-                            mesh.addFace(vertexIndex);
+                            Vector4i vertexIndex = new Vector4i(Integer.parseInt(p1[0])-1,Integer.parseInt(p2[0])-1,Integer.parseInt(p3[0])-1,Integer.parseInt(p4[0])-1);
+                            if (!mesh.addFace(vertexIndex)) {
+                                LOGGER.warn("Could not add face {}/{}/{}/{} because index points to non-existing vertex.",vertexIndex.x, vertexIndex.y, vertexIndex.z, vertexIndex.w);
+                            }
                         } else {
-                            /* Prepare Vertex-Index and Normal-Index vectors for Tri face. */
-                            Vector3i vertexIndex = new Vector3i(Integer.parseInt(p1[0]),Integer.parseInt(p2[0]),Integer.parseInt(p3[0]));
-                            mesh.addFace(vertexIndex);
+                            Vector3i vertexIndex = new Vector3i(Integer.parseInt(p1[0])-1,Integer.parseInt(p2[0])-1,Integer.parseInt(p3[0])-1);
+                            if (!mesh.addFace(vertexIndex)) {
+                                LOGGER.warn("Could not add face {}/{}/{} because index points to non-existing vertex.",vertexIndex.x, vertexIndex.y, vertexIndex.z);
+                            }
                         }
                         break;
                     default:
@@ -114,6 +114,9 @@ public class OBJMeshDecoder implements Decoder<Mesh> {
             mesh = null;
         } catch (NumberFormatException e) {
             LOGGER.error("Could not decode OBJ file {} because one of the tokens could not be converted to a valid number.", this.inputFile.toString(), LogHelper.getStackTrace(e));
+            mesh = null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            LOGGER.error("Could not decode OBJ file {} because one of the faces points to invalid vertex indices.", this.inputFile.toString(), LogHelper.getStackTrace(e));
             mesh = null;
         } finally {
             this.complete.set(true);

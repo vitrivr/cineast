@@ -156,6 +156,7 @@ public class STLMeshDecoder implements Decoder<Mesh> {
         byte[] sizeBytes = new byte[4];
         is.read(sizeBytes, 0, 4);
         long triangles = ((sizeBytes[0] & 0xFF)) | ((sizeBytes[1] & 0xFF) << 8) | ((sizeBytes[2] & 0xFF) << 16) | ((sizeBytes[3] & 0xFF) << 24);
+        if (triangles <= 0) return null;
 
         Mesh mesh = new Mesh((int)triangles, (int)triangles * 3);
 
@@ -175,7 +176,9 @@ public class STLMeshDecoder implements Decoder<Mesh> {
             mesh.addVertex(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
 
             /* Add a new face to the Mesh. */
-            mesh.addFace(new Vector3i(3*i + 1, 3*i + 2, 3*i + 3));
+            if (!mesh.addFace(new Vector3i(3 * i, 3 * i + 1, 3 * i + 2))) {
+                LOGGER.warn("Could not add face {}/{}/{} because index points to non-existing vertex.", 3*i, 3*i + 1, 3*i + 2);
+            }
 
             /* Read 2 bytes from the stream and discard them. */
             is.read(bytes, 0, 2);
