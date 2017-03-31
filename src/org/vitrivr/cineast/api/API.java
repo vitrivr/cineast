@@ -34,11 +34,11 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
+import org.vitrivr.cineast.core.features.listener.RetrievalResultEvaluationExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.importer.DataImportHandler;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
-import org.vitrivr.cineast.core.runtime.ContinousQueryDispatcher;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
@@ -431,6 +431,13 @@ public class API {
 						  }
 						  System.out.println();
 						  
+						  break;
+						}
+						case "exportresults" :{
+						  ContinousRetrievalLogic.addRetrievalResultListener(
+						      new RetrievalResultEvaluationExporter()
+						      );
+						  System.out.println("added RetrievalResultEvaluationExporter to ContinousRetrievalLogic");
 						  break;
 						}
 						case "exit":

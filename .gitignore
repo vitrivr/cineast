@@ -35,3 +35,4 @@ mycache/
 ##Tensorflow
 *.tfmodel
 data/
+retrieval_results/
