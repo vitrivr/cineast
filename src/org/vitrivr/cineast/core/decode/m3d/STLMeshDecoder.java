@@ -156,7 +156,15 @@ public class STLMeshDecoder implements Decoder<Mesh> {
         byte[] sizeBytes = new byte[4];
         is.read(sizeBytes, 0, 4);
         long triangles = ((sizeBytes[0] & 0xFF)) | ((sizeBytes[1] & 0xFF) << 8) | ((sizeBytes[2] & 0xFF) << 16) | ((sizeBytes[3] & 0xFF) << 24);
-        if (triangles <= 0) return null;
+
+        /* TODO: Properly handle models whose triangles > Integer.MAX_VALUE/3. */
+        if (triangles <= 0 ) {
+            LOGGER.error("The number of triangles in the Mesh seems to be smaller than zero. This STL file is probably corrupt!");
+            return null;
+        } else if (triangles > Integer.MAX_VALUE/3) {
+            LOGGER.error("The number of triangles in the Mesh exceeds the limit that can currently be processed by STLMeshDecoder.");
+            return null;
+        }
 
         Mesh mesh = new Mesh((int)triangles, (int)triangles * 3);
 
