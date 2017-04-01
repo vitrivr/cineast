@@ -33,7 +33,7 @@ public class Mesh implements WritableMesh {
         private final Vector3f color;
 
         /** List of faces the current vertex participates in. */
-        private final List<Face> faces = new ArrayList<>();
+        private final List<Face> faces = new ArrayList<>(4);
 
         /**
          *
@@ -146,10 +146,10 @@ public class Mesh implements WritableMesh {
         private final FaceType type;
 
         /** List of vertices in this face. */
-        private final List<Vertex> vertices = new ArrayList<>();
+        private final Vertex[] vertices;
 
         /** Vertex indices. */
-        private final Vector4i vertexIndices;
+        private final int[] vertexIndices;
 
         /**
          * Getter for the face's type.
@@ -169,23 +169,31 @@ public class Mesh implements WritableMesh {
             /* If the w-index is greater than -1 a QUAD face is created. */
             if (indices.w > -1) {
                 this.type = FaceType.QUAD;
+                this.vertices = new Vertex[4];
+                this.vertexIndices = new int[4];
             } else {
                 this.type = FaceType.TRI;
+                this.vertices = new Vertex[3];
+                this.vertexIndices = new int[3];
             }
 
+            /* Store vertex-indices. */
+            this.vertexIndices[0] = indices.x;
+            this.vertexIndices[1] = indices.y;
+            this.vertexIndices[2] = indices.z;
+            if (this.getType() == FaceType.QUAD) this.vertexIndices[3] = indices.w;
+
             /* Add vertices to face. */
-            this.vertices.add(Mesh.this.vertices.get(indices.x));
-            this.vertices.add(Mesh.this.vertices.get(indices.y));
-            this.vertices.add(Mesh.this.vertices.get(indices.z));
-            if (this.getType() == FaceType.QUAD) this.vertices.add(Mesh.this.vertices.get(indices.w));
+            this.vertices[0] = Mesh.this.vertices.get(this.vertexIndices[0]);
+            this.vertices[1] = Mesh.this.vertices.get(this.vertexIndices[1]);
+            this.vertices[2] = Mesh.this.vertices.get(this.vertexIndices[2]);
+            if (this.getType() == FaceType.QUAD) this.vertices[3] = Mesh.this.vertices.get(this.vertexIndices[3]);
 
             /* Attach face to vertices. */
-            Mesh.this.vertices.get(indices.x).attachToFace(this);
-            Mesh.this.vertices.get(indices.y).attachToFace(this);
-            Mesh.this.vertices.get(indices.z).attachToFace(this);
-            if (this.getType() == FaceType.QUAD) Mesh.this.vertices.get(indices.w).attachToFace(this);
-
-            this.vertexIndices = indices;
+            this.vertices[0].attachToFace(this);
+            this.vertices[1].attachToFace(this);
+            this.vertices[2].attachToFace(this);
+            if (this.getType() == FaceType.QUAD)this.vertices[3].attachToFace(this);
         }
 
         /**
@@ -194,7 +202,7 @@ public class Mesh implements WritableMesh {
          * @return Unmodifiable list of vertices.
          */
         public final List<Vertex> getVertices() {
-            return Collections.unmodifiableList(this.vertices);
+            return Arrays.asList(this.vertices);
         }
 
         /**
@@ -205,9 +213,9 @@ public class Mesh implements WritableMesh {
         public double area() {
             if (this.type == FaceType.TRI) {
                 /* Extract vertices. */
-                Vector3f v1 = this.vertices.get(0).position;
-                Vector3f v2 = this.vertices.get(1).position;
-                Vector3f v3 = this.vertices.get(2).position;
+                Vector3f v1 = this.vertices[0].position;
+                Vector3f v2 = this.vertices[1].position;
+                Vector3f v3 = this.vertices[2].position;
 
                 /* Generate the edges and sort them in ascending order. */
                 List<Vector3f> edges = new ArrayList<>();
@@ -239,10 +247,10 @@ public class Mesh implements WritableMesh {
                 }
             } else {
                 /* Extract vertices. */
-                Vector3f v1 = this.vertices.get(0).position;
-                Vector3f v2 = this.vertices.get(1).position;
-                Vector3f v3 = this.vertices.get(2).position;
-                Vector3f v4 = this.vertices.get(3).position;
+                Vector3f v1 = this.vertices[0].position;
+                Vector3f v2 = this.vertices[1].position;
+                Vector3f v3 = this.vertices[2].position;
+                Vector3f v4 = this.vertices[3].position;
 
                 /* Calculates the area of the face using Bretschneider's Formula. */
                 Vector3f s1 = new Vector3f(v1).sub(v2);
@@ -262,8 +270,8 @@ public class Mesh implements WritableMesh {
          * @return
          */
         public Vector3f normal() {
-            Vector3f e1 = new Vector3f(this.vertices.get(1).position).sub(this.vertices.get(0).position);
-            Vector3f e2 = new Vector3f(this.vertices.get(2).position).sub(this.vertices.get(0).position);
+            Vector3f e1 = new Vector3f(this.vertices[1].position).sub(this.vertices[0].position);
+            Vector3f e2 = new Vector3f(this.vertices[2].position).sub(this.vertices[0].position);
             return e1.cross(e2).normalize();
         }
 
@@ -321,7 +329,11 @@ public class Mesh implements WritableMesh {
         }
 
         for (Face face : mesh.getFaces()) {
-            this.addFace(new Vector4i(face.vertexIndices));
+            if (face.getType() == FaceType.QUAD) {
+                this.addFace(new Vector4i(face.vertexIndices[0], face.vertexIndices[1], face.vertexIndices[2], face.vertexIndices[3]));
+            } else {
+                this.addFace(new Vector4i(face.vertexIndices[0], face.vertexIndices[1], face.vertexIndices[2], -1));
+            }
         }
     }
 
