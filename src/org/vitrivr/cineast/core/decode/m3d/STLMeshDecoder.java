@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.decode.m3d;
 
+import gnu.trove.map.hash.TObjectIntHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
@@ -30,6 +31,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class STLMeshDecoder implements Decoder<Mesh> {
     /** Default logging facility. */
     private static final Logger LOGGER = LogManager.getLogger();
+
+    /** Maximum number of triangles in a STL file. Larger files are discarded. */
+    private static final int MAX_TRIANGLES = 5000000;
 
     /** HashSet containing all the mime-types supported by this ImageDecoder instance. */
     private static final Set<String> supportedFiles;
@@ -102,23 +106,48 @@ public class STLMeshDecoder implements Decoder<Mesh> {
     private Mesh readAscii(InputStream is)  throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         String line = null;
-        int idx = 0;
+
+        /* Prepare empty mesh. */
         Mesh mesh = new Mesh(100,100);
+
+        /* Prepare helper structures. */
+        TObjectIntHashMap<Vector3f> vertexBuffer = new TObjectIntHashMap<>();
+        int index = 0;
+        int[] vertexindices = new int[3];
+
         while ((line = br.readLine()) != null && !line.startsWith("endsolid")) {
+            line = line.trim();
+
+            /* Detect end of STL file. */
+            if (line.startsWith("endsolid")) break;
+
+            /* Detect begin of facet. */
             if (line.startsWith("facet normal ")) {
-                String[] splitNormal = line.split("\\s+");
-                while (!(line = br.readLine()).equals("endfacet")) {
-                    String[] splitVertex = line.split("\\s+");
+                int vidx = 0;
+
+                while ((line = br.readLine()) != null) {
+
+                    line = line.trim(); /* Trim line. */
+
+                    /* Detect end of facet. */
+                    if (line.equals("endfacet")) break;
+
+                    /* Detect vertex. */
                     if (line.startsWith("vertex")) {
-                        mesh.addVertex(new Vector3f(Float.parseFloat(splitVertex[2]),Float.parseFloat(splitVertex[3]), Float.parseFloat(splitVertex[4])));
+                        String[] splitVertex = line.split("\\s+");
+                        Vector3f vertex = new Vector3f(Float.parseFloat(splitVertex[1]),Float.parseFloat(splitVertex[2]), Float.parseFloat(splitVertex[3]));
+                        if (!vertexBuffer.containsKey(vertex)) {
+                            mesh.addVertex(vertex);
+                            vertexBuffer.put(vertex, index);
+                            index++;
+                        }
+                        vertexindices[vidx] = vertexBuffer.get(vertex);
+                        vidx++;
                     }
                 }
 
                  /* Add a new face to the Mesh. */
-                mesh.addFace(new Vector3i(3*idx + 1, 3*idx + 2, 3*idx + 3));
-
-                /* Increment index. */
-                idx += 1;
+                mesh.addFace(new Vector3i(vertexindices[0], vertexindices[1], vertexindices[2]));
             }
         }
 
@@ -157,16 +186,22 @@ public class STLMeshDecoder implements Decoder<Mesh> {
         is.read(sizeBytes, 0, 4);
         long triangles = ((sizeBytes[0] & 0xFF)) | ((sizeBytes[1] & 0xFF) << 8) | ((sizeBytes[2] & 0xFF) << 16) | ((sizeBytes[3] & 0xFF) << 24);
 
-        /* TODO: Properly handle models whose triangles > Integer.MAX_VALUE/3. */
-        if (triangles <= 0 ) {
+        /* TODO: Properly handle models whose triangles > MAX_TRIANGLES. */
+        if (triangles <= 0) {
             LOGGER.error("The number of triangles in the Mesh seems to be smaller than zero. This STL file is probably corrupt!");
             return null;
-        } else if (triangles > Integer.MAX_VALUE/3) {
-            LOGGER.error("The number of triangles in the Mesh exceeds the limit that can currently be processed by STLMeshDecoder.");
+        } else if (triangles > MAX_TRIANGLES) {
+            LOGGER.error("The number of triangles in the Mesh exceeds the limit that can currently be processed by STLMeshDecoder. The Mesh will be downsampled!");
             return null;
         }
 
-        Mesh mesh = new Mesh((int)triangles, (int)triangles * 3);
+        /* Prepare Mesh. */
+        Mesh mesh = new Mesh((int)triangles, (int)triangles);
+
+        /* Prepare helper structures. */
+        TObjectIntHashMap<Vector3f> vertexBuffer = new TObjectIntHashMap<>();
+        int index = 0;
+        int[] vertexindices = new int[3];
 
         /* Now add all triangles. */
         for (int i=0; i<triangles; i++) {
@@ -174,23 +209,30 @@ public class STLMeshDecoder implements Decoder<Mesh> {
             buffer.rewind();
             is.read(bytes);
 
-            float nx = buffer.getFloat();
-            nx = buffer.getFloat();
-            nx = buffer.getFloat();
+            /* Read and ignore three floats. */
+            buffer.getFloat();
+            buffer.getFloat();
+            buffer.getFloat();
 
             /* Add the vertices and the vertex-normal to the mesh. */
-            mesh.addVertex(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
-            mesh.addVertex(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
-            mesh.addVertex(new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat()));
-
-            /* Add a new face to the Mesh. */
-            if (!mesh.addFace(new Vector3i(3 * i, 3 * i + 1, 3 * i + 2))) {
-                LOGGER.warn("Could not add face {}/{}/{} because index points to non-existing vertex.", 3*i, 3*i + 1, 3*i + 2);
+            for (int vidx = 0; vidx < 3; vidx++) {
+                Vector3f vertex = new Vector3f(buffer.getFloat(), buffer.getFloat(), buffer.getFloat());
+                if (!vertexBuffer.containsKey(vertex)) {
+                    mesh.addVertex(vertex);
+                    vertexBuffer.put(vertex, index);
+                    index++;
+                }
+                vertexindices[vidx] = vertexBuffer.get(vertex);
             }
 
-            /* Read 2 bytes from the stream and discard them. */
-            is.read(bytes, 0, 2);
+            /* Add a new face to the Mesh. */
+            if (!mesh.addFace(new Vector3i(vertexindices[0], vertexindices[1], vertexindices[2]))) {
+                LOGGER.warn("Could not add face {}/{}/{} because index points to non-existing vertex.", vertexindices[0], vertexindices[1], vertexindices[2]);
+            }
         }
+
+        /* Read 2 bytes from the stream and discard them. */
+        is.read(bytes, 0, 2);
 
         /* Closes the InputStream. */
         is.close();
