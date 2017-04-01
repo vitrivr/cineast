@@ -174,7 +174,7 @@ public class STLMeshDecoder implements Decoder<Mesh> {
      */
     private Mesh readBinary(InputStream is, int skip) throws IOException {
         /* Prepare a ByteBuffer to read the rest of the STL file. */
-        byte[] bytes = new byte[48];
+        byte[] bytes = new byte[50];
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -230,9 +230,6 @@ public class STLMeshDecoder implements Decoder<Mesh> {
                 LOGGER.warn("Could not add face {}/{}/{} because index points to non-existing vertex.", vertexindices[0], vertexindices[1], vertexindices[2]);
             }
         }
-
-        /* Read 2 bytes from the stream and discard them. */
-        is.read(bytes, 0, 2);
 
         /* Closes the InputStream. */
         is.close();
