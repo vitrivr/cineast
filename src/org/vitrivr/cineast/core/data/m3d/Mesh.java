@@ -353,7 +353,7 @@ public class Mesh implements WritableMesh {
      *
      * @param vertex
      */
-    public void addVertex(Vector3f vertex) {
+    public synchronized void addVertex(Vector3f vertex) {
         this.addVertex(vertex, new Vector3f(1.0f, 1.0f, 1.0f));
     }
 
@@ -362,7 +362,7 @@ public class Mesh implements WritableMesh {
      *
      * @param vertex
      */
-    public void addVertex(Vector3f vertex, Vector3f color) {
+    public synchronized void addVertex(Vector3f vertex, Vector3f color) {
         this.addVertex(vertex, color, new Vector3f(0.0f, 0.0f, 0.0f));
     }
 
@@ -371,7 +371,7 @@ public class Mesh implements WritableMesh {
      *
      * @param vertex
      */
-    public void addVertex(Vector3f vertex, Vector3f color, Vector3f normal) {
+    public synchronized void addVertex(Vector3f vertex, Vector3f color, Vector3f normal) {
         this.vertices.add(new Vertex(vertex, color, normal));
     }
 
@@ -381,7 +381,7 @@ public class Mesh implements WritableMesh {
      *
      * @param vertices Vector3i containing the indices of the vertices.
      */
-    public boolean addFace(Vector3i vertices) {
+    public synchronized boolean addFace(Vector3i vertices) {
         int limit = this.vertices.size();
         if (vertices.x < limit && vertices.y < limit && vertices.z < limit) {
             Mesh.Face face = new Face(new Vector4i(vertices, -1));
@@ -398,7 +398,7 @@ public class Mesh implements WritableMesh {
      *
      * @param vertices Vector4i containing the indices of the vertices.
      */
-    public boolean addFace(Vector4i vertices) {
+    public synchronized boolean addFace(Vector4i vertices) {
         int limit = this.vertices.size();
         if (vertices.x < limit && vertices.y < limit && vertices.z < limit && vertices.w < limit) {
             Mesh.Face face = new Face(vertices);
@@ -415,7 +415,7 @@ public class Mesh implements WritableMesh {
      * @param vertexIndex Index of the vertex that should be returned.
      * @return Vertex.
      */
-    public Vertex getVertex(int vertexIndex) {
+    public synchronized Vertex getVertex(int vertexIndex) {
         return this.vertices.get(vertexIndex);
     }
 
@@ -442,7 +442,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Number of vertices.
      */
-    public final int numberOfVertices() {
+    public synchronized final int numberOfVertices() {
         return this.vertices.size();
     }
 
@@ -451,7 +451,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Number of faces.
      */
-    public final int numberOfFaces() {
+    public synchronized final int numberOfFaces() {
         return this.faces.size();
     }
 
@@ -460,7 +460,7 @@ public class Mesh implements WritableMesh {
      *
      * @return True if mesh is empty, false otherwise.
      */
-    public final boolean isEmpty() {
+    public synchronized final boolean isEmpty() {
         return this.faces.isEmpty();
     }
 
@@ -469,7 +469,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Surface area of the mesh.
      */
-    public final double surfaceArea() {
+    public synchronized final double surfaceArea() {
         if (this.surfaceArea == null) {
             this.surfaceArea = 0.0;
             for (Face face : this.faces) {
@@ -484,7 +484,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Bounding-box of the mesh.
      */
-    public float[] bounds() {
+    public synchronized float[] bounds() {
         if (this.boundingbox == null) {
             this.boundingbox = MeshMathUtil.bounds(this);
         }
@@ -496,7 +496,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Barycenter of the Mesh.
      */
-    public Vector3f barycenter() {
+    public synchronized Vector3f barycenter() {
         if (this.barycenter == null) {
             this.barycenter = MeshMathUtil.barycenter(this);
         }
@@ -508,7 +508,7 @@ public class Mesh implements WritableMesh {
      *
      * @param translation Vector describing the translation in the three directions.
      */
-    public final void move(Vector3f translation) {
+    public synchronized final void move(Vector3f translation) {
         Matrix4f translationMatrix = new Matrix4f().translation(translation);
         for (Mesh.Vertex v : this.vertices) {
             v.position.mulPosition(translationMatrix);
@@ -523,7 +523,7 @@ public class Mesh implements WritableMesh {
      *
      * @param factor Factor by which the Mesh should be scaled. Values < 1.0 will cause the Mesh to shrink.
      */
-    public final void scale(float factor) {
+    public synchronized final void scale(float factor) {
         Matrix4f scaling = new Matrix4f().scale(factor);
         for (Mesh.Vertex v : this.vertices) {
             v.position.mulPosition(scaling);
@@ -542,7 +542,7 @@ public class Mesh implements WritableMesh {
      *
      * @param transformation Transformation matrix that should be applied.
      */
-    public final void transform(Matrix4f transformation) {
+    public synchronized final void transform(Matrix4f transformation) {
         for (Mesh.Vertex v : this.vertices) {
             v.position.mulPosition(transformation);
         }
@@ -560,7 +560,7 @@ public class Mesh implements WritableMesh {
      * @param color New color of the vertex.
      */
     @Override
-    public void updateColor(int vertexIndex, Color color) {
+    public synchronized void updateColor(int vertexIndex, Color color) {
         Vertex vertex = this.vertices.get(vertexIndex);
         vertex.color.x = color.getRed()/255.0f;
         vertex.color.y = color.getBlue()/255.0f;
