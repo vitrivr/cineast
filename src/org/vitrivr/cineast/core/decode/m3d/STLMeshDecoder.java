@@ -84,13 +84,13 @@ public class STLMeshDecoder implements Decoder<Mesh> {
                     return this.readBinary(is, 74);
                 }
             } else {
-                LOGGER.warn("Could not read the first 10 bytes of the file {}. This is probably not an STL file.", this.inputFile.toString());
-                return Mesh.EMPTY;
+                LOGGER.warn("Could not read the first 10 bytes of the file {}. This is not a valid STL file.", this.inputFile.toString());
+                return null;
             }
         } catch (IOException e) {
             LOGGER.error("Could not decode STL file {} due to an IO exception ({})", this.inputFile.toString(), LogHelper.getStackTrace(e));
             this.complete.set(true);
-            return Mesh.EMPTY;
+            return null;
         } finally {
             this.complete.set(true);
         }
