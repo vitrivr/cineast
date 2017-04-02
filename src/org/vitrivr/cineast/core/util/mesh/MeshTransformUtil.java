@@ -74,6 +74,9 @@ public final class MeshTransformUtil {
      * @param size Length of the longest edge of the mesh's bounding box (for scaling).
      */
     public static void khlTransformInPlace(WritableMesh mesh, float size) {
+        /* Check if Mesh is empty. */
+        if (mesh.isEmpty()) return;
+
         /* 1) Center the mesh. */
         MeshTransformUtil.centerInPlace(mesh);
 
@@ -152,6 +155,7 @@ public final class MeshTransformUtil {
      * @param size Length of the longest edge of the mesh's bounding box.
      */
     public static void scaleInPlace(WritableMesh mesh, float size) {
+        if (mesh.isEmpty()) return;
         float[] bounds = MeshMathUtil.bounds(mesh);
         float max = Math.max(bounds[0]-bounds[1], Math.max(bounds[2]-bounds[3], bounds[4]-bounds[5]));
         mesh.scale(size/max);
@@ -179,6 +183,7 @@ public final class MeshTransformUtil {
      * @param mesh Centered Mesh.
      */
     public static void centerInPlace(WritableMesh mesh) {
+        if (mesh.isEmpty()) return;
         Vector3f center = mesh.barycenter();
         mesh.move(center.negate());
     }
