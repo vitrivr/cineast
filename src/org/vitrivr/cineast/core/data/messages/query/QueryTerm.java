@@ -89,7 +89,7 @@ public class QueryTerm {
                     List<AudioFrame> lists = AudioParser.parseWaveAudio(this.data, 22050.0f, 1);
                     this.cachedQueryContainer =  new AudioQueryContainer(lists);
                     break;
-                case MODEL:
+                case MODEL3D:
                     Mesh mesh = MeshParser.parseThreeJSV4Geometry(this.data);
                     this.cachedQueryContainer =  new ModelQueryContainer(mesh);
                     break;
