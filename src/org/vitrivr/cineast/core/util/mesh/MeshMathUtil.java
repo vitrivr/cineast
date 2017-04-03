@@ -34,7 +34,7 @@ public final class MeshMathUtil {
      * @param point Point to which the distance should be calculated.
      * @return Coordinates of the vertex that is farthest to the provided point.
      */
-    public static Mesh.Vertex farthestVertex(ReadableMesh mesh, Vector3f point) {
+    public static Mesh.Vertex farthestVertex(ReadableMesh mesh, Vector3fc point) {
         List<Mesh.Vertex> vertices = mesh.getVertices();
         Mesh.Vertex max = vertices.get(0);
         float dsq_max = point.distanceSquared(max.getPosition());
@@ -55,7 +55,7 @@ public final class MeshMathUtil {
      * @param point Point to which the distance should be calculated.
      * @return Coordinates of the vertex that is closest to the provided point.
      */
-    public static Mesh.Vertex closestVertex(ReadableMesh mesh, Vector3f point) {
+    public static Mesh.Vertex closestVertex(ReadableMesh mesh, Vector3fc point) {
         List<Mesh.Vertex> vertices = mesh.getVertices();
         Mesh.Vertex min = vertices.get(0);
         float dsq_min = point.distanceSquared(min.getPosition());

@@ -8,6 +8,7 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import org.joml.Vector3fc;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
@@ -77,11 +78,12 @@ public final class MeshTransformUtil {
         /* Check if Mesh is empty. */
         if (mesh.isEmpty()) return;
 
-        /* 1) Center the mesh. */
-        MeshTransformUtil.centerInPlace(mesh);
+         /* 1) Scale the mesh. */
+        MeshTransformUtil.scaleInPlace(mesh, size);
+
 
         /* 2) Rotate the mesh along its PCA axis. */
-        Vector3f barycenter = mesh.barycenter();
+        Vector3fc barycenter = mesh.barycenter();
 
         /* Prepare an empty covariance matrix. */
         DenseMatrix64F covariance = new DenseMatrix64F(3,3);
@@ -126,8 +128,8 @@ public final class MeshTransformUtil {
         rotation.rotate(angleY, xaxis);
         mesh.transform(rotation);
 
-        /* Scale the mesh. */
-        MeshTransformUtil.scaleInPlace(mesh, size);
+        /* 3) Center the mesh. */
+        MeshTransformUtil.centerInPlace(mesh);
     }
 
     /**
@@ -184,7 +186,7 @@ public final class MeshTransformUtil {
      */
     public static void centerInPlace(WritableMesh mesh) {
         if (mesh.isEmpty()) return;
-        Vector3f center = mesh.barycenter();
+        Vector3f center = new Vector3f(mesh.barycenter());
         mesh.move(center.negate());
     }
 

@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.util.mesh;
 
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.joml.Vector3i;
 import org.joml.Vector4i;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
@@ -26,7 +27,7 @@ public final class MeshColoringUtil {
      * @param mesh Mesh that needs coloring.
      */
     public static void color(WritableMesh mesh) {
-        Vector3f center = mesh.barycenter();
+        Vector3fc center = mesh.barycenter();
         Mesh.Vertex farthestVertex = MeshMathUtil.farthestVertex(mesh, center);
         float ds_max = center.distance(farthestVertex.getPosition());
         for (int i=0; i<mesh.numberOfVertices(); i++) {
@@ -43,7 +44,7 @@ public final class MeshColoringUtil {
     public static void normalColoring(WritableMesh mesh) {
         Vector3f axis = new Vector3f(1.0f,0.0f, 0.0f);
 
-        Vector3f center = mesh.barycenter();
+        Vector3fc center = mesh.barycenter();
         Mesh.Vertex farthestVertex = MeshMathUtil.farthestVertex(mesh, center);
         float ds_max = center.distance(farthestVertex.getPosition());
 

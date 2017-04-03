@@ -496,7 +496,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Barycenter of the Mesh.
      */
-    public synchronized Vector3f barycenter() {
+    public synchronized Vector3fc barycenter() {
         if (this.barycenter == null) {
             this.barycenter = MeshMathUtil.barycenter(this);
         }
