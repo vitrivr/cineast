@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.m3d;
 
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.List;
 
@@ -65,7 +66,7 @@ public interface ReadableMesh {
      *
      * @return Barycenter of the Mesh.
      */
-    Vector3f barycenter();
+    Vector3fc barycenter();
 
     /**
      * Indicates, whether the mesh is an empty Mesh or not
