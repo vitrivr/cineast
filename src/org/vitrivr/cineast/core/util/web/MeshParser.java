@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gnu.trove.map.hash.TObjectIntHashMap;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
@@ -18,8 +19,8 @@ public class MeshParser extends DataURLParser {
 
     /** Some format specific constants. */
     private static final String MIME_TYPE = "application/3d-json";
-    private static final String VERTICES_PROPERTY_NAME_THREEV4 = "position";
-    private static final String NORMAL_PROPERTY_NAME_THREEV4 = "normal";
+    private static final String VERTICES_PROPERTY_NAME_THREEV4 = "vertices";
+    private static final String NORMAL_PROPERTY_NAME_THREEV4 = "normals";
     private static final String ARRAY_PROPERTY_NAME_THREEV4 = "array";
 
     /**
@@ -38,48 +39,32 @@ public class MeshParser extends DataURLParser {
             /* Read the JSON structure of the transmitted mesh data. */
             JsonNode node = mapper.readTree(bytes);
             JsonNode vertices = node.get(VERTICES_PROPERTY_NAME_THREEV4);
-            if (vertices == null) {
-                LOGGER.error("Submitted mesh does not contain a position array. Aborting...");
-                return Mesh.EMPTY;
-            }
-
-            vertices = vertices.get(ARRAY_PROPERTY_NAME_THREEV4);
             if (vertices == null || !vertices.isArray() || vertices.size() == 0)  {
                 LOGGER.error("Submitted mesh does not contain any vertices. Aborting...");
                 return Mesh.EMPTY;
             }
 
-            JsonNode normals = node.get(NORMAL_PROPERTY_NAME_THREEV4);
-            if (normals == null) {
-                LOGGER.error("Submitted mesh does not contain any normals. Aborting...");
-                return Mesh.EMPTY;
-            }
-
-            normals = normals.get(ARRAY_PROPERTY_NAME_THREEV4);
-            if (normals == null  || !normals.isArray() || normals.size() == 0) {
-                LOGGER.error("Submitted mesh does not contain any normals. Aborting...");
-                return Mesh.EMPTY;
-            }
-
             /* Create new Mesh. */
-            Mesh mesh = new Mesh(vertices.size()/3, vertices.size());
+            Mesh mesh = new Mesh(vertices.size()/9, vertices.size()/3);
+
+            /* Prepare helper structures. */
+            TObjectIntHashMap<Vector3f> vertexBuffer = new TObjectIntHashMap<>();
+            int index = 0;
+            int[] vertexindices = new int[3];
 
             /* Add all the vertices and normals in the structure. */
-            for (int i=0; i<(vertices.size()/3); i++) {
-                int idx = 3*i;
-                Vector3f vertex = new Vector3f((float)vertices.get(idx).asDouble(), (float)vertices.get(idx+1).asDouble(),(float)vertices.get(idx+2).asDouble());
-                if (i < normals.size()) {
-                    Vector3f normal = new Vector3f((float)normals.get(idx).asDouble(), (float)normals.get(idx+1).asDouble(),(float)normals.get(idx+2).asDouble());
-                    mesh.addVertex(vertex, new Vector3f(1.0f, 1.0f, 1.0f), normal);
-                } else {
-                    mesh.addVertex(vertex, new Vector3f(1.0f, 1.0f, 1.0f));
+            for (int i=0; i<vertices.size()-9; i+=9) {
+                for (int j=0; j<3; j++) {
+                    int idx = i + 3*j;
+                    Vector3f vertex = new Vector3f((float)vertices.get(idx).asDouble(), (float)vertices.get(idx+1).asDouble(),(float)vertices.get(idx+2).asDouble());
+                    if (!vertexBuffer.containsKey(vertex)) {
+                        vertexBuffer.put(vertex, index++);
+                        mesh.addVertex(vertex);
+                    }
+                    vertexindices[j] = vertexBuffer.get(vertex);
                 }
-            }
 
-            /* Add the faces to the mesh. */
-            for (int i = 0; i<mesh.numberOfVertices()/3; i++) {
-                int idx = 3*i;
-                mesh.addFace(new Vector3i(idx+1, idx+2, idx+3));
+                mesh.addFace(new Vector3i(vertexindices[0], vertexindices[1], vertexindices[2]));
             }
 
             return mesh;
