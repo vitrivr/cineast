@@ -488,7 +488,7 @@ public class Mesh implements WritableMesh {
         if (this.boundingbox == null) {
             this.boundingbox = MeshMathUtil.bounds(this);
         }
-        return this.boundingbox;
+        return Arrays.copyOf(this.boundingbox, 6);
     }
 
     /**
