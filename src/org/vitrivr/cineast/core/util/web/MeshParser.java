@@ -53,7 +53,7 @@ public class MeshParser extends DataURLParser {
             int[] vertexindices = new int[3];
 
             /* Add all the vertices and normals in the structure. */
-            for (int i=0; i<vertices.size()-9; i+=9) {
+            for (int i=0; i<=vertices.size()-9; i+=9) {
                 for (int j=0; j<3; j++) {
                     int idx = i + 3*j;
                     Vector3f vertex = new Vector3f((float)vertices.get(idx).asDouble(), (float)vertices.get(idx+1).asDouble(),(float)vertices.get(idx+2).asDouble());
