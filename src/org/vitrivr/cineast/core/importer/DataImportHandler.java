@@ -119,6 +119,7 @@ public class DataImportHandler {
         if (p.toString().toLowerCase().endsWith(".json")) {
           DataImportRunner runner = new DataImportRunner(new JsonObjectImporter(p.toFile()), p);
           runner.run();
+          System.gc();
         }
       }
 
