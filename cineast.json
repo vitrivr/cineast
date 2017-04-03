@@ -75,6 +75,13 @@
 			],
 			"mfcc" : [
 				{"feature": "MFCCShingle",						"weight": 1.0}
+			],
+			"lightfield" : [
+				{"feature": "LightfieldFourier",				"weight": 1.0},
+				{"feature": "LightfieldZernike",				"weight": 1.0}
+			],
+			"sphericalharmonics" : [
+				{"feature": "SphericalHarmonics",				"weight": 1.0}
 			]
 		}
 	},
