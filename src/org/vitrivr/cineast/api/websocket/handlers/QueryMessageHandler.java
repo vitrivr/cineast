@@ -1,9 +1,14 @@
 package org.vitrivr.cineast.api.websocket.handlers;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jetty.websocket.api.Session;
-
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -13,13 +18,17 @@ import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.query.Query;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.QueryTerm;
-import org.vitrivr.cineast.core.data.messages.result.*;
+import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.QueryEnd;
+import org.vitrivr.cineast.core.data.messages.result.QueryStart;
+import org.vitrivr.cineast.core.data.messages.result.SegmentQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.SimilarityQueryResult;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 
-import java.util.*;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 /**
  * @author rgasser
@@ -169,7 +178,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
 
         ArrayList<MultimediaObjectDescriptor> vdList = new ArrayList<>(vids.length);
 
-        Map<String, MultimediaObjectDescriptor> vmap = vl.lookUpVideos(vids);
+        Map<String, MultimediaObjectDescriptor> vmap = vl.lookUpObjects(vids);
 
         for(String vid : vids){
             vdList.add(vmap.get(vid));

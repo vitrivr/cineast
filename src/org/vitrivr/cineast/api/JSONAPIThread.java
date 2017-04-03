@@ -411,7 +411,7 @@ public class JSONAPIThread extends Thread {
 			}
 
 			case "getMultimediaobjects":{
-				List<MultimediaObjectDescriptor> multimediaobjectIds = new MultimediaObjectLookup().getAllVideos();
+				List<MultimediaObjectDescriptor> multimediaobjectIds = new MultimediaObjectLookup().getAllObjects();
 
 				JsonArray movies = new JsonArray();
 				for(MultimediaObjectDescriptor descriptor: multimediaobjectIds){
@@ -538,7 +538,7 @@ public class JSONAPIThread extends Thread {
 			  }
         
 			  MultimediaObjectLookup mmlookup = new MultimediaObjectLookup();
-			  Map<String, MultimediaObjectDescriptor> mmobjects = mmlookup.lookUpVideos(mmobjectIds);
+			  Map<String, MultimediaObjectDescriptor> mmobjects = mmlookup.lookUpObjects(mmobjectIds);
 			  mmlookup.close();
 			  
 			  printer.print(JSONEncoder.encodeVideoBatch(mmobjects.values()));
