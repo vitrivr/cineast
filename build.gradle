@@ -98,9 +98,9 @@ dependencies {
     /**
      * Test dependencies (JUnit 5)
      */
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0-M3'
-    testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version:'1.0.0-M3'
-    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.0.0-M3'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0-M4'
+    testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version:'1.0.0-M4'
+    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.0.0-M4'
 
     /**
      * Manual Fixes for the javacpp-devs because of naming conventions & versions. Each os is handled independently
