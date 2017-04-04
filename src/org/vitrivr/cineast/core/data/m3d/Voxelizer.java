@@ -104,13 +104,10 @@ public class Voxelizer {
 
         long start =  System.currentTimeMillis();
 
-        /* Calculate the bounding-box of the mesh. */
-        float[] boundingbox =  mesh.bounds();
-
         /* Process the faces and perform all the relevant tests described in [1]. */
         for (Mesh.Face face : mesh.getFaces()) {
             List<Mesh.Vertex> vertices = face.getVertices();
-            List<Pair<Vector3i,Vector3f>> enclosings = Voxelizer.this.enclosingGrid(vertices, boundingbox, grid);
+            List<Pair<Vector3i,Vector3f>> enclosings = Voxelizer.this.enclosingGrid(vertices, grid);
             for (Pair<Vector3i,Vector3f> enclosing : enclosings) {
                 /* Perform vertex-tests. */
                 if (Voxelizer.this.vertextTest(vertices.get(0), enclosing)) {
@@ -228,11 +225,10 @@ public class Voxelizer {
      * of provided vertices.
      *
      * @param vertices The Vertices for which an enclosing grid needs to be found.
-     * @param boundingBox Bounding-box of the mesh. Used for calculations.
      * @param grid VoxelGrid to select voxels from.
      * @return List of voxels that confine the provided vertices.
      */
-    private List<Pair<Vector3i,Vector3f>> enclosingGrid(List<Mesh.Vertex> vertices, float[] boundingBox, VoxelGrid grid) {
+    private List<Pair<Vector3i,Vector3f>> enclosingGrid(List<Mesh.Vertex> vertices, VoxelGrid grid) {
         /* Calculate bounding box for provided vertices. */
         ArrayList<Vector3fc> positions = new ArrayList<>(vertices.size());
         for (Mesh.Vertex vertex : vertices) {
@@ -242,30 +238,14 @@ public class Voxelizer {
         float bounds[] = MeshMathUtil.bounds(positions);
 
         /* Derive max and min voxel-indices from bounding-boxes. */
-        int max_x = Math.abs((int)Math.ceil(((boundingBox[1]-bounds[0])/this.resolution)));
-        int min_x = Math.abs((int)Math.ceil(((boundingBox[1]-bounds[1])/this.resolution)));
-        int max_y = Math.abs((int)Math.ceil(((boundingBox[3]-bounds[2])/this.resolution)));
-        int min_y = Math.abs((int)Math.ceil(((boundingBox[3]-bounds[3])/this.resolution)));
-        int max_z = Math.abs((int)Math.ceil(((boundingBox[5]-bounds[4])/this.resolution)));
-        int min_z = Math.abs((int)Math.ceil(((boundingBox[5]-bounds[5])/this.resolution)));
-
-        assert min_x >= 0;
-        assert max_x < grid.getSizeX();
-        assert min_x <= max_x;
-
-        assert min_y >= 0;
-        assert max_y < grid.getSizeY();
-        assert min_y <= max_y;
-
-        assert min_z >= 0;
-        assert max_z < grid.getSizeY();
-        assert min_z <= max_z;
+        Vector3i max = grid.coordinateToVoxel(new Vector3f(bounds[0], bounds[2], bounds[4]));
+        Vector3i min = grid.coordinateToVoxel(new Vector3f(bounds[1], bounds[3], bounds[5]));
 
         /* Initialize an empty ArrayList for the Voxel-Elements. */
-        List<Pair<Vector3i,Vector3f>> enclosing = new ArrayList<>((max_x-min_x) * (max_y-min_y) * (max_z-min_z));
-        for (int i = min_x; i <= max_x; i++) {
-            for (int j = min_y;j<= max_y; j++) {
-                for (int k = min_z; k <= max_z; k++) {
+        List<Pair<Vector3i,Vector3f>> enclosing = new ArrayList<>((max.x-min.x) * (max.y-min.y) * (max.z-min.z));
+        for (int i = min.x; i <= max.x; i++) {
+            for (int j = min.y;j<= max.y; j++) {
+                for (int k = min.z; k <= max.z; k++) {
                     enclosing.add(new Pair<>(new Vector3i(i,j,k), grid.getVoxelCenter(i,j,k)));
                 }
             }

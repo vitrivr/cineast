@@ -7,7 +7,6 @@ import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
-import org.joml.Vector4i;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
@@ -235,9 +234,9 @@ public class JOGLOffscreenRenderer implements Renderer {
                         Vector3f voxelCenter = grid.getVoxelCenter(i,j,k);
 
                         /* Extract center of the voxel. */
-                        float x = grid.getVoxelCenter().x + voxelCenter.x;
-                        float y = grid.getVoxelCenter().y + voxelCenter.y;
-                        float z = grid.getVoxelCenter().z + voxelCenter.z;
+                        float x = voxelCenter.x;
+                        float y = voxelCenter.y;
+                        float z = voxelCenter.z;
 
                         /* Determine which faces to draw: Faced that are covered by another active voxel are switched off. */
                         if(i > 0) visible[0] = !grid.isVisible(i-1,j,k);

@@ -1,9 +1,12 @@
 package org.vitrivr.cineast.core.data.m3d;
 
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
+import org.joml.Vector3i;
 
 /**
- * This class represents a Voxel grid, i.e. a 3-dimensional grid of 3D pixels (called Voxels).
+ * This class represents a Voxel grid, i.e. a 3-dimensional grid of 3D pixels (called Voxels). Every voxel
+ * can either be visible or invisible.
  *
  * @author rgasser
  * @version 1.0
@@ -33,16 +36,21 @@ public class VoxelGrid {
     /** The total length ot the voxel grid (i.e. the number of voxels in the grid). */
     private final int length;
 
-    /** Number of visible Voxels in the grid. */
+    /** Number of visible voxels in the grid. */
     private int visible = 0;
 
-    /** Number of invisible Voxels in the grid. */
+    /** Number of invisible voxels in the grid. */
     private int invisible = 0;
 
     /** Array holding the actual voxels. */
     private final Voxel[][][] voxelGrid;
 
-    /** Defines the center of the voxel-grid (in the world coordinate system). */
+    /** Defines the center of the voxel-grid (in the world coordinate system). It corresponds to the
+     * center of the voxel at (sizeX/2, sizeY/2, sizeZ/2).
+     *
+     *
+     * <p>Important: </p> Transformation into world coordinates are based on this center!
+     */
     private final Vector3f center = new Vector3f(0f,0f,0f);
 
     /**
@@ -130,7 +138,7 @@ public class VoxelGrid {
      *
      * @return Vector pointing to the center of the grid.
      */
-    public final Vector3f getVoxelCenter() {
+    public final Vector3fc getGridCenter() {
         return center;
     }
 
@@ -173,6 +181,21 @@ public class VoxelGrid {
     }
 
     /**
+     * Transforms world-coordinates (e.g. position of a vertex in space) into the corresponding voxel coordinates,
+     * i.e. the index of the voxel in the grid.
+     *
+     * <p>Important: </p> The indices returned by this method are not necessarily within the bounds
+     * of the grid.
+     *
+     * @param coordinate Coordinates to be transformed.
+     * @return coordinate Voxel indices.
+     */
+    public final Vector3i coordinateToVoxel(Vector3fc coordinate) {
+        Vector3f gridCoordinates = (new Vector3f(coordinate)).add(this.center).div(this.resolution);
+        return new Vector3i((int)Math.ceil(gridCoordinates.x + this.sizeX/2), (int)Math.ceil(gridCoordinates.y + this.sizeY/2), (int)Math.ceil(gridCoordinates.z + this.sizeZ/2));
+    }
+
+    /**
      * Returns the Voxel at the specified position.
      *
      * @param x x position of the Voxel.
@@ -207,7 +230,7 @@ public class VoxelGrid {
      * @throws ArrayIndexOutOfBoundsException If one of the three indices is larger than the grid.
      */
     public Vector3f getVoxelCenter(int x, int y, int z) {
-        return new Vector3f((x-VoxelGrid.this.sizeX/2) * VoxelGrid.this.resolution, (y-VoxelGrid.this.sizeY/2)*VoxelGrid.this.resolution, (z-VoxelGrid.this.sizeZ/2)*VoxelGrid.this.resolution);
+        return new Vector3f((x-VoxelGrid.this.sizeX/2) * VoxelGrid.this.resolution + this.center.x, (y-VoxelGrid.this.sizeY/2)*VoxelGrid.this.resolution + this.center.y, (z-VoxelGrid.this.sizeZ/2)*VoxelGrid.this.resolution + this.center.z);
     }
 
     /**
@@ -229,5 +252,27 @@ public class VoxelGrid {
             this.invisible += 1;
             this.visible -= 1;
         }
+    }
+
+    /**
+     * Converts the VoxelGrid into a string that can be read by Matlab (e.g. for 3D scatter plots).
+     * The array contains the coordinates of all visible voxels.
+     *
+     * @return String
+     */
+    public String toMatlabArray() {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("[");
+        for (int x=0;x<this.sizeX;x++) {
+            for (int y=0;y<this.sizeY;y++) {
+                for (int z=0;z<this.sizeZ;z++) {
+                    if (this.voxelGrid[x][y][z] == Voxel.VISIBLE) {
+                        buffer.append(String.format("%d %d %d; ",x,y,z));
+                    }
+                }
+            }
+        }
+        buffer.append("]");
+        return buffer.toString();
     }
 }
