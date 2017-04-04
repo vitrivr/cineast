@@ -113,7 +113,9 @@ public class ContinousQueryDispatcher {
 							continue;
 						}
 						for(int i = 0; i < resultListeners.size(); ++i){
-						  resultListeners.get(i).notify(pair.second, pair.first);
+						  RetrievalResultListener listener = resultListeners.get(i);
+						  LOGGER.debug("calling RetrievalResultListener '{}' with output of '{}'", listener.getClass().getSimpleName(), pair.first.getRetriever().getClass().getSimpleName());
+						  listener.notify(pair.second, pair.first);
 						}
 						for (StringDoublePair sdp : list) {
 							if (Double.isInfinite(sdp.value) || Double.isNaN(sdp.value)) {
