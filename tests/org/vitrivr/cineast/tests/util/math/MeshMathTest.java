@@ -2,6 +2,7 @@ package org.vitrivr.cineast.tests.util.math;
 
 import org.joml.Vector3f;
 
+import org.joml.Vector3fc;
 import org.joml.Vector3i;
 import org.joml.Vector4i;
 import org.junit.jupiter.api.DisplayName;
@@ -89,27 +90,27 @@ public class MeshMathTest {
     void testMovedCubeBaryCenter() {
         Mesh movedCube = new Mesh(CUBE);
         movedCube.move(new Vector3f(1.0f, 1.0f,1.0f));
-        Vector3f barycenter = movedCube.barycenter();
-        assertEquals(1.0f, barycenter.x, 1e-6, "X-Coordinate of CUBE barycenter is off.");
-        assertEquals(1.0f, barycenter.y, 1e-6, "Y-Coordinate of CUBE barycenter is off.");
-        assertEquals(1.0f, barycenter.z, 1e-6, "Z-Coordinate of CUBE barycenter is off.");
+        Vector3fc barycenter = movedCube.barycenter();
+        assertEquals(1.0f, barycenter.x(), 1e-6, "X-Coordinate of CUBE barycenter is off.");
+        assertEquals(1.0f, barycenter.y(), 1e-6, "Y-Coordinate of CUBE barycenter is off.");
+        assertEquals(1.0f, barycenter.z(), 1e-6, "Z-Coordinate of CUBE barycenter is off.");
     }
 
     @Test
     @DisplayName("Empty Barycenter Test")
     void testEmptyBarycenter() {
-        Vector3f barycenter = MeshMathUtil.barycenter(Mesh.EMPTY);
-        assertEquals(Float.NaN, barycenter.x, "X-Coordinate of EMPTY barycenter is supposed to be NaN.");
-        assertEquals(Float.NaN, barycenter.y, "X-Coordinate of EMPTY barycenter is supposed to be NaN.");
-        assertEquals(Float.NaN, barycenter.z,"X-Coordinate of EMPTY barycenter is supposed to be NaN.");
+        Vector3fc barycenter = MeshMathUtil.barycenter(Mesh.EMPTY);
+        assertEquals(Float.NaN, barycenter.x(), "X-Coordinate of EMPTY barycenter is supposed to be NaN.");
+        assertEquals(Float.NaN, barycenter.y(), "X-Coordinate of EMPTY barycenter is supposed to be NaN.");
+        assertEquals(Float.NaN, barycenter.z(),"X-Coordinate of EMPTY barycenter is supposed to be NaN.");
     }
 
     @Test
     @DisplayName("Any Barycenter Test")
     void testAnyBarycenter() {
-        Vector3f barycenter = MeshMathUtil.barycenter(ANY);
-        assertNotEquals(0.0f, barycenter.x, "X-Coordinate of ANY barycenter is not supposed to be 0.0.");
-        assertNotEquals(0.0f, barycenter.y, "Y-Coordinate of ANY barycenter is not supposed to be 0.0.");
-        assertNotEquals(0.0f, barycenter.z,"Z-Coordinate of ANY barycenter is not supposed to be 0.0.");
+        Vector3fc barycenter = MeshMathUtil.barycenter(ANY);
+        assertNotEquals(0.0f, barycenter.x(), "X-Coordinate of ANY barycenter is not supposed to be 0.0.");
+        assertNotEquals(0.0f, barycenter.y(), "Y-Coordinate of ANY barycenter is not supposed to be 0.0.");
+        assertNotEquals(0.0f, barycenter.z(),"Z-Coordinate of ANY barycenter is not supposed to be 0.0.");
     }
 }
