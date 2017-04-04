@@ -81,7 +81,6 @@ public final class MeshTransformUtil {
          /* 1) Scale the mesh. */
         MeshTransformUtil.scaleInPlace(mesh, size);
 
-
         /* 2) Rotate the mesh along its PCA axis. */
         Vector3fc barycenter = mesh.barycenter();
 
@@ -120,12 +119,11 @@ public final class MeshTransformUtil {
         Vector3f xaxis = new Vector3f(1.0f,0.0f,0.0f);
         Vector3f yaxis = new Vector3f(0.0f,1.0f,0.0f);
         float angleX = xaxis.angle(eigenvectors.get(2).second);
-        Vector3f rotationAxis = xaxis.cross(eigenvectors.get(2).second);
-        rotation.rotate(angleX, rotationAxis);
+        rotation.rotate(angleX, xaxis.cross(eigenvectors.get(2).second));
 
         /* 2c) Apply second rotation: Second largest spread should occur along the y-axis. */
         float angleY = yaxis.angle(eigenvectors.get(1).second);
-        rotation.rotate(angleY, xaxis);
+        rotation.rotate(angleY, yaxis.cross(eigenvectors.get(1).second));
         mesh.transform(rotation);
 
         /* 3) Center the mesh. */
