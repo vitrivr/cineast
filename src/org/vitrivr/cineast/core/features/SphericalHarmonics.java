@@ -5,7 +5,6 @@ import org.apache.commons.math3.util.FastMath;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 import org.vitrivr.cineast.core.data.m3d.Voxelizer;
@@ -33,8 +32,11 @@ public class SphericalHarmonics extends AbstractFeatureModule {
     /* Size of the Voxel Grid in each of the three dimensions. */
     private static final int GRID_SIZE = 64;
 
+    /* Resolution of the grid. */
+    private static final int R = GRID_SIZE/2;
+
     /** Voxelizer instance used with thes feature module. */
-    private Voxelizer voxelizer = new Voxelizer(1.0f/GRID_SIZE);
+    private Voxelizer voxelizer = new Voxelizer(1.0f/R);
 
     /**
      * Default constructor for SphericalHarmonics class.
@@ -54,7 +56,7 @@ public class SphericalHarmonics extends AbstractFeatureModule {
         if (mesh == null || mesh.isEmpty()) return;
 
         /* Extract feature and persist it. */
-        float[] feature = this.featureVectorsFromMesh(mesh, shot.getId());
+        float[] feature = this.featureVectorsFromMesh(mesh);
         this.persist(shot.getId(), new FloatVectorImpl(feature));
     }
 
@@ -74,7 +76,7 @@ public class SphericalHarmonics extends AbstractFeatureModule {
         qc.setDistance(QueryConfig.Distance.euclidean);
 
         /* Extract feature and persist it. */
-        float[] feature = this.featureVectorsFromMesh(mesh, sc.getId());
+        float[] feature = this.featureVectorsFromMesh(mesh);
         return this.getSimilar(feature, qc);
     }
 
@@ -101,19 +103,17 @@ public class SphericalHarmonics extends AbstractFeatureModule {
      * @param mesh
      * @return
      */
-    private float[] featureVectorsFromMesh(ReadableMesh mesh, String id) {
+    private float[] featureVectorsFromMesh(ReadableMesh mesh) {
+        final float increment = 0.1f; /* Increment of the radius during calculation of the descriptors. Results in 7 different radii. */
+        final int cap = 8;
 
-        final int halfGridSize = GRID_SIZE/2;
-        final float radiusincrement = 0.125f; /* Increment of the radius during calculation of the descriptors. Results in 7 different radii. */
-        final float angularincrement = 0.1f; /* Increment of the angles during calculation of the descriptors. */
 
         /* Prepares an empty array for the feature vector. */
-        float[] feature = new float[7*25];
+        float[] feature = new float[(R-cap)*25];
 
         /* Voxelizes the grid from the mesh. If the resulting grid is invisible, the method returns immediately. */
-        VoxelGrid grid = this.voxelizer.voxelize(mesh, GRID_SIZE+1, GRID_SIZE+1, GRID_SIZE+1);
+        VoxelGrid grid = this.voxelizer.voxelize(mesh, GRID_SIZE + 1, GRID_SIZE + 1, GRID_SIZE + 1);
         if (!grid.isVisible()) return feature;
-
 
         List<List<Complex>> descriptors = new ArrayList<>();
 
@@ -126,29 +126,29 @@ public class SphericalHarmonics extends AbstractFeatureModule {
 
                 final SphericalHarmonicsFunction fkt = new SphericalHarmonicsFunction(l,m);
 
+
                 /*
                  * Middle-loop; Iterate over the 7 radii.
                  */
-                for (int r=0; r<7;r++) {
-
+                for (int r=0;r<R-cap;r++) {
                     /* Allocate array list for radius. */
                     if (descriptors.size() <= r) descriptors.add(new ArrayList<>());
                     List<Complex> list = descriptors.get(r);
 
-                    /* */
-                    float radius = (r + 2.0f) * radiusincrement;
                     Complex result = new Complex(0.0);
 
                     /*
                      * Used to calculate the projections at radius r for l and m (i.e. the integral ∫f(ϑ,ϼ)Zlm(ϑ,ϼ)dϴdϑ)
                      */
-                    for (float theta=0.0f; theta<=Math.PI;theta+=angularincrement) {
-                        for (float phi=0.0f; phi<=2*Math.PI;phi+=angularincrement) {
-                            int x = (int)Math.floor(radius * FastMath.sin(theta) * FastMath.cos(phi) * halfGridSize) + halfGridSize;
-                            int y = (int)Math.floor(radius * FastMath.cos(theta) * halfGridSize) + halfGridSize;
-                            int z = (int)Math.floor(radius * FastMath.sin(theta) * FastMath.sin(phi) * halfGridSize) + halfGridSize;
-                            double value = grid.isVisible(x,y,z) ? 1.0 : 0.0;
-                            result = result.add(fkt.value(theta, phi).conjugate().multiply(value*angularincrement*angularincrement));
+                    for (float theta=0.0f; theta<=2*Math.PI;theta+=increment) {
+                        for (float phi=0.0f; phi<=Math.PI;phi+=increment) {
+                            int x = (int)((r+1) * FastMath.sin(theta) * FastMath.cos(phi)) + R;
+                            int y = (int)((r+1) * FastMath.cos(theta)) + R;
+                            int z = (int)((r+1) * FastMath.sin(theta) * FastMath.sin(phi)) + R;
+
+                            if (grid.isVisible(x,y,z)) {
+                                result = result.add(fkt.value(theta, phi).conjugate().multiply(increment*increment));
+                            }
                         }
                     }
 
@@ -156,6 +156,8 @@ public class SphericalHarmonics extends AbstractFeatureModule {
                 }
             }
         }
+
+
 
         /* Assembles the actual feature vector. */
         int i = 0;
