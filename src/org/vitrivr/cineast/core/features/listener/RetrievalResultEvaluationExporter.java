@@ -66,7 +66,7 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
         writer.close();
         return;
       } else {
-        SegmentDescriptor segment = sl.lookUpSegment(task.getSegmentId());
+        SegmentDescriptor segment = sl.lookUpSegment(task.getSegmentId()).get();
         MultimediaObjectDescriptor mmobject = ol.lookUpObjectById(segment.getObjectId());
         
         String path = mmobject.getPath();
@@ -93,7 +93,7 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
 
         StringDoublePair sdp = iter.next();
 
-        SegmentDescriptor segment = sl.lookUpSegment(sdp.key);
+        SegmentDescriptor segment = sl.lookUpSegment(sdp.key).get();
         String objectId = segment.getObjectId();
         MultimediaObjectDescriptor mmobject = ol.lookUpObjectById(objectId);
         String path = mmobject.getPath();

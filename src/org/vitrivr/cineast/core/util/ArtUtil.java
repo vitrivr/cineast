@@ -105,7 +105,7 @@ public class ArtUtil {
 
   public static List<Map<String, PrimitiveTypeProvider>> getFeatureData(DBSelector selector, String multimediaobjectId){
     SegmentLookup segmentLookup = new SegmentLookup();
-    List<SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
+    List<SegmentDescriptor> segments = segmentLookup.lookUpSegmentsOfObject(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
     List<String> segmentIds = new ArrayList();
     Map<String, Integer> sequenceMapping = new HashMap();
@@ -125,7 +125,7 @@ public class ArtUtil {
   }
 
   public static List<Map<String, PrimitiveTypeProvider>> getFeatureData(DBSelector selector, List<String> segmentIds){
-    Map<String, SegmentDescriptor> segments = new SegmentLookup().lookUpSegments(segmentIds.toArray(new String[segmentIds.size()]));
+    Map<String, SegmentDescriptor> segments = new SegmentLookup().lookUpSegments(segmentIds);
     Map<String, Integer> sequenceMapping = new HashMap();
     for (SegmentDescriptor segment : segments.values()) {
       segmentIds.add(segment.getSegmentId());
