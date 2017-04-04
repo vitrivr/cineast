@@ -90,7 +90,7 @@ public class JSONAPIThread extends Thread {
 				String shotId = queryObject.get("shotid").asString();
 
 				SegmentLookup sl = new SegmentLookup();
-				SegmentDescriptor shot = sl.lookUpSegment(shotId);
+				SegmentDescriptor shot = sl.lookUpSegment(shotId).get();
 				//List<ShotDescriptor> allShots = sl.lookUpVideo(shot.getObjectId());
 
 				//Send metadata
@@ -117,7 +117,7 @@ public class JSONAPIThread extends Thread {
 					String shotId = clientJSON.get("shotid").asString();
 
 					SegmentLookup sl = new SegmentLookup();
-					SegmentDescriptor shot = sl.lookUpSegment(shotId);
+					SegmentDescriptor shot = sl.lookUpSegment(shotId).get();
 
 					JsonObject resultobj = new JsonObject();
 					resultobj.add("type", "submitShot").add("videoId", shot.getObjectId()).add("start", shot.getStart()).add("end", shot.getEnd());
@@ -364,13 +364,13 @@ public class JSONAPIThread extends Thread {
 				  
 					JsonValue val = shotidlist.get(i);
 					String shotid = val.asString();
-					SegmentDescriptor descriptor = sl.lookUpSegment(shotid);
+					SegmentDescriptor descriptor = sl.lookUpSegment(shotid).get();
 					
 					String video = descriptor.getObjectId();
 					int startSegment = Math.max(1, descriptor.getSequenceNumber() - limit);
 					int endSegment = descriptor.getSequenceNumber() + limit;
 					
-					List<SegmentDescriptor> all = sl.lookUpAllSegments(video);
+					List<SegmentDescriptor> all = sl.lookUpSegmentsOfObject(video);
 
 					for(SegmentDescriptor sd : all){
 					  if(sd.getSequenceNumber() >= startSegment && sd.getSequenceNumber() <= endSegment){
@@ -425,7 +425,7 @@ public class JSONAPIThread extends Thread {
 
 			case "getSegments":{
 				String multimediaobjectId = clientJSON.get("multimediaobjectId").asString();
-				List<SegmentDescriptor> segments = new SegmentLookup().lookUpAllSegments(multimediaobjectId);
+				List<SegmentDescriptor> segments = new SegmentLookup().lookUpSegmentsOfObject(multimediaobjectId);
 				Collections.sort(segments, new SegmentDescriptorComparator());
 
 				JsonArray list = new JsonArray();

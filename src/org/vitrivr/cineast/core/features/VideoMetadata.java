@@ -36,7 +36,7 @@ public class VideoMetadata extends SolrTextRetriever {
       String id = result.get("id").getString();
       float score = MathHelper.limit(result.get("ap_score").getFloat() / words / 10f, 0f, 1f);
      
-      List<SegmentDescriptor> segments = lookup.lookUpAllSegments(id);
+      List<SegmentDescriptor> segments = lookup.lookUpSegmentsOfObject(id);
       for(int i = 0; i < segments.size(); i += STEPSIZE){
         pairs.add(new StringDoublePair(segments.get(i).getSegmentId(), score));
       }

@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.api.websocket.handlers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -132,7 +133,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
             ids[i++] = sdp.key;
         }
 
-        Map<String, SegmentDescriptor> map = sl.lookUpSegments(ids);
+        Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
 
         for(String id : ids){
             SegmentDescriptor sd = map.get(id);
@@ -159,7 +160,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
             ids[i++] = sdp.key;
         }
 
-        Map<String, SegmentDescriptor> map = sl.lookUpSegments(ids);
+        Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
 
         HashSet<String> videoIds = new HashSet<>();
         for(String id : ids){
