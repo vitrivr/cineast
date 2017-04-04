@@ -91,8 +91,8 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
         writer.close();
         return;
       } else {
-        SegmentDescriptor segment = sl.lookUpSegment(task.getSegmentId());
-        MultimediaObjectDescriptor mmobject = ol.lookUpObjectById(segment.getObjectId());
+//        SegmentDescriptor segment = sl.lookUpSegment(task.getSegmentId()).get();
+//        MultimediaObjectDescriptor mmobject = ol.lookUpObjectById(segment.getObjectId());
         
         String path = objects.get(
             segments.get(
@@ -125,6 +125,7 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
 
        
         String path = objects.get(segments.get(sdp.key).getObjectId()).getPath().replace('\\', '/');
+
 
 //        try {
 //          Files.copy((new File(collectionLocation, path)).toPath(),
