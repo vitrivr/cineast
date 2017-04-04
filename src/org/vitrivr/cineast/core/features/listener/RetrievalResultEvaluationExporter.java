@@ -7,8 +7,12 @@ import java.io.PrintWriter;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,6 +40,9 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
   public void notify(List<StringDoublePair> resultList, RetrievalTask task) {
     ReadableQueryConfig qc = task.getConfig();
     String queryIdString;
+    
+    ArrayList<String> ids = new ArrayList<>(resultList.size() + 1);
+    
     if (qc == null || qc.getQueryId() == null) {
       LOGGER.error("could not determine query id, using 'null'");
       queryIdString = "null";
@@ -52,7 +59,25 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
     File out = new File(outFolder, "meta.json");
 
     SegmentLookup sl = new SegmentLookup();
+    
+    
+    for(StringDoublePair sdp : resultList){
+      ids.add(sdp.key);
+    }
+    
+    if(task.getSegmentId() != null){
+      ids.add(task.getSegmentId());
+    }
+    
+    Map<String, SegmentDescriptor> segments = sl.lookUpSegments(ids);
+    Set<String> objectIds = new HashSet<>();
+    
+    for(SegmentDescriptor sd : segments.values()){
+      objectIds.add(sd.getObjectId());
+    }
+    
     MultimediaObjectLookup ol = new MultimediaObjectLookup();
+    Map<String, MultimediaObjectDescriptor> objects = ol.lookUpObjects(objectIds);
 
     try {
       PrintWriter writer = new PrintWriter(out);
@@ -69,14 +94,19 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
         SegmentDescriptor segment = sl.lookUpSegment(task.getSegmentId());
         MultimediaObjectDescriptor mmobject = ol.lookUpObjectById(segment.getObjectId());
         
-        String path = mmobject.getPath();
+        String path = objects.get(
+            segments.get(
+                task.getSegmentId()
+                ).getObjectId()
+            ).getPath()
+            .replace('\\', '/');
 
-        try {
-          Files.copy((new File(collectionLocation, path)).toPath(),
-              (new File(dataFolder, path)).toPath(), COPY_OPTIONS);
-        } catch (IOException e) {
+//        try {
+//          Files.copy((new File(collectionLocation, path)).toPath(),
+//              (new File(dataFolder, path)).toPath(), COPY_OPTIONS);
+//        } catch (IOException e) {
           missing.println(path);
-        }
+//        }
         
         writer.print("\"queryObject\":");
         writer.println("\"" + path + "\",");
@@ -93,17 +123,15 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
 
         StringDoublePair sdp = iter.next();
 
-        SegmentDescriptor segment = sl.lookUpSegment(sdp.key);
-        String objectId = segment.getObjectId();
-        MultimediaObjectDescriptor mmobject = ol.lookUpObjectById(objectId);
-        String path = mmobject.getPath();
+       
+        String path = objects.get(segments.get(sdp.key).getObjectId()).getPath().replace('\\', '/');
 
-        try {
-          Files.copy((new File(collectionLocation, path)).toPath(),
-              (new File(dataFolder, path)).toPath(), COPY_OPTIONS);
-        } catch (IOException e) {
+//        try {
+//          Files.copy((new File(collectionLocation, path)).toPath(),
+//              (new File(dataFolder, path)).toPath(), COPY_OPTIONS);
+//        } catch (IOException e) {
           missing.println(path);
-        }
+//        }
 
         writer.print("\"mediaObject\":");
         writer.print("\"" + path + "\"");
