@@ -14,8 +14,8 @@ public class ReadableQueryConfig {
   protected Distance distance = null;
   protected float[] distanceWeights = null;
   protected float norm = Float.NaN;
-  protected NeuralNet net = null; // TODO remove from here
-  protected float classificationCutoff = Float.NaN; // TODO find better place
+//  protected NeuralNet net = null; // TODO remove from here
+//  protected float classificationCutoff = Float.NaN; // TODO find better place
   private final UUID queryId;
   
   protected ReadableQueryConfig(ReadableQueryConfig qc, UUID uuid){
@@ -26,17 +26,17 @@ public class ReadableQueryConfig {
     this.distance = qc.distance;
     this.distanceWeights = qc.distanceWeights;
     this.norm = qc.norm;
-    this.net = qc.net;
-    this.classificationCutoff = qc.classificationCutoff;
+//    this.net = qc.net;
+//    this.classificationCutoff = qc.classificationCutoff;
   }
   
   public ReadableQueryConfig(ReadableQueryConfig qc){
     this(qc, qc == null ? null : qc.queryId);
   }
 
-  public Optional<Float> getCutoff() {
-    return Optional.ofNullable(Float.isNaN(classificationCutoff) ? null : classificationCutoff);
-  }
+//  public Optional<Float> getCutoff() {
+//    return Optional.ofNullable(Float.isNaN(classificationCutoff) ? null : classificationCutoff);
+//  }
   
   public Optional<Distance> getDistance(){
     return Optional.ofNullable(this.distance);
@@ -50,9 +50,9 @@ public class ReadableQueryConfig {
     return this.queryId;
   }
   
-  public Optional<NeuralNet> getNet() {
-    return Optional.ofNullable(this.net);
-  }
+//  public Optional<NeuralNet> getNet() {
+//    return Optional.ofNullable(this.net);
+//  }
   
   public Optional<float[]> getDistanceWeights() {
     return Optional.ofNullable(this.distanceWeights);

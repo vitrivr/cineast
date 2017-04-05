@@ -67,9 +67,9 @@ public class QueryConfig extends ReadableQueryConfig {
     return new QueryConfig(qc, null);
   }
 
-  protected void setNet(NeuralNet net) {
-    this.net = net;
-  }
+//  protected void setNet(NeuralNet net) {
+//    this.net = net;
+//  }
 
   protected QueryConfig setDistance(Distance distance) {
     this.distance = distance;
@@ -95,7 +95,7 @@ public class QueryConfig extends ReadableQueryConfig {
     return this;
   }
 
-  protected void setClassificationCutoff(float classificationCutoff) {
-    this.classificationCutoff = classificationCutoff;
-  }
+//  protected void setClassificationCutoff(float classificationCutoff) {
+//    this.classificationCutoff = classificationCutoff;
+//  }
 }

@@ -89,9 +89,9 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
         } else {
             LOGGER.debug("Starting Sketch-based lookup");
             NeuralNet _net = null;
-            if (qc.getNet().isPresent()) {
-                _net = qc.getNet().get();
-            }
+//            if (qc.getNet().isPresent()) {
+//                _net = qc.getNet().get();
+//            }
             if (_net == null) {
                 _net = getNet();
             }
@@ -99,7 +99,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
             float[] classified = _net.classify(sc.getMostRepresentativeFrame().getImage().getBufferedImage());
             List<String> hits = new ArrayList<>();
             for (int i = 0; i < classified.length; i++) {
-                if (classified[i] > qc.getCutoff().orElse(defaultCutoff)) {
+                if (classified[i] > /*qc.getCutoff().orElse(*/defaultCutoff/*)*/) {
                     hits.add(_net.getSynSetLabels()[i]);
                 }
             }

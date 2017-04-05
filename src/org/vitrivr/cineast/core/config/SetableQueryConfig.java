@@ -8,10 +8,10 @@ public class SetableQueryConfig extends QueryConfig {
     super(qc);
   }
 
-  @Override
-  public void setNet(NeuralNet net) {
-    super.setNet(net);
-  }
+//  @Override
+//  public void setNet(NeuralNet net) {
+//    super.setNet(net);
+//  }
 
   @Override
   public QueryConfig setDistance(Distance distance) {
@@ -23,10 +23,10 @@ public class SetableQueryConfig extends QueryConfig {
     return super.setNorm(norm);
   }
 
-  @Override
-  public void setClassificationCutoff(float classificationCutoff) {
-    super.setClassificationCutoff(classificationCutoff);
-  }
+//  @Override
+//  public void setClassificationCutoff(float classificationCutoff) {
+//    super.setClassificationCutoff(classificationCutoff);
+//  }
 
  
   
