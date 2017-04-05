@@ -105,30 +105,30 @@ public class DataImportHandler {
    *          Path to the JSON file or a folder containing JSON files.
    */
   public void importJson(Path path) {
-    /*
-     * since the JsonObjectImporter does not currently support streaming, using the thread pool
-     * requires to read all files into memory first, which causes problems for large files. This is
-     * why the pool is not used in this call.
-     * 
-     */
     try {
       LOGGER.info("Starting data import with JSON files in: {}", path.toString());
-      Iterator<Path> iter = Files.walk(path, 2).iterator();
-      while (iter.hasNext()) {
-        Path p = iter.next();
-        if (p.toString().toLowerCase().endsWith(".json")) {
-          DataImportRunner runner = new DataImportRunner(new JsonObjectImporter(p.toFile()), p);
-          runner.run();
-          System.gc();
+      Files.walk(path, 2).forEach(p -> {
+        try {
+          if (p.toString().toLowerCase().endsWith(".json")) {
+            this.futures.add(
+                this.service.submit(new DataImportRunner(new JsonObjectImporter(p.toFile()), p)));
+          }
+        } catch (IOException e) {
+          LOGGER.error("Could not start data import for file '{}'. Skipping...?", p.toString());
         }
-      }
-
+      });
+      this.waitForCompletion();
       LOGGER.info("Completed data import with JSON files in: {}", path.toString());
-    } catch (IOException e) {
+      System.gc();
+      
+    } catch (IOException e)
+
+    {
       LOGGER.error(
           "Could not start data import process with path '{}' due to an IOException: {}. Aborting...",
           path.toString(), LogHelper.getStackTrace(e));
     }
+
   }
 
   /**
