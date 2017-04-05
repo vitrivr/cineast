@@ -19,20 +19,20 @@ bin
 
 
 .idea
-proto/
-representative_frames/
-thumbnails/
-queryImages/
-src/org/vitrivr/cineast/test/
+/proto/
+/representative_frames/
+/thumbnails/
+/queryImages/
+/src/org/vitrivr/cineast/test/
 
 ##Framecache
-framecache_*
+/framecache_*
 
 ##Art-UI
-cache/
-mycache/
+/cache/
+/mycache/
 
 ##Tensorflow
 *.tfmodel
-data/
-retrieval_results/
+/data/
+/retrieval_results/
