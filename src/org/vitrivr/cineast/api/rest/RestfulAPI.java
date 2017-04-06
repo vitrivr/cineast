@@ -7,6 +7,8 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectAllActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectByActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentAllByObjectIdActionHandler;
+
 import spark.Spark;
 
 import static spark.Spark.*;
@@ -54,6 +56,8 @@ public class RestfulAPI {
     get(path("find/object/all/:type"), new FindObjectAllActionHandler());
     // post(path("find/object/similar"), new FindObjectSimilarActionHandler());
 
+    get(path("find/segment/all/object/:id"), new FindSegmentAllByObjectIdActionHandler());
+    
     get(path("find/segment/all/:attribute/:value"), (request, response) -> {
       /* TODO: Implement! */
       return null;
