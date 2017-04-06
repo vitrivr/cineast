@@ -1,7 +1,11 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 
 import java.util.Map;
 
@@ -12,21 +16,43 @@ import java.util.Map;
  */
 public class FindObjectByActionHandler extends ParsingActionHandler<AnyMessage> {
 
-    private final static String ATTRIBUTE_NAME = ":attribute";
-    private final static String VALUE_NAME = ":value";
+  private final static String ATTRIBUTE_NAME = ":attribute";
+  private final static String VALUE_NAME = ":value";
 
-
-    @Override
-    public Object invoke(AnyMessage type, Map<String, String> parameters) {
-        String attribute = parameters.get(":id");
-        String value = parameters.get(":value");
-
-        /** TODO: Add logic to fetch object by attribute. */
-        return null;
+  private static final Logger LOGGER = LogManager.getLogger();
+  
+  @Override
+  public Object invoke(AnyMessage type, Map<String, String> parameters) {
+    String attribute = parameters.get(ATTRIBUTE_NAME);
+    String value = parameters.get(VALUE_NAME);
+    
+    MultimediaObjectLookup ol = new MultimediaObjectLookup();
+    MultimediaObjectDescriptor object = null;
+    
+    switch(attribute.toLowerCase()){
+      case "id":{
+        object = ol.lookUpObjectById(value);
+        break;
+      }
+      case "name":{
+        object = ol.lookUpObjectByName(value);
+        break;
+      }
+      case "path":{
+        object = ol.lookUpObjectByPath(value);
+        break;
+      }
+      default:{
+        LOGGER.error("Unknown attribute '{}' in FindObjectByActionHandler", attribute);
+      }
     }
 
-    @Override
-    public Class<AnyMessage> inClass() {
-        return AnyMessage.class;
-    }
+    ol.close();
+    return object;
+  }
+
+  @Override
+  public Class<AnyMessage> inClass() {
+    return AnyMessage.class;
+  }
 }

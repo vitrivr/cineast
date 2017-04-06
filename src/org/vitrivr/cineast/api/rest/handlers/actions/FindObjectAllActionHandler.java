@@ -14,14 +14,17 @@ import java.util.Map;
  * @created 10.01.17
  */
 public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage> {
-    @Override
-    public Object invoke(AnyMessage type, Map<String, String> parameters) {
-        List<MultimediaObjectDescriptor> multimediaobjectIds = new MultimediaObjectLookup().getAllObjects();
-        return multimediaobjectIds.toArray(new MultimediaObjectDescriptor[multimediaobjectIds.size()]);
-    }
+  @Override
+  public Object invoke(AnyMessage type, Map<String, String> parameters) {
 
-    @Override
-    public Class<AnyMessage> inClass() {
-        return AnyMessage.class;
-    }
+    MultimediaObjectLookup ol = new MultimediaObjectLookup();
+    List<MultimediaObjectDescriptor> multimediaobjectIds = ol.getAllObjects();
+    ol.close();
+    return multimediaobjectIds.toArray(new MultimediaObjectDescriptor[multimediaobjectIds.size()]);
+  }
+
+  @Override
+  public Class<AnyMessage> inClass() {
+    return AnyMessage.class;
+  }
 }
