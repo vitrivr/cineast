@@ -68,59 +68,8 @@ public class LightfieldFourier extends AbstractLightfieldDescriptor {
      */
     @Override
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-
-        /* Initialize helper data structures. */
-        TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), 0.5f, 0.0f);
-        TObjectDoubleHashMap<String> partialMap = new TObjectDoubleHashMap<>(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), 0.5f, 0.0f);
-
-
-        List<StringDoublePair> results = new ArrayList<>();
-
-        qc.setDistance(QueryConfig.Distance.manhattan);
-
-
-        List<Pair<Integer,float[]>> features;
-
-        /* Extract features from either the provided Mesh (1) or image (2). */
-        ReadableMesh mesh = sc.getNormalizedMesh();
-        if (mesh.isEmpty()) {
-            BufferedImage image = ImageUtil.createResampled(sc.getAvgImg().getBufferedImage(), SIZE, SIZE, Image.SCALE_SMOOTH);
-            features = this.featureVectorsFromImage(image,POSEIDX_UNKNOWN);
-            qc.setDistanceWeights(WEIGHTS);
-        } else {
-            features = this.featureVectorsFromMesh(mesh);
-        }
-
-        /* */
-        for (Pair<Integer,float[]> feature : features) {
-            partialMap.clear();
-            for (Map<String, PrimitiveTypeProvider> result : this.selector.getNearestNeighbourRows(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), feature.second, FIELDS[1], qc)) {
-
-                String id = result.get(FIELDS[0]).getString();
-                double score = MathHelper.getScore(result.get("ap_distance").getDouble(), this.maxDist);
-                int poseidx = result.get(FIELDS[2]).getInt();
-
-
-                if (poseidx != feature.first && feature.first != POSEIDX_UNKNOWN) {
-                    score *= 0.9;
-                }
-
-                double newValue = Math.max(partialMap.get(id), score);
-                partialMap.putIfAbsent(id, newValue);
-            }
-
-            for (String key : partialMap.keySet()) {
-                map.adjustOrPutValue(key, partialMap.get(key)/features.size(), partialMap.get(key)/features.size());
-            }
-        }
-
-        /* Add results to list. */
-        for (String key : map.keySet()) {
-            results.add(new StringDoublePair(key, map.get(key)));
-        };
-
-        /* Return results. */
-        return results;
+        qc.setDistance(QueryConfig.Distance.euclidean);
+        return super.getSimilar(sc, qc);
     }
 
     /**

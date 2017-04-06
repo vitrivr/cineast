@@ -1,11 +1,17 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import com.twelvemonkeys.image.ImageUtil;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -14,10 +20,13 @@ import org.vitrivr.cineast.core.render.Renderer;
 import org.vitrivr.cineast.core.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.MathHelper;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -30,13 +39,13 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Field names of the entity associated with this feature module. */
-    protected final static String[] FIELDS = {"id", "feature", "poseidx"};
+    private final static String[] FIELDS = {"id", "feature", "poseidx"};
 
     /** Size of the rendering environment. */
     protected final static int SIZE = 256;
 
     /** Default value for an unknown pose index. */
-    protected final static int POSEIDX_UNKNOWN = -1;
+    private final static int POSEIDX_UNKNOWN = -1;
 
     /** Camera positions used to create lightfield descriptions.
      *  - First index indicates the position-index
@@ -45,7 +54,7 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
      *  The array must be 1x3 at least, excess elements in the second dimension
      *  are being ignored.
      */
-    protected final double[][] camerapositions;
+    private final double[][] camerapositions;
 
     /** Offscreen rendering environment used to create Lightfield images. */
     private final Renderer renderer;
@@ -64,6 +73,51 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
         }
         this.camerapositions = camerapositions;
         this.renderer = new JOGLOffscreenRenderer(SIZE, SIZE);
+    }
+
+    /**
+     * Processes a SegmentContainer that has been transmitted for retrieval.
+     *
+     * @param sc SegmentContainer
+     * @param qc QueryConfiguration
+     */
+    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+        /* Initialize helper data structures. */
+        List<StringDoublePair> results = new ArrayList<>();
+        TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), 0.5f, 0.0f);
+        List<Pair<Integer,float[]>> features;
+
+        /* Extract features from either the provided Mesh (1) or image (2). */
+        ReadableMesh mesh = sc.getNormalizedMesh();
+        if (mesh.isEmpty()) {
+            BufferedImage image = ImageUtil.createResampled(sc.getAvgImg().getBufferedImage(), SIZE, SIZE, Image.SCALE_SMOOTH);
+            features = this.featureVectorsFromImage(image,POSEIDX_UNKNOWN);
+        } else {
+            features = this.featureVectorsFromMesh(mesh);
+        }
+
+        /* Perform search for each extracted feature and adjust scores. */
+        for (Pair<Integer,float[]> feature : features) {
+            for (Map<String, PrimitiveTypeProvider> result : this.selector.getNearestNeighbourRows(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), feature.second, FIELDS[1], qc)) {
+                /* Extract fields from resultset. */
+                final String id = result.get(FIELDS[0]).getString();
+                final int poseidx = result.get(FIELDS[2]).getInt();
+                final double distance = result.get("ap_distance").getDouble();
+                final double penalty = (poseidx == feature.first) ? 0.0 : 0.1;
+
+                /* Adjust distance in map. */
+                if (map.containsKey(id)) {
+                    double current = map.get(id);
+                    map.adjustValue(id, (distance-current)/2.0 + penalty);
+                } else {
+                    map.put(id, distance + penalty);
+                }
+            }
+        }
+
+        /* Add results to list and return list of results. */
+        map.forEachEntry((key, value) -> results.add(new StringDoublePair(key, MathHelper.getScore(value, this.maxDist))));
+        return results;
     }
 
     /**
