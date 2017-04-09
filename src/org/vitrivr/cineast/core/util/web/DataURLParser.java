@@ -47,6 +47,7 @@ public class DataURLParser {
      * @return Byte array of the data.
      */
     public static byte[] dataURLtoByteArray(String dataUrl, String verify) {
+        if (dataUrl == null) return null;
         dataUrl = dataUrl.replace(' ', '+');
 
         /* Check if string is actually a valid data URL. */
