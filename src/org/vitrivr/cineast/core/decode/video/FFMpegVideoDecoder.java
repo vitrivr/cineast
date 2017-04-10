@@ -63,10 +63,10 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     private static final Set<String> supportedFiles;
     static {
         HashSet<String> tmp = new HashSet<>();
-        tmp.add("video/mp4");
+        tmp.add("video/avi");
         tmp.add("video/mpeg");
-        tmp.add("video/x-msvideo"); //avi
-        tmp.add("video/x-matroska");
+        tmp.add("video/mp4");
+        tmp.add("video/quicktime");
         tmp.add("video/webm");
         supportedFiles = Collections.unmodifiableSet(tmp);
     }
