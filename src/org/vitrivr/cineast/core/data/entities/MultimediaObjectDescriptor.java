@@ -38,10 +38,15 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
      * @param generator ObjectIdGenerator used for ID generation.
      * @param path The Path that points to the file for which a new MultimediaObjectDescriptor should be created.
      * @param type MediaType of the new MultimediaObjectDescriptor
+     * @param lookup  MultimediaObjectLookup to prevent the assignment of already used ids
      * @return A new MultimediaObjectDescriptor
      */
-    public static MultimediaObjectDescriptor newMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type) {
-        String objectId = generator.next(path, type);
+    public static MultimediaObjectDescriptor newMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type, MultimediaObjectLookup lookup) {
+        String objectId;
+        do{
+          objectId = generator.next(path, type);
+        }while(lookup != null && lookup.lookUpObjectById(objectId).exists());
+        
         return new MultimediaObjectDescriptor(objectId, path.getFileName().toString(), path.toString(), type, false);
     }
     
