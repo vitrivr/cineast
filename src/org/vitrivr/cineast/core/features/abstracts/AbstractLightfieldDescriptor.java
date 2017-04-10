@@ -24,6 +24,7 @@ import org.vitrivr.cineast.core.util.MathHelper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,19 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
             if (position.length < 3) throw new IllegalArgumentException("Each position must have at least three coordinates.");
         }
         this.camerapositions = camerapositions;
-        this.renderer = new JOGLOffscreenRenderer(SIZE, SIZE);
+
+        /*
+         * Instantiate JOGLOffscreenRenderer.
+         * Handle the case where it cannot be created due to missing OpenGL support.
+         */
+        JOGLOffscreenRenderer renderer = null;
+        try {
+            renderer = new JOGLOffscreenRenderer(SIZE, SIZE);
+        } catch (Exception exception) {
+            LOGGER.error("Could not instantiate JOGLOffscreenRenderer! This instance of {} will not create any results or features!", this.getClass().getSimpleName());
+        } finally {
+            this.renderer = renderer;
+        }
     }
 
     /**
@@ -82,8 +95,16 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
      * @param qc QueryConfiguration
      */
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-        /* Initialize helper data structures. */
+        /* Initialize list with empty results. */
         List<StringDoublePair> results = new ArrayList<>();
+
+        /* Check for renderer. */
+        if (this.renderer == null) {
+            LOGGER.error("No renderer found. {} does not return any results.", this.getClass().getSimpleName());
+            return results;
+        }
+
+        /* Initialize helper data structures. */
         TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), 0.5f, 0.0f);
         List<Pair<Integer,float[]>> features;
 
@@ -128,6 +149,12 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
      */
     @Override
     public void processShot(SegmentContainer sc) {
+        /* Check for renderer. */
+        if (this.renderer == null) {
+            LOGGER.error("No renderer found! {} does not create any features.", this.getClass().getSimpleName());
+            return;
+        }
+
         /* If Mesh is empty, no feature is persisted. */
         ReadableMesh mesh = sc.getNormalizedMesh();
         if (mesh == null || mesh.isEmpty()) {
