@@ -59,11 +59,14 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     private static final Logger LOGGER = LogManager.getLogger();
     
-    /** Lists the mimetypes supported by the FFMpegAudioDecoder. Hint: List may not be complete yet. */
+    /** Lists the mimetypes supported by the FFMpegVideoDecoder.
+     *
+     * TODO: List may not be complete yet. */
     private static final Set<String> supportedFiles;
     static {
         HashSet<String> tmp = new HashSet<>();
-        tmp.add("audio/mp4"); /* They share the same suffix: .mp4. */
+        tmp.add("multimedia/mp4"); /* They share the same suffix with video (.mp4). */
+        tmp.add("video/mp4");
         tmp.add("video/avi");
         tmp.add("video/mpeg");
         tmp.add("video/quicktime");

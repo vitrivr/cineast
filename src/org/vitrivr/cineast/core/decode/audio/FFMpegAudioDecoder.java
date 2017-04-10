@@ -40,10 +40,13 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /** Lists the mime-types supported by the FFMpegAudioDecoder. Hint: List may not be complete yet. */
+    /** Lists the mime-types supported by the FFMpegAudioDecoder.
+     *
+     * TODO: List may not be complete yet. */
     private static final Set<String> supportedFiles;
     static {
         HashSet<String> tmp = new HashSet<>();
+        tmp.add("multimedia/mp4"); /* They share the same suffix with audio (.mp4). */
         tmp.add("audio/mp4");
         tmp.add("audio/aac");
         tmp.add("audio/mpeg");
