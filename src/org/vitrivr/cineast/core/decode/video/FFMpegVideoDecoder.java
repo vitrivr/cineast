@@ -63,9 +63,9 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     private static final Set<String> supportedFiles;
     static {
         HashSet<String> tmp = new HashSet<>();
+        tmp.add("audio/mp4"); /* They share the same suffix: .mp4. */
         tmp.add("video/avi");
         tmp.add("video/mpeg");
-        tmp.add("video/mp4");
         tmp.add("video/quicktime");
         tmp.add("video/webm");
         supportedFiles = Collections.unmodifiableSet(tmp);
