@@ -35,7 +35,6 @@ import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultTupleMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
-import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.DefaultValueHashMap;
@@ -294,7 +293,7 @@ public class ADAMproSelector implements DBSelector {
 
     AckMessage ack = response.getAck();
     if (ack.getCode() != Code.OK) {
-      LOGGER.error("error in getFeatureVectors ({}) : {}", ack.getCode(), ack.getMessage());
+      LOGGER.error("error in getFeatureVectors on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
       return _return;
     }
 
@@ -357,7 +356,7 @@ public class ADAMproSelector implements DBSelector {
 
     AckMessage ack = result.getAck();
     if (ack.getCode() != AckMessage.Code.OK) {
-      LOGGER.error("error in getNearestNeighbours ({}) : {}", ack.getCode(), ack.getMessage());
+      LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
       return new ArrayList<>(0);
     }
 
@@ -383,7 +382,7 @@ public class ADAMproSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
     if (values == null || values.length == 0) {
-      LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows()");
+      LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows(), entity: {}", entityName);
       return new ArrayList<>(0);
     }
 
@@ -400,7 +399,7 @@ public class ADAMproSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
       Iterable<String> values) {
     if (values == null) {
-      LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows()");
+      LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows(), entity: {}", entityName);
       return new ArrayList<>(0);
     }
 
@@ -439,13 +438,13 @@ public class ADAMproSelector implements DBSelector {
     try {
       propertiesMessage = future.get();
     } catch (InterruptedException | ExecutionException e) {
-      LOGGER.error("error in getAll: {}", LogHelper.getStackTrace(e));
+      LOGGER.error("error in getAll, entitiy {}: {}", entityName, LogHelper.getStackTrace(e));
       return new ArrayList<>(0);
     }
     try {
       count = Integer.parseInt(propertiesMessage.getPropertiesMap().get("count"));
     } catch (Exception e) {
-      LOGGER.error("error in getAll: {}", LogHelper.getStackTrace(e));
+      LOGGER.error("error in getAll, entitiy {}: {}", entityName, LogHelper.getStackTrace(e));
     }
     return preview(count);
   }
@@ -456,7 +455,7 @@ public class ADAMproSelector implements DBSelector {
     try {
       return future.get().getExists();
     } catch (InterruptedException | ExecutionException e) {
-      LOGGER.error("error in existsEntity: {}", LogHelper.getStackTrace(e));
+      LOGGER.error("error in existsEntity, entitiy {}: {}", entityName, LogHelper.getStackTrace(e));
       return false;
     }
   }
@@ -579,7 +578,7 @@ public class ADAMproSelector implements DBSelector {
 
     AckMessage ack = response.getAck();
     if (ack.getCode() != Code.OK) {
-      LOGGER.error("error in getNearestNeighbourRows ({}) : {}", ack.getCode(), ack.getMessage());
+      LOGGER.error("error in getNearestNeighbourRows, entitiy {} ({}) : {}", entityName, ack.getCode(), ack.getMessage());
       return _return;
     }
     return resultsToMap(response.getResultsList());
