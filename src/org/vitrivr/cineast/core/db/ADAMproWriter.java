@@ -84,21 +84,21 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
     try {
       QueryResultsMessage qRMessage = f.get();
       if(!qRMessage.hasAck()){
-        LOGGER.error("error in exists, no acc in QueryResultsMessage");
+        LOGGER.error("error in {}.exists, no acc in QueryResultsMessage", entityName);
         return false;
       }
       AckMessage ack = qRMessage.getAck();
       if(ack.getCode() != AckMessage.Code.OK){
-        LOGGER.error("error in exists: {}", ack.getMessage());
+        LOGGER.error("error in {}.exists: {}", entityName, ack.getMessage());
         return false;
       }
       if(qRMessage.getResponsesCount() == 0){
-        LOGGER.error("error in exists, no QueryResultInfoMessage in QueryResultsMessage");
+        LOGGER.error("error in {}.exists, no QueryResultInfoMessage in QueryResultsMessage", entityName);
         return false;
       }
       responce = qRMessage.getResponses(0);
     } catch (InterruptedException | ExecutionException e) {
-      LOGGER.error("error in exists: {}", LogHelper.getStackTrace(e));
+      LOGGER.error("error in {}.exists: {}", entityName, LogHelper.getStackTrace(e));
       return false;
     }
 
@@ -133,11 +133,11 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
     try{
       ack = future.get();
     } catch (InterruptedException | ExecutionException e) {
-      LOGGER.error("error in persist: {}", LogHelper.getStackTrace(e));
+      LOGGER.error("error in {}.persist: {}", entityName, LogHelper.getStackTrace(e));
       return false;
     }
     if (ack.getCode() != Code.OK) {
-      LOGGER.warn("Error: {} during persist", ack.getMessage());
+      LOGGER.warn("Error: {} during persist in entity {}", ack.getMessage(), entityName);
       return false;
     }
     return true;
