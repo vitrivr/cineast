@@ -2,11 +2,9 @@ package org.vitrivr.cineast.core.features;
 
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;

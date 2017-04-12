@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
 import java.util.List;
-
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;

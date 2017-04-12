@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.features.retriever;
 
 import java.util.List;
-
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;

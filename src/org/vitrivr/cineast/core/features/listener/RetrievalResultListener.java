@@ -1,8 +1,6 @@
 package org.vitrivr.cineast.core.features.listener;
 
 import java.util.List;
-
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.runtime.RetrievalTask;

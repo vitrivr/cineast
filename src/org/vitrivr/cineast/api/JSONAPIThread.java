@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.api;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -13,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,12 +42,6 @@ import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.explorative.PlaneHandler;
 import org.vitrivr.cineast.explorative.PlaneManager;
-
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,

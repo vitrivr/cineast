@@ -1,10 +1,8 @@
 package org.vitrivr.cineast.core.util;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.vitrivr.cineast.api.API;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;

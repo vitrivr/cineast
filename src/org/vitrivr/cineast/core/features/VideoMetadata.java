@@ -3,16 +3,13 @@ package org.vitrivr.cineast.core.features;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.features.abstracts.SolrTextRetriever;
-import org.vitrivr.cineast.core.util.MathHelper;
 
 public class VideoMetadata extends SolrTextRetriever {
 
