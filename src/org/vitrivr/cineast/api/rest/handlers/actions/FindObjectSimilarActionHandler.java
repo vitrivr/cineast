@@ -52,14 +52,14 @@ public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> 
       for (QueryContainer qc : categoryMap.get(category)) {
         float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation
 
-        List<SegmentScoreElement> result;
+        List<SegmentScoreElement> scoreResults;
         if (qc.hasId()) {
-          result = ContinousRetrievalLogic.retrieve(qc.getId(), category, qconf);
+          scoreResults = ContinousRetrievalLogic.retrieve(qc.getId(), category, qconf);
         } else {
-          result = ContinousRetrievalLogic.retrieve(qc, category, qconf);
+          scoreResults = ContinousRetrievalLogic.retrieve(qc, category, qconf);
         }
 
-        for (SegmentScoreElement element : result) {
+        for (SegmentScoreElement element : scoreResults) {
           String segmentId = element.getSegmentId();
           double score = element.getScore();
           if (Double.isInfinite(score) || Double.isNaN(score)) {
