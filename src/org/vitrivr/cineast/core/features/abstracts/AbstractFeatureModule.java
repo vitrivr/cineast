@@ -94,7 +94,8 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
     List<SegmentDistanceElement> distances = this.selector
         .getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
             "feature", SegmentDistanceElement.class, qcc);
-    return DistanceElements.toScore(distances, qcc.getCorrespondenceFunction().get());
+    CorrespondenceFunction function = qcc.getCorrespondenceFunction().orElse(linearCorrespondence);
+    return DistanceElements.toScore(distances, function);
   }
 
   @Override
