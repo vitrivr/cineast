@@ -47,8 +47,8 @@ public class ContinousQueryDispatcher {
   private static final List<RetrievalResultListener> resultListeners = new ArrayList<>();
   private static final SegmentLookup segmentLookup = new SegmentLookup();
 
-  private final LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(TASK_QUEUE_SIZE);
-  private ExecutorService executor = new ThreadPoolExecutor(THREAD_COUNT, THREAD_COUNT,
+  private static final LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(TASK_QUEUE_SIZE);
+  private static ExecutorService executor = new ThreadPoolExecutor(THREAD_COUNT, THREAD_COUNT,
       KEEP_ALIVE_TIME, TimeUnit.SECONDS, taskQueue);
 
   private final Function<Retriever, RetrievalTask> taskFactory;
@@ -100,17 +100,27 @@ public class ContinousQueryDispatcher {
   }
 
   private List<SegmentScoreElement> retrieve() {
-    this.checkExecutor();
+    initExecutor();
     List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures = this.startTasks();
     List<SegmentScoreElement> segmentScores = this.extractResults(futures);
     this.finish();
     return segmentScores;
   }
 
-  private void checkExecutor() {
-    if (this.executor == null || this.executor.isShutdown()) {
-      throw new IllegalStateException(
-          "Continuous query dispatcher can only be called once, but was already called.");
+  private static void initExecutor() {
+    if (executor.isShutdown()) {
+      clearExecutor();
+    }
+    if (executor == null) {
+      executor = new ThreadPoolExecutor(THREAD_COUNT, THREAD_COUNT, 60, TimeUnit.SECONDS, taskQueue);
+    }
+  }
+
+  private static void clearExecutor() {
+    taskQueue.clear();
+    if (executor != null) {
+      executor.shutdown();
+      executor = null;
     }
   }
 
@@ -255,12 +265,6 @@ public class ContinousQueryDispatcher {
   private void finish() {
     for (Retriever r : this.retrieverWeights.keySet()) {
       r.finish();
-    }
-
-    this.taskQueue.clear();
-    if (this.executor != null) {
-      this.executor.shutdown();
-      this.executor = null;
     }
   }
 }
