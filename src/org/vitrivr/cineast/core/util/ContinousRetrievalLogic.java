@@ -44,7 +44,7 @@ public class ContinousRetrievalLogic {
   }
 
   public static void shutdown() {
-    // FIXME: Is shutdown() really needed anymore or just remove it?
+    // FIXME: Is shutdown() really needed or just remove it? (Is/was never used)
     // ContinousQueryDispatcher.shutdown();
   }
 

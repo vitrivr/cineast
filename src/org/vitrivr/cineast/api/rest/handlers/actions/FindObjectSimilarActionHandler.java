@@ -27,6 +27,7 @@ public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> 
   @Override
   public Object invoke(Query query, Map<String, String> parameters) {
 
+    // TODO: Remove code duplication shared with FindObjectSimilarActionHandler
     /*
      * Prepare map that maps categories to QueryTerm components.
      */

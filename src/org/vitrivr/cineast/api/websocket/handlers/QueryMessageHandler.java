@@ -50,8 +50,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
     QueryStart startMarker = new QueryStart();
     this.write(session, startMarker);
 
-    // FIXME: remove code duplication shared with FindObjectSimilarActionHandler and JSONAPIThread
-
+    // TODO: Remove code duplication shared with FindObjectSimilarActionHandler
     /*
      * Prepare map that maps categories to QueryTerm components.
      */
