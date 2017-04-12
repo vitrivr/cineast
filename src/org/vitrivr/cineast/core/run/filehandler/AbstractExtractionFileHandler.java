@@ -347,7 +347,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         if (descriptor.exists() && descriptor.getMediatype() == this.context.sourceType()){
             return descriptor;
         }
-        return MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, path, type);
+        return MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, path, type, this.objectReader);
     }
 
     /**

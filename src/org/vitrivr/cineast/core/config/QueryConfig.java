@@ -4,7 +4,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
-import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 
 public class QueryConfig extends ReadableQueryConfig {
 

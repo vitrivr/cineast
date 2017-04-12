@@ -33,6 +33,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
+import org.vitrivr.cineast.core.features.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultEvaluationExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.importer.DataImportHandler;
@@ -68,26 +69,26 @@ public class API {
 				Config.loadConfig(commandline.getOptionValue("config"));
 			}
 
-			/* Handle -job; start handleExtraction. */
+			/* Handle --job; start handleExtraction. */
 			if (commandline.hasOption("job")) {
 				handleExtraction(new File(commandline.getOptionValue("job")));
 				return;
 			}
 
-			/* Handle -job; start handleExtraction. */
+			/* Handle --3d; start handleExtraction. */
             if (commandline.hasOption("3d")) {
                 handle3Dtest();
                 return;
             }
 
-			/* Handle -cli; start CLI. */
+			/* Handle -i; start CLI. */
 			if (Config.sharedConfig().getApi().getEnableCli() || commandline.hasOption('i')) {
 				CineastCLI cli = new CineastCLI();
 				cli.start();
 				return;
 			}
 
-			/* Handle -setup; start database setup. */
+			/* Handle --setup; start database setup. */
 			if (commandline.hasOption("setup")) {
 				HashMap<String, String> options = new HashMap<>();
 				String[] flags = commandline.getOptionValue("setup").split(";");
@@ -323,7 +324,7 @@ public class API {
 		@Override
 		public void run() {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("Cineast CLI started. I'm awaiting your commands...");
+			System.out.println("Cineast CLI started.");
 			String line = null;
 			try {
 				while ((line = reader.readLine()) != null) {

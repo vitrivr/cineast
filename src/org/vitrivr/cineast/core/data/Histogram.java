@@ -70,7 +70,7 @@ public abstract class Histogram implements ReadableFloatVector{
 	}
 
 	@Override
-	public double getDistance(ReadableFloatVector other) {
+	public double getEuclideanDistance(ReadableFloatVector other) {
 		int len = Math.min(this.getElementCount(), other.getElementCount());
 		double d = 0d, e = 0d;
 		for(int i = 0; i < len; ++i){
