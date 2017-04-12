@@ -90,12 +90,8 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
           if (Double.isInfinite(score) || Double.isNaN(score)) {
             continue;
           }
-          // FIXME: use map.adjustValue
-          if (map.contains(segmentId)) {
-            map.put(segmentId, map.get(segmentId) + score * weight);
-            continue;
-          }
-          map.put(segmentId, score * weight);
+          double weightedScore = score * weight;
+          map.adjustOrPutValue(segmentId, weightedScore, weightedScore);
         }
 
         List<StringDoublePair> list = new ArrayList<>(map.size());

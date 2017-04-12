@@ -159,11 +159,7 @@ public class JSONAPIThread extends Thread {
               if (Double.isInfinite(score) || Double.isNaN(score)) {
                 continue;
               }
-              // FIXME: use map.adjustValue
-              if (map.contains(segmentId)) {
-                score += map.get(segmentId);
-              }
-              map.put(segmentId, score);
+              map.adjustOrPutValue(segmentId, score, score);
             }
           }
           for (JsonValue _el : narr) {
@@ -176,11 +172,7 @@ public class JSONAPIThread extends Thread {
               if (Double.isInfinite(score) || Double.isNaN(score)) {
                 continue;
               }
-              if (map.contains(segmentId)) {
-                map.put(segmentId, map.get(segmentId) - score);
-              } else {
-                map.put(segmentId, -score);
-              }
+              map.adjustOrPutValue(segmentId, -score, -score);
             }
           }
 
