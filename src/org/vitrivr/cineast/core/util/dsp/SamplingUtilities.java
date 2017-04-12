@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util.fft;
+package org.vitrivr.cineast.core.util.dsp;
 
 /**
  * @author rgasser

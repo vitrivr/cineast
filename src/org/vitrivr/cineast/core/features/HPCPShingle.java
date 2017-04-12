@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.*;
@@ -7,8 +8,8 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
-import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.windows.BlackmanHarrisWindow;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -77,32 +78,26 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
         List<float[]> features = this.getFeatures(sc);
 
         /* Distance is always Cosine-Distance. */
-        qc.setDistance(QueryConfig.Distance.euclidean);
+        qc.setDistance(QueryConfig.Distance.cosine);
 
         /* Prepare helper data-structures. */
         final List<StringDoublePair> results = new ArrayList<>();
-        final HashMap<String, Double> map = new HashMap<>();
-        final HashSet<String> seen = new HashSet<>();
+        final TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
 
-        double max = 0.0f;
         for (float[] feature : features) {
             List<StringDoublePair> partial = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), feature, "feature", qc);
-            seen.clear();
             for (StringDoublePair hit : partial) {
-                if (!map.containsKey(hit.key)) map.put(hit.key, 0.0);
-                if (!seen.contains(hit.key) ) {
-                    map.put(hit.key, map.get(hit.key) + (this.maxDist - hit.value));
-                    seen.add(hit.key);
-                    max = Math.max(map.get(hit.key), max);
+                if (map.containsKey(hit.key)) {
+                    double current = map.get(hit.key);
+                    map.adjustValue(hit.key, (hit.value-current)/2.0f);
+                } else {
+                    map.put(hit.key, hit.value);
                 }
             }
         }
 
         /* Prepare final result-set. */
-        for (Map.Entry<String, Double> entry : map.entrySet()) {
-            results.add(new StringDoublePair(entry.getKey(), entry.getValue() / max));
-        }
-
+        map.forEachEntry((key, value) -> results.add(new StringDoublePair(key, MathHelper.getScore(value, this.maxDist))));
         return results;
     }
 

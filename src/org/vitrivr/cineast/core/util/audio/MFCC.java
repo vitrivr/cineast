@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.util.audio;
 
-import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.Spectrum;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
 
 import java.util.ArrayList;
 import java.util.List;

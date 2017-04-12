@@ -9,9 +9,9 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
-import org.vitrivr.cineast.core.util.fft.AudioSignalVisualizer;
-import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
+import org.vitrivr.cineast.core.util.dsp.visualization.AudioSignalVisualizer;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

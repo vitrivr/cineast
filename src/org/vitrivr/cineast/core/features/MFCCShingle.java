@@ -7,8 +7,8 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.MFCC;
-import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import java.util.*;
 

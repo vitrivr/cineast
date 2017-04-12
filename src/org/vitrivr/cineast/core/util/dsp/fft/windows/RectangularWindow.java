@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util.fft.windows;
+package org.vitrivr.cineast.core.util.dsp.fft.windows;
 
 /**
  * IdentityWindows - this is the same as applying no window at all.

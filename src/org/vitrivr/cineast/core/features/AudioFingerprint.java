@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.*;
@@ -11,9 +13,9 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.MathHelper;
-import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.Spectrum;
-import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -89,44 +91,47 @@ public class AudioFingerprint implements Extractor, Retriever {
 
     @Override
     public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-        HashMap<String,Double> map = new HashMap<>();
+        /* List that holds final results. */
         List<StringDoublePair> results = new ArrayList<>();
 
+        /* Map that holds partial results. */
+        TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
 
-        qc.setDistance(QueryConfig.Distance.hamming);
+        /*
+         * Configure query: Use a weighted Manhattan Distance. Weights are used to
+         * to inactivate entries in short segments.
+         */
+        float[] weights = new float[FINGERPRINT];
+        qc.setDistance(QueryConfig.Distance.manhattan);
+        qc.setDistanceWeights(weights);
 
-        List<Pair<Float, Double>> filteredSpectrum = this.filterSpectrum(sc);
+        TIntArrayList filteredSpectrum = this.filterSpectrum(sc);
         int lookups = filteredSpectrum.size() / FINGERPRINT;
 
         SummaryStatistics statistics = new SummaryStatistics();
 
         float[] feature = new float[FINGERPRINT];
         for (int i=0;i<=lookups;i++) {
-            float correction = 0.0f;
             for (int j=0; j< FINGERPRINT; j++) {
                 if (i * lookups + j < filteredSpectrum.size()) {
-                    float frequency = filteredSpectrum.get(i * lookups + j).first;
-                    feature[j] = Math.round(frequency - ((int)frequency % 2));
+                    feature[j] = filteredSpectrum.get(i * lookups + j);
+                    weights[j] = 1.0f;
                 } else {
-                    feature[j] = -1.0f;
-                    correction += 1.0f;
+                    weights[j] = 0.0f;
                 }
             }
             List<StringDoublePair> partials = this.selector.getNearestNeighbours(100, feature, "fingerprint", qc);
             for (StringDoublePair result : partials) {
                 statistics.addValue(result.value);
-                if (map.containsKey(result.key)) {
-                    map.put(result.key, Math.min(result.value-correction, map.get(result.key)));
-                } else {
-                    map.put(result.key, result.value-correction);
-                }
+                map.adjustOrPutValue(result.key, Math.min(result.value, map.get(result.key)), result.value);
             }
         }
 
-        map.forEach((key, value) -> {
-            if (value < statistics.getMean()) {
-                results.add(new StringDoublePair(key, MathHelper.getScore(value, statistics.getMax())));
-            }
+        /* Prepare final results. */
+        final double mean = statistics.getMean();
+        map.forEachEntry((key, value) -> {
+            if (value < mean) results.add(new StringDoublePair(key, MathHelper.getScore(value, mean)));
+            return true;
         });
 
         return results;
@@ -134,16 +139,14 @@ public class AudioFingerprint implements Extractor, Retriever {
 
     @Override
     public void processShot(SegmentContainer segment) {
-        List<Pair<Float, Double>> filteredSpectrum = this.filterSpectrum(segment);
-
+        TIntArrayList filteredSpectrum = this.filterSpectrum(segment);
         int shift = RANGES.length-1;
         int vectors = (filteredSpectrum.size() - FINGERPRINT) / shift;
         List<PersistentTuple> tuples = new ArrayList<>();
         for (int i = 0; i <= vectors; i++) {
             float[] feature = new float[FINGERPRINT];
             for (int j=0; j < FINGERPRINT; j++) {
-                float frequency = filteredSpectrum.get(i * shift + j).first;
-                feature[j] = Math.round(frequency - ((int)frequency % 2));
+                feature[j] = filteredSpectrum.get(i * shift + j);
             }
             tuples.add(this.phandler.generateTuple(segment.getId(), feature));
         }
@@ -155,9 +158,9 @@ public class AudioFingerprint implements Extractor, Retriever {
      * @param segment
      * @return
      */
-    private List<Pair<Float, Double>> filterSpectrum(SegmentContainer segment) {
+    private TIntArrayList filterSpectrum(SegmentContainer segment) {
         /* Prepare empty list of candidates for filtered spectrum. */
-        List<Pair<Float, Double>> candidates = new ArrayList<>();
+        TIntArrayList candidates = new TIntArrayList();
 
         /* Perform STFT and extract the Spectra. If this fails, return empty list. */
         STFT stft = segment.getSTFT(4096, 0, new HanningWindow());
@@ -180,7 +183,7 @@ public class AudioFingerprint implements Extractor, Retriever {
                         break;
                     }
                 }
-                candidates.add(peak);
+                candidates.add(Math.round(peak.first - (peak.first.intValue() % 2)));
             }
         }
         return candidates;

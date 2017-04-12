@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.data.providers;
 
-import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.windows.WindowFunction;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 
 import java.util.Arrays;
 
@@ -24,8 +24,8 @@ public interface AudioSTFTProvider {
     default STFT getSTFT(int windowsize, int overlap, WindowFunction function) {
         double[] data = new double[windowsize];
         Arrays.fill(data, 0.0);
-        STFT stft = new STFT(data, 22050);
-        stft.forward(windowsize,windowsize, function);
+        STFT stft = new STFT(windowsize,windowsize, function, 22050);
+        stft.forward(data);
         return stft;
     }
 }

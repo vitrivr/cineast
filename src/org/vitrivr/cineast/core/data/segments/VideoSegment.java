@@ -19,8 +19,8 @@ import org.vitrivr.cineast.core.descriptor.PathList;
 
 import boofcv.struct.geo.AssociatedPair;
 import georegression.struct.point.Point2D_F32;
-import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.windows.WindowFunction;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 
 public class VideoSegment implements SegmentContainer {
 
@@ -173,8 +173,8 @@ public class VideoSegment implements SegmentContainer {
     @Override
     public STFT getSTFT(int windowsize, int overlap, WindowFunction function) {
         if (this.getNumberOfSamples() >= windowsize) {
-            STFT stft = new STFT(this.getMeanSamplesAsDouble(), this.samplerate);
-            stft.forward(windowsize, overlap, function);
+            STFT stft = new STFT(windowsize, overlap, function, this.samplerate);
+            stft.forward(this.getMeanSamplesAsDouble());
             return stft;
         } else {
             return null;

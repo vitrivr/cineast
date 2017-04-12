@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util.fft;
+package org.vitrivr.cineast.core.util.dsp.fft;
 
 /**
  * Some utility functions in the context of FFT and STFT.

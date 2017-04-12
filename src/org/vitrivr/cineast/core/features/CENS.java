@@ -9,8 +9,8 @@ import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 
-import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.windows.BlackmanHarrisWindow;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
 
 import java.util.ArrayList;
 import java.util.HashMap;

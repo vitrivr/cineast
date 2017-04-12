@@ -1,7 +1,8 @@
-package org.vitrivr.cineast.core.util.fft;
+package org.vitrivr.cineast.core.util.dsp.visualization;
 
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
+import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
