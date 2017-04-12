@@ -15,8 +15,8 @@ public interface DBSelector {
 
   /**
    * Finds the {@code k}-nearest neighbours of the given {@code vector} in {@code column} using the
-   * provided distance function in {@code config}. {@code scoreElementClass} defines the specific
-   * type of {@link DistanceElement} to be returned by this method.
+   * provided distance function in {@code config}. {@code ScoreElementClass} defines the specific
+   * type of {@link DistanceElement} to be created internally and returned by this method.
    *
    * @param k maximum number of results
    * @param vector query vector
