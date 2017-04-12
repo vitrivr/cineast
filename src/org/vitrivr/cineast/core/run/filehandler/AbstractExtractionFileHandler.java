@@ -108,9 +108,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
         /* Setup the required persistence-writer classes. */
         PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
-        this.objectWriter = new MultimediaObjectWriter(writerSupplier.get(),10);
-        this.segmentWriter = new SegmentWriter(writerSupplier.get(),10);
-        this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get(),10);
+        this.objectWriter = new MultimediaObjectWriter(writerSupplier.get(),context.getBatchsize());
+        this.segmentWriter = new SegmentWriter(writerSupplier.get(),context.getBatchsize());
+        this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get(),context.getBatchsize());
 
         /* Setup the required persistence-reader classes. */
         DBSelectorSupplier readerSupplier = context.persistencyReader();

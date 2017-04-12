@@ -8,6 +8,8 @@ public final class APIConfig {
 	private boolean enableWebsocket = true;
 	private boolean enableRest = false;
 	private int httpPort = 4567;
+	private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
+
 
 	private boolean enableLegacy = false;
 	private int legacyPort = 12345;
@@ -18,9 +20,7 @@ public final class APIConfig {
 	private int threadPoolSize = 8;
 
 	@JsonCreator
-	public APIConfig() {
-
-	}
+	public APIConfig() {}
 
 	@JsonProperty
 	public boolean getEnableWebsocket(){
@@ -45,6 +45,14 @@ public final class APIConfig {
 			throw new IllegalArgumentException("httpPort must be > 0");
 		}
 		this.httpPort = httpPort;
+	}
+
+	@JsonProperty
+	public int getMaxMessageSize() {
+		return this.maxMessageSize;
+	}
+	public void setMaxMessageSize(int maxTextMessageSize) {
+		this.maxMessageSize = maxTextMessageSize;
 	}
 
 	@JsonProperty

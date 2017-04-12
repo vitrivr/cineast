@@ -13,14 +13,6 @@ public class SimpleFeatureDescriptorWriter extends AbstractBatchedEntityWriter<S
 
     private final String entityname;
 
-
-    /**
-     * @param writer
-     */
-    public SimpleFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname) {
-        this(writer, entityname, 1);
-    }
-
     /**
      * @param writer
      * @param batchsize

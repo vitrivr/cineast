@@ -103,9 +103,9 @@ public class IngestConfig implements ExtractionContextProvider {
     public void setDatabase(DatabaseConfig database) {
         /* Merge with global settings if not set. */
         DatabaseConfig global = Config.sharedConfig().getDatabase();
-        if (database.getSelector() == null) database.setSelector(global.getSelector());
-        if (database.getWriter() == null) database.setWriter(global.getWriter());
-
+        if (this.database.getSelector() == null) this.database.setSelector(global.getSelector());
+        if (this.database.getWriter() == null) this.database.setWriter(global.getWriter());
+        if (this.database.getBatchsize() == DatabaseConfig.DEFAULT_BATCH_SIZE) this.database.setBatchsize(global.getBatchsize());
         /* Apply. */
         this.database = database;
     }
@@ -292,5 +292,16 @@ public class IngestConfig implements ExtractionContextProvider {
     @Override
     public Integer segmentQueueSize() {
         return this.pipeline.getShotQueueSize();
+    }
+
+    /**
+     * Returns the size of a batch. A batch is used when persisting data. Entities will be kept in
+     * memory until the batchsize limit is hit at which point they will be persisted.
+     *
+     * @return Batch size.
+     */
+    @Override
+    public Integer getBatchsize() {
+        return this.database.getBatchsize();
     }
 }

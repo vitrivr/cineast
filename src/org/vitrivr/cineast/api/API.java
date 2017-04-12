@@ -374,9 +374,8 @@ public class API {
 								break;
 							}
 							Path path = Paths.get(commands.get(1));
-							int batchsize = 100;
+							int batchsize = Config.sharedConfig().getDatabase().getBatchsize();
 							if (commands.size() == 3) batchsize = Integer.parseInt(commands.get(2));
-
 							handleImport(path, batchsize);
 							break;
 						}

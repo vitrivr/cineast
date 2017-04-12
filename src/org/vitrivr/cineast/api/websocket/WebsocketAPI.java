@@ -10,6 +10,7 @@ import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.QueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
@@ -45,9 +46,6 @@ public class WebsocketAPI {
 
     /** Store sessions if you want to, for example, broadcast a message to all users.*/
     private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
-
-    /** Maximum size of a text-message. Should be large enough so as to be able to support transmission of image/audio data. */
-    private static final int MAX_TEXT_MESSAGE_SIZE = 4096 * 1000;
 
     /** Named context of the endpoint. Will be appended to the endpoint URL. */
     private static final String CONTEXT = "api";
@@ -127,7 +125,8 @@ public class WebsocketAPI {
      */
     @OnWebSocketConnect
     public void connected(Session session) {
-        session.getPolicy().setMaxTextMessageSize(MAX_TEXT_MESSAGE_SIZE);
+        session.getPolicy().setMaxTextMessageSize(Config.sharedConfig().getApi().getMaxMessageSize());
+        session.getPolicy().setMaxBinaryMessageSize(Config.sharedConfig().getApi().getMaxMessageSize());
         sessions.add(session);
         LOGGER.debug("New session {} connected!");
     }

@@ -18,11 +18,18 @@ import org.vitrivr.cineast.core.setup.NoEntityCreator;
 import com.eclipsesource.json.JsonObject;
 
 public final class DatabaseConfig {
+
+
+	/** Default value for batchsize. */
+	public static final int DEFAULT_BATCH_SIZE = 1000;
+
 	private String host = "127.0.0.1";
 	private int port =  5890;
 	private boolean plaintext = false;
 	private Writer writer = Writer.ADAMPRO;
 	private Selector selector = Selector.ADAMPRO;
+
+	private Integer batchsize = DEFAULT_BATCH_SIZE;
 	
 	private static final PersistencyWriterSupplier ADAMPRO_WRITER_SUPPLY = () -> new ADAMproWriter();	
 	private static final PersistencyWriterSupplier PROTO_WRITER_SUPPLY = () -> new ProtobufFileWriter();
@@ -31,8 +38,8 @@ public final class DatabaseConfig {
 	private static final DBSelectorSupplier NO_SELECTOR_SUPPLY = () -> new NoDBSelector();
 	private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = () -> new ADAMproSelector();
 	
-  private static final Supplier<EntityCreator> ADAMPRO_CREATOR_SUPPLY = () -> new ADAMproEntityCreator();
-  private static final Supplier<EntityCreator> NO_CREATOR_SUPPLY = () -> new NoEntityCreator();
+  	private static final Supplier<EntityCreator> ADAMPRO_CREATOR_SUPPLY = () -> new ADAMproEntityCreator();
+  	private static final Supplier<EntityCreator> NO_CREATOR_SUPPLY = () -> new NoEntityCreator();
 
 	public static enum Writer{
 		PROTO,
@@ -78,6 +85,14 @@ public final class DatabaseConfig {
 	}
 	public void setPlaintext(boolean plaintext) {
 		this.plaintext = plaintext;
+	}
+
+	@JsonProperty
+	public Integer getBatchsize() {
+		return batchsize;
+	}
+	public void setBatchsize(Integer batchsize) {
+		this.batchsize = batchsize;
 	}
 
 	@JsonProperty

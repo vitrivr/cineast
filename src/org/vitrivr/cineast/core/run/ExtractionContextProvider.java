@@ -151,4 +151,13 @@ public interface ExtractionContextProvider {
      * @return Size of the segment queue. Must be > 0.
      */
     Integer segmentQueueSize();
+
+
+    /**
+     * Returns the size of a batch. A batch is used when persisting data. Entities will be kept in
+     * memory until the batchsize limit is hit at which point they will be persisted.
+     *
+     * @return Batch size.
+     */
+    Integer getBatchsize();
 }

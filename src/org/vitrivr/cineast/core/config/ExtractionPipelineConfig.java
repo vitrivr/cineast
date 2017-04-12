@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class ExtractionPipelineConfig {
 
-	/** Defalt value for size of thread-pool. */
+	/** Default value for size of thread-pool. */
 	public static final int DEFAULT_THREADPOOL_SIZE = 4;
 
 	/** Default value for size of task-queue. */
