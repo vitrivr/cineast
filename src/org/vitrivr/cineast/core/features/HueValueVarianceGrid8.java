@@ -18,8 +18,8 @@ import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StatElement;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.GridPartitioner;
@@ -127,7 +127,7 @@ public class HueValueVarianceGrid8 extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		Pair<FloatVector, float[]> p = computeGrid(sc);
 		return getSimilar(p.first.toArray(null), new QueryConfig(qc).setDistanceWeights(p.second));
 	}

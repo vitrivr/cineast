@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
@@ -42,7 +42,7 @@ public class MotionHistogramBackground extends SubDivMotionHistogram {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, sc.getBgPaths());
 		
 		FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));

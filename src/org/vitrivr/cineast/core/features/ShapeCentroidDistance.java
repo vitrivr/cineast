@@ -11,7 +11,7 @@ import org.apache.commons.math3.transform.TransformType;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.images.ContourHelper;
@@ -66,7 +66,7 @@ public class ShapeCentroidDistance extends AbstractFeatureModule {
      * @return
      */
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 
         BufferedImage image = sc.getAvgImg().getBufferedImage();
 

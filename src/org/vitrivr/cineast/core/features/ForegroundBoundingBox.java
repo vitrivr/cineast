@@ -10,7 +10,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -46,7 +46,7 @@ public class ForegroundBoundingBox  extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		ArrayList<Pair<Long,ArrayList<Float>>> bboxs = MaskGenerator.getNormalizedBbox(sc.getVideoFrames(), sc.getPaths(), sc.getBgPaths());
 		FloatVectorImpl fv = new FloatVectorImpl(bboxs.get(0).second);
 		

@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.features;
 
+import gnu.trove.map.TObjectDoubleMap;
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,9 +14,14 @@ import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.score.ScoreElements;
+import org.vitrivr.cineast.core.data.score.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
@@ -27,107 +36,107 @@ import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
  */
 public class MFCCShingle extends AbstractFeatureModule {
 
-    /** Size of the window during STFT in # samples. */
-    private final static int WINDOW_SIZE = 8192;
+  /** Size of the window during STFT in # samples. */
+  private final static int WINDOW_SIZE = 8192;
 
-    /** Overlap between two subsequent frames during STFT in # samples. */
-    private final static int WINDOW_OVERLAP = 2205;
+  /** Overlap between two subsequent frames during STFT in # samples. */
+  private final static int WINDOW_OVERLAP = 2205;
 
-    /** */
-    private final static int SHINGLE_SIZE = 30;
+  /** */
+  private final static int SHINGLE_SIZE = 30;
 
-    /** */
-    private final float threshold;
+  /** */
+  private final float threshold;
 
-    /**
-     *
-     */
-    public MFCCShingle() {
-        super("features_mfccshingles", 2.0f);
-        this.threshold = 2.0f*this.maxDist/4.0f;
+  /**
+   *
+   */
+  public MFCCShingle() {
+    super("features_mfccshingles", 2.0f);
+    this.threshold = 2.0f * this.maxDist / 4.0f;
+  }
+
+  @Override
+  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+    /* Extract MFCC shingle features from QueryObject. */
+    List<float[]> features = this.getFeatures(sc);
+
+    /* Prepare helper data-structures. */
+    final TObjectDoubleMap<String> map = new TObjectDoubleHashMap<>();
+    final HashSet<String> seen = new HashSet<>(250);
+
+    qc = setQueryConfig(qc);
+
+    int stepsize = Math.max((int) Math.floor(features.size() / 10), 1);
+
+    for (int i = 0; i < features.size() - stepsize; i += stepsize) {
+      List<SegmentDistanceElement> partial = this.selector
+          .getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(),
+              features.get(i), "feature", SegmentDistanceElement.class, qc);
+      seen.clear();
+      for (SegmentDistanceElement hit : partial) {
+        if (hit.getDistance() > this.threshold) {
+          break;
+        }
+        String segmentId = hit.getSegmentId();
+        if (!seen.contains(segmentId)) {
+          map.adjustOrPutValue(segmentId, 1, 1);
+          seen.add(segmentId);
+        }
+      }
     }
 
-    @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-        /* Extract MFCC shingle features from QueryObject. */
-        List<float[]> features = this.getFeatures(sc);
+    /* Prepare final result-set. */
+    CorrespondenceFunction f = CorrespondenceFunction.fromFunction(value -> value / features.size());
+    return ScoreElements.scoresFromSegmentsDistanceMap(map, f);
+  }
 
-        /* Prepare helper data-structures. */
-        final List<StringDoublePair> results = new ArrayList<>();
-        final HashMap<String, Integer> map = new HashMap<>();
-        final HashSet<String> seen = new HashSet<>(250);
+  /**
+   *
+   * @param sc
+   */
+  @Override
+  public void processShot(SegmentContainer sc) {
+    List<float[]> features = this.getFeatures(sc);
+    features.forEach(f -> this.persist(sc.getId(), new FloatVectorImpl(f)));
+  }
 
-        qc = setQueryConfig(qc);
+  /**
+   *
+   * @param segment
+   * @return
+   */
+  private List<float[]> getFeatures(SegmentContainer segment) {
+    STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new HanningWindow());
+    List<MFCC> mfccs = MFCC.calculate(stft);
 
-        int stepsize = Math.max((int)Math.floor(features.size()/10), 1);
+    int vectors = mfccs.size() - SHINGLE_SIZE;
+    double powers = 1.0f;
 
-        for (int i = 0; i<features.size()-stepsize;i+=stepsize) {
-            List<StringDoublePair> partial = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), features.get(i), "feature", qc);
-            seen.clear();
-            for (StringDoublePair hit : partial) {
-                if (hit.value > this.threshold) break;
-                if (!seen.contains(hit.key)) {
-                    if (!map.containsKey(hit.key)) map.put(hit.key, 0);
-                    map.put(hit.key, map.get(hit.key) + 1);
-                    seen.add(hit.key);
-                }
-            }
+    if (vectors > 0) {
+      List<Pair<Double, float[]>> features = new ArrayList<>(vectors);
+
+      for (int i = 0; i < vectors; i++) {
+        float[] feature = new float[SHINGLE_SIZE * 13];
+        for (int j = 0; j < SHINGLE_SIZE; j++) {
+          MFCC mfcc = mfccs.get(i + j);
+          System.arraycopy(mfcc.getCepstra(), 0, feature, 13 * j, 13);
         }
 
-        /* Prepare final result-set. */
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            results.add(new StringDoublePair(entry.getKey(), (double) entry.getValue() / (double) features.size()));
-        }
+        Pair<Double, float[]> fp = new Pair<>(MathHelper.normL2(feature), MathHelper.normalizeL2(feature));
+        features.add(fp);
+        powers *= fp.first;
+      }
 
-        return results;
+      final double threshold = (Math.pow(powers, 1.0 / features.size()) / 4.0);
+      return features.stream().filter(f -> (f.first > threshold)).map(f -> f.second).collect(Collectors.toList());
     }
 
-    /**
-     *
-     * @param sc
-     */
-    @Override
-    public void processShot(SegmentContainer sc) {
-        List<float[]> features = this.getFeatures(sc);
-        features.forEach(f -> this.persist(sc.getId(), new FloatVectorImpl(f)));
-    }
-
-    /**
-     *
-     * @param segment
-     * @return
-     */
-    private List<float[]> getFeatures(SegmentContainer segment) {
-        STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new HanningWindow());
-        List<MFCC> mfccs = MFCC.calculate(stft);
-
-        int vectors = mfccs.size() - SHINGLE_SIZE;
-        double powers = 1.0f;
-
-        if (vectors > 0) {
-            List<Pair<Double, float[]>> features = new ArrayList<>(vectors);
-
-            for (int i = 0; i < vectors; i++) {
-                float[] feature = new float[SHINGLE_SIZE * 13];
-                for (int j = 0; j < SHINGLE_SIZE; j++) {
-                    MFCC mfcc = mfccs.get(i + j);
-                    System.arraycopy(mfcc.getCepstra(), 0, feature, 13 * j, 13);
-                }
-
-                Pair<Double, float[]> fp = new Pair<>(MathHelper.normL2(feature), MathHelper.normalizeL2(feature));
-                features.add(fp);
-                powers *= fp.first;
-            }
-
-            final double threshold = (Math.pow(powers, 1.0/features.size()) / 4.0);
-            return features.stream().filter(f -> (f.first > threshold)).map(f -> f.second).collect(Collectors.toList());
-        }
-
-        return new ArrayList<>(0);
-    }
-    
-    @Override
-    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
-      return new QueryConfig(qc).setDistanceIfEmpty(QueryConfig.Distance.euclidean);
-    }
+    return new ArrayList<>(0);
+  }
+  
+  @Override
+  protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+    return new QueryConfig(qc).setDistanceIfEmpty(QueryConfig.Distance.euclidean);
+  }
 }

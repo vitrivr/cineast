@@ -11,7 +11,7 @@ import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.StatElement;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.descriptor.EdgeImg;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -57,7 +57,7 @@ public class EdgeGrid16 extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		FloatVector query = getEdges(sc.getMostRepresentativeFrame().getImage());
 		return getSimilar(query.toArray(null), qc);
 	}

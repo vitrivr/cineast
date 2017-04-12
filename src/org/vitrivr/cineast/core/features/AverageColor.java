@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ColorUtils;
@@ -41,13 +41,13 @@ public class AverageColor extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		LOGGER.entry();
 		long start = System.currentTimeMillis();
 		ReadableLabContainer query = getAvg(sc.getAvgImg());
-		List<StringDoublePair> _reutrn = getSimilar(query.toArray(null), qc);
+		List<ScoreElement> _return = getSimilar(query.toArray(null), qc);
 		LOGGER.debug("AverageColor.getSimilar() done in {}ms", (System.currentTimeMillis() - start));
-		return LOGGER.exit(_reutrn);
+		return LOGGER.exit(_return);
 	}
 
 }

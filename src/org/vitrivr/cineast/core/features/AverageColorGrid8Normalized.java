@@ -7,7 +7,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.util.ImageHistogramEqualizer;
 
@@ -27,7 +27,7 @@ public class AverageColorGrid8Normalized extends AverageColorGrid8 {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		Pair<FloatVector, float[]> p = partition(ImageHistogramEqualizer.getEqualized(sc.getAvgImg()));
 		return getSimilar(p.first.toArray(null), new QueryConfig(qc).setDistanceWeights(p.second));
 	}

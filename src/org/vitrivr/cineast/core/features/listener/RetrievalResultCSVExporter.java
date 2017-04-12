@@ -15,6 +15,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.runtime.RetrievalTask;
@@ -26,7 +27,7 @@ public class RetrievalResultCSVExporter implements RetrievalResultListener {
   private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
-  public void notify(List<StringDoublePair> resultList, RetrievalTask task) {
+  public void notify(List<ScoreElement> resultList, RetrievalTask task) {
     ReadableQueryConfig qc = task.getConfig();
     String queryIdString;
     if (qc == null || qc.getQueryId() == null) {
@@ -44,8 +45,8 @@ public class RetrievalResultCSVExporter implements RetrievalResultListener {
     SegmentLookup sl = new SegmentLookup();
     
     ArrayList<String> ids = new ArrayList<>(resultList.size());
-    for(StringDoublePair sdp : resultList){
-      ids.add(sdp.key);
+    for(ScoreElement e : resultList){
+      ids.add(e.getId());
     }
     
     Map<String, SegmentDescriptor> segments = sl.lookUpSegments(ids);
@@ -64,16 +65,16 @@ public class RetrievalResultCSVExporter implements RetrievalResultListener {
       writer.println("\"rank\", \"id\", \"score\", \"path\"");
       
       int rank = 1;
-      for(StringDoublePair sdp : resultList){
+      for (ScoreElement e : resultList) {
         writer.print(rank++);
         writer.print(',');
-        writer.print(sdp.key);
+        writer.print(e.getId());
         writer.print(',');
-        writer.print(sdp.value);
+        writer.print(e.getScore());
         writer.print(',');
         writer.print('"');
         writer.print(
-            objects.get(segments.get(sdp.key).getObjectId()).getPath().replace('\\', '/'));
+            objects.get(segments.get(e.getId()).getObjectId()).getPath().replace('\\', '/'));
         writer.println('"');
       }
       writer.flush();

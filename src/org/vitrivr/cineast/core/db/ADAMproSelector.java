@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,15 +44,19 @@ import org.vitrivr.cineast.core.data.DefaultValueHashMap;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.score.DistanceElement;
+import org.vitrivr.cineast.core.data.score.ObjectDistanceElement;
+import org.vitrivr.cineast.core.data.score.ObjectScoreElement;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.score.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.util.LogHelper;
-
-import com.google.common.util.concurrent.ListenableFuture;
 
 public class ADAMproSelector implements DBSelector {
 
   /**
    * flag to choose if every selector should have its own connection to ADAMpro or if they should
-   * share one
+   * share one.
    */
   private static boolean useGlobalWrapper = true;
 
@@ -223,52 +229,53 @@ public class ADAMproSelector implements DBSelector {
       return manhattan;
     }
     switch (distance.get()) {
-    case chebyshev:
-      return chebyshev;
-    case chisquared:
-      return chisquared;
-    case correlation:
-      return correlation;
-    case cosine:
-      return cosine;
-    case euclidean:
-      return euclidean;
-    case hamming:
-      return hamming;
-    case jaccard:
-      return jaccard;
-    case kullbackleibler:
-      return kullbackleibler;
-    case manhattan:
-      return manhattan;
-    case minkowski: {
-
-      float norm = qc.getNorm().orElse(1f);
-
-      if (Math.abs(norm - 1f) < 1e6f) {
-        return manhattan;
-      }
-
-      if (Math.abs(norm - 2f) < 1e6f) {
+      case chebyshev:
+        return chebyshev;
+      case chisquared:
+        return chisquared;
+      case correlation:
+        return correlation;
+      case cosine:
+        return cosine;
+      case euclidean:
         return euclidean;
+      case hamming:
+        return hamming;
+      case jaccard:
+        return jaccard;
+      case kullbackleibler:
+        return kullbackleibler;
+      case manhattan:
+        return manhattan;
+      case minkowski: {
+
+        float norm = qc.getNorm().orElse(1f);
+
+        if (Math.abs(norm - 1f) < 1e6f) {
+          return manhattan;
+        }
+
+        if (Math.abs(norm - 2f) < 1e6f) {
+          return euclidean;
+        }
+
+        HashMap<String, String> tmp = new HashMap<>();
+        tmp.put("norm", Float.toString(norm));
+
+        synchronized (dmBuilder) {
+          return dmBuilder.clear().setDistancetype(DistanceType.minkowski).putAllOptions(tmp)
+              .build();
+        }
+
       }
-
-      HashMap<String, String> tmp = new HashMap<>();
-      tmp.put("norm", Float.toString(norm));
-
-      synchronized (dmBuilder) {
-        return dmBuilder.clear().setDistancetype(DistanceType.minkowski).putAllOptions(tmp).build();
-      }
-
-    }
-    case spannorm:
-      return spannorm;
-    case squaredeuclidean:
-      return squaredeuclidean;
-    case haversine:
-      return haversine;
-    default:
-      return manhattan;
+      case spannorm:
+        return spannorm;
+      case squaredeuclidean:
+        return squaredeuclidean;
+      case haversine:
+        return haversine;
+      default:
+        return manhattan;
     }
   }
 
@@ -340,8 +347,8 @@ public class ADAMproSelector implements DBSelector {
   }
 
   @Override
-  public List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column,
-      ReadableQueryConfig config) {
+  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
+      Class<T> scoreElementClass, ReadableQueryConfig config) {
     NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column,
         DataMessageConverter.convertVectorMessage(vector), k, config);
     QueryMessage sqMessage = buildQueryMessage(hints, null, projectionMessage, nnqMessage);
@@ -366,18 +373,37 @@ public class ADAMproSelector implements DBSelector {
     }
 
     QueryResultInfoMessage response = result.getResponses(0); // only head (end-result) is important
+    return handleNearestNeighbourResponse(response, k, scoreElementClass, config);
+  }
 
-    ArrayList<StringDoublePair> _return = new ArrayList<>(k);
-
+  private <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResultInfoMessage response,
+      int k, Class<T> distanceElementClass, ReadableQueryConfig config) {
+    List<T> result = new ArrayList<>(k);
     for (QueryResultTupleMessage msg : response.getResultsList()) {
       String id = msg.getDataMap().get("id").getStringData();
       if (id == null) {
         continue;
       }
-      _return.add(new StringDoublePair(id, msg.getDataMap().get("ap_distance").getDoubleData()));
+      double distance = msg.getDataMap().get("ap_distance").getDoubleData();
+      T e = createDistanceElement(distanceElementClass, id, distance);
+      if (e != null) {
+        result.add(e);
+      }
     }
 
-    return _return;
+    return result;
+  }
+
+  private <T extends DistanceElement> T createDistanceElement(Class<T> clazz, String id, double distance) {
+    if (clazz == SegmentDistanceElement.class) {
+      return clazz.cast(new SegmentDistanceElement(id, distance));
+    } else if (clazz == ObjectDistanceElement.class) {
+      return clazz.cast(new ObjectDistanceElement(id, distance));
+    } else {
+      LOGGER.error("Unknown subclass {} of DistanceElement in ADAMproSelector.getNearestNeighbours",
+          clazz.getSimpleName());
+      return null; // Using null because this is a programming error
+    }
   }
 
   @Override
@@ -485,10 +511,8 @@ public class ADAMproSelector implements DBSelector {
   }
 
   /**
-   * @param resultList
-   *          can be empty
-   * @return an ArrayList of length one if the resultList is empty, else the transformed
-   *         QueryResultTupleMessage
+   * @param resultList can be empty
+   * @return an ArrayList of length one if the resultList is empty, else the transformed QueryResultTupleMessage
    */
   private List<Map<String, PrimitiveTypeProvider>> resultsToMap(
       List<QueryResultTupleMessage> resultList) {
@@ -513,7 +537,7 @@ public class ADAMproSelector implements DBSelector {
 
   /**
    * Executes a QueryMessage and returns the resulting tuples
-   * 
+   *
    * @return an empty ArrayList if an error happens. Else just the list of rows
    */
   private List<Map<String, PrimitiveTypeProvider>> executeQuery(QueryMessage qm) {

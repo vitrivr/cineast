@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.config;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 
 public class ReadableQueryConfig {
@@ -14,6 +15,7 @@ public class ReadableQueryConfig {
   protected Distance distance = null;
   protected float[] distanceWeights = null;
   protected float norm = Float.NaN;
+  protected CorrespondenceFunction correspondence = null;
 //  protected NeuralNet net = null; // TODO remove from here
 //  protected float classificationCutoff = Float.NaN; // TODO find better place
   private final UUID queryId;
@@ -45,7 +47,11 @@ public class ReadableQueryConfig {
   public Optional<Float> getNorm(){
     return Optional.ofNullable(Float.isNaN(norm) ? null : norm);
   }
-  
+
+  public Optional<CorrespondenceFunction> getCorrespondenceFunction() {
+    return Optional.ofNullable(this.correspondence);
+  }
+
   public final UUID getQueryId(){
     return this.queryId;
   }

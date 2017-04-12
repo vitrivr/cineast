@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.score.DistanceElement;
 
 public interface DBSelector {
 
@@ -14,10 +14,20 @@ public interface DBSelector {
   boolean close();
 
   /**
-   * @return a list of pairs containing an id and the distance to the query vector
+   * Finds the {@code k}-nearest neighbours of the given {@code vector} in {@code column} using the
+   * provided distance function in {@code config}. {@code scoreElementClass} defines the specific
+   * type of {@link DistanceElement} to be returned by this method.
+   *
+   * @param k maximum number of results
+   * @param vector query vector
+   * @param column feature column to do the search
+   * @param scoreElementClass class of the {@link DistanceElement} type
+   * @param config query config
+   * @param <T> type of the {@link DistanceElement}
+   * @return a list of elements with their distance
    */
-  List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column,
-      ReadableQueryConfig config);
+  <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
+      Class<T> scoreElementClass, ReadableQueryConfig config);
 
   List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
       String column, ReadableQueryConfig config);
@@ -27,7 +37,7 @@ public interface DBSelector {
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
 
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values);
-  
+
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values);
 
   /**
@@ -42,6 +52,8 @@ public interface DBSelector {
 
   boolean existsEntity(String name);
 
-  /** Get first k rows */
+  /**
+   * Get first k rows
+   */
   List<Map<String, PrimitiveTypeProvider>> preview(int k);
 }

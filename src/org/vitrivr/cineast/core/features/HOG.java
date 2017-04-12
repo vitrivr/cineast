@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractCodebookFeatureModule;
 import org.vitrivr.cineast.core.util.images.HOGHelper;
@@ -65,13 +65,13 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
      * @return
      */
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig rqc) {
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig rqc) {
         long start = System.currentTimeMillis();
         LOGGER.traceEntry();
 
         ReadableQueryConfig qc = setQueryConfig(rqc);
 
-        List<StringDoublePair> results = null;
+        List<ScoreElement> results = null;
         BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
         if (image != null) {
             DescribeImageDense<GrayU8, TupleDesc_F64> hog = HOGHelper.getHOGDescriptors(image);

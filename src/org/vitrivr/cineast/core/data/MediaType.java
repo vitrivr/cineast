@@ -1,9 +1,8 @@
 package org.vitrivr.cineast.core.data;
 
+import gnu.trove.map.hash.TIntObjectHashMap;
 import java.util.EnumSet;
 import java.util.HashMap;
-
-import gnu.trove.map.hash.TIntObjectHashMap;
 
 public enum MediaType {
 
@@ -13,16 +12,15 @@ public enum MediaType {
   MODEL3D(3, "m", "3dmodel");
 
   private final int id;
-  private final String prefix, name;
+  private final String prefix;
+  private final String name;
 
   /**
-   * 
-   * @param id
-   *          numeric id to use to identify the type in the persistent storage layer
-   * @param prefix
-   *          the prefix of the MediaType without a trailing delimiter such as '_'
-   * @param name
-   *          the name of the media type
+   * Constructs a new media type given the id, the prefix and the name.
+   *
+   * @param id numeric id to use to identify the type in the persistent storage layer
+   * @param prefix the prefix of the MediaType without a trailing delimiter such as '_'
+   * @param name the name of the media type
    */
   MediaType(int id, String prefix, String name) {
     this.id = id;
@@ -35,7 +33,7 @@ public enum MediaType {
   }
 
   /**
-   * @return the prefix of the MediaType without a trailing delimiter such as '_'
+   * @return the prefix of the MediaType without a trailing delimiter such as '_'.
    */
   public String getPrefix() {
     return this.prefix;
@@ -48,7 +46,7 @@ public enum MediaType {
   private static final TIntObjectHashMap<MediaType> idToType = new TIntObjectHashMap<>();
   private static final HashMap<String, MediaType> prefixToType = new HashMap<>();
   private static final HashMap<String, MediaType> nameToType = new HashMap<>();
-  
+
   public static final char DELIMITER = '_';
 
   static {
@@ -74,14 +72,14 @@ public enum MediaType {
   }
 
   /**
-   * @return the MediaType associated with this id or null in case there is none
+   * @return the MediaType associated with this id or null in case there is none.
    */
   public static final MediaType fromId(int id) {
     return idToType.get(id);
   }
 
   /**
-   * @return the MediaType associated with this prefix or null in case there is none
+   * @return the MediaType associated with this prefix or null in case there is none.
    */
   public static final MediaType fromPrefix(String prefix) {
     if (prefix == null) {
@@ -91,7 +89,7 @@ public enum MediaType {
   }
 
   /**
-   * @return the MediaType associated with this name or null in case there is none
+   * @return the MediaType associated with this name or null in case there is none.
    */
   public static final MediaType fromName(String name) {
     if (name == null) {
@@ -111,32 +109,35 @@ public enum MediaType {
   public static final boolean existsName(String name) {
     return nameToType.containsKey(name.trim().toLowerCase());
   }
-  
-  
+
+
   /**
-   * generates an id of the form (prefix)_(object id) assuming the delimiter is '_'
+   * generates an id of the form (prefix)_(object id) assuming the delimiter is '_'.
+   *
    * @param type the type for which an id is to be generated
    * @param objectId the globally unique id of the object
    * @throws IllegalArgumentException if objectId is empty
    * @throws NullPointerException if type or objectId is null
    */
-  public static final String generateId(MediaType type, String objectId) throws IllegalArgumentException, NullPointerException{
-    if(type == null){
+  public static final String generateId(MediaType type, String objectId)
+      throws IllegalArgumentException, NullPointerException {
+    if (type == null) {
       throw new NullPointerException("type cannot be null");
     }
-    if(objectId == null){
+    if (objectId == null) {
       throw new NullPointerException("object id cannot be null");
     }
-    if(objectId.isEmpty()){
+    if (objectId.isEmpty()) {
       throw new IllegalArgumentException("sequenceNumber must be non-negative");
     }
-    
+
     return type.getPrefix() + DELIMITER + objectId;
-    
+
   }
-  
+
   /**
-   * generates a segment id of the form (prefix)_(object id)_(sequence number) assuming the delimiter is '_'
+   * generates a segment id of the form (prefix)_(object id)_(sequence number) assuming the
+   * delimiter is '_'.
    *
    * @param type the type for which an id is to be generated
    * @param objectId the globally unique id of the object (without MediaType prefix)
@@ -144,25 +145,28 @@ public enum MediaType {
    * @throws IllegalArgumentException if shot sequence number is negative or objectId is empty
    * @throws NullPointerException if type or objectId is null
    */
-  public static final String generateSegmentId(MediaType type, String objectId, long sequenceNumber) throws IllegalArgumentException, NullPointerException{
-    if(sequenceNumber < 0){
+  public static final String generateSegmentId(MediaType type, String objectId, long sequenceNumber)
+      throws IllegalArgumentException, NullPointerException {
+    if (sequenceNumber < 0) {
       throw new IllegalArgumentException("sequenceNumber must be non-negative");
     }
-    
+
     return generateId(type, objectId) + DELIMITER + sequenceNumber;
-    
+
   }
 
   /**
-   * generates a segment id of the form (prefix)_(object id)_(sequence number) assuming the delimiter is '_'
+   * generates a segment id of the form (prefix)_(object id)_(sequence number) assuming the
+   * delimiter is '_'
    *
    * @param objectId the globally unique id of the object (with MediaType prefix)
    * @param sequenceNumber the number of the segment within the object
    * @throws IllegalArgumentException if shot sequence number is negative or objectId is empty
    * @throws NullPointerException if type or objectId is null
    */
-  public static final String generateSegmentId(String objectId, long sequenceNumber) throws IllegalArgumentException, NullPointerException{
-    if(sequenceNumber < 0){
+  public static final String generateSegmentId(String objectId, long sequenceNumber)
+      throws IllegalArgumentException, NullPointerException {
+    if (sequenceNumber < 0) {
       throw new IllegalArgumentException("sequenceNumber must be non-negative");
     }
     return objectId + DELIMITER + sequenceNumber;

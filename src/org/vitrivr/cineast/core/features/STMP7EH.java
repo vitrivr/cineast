@@ -8,8 +8,8 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.StatElement;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 
@@ -53,13 +53,13 @@ public class STMP7EH extends EHD {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		// TODO Auto-generated method stub
 		return super.getSimilar(sc, qc);
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(String shotId, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
 		// TODO Auto-generated method stub
 		return super.getSimilar(shotId, qc);
 	}

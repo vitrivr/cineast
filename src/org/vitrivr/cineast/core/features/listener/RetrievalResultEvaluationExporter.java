@@ -21,6 +21,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.runtime.RetrievalTask;
@@ -37,7 +38,7 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
       StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES };
 
   @Override
-  public void notify(List<StringDoublePair> resultList, RetrievalTask task) {
+  public void notify(List<ScoreElement> resultList, RetrievalTask task) {
     ReadableQueryConfig qc = task.getConfig();
     String queryIdString;
     
@@ -61,8 +62,8 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
     SegmentLookup sl = new SegmentLookup();
     
     
-    for(StringDoublePair sdp : resultList){
-      ids.add(sdp.key);
+    for(ScoreElement e : resultList){
+      ids.add(e.getId());
     }
     
     if(task.getSegmentId() != null){
@@ -116,15 +117,15 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
       writer.println("\"resultSet\":[");
 
       int rank = 1;
-      Iterator<StringDoublePair> iter = resultList.iterator();
+      Iterator<ScoreElement> iter = resultList.iterator();
       while (iter.hasNext()) {
 
         writer.println('{');
 
-        StringDoublePair sdp = iter.next();
+        ScoreElement e = iter.next();
 
        
-        String path = objects.get(segments.get(sdp.key).getObjectId()).getPath().replace('\\', '/');
+        String path = objects.get(segments.get(e.getId()).getObjectId()).getPath().replace('\\', '/');
 
 
 //        try {
@@ -139,7 +140,7 @@ public class RetrievalResultEvaluationExporter implements RetrievalResultListene
         writer.println(',');
 
         writer.print("\"score\":");
-        writer.print(sdp.value);
+        writer.print(e.getScore());
         writer.println(',');
 
         writer.print("\"rank\":");

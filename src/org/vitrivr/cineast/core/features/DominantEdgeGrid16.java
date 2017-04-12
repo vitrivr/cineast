@@ -9,7 +9,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.descriptor.EdgeList;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -81,7 +81,7 @@ public class DominantEdgeGrid16 extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		short[][][] edgeHist = new short[16][16][4];
 		buildEdgeHist(edgeHist, sc.getMostRepresentativeFrame().getImage());
 		short[] dominant = getDominants(edgeHist);
