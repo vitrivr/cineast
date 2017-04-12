@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.config;
 
 import java.util.Objects;
 import java.util.UUID;
-
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 
 public class QueryConfig extends ReadableQueryConfig {
