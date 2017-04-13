@@ -108,11 +108,14 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     private swscale.SwsContext sws_ctx = null;
     private swresample.SwrContext swr_ctx = null;
 
-    /** Indicates that decoding of audio-data is complete. */
-    private final AtomicBoolean audioComplete = new AtomicBoolean(false);
-
     /** Indicates that decoding of video-data is complete. */
     private final AtomicBoolean videoComplete = new AtomicBoolean(false);
+
+    /** Indicates that decoding of video-data is complete. */
+    private final AtomicBoolean audioComplete = new AtomicBoolean(false);
+
+    /** Indicates the EOF has been reached during decoding. */
+    private final AtomicBoolean eof = new AtomicBoolean(false);
 
     /**
      *
@@ -130,12 +133,18 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
                 LOGGER.error("Error occurred while reading packet. FFMPEG av_read_frame() returned code {}.", read_results);
                 av_packet_unref(this.packet);
                 break;
+            } else if (read_results == AVERROR_EOF) {
+                if (this.eof.get()) break;
+                this.eof.set(true);
             }
+
+            /* Set readFrame to true. */
+            readFrame = true;
 
             /* Two cases: Audio or video stream!. */
             if (packet.stream_index() == this.videoStream) {
                 /* Send packet to decoder. If no packet was read, send null to flush the buffer. */
-                int decode_results = avcodec_send_packet(this.pCodecCtxVideo, read_results == AVERROR_EOF ? null : this.packet);
+                int decode_results = avcodec_send_packet(this.pCodecCtxVideo, this.eof.get() ? null : this.packet);
                 if (decode_results < 0) {
                     LOGGER.error("Error occurred while decoding frames from packet. FFMPEG avcodec_send_packet() returned code {}.", decode_results);
                     av_packet_unref(this.packet);
@@ -151,11 +160,10 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
                     if (queue) {
                         readVideo();
                     }
-                    readFrame = true;
                 }
             } else if (packet.stream_index() == this.audioStream) {
                 /* Send packet to decoder. If no packet was read, send null to flush the buffer. */
-                int decode_results = avcodec_send_packet(this.pCodecCtxAudio, read_results == AVERROR_EOF ? null : this.packet);
+                int decode_results = avcodec_send_packet(this.pCodecCtxAudio, this.eof.get() ? null : this.packet);
                 if (decode_results < 0) {
                     LOGGER.error("Error occurred while decoding frames from packet. FFMPEG avcodec_send_packet() returned code {}.", decode_results);
                     av_packet_unref(this.packet);
@@ -175,7 +183,6 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
                             this.enqueueOriginalAudio();
                         }
                     }
-                    readFrame = true;
                 }
             }
 
@@ -332,11 +339,6 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         if (this.pCodecCtxVideo != null) {
             avcodec_free_context(this.pCodecCtxVideo);
             this.pCodecCtxVideo = null;
-        }
-
-        /* Free buffer. */
-        if (this.buffer != null) {
-            av_freep(this.buffer);
         }
 
         /* Close the audio file context. */
@@ -545,24 +547,34 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     @Override
     public VideoFrame getNext() {
         /* Read frames until a video-frame becomes available. */
-        while (this.videoFrameQueue.isEmpty() && !this.videoComplete.get()) {
-            this.videoComplete.set(!this.readFrame(true));
+        while (this.videoFrameQueue.isEmpty() && !this.eof.get()) {
+            this.readFrame(true);
+        }
+
+        /* If frame-queue is empty and EOF has been reached, then video decoding was completed. */
+        if (this.videoFrameQueue.isEmpty()) {
+            this.videoComplete.set(true);
+            return null;
         }
 
         /* Fetch that video frame. */
         Pair<Long, VideoFrame> frame = this.videoFrameQueue.poll();
-        if (frame == null) return null;
 
-        /* Now if the audio stream is set, read AudioFrames until the timestamp of the next AudioFrame in the
+        /*
+         * Now if the audio stream is set, read AudioFrames until the timestamp of the next AudioFrame in the
          * queue becomes greater than the timestamp of the VideoFrame. All these AudioFrames go to the VideoFrame.
          */
-        while (this.audioStream > -1  && !this.audioComplete.get()) {
+        while (!this.audioComplete.get()) {
+            while (this.audioFrameQueue.isEmpty() && !this.eof.get()) {
+                this.readFrame(true);
+            }
+
             if (this.audioFrameQueue.isEmpty()) {
-                this.audioComplete.set(!this.readFrame(true));
+                this.audioComplete.set(true);
+                break;
             }
 
             Pair<Long,AudioFrame> audioFrame = this.audioFrameQueue.peek();
-            if (audioFrame == null) continue;
             if (audioFrame.first <= frame.first) {
                 frame.second.addAudioFrame(this.audioFrameQueue.poll().second);
             } else {
@@ -591,7 +603,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      */
     @Override
     public boolean complete() {
-        return this.audioComplete.get() && this.videoComplete.get();
+        return this.videoComplete.get();
     }
 
     /**
