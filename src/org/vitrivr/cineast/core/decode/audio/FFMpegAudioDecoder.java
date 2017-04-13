@@ -68,6 +68,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     private static final int TARGET_FORMAT = AV_SAMPLE_FMT_S16;
     private static final int BYTES_PER_SAMPLE = av_get_bytes_per_sample(TARGET_FORMAT);
 
+    /** Internal data structure used to hold decoded AudioFrames. */
     private ArrayDeque<AudioFrame> frameQueue = new ArrayDeque<>();
 
     private AVFormatContext pFormatCtx = null;
@@ -272,16 +273,17 @@ public class FFMpegAudioDecoder implements AudioDecoder {
             return false;
         }
 
-        /* Find the best frames stream. */
+        /* Find the best stream. */
         AVCodec codec = new AVCodec();
         this.audioStream = av_find_best_stream(this.pFormatCtx, AVMEDIA_TYPE_AUDIO,-1, -1, codec, 0);
         if (this.audioStream == -1) {
-            LOGGER.error("Couldn't find a supported frames stream.");
+            LOGGER.error("Couldn't find a supported audio stream.");
             return false;
         }
 
-        /* Allocate new codec-context for codec returned by av_find_best_stream(). */
+        /* Allocate new codec-context. */
         this.pCodecCtx = avcodec_alloc_context3(codec);
+        avcodec_parameters_to_context(this.pCodecCtx, this.pFormatCtx.streams(this.audioStream).codecpar());
 
         /* Initialize context with stream's codec settings. */
         this.pCodecCtx.sample_rate(this.pFormatCtx.streams(this.audioStream).codecpar().sample_rate());
@@ -291,7 +293,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
         /* Open the code context. */
         if (avcodec_open2(this.pCodecCtx, codec, (AVDictionary) null) < 0) {
-            LOGGER.error("Error, Could not open frames codec");
+            LOGGER.error("Could not open audio codec.");
             return false;
         }
         
@@ -299,17 +301,29 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         this.swr_ctx = swr_alloc_set_opts(null, channellayout, TARGET_FORMAT, samplerate, this.pCodecCtx.channel_layout(), this.pCodecCtx.sample_fmt(), this.pCodecCtx.sample_rate(), 0, null);
         if(swr_init(this.swr_ctx) < 0) {
             this.swr_ctx = null;
-            LOGGER.warn("Warning! Could not open re-sample context - original format will be kept!");
+            LOGGER.warn("Could not open re-sample context - original format will be kept!");
         }
 
-        /* Initialize the packet. */
+       /* Initialize the packet. */
         this.packet = av_packet_alloc();
+        if (this.packet == null) {
+            LOGGER.error("Could not allocate packet data structure for decoded data.");
+            return false;
+        }
 
-        /* Initialize decodedFrame. */
+        /* Allocate frame that holds decoded frame information. */
         this.decodedFrame = av_frame_alloc();
+        if (this.decodedFrame == null) {
+            LOGGER.error("Could not allocate frame data structure for decoded data.");
+            return false;
+        }
 
         /* Initialize out-frame. */
         this.resampledFrame = av_frame_alloc();
+        if (this.resampledFrame == null) {
+            LOGGER.error("Could not allocate frame data structure for re-sampled data.");
+            return false;
+        }
         this.resampledFrame.channel_layout(channellayout);
         this.resampledFrame.sample_rate(samplerate);
         this.resampledFrame.channels(channels);
@@ -367,7 +381,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     }
 
     /**
-     *
+     * Closes the FFMpegAudioDecoder and frees all (non-native) resources associated with it.
      */
     @Override
     public void close() {
