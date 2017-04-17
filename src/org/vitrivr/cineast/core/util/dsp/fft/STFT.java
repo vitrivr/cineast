@@ -63,7 +63,7 @@ public class STFT {
         /* Prepares empty array for STFT. */
         this.stft = new ArrayList<>();
 
-        this.frequencies = FFTUtil.binFrequencies(windowsize, samplingrate);
+        this.frequencies = FFTUtil.binCenterFrequencies(windowsize, samplingrate);
         this.time = FFTUtil.time(this.width, windowsize, samplingrate);
     }
 
