@@ -12,22 +12,51 @@ public class FFTUtil {
     private FFTUtil() { }
 
     /**
-     * Returns frequency labels in Hz for a FFT of the specified size and samplerate.
+     * Returns frequency labels in Hz for a FFT of the specified size and samplingrate.
      *
      * @param size Size of the FFT (i.e. number of frequency bins).
-     * @param samplerate Samplerate at which the original data has been sampled.
+     * @param samplingrate Rate at which the original data has been sampled.
      *
      * @return Array containing the frequency labels in Hz in ascending order.
      */
-    public static float[] binFrequencies(int size, float samplerate) {
-        double bin_width = (samplerate / size);
-        double offset = bin_width/2.0;
+    public static float[] binCenterFrequencies(int size, float samplingrate) {
         float[] labels = new float[size/2];
         for (int bin = 0; bin < labels.length; bin++) {
-            labels[bin] = (float)((bin * bin_width) + offset);
+            labels[bin] = FFTUtil.binCenterFrequency(bin, size, samplingrate);
         }
         return labels;
     }
+
+    /**
+     * Returns the center frequency associated with the provided bin-index for the given
+     * window-size and samplingrate.
+     *
+     * @param index Index of the bin in question.
+     * @param size Size of the FFT (i.e. number of frequency bins).
+     * @param samplingrate Rate at which the original data has been sampled.
+     */
+    public static float binCenterFrequency(int index, int size, float samplingrate) {
+        if (index > size) throw new IllegalArgumentException("The index cannot be greater than the window-size of the FFT.");
+        double bin_width = (samplingrate / size);
+        double offset = bin_width/2.0;
+        return (float)((index * bin_width) + offset);
+    }
+
+    /**
+     * Returns the bin-index associated with the provided frequency at the given samplingrate
+     * and window-size.
+     *
+     * @param frequency
+     * @param size Size of the FFT (i.e. number of frequency bins).
+     * @param samplingrate Rate at which the original data has been sampled.
+     * @return
+     */
+    public static int binIndex(float frequency, int size, float samplingrate) {
+        if (frequency > samplingrate/2) throw new IllegalArgumentException("The frequency cannot be greater than half the samplingrate.");
+        double bin_width = (samplingrate / size);
+        return (int)Math.floor(frequency/bin_width);
+    }
+
 
     /**
      * Returns time labels in seconds for a STFT of given width using the provided
@@ -35,14 +64,14 @@ public class FFTUtil {
      *
      * @param width Size of the STFT (i.e. number of time bins).
      * @param windowsize Used for FFT (i.e. number of samples per time bin).
-     * @param samplerate Samplerate at which the original data has been sampled.
+     * @param samplingrate Rate at which the original data has been sampled.
      *
      * @return Array containing the time labels for the STFT in seconds in ascending order.
      */
-    public static float[] time(int width, int windowsize, float samplerate) {
+    public static float[] time(int width, int windowsize, float samplingrate) {
         float[] labels = new float[width];
         for (int i=0;i<labels.length;i++) {
-            labels[i] = i*(windowsize/samplerate);
+            labels[i] = i*(windowsize/samplingrate);
         }
         return labels;
     }

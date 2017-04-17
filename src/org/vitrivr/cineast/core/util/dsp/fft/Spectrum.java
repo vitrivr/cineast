@@ -58,10 +58,10 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
         double[] powerSpectrum = new double[bins];
         powerSpectrum[0] = (Math.pow(data[0].getReal(),2) + Math.pow(data[0].getImaginary(),2)) / normalizationFactor;
         for(int i = 1; i < bins; i++) {
-            powerSpectrum[i] = (2 * (Math.pow(data[i].getReal(),2) + Math.pow(data[i].getImaginary(),2))) / normalizationFactor;
+            powerSpectrum[i] = (2 * Math.pow(data[i].abs(),2)) / normalizationFactor;
         }
 
-        return new Spectrum(Type.POWER, powerSpectrum, FFTUtil.binFrequencies(data.length, samplingrate));
+        return new Spectrum(Type.POWER, powerSpectrum, FFTUtil.binCenterFrequencies(data.length, samplingrate));
     }
 
     /**
@@ -80,10 +80,10 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
         double[] magnitudeSpectrum = new double[bins];
         magnitudeSpectrum[0] = Math.sqrt(Math.pow(data[0].getReal(),2) + Math.pow(data[0].getImaginary(),2)) / normalizationFactor;
         for(int i = 1; i < bins; i++) {
-            magnitudeSpectrum[i] = (2 * Math.sqrt(Math.pow(data[i].getReal(),2) + Math.pow(data[i].getImaginary(),2))) / normalizationFactor;
+            magnitudeSpectrum[i] = (2 * data[i].abs()) / normalizationFactor;
         }
 
-        return new Spectrum(Type.MAGNITUDE, magnitudeSpectrum, FFTUtil.binFrequencies(data.length, samplingrate));
+        return new Spectrum(Type.MAGNITUDE, magnitudeSpectrum, FFTUtil.binCenterFrequencies(data.length, samplingrate));
     }
 
     /**
@@ -92,11 +92,11 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
      * @param spectrum
      * @param frequencies
      */
-    private Spectrum(Type type, double[] spectrum, float[] frequencies) {
+    public Spectrum(Type type, double[] spectrum, float[] frequencies) {
         /* Check if the length of both array is the same. */
         if (spectrum.length != frequencies.length) throw new IllegalArgumentException("The length of the spectrum and the frequency-label array must be the same!");
 
-        /* Store values for further refrence. */
+        /* Store values for further reference. */
         this.length = spectrum.length;
         this.spectrum = spectrum;
         this.frequencies = frequencies;

@@ -4,6 +4,7 @@ import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
+import org.apache.commons.math3.util.MathArrays;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.RectangularWindow;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 
@@ -114,5 +115,45 @@ public class FFT {
      */
     public final Complex[] getValues() {
         return this.data;
+    }
+
+    /**
+     * Can be used to directly access a FFT coefficient at the
+     * specified index.
+     *
+     * @param index Index of the coefficient that should be retrieved.
+     * @return Fourier coefficient.
+     */
+    public final Complex get(int index) {
+        return this.data[index];
+    }
+
+    /**
+     * Getter for samplingrate.
+     *
+     * @return Rate at which the original signal has been sampled.
+     */
+    public final float getSamplingrate() {
+        return this.samplingrate;
+    }
+
+    /**
+     * Getter for samplingrate.
+     *
+     * @return Rate at which the original signal has been sampled.
+     */
+    public final int getWindowsize() {
+        return this.data.length;
+    }
+
+    /**
+     * Returns true if the FFT only contains zeros and false
+     * otherwise
+     */
+    public final boolean isZero() {
+        for (Complex coefficient : this.data) {
+            if (coefficient.abs() > 0) return false;
+        }
+        return true;
     }
 }
