@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.util.audio;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
+import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +45,6 @@ public class HPCP {
         }
     }
 
-    /** Reference frequency in Hz. Corresponds to the musical note A (A440 or A4) above the middle C. */
-    private static final double F_REF = 440.0f;
-
     /** Window-size parameter, which defaults to 4/3 semitones as per [1]. */
     private static final float WINDOW = 4f/3f;
 
@@ -71,7 +69,7 @@ public class HPCP {
      * @return r Resolution to use (1, 1/2, or 1/3)
      */
     public static double binToCenterFrequency(int n, Resolution r) {
-        return F_REF*Math.pow(2, ((float)n/(float)r.bins));
+        return MidiUtil.F_REF*Math.pow(2, ((float)n/(float)r.bins));
     }
 
     /**
