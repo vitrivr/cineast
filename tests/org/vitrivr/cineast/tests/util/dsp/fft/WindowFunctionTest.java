@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.tests.util.fft;
+package org.vitrivr.cineast.tests.util.dsp.fft;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
