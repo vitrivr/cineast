@@ -165,6 +165,19 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
     }
 
     /**
+     * Changes the value at the given index to the new,
+     * provided value.
+     *
+     * @param idx Index of the position in the spectrum that should be updated.
+     * @param value New value at that position.
+     */
+    public void setValue(int idx, double value) {
+        if (idx < this.length) {
+            this.spectrum[idx] = value;
+        }
+    }
+
+    /**
      * Returns the maximum value in the spectrum.
      *
      * @return
