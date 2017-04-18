@@ -13,7 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.imageio.ImageIO;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -33,7 +35,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
-import org.vitrivr.cineast.core.features.listener.RetrievalResultEvaluationExporter;
+import org.vitrivr.cineast.core.features.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.importer.DataImportHandler;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
@@ -455,10 +457,10 @@ public class API {
             }
             case "exportresults": {
               ContinousRetrievalLogic.addRetrievalResultListener(
-                  new RetrievalResultEvaluationExporter()
+                  new RetrievalResultCSVExporter()
               );
               System.out
-                  .println("added RetrievalResultEvaluationExporter to ContinousRetrievalLogic");
+                  .println("added RetrievalResultCSVExporter to ContinousRetrievalLogic");
               break;
             }
             case "exit":
