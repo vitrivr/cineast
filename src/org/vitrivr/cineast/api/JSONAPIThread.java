@@ -162,7 +162,6 @@ public class JSONAPIThread extends Thread {
           for (JsonValue _el : narr) {
             String _shotid = _el.asString();
             result = ContinousRetrievalLogic.retrieve(_shotid, category.asString(), qconf);
-            // FIXME: use map.adjustValue
             for (SegmentScoreElement element : result) {
               String segmentId = element.getSegmentId();
               double score = element.getScore();
@@ -299,18 +298,13 @@ public class JSONAPIThread extends Thread {
             }else{
               result = ContinousRetrievalLogic.retrieve(qc, category, qconf);
             }
-            // FIXME: use map.adjustValue
             for (SegmentScoreElement element : result) {
               String segmentId = element.getSegmentId();
               double score = element.getScore();
               if (Double.isInfinite(score) || Double.isNaN(score)) {
                 continue;
               }
-              if (map.contains(segmentId)) {
-                map.put(segmentId, map.get(segmentId) + score * weight);
-              } else {
-                map.put(segmentId, score * weight);
-              }
+              map.adjustOrPutValue(segmentId, score * weight, score * weight);
             }
             
             List<StringDoublePair> list = new ArrayList<>(map.size());
