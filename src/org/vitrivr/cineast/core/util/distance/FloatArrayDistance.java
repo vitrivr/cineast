@@ -20,23 +20,16 @@ public interface FloatArrayDistance extends Distance<float[]>{
     switch(distance){
     case chebyshev: return new ChebyshevDistance();
     case chisquared: return new ChiSquaredDistance();
-    case correlation:
-      break;
-    case cosine:
-      break;
+    case correlation: return new CorrelationDistance();
+    case cosine: return new CosineDistance();
     case euclidean: return new EuclideanDistance();
     case hamming: return new HammingDistance();
     case haversine:
       break;
-    case jaccard:
-      break;
-    case kullbackleibler:
-      break;
+    case jaccard: return new JaccardDistance();
+    case kullbackleibler: return new KLDivergence();
     case manhattan: return new ManhattanDistance();
-    case minkowski:
-      break;
-    case spannorm:
-      break;
+    case spannorm: return new SpanNormDistance();
     case squaredeuclidean: return new SquaredEuclideanDistance();
     default:
       break;
