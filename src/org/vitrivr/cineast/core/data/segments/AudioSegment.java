@@ -200,18 +200,16 @@ public class AudioSegment implements SegmentContainer {
      *
      * @param windowsize Size of the window used during STFT. Must be a power of two.
      * @param overlap Overlap in samples between two subsequent windows.
+     * @param padding Zero-padding before and after the actual sample data. Causes the window to contain (windowsize-2*padding) data-points..
      * @param function WindowFunction to apply before calculating the STFT.
      *
      * @return STFT of the current AudioSegment or null if the segment is empty.
      */
     @Override
-    public STFT getSTFT(int windowsize, int overlap, WindowFunction function) {
-        if (this.getNumberOfSamples() >= windowsize) {
-            STFT stft = new STFT(windowsize, overlap, function, this.samplerate);
-            stft.forward(this.getMeanSamplesAsDouble());
-            return stft;
-        } else {
-            return null;
-        }
+    public STFT getSTFT(int windowsize, int overlap, int padding, WindowFunction function) {
+        if (2*padding >= windowsize) throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
+        STFT stft = new STFT(windowsize, overlap, padding, function, this.samplerate);
+        stft.forward(this.getMeanSamplesAsDouble());
+        return stft;
     }
 }

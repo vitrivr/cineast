@@ -4,9 +4,9 @@ import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
-import org.apache.commons.math3.util.MathArrays;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.RectangularWindow;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
+import org.vitrivr.cineast.core.util.dsp.filter.frequency.FrequencyDomainFilterInterface;
 
 /**
  * This class wraps the Apache Commons FastFourierTransformer and extends it with some additional functionality.
@@ -155,5 +155,14 @@ public class FFT {
             if (coefficient.abs() > 0) return false;
         }
         return true;
+    }
+
+    /**
+     * Applies the provided FrequencyDomainFilter to this FFT.
+     *
+     * @param filter FrequencyDomainFilter that should be applied.
+     */
+    public final void applyFilter(FrequencyDomainFilterInterface filter) {
+        filter.filterInPlace(this.data);
     }
 }
