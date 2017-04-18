@@ -83,9 +83,9 @@ public class QueryConfig extends ReadableQueryConfig {
 
   protected QueryConfig setNorm(float norm) {
     this.norm = norm;
-    if (Math.abs(norm - 2f) < 1e6f) {
+    if (Math.abs(norm - 2f) < 1e-6f) {
       this.distance = Distance.euclidean;
-    } else if (Math.abs(norm - 1f) < 1e6f) {
+    } else if (Math.abs(norm - 1f) < 1e-6f) {
       this.distance = Distance.manhattan;
     } else if (Float.isInfinite(norm) && norm > 0) {
       this.distance = Distance.chebyshev;
