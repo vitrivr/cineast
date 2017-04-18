@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.util.distance;
 
-public class EuclideanDistance implements FloatArrayDistance {
+public class ChiSquaredDistance implements FloatArrayDistance {
 
   @Override
   public double applyAsDouble(float[] t, float[] u) {
@@ -17,10 +17,10 @@ public class EuclideanDistance implements FloatArrayDistance {
     double dist = 0d;
     
     for(int i = 0; i < len; ++i){
-      dist += (t[i] - u[i]) * (t[i] - u[i]);
+      dist += ((t[i] - u[i]) * (t[i] - u[i])) / (t[i] + u[i]);
     }
     
-    return Math.sqrt(dist);
+    return dist;
   }
 
 }
