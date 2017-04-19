@@ -1,7 +1,9 @@
 package org.vitrivr.cineast.core.db;
 
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -158,26 +160,7 @@ public class ADAMproSelector implements DBSelector {
   }
 
   private WhereMessage buildWhereMessage(String key, String value) {
-    synchronized (wmBuilder) {
-      wmBuilder.clear();
-      return wmBuilder.setAttribute(key).addValues(DataMessage.newBuilder().setStringData(value))
-          .build();
-    }
-  }
-
-  private WhereMessage buildWhereMessage(String key, String... values) {
-    synchronized (wmBuilder) {
-      wmBuilder.clear();
-      DataMessage.Builder damBuilder = DataMessage.newBuilder();
-
-      wmBuilder.setAttribute(key);
-
-      for (String value : values) {
-        wmBuilder.addValues(damBuilder.setStringData(value).build());
-      }
-
-      return wmBuilder.build();
-    }
+    return buildWhereMessage(key, Collections.singleton(value));
   }
 
   private WhereMessage buildWhereMessage(String key, Iterable<String> values) {
@@ -386,37 +369,23 @@ public class ADAMproSelector implements DBSelector {
   }
 
   @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
+    return getRows(fieldName, Collections.singleton(value));
+  }
+
+  @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
-    if (values == null || values.length == 0) {
-      LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows(), entity: {}", entityName);
-      return new ArrayList<>(0);
-    }
-
-    if (values.length == 1) {
-      return getRows(fieldName, values[0]);
-    }
-
-    WhereMessage where = buildWhereMessage(fieldName, values);
-    BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
-    return executeBooleanQuery(bqMessage);
+    return getRows(fieldName, Arrays.asList(values));
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
       Iterable<String> values) {
-    if (values == null) {
-      LOGGER.error("Cannot query empty value list in ADAMproSelector.getRows(), entity: {}", entityName);
+    if (values == null || Iterables.isEmpty(values)) {
       return new ArrayList<>(0);
     }
 
     WhereMessage where = buildWhereMessage(fieldName, values);
-    BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
-    return executeBooleanQuery(bqMessage);
-  }
-
-  @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
-    WhereMessage where = buildWhereMessage(fieldName, value);
     BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
     return executeBooleanQuery(bqMessage);
   }
@@ -530,7 +499,9 @@ public class ADAMproSelector implements DBSelector {
     }
 
     if (result.getAck().getCode() != AckMessage.Code.OK) {
-      LOGGER.error(result.getAck().getMessage());
+      LOGGER.error("Query returned non-OK result code {} with message: {}",
+          result.getAck().getCode(),
+          result.getAck().getMessage());
     }
 
     if (result.getResponsesCount() == 0) {
