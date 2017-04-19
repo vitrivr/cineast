@@ -20,13 +20,13 @@ public interface DBSelector {
    * @param k maximum number of results
    * @param vector query vector
    * @param column feature column to do the search
-   * @param scoreElementClass class of the {@link DistanceElement} type
+   * @param distanceElementClass class of the {@link DistanceElement} type
    * @param config query config
    * @param <T> type of the {@link DistanceElement}
    * @return a list of elements with their distance
    */
   <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
-      Class<T> scoreElementClass, ReadableQueryConfig config);
+      Class<T> distanceElementClass, ReadableQueryConfig config);
 
   List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
       String column, ReadableQueryConfig config);

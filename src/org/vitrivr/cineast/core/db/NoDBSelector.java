@@ -26,7 +26,7 @@ public class NoDBSelector implements DBSelector {
 
   @Override
   public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector,
-      String column, Class<T> scoreElementClass, ReadableQueryConfig config) {
+      String column, Class<T> distanceElementClass, ReadableQueryConfig config) {
     return new ArrayList<>(0);
   }
 

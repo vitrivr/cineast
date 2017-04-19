@@ -339,7 +339,7 @@ public class ADAMproSelector implements DBSelector {
 
   @Override
   public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
-      Class<T> scoreElementClass, ReadableQueryConfig config) {
+      Class<T> distanceElementClass, ReadableQueryConfig config) {
     NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column,
         DataMessageConverter.convertVectorMessage(vector), k, config);
     QueryMessage sqMessage = buildQueryMessage(hints, null, projectionMessage, nnqMessage);
@@ -364,7 +364,7 @@ public class ADAMproSelector implements DBSelector {
     }
 
     QueryResultInfoMessage response = result.getResponses(0); // only head (end-result) is important
-    return handleNearestNeighbourResponse(response, k, scoreElementClass, config);
+    return handleNearestNeighbourResponse(response, k, distanceElementClass, config);
   }
 
   private <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResultInfoMessage response,
