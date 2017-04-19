@@ -26,7 +26,6 @@ import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.ObjectScoreElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.ScoreElements;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultListener;
@@ -251,11 +250,11 @@ public class ContinousQueryDispatcher {
       }
     }
 
-    return ScoreElements.segmentsFromSegmentsMap(scoreBySegmentId);
+    return ScoreElement.segmentsFromSegmentsMap(scoreBySegmentId);
   }
 
   private List<SegmentScoreElement> sortAndTruncate(List<SegmentScoreElement> results) {
-    results.sort(ScoreElements.SCORE_COMPARATOR.reversed());
+    results.sort(ScoreElement.SCORE_COMPARATOR.reversed());
     if (results.size() > MAX_RESULTS) {
       results = results.subList(0, MAX_RESULTS);
     }

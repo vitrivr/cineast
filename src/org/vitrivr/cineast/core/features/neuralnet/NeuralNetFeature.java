@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.ScoreElements;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -114,7 +113,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
                 _return.add(new SegmentScoreElement(segmentId, probability));
             }
         }
-        _return = ScoreElements.filterMaximumScores(_return.stream());
+        _return = ScoreElement.filterMaximumScores(_return.stream());
         LOGGER.trace("NeuralNetFeature.getSimilar() done in {}",
                 TimeHelper.toc());
         return LOGGER.traceExit(_return);

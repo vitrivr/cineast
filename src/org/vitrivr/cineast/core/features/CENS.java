@@ -10,7 +10,6 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.ScoreElements;
 import org.vitrivr.cineast.core.data.score.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -115,7 +114,7 @@ public abstract class CENS extends AbstractFeatureModule {
     }
 
     final double finalMax = max;
-    return ScoreElements.scoresFromSegmentsDistanceMap(map, CorrespondenceFunction.fromFunction(score -> score / finalMax));
+    return ScoreElement.scoresFromSegmentsDistanceMap(map, CorrespondenceFunction.fromFunction(score -> score / finalMax));
   }
 
   /**

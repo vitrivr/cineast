@@ -13,7 +13,6 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.ScoreElements;
 import org.vitrivr.cineast.core.data.score.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -116,7 +115,7 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
     /* Prepare final result-set. */
     final double finalMax = max;
     CorrespondenceFunction f = CorrespondenceFunction.fromFunction(value -> value / finalMax);
-    return ScoreElements.scoresFromSegmentsDistanceMap(map, f);
+    return ScoreElement.scoresFromSegmentsDistanceMap(map, f);
   }
 
   /**

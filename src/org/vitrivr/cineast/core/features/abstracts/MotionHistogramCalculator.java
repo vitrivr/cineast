@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.score.DistanceElements;
+import org.vitrivr.cineast.core.data.score.DistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentDistanceElement;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -113,7 +113,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
     List<SegmentDistanceElement> distances = this.selector
         .getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
             this.fieldName, SegmentDistanceElement.class, qcc);
-    return DistanceElements.toScore(distances, qcc.getCorrespondenceFunction().get());
+    return DistanceElement.toScore(distances, qcc.getCorrespondenceFunction().get());
   }
 
   @Override

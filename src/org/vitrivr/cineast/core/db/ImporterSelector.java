@@ -4,14 +4,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FixedSizePriorityQueue;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.score.DistanceElement;
 import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.core.util.distance.FloatArrayDistance;
 import org.vitrivr.cineast.core.util.distance.PrimitiveTypeMapDistanceComparator;
@@ -33,20 +33,15 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column,
-      ReadableQueryConfig config) {
-
-    List<Map<String, PrimitiveTypeProvider>> list = getNearestNeighbourRows(k, vector, column,
+  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector,
+      String column, Class<T> distanceElementClass, ReadableQueryConfig config) {
+    List<Map<String, PrimitiveTypeProvider>> results = getNearestNeighbourRows(k, vector, column,
         config);
-    int len = Math.min(k, list.size());
-    ArrayList<StringDoublePair> _return = new ArrayList<>(len);
-
-    for (int i = 0; i < len; ++i) {
-      Map<String, PrimitiveTypeProvider> map = list.get(i);
-      _return.add(new StringDoublePair(map.get("id").getString(), map.get("distance").getDouble()));
-    }
-
-    return _return;
+    return results.stream()
+        .map(m -> DistanceElement.create(
+            distanceElementClass, m.get("id").getString(), m.get("distance").getDouble()))
+        .limit(k)
+        .collect(Collectors.toList());
   }
 
   @Override

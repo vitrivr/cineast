@@ -11,9 +11,8 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
-import org.vitrivr.cineast.core.data.score.DistanceElements;
+import org.vitrivr.cineast.core.data.score.DistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.ScoreElements;
 import org.vitrivr.cineast.core.data.score.SegmentDistanceElement;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -81,7 +80,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
     Stream<ScoreElement> elements = list.stream()
         .flatMap(vector -> this.getSimilar(vector, qc).stream());
-    return ScoreElements.filterMaximumScores(elements);
+    return ScoreElement.filterMaximumScores(elements);
   }
 
   /**
@@ -94,7 +93,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
         .getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
             "feature", SegmentDistanceElement.class, qcc);
     CorrespondenceFunction function = qcc.getCorrespondenceFunction().orElse(linearCorrespondence);
-    return DistanceElements.toScore(distances, function);
+    return DistanceElement.toScore(distances, function);
   }
 
   @Override

@@ -13,7 +13,6 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.ScoreElements;
 import org.vitrivr.cineast.core.data.score.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -81,7 +80,7 @@ public class MFCCShingle extends AbstractFeatureModule {
 
     /* Prepare final result-set. */
     CorrespondenceFunction f = CorrespondenceFunction.fromFunction(value -> value / features.size());
-    return ScoreElements.scoresFromSegmentsDistanceMap(map, f);
+    return ScoreElement.scoresFromSegmentsDistanceMap(map, f);
   }
 
   /**

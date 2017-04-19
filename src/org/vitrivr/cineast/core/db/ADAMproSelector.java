@@ -41,8 +41,6 @@ import org.vitrivr.cineast.core.data.DefaultValueHashMap;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.score.DistanceElement;
-import org.vitrivr.cineast.core.data.score.ObjectDistanceElement;
-import org.vitrivr.cineast.core.data.score.SegmentDistanceElement;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 public class ADAMproSelector implements DBSelector {
@@ -378,25 +376,13 @@ public class ADAMproSelector implements DBSelector {
         continue;
       }
       double distance = msg.getDataMap().get("ap_distance").getDoubleData();
-      T e = createDistanceElement(distanceElementClass, id, distance);
+      T e = DistanceElement.create(distanceElementClass, id, distance);
       if (e != null) {
         result.add(e);
       }
     }
 
     return result;
-  }
-
-  private <T extends DistanceElement> T createDistanceElement(Class<T> clazz, String id, double distance) {
-    if (clazz == SegmentDistanceElement.class) {
-      return clazz.cast(new SegmentDistanceElement(id, distance));
-    } else if (clazz == ObjectDistanceElement.class) {
-      return clazz.cast(new ObjectDistanceElement(id, distance));
-    } else {
-      LOGGER.error("Unknown subclass {} of DistanceElement in ADAMproSelector.getNearestNeighbours",
-          clazz.getSimpleName());
-      return null; // Using null because this is a programming error
-    }
   }
 
   @Override

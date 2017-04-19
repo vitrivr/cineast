@@ -4,7 +4,7 @@ import java.util.List;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
-import org.vitrivr.cineast.core.data.score.DistanceElements;
+import org.vitrivr.cineast.core.data.score.DistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentDistanceElement;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
@@ -36,7 +36,7 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
     List<SegmentDistanceElement> distances = this.selector
         .getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
             "hist", SegmentDistanceElement.class, qc);
-    return DistanceElements.toScore(distances, qc.getCorrespondenceFunction().get());
+    return DistanceElement.toScore(distances, qc.getCorrespondenceFunction().get());
   }
 
   @Override
