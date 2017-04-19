@@ -1,5 +1,6 @@
-package org.vitrivr.cineast.core.util.audio;
+package org.vitrivr.cineast.core.util.audio.pitch.estimation;
 
+import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
 import org.vitrivr.cineast.core.util.dsp.fft.FFT;
 import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
@@ -40,55 +41,14 @@ public class KLF0PitchEstimator {
     private static final double BETA = 320.0f;
 
     /**
-     * Represents a pitch / F0 candidate as returned by the KlapuriF0PitchEstimator.
-     */
-    public static class PitchCandidate {
-        /* Frequency value of the pitch candidate. */
-        public float frequency;
-
-        /** Salience value of the pitch candidate. */
-        public float salience;
-
-        /** Boolean indicating if the candidate is active or not. */
-        private boolean active = true;
-
-        /**
-         *
-         * @param frequency
-         * @param salience
-         */
-        private PitchCandidate(float frequency, float salience) {
-            this.frequency = frequency;
-            this.salience = salience;
-        }
-
-        /**
-         *
-         * @return
-         */
-        public boolean isActive() {
-            return active;
-        }
-
-        /**
-         *
-         * @param active
-         */
-        public void setActive(boolean active) {
-            this.active = active;
-        }
-
-    }
-
-    /**
      * Estimates the pithces in the provided STFT and returns a List of PitchCandidate lists (one
      * list per FFT).
      *
      * @param stft STFT for which to estimate the pitches.
      * @return List of PitchCandidate lists.
      */
-    public List<List<PitchCandidate>> estimatePitch(STFT stft) {
-        List<List<PitchCandidate>> results = new ArrayList<>(stft.getStft().size());
+    public List<List<Pitch>> estimatePitch(STFT stft) {
+        List<List<Pitch>> results = new ArrayList<>(stft.getStft().size());
         for (FFT fft : stft.getStft()) {
             if (fft.isZero()) continue;
             results.add(this.estimatePitch(fft));
@@ -104,45 +64,45 @@ public class KLF0PitchEstimator {
      * @param fft FFT to estimate the pitches from.
      * @return List of pitch candidates.
      */
-    public List<PitchCandidate> estimatePitch(FFT fft) {
+    public List<Pitch> estimatePitch(FFT fft) {
         /* Prepare required helper variables. */
         final float samplingrate = fft.getSamplingrate();
         final int windowsize = fft.getWindowsize();
         final Spectrum spectrum = fft.getPowerSpectrum();
 
         /* Prepare empty array of booleans holding the estimates. */
-        List<PitchCandidate> candidates = new ArrayList<>();
+        List<Pitch> candidates = new ArrayList<>();
 
         float test = 0, lasttest = 0;
         int loopcount = 1;
         while (true) {
-            PitchCandidate candidate = this.detect(spectrum, samplingrate, windowsize);
+            Pitch candidate = this.detect(spectrum, samplingrate, windowsize);
             boolean exists = false;
-            for (PitchCandidate c : candidates) {
-                if (c.frequency == candidate.frequency) {
-                    c.salience = candidate.salience;
+            for (Pitch c : candidates) {
+                if (c.getFrequency() == candidate.getFrequency()) {
+                    c.setSalience(candidate.getSalience() + c.getSalience());
                     exists = true;
-                };
+                }
             }
 
             if (!exists) candidates.add(candidate);
 
             lasttest = test;
-            test = (float)((test + candidate.salience) / Math.pow(loopcount, .7f));
+            test = (float)((test + candidate.getSalience()) / Math.pow(loopcount, .7f));
             if (test <= lasttest) break;
             loopcount++;
 
             /* Subtract the information of the found pitch from the current spectrum. */
-            for (int i = 1; i * candidate.frequency < samplingrate / 2; ++i) {
-                int index = FFTUtil.binIndex(i * candidate.frequency, windowsize, samplingrate);
-                float weighting = (candidate.frequency + 52) / (i * candidate.frequency + 320);
+            for (int i = 1; i * candidate.getFrequency() < samplingrate / 2; ++i) {
+                int index = FFTUtil.binIndex(i * candidate.getFrequency(), windowsize, samplingrate);
+                float weighting = (candidate.getFrequency() + 52) / (i * candidate.getFrequency() + 320);
                 spectrum.setValue(index, spectrum.getValue(index) *  (1 - 0.89f * weighting));
                 spectrum.setValue(index-1, spectrum.getValue(index-1) *  (1 - 0.89f * weighting));
             }
         }
 
         /* Sort list of candidates by their salience in descending order. */
-        candidates.sort(Comparator.comparingDouble(c -> c.salience));
+        candidates.sort(Comparator.comparingDouble(Pitch::getSalience));
         Collections.reverse(candidates);
 
         /* Return list of candidates. */
@@ -157,8 +117,8 @@ public class KLF0PitchEstimator {
      * @param samplingrate Samplingrate at which the original signal has been sampled.
      * @param windowsize Windowsize used in the FFT.
      */
-    private PitchCandidate detect(Spectrum spectrum, final float samplingrate, final int windowsize) {
-        PitchCandidate candidate = null;
+    private Pitch detect(Spectrum spectrum, final float samplingrate, final int windowsize) {
+        Pitch candidate = null;
         for (int n = MIN_PITCH; n<= MAX_PITCH; n++) {
             final float pitch = MidiUtil.midiToFrequency(n);
             final float tau = samplingrate/pitch; /* Fundamental period, i.e. f0=fs/τ. */
@@ -176,8 +136,9 @@ public class KLF0PitchEstimator {
                 }
                 cSalience += val * this.g(pitch, m);
             }
-            if (candidate == null || candidate.salience < cSalience) {
-                candidate = new PitchCandidate(pitch, cSalience);
+            if (candidate == null || candidate.getSalience() < cSalience) {
+                candidate = new Pitch(pitch);
+                candidate.setSalience(cSalience);
             }
         }
         return candidate;
