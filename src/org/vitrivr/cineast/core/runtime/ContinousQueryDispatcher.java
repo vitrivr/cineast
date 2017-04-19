@@ -60,7 +60,7 @@ public class ContinousQueryDispatcher {
       RetrieverInitializer initializer,
       ReadableQueryConfig config) {
     return new ContinousQueryDispatcher(r -> new RetrievalTask(r, query, config), retrievers,
-        initializer).retrieve();
+        initializer).doRetrieve();
   }
 
   public static List<SegmentScoreElement> retrieve(String segmentId,
@@ -68,7 +68,7 @@ public class ContinousQueryDispatcher {
       RetrieverInitializer initializer,
       ReadableQueryConfig config) {
     return new ContinousQueryDispatcher(r -> new RetrievalTask(r, segmentId, config), retrievers,
-        initializer).retrieve();
+        initializer).doRetrieve();
   }
 
   public static void addRetrievalResultListener(RetrievalResultListener listener) {
@@ -98,7 +98,7 @@ public class ContinousQueryDispatcher {
     this.retrieverWeightSum = weightSum;
   }
 
-  private List<SegmentScoreElement> retrieve() {
+  private List<SegmentScoreElement> doRetrieve() {
     initExecutor();
     List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures = this.startTasks();
     List<SegmentScoreElement> segmentScores = this.extractResults(futures);
@@ -111,7 +111,8 @@ public class ContinousQueryDispatcher {
       clearExecutor();
     }
     if (executor == null) {
-      executor = new ThreadPoolExecutor(THREAD_COUNT, THREAD_COUNT, 60, TimeUnit.SECONDS, taskQueue);
+      executor = new ThreadPoolExecutor(THREAD_COUNT, THREAD_COUNT, KEEP_ALIVE_TIME,
+          TimeUnit.SECONDS, taskQueue);
     }
   }
 
@@ -163,9 +164,8 @@ public class ContinousQueryDispatcher {
       }
     }
 
-    List<SegmentScoreElement> merged =
-        this.mergeObjectSegmentElements(scoreByObjectId, scoreBySegmentId);
-    return this.sortAndTruncate(merged);
+    this.mergeObjectSegmentElements(scoreBySegmentId, scoreByObjectId);
+    return this.normalizeSortTruncate(scoreBySegmentId);
   }
 
   private void addRetrievalResult(TObjectDoubleMap<String> scoreByObjectId,
@@ -207,24 +207,21 @@ public class ContinousQueryDispatcher {
       return;
     }
 
-    // Normalize already here because of ObjectScoreElement merge strategy
-    // TODO: Discuss with Luca whether normalization here is ok or not
-    double updatedScore = score * weight / this.retrieverWeightSum;
-    scoreById.adjustOrPutValue(id, updatedScore, updatedScore);
+    double weightedScore = score * weight;
+    scoreById.adjustOrPutValue(id, weightedScore, weightedScore);
   }
 
+  // TODO: Move into own class
   /**
-   * Merges the object and segment scores into one final list of {@link SegmentScoreElement}s. Every
-   * object score is added to the scores of its segments. If an object without any of its segments
-   * was found, the first segment is added and used instead.
+   * Merges the object scores into the segment scores by adding every object score to the scores of
+   * its segments. If an object without any of its segments was found, the first segment gets added
+   * and used instead.
    *
-   * @param scoreByObjectId Map containing the found object ids with their score.
    * @param scoreBySegmentId Map containing the found segment ids with their score.
-   * @return A final, merged list of {@link SegmentScoreElement}s.
+   * @param scoreByObjectId Map containing the found object ids with their score.
    */
-  private List<SegmentScoreElement> mergeObjectSegmentElements(
-      TObjectDoubleMap<String> scoreByObjectId,
-      TObjectDoubleMap<String> scoreBySegmentId) {
+  private void mergeObjectSegmentElements(TObjectDoubleMap<String> scoreBySegmentId,
+      TObjectDoubleMap<String> scoreByObjectId) {
     Set<String> objectIds = scoreByObjectId.keySet();
     ListMultimap<String, SegmentDescriptor> segmentsByObjectId =
         segmentLookup.lookUpSegmentsOfObjects(objectIds);
@@ -232,7 +229,10 @@ public class ContinousQueryDispatcher {
       assert scoreByObjectId.containsKey(objectId);
       double objectScore = scoreByObjectId.get(objectId);
       List<SegmentDescriptor> segments = segmentsByObjectId.get(objectId);
-      assert !segments.isEmpty();
+      if (segments.isEmpty()) {
+        LOGGER.error("Object {} has no segments", objectId);
+        continue;
+      }
 
       boolean objectSegmentsFoundInResults = false;
       for (SegmentDescriptor segment : segments) {
@@ -249,16 +249,22 @@ public class ContinousQueryDispatcher {
         scoreBySegmentId.put(firstId, objectScore);
       }
     }
-
-    return ScoreElement.segmentsFromSegmentsMap(scoreBySegmentId);
   }
 
-  private List<SegmentScoreElement> sortAndTruncate(List<SegmentScoreElement> results) {
+  private List<SegmentScoreElement> normalizeSortTruncate(
+      TObjectDoubleMap<String> scoreBySegmentId) {
+    List<SegmentScoreElement> results = new ArrayList<>(scoreBySegmentId.size());
+    scoreBySegmentId.forEachEntry((segmentId, score) -> {
+      results.add(new SegmentScoreElement(segmentId, score / this.retrieverWeightSum));
+      return true;
+    });
+
     results.sort(ScoreElement.SCORE_COMPARATOR.reversed());
     if (results.size() > MAX_RESULTS) {
-      results = results.subList(0, MAX_RESULTS);
+      return results.subList(0, MAX_RESULTS);
+    } else {
+      return results;
     }
-    return results;
   }
 
   private void finish() {
