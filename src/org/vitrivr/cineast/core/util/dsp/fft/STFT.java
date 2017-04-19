@@ -103,9 +103,9 @@ public class STFT {
 
             /* Copy the samples into the window. */
             if (end <= samples.length) {
-                System.arraycopy(samples, start, window, padding-1, length);
+                System.arraycopy(samples, start, window, padding, length);
             } else {
-                System.arraycopy(samples, start, window, padding-1, samples.length - start);
+                System.arraycopy(samples, start, window, padding, samples.length - start);
                 Arrays.fill(window, samples.length - start + 1, window.length - 1, 0.0);
             }
 
