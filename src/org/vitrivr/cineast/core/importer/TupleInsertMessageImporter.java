@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.importer;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,7 +14,6 @@ import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
-import org.vitrivr.cineast.core.util.LogHelper;
 
 public class TupleInsertMessageImporter implements Importer<TupleInsertMessage>{
 
@@ -25,12 +25,15 @@ public class TupleInsertMessageImporter implements Importer<TupleInsertMessage>{
 	}
 	
 	public TupleInsertMessage readNext(){
-		try {
-			return TupleInsertMessage.parseDelimitedFrom(this.inStream);
-		} catch (IOException e) {
-			LOGGER.error("error while reading TupleInsertMessage: {}", LogHelper.getStackTrace(e));
-			return null;
-		}
+	  while(true){
+  		try {
+  			return TupleInsertMessage.parseDelimitedFrom(this.inStream);
+  		} catch (EOFException eof) {
+  		  return null;
+  		}	catch (IOException e) {
+  			LOGGER.error("error while reading TupleInsertMessage, skipping");
+  		}
+	  }
 	}
 
 	@Override
@@ -39,7 +42,7 @@ public class TupleInsertMessageImporter implements Importer<TupleInsertMessage>{
 			return null;
 		}
 		
-		Map<String, DataMessage> data = message.getData();
+		Map<String, DataMessage> data = message.getDataMap();
 		
 		HashMap<String, PrimitiveTypeProvider> map = new HashMap<>();
 		
