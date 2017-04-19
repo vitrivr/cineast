@@ -28,7 +28,9 @@ import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.swing.text.Segment;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import java.time.Duration;
@@ -61,16 +63,17 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     /** SegmentWriter used to persist SegmentDescriptors created during the extraction. */
     private final MultimediaMetadataWriter metadataWriter;
 
-    /** MultimediaObjectLookup used to lookup existing MultimediaObjectDescriptors during the extraction. */
-    private final MultimediaObjectLookup objectReader;
-
-    /** SegmentLookup used to lookup existing SegmentDescriptors during the extraction. */
-    private final SegmentLookup segmentReader;
-
+    /** Iterator off all paths that are due for extraction. */
     private final Iterator<Path> files;
 
     /** ExtractionContextProvider that is used to configure the extraction. */
     private final ExtractionContextProvider context;
+
+    /** MultimediaObjectLookup used to lookup existing MultimediaObjectDescriptors during the extraction. */
+    protected final MultimediaObjectLookup objectReader;
+
+    /** SegmentLookup used to lookup existing SegmentDescriptors during the extraction. */
+    protected final SegmentLookup segmentReader;
 
     /** ExecutorService used to run the ExtractionPipeline and the Segmenter. */
     private final ExecutorService executorService = Executors.newFixedThreadPool(2, r -> {
@@ -160,17 +163,16 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
             /* Pass file to decoder and decoder to segmenter. */
             if (decoder.init(path, Config.sharedConfig().getDecoders().get(this.context.sourceType()))) {
-                segmenter.init(decoder);
-
                 /* Create / lookup MultimediaObjectDescriptor for new file. */
-                MultimediaObjectDescriptor descriptor = this.getOrCreateMultimediaObjectDescriptor(generator, this.context.inputPath().relativize(path), context.sourceType());
+                final MultimediaObjectDescriptor descriptor = this.fetchOrCreateMultimediaObjectDescriptor(generator, path, context.sourceType());
                 if (!this.checkAndPersistMultimediaObject(descriptor)) continue;
 
                 /* Store objectId for further reference and initialize a new segment number. */
-                String objectId = descriptor.getObjectId();
+                final String objectId = descriptor.getObjectId();
                 int segmentNumber = 1;
 
-                /* Pass segmenter (runnable) to executor service. */
+                /* Initialize segmenter and pass to executor service. */
+                segmenter.init(decoder, descriptor);
                 this.executorService.execute(segmenter);
 
                 /* Poll for output from the segmenter until that segmenter reports that no more output
@@ -181,10 +183,10 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                  */
                 while (!segmenter.complete()) {
                     try {
-                        SegmentContainer container = segmenter.getNext();
+                        final SegmentContainer container = segmenter.getNext();
                         if (container != null) {
                             /* Create segment-descriptor and try to persist it. */
-                            SegmentDescriptor segmentDescriptor = SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd());
+                            final SegmentDescriptor segmentDescriptor = this.fetchOrCreateSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd());
                             if (!this.checkAndPersistSegment(segmentDescriptor)) continue;
 
                             /* Update container ID's. */
@@ -274,34 +276,23 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     }
 
     /**
-     * Persists a MultimediaObjectDescriptor and performs an existence check before, if so configured. Based
-     * on the outcome of that persistence check and the settings in the ExtractionContext this method
-     * returns true if object should be processed further or false otherwise.
+     * Checks if the MultimediaObjectDescriptor already exists and decides whether extraction should continue for
+     * that object or not (based on the ingest settings). If it does not exist, the MultimediaObjectDescriptor is
+     * persisted.
      *
      * @param descriptor MultimediaObjectDescriptor that should be persisted.
      * @return true if object should be processed further or false if it should be skipped.
      */
-    private boolean checkAndPersistMultimediaObject(MultimediaObjectDescriptor descriptor) {
-        if (descriptor.exists()) { //this is true when a descriptor is used which has previously been retrieved from the database
-          return true;
-        }
-      
-        if (descriptor.getObjectId() == null) {
+    protected boolean checkAndPersistMultimediaObject(MultimediaObjectDescriptor descriptor) {
+        if (descriptor.exists() && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {//this is true when a descriptor is used which has previously been retrieved from the database
+            LOGGER.info("MultimediaObject {} (name: {}) already exists. This object will be skipped.", descriptor.getObjectId(), descriptor.getName());
+            return false;
+        } else if (descriptor.exists() && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_PROCEED) {
+            LOGGER.info("MultimediaObject {} (name: {}) already exists. Proceeding anyway...", descriptor.getObjectId(), descriptor.getName());
+            return true;
+        } else if (descriptor.getObjectId() == null) {
             LOGGER.warn("The objectId that was generated for {} is empty. This object cannot be persisted and will be skipped.", descriptor.getPath());
             return false;
-        }
-
-        if (this.context.existenceCheck() != IdConfig.ExistenceCheck.NOCHECK) {
-            if (!this.objectReader.lookUpObjectById(descriptor.getObjectId()).exists()) {
-                this.objectWriter.write(descriptor);
-                return true;
-            } else if (this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {
-                LOGGER.warn("MultimediaObject {} (name: {}) already exists. This object will be skipped.", descriptor.getObjectId(), descriptor.getName());
-                return false;
-            } else {
-                LOGGER.warn("MultimediaObject {} (name: {}) already exists. Proceeding anyway...", descriptor.getObjectId(), descriptor.getName());
-                return true;
-            }
         } else {
             this.objectWriter.write(descriptor);
             return true;
@@ -316,19 +307,13 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @param descriptor SegmentDescriptor that should be persisted.
      * @return true if segment should be processed further or false if it should be skipped.
      */
-    private boolean checkAndPersistSegment(SegmentDescriptor descriptor) {
-        if (this.context.existenceCheck() != IdConfig.ExistenceCheck.NOCHECK) {
-            
-            if (!this.segmentReader.lookUpShot(descriptor.getSegmentId()).exists()) {
-                this.segmentWriter.write(descriptor);
-                return true;
-            } else if (this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {
-                LOGGER.warn("Segment {} already exists. This segment will be skipped.", descriptor.getSegmentId());
-                return false;
-            } else {
-                LOGGER.warn("Segment {} already exists. Proceeding anyway...", descriptor.getSegmentId());
-                return true;
-            }
+    protected boolean checkAndPersistSegment(SegmentDescriptor descriptor) {
+        if (descriptor.exists()  && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP){
+            LOGGER.info("Segment {} already exists. This segment will be skipped.", descriptor.getSegmentId());
+            return false;
+        } else if (descriptor.exists() && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_PROCEED) {
+            LOGGER.info("Segment {} already exists. Proceeding anyway...", descriptor.getSegmentId());
+            return true;
         } else {
             this.segmentWriter.write(descriptor);
             return true;
@@ -344,12 +329,45 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @param type MediaType of the new MultimediaObjectDescriptor
      * @return the existing or a new MultimediaObjectDescriptor
      */
-    public MultimediaObjectDescriptor getOrCreateMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type){
-        MultimediaObjectDescriptor descriptor = this.objectReader.lookUpObjectByPath(path.getFileName().toString());
+    protected MultimediaObjectDescriptor fetchOrCreateMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type){
+        /*
+         * Two cases:
+         * - For single-file extraction, the file-name is stored as file-path.
+         * - For extraction of a folder, the path relative to the input folder is stored as file-path.
+         */
+        if (Files.isRegularFile(this.context.inputPath())) {
+            path = path.getFileName();
+        } else {
+            path = this.context.inputPath().relativize(path);
+        }
+
+        /* Lookup multimedia-object and persist if necessary. */
+        MultimediaObjectDescriptor descriptor = this.objectReader.lookUpObjectByPath(path.toString());
         if (descriptor.exists() && descriptor.getMediatype() == this.context.sourceType()){
             return descriptor;
         }
         return MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, path, type);
+    }
+
+    /**
+     * Convenience method to lookup a SegmentDescriptor for a given path and type or create a new one if needed.
+     * If a new descriptor is required, SegmentDescriptor.newSegmentDescriptor() is used.
+     *
+     * @param objectId
+     * @param segmentNumber
+     * @param start
+     * @param end
+     * @param startabs
+     * @param endabs
+     * @return
+     */
+    protected SegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs){
+        String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
+        SegmentDescriptor descriptor = this.segmentReader.lookUpShot(segmentId);
+        if (descriptor.exists()){
+            return descriptor;
+        }
+        return SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, start, end, startabs, endabs);
     }
 
     /**
@@ -358,7 +376,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @param path Path to the file for which metadata must be extracted.
      * @param objectId ObjectId of the MediaObjectDescriptor associated with the path.
      */
-    private void extractAndPersistMetadata(Path path, String objectId) {
+    protected void extractAndPersistMetadata(Path path, String objectId) {
         for (MetadataExtractor extractor : this.metadataExtractors) {
             try{
               List<MultimediaMetadataDescriptor> metadata = extractor.extract(objectId, path);
@@ -370,5 +388,14 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
               LOGGER.error("exception during metadata extraction: {}", LogHelper.getStackTrace(e));
             }
         }
+    }
+
+    /**
+     *
+     * @param object
+     * @return
+     */
+    protected List<SegmentDescriptor> retrieveExistingSegments(MultimediaObjectDescriptor object) {
+        return this.segmentReader.lookUpAllSegments(object.getObjectId());
     }
 }

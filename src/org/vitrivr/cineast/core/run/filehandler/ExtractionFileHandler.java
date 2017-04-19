@@ -1,14 +1,17 @@
 package org.vitrivr.cineast.core.run.filehandler;
 
 import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
+
+import java.util.HashMap;
 
 /**
  * ExtractionFileHandlers are the second step in a media-file extraction process. They orchestrate file
  * decoding, segmenting and hand the segments to the extraction-pipeline.
  *
- * The ExtractionFileHandlers are usually MediaType specific. However, most  implementations can
- * be derived from the AbstractExtractionFileHandler class.
+ * The ExtractionFileHandlers are usually MediaType specific. However, most implementations can be derived from
+ * the AbstractExtractionFileHandler class.
  *
  * @see AbstractExtractionFileHandler
  * @see org.vitrivr.cineast.core.run.ExtractionDispatcher
@@ -20,7 +23,7 @@ import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 public interface ExtractionFileHandler<T> extends Runnable {
 
     /**
-     * Returns a new instance of  Decoder<T> that should be used with a concrete implementation
+     * Returns a new instance of Decoder<T> that should be used with a concrete implementation
      * of this interface.
      *
      * @return Decoder

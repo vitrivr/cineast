@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.segmenter.general;
 
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A simple segmenter that passes the output from the decoder straight back to the orchestrator.
- * No aggregation or post-processing will takes place besides packaging of the content in a
+ * No aggregation or post-processing will take place besides wrapping of the content in a
  * SegmentContainer.
  *
  * @author rgasser
@@ -28,10 +29,14 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
     private AtomicBoolean complete = new AtomicBoolean(false);
 
     /**
-     * @param decoder
+     * Method used to initialize the Segmenter. A class implementing the Decoder interface with
+     * the same type must be provided.
+     *
+     * @param decoder Decoder used for media-decoding.
+     * @param object Media object that is about to be segmented.
      */
     @Override
-    public void init(Decoder<T> decoder) {
+    public void init(Decoder<T> decoder, MultimediaObjectDescriptor object) {
         this.decoder = decoder;
         this.complete.set(false);
     }

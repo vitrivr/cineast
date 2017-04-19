@@ -1,18 +1,19 @@
 package org.vitrivr.cineast.core.segmenter.video;
 
+import org.apache.commons.math3.complex.Complex;
 import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.segments.VideoSegment;
+import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -50,19 +51,15 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
 
     private volatile boolean isrunning = false;
 
-    /**
-     *
-     */
-    public VideoHistogramSegmenter() {
-        this.knownShotBoundaries = new LinkedList<SegmentDescriptor>();
-    }
+    /** SegmentLookup used to lookup existing SegmentDescriptors during the extraction. */
+    private final SegmentLookup segmentReader;
 
     /**
      *
-     * @param knownShotBoundaries
      */
-    public VideoHistogramSegmenter(List<SegmentDescriptor> knownShotBoundaries){
-        this.knownShotBoundaries = ((knownShotBoundaries == null) ? new LinkedList<SegmentDescriptor>() : knownShotBoundaries);
+    public VideoHistogramSegmenter(SegmentLookup lookup) {
+        this.segmentReader = lookup;
+        this.knownShotBoundaries = new LinkedList<SegmentDescriptor>();
     }
 
     /**
@@ -87,16 +84,18 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
      * Method used to initialize the Segmenter - assigns the new Decoder instance and clears
      * all the queues.
      *
-     * @param decoder Decoder used for media-decoding.
+     * @param object Media object that is about to be segmented.
      */
     @Override
-    public synchronized void init(Decoder<VideoFrame> decoder) {
+    public synchronized void init(Decoder<VideoFrame> decoder, MultimediaObjectDescriptor object) {
         if (!this.isrunning) {
             this.decoder = decoder;
             this.complete = false;
             this.preShotList.clear();
             this.segments.clear();
             this.videoFrameList.clear();
+            this.knownShotBoundaries = this.segmentReader.lookUpAllSegments(object.getObjectId());
+            this.knownShotBoundaries.sort(Comparator.comparingInt(SegmentDescriptor::getSequenceNumber));
         }
     }
 
