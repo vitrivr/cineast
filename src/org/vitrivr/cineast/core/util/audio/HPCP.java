@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class can be used to calculate the Harmonic Pitch Class Profile (HPCP) of a Shor-Term Fourier Transform or a single
+ * This class can be used to calculate the Harmonic Pitch Class Profile (HPCP) of a Short-Term Fourier Transform or a single
  * Spectrum using the approach outlined by E. Gomez in [1].
  *
  * Harmonic Pitch Class Profiles assign the frequencies in a power spectrum to the pitch classes on the equal tempered

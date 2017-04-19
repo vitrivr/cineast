@@ -7,11 +7,17 @@ import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
 import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
- * This class tries to estimate the most salient pitch(es) from a provided FFT or STFT by applying the method
- * described in [1], which sums the harmonic amplitudes of pitch-candidates.
+ * This class can be used to estimate the most salient pitch(es) from a provided FFT or STFT by applying the method
+ * described in [1].
+ *
+ * The method sums the amplitudes of pitch-candidates and their harmonic partials in a frame to obtain a salience function.
+ * The pitch candidate with the highest salience is then selected and removed from the spectrum. This procedure is repeated
+ * until all pitches have been detected.
  *
  * [1] Klapuri, A. (2006). Multiple Fundamental Frequency Estimation by Summing Harmonic Amplitudes.
  *      Proceedings of the International Symposium/Conference on Music Information Retrieval (ISMIR), 216–221.
@@ -20,7 +26,7 @@ import java.util.List;
  * @version 1.0
  * @created 17.04.17
  */
-public class KlapuriF0PitchEstimator {
+public class KLF0PitchEstimator {
     /** MIDI index of the minimum pitch to consider in the analysis. */
     private static final int MIN_PITCH = 28;
 
@@ -38,10 +44,13 @@ public class KlapuriF0PitchEstimator {
      */
     public static class PitchCandidate {
         /* Frequency value of the pitch candidate. */
-        public final float frequency;
+        public float frequency;
 
         /** Salience value of the pitch candidate. */
-        public final float salience;
+        public float salience;
+
+        /** Boolean indicating if the candidate is active or not. */
+        private boolean active = true;
 
         /**
          *
@@ -52,6 +61,23 @@ public class KlapuriF0PitchEstimator {
             this.frequency = frequency;
             this.salience = salience;
         }
+
+        /**
+         *
+         * @return
+         */
+        public boolean isActive() {
+            return active;
+        }
+
+        /**
+         *
+         * @param active
+         */
+        public void setActive(boolean active) {
+            this.active = active;
+        }
+
     }
 
     /**
@@ -91,7 +117,16 @@ public class KlapuriF0PitchEstimator {
         int loopcount = 1;
         while (true) {
             PitchCandidate candidate = this.detect(spectrum, samplingrate, windowsize);
-            candidates.add(candidate);
+            boolean exists = false;
+            for (PitchCandidate c : candidates) {
+                if (c.frequency == candidate.frequency) {
+                    c.salience = candidate.salience;
+                    exists = true;
+                };
+            }
+
+            if (!exists) candidates.add(candidate);
+
             lasttest = test;
             test = (float)((test + candidate.salience) / Math.pow(loopcount, .7f));
             if (test <= lasttest) break;
@@ -106,6 +141,11 @@ public class KlapuriF0PitchEstimator {
             }
         }
 
+        /* Sort list of candidates by their salience in descending order. */
+        candidates.sort(Comparator.comparingDouble(c -> c.salience));
+        Collections.reverse(candidates);
+
+        /* Return list of candidates. */
         return candidates;
     }
 
