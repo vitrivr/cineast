@@ -4,7 +4,7 @@ import java.util.Objects;
 
 abstract class AbstractScoreElement implements ScoreElement {
   private final String id;
-  private double score;
+  private final double score;
 
   protected AbstractScoreElement(String id, double score) {
     this.id = id;
