@@ -9,11 +9,11 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.LimitedQueue;
-import org.vitrivr.cineast.core.data.StatElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
@@ -37,7 +37,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     private final LinkedBlockingQueue<SegmentContainer> segmentQueue = new LinkedBlockingQueue<SegmentContainer>(Config.sharedConfig().getExtractor().getShotQueueSize());
 
     /** HashMap containing statistics about the execution of the extractors. */
-    private final ConcurrentHashMap<Class<?>, StatElement> timeMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class<?>, SummaryStatistics> timeMap = new ConcurrentHashMap<>();
 
     /** ExecutorService used do execute the ExtractionTasks. */
     private final ExecutorService executorService;
@@ -209,13 +209,13 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     @Override
     public void reportExecutionTime(Class<?> c, long milliseconds) {
         if(!this.timeMap.containsKey(c)){
-            this.timeMap.put(c, new StatElement(milliseconds));
-        } else {
-            StatElement stat = this.timeMap.get(c);
-            synchronized (stat) {
-                stat.add(milliseconds);
-            }
+            this.timeMap.put(c, new SummaryStatistics());
         }
+        SummaryStatistics stat = this.timeMap.get(c);
+          synchronized (stat) {
+              stat.addValue(milliseconds);
+          }
+        
     }
 
     /**
@@ -225,7 +225,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     @Override
     public long getAverageExecutionTime(Class<?> c) {
         if(this.timeMap.containsKey(c)){
-            return (long) this.timeMap.get(c).getAvg();
+            return (long) this.timeMap.get(c).getMean();
         }
         return 0;
     }
