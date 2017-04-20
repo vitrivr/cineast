@@ -1,6 +1,18 @@
 package org.vitrivr.cineast.core.util.distance;
 
-public class CorrelationDistance implements FloatArrayDistance {
+public class WeightedCorrelationDistance extends CorrelationDistance {
+
+  private final float[] weights;
+
+  WeightedCorrelationDistance(float[] weights) {
+    if (weights == null) {
+      throw new NullPointerException("weights cannot be null");
+    }
+    if (weights.length == 0) {
+      throw new IllegalArgumentException("weights cannot be empty");
+    }
+    this.weights = weights.clone();
+  }
 
   @Override
   public double applyAsDouble(float[] t, float[] u) {
@@ -12,7 +24,7 @@ public class CorrelationDistance implements FloatArrayDistance {
       return 0d;
     }
 
-    int len = Math.min(t.length, u.length);
+    int len = Math.min(Math.min(t.length, u.length), this.weights.length);
 
     double ma = 0d, mb = 0d;
 
@@ -28,8 +40,8 @@ public class CorrelationDistance implements FloatArrayDistance {
     double a_, b_;
 
     for (int i = 0; i < len; ++i) {
-      a_ = t[i] - ma;
-      b_ = u[i] - mb;
+      a_ = (t[i] - ma) * this.weights[i];
+      b_ = (u[i] - mb) * this.weights[i];
       dot += a_ * b_;
       a += a_ * a_;
       b += b_ * b_;
