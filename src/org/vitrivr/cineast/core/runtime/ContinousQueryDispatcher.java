@@ -67,6 +67,10 @@ public class ContinousQueryDispatcher {
         initializer).doRetrieve();
   }
 
+  public static void shutdown() {
+    clearExecutor();
+  }
+
   public static void addRetrievalResultListener(RetrievalResultListener listener) {
     Objects.requireNonNull(listener, LISTENER_NULL_MESSAGE);
     if (!resultListeners.contains(listener)) {

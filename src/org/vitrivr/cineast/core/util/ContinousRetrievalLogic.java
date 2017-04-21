@@ -41,9 +41,8 @@ public class ContinousRetrievalLogic {
     ContinousQueryDispatcher.removeRetrievalResultListener(listener);
   }
 
+  // TODO: Is this method actually needed?
   public static void shutdown() {
-    // FIXME: Is shutdown() really needed or just remove it? (Is/was never used)
-    // ContinousQueryDispatcher.shutdown();
+    ContinousQueryDispatcher.shutdown();
   }
-
 }
