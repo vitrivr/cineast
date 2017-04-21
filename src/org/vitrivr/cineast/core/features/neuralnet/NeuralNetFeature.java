@@ -8,12 +8,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -26,7 +26,6 @@ import org.vitrivr.cineast.core.features.neuralnet.label.ConceptReader;
 import org.vitrivr.cineast.core.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.MaxPool;
 import org.vitrivr.cineast.core.util.TimeHelper;
 
 /**
@@ -72,10 +71,10 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
      * Might perform knn on the 1k-vector in the future.
      * It's also not clear yet if we could combine labels and input image
      */
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc, DBSelector classificationSelector, float defaultCutoff) {
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc, DBSelector classificationSelector, float defaultCutoff) {
         LOGGER.traceEntry();
         TimeHelper.tic();
-        List<StringDoublePair> _return = new ArrayList<>();
+        List<ScoreElement> _return = new ArrayList<>();
         if (!sc.getTags().isEmpty()) {
             Set<String> wnLabels = new HashSet<>();
             wnLabels.addAll(getClassSelector().getRows(getHumanLabelColName(), sc.getTags().toArray(new String[sc.getTags().size()])).stream().map(row -> row.get(getWnLabelColName()).getString()).collect(Collectors.toList()));
@@ -83,8 +82,11 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
             LOGGER.debug("Looking for labels: {}", String.join(", ",wnLabels.toArray(new String[wnLabels.size()])));
             for (Map<String, PrimitiveTypeProvider> row :
                     classificationSelector.getRows(getWnLabelColName(), wnLabels.toArray(new String[wnLabels.size()]))) {
-                LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getFloat(), row.get(getWnLabelColName()).toString());
-                _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getFloat()));
+                String segmentId = row.get("segmentid").getString();
+                float probability = row.get("probability").getFloat();
+                LOGGER.debug("Found hit for query {}: {} {} ",
+                    segmentId, probability, row.get(getWnLabelColName()).toString());
+                _return.add(new SegmentScoreElement(segmentId, probability));
             }
         } else {
             LOGGER.debug("Starting Sketch-based lookup");
@@ -104,11 +106,14 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
                 }
             }
             for (Map<String, PrimitiveTypeProvider> row : classificationSelector.getRows(getWnLabelColName(), hits.toArray(new String[hits.size()]))) {
-                LOGGER.debug("Found hit for query {}: {} {} ", row.get("segmentid").getString(), row.get("probability").getFloat(), row.get(getWnLabelColName()).toString());
-                _return.add(new StringDoublePair(row.get("segmentid").getString(), row.get("probability").getFloat()));
+                String segmentId = row.get("segmentid").getString();
+                float probability = row.get("probability").getFloat();
+                LOGGER.debug("Found hit for query {}: {} {} ",
+                    segmentId, probability, row.get(getWnLabelColName()).toString());
+                _return.add(new SegmentScoreElement(segmentId, probability));
             }
         }
-        _return = MaxPool.maxPoolStringId(_return);
+        _return = ScoreElement.filterMaximumScores(_return.stream());
         LOGGER.trace("NeuralNetFeature.getSimilar() done in {}",
                 TimeHelper.toc());
         return LOGGER.traceExit(_return);

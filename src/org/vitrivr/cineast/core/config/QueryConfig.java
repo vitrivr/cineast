@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.config;
 
+import java.util.Objects;
 import java.util.UUID;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 
 public class QueryConfig extends ReadableQueryConfig {
 
@@ -34,6 +36,13 @@ public class QueryConfig extends ReadableQueryConfig {
   public QueryConfig setNormIfEmty(float norm) {
     if (Float.isNaN(this.norm)) {
       return setNorm(norm);
+    }
+    return this;
+  }
+
+  public QueryConfig setCorrespondenceFunctionIfEmpty(CorrespondenceFunction f) {
+    if (this.correspondence == null) {
+      return setCorrespondenceFunction(f);
     }
     return this;
   }
@@ -90,6 +99,12 @@ public class QueryConfig extends ReadableQueryConfig {
     } else if (Float.isInfinite(norm) && norm > 0) {
       this.distance = Distance.chebyshev;
     }
+    return this;
+  }
+
+  protected QueryConfig setCorrespondenceFunction(CorrespondenceFunction f) {
+    Objects.requireNonNull(f, "Correspondence function cannot be null");
+    this.correspondence = f;
     return this;
   }
 

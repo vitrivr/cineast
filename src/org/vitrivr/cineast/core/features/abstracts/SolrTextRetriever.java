@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -19,7 +20,6 @@ import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.MathHelper;
 
 /**
  * This is a proof of concept class and will probably be replaced by a more general solution to text
@@ -56,11 +56,15 @@ public abstract class SolrTextRetriever implements Retriever {
           "SolrTextRetriever only works with ADAMproSelectors, {} is currently not supported",
           s.getClass().getSimpleName());
     }
-
   }
 
   @Override
-  public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+  public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
+    return new ArrayList<>(0); // currently not supported
+  }
+
+  @Override
+  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     if (this.selector == null) {
       return new ArrayList<>(0);
     }
@@ -70,7 +74,7 @@ public abstract class SolrTextRetriever implements Retriever {
 
     List<SubtitleItem> subItems = sc.getSubtitleItems();
     
-    if(subItems.isEmpty()){
+    if (subItems.isEmpty()) {
       return new ArrayList<>(0);
     }
     
@@ -88,30 +92,24 @@ public abstract class SolrTextRetriever implements Retriever {
 
     List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFromExternal("solr",
         parameters);
-    
-    ArrayList<StringDoublePair> pairs = processResults(query, resultList);
-    
-    return pairs;
+
+    return processResults(query, resultList);
   }
 
-  protected ArrayList<StringDoublePair> processResults(String query,
+  // Internally, this method only creates SegmentScoreElements
+  protected List<ScoreElement> processResults(String query,
       List<Map<String, PrimitiveTypeProvider>> resultList) {
-    ArrayList<StringDoublePair> pairs = new ArrayList<>(resultList.size());
-    
     int words = query.split("\\s+").length;
-    
-    for(Map<String, PrimitiveTypeProvider> result : resultList){
-      String id = result.get("id").getString();
-      float score = result.get("ap_score").getFloat();
-      
-      pairs.add(new StringDoublePair(id, MathHelper.limit(score / words / 10f, 0f, 1f)));
-    }
-    return pairs;
-  }
+    // Using CorrespondenceFunction to ensure that the scores are within [0,1]
+    CorrespondenceFunction f = CorrespondenceFunction.fromFunction(score -> score / words / 10f);
 
-  @Override
-  public List<StringDoublePair> getSimilar(String shotId, ReadableQueryConfig qc) {
-    return new ArrayList<>(0); // currently not supported
+    List<ScoreElement> scoreElements = new ArrayList<>(resultList.size());
+    for (Map<String, PrimitiveTypeProvider> result : resultList) {
+      String id = result.get("id").getString();
+      double score = f.applyAsDouble(result.get("ap_score").getFloat());
+      scoreElements.add(new SegmentScoreElement(id, score));
+    }
+    return scoreElements;
   }
 
   @Override
@@ -120,7 +118,5 @@ public abstract class SolrTextRetriever implements Retriever {
       this.selector.close();
       this.selector = null;
     }
-
   }
-
 }

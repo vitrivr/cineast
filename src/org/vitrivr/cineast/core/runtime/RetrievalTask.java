@@ -2,17 +2,15 @@ package org.vitrivr.cineast.core.runtime;
 
 import java.util.List;
 import java.util.concurrent.Callable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 
-public class RetrievalTask implements Callable<Pair<RetrievalTask, List<StringDoublePair>>> {
+public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreElement>>> {
 
 	private final Retriever retriever;
 	private final QueryContainer query;
@@ -46,16 +44,16 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<StringDo
 	}
 	
 	@Override
-	public Pair<RetrievalTask, List<StringDoublePair>> call() throws Exception {
+	public Pair<RetrievalTask, List<ScoreElement>> call() throws Exception {
 		LOGGER.traceEntry();
 		LOGGER.debug("starting {}", retriever.getClass().getSimpleName());
-		List<StringDoublePair> result;
+		List<ScoreElement> result;
 		if(this.query == null){
 			result = this.retriever.getSimilar(this.shotId, this.config);
 		}else{
 			result = this.retriever.getSimilar(this.query, this.config);
 		}
-		return LOGGER.traceExit(new Pair<RetrievalTask, List<StringDoublePair>>(this, result));
+		return LOGGER.traceExit(new Pair<RetrievalTask, List<ScoreElement>>(this, result));
 	}
 
   public Retriever getRetriever() {

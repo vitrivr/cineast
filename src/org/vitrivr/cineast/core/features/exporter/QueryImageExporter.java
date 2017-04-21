@@ -6,17 +6,15 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
-
 import javax.imageio.ImageIO;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
@@ -41,7 +39,7 @@ public class QueryImageExporter implements Retriever {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		BufferedImage bimg = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
 		try {
 		  String filename = (qc != null && qc.getQueryId() != null) ? qc.getQueryId().toString() : this.df.format(Calendar.getInstance().getTime());
@@ -49,12 +47,12 @@ public class QueryImageExporter implements Retriever {
 		} catch (IOException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
 		}
-		return new LinkedList<StringDoublePair>();
+		return Collections.emptyList();
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(String shotId, ReadableQueryConfig qc) {
-		return new LinkedList<StringDoublePair>();
+	public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
+		return Collections.emptyList();
 	}
 
 	@Override

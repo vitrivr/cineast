@@ -32,8 +32,8 @@ import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
@@ -41,7 +41,7 @@ import org.vitrivr.cineast.core.importer.DataImportHandler;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
 import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
+import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 /**
@@ -442,25 +442,26 @@ public class API {
               String segmentId = commands.get(1);
               String category = commands.get(2);
 
-              List<StringDoublePair> results = ContinousRetrievalLogic.retrieve(segmentId, category,
+              List<SegmentScoreElement> results = ContinuousRetrievalLogic
+                  .retrieve(segmentId, category,
                   QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()));
 
               System.out.println("results:");
-              for (StringDoublePair result : results) {
-                System.out.print(result.key);
+              for (SegmentScoreElement e : results) {
+                System.out.print(e.getSegmentId());
                 System.out.print(": ");
-                System.out.println(result.value);
+                System.out.println(e.getScore());
               }
               System.out.println();
 
               break;
             }
             case "exportresults": {
-              ContinousRetrievalLogic.addRetrievalResultListener(
+              ContinuousRetrievalLogic.addRetrievalResultListener(
                   new RetrievalResultCSVExporter()
               );
               System.out
-                  .println("added RetrievalResultCSVExporter to ContinousRetrievalLogic");
+                  .println("added RetrievalResultCSVExporter to ContinuousRetrievalLogic");
               break;
             }
             case "exit":
