@@ -24,14 +24,15 @@ public class FloatArrayDistanceComparator implements Comparator<float[]> {
 
   @Override
   public int compare(float[] o1, float[] o2) {
-    int compare = Double.compare(this.distance.applyAsDouble(this.query, o1), this.distance.applyAsDouble(this.query, o2));
-    if(compare != 0){
+    int compare = Double.compare(this.distance.applyAsDouble(this.query, o1),
+        this.distance.applyAsDouble(this.query, o2));
+    if (compare != 0) {
       return compare;
     }
     int len = Math.min(o1.length, o1.length);
-    for(int i = 0; i < len; ++i){
+    for (int i = 0; i < len; ++i) {
       compare = Float.compare(o1[i], o2[i]);
-      if(compare != 0){
+      if (compare != 0) {
         return compare;
       }
     }

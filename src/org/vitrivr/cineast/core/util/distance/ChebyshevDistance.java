@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.util.distance;
 
-public class ManhattanDistance implements FloatArrayDistance {
+public class ChebyshevDistance implements FloatArrayDistance {
 
   @Override
   public double applyAsDouble(float[] t, float[] u) {
@@ -17,7 +17,7 @@ public class ManhattanDistance implements FloatArrayDistance {
     double dist = 0d;
 
     for (int i = 0; i < len; ++i) {
-      dist += Math.abs(t[i] - u[i]);
+      dist = Math.max(dist, Math.abs(t[i] - u[i]));
     }
 
     return dist;

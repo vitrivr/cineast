@@ -2,39 +2,39 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class MinkowskiDistance implements FloatArrayDistance {
 
-  private final double exponenet;
-  
-  public MinkowskiDistance(double exponent){
-    if(Double.isNaN(exponent)){
+  protected final double exponenet;
+
+  public MinkowskiDistance(double exponent) {
+    if (Double.isNaN(exponent)) {
       throw new IllegalArgumentException("exponenet for MinkowskiDistance can not be NaN");
     }
-    if(exponent <= 0d){
+    if (exponent <= 0d) {
       throw new IllegalArgumentException("exponenet for MinkowskiDistance must be positive");
     }
-    if(Double.isInfinite(exponent)){
+    if (Double.isInfinite(exponent)) {
       throw new IllegalArgumentException("exponenet for MinkowskiDistance must be finite");
     }
     this.exponenet = exponent;
   }
-  
+
   @Override
   public double applyAsDouble(float[] t, float[] u) {
-    if(t == null || u == null){
+    if (t == null || u == null) {
       return Double.NaN;
     }
-    
-    if(t == u){
+
+    if (t == u) {
       return 0d;
     }
-    
+
     int len = Math.min(t.length, u.length);
-    
+
     double dist = 0d;
-    
-    for(int i = 0; i < len; ++i){
+
+    for (int i = 0; i < len; ++i) {
       dist += Math.pow(t[i] - u[i], exponenet);
     }
-    
+
     return Math.pow(dist, 1d / exponenet);
   }
 

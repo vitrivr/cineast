@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.ADAMproWriter;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.JsonFileWriter;
+import org.vitrivr.cineast.core.db.JsonSelector;
 import org.vitrivr.cineast.core.db.NoDBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.ProtoSelector;
@@ -30,6 +31,7 @@ public final class DatabaseConfig {
 	
 	private static final DBSelectorSupplier NO_SELECTOR_SUPPLY = () -> new NoDBSelector();
 	private static final DBSelectorSupplier PROTO_SELECTOR_SUPPLY = () -> new ProtoSelector();
+	private static final DBSelectorSupplier JSON_SELECTOR_SUPPLY = () -> new JsonSelector();
 	private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = () -> new ADAMproSelector();
 	
   private static final Supplier<EntityCreator> ADAMPRO_CREATOR_SUPPLY = () -> new ADAMproEntityCreator();
@@ -43,6 +45,7 @@ public final class DatabaseConfig {
 	
 	public static enum Selector{
 	  NONE,
+	  JSON,
 	  PROTO,
 		ADAMPRO
 	}
@@ -118,6 +121,8 @@ public final class DatabaseConfig {
 			return ADAMPRO_SELECTOR_SUPPLY;
 		case PROTO:
 		  return PROTO_SELECTOR_SUPPLY;
+		case JSON:
+		  return JSON_SELECTOR_SUPPLY;
 		case NONE:
 		  return NO_SELECTOR_SUPPLY;
 		default:

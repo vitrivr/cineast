@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.util.distance;
 
-public class ManhattanDistance implements FloatArrayDistance {
+public class SpanNormDistance implements FloatArrayDistance {
 
   @Override
   public double applyAsDouble(float[] t, float[] u) {
@@ -14,13 +14,14 @@ public class ManhattanDistance implements FloatArrayDistance {
 
     int len = Math.min(t.length, u.length);
 
-    double dist = 0d;
+    double min = 0d, max = 0d;
 
     for (int i = 0; i < len; ++i) {
-      dist += Math.abs(t[i] - u[i]);
+      max = Math.max(max, (t[i] - u[i]));
+      min = Math.min(min, (t[i] - u[i]));
     }
 
-    return dist;
+    return max - min;
   }
 
 }

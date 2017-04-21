@@ -16,19 +16,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Grid;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.Position;
-import org.vitrivr.cineast.core.data.StatElement;
 import org.vitrivr.cineast.core.data.UniqueElementGrid;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
 
 import com.eclipsesource.json.JsonObject;
 
-public class BasicPlaneManager<T extends Printable> implements TreeTraverserHorizontal<T>, Serializable, PlaneManager<T> {
+public class BasicPlaneManager<T extends Printable>
+    implements TreeTraverserHorizontal<T>, Serializable, PlaneManager<T> {
 
   private static final long serialVersionUID = -7745507778074218761L;
   private transient final DistanceCalculation<T> distanceCalculation;
@@ -298,7 +299,7 @@ public class BasicPlaneManager<T extends Printable> implements TreeTraverserHori
     return flatPlane;
   }
 
-  public final UniqueElementGrid<String> compactGrid(VisualizationElement<T>[][] flatPlane){
+  public final UniqueElementGrid<String> compactGrid(VisualizationElement<T>[][] flatPlane) {
     UniqueElementGrid<String> grid = new UniqueElementGrid<>();
 
     for (int x = 0; x < flatPlane.length; ++x) {
@@ -309,7 +310,7 @@ public class BasicPlaneManager<T extends Printable> implements TreeTraverserHori
     }
     return grid;
   }
-  
+
   private boolean moveItem(VisualizationElement<T>[][] flatPlane, List<Direction> directions, int x,
       int y) {
 
@@ -360,7 +361,9 @@ public class BasicPlaneManager<T extends Printable> implements TreeTraverserHori
   // return jsonArray;
   // }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.vitrivr.cineast.explorative.PlaneManager#getSingleElement(int, int, int)
    */
   @Override
@@ -384,7 +387,9 @@ public class BasicPlaneManager<T extends Printable> implements TreeTraverserHori
     return plane.get(x, y);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.vitrivr.cineast.explorative.PlaneManager#getElementPosition(int, java.lang.String)
    */
   @Override
@@ -425,8 +430,11 @@ public class BasicPlaneManager<T extends Printable> implements TreeTraverserHori
   // }
   // }
 
-  /* (non-Javadoc)
-   * @see org.vitrivr.cineast.explorative.PlaneManager#getRepresentativeOfElement(java.lang.String, int)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.vitrivr.cineast.explorative.PlaneManager#getRepresentativeOfElement(java.lang.String,
+   * int)
    */
   @Override
   public String getRepresentativeOfElement(String id, int currentLevel) {
@@ -435,7 +443,9 @@ public class BasicPlaneManager<T extends Printable> implements TreeTraverserHori
     return representativeOfElements.get(currentLevel).get(id);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.vitrivr.cineast.explorative.PlaneManager#getTopLevel()
    */
   @Override
@@ -443,7 +453,9 @@ public class BasicPlaneManager<T extends Printable> implements TreeTraverserHori
     return flatPlanes.size() - 1;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.vitrivr.cineast.explorative.PlaneManager#getCenter()
    */
   @Override
@@ -455,14 +467,14 @@ public class BasicPlaneManager<T extends Printable> implements TreeTraverserHori
   }
 
   void saveElementsAndPositions(VisualizationElement[][] flatPlane) {
-    StatElement xpos = new StatElement(), ypos = new StatElement();
+    SummaryStatistics xpos = new SummaryStatistics(), ypos = new SummaryStatistics();
     // Map<String, Position> elementsAndPositions = new HashMap<>();
     HashMap<String, String> representativeOfElement = new HashMap<>();
     for (int x = 0; x < flatPlane.length; x++) {
       for (int y = 0; y < flatPlane[0].length; y++) {
         if (flatPlane[x][y] != null) {
-          xpos.add(x);
-          ypos.add(y);
+          xpos.addValue(x);
+          ypos.addValue(y);
           // elementsAndPositions.put(flatPlane[x][y].getId(), new Position(x, y));
           if (flatPlane[x][y].getRepresentative() == null
               || flatPlane[x][y].getRepresentative().length() == 0)
@@ -478,7 +490,7 @@ public class BasicPlaneManager<T extends Printable> implements TreeTraverserHori
     // elements in representative list: " + representativeOfElement.size());
     representativeOfElements.add(representativeOfElement);
     // positionsOfElements.add(elementsAndPositions);
-    centers.add(new Position((int) xpos.getAvg(), (int) ypos.getAvg()));
+    centers.add(new Position((int) xpos.getMean(), (int) ypos.getMean()));
   }
 
 }
