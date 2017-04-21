@@ -3,8 +3,8 @@ package org.vitrivr.cineast.core.db;
 import java.util.List;
 import java.util.Map;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.score.DistanceElement;
 
 public interface DBSelector {
 

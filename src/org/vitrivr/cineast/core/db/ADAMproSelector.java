@@ -40,9 +40,9 @@ import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.DefaultValueHashMap;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.score.DistanceElement;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 public class ADAMproSelector implements DBSelector {

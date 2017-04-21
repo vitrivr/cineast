@@ -1,6 +1,7 @@
-package org.vitrivr.cineast.core.data.score;
+package org.vitrivr.cineast.core.data.distance;
 
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 
 public class SegmentDistanceElement extends AbstractDistanceElement {
   public SegmentDistanceElement(String id, double distance) {

@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.data.score;
+package org.vitrivr.cineast.core.data.distance;
 
 import java.util.Objects;
 
