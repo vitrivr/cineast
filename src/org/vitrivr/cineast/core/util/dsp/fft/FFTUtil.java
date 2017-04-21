@@ -63,17 +63,37 @@ public class FFTUtil {
      * window size and samplerate.
      *
      * @param width Size of the STFT (i.e. number of time bins).
-     * @param windowsize Used for FFT (i.e. number of samples per time bin).
+     * @param windowsize Used for FFT (i.e. number of samples per time bin)
+     * @param overlap Overlap in samples between two adjacent windows during the FFT.
+     * @param padding Zeropadding, i.e. how many zeros have been added before and after the actual sample starts
+     *                (Assumption: padding happens within the fixed windowsize)
      * @param samplingrate Rate at which the original data has been sampled.
      *
      * @return Array containing the time labels for the STFT in seconds in ascending order.
      */
-    public static float[] time(int width, int windowsize, float samplingrate) {
+    public static float[] time(int width, int windowsize, int overlap, int padding, float samplingrate) {
         float[] labels = new float[width];
+        float stepsize = FFTUtil.timeStepsize(windowsize, overlap, padding, samplingrate);
         for (int i=0;i<labels.length;i++) {
-            labels[i] = i*(windowsize/samplingrate);
+            labels[i] = i*stepsize;
         }
         return labels;
+    }
+
+
+    /**
+     * Returns the width in seconds of a single FFT in an STFT i.e. how many seconds one
+     * progresses in the original signal when moving to the next FFT.
+     *
+     * @param windowsize Windowsize used for the FFT.
+     * @param overlap Overlap in samples between two adjacent windows during the FFT.
+     * @param padding Zeropadding, i.e. how many zeros have been added before and after the actual sample starts
+     *                (Assumption: padding happens within the fixed windowsize)
+     * @param samplingrate Rate at which the original signal has been sampled.
+     * @return Time step-size in seconds.
+     */
+    public static float timeStepsize(int windowsize, int overlap, int padding, float samplingrate) {
+       return ((windowsize - overlap - 2*padding)/samplingrate);
     }
 
     /**

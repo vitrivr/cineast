@@ -23,7 +23,8 @@ public class STFT {
     /** Window function to use when calculating the FFT. */
     private final WindowFunction windowFunction;
 
-    /** Zero-padding factor used for STFT calculation.
+    /**
+     * Zero-padding factor used for STFT calculation.
      *
      * A value of X means that X zeros will be prepended before the signal start. Then after the actual signal, another X zeros
      * will be appended. This means, that the window will contain windowsize-2*X samplepoints
@@ -33,9 +34,6 @@ public class STFT {
     /** Overlap in samples between two subsequent windows. */
     private final int overlap;
 
-    /** Width of the STFT (i.e. the number of timepoints or FFT's). */
-    private int width;
-
     /** Height of the STFT (i.e. the number of frequency bins per FFT). */
     private int height;
 
@@ -43,7 +41,7 @@ public class STFT {
     private final float[] frequencies;
 
     /** Time labels in ascending order (for each entry in the stft list). */
-    private final float[] time;
+    private float[] time;
 
     /** List containing one FFT entry per timepoint. Same order as time[] */
     private final List<FFT> stft;
@@ -67,14 +65,13 @@ public class STFT {
         this.windowFunction = function;
         this.windowsize = windowsize;
         this.overlap = overlap;
-        this.height = windowsize/2;
         this.padding = padding;
+        this.height = windowsize/2;
 
         /* Prepares empty array for STFT. */
         this.stft = new ArrayList<>();
 
         this.frequencies = FFTUtil.binCenterFrequencies(windowsize, samplingrate);
-        this.time = FFTUtil.time(this.width, windowsize, samplingrate);
     }
 
     /**
@@ -88,21 +85,23 @@ public class STFT {
      * @param samples
      */
     public void forward(double[] samples) {
-        /* Derive properties from the available information. */
-        this.width += (int) Math.ceil((float) samples.length / (windowsize - overlap - 2*padding));
+        /* Initialize values for the sliding window. */
+        final int increment = this.windowsize - overlap - 2*this.padding;
+        final int length = this.windowsize - 2*this.padding;
+        int start = 0;
+        int end = start + increment - 1;
+
+        /* Initialize buffer that holds samples for FFT. */
+        final double window[] = new double[windowsize];
 
         /*
          * Outer-loop: Create a sliding window and move it across the samples.
          * For each iteration, forward the FFT for the samples in the Window and add it to the list.
          */
-        double window[] = new double[windowsize];
-        for (int i = 0; i < this.width; i++) {
-            int length = windowsize - 2*padding;
-            int start = i * (length - overlap);
-            int end = start + length - 1;
 
+        while (start < samples.length) {
             /* Copy the samples into the window. */
-            if (end <= samples.length) {
+            if (end < samples.length) {
                 System.arraycopy(samples, start, window, padding, length);
             } else {
                 System.arraycopy(samples, start, window, padding, samples.length - start);
@@ -113,7 +112,14 @@ public class STFT {
             FFT fft = new FFT();
             fft.forward(window, this.samplingrate, this.windowFunction);
             this.stft.add(fft);
+
+            /* Move the window. */
+            start += increment;
+            end = start + increment -1;
         }
+
+        /* Updates the time-labels. */
+        this.time = FFTUtil.time(this.stft.size(), windowsize, overlap, padding, samplingrate);
     }
 
     /**
@@ -229,7 +235,7 @@ public class STFT {
      * @return Width of the STFT.
      */
     public int getWidth() {
-        return this.width;
+        return this.stft.size();
     }
 
     /**
@@ -239,6 +245,15 @@ public class STFT {
      */
     public int getHeight() {
         return this.height;
+    }
+
+    /**
+     * The stepsize in seconds between to adjacent bins in the time dimension.
+     *
+     * @return
+     */
+    public float timeStepsize() {
+       return ((windowsize - overlap - 2*padding)/this.samplingrate);
     }
 
     /**
