@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.runtime;
 
-import com.google.common.collect.ListMultimap;
 import gnu.trove.iterator.TDoubleIterator;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -9,7 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -22,16 +20,15 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.ObjectScoreElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultListener;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.ScoreFusion;
 
 public class ContinousQueryDispatcher {
   private static final Logger LOGGER = LogManager.getLogger();
@@ -44,7 +41,6 @@ public class ContinousQueryDispatcher {
   private static final int KEEP_ALIVE_TIME = 60;
 
   private static final List<RetrievalResultListener> resultListeners = new ArrayList<>();
-  private static final SegmentLookup segmentLookup = new SegmentLookup();
 
   private static final LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(TASK_QUEUE_SIZE);
   private static ExecutorService executor = new ThreadPoolExecutor(THREAD_COUNT, THREAD_COUNT,
@@ -164,7 +160,7 @@ public class ContinousQueryDispatcher {
       }
     }
 
-    this.mergeObjectSegmentElements(scoreBySegmentId, scoreByObjectId);
+    ScoreFusion.fuseObjectsIntoSegments(scoreBySegmentId, scoreByObjectId);
     return this.normalizeSortTruncate(scoreBySegmentId);
   }
 
@@ -209,46 +205,6 @@ public class ContinousQueryDispatcher {
 
     double weightedScore = score * weight;
     scoreById.adjustOrPutValue(id, weightedScore, weightedScore);
-  }
-
-  // TODO: Move into own class
-  /**
-   * Merges the object scores into the segment scores by adding every object score to the scores of
-   * its segments. If an object without any of its segments was found, the first segment gets added
-   * and used instead.
-   *
-   * @param scoreBySegmentId Map containing the found segment ids with their score.
-   * @param scoreByObjectId Map containing the found object ids with their score.
-   */
-  private void mergeObjectSegmentElements(TObjectDoubleMap<String> scoreBySegmentId,
-      TObjectDoubleMap<String> scoreByObjectId) {
-    Set<String> objectIds = scoreByObjectId.keySet();
-    ListMultimap<String, SegmentDescriptor> segmentsByObjectId =
-        segmentLookup.lookUpSegmentsOfObjects(objectIds);
-    for (String objectId : segmentsByObjectId.keySet()) {
-      assert scoreByObjectId.containsKey(objectId);
-      double objectScore = scoreByObjectId.get(objectId);
-      List<SegmentDescriptor> segments = segmentsByObjectId.get(objectId);
-      if (segments.isEmpty()) {
-        LOGGER.error("Object {} has no segments", objectId);
-        continue;
-      }
-
-      boolean objectSegmentsFoundInResults = false;
-      for (SegmentDescriptor segment : segments) {
-        String segmentId = segment.getSegmentId();
-        boolean foundElement = scoreBySegmentId.adjustValue(segmentId, objectScore);
-        if (foundElement) {
-          objectSegmentsFoundInResults = true;
-        }
-      }
-
-      if (!objectSegmentsFoundInResults) {
-        SegmentDescriptor firstSegment = segments.get(0);
-        String firstId = firstSegment.getSegmentId();
-        scoreBySegmentId.put(firstId, objectScore);
-      }
-    }
   }
 
   private List<SegmentScoreElement> normalizeSortTruncate(
