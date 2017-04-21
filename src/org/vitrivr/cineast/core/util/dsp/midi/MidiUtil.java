@@ -1,11 +1,22 @@
 package org.vitrivr.cineast.core.util.dsp.midi;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.audio.pitch.Melody;
+import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
+
+import javax.sound.midi.*;
+
 /**
  * @author rgasser
  * @version 1.0
  * @created 16.04.17
  */
 public final class MidiUtil {
+
+    private static final Logger LOGGER = LogManager.getLogger();
+
 
     /** Reference frequency in Hz. Corresponds to the musical note A (A440 or A4) above the middle C. */
     public static final double F_REF = 440.0f;
@@ -35,4 +46,34 @@ public final class MidiUtil {
         return (float)(Math.pow(2,(m-69.0)/12.0)*F_REF);
     }
 
+    /**
+     * Convenience methods that allows playback of a melody on a MIDI channel.
+     *
+     * @param melody Melody that should be played.
+     * @param instrument Index of the instrument to be used for playback.
+     * @param channel Channel to play the melody on.
+     */
+    public static void play(Melody melody, int instrument, int channel) {
+        try {
+            Synthesizer midiSynth = MidiSystem.getSynthesizer();
+            midiSynth.open();
+            Instrument[] instr = midiSynth.getDefaultSoundbank().getInstruments();
+            MidiChannel[] mChannels = midiSynth.getChannels();
+
+            midiSynth.loadInstrument(instr[instrument]);
+
+            for (Pitch pitch : melody) {
+                mChannels[channel].noteOn(pitch.getIndex(), 100);
+                try {
+                    Thread.sleep(pitch.getDuration());
+                } catch( InterruptedException e ) {
+                    LOGGER.error("Thread was interrupted during playback ({}).", LogHelper.getStackTrace(e));
+                    return;
+                }
+                mChannels[0].noteOff(pitch.getIndex());
+            }
+        } catch (MidiUnavailableException e) {
+            LOGGER.error("MIDI is not available ({}).", LogHelper.getStackTrace(e));
+        }
+    }
 }
