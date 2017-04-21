@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.util.audio.pitch;
 
+import org.vitrivr.cineast.core.util.dsp.FrequencyUtils;
+
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,8 +14,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @created 19.04.17
  */
-public class Melody {
-
+public class Melody implements Iterable<Pitch> {
     /** List holding the pitches that comprise this melody. */
     private final List<Pitch> pitches = new LinkedList<>();
 
@@ -32,6 +34,16 @@ public class Melody {
      */
     public void prepend(Pitch pitch) {
         this.pitches.add(0, pitch);
+    }
+
+    /**
+     * Accessor for a pitch at a specific index.
+     *
+     * @param index Index of the pitch.
+     * @return Pitch
+     */
+    public Pitch getPitch(int index) {
+        return this.pitches.get(index);
     }
 
     /**
@@ -70,11 +82,40 @@ public class Melody {
     }
 
     /**
+     * Returns a list of frequencies for every pitch.
+     *
+     * @return List of pitch-frequencies.
+     */
+    public List<Float> getFrequencies() {
+        return this.pitches.stream().map(Pitch::getFrequency).collect(Collectors.toList());
+    }
+
+    /**
+     * Returns the distance in cents of every pitch to some arbitrary minimum.
+     *
+     * @param min The minimum frequency to calculate the distance from in Hz.
+     * @return List of pitch-distances in cents.
+     */
+    public List<Double> getCentDistances(float min) {
+        return this.pitches.stream().map(p -> FrequencyUtils.cents(p.getFrequency(), min)).collect(Collectors.toList());
+    }
+
+    /**
      * Returns the size of the melody in pitches.
      *
      * @return Size of the melody.
      */
     public final int size() {
         return this.pitches.size();
+    }
+
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    @Override
+    public Iterator<Pitch> iterator() {
+        return this.pitches.iterator();
     }
 }

@@ -3,6 +3,9 @@ package org.vitrivr.cineast.core.util.audio.pitch.tracking;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * This is a helper class for pitch tracking. It represents a pitch contour, that is, a candidate for a melody fragment. The contour
  * has a fixed length and each slot in the sequence represents a specific timeframe (e.g. belonging to a FFT bin in the underlying STFT).
@@ -11,11 +14,16 @@ import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
  * but also as an entity. In addition to the actual pitch information, the pitch contour class also provides access to pitch contour statistics
  * related to salience and pitch frequency.
  *
+ * @see PitchTracker
+ *
  * @author rgasser
  * @version 1.0
  * @created 19.04.17
  */
 public class PitchContour {
+    /** The minimum frequency in Hz on the (artifical) cent-scale. */
+    private static final float CENT_SCALE_MINIMUM = 55.0f;
+
     /** Entity that keeps track of salience related contour statistics. */
     private SummaryStatistics salienceStatistics = new SummaryStatistics();
 
@@ -23,32 +31,51 @@ public class PitchContour {
     private SummaryStatistics frequencyStatistics = new SummaryStatistics();
 
     /** Sequence of pitches that form the PitchContour. */
-    private final Pitch[] contour;
+    private final List<Pitch> contour = new LinkedList<>();
 
     /** Indicates that the PitchContour statistics require recalculation. */
-    private boolean dirty = false;
+    private boolean dirty = true;
+
+    /** The start frame-index of the pitch-contour. Marks beginning in time. */
+    private int start;
+
+    /** The end frame-index of the pitch-contour. Marks ending in time. */
+    private int end;
 
     /**
-     * Constructor for the PitchContour class.
+     * Constructor for PitchContour.
      *
-     * @param size Size of the contour, i.e. number of pitches.
+     * @param start Start-index of the contour.
+     * @param pitch Pitch that belongs to the start-index.
      */
-    public PitchContour(int size) {
-        this.contour = new Pitch[size];
+    public PitchContour(int start, Pitch pitch) {
+        this.start = start;
+        this.end = start;
+        this.contour.add(pitch);
     }
 
     /**
      * Sets the pitch at the given index if the index is within the bounds
      * of the PitchContour.
      *
-     * @param i Index for which to return a pitch.
-     * @param p Pitch to set.
+     * @param p Pitch to append.
      */
-    public void setPitch(int i, Pitch p) {
-        if (i < this.contour.length) {
-            this.contour[i] = p;
-            this.dirty = true;
-        }
+    public void append(Pitch p) {
+        this.contour.add(p);
+        this.end += 1;
+        this.dirty = true;
+    }
+
+    /**
+     * Sets the pitch at the given index if the index is within the bounds
+     * of the PitchContour.
+     *
+     * @param p Pitch to append.
+     */
+    public void prepend(Pitch p) {
+        this.contour.add(0, p);
+        this.start -= 1;
+        this.dirty = true;
     }
 
     /**
@@ -58,12 +85,31 @@ public class PitchContour {
      * @param i Index for which to return a pitch.
      */
     public Pitch getPitch(int i) {
-        if (i < this.contour.length) {
-            return this.contour[i];
+        if (i >= this.start && i <= this.end) {
+            return this.contour.get(i-this.start);
         } else {
             return null;
         }
     }
+
+    /**
+     * Getter for start.
+     *
+     * @return Start frame-index.
+     */
+    public final int getStart() {
+        return start;
+    }
+
+    /**
+     * Getter for end.
+     *
+     * @return End frame-index.
+     */
+    public final int getEnd() {
+        return end;
+    }
+
 
     /**
      * Size of the pitch-contour. This number also includes
@@ -71,8 +117,8 @@ public class PitchContour {
      *
      * @return Size of the contour.
      */
-    public int size() {
-        return this.contour.length;
+    public final int size() {
+        return this.contour.size();
     }
 
     /**
@@ -80,7 +126,7 @@ public class PitchContour {
      *
      * @return Pitch mean
      */
-    public double pitchMean() {
+    public final double pitchMean() {
         if (this.dirty) this.calculate();
         return this.frequencyStatistics.getMean();
     }
@@ -90,20 +136,9 @@ public class PitchContour {
      *
      * @return Pitch standard deviation
      */
-    public double pitchDeviation() {
+    public final double pitchDeviation() {
         if (this.dirty) this.calculate();
         return this.frequencyStatistics.getStandardDeviation();
-    }
-
-    /**
-     * Returns the standard-deviation of all pitches in the melody in cents.
-     *
-     * @return Pitch standard deviation
-     */
-    public double pitchDeviationCents() {
-        double mean = this.pitchMean();
-        double std = this.pitchDeviation();
-        return 1200*Math.log((mean+std)/mean)/Math.log(2);
     }
 
     /**
@@ -111,7 +146,7 @@ public class PitchContour {
      *
      * @return Salience mean
      */
-    public double salienceMean() {
+    public final double salienceMean() {
         if (this.dirty) this.calculate();
         return this.salienceStatistics.getMean();
     }
@@ -121,7 +156,7 @@ public class PitchContour {
      *
      * @return Salience standard deviation.
      */
-    public double salienceDeviation() {
+    public final double salienceDeviation() {
         if (this.dirty) this.calculate();
         return this.salienceStatistics.getStandardDeviation();
     }
@@ -131,9 +166,27 @@ public class PitchContour {
      *
      * @return
      */
-    public double salienceSum() {
+    public final double salienceSum() {
         if (this.dirty) this.calculate();
         return this.salienceStatistics.getSum();
+    }
+
+    /**
+     * Calculates the overlap between the given pitch-contours.
+     *
+     * @return Size of the overlap between two pitch-contours.
+     */
+    public final int overlap(PitchContour contour) {
+        return Math.max(0, Math.min(this.end,contour.end) - Math.max(this.start, contour.start));
+    }
+
+    /**
+     * Determines if two PitchContours overlap and returns true of false.
+     *
+     * @return true, if two PitchContours  overlap and falseotherwise.
+     */
+    public final boolean overlaps(PitchContour contour) {
+        return this.overlap(contour) > 0;
     }
 
     /**
@@ -145,7 +198,7 @@ public class PitchContour {
         for (Pitch pitch : this.contour) {
             if (pitch != null) {
                 this.salienceStatistics.addValue(pitch.getSalience());
-                this.frequencyStatistics.addValue(pitch.getFrequency());
+                this.frequencyStatistics.addValue(pitch.distanceCents(CENT_SCALE_MINIMUM));
             }
         }
         this.dirty = false;

@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.util.audio.pitch;
 
+import org.vitrivr.cineast.core.util.dsp.FrequencyUtils;
 import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
 
 /**
@@ -116,6 +117,17 @@ public class Pitch {
      * @return Distance in cents.
      */
     public double distanceCents(Pitch pitch) {
-        return 1200 * (Math.log(pitch.frequency/this.frequency)/Math.log(2));
+        return FrequencyUtils.cents(pitch.frequency, this.frequency);
+    }
+
+    /**
+     * Calculates the distance between the current pitch and the provided
+     * pitch on a cent scale.
+     *
+     * @param frequency Frequency to measure the distance to.
+     * @return Distance in cents.
+     */
+    public double distanceCents(float frequency) {
+        return FrequencyUtils.cents(frequency, this.frequency);
     }
 }

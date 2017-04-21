@@ -4,11 +4,9 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import org.vitrivr.cineast.core.util.audio.pitch.Melody;
 import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
+import org.vitrivr.cineast.core.util.dsp.FrequencyUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class implements the pitch-tracking algorithm described in [1]. It can be used to extract a melody from a
@@ -28,6 +26,9 @@ public class PitchTracker {
     /** Active pitch-candidates. */
     private Pitch[][] s1;
 
+    /** Number of ms that passes between two adjacent bins. */
+    private float t_stepsize;
+
     /** Threshold in first (per-frame) filter step. */
     private final float t1;
 
@@ -40,8 +41,8 @@ public class PitchTracker {
     /** Maximum distance between two pitches in subsequent frames (in cents) according to [1]. */
     private final float d_max;
 
-    /** Maximum amount of misses before contour tracking is aborted. */
-    private final int m_max;
+    /** Maximum amount of misses in seconds before contour tracking is aborted. */
+    private final float m_max;
 
     /** SummaryStatistics for the PitchContours. */
     private final SummaryStatistics contourStatistics = new SummaryStatistics();
@@ -53,7 +54,7 @@ public class PitchTracker {
      * Default constructor for PitchTracker. Uses the settings described in [1].
      */
     public PitchTracker() {
-        this(0.9f, 0.9f,0.2f, 80.0f, 3);
+        this(0.9f, 0.9f,0.2f, 80.0f, 0.1f);
     }
 
     /**
@@ -65,7 +66,7 @@ public class PitchTracker {
      * @param d_max Maximum distance between two pitches in subsequent frames during tracking.
      * @param m_max Maximum amount of misses before contour tracking is aborted.
      */
-    public PitchTracker(float t1, float t2, float v_threshold, float d_max, int m_max) {
+    public PitchTracker(float t1, float t2, float v_threshold, float d_max, float m_max) {
         this.t1 = t1;
         this.t2 = t2;
         this.v_threshold = v_threshold;
@@ -78,11 +79,13 @@ public class PitchTracker {
      * for pitch-streaming and subsequent melody selection and discards previous results.
      *
      * @param candidates Nested list of pitch candidates. The first list contains one list per time-frame, each time-frame then contains one to n pitch-candidates.
+     * @param t_stepsize The time in milliseconds that passes between to adjacent bins.
      */
-    public void initialize(List<List<Pitch>> candidates) {
+    public void initialize(List<List<Pitch>> candidates, float t_stepsize) {
         /* Initialize S1 and S0 with new pitch-candidates */
         this.s1 = new Pitch[candidates.size()][];
         this.s0 = new Pitch[candidates.size()][];
+        this.t_stepsize = t_stepsize;
         for (int i=0; i<candidates.size();i++) {
             int size = candidates.get(i).size();
             this.s1[i] = new Pitch[size];
@@ -110,22 +113,16 @@ public class PitchTracker {
         int[] currentPointer = null;
         Pitch currentPitch = null;
         while (true) {
-            /* Prepares a new pitch contour. */
-            final PitchContour contour = new PitchContour(this.s1.length);
-
             /* Find the pitch with the maximum salience in S1 and add it to the melody. */
-            currentPointer = this.seekGlobalMaxInS1();
+            currentPointer = this.seekMostSalientInS1();
             if (currentPointer[0] == -1 || currentPointer[1] == -1) break;
 
-            /* Select that pitch from S1 and add it to the contour. */
+            /* Select that pitch from S1 and create new PitchContour. */
             currentPitch = this.selectFromS1(currentPointer[0], currentPointer[1]);
-            contour.setPitch(currentPointer[0], currentPitch);
+            final PitchContour contour = new PitchContour(currentPointer[0], currentPitch);
 
-            /* Tracks pitch contour upstream. */
-            this.trackUpstream(contour, currentPointer[0]);
-
-            /* Track pitch contour downstream. */
-            this.trackDownstream(contour, currentPointer[0]);
+            /* Track pitch contour. */
+            this.track(contour, currentPointer[0]);
 
             /* Add contour to list of contours */
             this.addContour(contour);
@@ -157,7 +154,7 @@ public class PitchTracker {
          * Use the mean-contour to remove octave-duplicates and pitch-outliers. Perform multiple
          * iterations in which the mean-contour is updated.
          */
-        Pitch[] mean = this.meanContour(this.pitchContours);
+        double[] mean = this.meanContour(this.pitchContours);
         List<PitchContour> copy = null;
         for (int i=0; i<iterations; i++) {
             copy = new ArrayList<>(workingList);
@@ -174,27 +171,28 @@ public class PitchTracker {
         copy.sort(Comparator.comparingDouble(PitchContour::salienceSum));
         Collections.reverse(workingList);
 
-
-        /* Construct melody from remaining pitch-contours. */
+        /*
+         * Construct melody from remaining pitch-contours.
+         */
         Melody melody = new Melody();
         for (int i=0;i<this.s1.length;i++) {
-            boolean hit = false;
             for (PitchContour contour : workingList) {
-                if (contour.getPitch(i) != null) {
-                    melody.append(contour.getPitch(i));
-                    hit = true;
+                if (contour.getStart() == i) {
+                    Pitch melodyPitch = new Pitch(contour.getPitch(i).getFrequency());
+                    int j = i;
+                    double time = this.t_stepsize;
+                    while (contour.getPitch(j) != null) {
+                        time += this.t_stepsize;
+                        j+= 1;
+                    }
+                    if (time > 0.1f) {
+                        melodyPitch.setDuration((int)(time * 1000));
+                        melody.append(melodyPitch);
+                        i=j-1;
+                    }
                     break;
                 }
             }
-
-            /* if (!hit) {
-                for (PitchContour contour : this.pitchContours) {
-                    if (contour.getPitch(i) != null) {
-                        melody.append(contour.getPitch(i));
-                        break;
-                    }
-                }
-            } */
         }
         return melody;
     }
@@ -204,47 +202,32 @@ public class PitchTracker {
      * @param contours
      * @return
      */
-    public Pitch[] meanContour(List<PitchContour> contours) {
+    public double[] meanContour(List<PitchContour> contours) {
 
-        final int size = 20;
-        double[] pitchmeans = new double[this.s1.length];
-        Pitch[] meanpitches = new Pitch[this.s1.length];
+        final int size = 40;
 
-        for (int i=0; i<this.s1.length; i++) {
-            float sum = 0;
-            float mean = 0.0f;
-            for (PitchContour contour : contours) {
-                if (contour.getPitch(i) != null) {
-                    mean += contour.getPitch(i).getFrequency() * contour.salienceSum();
-                    sum += contour.salienceSum();
-                }
-            }
-
-            if (sum > 0) {
-                pitchmeans[i] = mean/sum;
+        /* Calculate pitch-mean. */
+        double[] framesum = new double[this.s1.length];
+        double[] weights = new double[this.s1.length];
+        double[] pitchmean = new double[this.s1.length];
+        for (PitchContour contour : contours) {
+            for (int i = contour.getStart(); i<contour.getEnd(); i++) {
+                framesum[i] += contour.getPitch(i).getFrequency() * contour.salienceSum();
+                weights[i] += contour.salienceSum();
             }
         }
 
-        for (int i=0; i<pitchmeans.length; i++) {
-            double mean = 0.0f;
-            for (int s=0; s<size; s++) {
-                if (i+s < pitchmeans.length) {
-                    mean += pitchmeans[i+s];
-                }
+        for (int i=0; i<framesum.length; i++) {
+            int start = Math.max(0, i-size/2);
+            int end  = Math.min(framesum.length, i+size/2);
+            for (int k=start; k<end; k++) {
+                if (weights[k] > 0) pitchmean[i] += framesum[k]/weights[k];
             }
-
-            pitchmeans[i] = mean/size;
+            pitchmean[i] /= (end-start+1);
         }
 
-        for (int i=0; i<pitchmeans.length; i++) {
-            meanpitches[i] = new Pitch((float)pitchmeans[i]);
-        }
-
-        return meanpitches;
+       return pitchmean;
     }
-
-
-
 
     /**
      * Selects the pitch specified by the two pitch-indices from S1 a and returns
@@ -303,10 +286,10 @@ public class PitchTracker {
      *
      * @return Indexes {t,i} pointing to maximum is S1.
      */
-    private int[] seekGlobalMaxInS1() {
+    private int[] seekMostSalientInS1() {
         int[] max = {-1, -1};
         for (int t = 0; t<this.s1.length; t++) {
-            int max_i = this.seekFrameMaxInS1(t);
+            int max_i = this.seekMostSalientInFrameS1(t);
             if (max_i == -1) continue;
             if (max[0] == -1 || max[1] == -1 || this.s1[t][max_i].getSalience() > this.s1[max[0]][max[1]].getSalience()) {
                 max[0] = t;
@@ -323,12 +306,12 @@ public class PitchTracker {
      * @param t Temporal index of the frame in S1.
      * @return Index of the maximum in the specified frame.
      */
-    private int seekFrameMaxInS1(int t) {
+    private int seekMostSalientInFrameS1(int t) {
         Pitch[] pitches = this.s1[t];
         int max = -1;
         for (int i=0;i<pitches.length;i++) {
             if (pitches[i] == null) continue;
-            if (max == -1 || pitches[i].getSalience() < pitches[max].getSalience()) {
+            if (max == -1 || pitches[i].getSalience() > pitches[max].getSalience()) {
                 max = i;
             }
         }
@@ -351,7 +334,7 @@ public class PitchTracker {
      */
     private void applyPerFrameFilter() {
         for (int t = 0; t<this.s1.length; t++) {
-            int max_idx = this.seekFrameMaxInS1(t);
+            int max_idx = this.seekMostSalientInFrameS1(t);
             if (max_idx == -1) continue;
             int size = this.s1[t].length;
             for (int i=0; i<size; i++) {
@@ -379,10 +362,11 @@ public class PitchTracker {
         }
 
         /* Iteration #2: Move pitches that are bellow the threshold. */
+        final double threshold = statistics.getMean() - this.t2 * statistics.getStandardDeviation();
         for (int t=0; t<this.s1.length; t++) {
             for (int i=0; i<this.s1[t].length; i++) {
                 if (this.s1[t][i] == null) continue;
-                if (this.s1[t][i].getSalience() < statistics.getMean() - this.t2 * statistics.getStandardDeviation()) {
+                if (this.s1[t][i].getSalience() < threshold) {
                     this.moveToS0(t,i);
                 }
             }
@@ -395,24 +379,25 @@ public class PitchTracker {
      * @param start
      * @return
      */
-    private void trackUpstream(final PitchContour contour, int start) {
+    private void track(final PitchContour contour, final int start) {
+        /* If start is the last entry, then no forward-tracking is required. */
+        if (start == this.s1.length - 1) return;
+
+        /* Initialize helper variables; number of pitches and last-pitch. */
         int misses = 0;
-        int frameindex = start;
+        Pitch lastPitch = contour.getPitch(start);
 
-        Pitch lastPitch = contour.getPitch(frameindex);
-
-        /* */
-        while (frameindex < this.s1.length-1) {
-            frameindex += 1;
+        /* Track pitches upstream (i.e. forward in time). */
+        for (int frameindex = start+1; frameindex<this.s1.length; frameindex++) {
+            /* Flag that indicates, if a matching pitch could be found in the new frame. */
             boolean found = false;
 
             /* Search for a matching pitch candidate in S1 in the next frame. */
             for (int j=0;j<this.s1[frameindex].length; j++) {
                 if (this.s1[frameindex][j] == null) continue;
-                if (Math.abs(this.s1[frameindex][j].distanceCents(lastPitch)) <= this.d_max) {
+                if (found = (Math.abs(this.s1[frameindex][j].distanceCents(lastPitch)) <= this.d_max)) {
                     lastPitch = this.selectFromS1(frameindex,j);
-                    contour.setPitch(frameindex, lastPitch);
-                    found = true;
+                    contour.append(lastPitch);
                     misses = 0;
                     break;
                 }
@@ -427,41 +412,36 @@ public class PitchTracker {
              * Search for pitch candidates in S0 afterwards.
              */
             misses += 1;
-            if (misses >= this.m_max) break;
+            if (misses * this.t_stepsize >= this.m_max) break;
             for (int j=0;j<this.s0[frameindex].length; j++) {
                 if (this.s0[frameindex][j] == null) continue;
-                if (Math.abs(this.s0[frameindex][j].distanceCents(lastPitch)) <= this.d_max) {
+                if (found = (Math.abs(this.s0[frameindex][j].distanceCents(lastPitch)) <= this.d_max)) {
                     lastPitch = this.selectFromS0(frameindex,j);
-                    contour.setPitch(frameindex, lastPitch);
-
+                    contour.append(lastPitch);
                     break;
                 }
             }
+
+            if (!found) break;
         }
-    }
 
-    /**
-     *
-     * @param contour
-     * @param start
-     * @return
-     */
-    private void trackDownstream(final PitchContour contour, int start) {
-        int misses = 0;
-        int frameindex = start;
-        Pitch lastPitch = contour.getPitch(frameindex);
-        /* */
-        while (frameindex > 1) {
-            frameindex -= 1;
+        /* If start is at index 0 then no backwards-tracking is required. */
+        if (start == 0) return;
+
+        /* Re-Initialize helper variables; number of pitches and last-pitch. */
+        misses = 0;
+        lastPitch = contour.getPitch(start);
+
+        /* Track pitches downstream (i.e. back in time) */
+        for (int frameindex = start-1; frameindex > 0; frameindex--) {
             boolean found = false;
 
             /* Search for a matching pitch candidate in S1 in the next frame. */
             for (int j=0;j<this.s1[frameindex].length; j++) {
                 if (this.s1[frameindex][j] == null) continue;
-                if (Math.abs(this.s1[frameindex][j].distanceCents(lastPitch)) < this.d_max) {
+                if (found = (Math.abs(this.s1[frameindex][j].distanceCents(lastPitch)) <= this.d_max)) {
                     lastPitch = this.selectFromS1(frameindex,j);
-                    contour.setPitch(frameindex, lastPitch);
-                    found = true;
+                    contour.prepend(lastPitch);
                     misses = 0;
                     break;
                 }
@@ -479,12 +459,15 @@ public class PitchTracker {
             if (misses >= this.m_max) break;
             for (int j=0;j<this.s0[frameindex].length; j++) {
                 if (this.s0[frameindex][j] == null) continue;
-                if (Math.abs(this.s0[frameindex][j].distanceCents(lastPitch)) < this.d_max) {
+                if (found = (Math.abs(this.s0[frameindex][j].distanceCents(lastPitch)) < this.d_max)) {
                     lastPitch = this.selectFromS0(frameindex,j);
-                    contour.setPitch(frameindex, lastPitch);
+                    contour.prepend(lastPitch);
                     break;
                 }
             }
+
+            /* If no matching pitch was found even in S0, stop tracking. */
+            if (!found) break;
         }
     }
 
@@ -493,7 +476,7 @@ public class PitchTracker {
      */
     private void voicingDetection(List<PitchContour> contours) {
         contours.removeIf(c -> {
-            if (c.pitchDeviationCents() < 40.0f) {
+            if (c.pitchDeviation() < 40.0f) {
                return c.salienceMean() < contourStatistics.getMean() - this.v_threshold * contourStatistics.getStandardDeviation();
             } else {
                 return false;
@@ -505,55 +488,50 @@ public class PitchTracker {
      *
      * @param contours
      */
-    private void detectAndRemoveOctaveDuplicates(List<PitchContour> contours, Pitch[] meanpitches) {
-        contours.removeIf(ct -> {
+    private void detectAndRemoveOctaveDuplicates(List<PitchContour> contours, double[] meanpitches) {
+        Iterator<PitchContour> iterator = contours.iterator();
+        while(iterator.hasNext()) {
+            PitchContour ct = iterator.next();
             for (PitchContour ci : contours) {
                 /* Take contour at i; if c == ci then skip. */
-                if (ct == ci) continue;
+                if (ct == ci || ci.overlaps(ct)) continue;
 
                 /* Calculate mean distance from ct to ci. */
                 double distance = 0.0;
                 int count = 0;
-                for (int k = 0; k < ci.size(); k++) {
+                for (int k = ct.getStart(); k <= ct.getEnd(); k++) {
                     if (ci.getPitch(k) != null && ct.getPitch(k) != null) {
-                        distance += Math.abs(ci.getPitch(k).distanceCents(ct.getPitch(k)));
+                        distance += ci.getPitch(k).distanceCents(ct.getPitch(k));
                         count += 1;
                     }
                 }
 
-                /* Count < 5 means that the two contours have very little overlap. */
-                if (count < 5) continue;
-
-                /* Normalise distance.. */
+                /* Normalise distance. */
                 distance /= count;
 
-                /* If distance is between 1150.0 and 1250 cents, the an octave duplicate has been detected! */
-                if (distance >= 1150.0f && distance <= 1250.0f) {
+                /* If distance is between 1150 and 1250 cents, the an octave duplicate has been detected! */
+                if (distance >= (FrequencyUtils.OCTAVE_CENT - 50.f) && distance <= (FrequencyUtils.OCTAVE_CENT + 50.f)) {
                     double di = 0.0f;
                     double dt = 0.0f;
-                    int counti = 0;
-                    int countt = 0;
-                    for (int k = 0; k < ci.size(); k++) {
-                        if (ci.getPitch(k) != null) {
-                            di += Math.abs(ci.getPitch(k).distanceCents(meanpitches[k]));
-                            counti += 1;
-                        }
-                        if (ct.getPitch(k) != null) {
-                            dt += Math.abs(ct.getPitch(k).distanceCents(meanpitches[k]));
-                            countt += 1;
-                        }
+                    for (int k = ci.getStart(); k <= ci.getEnd(); k++) {
+                        di += Math.abs(ci.getPitch(k).distanceCents((float)meanpitches[k]));
+                    }
+                    for (int k = ct.getStart(); k <= ct.getEnd(); k++) {
+                        dt += Math.abs(ct.getPitch(k).distanceCents((float)meanpitches[k]));
                     }
 
                     /* Normalise distances. */
-                    di /= counti;
-                    dt /= countt;
+                    di /= ci.size();
+                    dt /= ct.size();
 
-                    /* If distance dt > di, then remove ct, */
-                    if (dt > di) return true;
+                    /* If distance dt > di, then remove ct. */
+                    if (Math.abs(dt) > Math.abs(di)) {
+                        iterator.remove();
+                        break;
+                    }
                 }
             }
-            return false;
-        });
+        }
     }
 
     /**
@@ -561,19 +539,18 @@ public class PitchTracker {
      * @param contours
      * @param meanpitches
      */
-    private void detectAndRemovePitchOutliers(List<PitchContour> contours, final Pitch[] meanpitches) {
-        contours.removeIf(c -> {
+    private void detectAndRemovePitchOutliers(List<PitchContour> contours, final double[] meanpitches) {
+        Iterator<PitchContour> iterator = contours.iterator();
+        while(iterator.hasNext()) {
+            PitchContour c = iterator.next();
             double distance = 0.0f;
-            int count = 0;
-            for (int i=0; i<c.size();i++) {
-                if (c.getPitch(i) != null && meanpitches[i] != null) {
-                    distance += Math.abs(c.getPitch(i).distanceCents(meanpitches[i]));
-                    count += 1;
-                }
+            for (int t = c.getStart(); t <= c.getEnd(); t++) {
+                distance += c.getPitch(t).distanceCents((float)meanpitches[t]);
             }
-
-            if (count > 0) distance /= count;
-            return distance > 1200.0f;
-        });
+            distance /= c.size();
+            if (Math.abs(distance) > FrequencyUtils.OCTAVE_CENT) {
+                iterator.remove();
+            }
+        }
     }
 }
