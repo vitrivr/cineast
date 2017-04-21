@@ -15,7 +15,7 @@ import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.QueryTerm;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
+import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 
 /**
  * @author rgasser
@@ -53,9 +53,9 @@ public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> 
 
         List<SegmentScoreElement> scoreResults;
         if (qc.hasId()) {
-          scoreResults = ContinousRetrievalLogic.retrieve(qc.getId(), category, qconf);
+          scoreResults = ContinuousRetrievalLogic.retrieve(qc.getId(), category, qconf);
         } else {
-          scoreResults = ContinousRetrievalLogic.retrieve(qc, category, qconf);
+          scoreResults = ContinuousRetrievalLogic.retrieve(qc, category, qconf);
         }
 
         for (SegmentScoreElement element : scoreResults) {

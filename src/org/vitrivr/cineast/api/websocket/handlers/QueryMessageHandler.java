@@ -28,7 +28,7 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
-import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
+import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 
 /**
  * @author rgasser
@@ -75,9 +75,9 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
         float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation
 
         if (qc.hasId()) {
-          result = ContinousRetrievalLogic.retrieve(qc.getId(), category, qconf);
+          result = ContinuousRetrievalLogic.retrieve(qc.getId(), category, qconf);
         } else {
-          result = ContinousRetrievalLogic.retrieve(qc, category, qconf);
+          result = ContinuousRetrievalLogic.retrieve(qc, category, qconf);
         }
 
         for (SegmentScoreElement element : result) {

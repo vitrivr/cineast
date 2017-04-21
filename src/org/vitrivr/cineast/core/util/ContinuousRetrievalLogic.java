@@ -10,9 +10,9 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultListener;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.runtime.ContinousQueryDispatcher;
+import org.vitrivr.cineast.core.runtime.ContinuousQueryDispatcher;
 
-public class ContinousRetrievalLogic {
+public class ContinuousRetrievalLogic {
 
   public static List<SegmentScoreElement> retrieve(QueryContainer qc, String category,
       ReadableQueryConfig config) {
@@ -21,7 +21,7 @@ public class ContinousRetrievalLogic {
     if (retrievers.isEmpty()) {
       return new ArrayList<SegmentScoreElement>(0);
     }
-    return ContinousQueryDispatcher.retrieve(qc, retrievers, API.getInitializer(), config);
+    return ContinuousQueryDispatcher.retrieve(qc, retrievers, API.getInitializer(), config);
   }
 
   public static List<SegmentScoreElement> retrieve(String id, String category, ReadableQueryConfig config) {
@@ -30,19 +30,19 @@ public class ContinousRetrievalLogic {
     if (retrievers.isEmpty()) {
       return new ArrayList<SegmentScoreElement>(0);
     }
-    return ContinousQueryDispatcher.retrieve(id, retrievers, API.getInitializer(), config);
+    return ContinuousQueryDispatcher.retrieve(id, retrievers, API.getInitializer(), config);
   }
 
   public static void addRetrievalResultListener(RetrievalResultListener listener) {
-    ContinousQueryDispatcher.addRetrievalResultListener(listener);
+    ContinuousQueryDispatcher.addRetrievalResultListener(listener);
   }
 
   public static void removeRetrievalResultListener(RetrievalResultListener listener) {
-    ContinousQueryDispatcher.removeRetrievalResultListener(listener);
+    ContinuousQueryDispatcher.removeRetrievalResultListener(listener);
   }
 
   // TODO: Is this method actually needed?
   public static void shutdown() {
-    ContinousQueryDispatcher.shutdown();
+    ContinuousQueryDispatcher.shutdown();
   }
 }

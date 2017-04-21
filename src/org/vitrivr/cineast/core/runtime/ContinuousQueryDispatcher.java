@@ -30,7 +30,7 @@ import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.ScoreFusion;
 
-public class ContinousQueryDispatcher {
+public class ContinuousQueryDispatcher {
   private static final Logger LOGGER = LogManager.getLogger();
 
   private static final String LISTENER_NULL_MESSAGE = "Retrieval result listener cannot be null.";
@@ -55,7 +55,7 @@ public class ContinousQueryDispatcher {
       TObjectDoubleHashMap<Retriever> retrievers,
       RetrieverInitializer initializer,
       ReadableQueryConfig config) {
-    return new ContinousQueryDispatcher(r -> new RetrievalTask(r, query, config), retrievers,
+    return new ContinuousQueryDispatcher(r -> new RetrievalTask(r, query, config), retrievers,
         initializer).doRetrieve();
   }
 
@@ -63,7 +63,7 @@ public class ContinousQueryDispatcher {
       TObjectDoubleHashMap<Retriever> retrievers,
       RetrieverInitializer initializer,
       ReadableQueryConfig config) {
-    return new ContinousQueryDispatcher(r -> new RetrievalTask(r, segmentId, config), retrievers,
+    return new ContinuousQueryDispatcher(r -> new RetrievalTask(r, segmentId, config), retrievers,
         initializer).doRetrieve();
   }
 
@@ -83,7 +83,7 @@ public class ContinousQueryDispatcher {
     resultListeners.remove(listener);
   }
 
-  private ContinousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory,
+  private ContinuousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory,
       TObjectDoubleMap<Retriever> retrieverWeights,
       RetrieverInitializer initializer) {
     this.taskFactory = taskFactory;
@@ -189,7 +189,7 @@ public class ContinousQueryDispatcher {
         scoreById = scoreBySegmentId;
       } else {
         LOGGER.error(
-            "Unknown subclass {} of ScoreElement in ContinousQueryDispatcher.addRetrievalResult.",
+            "Unknown subclass {} of ScoreElement in ContinuousQueryDispatcher.addRetrievalResult.",
             element.getClass().getSimpleName());
         continue;
       }

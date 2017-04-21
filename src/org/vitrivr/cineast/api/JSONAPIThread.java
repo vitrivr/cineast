@@ -38,7 +38,7 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
-import org.vitrivr.cineast.core.util.ContinousRetrievalLogic;
+import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.explorative.PlaneHandler;
 import org.vitrivr.cineast.explorative.PlaneManager;
@@ -149,7 +149,7 @@ public class JSONAPIThread extends Thread {
 
           for (JsonValue _el : parr) {
             String _shotid = _el.asString();
-            result = ContinousRetrievalLogic.retrieve(_shotid, category.asString(), qconf);
+            result = ContinuousRetrievalLogic.retrieve(_shotid, category.asString(), qconf);
             for (SegmentScoreElement element : result) {
               String segmentId = element.getSegmentId();
               double score = element.getScore();
@@ -161,7 +161,7 @@ public class JSONAPIThread extends Thread {
           }
           for (JsonValue _el : narr) {
             String _shotid = _el.asString();
-            result = ContinousRetrievalLogic.retrieve(_shotid, category.asString(), qconf);
+            result = ContinuousRetrievalLogic.retrieve(_shotid, category.asString(), qconf);
             for (SegmentScoreElement element : result) {
               String segmentId = element.getSegmentId();
               double score = element.getScore();
@@ -230,10 +230,10 @@ public class JSONAPIThread extends Thread {
             List<SegmentScoreElement> scores;
             if (query.get("id") != null) {
               String id = query.get("id").asString();
-              scores = ContinousRetrievalLogic.retrieve(id, category.asString(), qconf);
+              scores = ContinuousRetrievalLogic.retrieve(id, category.asString(), qconf);
             } else {
               ImageQueryContainer qc = JSONUtils.queryContainerFromJSON(query);
-              scores = ContinousRetrievalLogic.retrieve(qc, category.asString(), qconf);
+              scores = ContinuousRetrievalLogic.retrieve(qc, category.asString(), qconf);
             }
             List<StringDoublePair> pairs = scores.stream().map(e -> new StringDoublePair(e.getSegmentId(), e.getScore())).collect(
                 Collectors.toList());
@@ -294,9 +294,9 @@ public class JSONAPIThread extends Thread {
             float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation 
             
             if(qc.hasId()){
-              result = ContinousRetrievalLogic.retrieve(qc.getId(), category, qconf);
+              result = ContinuousRetrievalLogic.retrieve(qc.getId(), category, qconf);
             }else{
-              result = ContinousRetrievalLogic.retrieve(qc, category, qconf);
+              result = ContinuousRetrievalLogic.retrieve(qc, category, qconf);
             }
             for (SegmentScoreElement element : result) {
               String segmentId = element.getSegmentId();
