@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.util.audio.pitch.estimation;
 
 import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
 import org.vitrivr.cineast.core.util.dsp.fft.FFT;
-import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
 import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
@@ -29,19 +28,50 @@ import java.util.List;
  */
 public class KLF0PitchEstimator {
     /** MIDI index of the minimum pitch to consider in the analysis. */
-    private static final int MIN_PITCH = 28;
+    private static final int DEFAULT_MIN_PITCH = 28;
 
     /** MIDI index of the maximum pitch to consider in the analysis. */
-    private static final int MAX_PITCH = 96;
+    private static final int DEFAULT_MAX_PITCH = 96;
 
     /** α value as defined in [1]. Suitable only for an analysis window of 96ms. */
-    private static final double ALPHA = 50.0f;
+    private static final float ALPHA = 50.0f;
 
     /** β value as defined in [1]. Suitable only for an analysis window of 96ms. */
-    private static final double BETA = 320.0f;
+    private static final float BETA = 320.0f;
+
+    /** Maximum pitch to consider (MIDI index of the pitch). */
+    private final int max;
+
+    /** Maximum pitch to consider (MIDI index of the pitch). */
+    private final int min;
+
+    /** Maximum pitch to consider (MIDI index of the pitch). */
+    private final float alpha;
+
+    /** Maximum pitch to consider (MIDI index of the pitch). */
+    private final float beta;
 
     /**
-     * Estimates the pithces in the provided STFT and returns a List of PitchCandidate lists (one
+     * Default constructor for KLF0PitchEstimator. Uses parameter described in [1].
+     */
+    public KLF0PitchEstimator() {
+        this(DEFAULT_MIN_PITCH, DEFAULT_MAX_PITCH, ALPHA, BETA);
+    }
+
+    /**
+     *
+     * @param min
+     * @param max
+     */
+    public KLF0PitchEstimator(int min, int max, float alpha, float beta) {
+        this.max = max;
+        this.min = min;
+        this.alpha = alpha;
+        this.beta = beta;
+    }
+
+    /**
+     * Estimates the pitches in the provided STFT and returns a List of PitchCandidate lists (one
      * list per FFT).
      *
      * @param stft STFT for which to estimate the pitches.
@@ -76,28 +106,45 @@ public class KLF0PitchEstimator {
         float test = 0, lasttest = 0;
         int loopcount = 1;
         while (true) {
+            /* Detect new candidate. */
             Pitch candidate = this.detect(spectrum, samplingrate, windowsize);
+
+            /* Test if that candidate already exists. */
             boolean exists = false;
             for (Pitch c : candidates) {
                 if (c.getFrequency() == candidate.getFrequency()) {
                     c.setSalience(candidate.getSalience() + c.getSalience());
                     exists = true;
+                    break;
                 }
             }
 
             if (!exists) candidates.add(candidate);
 
+            /* Conduct test and break if it fails. */
             lasttest = test;
             test = (float)((test + candidate.getSalience()) / Math.pow(loopcount, .7f));
             if (test <= lasttest) break;
             loopcount++;
 
+            /* Add candidate to list. */
+            candidates.add(candidate);
+
+            final float f0 = candidate.getFrequency();
+            final float tau = samplingrate/f0; /* Fundamental period, i.e. f0=fs/τ. */
+            final float dtau = 0.25f; /* Δτ/2, which is 0.25 according to [1]. */
+
             /* Subtract the information of the found pitch from the current spectrum. */
-            for (int i = 1; i * candidate.getFrequency() < samplingrate / 2; ++i) {
-                int index = FFTUtil.binIndex(i * candidate.getFrequency(), windowsize, samplingrate);
-                float weighting = (candidate.getFrequency() + 52) / (i * candidate.getFrequency() + 320);
-                spectrum.setValue(index, spectrum.getValue(index) *  (1 - 0.89f * weighting));
-                spectrum.setValue(index-1, spectrum.getValue(index-1) *  (1 - 0.89f * weighting));
+            for (int m = 1; m * candidate.getFrequency() < samplingrate / 2; m++) {
+                int max = Math.round((m*windowsize)/(tau - dtau));
+                int min = Math.round((m*windowsize)/(tau + dtau));
+                int max_bin = min;
+                for (int offset = min; offset <= max && offset < windowsize/2; offset++) {
+                    if (spectrum.getValue(offset) > spectrum.getValue(max_bin)) {
+                        max_bin = offset;
+                    }
+                }
+                spectrum.setValue(max_bin, spectrum.getValue(max_bin) - 0.89f * spectrum.getValue(max_bin) * this.g(f0, m));
             }
         }
 
@@ -112,36 +159,50 @@ public class KLF0PitchEstimator {
     /**
      * Detects the most salient F0 candidate in the provided spectrum.
      *
-     * @param spectrum Power spectrum to search for the candidate. According to [1], spectral whitening should be
-     *                 applied to the signal prior to F0 estimation.
+     * @param spectrum Power spectrum to search for the candidate.
      * @param samplingrate Samplingrate at which the original signal has been sampled.
      * @param windowsize Windowsize used in the FFT.
      */
     private Pitch detect(Spectrum spectrum, final float samplingrate, final int windowsize) {
         Pitch candidate = null;
-        for (int n = MIN_PITCH; n<= MAX_PITCH; n++) {
-            final float pitch = MidiUtil.midiToFrequency(n);
-            final float tau = samplingrate/pitch; /* Fundamental period, i.e. f0=fs/τ. */
-            final float dtau = 0.25f; /* Δτ/2, which is 0.25 according to [1]. */
-            float cSalience = 0; /* Salience of the candidate pitch. */
-            for (int m = 1; m * pitch < samplingrate / 2; m++) {
-                int bin = FFTUtil.binIndex(m * pitch, windowsize, samplingrate);
-                int max = Math.round((m*windowsize)/(tau - dtau));
-                int min = Math.round((m*windowsize)/(tau + dtau));
-                double val = 0;
-                for (int offset = min; offset <= max; offset++) {
-                    if (bin + offset < windowsize / 2) {
-                        val = Math.max(val, spectrum.getValue(offset));
-                    }
-                }
-                cSalience += val * this.g(pitch, m);
-            }
-            if (candidate == null || candidate.getSalience() < cSalience) {
-                candidate = new Pitch(pitch);
-                candidate.setSalience(cSalience);
+        for (int n = this.min; n<= this.max; n++) {
+            final float f0 = MidiUtil.midiToFrequency(n);
+            final double salience = this.salience(f0, spectrum, samplingrate, windowsize);
+            if (candidate == null || candidate.getSalience() < salience) {
+                candidate = new Pitch(f0);
+                candidate.setSalience(salience);
             }
         }
         return candidate;
+    }
+
+    /**
+     * Calculates and returns the salience of a f0 in a spectrum according to [1].
+     *
+     * @param f0 The f0 to calculate the salience for.
+     * @param spectrum The spectrum to check.
+     * @param samplingrate The rate at which the original audio has been sampled.
+     * @param samplingrate The windowsize used during creation of the spectrum.
+     * @return Salience of f0 in the spectrum.
+     */
+    private final double salience(float f0, Spectrum spectrum, final float samplingrate, final int windowsize) {
+        final float tau = samplingrate/f0; /* Fundamental period, i.e. f0=fs/τ. */
+        final float dtau = 0.25f; /* Δτ/2, which is 0.25 according to [1]. */
+        float salience = 0; /* Salience of the candidate pitch. */
+
+        for (int m = 1; m * f0 < samplingrate/2; m++) {
+            int max = Math.round((m*windowsize)/(tau - dtau));
+            int min = Math.round((m*windowsize)/(tau + dtau));
+            int max_bin = min;
+            for (int offset = min; offset <= max && offset < windowsize/2; offset++) {
+                if (spectrum.getValue(offset) > spectrum.getValue(max_bin)) {
+                    max_bin = offset;
+                }
+            }
+            salience += spectrum.getValue(max_bin) * this.g(f0, m);
+        }
+
+        return salience;
     }
 
 
@@ -154,6 +215,6 @@ public class KLF0PitchEstimator {
      * @return weight for the provided f0/partial constellation.
      */
     private double g(float f0, int m) {
-        return (f0 + ALPHA)/(m*f0 + BETA);
+        return (f0 + this.alpha)/(m*f0 + this.beta);
     }
 }
