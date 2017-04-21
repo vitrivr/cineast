@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
-import org.vitrivr.cineast.core.util.GroupingUtils;
+import org.vitrivr.cineast.core.util.GroupingUtil;
 
 /**
  * Instances of this class denote a specific score for a particular document, i.e., a document id
@@ -35,7 +35,7 @@ public interface ScoreElement {
    * @return list of the maximum score element of each id
    */
   static List<ScoreElement> filterMaximumScores(Stream<ScoreElement> elements) {
-    return GroupingUtils.filterMaxByGroup(elements, e -> e.getId(), SCORE_COMPARATOR);
+    return GroupingUtil.filterMaxByGroup(elements, e -> e.getId(), SCORE_COMPARATOR);
   }
 
   static List<SegmentScoreElement> segmentsFromSegmentsMap(

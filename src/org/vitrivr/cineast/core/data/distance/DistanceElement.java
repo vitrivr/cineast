@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.util.GroupingUtils;
+import org.vitrivr.cineast.core.util.GroupingUtil;
 
 public interface DistanceElement {
   String getId();
@@ -42,6 +42,6 @@ public interface DistanceElement {
       Comparator.<DistanceElement>comparingDouble(e -> e.getDistance()).reversed();
 
   static List<DistanceElement> filterMinimumDistances(Stream<DistanceElement> elements) {
-    return GroupingUtils.filterMaxByGroup(elements, e -> e.getId(), INVERSE_DISTANCE_COMPARATOR);
+    return GroupingUtil.filterMaxByGroup(elements, e -> e.getId(), INVERSE_DISTANCE_COMPARATOR);
   }
 }

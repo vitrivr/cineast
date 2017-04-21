@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class GroupingUtils {
-  private GroupingUtils() {}
+public class GroupingUtil {
+  private GroupingUtil() {}
 
   /**
    * Filters the given {@code elements} by keeping only the greatest element of each group.
