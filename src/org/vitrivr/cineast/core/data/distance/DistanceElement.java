@@ -23,18 +23,15 @@ public interface DistanceElement {
   }
 
   static <T extends DistanceElement> T create(Class<T> clazz, String id, double distance) {
-    // TODO: use ReflectionHelper.instanciate instead?
     if (clazz == SegmentDistanceElement.class) {
       return clazz.cast(new SegmentDistanceElement(id, distance));
     } else if (clazz == ObjectDistanceElement.class) {
       return clazz.cast(new ObjectDistanceElement(id, distance));
     } else {
-      String className = clazz.getSimpleName();
-      Logger logger = LogManager.getLogger();
-      logger.error("Unknown subclass {} of DistanceElement in ADAMproSelector.getNearestNeighbours",
-          className);
-      // TODO: Throw IllegalArgumentException instead of returning null?
-      return null; // Using null because this is a programming error
+      // This is a programming error
+      String errorMessage = "Unknown subclass " + clazz.getSimpleName() + " of DistanceElement";
+      LogManager.getLogger().error(errorMessage);
+      throw new IllegalArgumentException(errorMessage);
     }
   }
 

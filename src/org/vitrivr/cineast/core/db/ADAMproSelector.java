@@ -360,9 +360,7 @@ public class ADAMproSelector implements DBSelector {
       }
       double distance = msg.getDataMap().get("ap_distance").getDoubleData();
       T e = DistanceElement.create(distanceElementClass, id, distance);
-      if (e != null) {
-        result.add(e);
-      }
+      result.add(e);
     }
 
     return result;
