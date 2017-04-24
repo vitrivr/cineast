@@ -59,6 +59,9 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
 
     Map<String, PrimitiveTypeProvider> map;
     while ((map = importer.readNextAsMap()) != null) {
+      if(!map.containsKey(column)){
+        continue;
+      }
       double d = distance.applyAsDouble(vector, map.get(column).getFloatArray());
       map.put("distance", new FloatTypeProvider((float) d));
       knn.add(map);
