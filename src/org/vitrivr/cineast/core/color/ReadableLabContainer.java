@@ -102,15 +102,4 @@ public class ReadableLabContainer extends AbstractColorContainer<ReadableLabCont
   public String toFeatureString() {
     return "<" + L + ", " + a + ", " + b + ">";
   }
-
-  @Override
-  public float[] toArray(float[] arr) {
-    if (arr != null && arr.length == 3) {
-      arr[0] = L;
-      arr[1] = a;
-      arr[2] = b;
-      return arr;
-    }
-    return new float[]{L, a, b};
-  }
 }

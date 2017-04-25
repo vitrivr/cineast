@@ -79,18 +79,4 @@ public abstract class Histogram implements ReadableFloatVector {
     throw new IndexOutOfBoundsException(
         num + " is not a valid bin index for a histogram with " + this.bins.length + " bins");
   }
-
-  @Override
-  public float[] toArray(float[] arr) {
-    float[] _return;
-    if (arr != null && arr.length == this.bins.length) {
-      _return = arr;
-    } else {
-      _return = new float[this.bins.length];
-    }
-    for (int i = 0; i < _return.length; ++i) {
-      _return[i] = (float) this.bins[i];
-    }
-    return _return;
-  }
 }

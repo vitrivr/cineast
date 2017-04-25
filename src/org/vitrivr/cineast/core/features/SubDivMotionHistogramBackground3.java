@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
@@ -47,6 +48,6 @@ public class SubDivMotionHistogramBackground3 extends SubDivMotionHistogram {
 			}
 		}
 		FloatVectorImpl fv = new FloatVectorImpl(tmp);
-		return getSimilar(fv.toArray(null), qc);
+    return getSimilar(ReadableFloatVector.toArray(fv), qc);
 	}
 }

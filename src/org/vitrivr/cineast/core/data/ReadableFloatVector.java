@@ -10,12 +10,29 @@ public interface ReadableFloatVector {
   float getElement(int num);
 
   /**
-   * maps the vector to a float array
-   *
-   * @param arr the array to write into. If arr is null or does not have the correct length, a new
-   * array is generated instead
+   * @param vector the vector
+   * @return a new array containing the vector elements
    */
-  float[] toArray(float[] arr);
+  static float[] toArray(ReadableFloatVector vector) {
+    return toArray(vector, new float[vector.getElementCount()]);
+  }
+
+  /**
+   * @param vector the vector
+   * @param array the array to write into. If {@code array} does not have match length, a new array
+   *              is generated instead.
+   * @return an array containing the vector elements
+   */
+  static float[] toArray(ReadableFloatVector vector, float[] array) {
+    int size = vector.getElementCount();
+    if (array.length != size) {
+      array = new float[size];
+    }
+    for (int i = 0; i < size; ++i) {
+      array[i] = vector.getElement(i);
+    }
+    return array;
+  }
 
   /**
    * @param vector the vector

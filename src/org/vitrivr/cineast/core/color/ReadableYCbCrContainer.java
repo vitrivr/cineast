@@ -36,15 +36,4 @@ public class ReadableYCbCrContainer extends
   public int getCr() {
     return this.cr;
   }
-
-  @Override
-  public float[] toArray(float[] arr) {
-    if (arr != null && arr.length == 3) {
-      arr[0] = y / 255f;
-      arr[1] = cb / 255f;
-      arr[2] = cr / 255f;
-      return arr;
-    }
-    return new float[]{y, cb, cr};
-  }
 }

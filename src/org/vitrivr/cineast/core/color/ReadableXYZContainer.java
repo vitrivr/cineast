@@ -45,15 +45,4 @@ public class ReadableXYZContainer extends AbstractColorContainer<ReadableXYZCont
   public float getZ() {
     return this.z;
   }
-
-  @Override
-  public float[] toArray(float[] arr) {
-    if (arr != null && arr.length == 3) {
-      arr[0] = x;
-      arr[1] = y;
-      arr[2] = z;
-      return arr;
-    }
-    return new float[]{x, y, z};
-  }
 }

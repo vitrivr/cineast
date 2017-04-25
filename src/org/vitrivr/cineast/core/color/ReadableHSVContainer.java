@@ -46,15 +46,4 @@ public class ReadableHSVContainer extends AbstractColorContainer<ReadableHSVCont
   public float getV() {
     return this.v;
   }
-
-  @Override
-  public float[] toArray(float[] arr) {
-    if (arr != null && arr.length == 3) {
-      arr[0] = h;
-      arr[1] = s;
-      arr[2] = v;
-      return arr;
-    }
-    return new float[]{h, s, v};
-  }
 }

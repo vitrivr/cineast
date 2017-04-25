@@ -87,19 +87,4 @@ public class FloatVectorImpl implements FloatVector {
   public String toString() {
     return this.toFeatureString();
   }
-
-  @Override
-  public float[] toArray(float[] arr) {
-    float[] _return;
-    if (arr != null && arr.length == this.list.size()) {
-      _return = arr;
-    } else {
-      _return = new float[this.list.size()];
-    }
-    for (int i = 0; i < _return.length; ++i) {
-      _return[i] = this.list.get(i);
-    }
-    return _return;
-  }
-
 }

@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.SubDivMotionHistogram;
@@ -13,41 +14,41 @@ import org.vitrivr.cineast.core.util.MathHelper;
 
 public class SubDivMotionHistogramBackground5 extends SubDivMotionHistogram {
 
-	public SubDivMotionHistogramBackground5() {
-		super("features_SubDivMotionHistogramBackground5", "hists", MathHelper.SQRT2 * 25);
-	}
+  public SubDivMotionHistogramBackground5() {
+    super("features_SubDivMotionHistogramBackground5", "hists", MathHelper.SQRT2 * 25);
+  }
 
-	@Override
-	public void processShot(SegmentContainer shot) {
-		if(!phandler.idExists(shot.getId())){
-			
-			Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(5, shot.getBgPaths());
-			
-			FloatVector sum = new FloatVectorImpl(pair.first);
-			ArrayList<Float> tmp = new ArrayList<Float>(5 * 5 * 8);
-			for(List<Float> l : pair.second){
-				for(float f : l){
-					tmp.add(f);
-				}
-			}
-			FloatVectorImpl fv = new FloatVectorImpl(tmp);
+  @Override
+  public void processShot(SegmentContainer shot) {
+    if (!phandler.idExists(shot.getId())) {
 
-			persist(shot.getId(), sum, fv);
-		}
-	}
+      Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(5, shot.getBgPaths());
 
-	@Override
-	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(5, sc.getBgPaths());
+      FloatVector sum = new FloatVectorImpl(pair.first);
+      ArrayList<Float> tmp = new ArrayList<Float>(5 * 5 * 8);
+      for (List<Float> l : pair.second) {
+        for (float f : l) {
+          tmp.add(f);
+        }
+      }
+      FloatVectorImpl fv = new FloatVectorImpl(tmp);
 
-		ArrayList<Float> tmp = new ArrayList<Float>(5 * 5 * 8);
-		for (List<Float> l : pair.second) {
-			for (float f : l) {
-				tmp.add(f);
-			}
-		}
-		FloatVectorImpl fv = new FloatVectorImpl(tmp);
-		return getSimilar(fv.toArray(null), qc);
-	}
+      persist(shot.getId(), sum, fv);
+    }
+  }
+
+  @Override
+  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+    Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(5, sc.getBgPaths());
+
+    ArrayList<Float> tmp = new ArrayList<Float>(5 * 5 * 8);
+    for (List<Float> l : pair.second) {
+      for (float f : l) {
+        tmp.add(f);
+      }
+    }
+    FloatVectorImpl fv = new FloatVectorImpl(tmp);
+    return getSimilar(ReadableFloatVector.toArray(fv), qc);
+  }
 
 }

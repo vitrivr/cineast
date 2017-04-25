@@ -113,15 +113,4 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
   public String toFeatureString() {
     return "<" + r + ", " + g + ", " + b + ">";
   }
-
-  @Override
-  public float[] toArray(float[] arr) {
-    if (arr != null && arr.length == 3) {
-      arr[0] = r / 255f;
-      arr[1] = g / 255f;
-      arr[2] = b / 255f;
-      return arr;
-    }
-    return new float[]{r / 255f, g / 255f, b / 255f};
-  }
 }
