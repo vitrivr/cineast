@@ -30,6 +30,7 @@ public class Config {
     private NeuralNetConfig neuralnet;
     private QueryConfig query;
     private HashMap<MediaType, DecoderConfig> decoders;
+    private BenchmarkConfig benchmark = new BenchmarkConfig();
 
 
     /**
@@ -129,4 +130,11 @@ public class Config {
         this.decoders = decoders;
     }
 
+    @JsonProperty
+    public BenchmarkConfig getBenchmark() {
+        return benchmark;
+    }
+    public void setBenchmark(BenchmarkConfig benchmark) {
+        this.benchmark = benchmark;
+    }
 }
