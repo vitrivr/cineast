@@ -1,9 +1,8 @@
 package org.vitrivr.cineast.core.metadata;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
-
 import java.nio.file.Path;
 import java.util.List;
+import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 
 /**
  * @author rgasser
@@ -11,21 +10,36 @@ import java.util.List;
  * @created 19.01.17
  */
 public interface MetadataExtractor {
-    /**
-     * Extracts the metadata from the specified path and returns a List of MultimediaMetadataDescriptor objects
-     * (one for each metadata entry).
-     *
-     * @param objectId ID of the multimedia object for which metadata will be generated.
-     * @param path Path to the file for which metadata should be extracted.
-     * @return List of MultimediaMetadataDescriptors. The list may be empty but must always be returned!
-     */
-    List<MultimediaMetadataDescriptor> extract(String objectId, Path path);
+  /**
+   * Initializes the extractor. The default implementation does nothing.
+   */
+  default void init() {
+    // As a default do nothing
+  }
 
-    /**
-     * Returns a name that helps to identify the metadata domain. E.g. EXIF for EXIF
-     * metadata or DC for Dublin Core.
-     *
-     * @return Name of the metadata domain for which this extractor returns metadata.
-     */
-    String domain();
+  /**
+   * Extracts the metadata from the specified path and returns a List of
+   * MultimediaMetadataDescriptor objects (one for each metadata entry).
+   *
+   * @param objectId ID of the multimedia object for which metadata will be generated.
+   * @param path Path to the file for which metadata should be extracted.
+   * @return List of MultimediaMetadataDescriptors. The list may be empty but must always be
+   *         returned!
+   */
+  List<MultimediaMetadataDescriptor> extract(String objectId, Path path);
+
+  /**
+   * Closes and cleans up the extractor. The default implementation does nothing.
+   */
+  default void finish() {
+    // As a default do nothing
+  }
+
+  /**
+   * Returns a name that helps to identify the metadata domain. E.g. EXIF for EXIF
+   * metadata or DC for Dublin Core.
+   *
+   * @return Name of the metadata domain for which this extractor returns metadata.
+   */
+  String domain();
 }
