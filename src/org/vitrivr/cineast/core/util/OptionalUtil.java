@@ -1,8 +1,11 @@
 package org.vitrivr.cineast.core.util;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.vitrivr.cineast.core.data.Pair;
 
 public class OptionalUtil {
@@ -49,5 +52,34 @@ public class OptionalUtil {
     } else {
       return Objects.requireNonNull(secondSupplier.get());
     }
+  }
+
+  /**
+   * If a value of the given {@code Optional} is present, returns a sequential {@link Stream}
+   * containing only that value, otherwise returns an empty {@code Stream}.
+   *
+   * @param optional the {@code Optional}
+   * @return the optional value as a {@code Stream}
+   * @throws NullPointerException if the given {@code Optional} is null
+   */
+  @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+  public static <T> Stream<T> toStream(Optional<T> optional) {
+    Objects.requireNonNull(optional);
+    return optional
+        .map(t -> Stream.of(t))
+        .orElse(Stream.empty());
+  }
+
+  /**
+   * If a value of the given {@code Optional} is present, returns a {@link List} containing only
+   * that value, otherwise returns an empty {@code List}.
+   *
+   * @param optional the {@code Optional}
+   * @return the optional value as a {@code List}
+   * @throws NullPointerException if the given {@code Optional} is null
+   */
+  @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+  public static <T> List<T> toList(Optional<T> optional) {
+    return toStream(optional).collect(Collectors.toList());
   }
 }
