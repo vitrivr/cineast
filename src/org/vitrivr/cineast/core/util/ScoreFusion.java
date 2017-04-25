@@ -41,6 +41,7 @@ public class ScoreFusion {
       }
       fuseObjectScoreIntoSegments(scoreBySegmentId, objectScore, segments);
     }
+    segmentLookup.close();
   }
 
   private static void fuseObjectScoreIntoSegments(TObjectDoubleMap<String> scoreBySegmentId,

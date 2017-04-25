@@ -46,43 +46,75 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   protected static int get(Color c) {
     switch (c) {
-      case Black:   return 0;
-      case Blue:    return 1;
-      case Brown:   return 2;
-      case Cyan:    return 3;
-      case Green:   return 4;
-      case Grey:    return 5;
-      case Magenta: return 6;
-      case Navy:    return 7;
-      case Orange:  return 8;
-      case Pink:    return 9;
-      case Red:     return 10;
-      case Teal:    return 11;
-      case Violet:  return 12;
-      case White:   return 13;
-      case Yellow:  return 14;
-      default:      return -1;
+    case Black:
+      return 0;
+    case Blue:
+      return 1;
+    case Brown:
+      return 2;
+    case Cyan:
+      return 3;
+    case Green:
+      return 4;
+    case Grey:
+      return 5;
+    case Magenta:
+      return 6;
+    case Navy:
+      return 7;
+    case Orange:
+      return 8;
+    case Pink:
+      return 9;
+    case Red:
+      return 10;
+    case Teal:
+      return 11;
+    case Violet:
+      return 12;
+    case White:
+      return 13;
+    case Yellow:
+      return 14;
+    default:
+      return -1;
     }
   }
 
   protected static Color get(int i) {
-    switch(i) {
-      case 0:  return Color.Black;
-      case 1:  return Color.Blue;
-      case 2:  return Color.Brown;
-      case 3:  return Color.Cyan;
-      case 4:  return Color.Green;
-      case 5:  return Color.Grey;
-      case 6:  return Color.Magenta;
-      case 7:  return Color.Navy;
-      case 8:  return Color.Orange;
-      case 9:  return Color.Pink;
-      case 10: return Color.Red;
-      case 11: return Color.Teal;
-      case 12: return Color.Violet;
-      case 13: return Color.White;
-      case 14: return Color.Yellow;
-      default: return Color.Black;
+    switch (i) {
+    case 0:
+      return Color.Black;
+    case 1:
+      return Color.Blue;
+    case 2:
+      return Color.Brown;
+    case 3:
+      return Color.Cyan;
+    case 4:
+      return Color.Green;
+    case 5:
+      return Color.Grey;
+    case 6:
+      return Color.Magenta;
+    case 7:
+      return Color.Navy;
+    case 8:
+      return Color.Orange;
+    case 9:
+      return Color.Pink;
+    case 10:
+      return Color.Red;
+    case 11:
+      return Color.Teal;
+    case 12:
+      return Color.Violet;
+    case 13:
+      return Color.White;
+    case 14:
+      return Color.Yellow;
+    default:
+      return Color.Black;
     }
   }
 
@@ -101,8 +133,8 @@ public class AverageColorRaster extends AbstractFeatureModule {
     for (int i : colors) {
       ints.add(i);
     }
-    ArrayList<LinkedList<Integer>> partitions = GridPartitioner
-        .partition(ints, avg.getWidth(), avg.getHeight(), 8, 8);
+    ArrayList<LinkedList<Integer>> partitions = GridPartitioner.partition(ints, avg.getWidth(),
+        avg.getHeight(), 8, 8);
 
     float[] raster = new float[64];
     float[] hist = new float[15];
@@ -119,7 +151,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   @Override
   public void processShot(SegmentContainer shot) {
-    LOGGER.entry();
+    LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {
 
       Pair<float[], float[]> pair = computeRaster(shot);
@@ -127,14 +159,13 @@ public class AverageColorRaster extends AbstractFeatureModule {
       persist(shot.getId(), new FloatVectorImpl(pair.first), new FloatVectorImpl(pair.second));
 
     }
-    LOGGER.exit();
+    LOGGER.traceExit();
   }
 
   protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {
     PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2);
     this.phandler.persist(tuple);
   }
-
 
   protected static double register(float[] query, float[] db) {
     double best = 0;
@@ -170,76 +201,81 @@ public class AverageColorRaster extends AbstractFeatureModule {
       return 1d;
     }
     switch (c1) {
-      case Black:
-        if (c2 == Color.Grey) {
-          return 0.25;
-        }
-        break;
-      case Blue:
-        if (c2 == Color.Navy || c2 == Color.Violet) {
-          return 0.5;
-        }
-        if (c2 == Color.Cyan) {
-          return 0.25;
-        }
-        break;
-      case Brown:
-        if (c2 == Color.Grey) {
-          return 0.5;
-        }
-        break;
-      case Cyan:
-        if (c2 == Color.White) {
-          return 0.25;
-        }
-        break;
-      case Green:
-        if (c2 == Color.Teal) {
-          return 0.5;
-        }
-        break;
-      case Grey:
-        if (c2 == Color.White || c2 == Color.Black) {
-          return 0.125;
-        }
-        break;
-      case Magenta:
-        if (c2 == Color.Violet || c2 == Color.Pink) {
-          return 0.5;
-        }
-        break;
-      case Orange:
-        if (c2 == Color.Red || c2 == Color.Yellow) {
-          return 0.5;
-        }
-        break;
-      case Pink:
-        if (c2 == Color.Red) {
-          return 0.5;
-        }
-        break;
-      default:
-        return 0;
+    case Black:
+      if (c2 == Color.Grey) {
+        return 0.25;
+      }
+      break;
+    case Blue:
+      if (c2 == Color.Navy || c2 == Color.Violet) {
+        return 0.5;
+      }
+      if (c2 == Color.Cyan) {
+        return 0.25;
+      }
+      break;
+    case Brown:
+      if (c2 == Color.Grey) {
+        return 0.5;
+      }
+      break;
+    case Cyan:
+      if (c2 == Color.White) {
+        return 0.25;
+      }
+      break;
+    case Green:
+      if (c2 == Color.Teal) {
+        return 0.5;
+      }
+      break;
+    case Grey:
+      if (c2 == Color.White || c2 == Color.Black) {
+        return 0.125;
+      }
+      break;
+    case Magenta:
+      if (c2 == Color.Violet || c2 == Color.Pink) {
+        return 0.5;
+      }
+      break;
+    case Orange:
+      if (c2 == Color.Red || c2 == Color.Yellow) {
+        return 0.5;
+      }
+      break;
+    case Pink:
+      if (c2 == Color.Red) {
+        return 0.5;
+      }
+      break;
+    default:
+      return 0;
     }
     return 0;
   }
 
-
   private List<ScoreElement> getSimilar(float[] raster, float[] hist, ReadableQueryConfig rqc) {
-    int limit = Config.sharedConfig().getRetriever().getMaxResultsPerModule() * 5;
+    int limit = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
 
     QueryConfig qc = new QueryConfig(rqc).setDistanceIfEmpty(Distance.chisquared);
 
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector
-        .getNearestNeighbourRows(limit, hist, "hist", qc);
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getNearestNeighbourRows(limit * 5,
+        hist, "hist", qc);
 
     ArrayList<ScoreElement> scores = new ArrayList<>(rows.size());
     for (Map<String, PrimitiveTypeProvider> map : rows) {
       String id = map.get("id").getString();
-      double score = this.register(raster, map.get("raster").getFloatArray());
+      double score = register(raster, map.get("raster").getFloatArray());
       scores.add(new SegmentScoreElement(id, score));
     }
-    return scores;
+
+    scores.sort(ScoreElement.SCORE_COMPARATOR.reversed());
+    if (scores.size() > limit) {
+      return scores.subList(0, limit);
+    } else {
+      return scores;
+    }
   }
 
   @Override
