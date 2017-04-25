@@ -13,7 +13,7 @@ import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 public class JsonMetadataExtractor implements MetadataExtractor {
-  private static final String DOMAIN = "json";
+  private static final String DOMAIN = "JSON";
   private static final String JSON_EXTENSION = "json";
 
   private static final JacksonJsonProvider jacksonJsonReader = new JacksonJsonProvider();
@@ -50,15 +50,5 @@ public class JsonMetadataExtractor implements MetadataExtractor {
         .map(e -> MultimediaMetadataDescriptor
             .newMultimediaMetadataDescriptor(objectId, this.domain(), e.getKey(), e.getValue()))
         .collect(Collectors.toList());
-  }
-
-  public static void main(String[] args) {
-    Optional<Map<String, Object>> o = extractJsonMetadata(Paths.get("/tmp/somePath"));
-    if (o.isPresent()) {
-      System.out.println("Valid json:");
-      o.get().forEach((k, v) -> System.out.println(k + "=" + v));
-    } else {
-      System.out.println("Invalid json.");
-    }
   }
 }
