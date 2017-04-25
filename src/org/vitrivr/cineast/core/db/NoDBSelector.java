@@ -1,19 +1,16 @@
 package org.vitrivr.cineast.core.db;
 
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 
 /**
- * 
- * @author Luca Rossetto
- * 
- * Helper class to disable database lookups
+ * Helper class to disable database lookups.
  *
+ * @author Luca Rossetto
  */
 public class NoDBSelector implements DBSelector {
 
@@ -28,19 +25,25 @@ public class NoDBSelector implements DBSelector {
   }
 
   @Override
-  public List<StringDoublePair> getNearestNeighbours(int k, float[] vector, String column,
-      QueryConfig config) {
+  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector,
+      String column, Class<T> distanceElementClass, ReadableQueryConfig config) {
     return new ArrayList<>(0);
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
-      String column, QueryConfig config) {
+      String column, ReadableQueryConfig config) {
     return new ArrayList<>(0);
   }
 
   @Override
   public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
+    return new ArrayList<>(0);
+  }
+
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
+      Iterable<String> values) {
     return new ArrayList<>(0);
   }
 
@@ -71,12 +74,6 @@ public class NoDBSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> preview(int k) {
-    return new ArrayList<>(0);
-  }
-
-  @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
-      Iterable<String> values) {
     return new ArrayList<>(0);
   }
 

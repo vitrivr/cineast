@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.run;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
@@ -68,7 +69,7 @@ public class ExtractionDispatcher {
             LOGGER.warn("The path '{}' specified in the extraction configuration does not exist!", path.toString());
             return false;
         }
-        this.paths = Files.walk(path, this.context.depth())
+        this.paths = Files.walk(path, this.context.depth(), FileVisitOption.FOLLOW_LINKS)
                      .filter(p -> {
                          try {
                              return Files.exists(p) && Files.isRegularFile(p) && !Files.isHidden(p) && Files.isReadable(p);

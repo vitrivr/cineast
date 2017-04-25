@@ -1,3 +1,4 @@
+*.orig
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -19,19 +20,20 @@ bin
 
 
 .idea
-proto/
-representative_frames/
-thumbnails/
-queryImages/
-src/org/vitrivr/cineast/test/
+/proto/
+/representative_frames/
+/thumbnails/
+/queryImages/
+/src/org/vitrivr/cineast/test/
 
 ##Framecache
-framecache_*
+/framecache_*
 
 ##Art-UI
-cache/
-mycache/
+/cache/
+/mycache/
 
 ##Tensorflow
 *.tfmodel
-data/
+/data/
+/retrieval_results/

@@ -8,15 +8,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
-
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Position;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.NeuralNetConfig;
-import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
@@ -28,10 +30,6 @@ import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFacto
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.NeuralNetUtil;
 import org.vitrivr.cineast.core.util.TimeHelper;
-
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.geometry.Position;
-import net.coobird.thumbnailator.geometry.Positions;
 
 /**
  * VGG16-Feature module
@@ -100,7 +98,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
      */
     @Override
     public void processShot(SegmentContainer shot) {
-        LOGGER.entry();
+        LOGGER.traceEntry();
         TimeHelper.tic();
         if (!phandler.idExists(shot.getId())) {
             BufferedImage keyframe = shot.getMostRepresentativeFrame().getImage().getBufferedImage();
@@ -125,7 +123,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
             LOGGER.trace("NeuralNetFeature.processShot() done in {}",
                     TimeHelper.toc());
         }
-        LOGGER.exit();
+        LOGGER.traceExit();
     }
 
     /**
@@ -134,7 +132,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
      * It's also not clear yet if we could combine labels and input image
      */
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         return getSimilar(sc, qc, classificationSelector, cutoff);
     }
 

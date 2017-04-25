@@ -33,7 +33,7 @@ public class JSONUtils {
 	private JSONUtils(){}
 	
 	public static Pair<ImageQueryContainer, TObjectDoubleHashMap<String>> readQueryFromJSON(Reader reader){
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		try {
 			JsonObject jobj_in = JsonObject.readFrom(reader);
 			ImageQueryContainer qc = queryContainerFromJSON(jobj_in);
@@ -42,7 +42,7 @@ public class JSONUtils {
 			
 			TObjectDoubleHashMap<String> weightMap = getWeightsFromJsonString(weights);
 			
-			return LOGGER.exit(new Pair<ImageQueryContainer, TObjectDoubleHashMap<String>>(qc, weightMap));
+			return LOGGER.traceExit(new Pair<ImageQueryContainer, TObjectDoubleHashMap<String>>(qc, weightMap));
 		} catch (IOException e) {
 			LOGGER.error(LogHelper.getStackTrace(e));
 			return null;
@@ -186,7 +186,7 @@ public class JSONUtils {
 			ids[i++] = sdp.key;
 		}
 		
-		Map<String, SegmentDescriptor> map = sl.lookUpShots(ids);
+		Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
 		
 		for(String id : ids){
 			SegmentDescriptor sd = map.get(id);
@@ -223,7 +223,7 @@ public class JSONUtils {
 			ids[i++] = sdp.key;
 		}
 		
-		Map<String, SegmentDescriptor> map = sl.lookUpShots(ids);
+		Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
 		
 		HashSet<String> videoIds = new HashSet<>();
 		for(String id : ids){
@@ -242,7 +242,7 @@ public class JSONUtils {
 		
 		ArrayList<MultimediaObjectDescriptor> vdList = new ArrayList<>(vids.length);
 		
-		Map<String, MultimediaObjectDescriptor> vmap = vl.lookUpVideos(vids);
+		Map<String, MultimediaObjectDescriptor> vmap = vl.lookUpObjects(vids);
 		
 		for(String vid : vids){
 			vdList.add(vmap.get(vid));

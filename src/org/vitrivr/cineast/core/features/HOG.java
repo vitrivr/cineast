@@ -1,21 +1,19 @@
 package org.vitrivr.cineast.core.features;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.abstracts.AbstractCodebookFeatureModule;
-import org.vitrivr.cineast.core.util.images.HOGHelper;
-
 import boofcv.abst.feature.dense.DescribeImageDense;
 import boofcv.struct.feature.TupleDesc_F64;
 import boofcv.struct.image.GrayU8;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.features.abstracts.AbstractCodebookFeatureModule;
+import org.vitrivr.cineast.core.util.images.HOGHelper;
 
 /**
  * @author rgasser
@@ -65,13 +63,13 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
      * @return
      */
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig rqc) {
         long start = System.currentTimeMillis();
         LOGGER.traceEntry();
 
-        qc.setDistanceIfEmpty(QueryConfig.Distance.euclidean);
+        ReadableQueryConfig qc = setQueryConfig(rqc);
 
-        List<StringDoublePair> results = null;
+        List<ScoreElement> results = null;
         BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
         if (image != null) {
             DescribeImageDense<GrayU8, TupleDesc_F64> hog = HOGHelper.getHOGDescriptors(image);

@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
+import java.util.stream.Stream;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
@@ -18,134 +22,105 @@ import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.MathHelper;
-
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 public abstract class AbstractFeatureModule implements Extractor, Retriever {
-    protected SimpleFeatureDescriptorWriter writer;
-	protected DBSelector selector;
-	protected final float maxDist;
-	protected final String tableName;
-	protected PersistencyWriter<?> phandler;
+  protected SimpleFeatureDescriptorWriter writer;
+  protected DBSelector selector;
+  protected final float maxDist;
+  protected final String tableName;
+  protected PersistencyWriter<?> phandler;
+  private CorrespondenceFunction linearCorrespondence;
 
+  protected AbstractFeatureModule(String tableName, float maxDist) {
+    this.tableName = tableName;
+    this.maxDist = maxDist;
+    this.linearCorrespondence = CorrespondenceFunction.linear(maxDist);
+  }
 
-	protected AbstractFeatureModule(String tableName, float maxDist){
-		this.tableName = tableName;
-		this.maxDist = maxDist;
-	}
+  @Override
+  public void init(PersistencyWriterSupplier phandlerSupply) {
+    this.phandler = phandlerSupply.get();
+    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName, 10);
+  }
 
-	@Override
-	public void init(PersistencyWriterSupplier phandlerSupply) {
-	    this.phandler = phandlerSupply.get();
-	    this.writer = new SimpleFeatureDescriptorWriter(this.phandler, this.tableName, 10) ;
-	}
+  @Override
+  public void init(DBSelectorSupplier selectorSupply) {
+    this.selector = selectorSupply.get();
+    this.selector.open(this.tableName);
+  }
 
-	@Override
-	public void init(DBSelectorSupplier selectorSupply) {
-		this.selector = selectorSupply.get();
-		this.selector.open(this.tableName);
-	}
+  private float[] arrayCache = null; // avoiding the creation of new arrays on every call
 
-	private float[] arrayCache = null; //avoiding the creation of new arrays on every call
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void persist(String shotId, ReadableFloatVector fv) {
-        SimpleFeatureDescriptor descriptor = new SimpleFeatureDescriptor(shotId, fv);
-		this.writer.write(descriptor);
-	}
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  protected void persist(String shotId, ReadableFloatVector fv) {
+    SimpleFeatureDescriptor descriptor = new SimpleFeatureDescriptor(shotId, fv);
+    this.writer.write(descriptor);
+  }
 
-	protected void persist(String shotId, List<ReadableFloatVector> fvs) {
-		List<SimpleFeatureDescriptor> entities = fvs.stream()
-                .map(fv -> new SimpleFeatureDescriptor(shotId, fv))
-                .collect(Collectors.toList());
-		this.writer.write(entities);
-	}
+  protected void persist(String shotId, List<ReadableFloatVector> fvs) {
+    List<SimpleFeatureDescriptor> entities = fvs.stream()
+        .map(fv -> new SimpleFeatureDescriptor(shotId, fv))
+        .collect(Collectors.toList());
+    this.writer.write(entities);
+  }
 
-	protected QueryConfig setQueryConfig(QueryConfig qc){
-	  return qc;
-	}
-	
-	@Override
-	public List<StringDoublePair> getSimilar(String shotId, QueryConfig qc) {
-		List<float[]> list = this.selector.getFeatureVectors("id", shotId, "feature");
-		if(list.isEmpty()){
-			return new ArrayList<>(1);
-		}
-		if(list.size() == 1){
-			return getSimilar(list.get(0), qc);
-		}
+  protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+    return new QueryConfig(qc).setCorrespondenceFunctionIfEmpty(this.linearCorrespondence);
+  }
 
-		TObjectDoubleMap<String> maxPool = new TObjectDoubleHashMap<>();
-		for(float[] vector : list){
+  @Override
+  public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
+    List<float[]> list = this.selector.getFeatureVectors("id", shotId, "feature");
+    if (list.isEmpty()) {
+      return new ArrayList<>(0);
+    }
+    if (list.size() == 1) {
+      return getSimilar(list.get(0), qc);
+    }
 
+    Stream<ScoreElement> elements = list.stream()
+        .flatMap(vector -> this.getSimilar(vector, qc).stream());
+    return ScoreElement.filterMaximumScores(elements);
+  }
 
-			List<StringDoublePair> similar = getSimilar(vector, qc);
+  /**
+   * helper function to retrieve elements close to a vector which has to be generated by the feature
+   * module.
+   */
+  protected List<ScoreElement> getSimilar(float[] vector, ReadableQueryConfig qc) {
+    ReadableQueryConfig qcc = setQueryConfig(qc);
+    List<SegmentDistanceElement> distances = this.selector
+        .getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
+            "feature", SegmentDistanceElement.class, qcc);
+    CorrespondenceFunction function = qcc.getCorrespondenceFunction().orElse(linearCorrespondence);
+    return DistanceElement.toScore(distances, function);
+  }
 
-			for(StringDoublePair sdp : similar){
-				if(maxPool.containsKey(sdp.key)){
-					if(maxPool.get(sdp.key) < sdp.value){
-						maxPool.put(sdp.key, sdp.value);
-					}
-				}else{
-					maxPool.put(sdp.key, sdp.value);
-				}
-			}
+  @Override
+  public void finish() {
+    if (this.writer != null) {
+      this.writer.close();
+      this.writer = null;
+    }
 
-		}
+    if (this.phandler != null) {
+      this.phandler.close();
+      this.phandler = null;
+    }
 
-		ArrayList<StringDoublePair> _return = new ArrayList<>(maxPool.isEmpty() ? 1 : maxPool.size());
-		for(String id : maxPool.keySet()){
-			_return.add(new StringDoublePair(id, maxPool.get(id)));
-		}
+    if (this.selector != null) {
+      this.selector.close();
+      this.selector = null;
+    }
+  }
 
-		return _return;
-	}
+  @Override
+  public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+    supply.get().createFeatureEntity(this.tableName, true);
+  }
 
-	/**
-	 * helper function to retrieve elements close to a vector which has to be generated by the feature module
-	 */
-	protected List<StringDoublePair> getSimilar(float[] vector, QueryConfig qc) {
-	  qc = setQueryConfig(qc);
-		List<StringDoublePair> distances = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector, "feature", qc);
-		if(distances == null){
-			return new ArrayList<>(1);
-		}
-		for(StringDoublePair sdp : distances){
-			double dist = sdp.value;
-			sdp.value = MathHelper.getScore(dist, maxDist);
-		}
-		return distances;
-	}
-
-
-
-	@Override
-	public void finish() {
-		if(this.writer != null){
-			this.writer.close();
-			this.writer = null;
-		}
-
-        if(this.phandler != null){
-            this.phandler.close();
-            this.phandler = null;
-        }
-
-		if(this.selector != null){
-			this.selector.close();
-			this.selector = null;
-		}
-	}
-
-	@Override
-	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-		supply.get().createFeatureEntity(this.tableName, true);
-
-	}
-
-	@Override
-	public void dropPersistentLayer(Supplier<EntityCreator> supply) {
-		supply.get().dropEntity(this.tableName);
-	}
+  @Override
+  public void dropPersistentLayer(Supplier<EntityCreator> supply) {
+    supply.get().dropEntity(this.tableName);
+  }
 }

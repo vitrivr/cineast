@@ -76,7 +76,7 @@ public class FullVisualizationMedianColorSunburstReal extends AbstractVisualizat
   public String visualizeMultimediaobject(String multimediaobjectId) {
     //don't care about given id here...
     MultimediaObjectLookup lookup = new MultimediaObjectLookup();
-    List<MultimediaObjectDescriptor> all = lookup.getAllVideos();
+    List<MultimediaObjectDescriptor> all = lookup.getAllObjects();
     List<Map<String, PrimitiveTypeProvider>> allData = new ArrayList<>();
     for(MultimediaObjectDescriptor multimedia: all){
       allData.addAll(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimedia.getObjectId()));

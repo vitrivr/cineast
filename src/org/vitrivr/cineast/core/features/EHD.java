@@ -1,22 +1,21 @@
 package org.vitrivr.cineast.core.features;
 
+import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.image.GrayU8;
 import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.QueryConfig.Distance;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
-
-import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.GrayU8;
 /**
  * see Efficient Use of MPEG-7 Edge Histogram Descriptor by Won '02
  * see http://stackoverflow.com/questions/909542/opencv-edge-extraction
@@ -42,7 +41,7 @@ public class EHD extends AbstractFeatureModule {
 
 	@Override
 	public void processShot(SegmentContainer shot) {
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		if (!phandler.idExists(shot.getId())) {
 			List<VideoFrame> videoFrames = shot.getVideoFrames();
 			float[] hist = new float[80];
@@ -56,7 +55,7 @@ public class EHD extends AbstractFeatureModule {
 			}
 			persist(shot.getId(), new FloatVectorImpl(hist));
 		}
-		LOGGER.exit();
+		LOGGER.traceExit();
 	}
 
 	protected static float[] process(MultiImage img, float[] hist){
@@ -114,13 +113,13 @@ public class EHD extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		FloatVector query = new FloatVectorImpl(process(sc.getMostRepresentativeFrame().getImage(), new float[80]));
 		return getSimilar(query.toArray(null), qc);
 	}
 	
   @Override
-  protected QueryConfig setQueryConfig(QueryConfig qc) {
+  protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
     return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
   }
 

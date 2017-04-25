@@ -2,8 +2,10 @@ package org.vitrivr.cineast.core.data;
 
 import java.util.List;
 
-public interface ReadableFloatVector extends Distance<ReadableFloatVector> {
+public interface ReadableFloatVector {
 
+  double getEuclideanDistance(ReadableFloatVector other);
+  
 	int getElementCount();
 	
 	float getElement(int num);

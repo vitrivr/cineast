@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
@@ -11,7 +12,6 @@ import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.StatElement;
 
 public final class ARPartioner {
 
@@ -54,30 +54,30 @@ public final class ARPartioner {
 		}
 		
 		ArrayList<LinkedList<Integer>> partitions = ARPartioner.partition(tmpList, img.getWidth(), img.getHeight(), angularSegments, radialSegments);
-		ArrayList<StatElement> stats = new ArrayList<StatElement>(angularSegments * radialSegments * 3);
-		ArrayList<StatElement> alphas = new ArrayList<StatElement>(angularSegments * radialSegments);
+		ArrayList<SummaryStatistics> stats = new ArrayList<SummaryStatistics>(angularSegments * radialSegments * 3);
+		ArrayList<SummaryStatistics> alphas = new ArrayList<SummaryStatistics>(angularSegments * radialSegments);
 		
 		for(int i = 0; i < angularSegments * radialSegments * 3; ++i){
-			stats.add(new StatElement());
+			stats.add(new SummaryStatistics());
 		}
 		
 		for(int i = 0; i < angularSegments * radialSegments; ++i){
-			alphas.add(new StatElement());
+			alphas.add(new SummaryStatistics());
 		}
 		
 		for(int i = 0; i < angularSegments * radialSegments; ++i){
 			LinkedList<Integer> cols = partitions.get(i);
-			StatElement L = stats.get(3 * i);
-			StatElement a = stats.get(3 * i + 1);
-			StatElement b = stats.get(3 * i + 2);
-			StatElement alpha = alphas.get(i);
+			SummaryStatistics L = stats.get(3 * i);
+			SummaryStatistics a = stats.get(3 * i + 1);
+			SummaryStatistics b = stats.get(3 * i + 2);
+			SummaryStatistics alpha = alphas.get(i);
 			
 			for(int c : cols){
 				ReadableLabContainer lab = ColorConverter.cachedRGBtoLab(c);
-				L.add(lab.getL());
-				a.add(lab.getA());
-				b.add(lab.getB());
-				alpha.add(ReadableRGBContainer.getAlpha(c) / 255f);
+				L.addValue(lab.getL());
+				a.addValue(lab.getA());
+				b.addValue(lab.getB());
+				alpha.addValue(ReadableRGBContainer.getAlpha(c) / 255f);
 			}
 		}
 		
@@ -85,13 +85,13 @@ public final class ARPartioner {
 		float[] weights = new float[vec.length];
 		
 		for(int i = 0; i < stats.size(); ++i){
-			StatElement s = stats.get(i);
-			vec[2 * i] = s.getAvg();
-			vec[2 * i + 1] = s.getVariance();
+		  SummaryStatistics s = stats.get(i);
+			vec[2 * i] = (float) s.getMean();
+			vec[2 * i + 1] = (float) s.getVariance();
 		}
 		
 		for(int i = 0; i < alphas.size(); ++i){
-			weights[3 * i] = alphas.get(i).getAvg();
+			weights[3 * i] = (float) alphas.get(i).getMean();
 			weights[3 * i + 1] = weights[3 * i];
 			weights[3 * i + 2] = weights[3 * i];
 		}

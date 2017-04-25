@@ -1,22 +1,20 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.FloatVector;
-import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.descriptor.EdgeList;
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
-
 import boofcv.alg.feature.detect.edge.EdgeContour;
 import boofcv.alg.feature.detect.edge.EdgeSegment;
 import georegression.struct.point.Point2D_I32;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.FloatVector;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.descriptor.EdgeList;
+import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
 public class DominantEdgeGrid8 extends AbstractFeatureModule {
 
@@ -81,7 +79,7 @@ public class DominantEdgeGrid8 extends AbstractFeatureModule {
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		short[][][] edgeHist = new short[8][8][4];
 		buildEdgeHist(edgeHist, sc.getMostRepresentativeFrame().getImage());
 		short[] dominant = getDominants(edgeHist);

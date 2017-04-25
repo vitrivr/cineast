@@ -1,0 +1,63 @@
+package org.vitrivr.cineast.core.util;
+
+import com.google.common.collect.ListMultimap;
+import gnu.trove.map.TObjectDoubleMap;
+import java.util.List;
+import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+
+public class ScoreFusion {
+  private ScoreFusion() {}
+
+  private static final Logger logger = LogManager.getLogger();
+
+  /**
+   * Fuses the object scores into the segment scores by adding every object score to the scores of
+   * its segments. If an object without any of its segments was found, the first segment gets added
+   * and used instead.
+   * Note that this method <i>modifies {@code scoreBySegmentId} in place without changing
+   * {@code scoreByObjectId}</i>.
+   *
+   * @param scoreBySegmentId segment ids with their respective score
+   * @param scoreByObjectId object ids with their respective score
+   */
+  public static void fuseObjectsIntoSegments(TObjectDoubleMap<String> scoreBySegmentId,
+      TObjectDoubleMap<String> scoreByObjectId) {
+    SegmentLookup segmentLookup = new SegmentLookup();
+
+    Set<String> objectIds = scoreByObjectId.keySet();
+    ListMultimap<String, SegmentDescriptor> segmentsByObjectId =
+        segmentLookup.lookUpSegmentsOfObjects(objectIds);
+    for (String objectId : segmentsByObjectId.keySet()) {
+      assert scoreByObjectId.containsKey(objectId);
+      double objectScore = scoreByObjectId.get(objectId);
+      List<SegmentDescriptor> segments = segmentsByObjectId.get(objectId);
+      if (segments.isEmpty()) {
+        logger.error("Object {} has no segments", objectId);
+        continue;
+      }
+      fuseObjectScoreIntoSegments(scoreBySegmentId, objectScore, segments);
+    }
+    segmentLookup.close();
+  }
+
+  private static void fuseObjectScoreIntoSegments(TObjectDoubleMap<String> scoreBySegmentId,
+      double objectScore, List<SegmentDescriptor> segments) {
+    boolean objectSegmentsFoundInResults = false;
+    for (SegmentDescriptor segment : segments) {
+      boolean foundElement = scoreBySegmentId.adjustValue(segment.getSegmentId(), objectScore);
+      if (foundElement) {
+        objectSegmentsFoundInResults = true;
+      }
+    }
+
+    if (!objectSegmentsFoundInResults) {
+      SegmentDescriptor firstSegment = segments.get(0);
+      String firstId = firstSegment.getSegmentId();
+      scoreBySegmentId.put(firstId, objectScore);
+    }
+  }
+}

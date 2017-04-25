@@ -53,7 +53,7 @@ public strictfp class KMeansPP {
 			for (int i = 0; i < points.size(); ++i) {
 				double dist = 0;
 				for (T point : points.get(i)) {
-					dist += centers.get(i).getDistance(point);
+					dist += centers.get(i).getEuclideanDistance(point);
 				}
 				distances[i] = dist;
 				distance += dist;
@@ -131,9 +131,9 @@ public strictfp class KMeansPP {
 
 			for (T element : elements) {
 				int j = 0;
-				double min = element.getDistance(centers.get(0));
+				double min = element.getEuclideanDistance(centers.get(0));
 				for (int i = 1; i < centers.size(); ++i) {
-					double d = element.getDistance(centers.get(i));
+					double d = element.getEuclideanDistance(centers.get(i));
 					if (d < min) {
 						min = d;
 						j = i;
@@ -146,7 +146,7 @@ public strictfp class KMeansPP {
 			for (int i = 0; i < centers.size(); ++i) {
 				helper =  ColorUtils.getAvg(points.get(i), helper);
 				FloatVector center = centers.get(i);
-				dist += helper.getDistance(center);
+				dist += helper.getEuclideanDistance(center);
 				for (int j = 0; j < center.getElementCount(); ++j) {
 					center.setElement(j, helper.getElement(j));
 				}
@@ -183,7 +183,7 @@ public strictfp class KMeansPP {
 				double dMin = Double.POSITIVE_INFINITY;
 				for (int ii = 0; ii < i; ++ii) {
 					dMin = Math.min(dMin,
-							_return.get(ii).getDistance(elements.get(j)));
+							_return.get(ii).getEuclideanDistance(elements.get(j)));
 				}
 				distances[j] = dMin * dMin;
 				sum += distances[j];

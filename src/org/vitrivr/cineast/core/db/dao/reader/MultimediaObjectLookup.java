@@ -107,7 +107,7 @@ public class MultimediaObjectLookup extends AbstractEntityReader {
     return mapToDescriptor(result.get(0));
   }
 
-  public Map<String, MultimediaObjectDescriptor> lookUpVideos(String... videoIds) {
+  public Map<String, MultimediaObjectDescriptor> lookUpObjects(String... videoIds) {
     if (videoIds == null || videoIds.length == 0) {
       return new HashMap<>();
     }
@@ -129,7 +129,7 @@ public class MultimediaObjectLookup extends AbstractEntityReader {
 
   }
 
-  public Map<String, MultimediaObjectDescriptor> lookUpVideos(Iterable<String> videoIds) {
+  public Map<String, MultimediaObjectDescriptor> lookUpObjects(Iterable<String> videoIds) {
     if (videoIds == null) {
       return new HashMap<>();
     }
@@ -151,7 +151,7 @@ public class MultimediaObjectLookup extends AbstractEntityReader {
 
   }
 
-  public List<MultimediaObjectDescriptor> getAllVideos() {
+  public List<MultimediaObjectDescriptor> getAllObjects() {
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(MultimediaObjectDescriptor.ENTITY);
     List<Map<String, PrimitiveTypeProvider>> all = selector.getAll();
@@ -162,7 +162,7 @@ public class MultimediaObjectLookup extends AbstractEntityReader {
     return _return;
   }
 
-  public List<String> lookUpVideoIds() {
+  public List<String> lookUpObjectIds() {
     DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
     selector.open(MultimediaObjectDescriptor.ENTITY);
     List<PrimitiveTypeProvider> ids = selector.getAll(MultimediaObjectDescriptor.FIELDNAMES[0]);

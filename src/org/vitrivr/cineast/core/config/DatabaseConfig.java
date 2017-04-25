@@ -2,20 +2,21 @@ package org.vitrivr.cineast.core.config;
 
 import java.util.function.Supplier;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.db.ADAMproSelector;
 import org.vitrivr.cineast.core.db.ADAMproWriter;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.JsonFileWriter;
+import org.vitrivr.cineast.core.db.JsonSelector;
 import org.vitrivr.cineast.core.db.NoDBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.ProtoSelector;
 import org.vitrivr.cineast.core.db.ProtobufFileWriter;
 import org.vitrivr.cineast.core.setup.ADAMproEntityCreator;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.setup.NoEntityCreator;
 
-import com.eclipsesource.json.JsonObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class DatabaseConfig {
 
@@ -36,6 +37,8 @@ public final class DatabaseConfig {
 	private static final PersistencyWriterSupplier JSON_WRITER_SUPPLY = () -> new JsonFileWriter();
 	
 	private static final DBSelectorSupplier NO_SELECTOR_SUPPLY = () -> new NoDBSelector();
+	private static final DBSelectorSupplier PROTO_SELECTOR_SUPPLY = () -> new ProtoSelector();
+	private static final DBSelectorSupplier JSON_SELECTOR_SUPPLY = () -> new JsonSelector();
 	private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = () -> new ADAMproSelector();
 	
   	private static final Supplier<EntityCreator> ADAMPRO_CREATOR_SUPPLY = () -> new ADAMproEntityCreator();
@@ -49,6 +52,8 @@ public final class DatabaseConfig {
 	
 	public static enum Selector{
 	  NONE,
+	  JSON,
+	  PROTO,
 		ADAMPRO
 	}
 
@@ -129,6 +134,10 @@ public final class DatabaseConfig {
 		switch(this.selector){
 		case ADAMPRO:
 			return ADAMPRO_SELECTOR_SUPPLY;
+		case PROTO:
+		  return PROTO_SELECTOR_SUPPLY;
+		case JSON:
+		  return JSON_SELECTOR_SUPPLY;
 		case NONE:
 		  return NO_SELECTOR_SUPPLY;
 		default:

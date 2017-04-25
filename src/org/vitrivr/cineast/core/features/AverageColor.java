@@ -1,15 +1,14 @@
 package org.vitrivr.cineast.core.features;
 
 import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
-import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ColorUtils;
 import org.vitrivr.cineast.core.util.TimeHelper;
@@ -30,24 +29,24 @@ public class AverageColor extends AbstractFeatureModule {
 	@Override
 	public void processShot(SegmentContainer shot) {
 		TimeHelper.tic();
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		if (!phandler.idExists(shot.getId())) {
 			ReadableLabContainer avg = getAvg(shot.getAvgImg());
 			persist(shot.getId(), avg);
 			LOGGER.debug("AverageColor.processShot() done in {}",
 					TimeHelper.toc());
 		}
-		LOGGER.exit();
+		LOGGER.traceExit();
 	}
 
 	@Override
-	public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
 		LOGGER.entry();
 		long start = System.currentTimeMillis();
 		ReadableLabContainer query = getAvg(sc.getAvgImg());
-		List<StringDoublePair> _reutrn = getSimilar(query.toArray(null), qc);
+		List<ScoreElement> _return = getSimilar(query.toArray(null), qc);
 		LOGGER.debug("AverageColor.getSimilar() done in {}ms", (System.currentTimeMillis() - start));
-		return LOGGER.exit(_reutrn);
+		return LOGGER.exit(_return);
 	}
 
 }

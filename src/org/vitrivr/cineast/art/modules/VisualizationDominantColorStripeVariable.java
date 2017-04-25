@@ -72,7 +72,7 @@ public class VisualizationDominantColorStripeVariable extends AbstractVisualizat
   @Override
   public String visualizeMultipleSegments(List<String> segmentIds){
     SegmentLookup segmentLookup = new SegmentLookup();
-    Map<String, SegmentDescriptor> segmentMap = segmentLookup.lookUpShots(segmentIds.toArray(new String[segmentIds.size()]));
+    Map<String, SegmentDescriptor> segmentMap = segmentLookup.lookUpSegments(segmentIds);
     List<SegmentDescriptor> segments = new ArrayList<>();
     for (Map.Entry<String, SegmentDescriptor> entry : segmentMap.entrySet()) {
       segments.add(entry.getValue());
@@ -83,7 +83,7 @@ public class VisualizationDominantColorStripeVariable extends AbstractVisualizat
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
     SegmentLookup segmentLookup = new SegmentLookup();
-    List<SegmentDescriptor> segments = segmentLookup.lookUpAllSegments(multimediaobjectId);
+    List<SegmentDescriptor> segments = segmentLookup.lookUpSegmentsOfObject(multimediaobjectId);
     return visualizeMulti(ArtUtil.getFeatureData(selectors.get("DominantColor"), multimediaobjectId), segments);
   }
 
