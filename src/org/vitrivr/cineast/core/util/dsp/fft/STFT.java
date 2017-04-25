@@ -89,7 +89,7 @@ public class STFT {
         final int increment = this.windowsize - overlap - 2*this.padding;
         final int length = this.windowsize - 2*this.padding;
         int start = 0;
-        int end = start + increment - 1;
+        int end = start + length - 1;
 
         /* Initialize buffer that holds samples for FFT. */
         final double window[] = new double[windowsize];
@@ -115,7 +115,7 @@ public class STFT {
 
             /* Move the window. */
             start += increment;
-            end = start + increment -1;
+            end += increment;
         }
 
         /* Updates the time-labels. */
