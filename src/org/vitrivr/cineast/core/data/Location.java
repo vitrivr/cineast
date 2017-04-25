@@ -26,7 +26,7 @@ public class Location implements ReadableFloatVector {
 
   public static Location of(float[] array) {
     checkArgument(array.length == ELEMENT_COUNT,
-        "Given float array must contain %s elements, but found %s.", ELEMENT_COUNT, array.length);
+        "Float array must contain %s elements, but found %s.", ELEMENT_COUNT, array.length);
     return of(array[0], array[1]);
   }
 
