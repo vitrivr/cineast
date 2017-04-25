@@ -1,20 +1,18 @@
 package org.vitrivr.cineast.core.util.json;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.util.LogHelper;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * Provides JSON deserialization capabilities by means of Jackson Databind library.
@@ -52,16 +50,8 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter {
   public <T> T toObject(String jsonString, Class<T> c) {
     try {
       return MAPPER.readValue(jsonString, c);
-    } catch (JsonParseException e) {
-      LOGGER.log(Level.ERROR, "Could not parse JSON.");
-      return null;
-    } catch (JsonMappingException e) {
-      LOGGER.log(Level.ERROR,
-          "Could not map JSON to POJO. Please check your object definitions.\n{}",
-          LogHelper.getStackTrace(e));
-      return null;
     } catch (IOException e) {
-      LOGGER.log(Level.ERROR, "Could not read JSON.", e);
+      logIOExceptionOfReadValue(e, "string '" + jsonString + "'");
       return null;
     }
   }
@@ -70,31 +60,28 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter {
   public <T> T toObject(File json, Class<T> c) {
     try {
       return MAPPER.readValue(json, c);
-    } catch (JsonParseException e) {
-      LOGGER.log(Level.ERROR, "Could not parse JSON file under '{}'.\n{}", json.toString(),
-          LogHelper.getStackTrace(e));
-      return null;
-    } catch (JsonMappingException e) {
-      LOGGER.log(Level.ERROR,
-          "Could not map JSON under '{}' to POJO. Please check your object definitions.\n{}",
-          json.toString(), LogHelper.getStackTrace(e));
-      return null;
-    } catch (FileNotFoundException e) {
-      LOGGER.log(Level.WARN, "Could not find file under '{}'.", json.toString());
-      return null;
     } catch (IOException e) {
-      LOGGER.log(Level.ERROR, "Could not read JSON file under '{}'.", json.toString(),
-          LogHelper.getStackTrace(e));
+      logIOExceptionOfReadValue(e, "file '" + json + "'");
       return null;
+    }
+  }
+
+  private static void logIOExceptionOfReadValue(IOException e, String jsonTypeMessage) {
+    if (e instanceof JsonParseException) {
+      LOGGER.error("Could not parse JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
+    } else if (e instanceof JsonMappingException) {
+      LOGGER.error("Could not map JSON {} to POJO. Please check your object definitions.\n{}",
+          jsonTypeMessage, LogHelper.getStackTrace(e));
+    } else if (e instanceof FileNotFoundException) {
+      LOGGER.warn("Could not find JSON {}", jsonTypeMessage);
+    } else {
+      LOGGER.error("Could not read JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
     }
   }
 
   /**
    * Takes a Java Object (usually a POJO) and tries to serialize it into a JSON. If serialization
    * fails for some reason, this method should return JSON_EMPTY;
-   *
-   * @param object
-   * @return
    */
   @Override
   public String toJson(Object object) {
