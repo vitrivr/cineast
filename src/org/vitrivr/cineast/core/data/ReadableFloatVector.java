@@ -19,8 +19,8 @@ public interface ReadableFloatVector {
 
   /**
    * @param vector the vector
-   * @param array the array to write into. If {@code array} does not have match length, a new array
-   *              is generated instead.
+   * @param array the array to write into. If {@code array} does not match the vector size, a new
+   *              array is generated instead.
    * @return an array containing the vector elements
    */
   static float[] toArray(ReadableFloatVector vector, float[] array) {
