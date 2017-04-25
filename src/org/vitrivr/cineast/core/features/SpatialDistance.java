@@ -186,7 +186,7 @@ public class SpatialDistance implements MetadataExtractor, Retriever {
         .map(descriptor -> descriptor.getObjectId())
         .map(objId -> this.dbSelector.getFeatureVectors(ID_COLUMN_NAME, objId, FEATURE_COLUMN_NAME))
         .flatMap(features -> features.stream().findFirst())
-        .map(feature -> Location.ofFloatArray(feature))
+        .map(feature -> Location.of(feature))
         .map(location -> this.getSimilar(location, rqc))
         .orElse(Collections.emptyList());
   }
