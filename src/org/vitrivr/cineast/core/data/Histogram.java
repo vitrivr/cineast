@@ -1,8 +1,6 @@
 package org.vitrivr.cineast.core.data;
 
 import gnu.trove.map.hash.TObjectIntHashMap;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 public abstract class Histogram implements ReadableFloatVector {
@@ -94,18 +92,5 @@ public abstract class Histogram implements ReadableFloatVector {
       _return[i] = (float) this.bins[i];
     }
     return _return;
-  }
-
-  @Override
-  public List<Float> toList(List<Float> list) {
-    if (list == null) {
-      list = new ArrayList<>(this.bins.length);
-    } else {
-      list.clear();
-    }
-    for (int i = 0; i < this.bins.length; ++i) {
-      list.add((float) this.bins[i]);
-    }
-    return list;
   }
 }

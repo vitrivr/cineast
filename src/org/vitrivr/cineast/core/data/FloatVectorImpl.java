@@ -102,17 +102,4 @@ public class FloatVectorImpl implements FloatVector {
     return _return;
   }
 
-  @Override
-  public List<Float> toList(List<Float> list) {
-    if (list == null) {
-      list = new ArrayList<>(this.list.size());
-    } else {
-      list.clear();
-    }
-    for (int i = 0; i < this.list.size(); ++i) {
-      list.add(this.list.get(i));
-    }
-    return list;
-  }
-
 }
