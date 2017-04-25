@@ -5,10 +5,7 @@ import org.apache.commons.math3.complex.Complex;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
-import org.vitrivr.cineast.core.features.abstracts.AbstractLightfieldDescriptor;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.images.ZernikeHelper;
 import org.vitrivr.cineast.core.util.math.MathConstants;
@@ -23,7 +20,7 @@ import java.util.List;
  * @version 1.0
  * @created 17.03.17
  */
-public class LightfieldZernike extends AbstractLightfieldDescriptor {
+public class LightfieldZernike extends Lightfield {
 
     /**
      * Default constructor for LightfieldZernike class.

@@ -1,9 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
 import boofcv.alg.filter.binary.Contour;
-import com.twelvemonkeys.image.ImageUtil;
 import georegression.struct.point.Point2D_I32;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
@@ -13,21 +11,16 @@ import org.apache.commons.math3.transform.TransformType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.m3d.Mesh;
-import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.abstracts.AbstractLightfieldDescriptor;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.images.ContourHelper;
 import org.vitrivr.cineast.core.util.math.MathConstants;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
@@ -37,7 +30,7 @@ import java.util.List;
  * @version 1.0
  * @created 14.03.17
  */
-public class LightfieldFourier extends AbstractLightfieldDescriptor {
+public class LightfieldFourier extends Lightfield {
 
     private static final Logger LOGGER = LogManager.getLogger();
 

@@ -23,7 +23,7 @@ public class CENS {
     private CENS() {}
 
     /**
-     * Calculates and returns CENS features given a Harmonic Pitc Class Profile (HPCP).
+     * Calculates and returns CENS features given a Harmonic Pitch Class Profile (HPCP).
      *
      * @param hpcps HPCP from which to calculate the CENS feature.
      * @param w Size of the Hanning Window used in the convolution step. First parameter for the algorithm according to [1]

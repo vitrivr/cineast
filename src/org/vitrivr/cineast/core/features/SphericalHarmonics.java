@@ -4,20 +4,23 @@ import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.FastMath;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 import org.vitrivr.cineast.core.data.m3d.Voxelizer;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
+import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.math.functions.SphericalHarmonicsFunction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * An Extraction and Retrieval module for 3D models that leverages Spherical Harmonics as proposed in [1].
@@ -29,7 +32,7 @@ import java.util.List;
  * @version 1.0
  * @created 16.02.17
  */
-public class SphericalHarmonics extends AbstractFeatureModule {
+public class SphericalHarmonics extends StagedFeatureModule {
 
     /* Size of the Voxel Grid in each of the three dimensions. */
     private static final int GRID_SIZE = 64;
@@ -58,38 +61,48 @@ public class SphericalHarmonics extends AbstractFeatureModule {
         if (mesh == null || mesh.isEmpty()) return;
 
         /* Extract feature and persist it. */
-        float[] feature = this.featureVectorsFromMesh(mesh);
+        float[] feature = this.featureVectorFromMesh(mesh);
         this.persist(shot.getId(), new FloatVectorImpl(feature));
     }
 
     /**
+     * This method represents the first step that's executed when processing query. The associated SegmentContainer is
+     * examined and feature-vectors are being generated. The generated vectors are returned by this method together with an
+     * optional weight-vector.
      *
-     * @param sc
-     * @param qc
-     * @return
+     * <strong>Important: </strong> The weight-vector must have the same size as the feature-vectors returned by the method.
+     *
+     * @param sc SegmentContainer that was submitted to the feature module.
+     * @param qc A QueryConfig object that contains query-related configuration parameters. Can still be edited.
+     * @return List of feature vectors for lookup.
      */
     @Override
-    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+    protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
+        /* Initialize list of features. */
+        List<float[]> features = new ArrayList<>();
+
         /* Get the normalized Mesh. */
         ReadableMesh mesh = sc.getNormalizedMesh();
-        if (mesh == null || mesh.isEmpty()) new ArrayList<>();
+        if (mesh == null || mesh.isEmpty()) return features;
 
         /* Extract feature and persist it. */
-        float[] feature = this.featureVectorsFromMesh(mesh);
-        return this.getSimilar(feature, qc);
+        features.add(this.featureVectorFromMesh(mesh));
+        return features;
     }
 
     /**
-     * Merges the provided QueryConfig with the default QueryConfig enforced by the
-     * feature module.
+     * This method represents the last step that's executed when processing a query. A list of partial-results (DistanceElements) returned by
+     * the lookup stage is processed based on some internal method and finally converted to a list of ScoreElements. The filtered list of
+     * ScoreElements is returned by the feature module during retrieval.
      *
-     * @param qc QueryConfig provided by the caller of the feature module.
-     * @return Modified QueryConfig.
+     * @param partialResults List of partial results returned by the lookup stage.
+     * @param qc A ReadableQueryConfig object that contains query-related configuration parameters.
+     * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
-    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
-        return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
-                .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
+    @Override
+    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        return ScoreElement.filterMaximumScores(partialResults.stream().map(v -> v.toScore(correspondence)));
     }
 
     /**
@@ -114,7 +127,7 @@ public class SphericalHarmonics extends AbstractFeatureModule {
      * @param mesh
      * @return
      */
-    private float[] featureVectorsFromMesh(ReadableMesh mesh) {
+    private float[] featureVectorFromMesh(ReadableMesh mesh) {
         final float increment = 0.1f; /* Increment of the radius during calculation of the descriptors. Results in 7 different radii. */
         final int cap = 8;
 

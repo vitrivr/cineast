@@ -1,52 +1,38 @@
 package org.vitrivr.cineast.core.features;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
-import org.vitrivr.cineast.core.config.Config;
+
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.*;
+
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
-import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
+
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * An Extraction and Retrieval module that leverages pure HPCP shingles according to [1]. These shingles can be used
- * for cover-song and version identification.
- *
- * [1] Casey, M., Rhodes, C., & Slaney, M. (2008). Analysis of minimum distances in high-dimensional musical spaces.
- *  IEEE Transactions on Audio, Speech and Language Processing, 16(5), 1015–1028. http://doi.org/10.1109/TASL.2008.925883
- *
  * @author rgasser
  * @version 1.0
- * @created 26.02.17
+ * @created 25.04.17
  */
-public abstract class HPCPShingle extends StagedFeatureModule {
-
+public abstract class AverageHPCP extends StagedFeatureModule {
     /** Size of the window during STFT in samples. */
     private final static int WINDOW_SIZE = 8192;
 
-    /** Overlap between two subsequent frames during STFT in samples. */
+    /** Overlap between two subsequent average during STFT in samples. */
     private final static int WINDOW_OVERLAP = 2205;
-
-    /**
-     * Size of a shingle in number of HPCP features.
-     *
-     * The final feature vector has SHINGLE_SIZE * HPCP.Resolution.Bins components
-     */
-    private final static int SHINGLE_SIZE = 30;
 
     /** Minimum resolution to consider in HPCP calculation. */
     private final float min_frequency;
@@ -57,21 +43,26 @@ public abstract class HPCPShingle extends StagedFeatureModule {
     /** HPCP resolution (12, 24, 36 bins). */
     private final HPCP.Resolution resolution;
 
+    /* The number of HPCP frames that should be averaged into a single vector. */
+    private final int average;
+
     /**
      * Default constructor.
      *
      * @param name Name of the entity (for persistence writer).
-     * @param min_frequency Minimum frequency to consider during HPCP analysis.
-     * @param max_frequency Maximum frequency to consider during HPCP analysis.
+     * @param min_frequency Minimum frequency to consider for HPCP generation.
+     * @param max_frequency Maximum frequency to consider for HPCP generation.
      * @param resolution Resolution of HPCP (i.e. number of HPCP bins).
+     * @param average Number of frames to average.
      */
-    protected HPCPShingle(String name, float min_frequency, float max_frequency, HPCP.Resolution resolution) {
+    protected AverageHPCP(String name, float min_frequency, float max_frequency, HPCP.Resolution resolution, int average) {
         super(name, 2.0f);
 
         /* Assign variables. */
         this.min_frequency = min_frequency;
         this.max_frequency = max_frequency;
         this.resolution = resolution;
+        this.average = average;
     }
 
     /**
@@ -83,7 +74,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      *
      * @param sc SegmentContainer that was submitted to the feature module.
      * @param qc A QueryConfig object that contains query-related configuration parameters. Can still be edited.
-     * @return A pair containing a List of features and an optional weight vector.
+     * @return List of feature vectors for lookup.
      */
     @Override
     protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
@@ -96,23 +87,30 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      * ScoreElements is returned by the feature module during retrieval.
      *
      * @param partialResults List of partial results returned by the lookup stage.
-     * @param qc             A ReadableQueryConfig object that contains query-related configuration parameters.
+     * @param qc A ReadableQueryConfig object that contains query-related configuration parameters.
      * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
     @Override
     protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
         /* Prepare helper data-structures. */
         final List<ScoreElement> results = new ArrayList<>();
-        final TObjectIntHashMap<String> map = new TObjectIntHashMap<>();
+        final TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
+
+        /* Set QueryConfig and extract correspondence function. */
+        qc = this.setQueryConfig(qc);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
 
         for (DistanceElement hit : partialResults) {
-            if (hit.getDistance() <= 0.9f) {
-                map.adjustOrPutValue(hit.getId(), 1, 1);
+            if (map.containsKey(hit.getId())) {
+                double current = map.get(hit.getId());
+                map.adjustValue(hit.getId(), (hit.getDistance()-current)/2.0f);
+            } else {
+                map.put(hit.getId(), hit.getDistance());
             }
         }
 
          /* Prepare final result-set. */
-        map.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, 1-(1.0/value))));
+        map.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, correspondence.applyAsDouble(value))));
         return ScoreElement.filterMaximumScores(results.stream());
     }
 
@@ -134,44 +132,26 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      * @return List of HPCP Shingle feature vectors.
      */
     private List<float[]> getFeatures(SegmentContainer segment) {
-        /* Create STFT; If this fails, return empty list. */
+        /* Create STFT. IF this fails, return empty list. */
         STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
         if (stft == null) return new ArrayList<>();
 
         HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);
         hpcps.addContribution(stft);
 
-        int vectors = Math.max(hpcps.size() - SHINGLE_SIZE, 1);
-        final SummaryStatistics statistics = new SummaryStatistics();
+        /* Determine number of vectors that will result from the data. */
+        int vectors = hpcps.size()/this.average;
 
-        List<Pair<Double, float[]>> features = new ArrayList<>(vectors);
-        for (int n = 0; n < vectors; n++) {
-            Pair<Double, float[]> feature = this.getHPCPShingle(hpcps, n);
-            features.add(feature);
-            statistics.addValue(feature.first);
-        }
-
-        final double threshold = statistics.getMean() - 0.9f * statistics.getStandardDeviation();
-        return features.stream().filter(f -> (f.first > threshold)).map(f -> f.second).collect(Collectors.toList());
-    }
-
-
-    /**
-     * Returns a constant length HPCP shingle from a Harmonic Pitch Class Profile. If the
-     * resulting shingle is a zero-vector, this method will return null instead.
-     *
-     * @param hpcps The HPCP to create the shingle from.
-     * @param shift The index to shift the HPCP's by.
-     * @return HPCP shingle (feature vector) or null.
-     */
-    private Pair<Double, float[]> getHPCPShingle(HPCP hpcps, int shift) {
-        float[] feature = new float[SHINGLE_SIZE * this.resolution.bins];
-        for (int i = shift; i < SHINGLE_SIZE + shift; i++) {
-            if (i < hpcps.size()) {
-                float[] hpcp = hpcps.getHpcp(i);
-                System.arraycopy(hpcp, 0, feature, (i - shift) * this.resolution.bins, hpcp.length);
+        List<float[]> features = new ArrayList<>(vectors);
+        for (int i = 0; i < vectors; i++) {
+            float[] feature = new float[this.resolution.bins];
+            for (int j = 0; j<this.average; j++) {
+                for (int k=0; k<this.resolution.bins;k++) {
+                    feature[k] += hpcps.getHpcp(i*this.average + j)[k];
+                }
             }
+            features.add(MathHelper.normalizeL2(feature));
         }
-        return new Pair<>(MathHelper.normL2(feature), MathHelper.normalizeL2(feature));
+        return features;
     }
 }

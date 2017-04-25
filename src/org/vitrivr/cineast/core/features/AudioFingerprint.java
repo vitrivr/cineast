@@ -15,6 +15,7 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.*;
 
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.AttributeDefinition;
@@ -33,13 +34,12 @@ import java.util.function.Supplier;
  * @version 1.0
  * @created 14.02.17
  */
-public class AudioFingerprint extends AbstractFeatureModule {
+public class AudioFingerprint extends StagedFeatureModule {
     /** Frequency-ranges that should be used to calculate the fingerprint. */
     private static final float[] RANGES = {20.0f, 40.0f, 80.0f, 120.0f, 180.0f, 300.0f, 420.0f};
 
     /** Length of an individual fingerprint (size of FV). */
     private static final int FINGERPRINT = 20 * (RANGES.length-1);
-
 
     /**
      * Default constructor;
@@ -48,55 +48,76 @@ public class AudioFingerprint extends AbstractFeatureModule {
         super("features_audiofingerprint", 100.0f);
     }
 
-
+    /**
+     * This method represents the first step that's executed when processing query. The associated SegmentContainer is
+     * examined and feature-vectors are being generated. The generated vectors are returned by this method together with an
+     * optional weight-vector.
+     * <p>
+     * <strong>Important: </strong> The weight-vector must have the same size as the feature-vectors returned by the method.
+     *
+     * @param sc SegmentContainer that was submitted to the feature module
+     * @param qc A QueryConfig object that contains query-related configuration parameters. Can still be edited.
+     * @return A pair containing a List of features and an optional weight vector.
+     */
     @Override
-    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-        /* List that holds final results. */
-        List<ScoreElement> results = new ArrayList<>();
+    protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
+        /* Prepare empty list of features. */
+        List<float[]> features = new ArrayList<>();
 
-        /* Map that holds partial results. */
-        TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
-
-        /*
-         * Configure query: Use a weighted Manhattan Distance. Weights are used to
-         * to inactivate entries in short segments.
-         */
-        float[] weights = new float[FINGERPRINT];
-
+        /* Extract filtered spectrum and create query-vectors. */
         TIntArrayList filteredSpectrum = this.filterSpectrum(sc);
         int lookups = filteredSpectrum.size() / FINGERPRINT;
-
-        SummaryStatistics statistics = new SummaryStatistics();
 
         float[] feature = new float[FINGERPRINT];
         for (int i=0;i<=lookups;i++) {
             for (int j=0; j< FINGERPRINT; j++) {
                 if (i * lookups + j < filteredSpectrum.size()) {
                     feature[j] = filteredSpectrum.get(i * lookups + j);
-                    weights[j] = 1.0f;
-                } else {
-                    weights[j] = 0.0f;
                 }
             }
-            List<SegmentDistanceElement> partials = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule()/4, feature, "fingerprint", SegmentDistanceElement.class, qc);
-            for (SegmentDistanceElement result : partials) {
-                statistics.addValue(result.getDistance());
-                map.adjustOrPutValue(result.getSegmentId(), Math.min(result.getDistance(), map.get(result.getSegmentId())), result.getDistance());
-            }
+            features.add(feature);
+        }
+        return features;
+    }
+
+    /**
+     * This method represents the last step that's executed when processing a query. A list of partial-results (DistanceElements) returned by
+     * the lookup stage is processed based on some internal method and finally converted to a list of ScoreElements. The filtered list of
+     * ScoreElements is returned by the feature module during retrieval.
+     *
+     * @param partialResults List of partial results returned by the lookup stage.
+     * @param qc A ReadableQueryConfig object that contains query-related configuration parameters.
+     * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
+     */
+    @Override
+    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+        /* Prepare empty list of results. */
+        final ArrayList<ScoreElement> results = new ArrayList<>();
+        final SummaryStatistics statistics = new SummaryStatistics();
+        final HashMap<String,DistanceElement> map = new HashMap<>();
+
+        /* Merge into map for final results; select the minimum distance. */
+        for (DistanceElement result : partialResults) {
+            statistics.addValue(result.getDistance());
+            map.merge(result.getId(), result, (d1,d2) -> {
+                if (d1.getDistance() > d2.getDistance()) {
+                    return d2;
+                } else {
+                    return d1;
+                }
+            });
         }
 
-        /* Set QueryConfig and extract correspondence function. */
-        qc = this.setQueryConfig(qc);
-        final CorrespondenceFunction correspondence = CorrespondenceFunction.linear(statistics.getMean());
-
         /* Prepare final results. */
-        map.forEachEntry((key, value) -> {
-            results.add(new SegmentScoreElement(key, correspondence.applyAsDouble(value)));
-            return true;
-        });
+        final CorrespondenceFunction correspondence = CorrespondenceFunction.linear(statistics.getMean());
+        map.forEach((key, value) -> results.add(value.toScore(correspondence)));
         return ScoreElement.filterMaximumScores(results.stream());
     }
 
+    /**
+     *
+     * @param segment
+     */
     @Override
     public void processShot(SegmentContainer segment) {
         TIntArrayList filteredSpectrum = this.filterSpectrum(segment);
@@ -111,6 +132,23 @@ public class AudioFingerprint extends AbstractFeatureModule {
             tuples.add(this.phandler.generateTuple(segment.getId(), feature));
         }
         this.phandler.persist(tuples);
+    }
+
+    /**
+     * Returns a weight-vector for the given feature. Defaults to null,
+     * i.e. all components are weighted equally.
+     *
+     * @param feature Feature for which a weight-vector is required.
+     * @return Weight vector for feature.
+     */
+    protected float[] weightsForFeature(float[] feature) {
+        float[] weight = new float[feature.length];
+        for (int i=0;i<feature.length;i++) {
+            if (feature[i] > 0) {
+                weight[i] = 1.0f;
+            }
+        }
+        return weight;
     }
 
     /**

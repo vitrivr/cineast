@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.features.abstracts;
+package org.vitrivr.cineast.core.features;
 
 import com.twelvemonkeys.image.ImageUtil;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -12,6 +12,7 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
@@ -19,16 +20,16 @@ import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.Renderer;
 import org.vitrivr.cineast.core.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.MathHelper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ import java.util.function.Supplier;
  * @version 1.0
  * @created 17.03.17
  */
-public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModule {
+public abstract class Lightfield extends AbstractFeatureModule {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -70,7 +71,7 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
      * @param maxDist
      * @param camerapositions
      */
-    protected AbstractLightfieldDescriptor(String tableName, float maxDist, double[][] camerapositions) {
+    protected Lightfield(String tableName, float maxDist, double[][] camerapositions) {
         super(tableName, maxDist);
         if (camerapositions.length == 0) throw new IllegalArgumentException("You must specify at least one camera position!");
         for (double[] position : camerapositions) {
