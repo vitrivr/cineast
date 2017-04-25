@@ -3,11 +3,13 @@ package org.vitrivr.cineast.core.features;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.FastMath;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 import org.vitrivr.cineast.core.data.m3d.Voxelizer;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
@@ -67,19 +69,28 @@ public class SphericalHarmonics extends AbstractFeatureModule {
      * @return
      */
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Get the normalized Mesh. */
         ReadableMesh mesh = sc.getNormalizedMesh();
         if (mesh == null || mesh.isEmpty()) new ArrayList<>();
-
-        /* This feature module always uses the Euclidian Distance!. */
-        qc.setDistance(QueryConfig.Distance.euclidean);
 
         /* Extract feature and persist it. */
         float[] feature = this.featureVectorsFromMesh(mesh);
         return this.getSimilar(feature, qc);
     }
 
+    /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
+     *
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
+     */
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
+    }
 
     /**
      * Obtains the SphericalHarmonic descriptor of the Mesh. To do so, the Mesh is rasterized into a VoxelGrid of 65 x 65 x 65

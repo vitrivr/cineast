@@ -7,11 +7,15 @@ import org.apache.logging.log4j.Logger;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -94,15 +98,19 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
      * @param sc SegmentContainer
      * @param qc QueryConfiguration
      */
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Initialize list with empty results. */
-        List<StringDoublePair> results = new ArrayList<>();
+        List<ScoreElement> results = new ArrayList<>();
 
-        /* Check for renderer. */
+        /* Check if renderer could be initialised. */
         if (this.renderer == null) {
             LOGGER.error("No renderer found. {} does not return any results.", this.getClass().getSimpleName());
             return results;
         }
+
+        /* Set QueryConfig and extract correspondence function. */
+        qc = this.setQueryConfig(qc);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
 
         /* Initialize helper data structures. */
         TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), 0.5f, 0.0f);
@@ -137,7 +145,7 @@ public abstract class  AbstractLightfieldDescriptor extends AbstractFeatureModul
         }
 
         /* Add results to list and return list of results. */
-        map.forEachEntry((key, value) -> results.add(new StringDoublePair(key, MathHelper.getScore(value, this.maxDist))));
+        map.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, correspondence.applyAsDouble(value))));
         return results;
     }
 

@@ -3,7 +3,12 @@ package org.vitrivr.cineast.core.features;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
@@ -73,32 +78,46 @@ public abstract class HPCPShingle extends AbstractFeatureModule {
      * @return
      */
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Get list of features. */
         List<float[]> features = this.getFeatures(sc);
 
-        /* Distance is always Cosine-Distance. */
-        qc.setDistance(QueryConfig.Distance.cosine);
-
         /* Prepare helper data-structures. */
-        final List<StringDoublePair> results = new ArrayList<>();
+        final List<ScoreElement> results = new ArrayList<>();
         final TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
 
+        /* Set QueryConfig and extract correspondence function. */
+        qc = this.setQueryConfig(qc);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+
         for (float[] feature : features) {
-            List<StringDoublePair> partial = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), feature, "feature", qc);
-            for (StringDoublePair hit : partial) {
-                if (map.containsKey(hit.key)) {
-                    double current = map.get(hit.key);
-                    map.adjustValue(hit.key, (hit.value-current)/2.0f);
+            List<SegmentDistanceElement> partial = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), feature, "feature", SegmentDistanceElement.class, qc);
+            for (SegmentDistanceElement hit : partial) {
+                if (map.containsKey(hit.getId())) {
+                    double current = map.get(hit.getId());
+                    map.adjustValue(hit.getId(), (hit.getDistance()-current)/2.0f);
                 } else {
-                    map.put(hit.key, hit.value);
+                    map.put(hit.getId(), hit.getDistance());
                 }
             }
         }
 
         /* Prepare final result-set. */
-        map.forEachEntry((key, value) -> results.add(new StringDoublePair(key, MathHelper.getScore(value, this.maxDist))));
-        return results;
+        map.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, correspondence.applyAsDouble(value))));
+        return ScoreElement.filterMaximumScores(results.stream());
+    }
+
+    /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
+     *
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
+     */
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 
     /**

@@ -1,8 +1,13 @@
 package org.vitrivr.cineast.core.features;
 
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
@@ -40,42 +45,53 @@ public class MFCCShingle extends AbstractFeatureModule {
     }
 
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Extract MFCC shingle features from QueryObject. */
         List<float[]> features = this.getFeatures(sc);
 
         /* Prepare helper data-structures. */
-        final List<StringDoublePair> results = new ArrayList<>();
-        final HashMap<String, Double> map = new HashMap<>();
-        final HashSet<String> seen = new HashSet<>(250);
+        final List<ScoreElement> results = new ArrayList<>();
+        final TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
+        final HashSet<String> seen = new HashSet<>(Config.sharedConfig().getRetriever().getMaxResultsPerModule());
 
         /* Determine, how many lookups should be performed. */
-        final int maxlookup = 10;
+        final int maxlookup = 5;
         final int stepsize = Math.max((int)Math.floor(features.size()/maxlookup), 1);
         final double maxDist = ((features.size()/stepsize) * this.maxDist);
 
-        /* Set default distance to L2. */
-        qc.setDistance(QueryConfig.Distance.euclidean);
+       /* Set QueryConfig and extract correspondence function. */
+        qc = this.setQueryConfig(qc);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
 
         for (int i = 0; i<features.size()-stepsize;i+=stepsize) {
-            List<StringDoublePair> partial = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), features.get(i), "feature", qc);
+            List<SegmentDistanceElement> partial = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), features.get(i), "feature", SegmentDistanceElement.class, qc);
             seen.clear();
-            for (StringDoublePair hit : partial) {
-                if (hit.value > this.threshold) break;
-                if (!seen.contains(hit.key)) {
-                    if (!map.containsKey(hit.key)) map.put(hit.key, 0.0);
-                    map.put(hit.key, map.get(hit.key) + (this.maxDist - hit.value));
-                    seen.add(hit.key);
+            for (SegmentDistanceElement hit : partial) {
+                if (hit.getDistance() > this.threshold) break;
+                if (!seen.contains(hit.getSegmentId())) {
+                    map.adjustOrPutValue(hit.getSegmentId(), this.maxDist - hit.getDistance(), 0.0);
+                    seen.add(hit.getSegmentId());
                 }
             }
         }
 
         /* Prepare final result-set. */
-        for (Map.Entry<String, Double> entry : map.entrySet()) {
-            results.add(new StringDoublePair(entry.getKey(), entry.getValue() / maxDist));
-        }
-
+        map.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, correspondence.applyAsDouble(value))));
+        ScoreElement.filterMaximumScores(results.stream());
         return results;
+    }
+
+    /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
+     *
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
+     */
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 
     /**

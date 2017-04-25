@@ -1,8 +1,16 @@
 package org.vitrivr.cineast.core.features;
 
 
+import gnu.trove.map.hash.TObjectDoubleHashMap;
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -46,7 +54,7 @@ public abstract class CENS extends AbstractFeatureModule {
      * in this array. The inner array contains the following parameters:
      *
      * 0 - Window size (w)
-     * 1 - Downsamling ratio (d)
+     * 1 - Downsampling ratio (d)
      * 2 - Weight
      */
     private final static int[][] QUERY_SETTINGS = {
@@ -85,9 +93,9 @@ public abstract class CENS extends AbstractFeatureModule {
      * @return
      */
     @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Prepare empty list of results. */
-        List<StringDoublePair> results = new ArrayList<>();
+        List<ScoreElement> results = new ArrayList<>();
 
         /* Create STFT. IF this fails, return empty list. */
         STFT stft = sc.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
@@ -96,31 +104,32 @@ public abstract class CENS extends AbstractFeatureModule {
         /* Derive HPCP features. */
         HPCP hpcps = new HPCP(HPCP.Resolution.FULLSEMITONE, this.minFrequency, this.maxFrequency);
         hpcps.addContribution(stft);
-        qc.setDistance(QueryConfig.Distance.cosine);
 
-        HashMap<String, Double> map = new HashMap<>();
+        /* Set QueryConfig and extract correspondence function. */
+        qc = this.setQueryConfig(qc);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+
+        TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
         double max = 0.0;
         for (int[] QUERY_SETTING : QUERY_SETTINGS) {
             List<float[]> features = this.getFeatures(sc, QUERY_SETTING[0], QUERY_SETTING[1]);
             if (features.size() > 0) {
                 float[] feature = features.get(0);
-                List<StringDoublePair> partial = this.selector.getNearestNeighbours(250, feature, "feature", qc);
-                for (StringDoublePair hit : partial) {
-                    if (map.containsKey(hit.key)) {
-                        map.put(hit.key, map.get(hit.key) + QUERY_SETTING[2] * (this.maxDist - hit.value));
+                List<SegmentDistanceElement> partial = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), feature, "feature", SegmentDistanceElement.class, qc);
+                for (SegmentDistanceElement hit : partial) {
+                    if (map.containsKey(hit.getId())) {
+                        double current = map.get(hit.getId());
+                        map.adjustValue(hit.getId(), QUERY_SETTING[2] * ((hit.getDistance()-current)/2.0f));
                     } else {
-                        map.put(hit.key, QUERY_SETTING[2] * (this.maxDist - hit.value));
+                        map.put(hit.getId(), hit.getDistance());
                     }
-                    max = Math.max(map.get(hit.key), max);
                 }
             }
         }
 
-        for (Map.Entry<String, Double> entry : map.entrySet()) {
-            results.add(new StringDoublePair(entry.getKey(), entry.getValue()/max));
-        }
-
-        return results;
+        /* Prepare final result-set. */
+        map.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, correspondence.applyAsDouble(value))));
+        return ScoreElement.filterMaximumScores(results.stream());
     }
 
     /**
@@ -131,6 +140,19 @@ public abstract class CENS extends AbstractFeatureModule {
     public void processShot(SegmentContainer shot) {
         List<float[]> features = this.getFeatures(shot, 21, 5);
         features.forEach(f -> this.persist(shot.getId(), new FloatVectorImpl(f)));
+    }
+
+    /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
+     *
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
+     */
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 
     /**

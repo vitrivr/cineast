@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features;
 import org.apache.commons.math3.complex.Complex;
 
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -32,15 +33,16 @@ public class LightfieldZernike extends AbstractLightfieldDescriptor {
     }
 
     /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
      *
-     * @param sc
-     * @param qc
-     * @return
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
      */
-    @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-        qc.setDistance(QueryConfig.Distance.euclidean);
-        return super.getSimilar(sc, qc);
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 
 

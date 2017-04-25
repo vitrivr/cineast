@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
@@ -40,8 +41,10 @@ public class LightfieldFourier extends AbstractLightfieldDescriptor {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /** Weights used for kNN retrieval based on images / sketches. Higher frequency components (standing for finer details) will have less
-     * weight towards the final result. */
+    /**
+     * Weights used for kNN retrieval based on images / sketches. Higher frequency components (standing for finer details) will have less
+     * weight towards the final result.
+     */
     private static final float[] WEIGHTS = new float[SIZE+1];
     static {
         for (int i=0;i<SIZE;i++) {
@@ -61,15 +64,17 @@ public class LightfieldFourier extends AbstractLightfieldDescriptor {
     }
 
     /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
      *
-     * @param sc
-     * @param qc
-     * @return
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
      */
-    @Override
-    public List<StringDoublePair> getSimilar(SegmentContainer sc, QueryConfig qc) {
-        qc.setDistance(QueryConfig.Distance.euclidean);
-        return super.getSimilar(sc, qc);
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
+                .setDistanceWeights(WEIGHTS);
     }
 
     /**

@@ -16,14 +16,8 @@ package org.vitrivr.cineast.core.features;
  */
 public class CENS12BasslineShingle extends CENS {
 
-    /**
-     *
-     */
     private final static float MIN_FREQUENCY = 10.0f;
 
-    /**
-     *
-     */
     private final static float MAX_FREQUENCY = 262.0f;
 
     /**
