@@ -94,7 +94,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
             this.preShotList.clear();
             this.segments.clear();
             this.videoFrameList.clear();
-            this.knownShotBoundaries = this.segmentReader.lookUpAllSegments(object.getObjectId());
+            this.knownShotBoundaries = this.segmentReader.lookUpSegmentsOfObject(object.getObjectId());
             this.knownShotBoundaries.sort(Comparator.comparingInt(SegmentDescriptor::getSequenceNumber));
         }
     }

@@ -346,7 +346,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         if (descriptor.exists() && descriptor.getMediatype() == this.context.sourceType()){
             return descriptor;
         }
-        return MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, path, type);
+        return MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, path, type, this.objectReader);
     }
 
     /**
@@ -363,11 +363,8 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      */
     protected SegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs){
         String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
-        SegmentDescriptor descriptor = this.segmentReader.lookUpShot(segmentId);
-        if (descriptor.exists()){
-            return descriptor;
-        }
-        return SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, start, end, startabs, endabs);
+        Optional<SegmentDescriptor> descriptor = this.segmentReader.lookUpSegment(segmentId);
+        return descriptor.orElse(SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, start, end, startabs, endabs));
     }
 
     /**
@@ -396,6 +393,6 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @return
      */
     protected List<SegmentDescriptor> retrieveExistingSegments(MultimediaObjectDescriptor object) {
-        return this.segmentReader.lookUpAllSegments(object.getObjectId());
+        return this.segmentReader.lookUpSegmentsOfObject(object.getObjectId());
     }
 }
