@@ -87,7 +87,7 @@ public class FullVisualizationMedianColorSunburstReal extends AbstractVisualizat
 
   @Override
   public List<VisualizationType> getVisualizations() {
-    List<VisualizationType> types = new ArrayList();
+    List<VisualizationType> types = new ArrayList<>();
     types.add(VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT);
     return types;
   }

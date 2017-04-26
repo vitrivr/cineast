@@ -93,7 +93,7 @@ public class VisualizationMedianColorGrid8 extends AbstractVisualizationModule {
 
   @Override
   public List<VisualizationType> getVisualizations() {
-    List<VisualizationType> types = new ArrayList();
+    List<VisualizationType> types = new ArrayList<>();
     types.add(VisualizationType.VISUALIZATION_SEGMENT);
     types.add(VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT);
     return types;

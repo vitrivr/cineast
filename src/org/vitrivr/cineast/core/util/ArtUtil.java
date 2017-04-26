@@ -107,7 +107,7 @@ public class ArtUtil {
     SegmentLookup segmentLookup = new SegmentLookup();
     List<SegmentDescriptor> segments = segmentLookup.lookUpSegmentsOfObject(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
-    List<String> segmentIds = new ArrayList();
+    List<String> segmentIds = new ArrayList<>();
     Map<String, Integer> sequenceMapping = new HashMap();
     for(SegmentDescriptor segment: segments){
       segmentIds.add(segment.getSegmentId());
