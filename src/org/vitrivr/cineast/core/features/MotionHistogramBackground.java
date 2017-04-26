@@ -18,40 +18,42 @@ import org.vitrivr.cineast.core.util.MathHelper;
 
 public class MotionHistogramBackground extends SubDivMotionHistogram {
 
-	public MotionHistogramBackground() {
-		super("features_MotionHistogramBackground", "feature", MathHelper.SQRT2);
-	}
-	
-	@Override
-	public void processShot(SegmentContainer shot) {
-		if(!phandler.idExists(shot.getId())){
-			
-			Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, shot.getBgPaths());
-			
-			double sum = pair.first.get(0);
-			FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
+  public MotionHistogramBackground() {
+    super("features_MotionHistogramBackground", "feature", MathHelper.SQRT2);
+  }
 
-			persist(shot.getId(), sum, fv);
-		}
-	}
+  @Override
+  public void processShot(SegmentContainer shot) {
+    if (!phandler.idExists(shot.getId())) {
 
-	protected void persist(String shotId, double sum, ReadableFloatVector fs) {
-		PersistentTuple tuple = this.phandler.generateTuple(shotId, sum, fs);
-		this.phandler.persist(tuple);
-	}
+      Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, shot.getBgPaths());
 
-	@Override
-	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-		Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, sc.getBgPaths());
-		
-		FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
-		return getSimilar(fv.toArray(null), qc);
-	}
+      double sum = pair.first.get(0);
+      FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
 
-	@Override
-	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-		supply.get().createFeatureEntity("features_MotionHistogramBackground", true, new AttributeDefinition("sum", AttributeType.FLOAT), new AttributeDefinition("hist", AttributeType.VECTOR));
-	}
+      persist(shot.getId(), sum, fv);
+    }
+  }
 
-	
+  protected void persist(String shotId, double sum, ReadableFloatVector fs) {
+    PersistentTuple tuple = this.phandler.generateTuple(shotId, sum, fs);
+    this.phandler.persist(tuple);
+  }
+
+  @Override
+  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+    Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(1, sc.getBgPaths());
+
+    FloatVectorImpl fv = new FloatVectorImpl(pair.second.get(0));
+    return getSimilar(ReadableFloatVector.toArray(fv), qc);
+  }
+
+  @Override
+  public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+    supply.get().createFeatureEntity("features_MotionHistogramBackground", true,
+        new AttributeDefinition("sum", AttributeType.FLOAT),
+        new AttributeDefinition("hist", AttributeType.VECTOR));
+  }
+
+
 }

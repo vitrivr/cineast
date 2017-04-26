@@ -47,7 +47,7 @@ public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<T
 			  return insertMessageBuilder.setVectorData(generateIntVectorMessage(new IntArrayIterable((int[])o))).build();
 			}
 			if(o instanceof ReadableFloatVector){
-				return insertMessageBuilder.setVectorData(generateVectorMessage(((ReadableFloatVector)o).toList(null))).build();
+				return insertMessageBuilder.setVectorData(generateVectorMessage(ReadableFloatVector.toList((ReadableFloatVector) o))).build();
 			}
 			if(o == null){
 				return insertMessageBuilder.setStringData("null").build();
