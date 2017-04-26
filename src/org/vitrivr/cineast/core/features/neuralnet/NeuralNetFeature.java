@@ -216,7 +216,7 @@ public abstract class NeuralNetFeature extends AbstractFeatureModule {
     /**
      * Use this writer to fill in your own labels into the table which is available to all neural nets
      */
-    protected PersistencyWriter getClassWriter() {
+    protected PersistencyWriter<?> getClassWriter() {
         return this.classWriter;
     }
 
