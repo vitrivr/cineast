@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.vitrivr.cineast.core.data.Pair;
 
-public class OptionalUtil {
+public final class OptionalUtil {
+  private OptionalUtil() {}
+
   /**
    * If both a value of the first {@code Optional} and a value produced by the supplying function is
    * present, returns a {@code Pair} of both, otherwise returns an empty {@code Optional}.
