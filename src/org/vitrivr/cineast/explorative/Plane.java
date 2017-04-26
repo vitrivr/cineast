@@ -23,6 +23,7 @@ public class Plane<T extends Printable> implements Printable, Serializable {
     private final DistanceCalculation<T> distanceCalculator;
     private final T representative;
 
+    @SuppressWarnings("unchecked")
     Plane(List<T> vectors, DistanceCalculation<T> distanceCalculator, T representative){
         this.height = (int) Math.ceil(Math.sqrt(vectors.size()));
         this.width = (int) Math.ceil(Math.sqrt(vectors.size()));

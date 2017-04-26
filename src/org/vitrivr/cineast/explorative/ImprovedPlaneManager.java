@@ -25,7 +25,7 @@ public class ImprovedPlaneManager<T extends Printable> extends BasicPlaneManager
     private transient List<VisualizationElement<T>[][]> nonOptimizedPlanes = new ArrayList<>();
     private final Logger LOGGER = LogManager.getLogger();
 
-    public ImprovedPlaneManager(DistanceCalculation distanceCalculation, String featureName){
+    public ImprovedPlaneManager(DistanceCalculation<T> distanceCalculation, String featureName){
         super(distanceCalculation, featureName);
         this.distanceCalculation = distanceCalculation;
     }
@@ -104,6 +104,7 @@ public class ImprovedPlaneManager<T extends Printable> extends BasicPlaneManager
     }
 
     private VisualizationElement<T>[][] createParentFlatPlane(VisualizationElement<T>[][] childFlatPlane, int level){
+        @SuppressWarnings("unchecked")
         VisualizationElement<T>[][] parentFlatPlane = new VisualizationElement[childFlatPlane.length][childFlatPlane[0].length];
         for(int x = 0; x < childFlatPlane.length; x++){
             for(int y = 0; y < childFlatPlane[0].length; y++){
