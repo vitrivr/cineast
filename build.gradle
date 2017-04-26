@@ -37,7 +37,13 @@ junitPlatform {
     }
 }
 
-compileJava.options.encoding = 'UTF-8'
+compileJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+compileTestJava.options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+
 protobuf {
   protoc {
     artifact = 'com.google.protobuf:protoc:3.1.0'
