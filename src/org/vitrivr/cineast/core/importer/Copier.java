@@ -54,14 +54,17 @@ public class Copier {
 			for(i = 0; i < names.length; ++i){
 				objects[i] = PrimitiveTypeProvider.getObject(map.get(names[i]));
 			}
-			@SuppressWarnings("rawtypes")
-			PersistentTuple tuple = this.writer.generateTuple(objects);
-			this.writer.persist(tuple);
+			persistTuple(this.writer.generateTuple(objects));
 		}while((map = this.importer.readNextAsMap()) != null);
 		
 		this.writer.close();
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	private void persistTuple(PersistentTuple tuple) {
+		this.writer.persist(tuple);
+	}
+
 	public void copyBatched(int batchSize){
 	  
 	  if(batchSize <= 0){
