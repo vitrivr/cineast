@@ -14,7 +14,7 @@ public class FixedSizePriorityQueue<E> extends TreeSet<E> {
   private static final long serialVersionUID = 6510572768545573017L;
   private final int maxSize;
 
-  public FixedSizePriorityQueue(int maxSize, Comparator<E> comparator) {
+  private FixedSizePriorityQueue(int maxSize, Comparator<E> comparator) {
     super(comparator);
     if (maxSize < 0) {
       throw new IllegalArgumentException("maxSize must be positive");
@@ -22,8 +22,12 @@ public class FixedSizePriorityQueue<E> extends TreeSet<E> {
     this.maxSize = maxSize;
   }
 
-  public FixedSizePriorityQueue(int maxSize) {
-    this(maxSize, new NaturalComparator());
+  public static <T extends Comparable<? super T>> FixedSizePriorityQueue<T> create(int maxSize) {
+    return new FixedSizePriorityQueue<T>(maxSize, Comparator.naturalOrder());
+  }
+
+  public static <T> FixedSizePriorityQueue<T> create(int maxSize, Comparator<T> comparator) {
+    return new FixedSizePriorityQueue<T>(maxSize, comparator);
   }
 
   private final int elementsLeft() {
