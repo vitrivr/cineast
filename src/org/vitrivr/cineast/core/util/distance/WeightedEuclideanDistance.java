@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class WeightedEuclideanDistance extends EuclideanDistance {
 
+  private static final long serialVersionUID = -3515846552848309853L;
   private final float[] weights;
 
   WeightedEuclideanDistance(float[] weights) {

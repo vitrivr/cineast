@@ -6,6 +6,9 @@ package org.vitrivr.cineast.core.decode.m3d;
  * @created 29.12.16
  */
 public class MeshDecoderException extends Exception {
+
+  private static final long serialVersionUID = -6496491964433759446L;
+
     MeshDecoderException(String message, Throwable cause) {
         super(message,cause);
     }

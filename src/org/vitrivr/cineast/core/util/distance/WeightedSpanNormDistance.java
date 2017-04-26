@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class WeightedSpanNormDistance extends SpanNormDistance {
 
+  private static final long serialVersionUID = -2854063634272230480L;
   private final float[] weights;
 
   WeightedSpanNormDistance(float[] weights) {

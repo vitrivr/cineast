@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class CorrelationDistance implements FloatArrayDistance {
 
+  private static final long serialVersionUID = 871539863056627306L;
+
   @Override
   public double applyAsDouble(float[] t, float[] u) {
     if (t == null || u == null) {

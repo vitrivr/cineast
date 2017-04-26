@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class WeightedChebyshevDistance extends ChebyshevDistance {
 
+  private static final long serialVersionUID = 3146437065362382786L;
   private final float[] weights;
 
   WeightedChebyshevDistance(float[] weights) {
