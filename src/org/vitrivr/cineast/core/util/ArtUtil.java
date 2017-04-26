@@ -116,6 +116,7 @@ public class ArtUtil {
     List<Map<String, PrimitiveTypeProvider>> featureData = selector.getRows("id", segmentIds.toArray(new String[segmentIds.size()]));
 
     //sort by sequence number
+    @SuppressWarnings("unchecked")
     Map<String, PrimitiveTypeProvider>[] featureDataSorted = new HashMap[featureData.size()];
     for(Map<String, PrimitiveTypeProvider> entry: featureData){
       featureDataSorted[sequenceMapping.get(entry.get("id").getString()) - 1] = entry;
