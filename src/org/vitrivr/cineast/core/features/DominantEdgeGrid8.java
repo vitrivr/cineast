@@ -27,7 +27,7 @@ public class DominantEdgeGrid8 extends AbstractFeatureModule {
 
   @Override
   public void processShot(SegmentContainer shot) {
-    LOGGER.entry();
+    LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {
       short[][][] edgeHist = new short[16][16][4];
       buildEdgeHist(edgeHist, shot.getMostRepresentativeFrame().getImage());
@@ -35,7 +35,7 @@ public class DominantEdgeGrid8 extends AbstractFeatureModule {
       FloatVector fv = new FloatVectorImpl(dominant);
       persist(shot.getId(), fv);
     }
-    LOGGER.exit();
+    LOGGER.traceExit();
   }
 
 

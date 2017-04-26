@@ -37,7 +37,7 @@ public class EdgeImg {
 	//private static final CannyEdge<ImageUInt8, ImageSInt16> canny = FactoryEdgeDetectors.canny(2, false, true, ImageUInt8.class, ImageSInt16.class);
 	
 	public static MultiImage getEdgeImg(MultiImage img) {
-		LOGGER.entry();
+		LOGGER.traceEntry();
 
 		GrayU8 gray = ConvertBufferedImage.convertFrom(img.getBufferedImage(), (GrayU8) null);
 		if(!isSolid(gray)){
@@ -50,7 +50,7 @@ public class EdgeImg {
 	}
 
 	public static boolean[] getEdgePixels(MultiImage img, boolean[] out) {
-		LOGGER.entry();
+		LOGGER.traceEntry();
 
 		if (out == null || out.length != img.getWidth() * img.getHeight()) {
 			out = new boolean[img.getWidth() * img.getHeight()];
@@ -67,12 +67,12 @@ public class EdgeImg {
 			out[i] = (gray.data[i] != 0);
 		}
 
-		LOGGER.exit();
+		LOGGER.traceExit();
 		return out;
 	}
 
 	public static List<Boolean> getEdgePixels(MultiImage img, List<Boolean> out) {
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		if (out == null) {
 			out = new ArrayList<Boolean>(img.getWidth() * img.getHeight());
 		} else {
@@ -93,7 +93,7 @@ public class EdgeImg {
 		for (int i = 0; i < gray.data.length; ++i) {
 			out.add(gray.data[i] != 0);
 		}
-		LOGGER.exit();
+		LOGGER.traceExit();
 		return out;
 	}
 	

@@ -75,7 +75,7 @@ public class VGG16Net implements TensorFlowNet {
 
     @Override
     public float[] classify(BufferedImage img) {
-        LOGGER.entry();
+        LOGGER.traceEntry();
         TimeHelper.tic();
         BufferedImage cropped = ImageCropper.scaleAndCropImage(img, 224, 224);
 

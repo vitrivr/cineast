@@ -61,7 +61,7 @@ public class RandomNetFeature extends NeuralNetFeature {
 
     @Override
     public void processShot(SegmentContainer shot) {
-        LOGGER.entry();
+        LOGGER.traceEntry();
         TimeHelper.tic();
         if (!phandler.idExists(shot.getId())) {
             float[] probabilities = net.classify(new BufferedImage(100,100,0));
@@ -83,7 +83,7 @@ public class RandomNetFeature extends NeuralNetFeature {
             LOGGER.trace("NeuralNetFeature.processShot() done in {}",
                     TimeHelper.toc());
         }
-        LOGGER.exit();
+        LOGGER.traceExit();
     }
 
 

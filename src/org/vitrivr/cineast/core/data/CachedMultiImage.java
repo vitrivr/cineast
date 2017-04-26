@@ -123,7 +123,7 @@ public class CachedMultiImage implements MultiImage {
 	@Override
 	public synchronized int[] getColors(){
 		getColorsLock.lock();
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		int[] _return = null;
 		
 		try {
@@ -136,7 +136,7 @@ public class CachedMultiImage implements MultiImage {
 		}
 		
 		try{
-			LOGGER.exit();
+			LOGGER.traceExit();
 			return _return;
 		}finally{
 			getColorsLock.unlock();
