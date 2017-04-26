@@ -58,7 +58,6 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
     return mst.isReadyForMitosis();
   }
 
-  @SuppressWarnings("unchecked")
   public List<HCTCell<T>> mitosis() throws Exception {
     List<IMST<T>> msts = mst.mitosis();
     List<HCTCell<T>> newCells = new ArrayList<>();
