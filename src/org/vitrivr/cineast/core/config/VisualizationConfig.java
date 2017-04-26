@@ -113,7 +113,7 @@ public final class VisualizationConfig {
     this.cacheEnabled = cacheEnabled;
   }
 
-  public boolean isValidVisualization(Class vizClass) {
+  public boolean isValidVisualization(Class<?> vizClass) {
     for (Map.Entry<String, List<Class<? extends Visualization>>> entry : visualizationCategories.entrySet()) {
       for (Class<? extends Visualization> visualization : entry.getValue()) {
         if(visualization.equals(vizClass)){
