@@ -39,7 +39,8 @@ junitPlatform {
 
 compileJava {
   options.encoding = 'UTF-8'
-  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+  // Important warnings that are currently missing simply because there are too many: "cast", "rawtypes". Ideally, "all" should be used in the future
+  options.compilerArgs += ["-Xlint:deprecation", "-Xlint:overrides", "-Xlint:static", "-Xlint:unchecked", "-Xlint:varargs"]
 }
 
 compileTestJava.options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
