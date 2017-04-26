@@ -43,9 +43,9 @@ public class ArtUtil {
         for(int y=0;y<sizeY;y++) {
           RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[count], arr[count + 1], arr[count + 2]));
           int color = rgbContainer.toIntColor();
-          pixels[y][x][0] = rgbContainer.getRed(color);
-          pixels[y][x][1] = rgbContainer.getGreen(color);
-          pixels[y][x][2] = rgbContainer.getBlue(color);
+          pixels[y][x][0] = RGBContainer.getRed(color);
+          pixels[y][x][1] = RGBContainer.getGreen(color);
+          pixels[y][x][2] = RGBContainer.getBlue(color);
           count+=3;
         }
       }
@@ -61,9 +61,9 @@ public class ArtUtil {
       for(int y=0;y<sizeY;y++) {
         RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(featureData[count], featureData[count + 1], featureData[count + 2]));
         int color = rgbContainer.toIntColor();
-        pixels[y][x][0] = rgbContainer.getRed(color);
-        pixels[y][x][1] = rgbContainer.getGreen(color);
-        pixels[y][x][2] = rgbContainer.getBlue(color);
+        pixels[y][x][0] = RGBContainer.getRed(color);
+        pixels[y][x][1] = RGBContainer.getGreen(color);
+        pixels[y][x][2] = RGBContainer.getBlue(color);
         count+=3;
       }
     }
