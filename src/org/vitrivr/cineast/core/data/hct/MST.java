@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.data.hct;
 
+import com.google.common.collect.Iterables;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +73,7 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
     if (graph.vertexSet().size() == 0)
       throw new Exception("This graph contains no nodes!");
     if (graph.vertexSet().size() == 1) {
-      return (MSTNode<T>) graph.vertexSet().toArray()[0];
+      return Iterables.getOnlyElement(graph.vertexSet());
     }
     int degree = 0;
     MSTNode<T> nucleus = null;
