@@ -39,7 +39,7 @@ public class EXIFMetadataExtractor implements MetadataExtractor {
    * @param objectId ID of the multimedia object for which metadata will be generated.
    * @param path Path to the file for which metadata should be extracted.
    * @return List of MultimediaMetadataDescriptors. The list may be empty but must always be
-   * returned!
+   *         returned!
    */
   @Override
   public List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
