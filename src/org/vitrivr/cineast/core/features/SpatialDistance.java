@@ -1,10 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.GpsDirectory;
 import com.google.common.collect.ImmutableList;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +33,7 @@ import org.vitrivr.cineast.core.metadata.JsonMetadataExtractor;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.OptionalUtil;
+import org.vitrivr.cineast.core.util.images.MetadataUtil;
 
 /**
  * A feature that calculates similarity based on an approximation of the great-circle distance
@@ -168,16 +166,9 @@ public class SpatialDistance implements MetadataExtractor, Retriever {
   }
 
   private Optional<Location> extractExifGpsLocation(Path objectPath) {
-    Optional<Metadata> exifData = Optional.empty();
-    try {
-      exifData = Optional.of(ImageMetadataReader.readMetadata(objectPath.toFile()));
-    } catch (com.drew.imaging.ImageProcessingException | IOException e) {
-      logger.info("Error while reading exif data", e);
-    }
-
-    return exifData
-        .map(metadata -> metadata.getFirstDirectoryOfType(GpsDirectory.class))
-        .map(directory -> directory.getGeoLocation())
+    return MetadataUtil
+        .getMetadataDirectoryOfType(objectPath, GpsDirectory.class)
+        .map(gpsDirectory -> gpsDirectory.getGeoLocation())
         .map(geoLocation -> Location.of(geoLocation));
   }
 
