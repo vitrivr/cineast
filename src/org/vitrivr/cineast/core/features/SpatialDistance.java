@@ -37,6 +37,37 @@ import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.OptionalUtil;
 
+/**
+ * A feature that calculates similarity based on an approximation of the great-circle distance
+ * between two documents. The feature extraction and retrieval bases on objects rather than
+ * segments.
+ *
+ * <p>As a {@link MetadataExtractor} it tries to extract the latitude and longitude coordinates from
+ * the object itself, and storing the object id and the feature vector as
+ * {@code [latitude, longitude]}.
+ *
+ * <p>It extracts the feature data using the GPS data of the Exif format. If not present, it tries
+ * to retrieve the coordinates from a JSON file named after the original document,
+ * e.g. {@code image_0001.json} for {@code image_0001.jpg}. To successfully extract the coordinates,
+ * the JSON file must contain a top level object with {@code "latitude"} and {@code "longitude"}
+ * key-value pairs, for example:
+ *
+ * <pre>
+ *   {
+ *     "latitude": 47.57,
+ *     "longitude": 7.6
+ *   }</pre>
+ *
+ * <p>During retrieval, it does a k-nearest neighbor search based on the coordinates by making use
+ * of the <i>Haversine</i> distance. Because the {@link Retriever} interface features similarity
+ * only on segments, during similarity search based on an existing segment (i.e. {@code segmentId})
+ * the feature has to perform a {@link SegmentLookup} in order to retrieve the object id of the
+ * given segment.
+ *
+ * <p>As of now, the feature uses a linear {@link CorrespondenceFunction} with a maximum distance of
+ * {@code 1000m}. This correspondence <i>heavily</i> influences the quality of the retrieval and
+ * is likely to be unfit for some data sets.
+ */
 public class SpatialDistance implements MetadataExtractor, Retriever {
   private static final Logger logger = LogManager.getLogger();
 
@@ -111,6 +142,17 @@ public class SpatialDistance implements MetadataExtractor, Retriever {
   }
 
   /* Extraction */
+  /**
+   * Extracts the latitude and longitude coordinates from the specified path using Exif data or a
+   * supplementary JSON file (see the class description for more details), stores them in the
+   * feature table with the given {@code objectId} and returns two descriptors based on the
+   * coordinates.
+   *
+   * @param objectId ID of the multimedia object for which metadata will be generated.
+   * @param objectPath Path to the file for which the coordinates should be extracted.
+   * @return a list of two {@code MultimediaMetadataDescriptor}s containing the two coordinates, if
+   *         found and successfully extracted from the path, otherwise an empty list.
+   */
   @Override
   public List<MultimediaMetadataDescriptor> extract(String objectId, Path objectPath) {
     Optional<Location> location = this.extractLocation(objectId, objectPath);
@@ -180,6 +222,11 @@ public class SpatialDistance implements MetadataExtractor, Retriever {
         .orElse(Collections.emptyList());
   }
 
+  /**
+   * Performs the similarity search based on an existing segment. Because feature data is based on
+   * objects, this function performs a {@link SegmentLookup} to retrieve the object id of the given
+   * segment.
+   */
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig rqc) {
     return this.segmentLookup.lookUpSegment(segmentId)
