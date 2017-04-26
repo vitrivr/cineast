@@ -6,10 +6,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.jgrapht.alg.DijkstraShortestPath;
-import org.jgrapht.alg.KruskalMinimumSpanningTree;
-import org.jgrapht.alg.interfaces.MinimumSpanningTree;
+import org.jgrapht.alg.interfaces.SpanningTreeAlgorithm.SpanningTree;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.traverse.BreadthFirstIterator;
@@ -150,8 +149,7 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
   private double updateCoveringRadius() throws Exception {
     double coveringRadius = 0;
     for (MSTNode<T> node : mst.vertexSet()) {
-      double pathLength = new DijkstraShortestPath<MSTNode<T>, DefaultWeightedEdge>(mst, nucleus,
-          node).getPathLength();
+      double pathLength = DijkstraShortestPath.findPathBetween(mst, nucleus, node).getWeight();
       if (pathLength > coveringRadius)
         coveringRadius = pathLength;
     }
@@ -178,9 +176,9 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
     if (graph.vertexSet().size() == 1)
       return graph; // PrimMinimum
 
-    MinimumSpanningTree<MSTNode<T>, DefaultWeightedEdge> internMst = new KruskalMinimumSpanningTree<>(
-        graph);
-    Set<DefaultWeightedEdge> edges = internMst.getMinimumSpanningTreeEdgeSet();
+    SpanningTree<DefaultWeightedEdge> internMst = new KruskalMinimumSpanningTree<>(graph)
+        .getSpanningTree();
+    Set<DefaultWeightedEdge> edges = internMst.getEdges();
     Set<MSTNode<T>> nodes = graph.vertexSet();
     SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> internSWG = new SimpleWeightedGraph<>(
         DefaultWeightedEdge.class);
