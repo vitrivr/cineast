@@ -39,7 +39,7 @@ junitPlatform {
 
 compileJava {
   options.encoding = 'UTF-8'
-  // Important warnings that are currently missing simply because there are too many: "cast", "rawtypes". Ideally, "all" should be used in the future
+  // Important warnings that are currently missing simply because there are too many: "cast", "rawtypes", "serial". Ideally, "all" should be used in the future
   options.compilerArgs += ["-Xlint:deprecation", "-Xlint:overrides", "-Xlint:static", "-Xlint:unchecked", "-Xlint:varargs"]
 }
 
