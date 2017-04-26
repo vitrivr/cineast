@@ -47,7 +47,7 @@ public class AverageColor extends AbstractFeatureModule {
     ReadableLabContainer query = getAvg(sc.getAvgImg());
     List<ScoreElement> _return = getSimilar(ReadableFloatVector.toArray(query), qc);
     LOGGER.debug("AverageColor.getSimilar() done in {}ms", (System.currentTimeMillis() - start));
-    return LOGGER.exit(_return);
+    return LOGGER.traceExit(_return);
   }
 
 }

@@ -76,7 +76,7 @@ public class MedianColor extends AbstractFeatureModule {
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     LOGGER.traceEntry();
     LabContainer query = getMedian(sc.getMedianImg());
-    return LOGGER.exit(getSimilar(ReadableFloatVector.toArray(query), qc));
+    return LOGGER.traceExit(getSimilar(ReadableFloatVector.toArray(query), qc));
   }
 
 }

@@ -24,7 +24,7 @@ public class MostRepresentative {
 				_return = f;
 			}
 		}
-		return LOGGER.exit(_return);
+		return LOGGER.traceExit(_return);
 	}
 	
 }

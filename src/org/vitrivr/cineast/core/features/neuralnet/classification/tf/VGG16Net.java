@@ -111,7 +111,7 @@ public class VGG16Net implements TensorFlowNet {
         }
 
         LOGGER.debug("Image classified by VGG16 in {} msec", TimeHelper.toc());
-        return LOGGER.exit(_return);
+        return LOGGER.traceExit(_return);
     }
 
     @Override
