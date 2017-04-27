@@ -43,7 +43,7 @@ compileJava {
   options.compilerArgs += ["-Xlint:deprecation", "-Xlint:overrides", "-Xlint:static", "-Xlint:unchecked", "-Xlint:varargs"]
 }
 
-compileTestJava.options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+compileTestJava.options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xlint:empty" << "-Xlint:serial"
 
 protobuf {
   protoc {
