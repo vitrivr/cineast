@@ -1,9 +1,7 @@
 package org.vitrivr.cineast.core.db;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -35,9 +33,9 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   @Override
   public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector,
       String column, Class<T> distanceElementClass, ReadableQueryConfig config) {
-    List<Map<String, PrimitiveTypeProvider>> results = getNearestNeighbourRows(k, vector, column,
+      List<Map<String, PrimitiveTypeProvider>> results = getNearestNeighbourRows(k, vector, column,
         config);
-    return results.stream()
+      return results.stream()
         .map(m -> DistanceElement.create(
             distanceElementClass, m.get("id").getString(), m.get("distance").getDouble()))
         .limit(k)
@@ -58,47 +56,68 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     /* Check if size of configs and vectors array corresponds. */
     if (vectors.size() > configs.size()) throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
 
-    List<T> results = new ArrayList<>();
-    for (int i = 0; i< vectors.size(); i++) {
-      results.addAll(this.getNearestNeighbours(k, vectors.get(i), column, distanceElementClass, configs.get(i)));
+    /* Prepare helper data-structures. */
+    final Importer<?> importer = newImporter(this.file);
+    final List<FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>>> knns = new ArrayList<>(vectors.size());
+    final List<FloatArrayDistance> distances = new ArrayList<>(vectors.size());
+
+    for (int i=0; i< vectors.size(); i++) {
+      FloatArrayDistance distance = FloatArrayDistance.fromQueryConfig(configs.get(i));
+      distances.add(distance);
+      knns.add(new FixedSizePriorityQueue<>(k, new PrimitiveTypeMapDistanceComparator(column, vectors.get(i), distance)));
     }
-    return results;
+
+    Map<String, PrimitiveTypeProvider> map;
+    while ((map = importer.readNextAsMap()) != null) {
+      if (!map.containsKey(column)) continue;
+      for (int i = 0; i < vectors.size(); i++) {
+        double d = distances.get(i).applyAsDouble(vectors.get(i), map.get(column).getFloatArray());
+        map.put("distance", new FloatTypeProvider((float) d));
+        knns.get(i).add(map);
+      }
+    }
+
+    return knns.stream()
+            .flatMap(Collection::stream)
+            .map(m -> DistanceElement.create(distanceElementClass, m.get("id").getString(), m.get("distance").getDouble()))
+            .limit(k)
+            .collect(Collectors.toList());
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
       String column, ReadableQueryConfig config) {
 
-    config = QueryConfig.clone(config);
+      config = QueryConfig.clone(config);
 
-    Importer<?> importer = newImporter(this.file);
+      Importer<?> importer = newImporter(this.file);
 
-    FloatArrayDistance distance = FloatArrayDistance.fromQueryConfig(config);
+      FloatArrayDistance distance = FloatArrayDistance.fromQueryConfig(config);
 
-    FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn = new FixedSizePriorityQueue<>(k,
-        new PrimitiveTypeMapDistanceComparator(column, vector, distance));
+      FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn = new FixedSizePriorityQueue<>(k,
+          new PrimitiveTypeMapDistanceComparator(column, vector, distance));
 
-    Map<String, PrimitiveTypeProvider> map;
-    while ((map = importer.readNextAsMap()) != null) {
-      if(!map.containsKey(column)){
-        continue;
+      Map<String, PrimitiveTypeProvider> map;
+      while ((map = importer.readNextAsMap()) != null) {
+        if(!map.containsKey(column)){
+          continue;
+        }
+        double d = distance.applyAsDouble(vector, map.get(column).getFloatArray());
+        map.put("distance", new FloatTypeProvider((float) d));
+        knn.add(map);
       }
-      double d = distance.applyAsDouble(vector, map.get(column).getFloatArray());
-      map.put("distance", new FloatTypeProvider((float) d));
-      knn.add(map);
-    }
 
-    int len = Math.min(knn.size(), k);
-    ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(len);
+      int len = Math.min(knn.size(), k);
+      ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(len);
 
-    for (Map<String, PrimitiveTypeProvider> i : knn) {
-      _return.add(i);
-      if (_return.size() >= len) {
-        break;
+      for (Map<String, PrimitiveTypeProvider> i : knn) {
+        _return.add(i);
+        if (_return.size() >= len) {
+          break;
+        }
       }
-    }
 
-    return _return;
+      return _return;
   }
 
   @Override
