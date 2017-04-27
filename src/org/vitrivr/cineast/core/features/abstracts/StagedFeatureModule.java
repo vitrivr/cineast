@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
-import org.vitrivr.cineast.core.benchmark.Benchmark;
-import org.vitrivr.cineast.core.benchmark.BenchmarkEngine;
+import org.vitrivr.cineast.core.benchmark.model.Benchmark;
+import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
 import org.vitrivr.cineast.core.benchmark.BenchmarkManager;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -28,9 +28,6 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
     private final static String BENCHMARK_SPLITNAME_PREPROCESSING = "PREPROCESSING";
     private final static String BENCHMARK_SPLITNAME_LOOKUP = "LOOKUP";
     private final static String BENCHMARK_SPLITNAME_POSTPROCESSING = "POSTPROCESSING";
-
-    /** The maximum number of lookups that should be executed by the feature module. Is not bound by default (i.e. = -1)! */
-    protected int maxLookups = -1;
 
     /**
      *
@@ -97,13 +94,15 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      */
     protected List<DistanceElement> lookup(List<float[]> features, QueryConfig qc) {
         final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
-        int counter = 1;
         List<DistanceElement> partialResults = new ArrayList<>();
-        for (float[] feature : features) {
-            if (this.maxLookups > 0 && counter > this.maxLookups) break;
-            qc.setDistanceWeights(this.weightsForFeature(feature));
-            partialResults.addAll(this.selector.getNearestNeighbours(numberOfPartialResults, feature, "feature", SegmentDistanceElement.class, qc));
-            counter += 1;
+        if (features.size() == 1) {
+            partialResults.addAll(this.selector.getNearestNeighbours(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, this.queryConfigForFeature(qc, features.get(0))));
+        } else {
+            List<ReadableQueryConfig> configs = new ArrayList<>(features.size());
+            for (float[] feature : features) {
+                configs.add(this.queryConfigForFeature(qc, feature));
+            }
+            partialResults.addAll(this.selector.getNearestNeighbours(numberOfPartialResults, features, "feature", SegmentDistanceElement.class, configs));
         }
         return partialResults;
     }
@@ -120,14 +119,15 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
     protected abstract List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc);
 
     /**
-     * Returns a weight-vector for the given feature. Defaults to null,
-     * i.e. all components are weighted equally.
+     * Returns a modified QueryConfig for the given feature. By default, this method simply returns the original config. However,
+     * this method can be re-implemented to e.g. add a static or dynamic weight vector.
      *
+     * @param qc Original query config
      * @param feature Feature for which a weight-vector is required.
-     * @return Weight vector for feature.
+     * @return New query config (may be identical to the original one).
      */
-    protected float[] weightsForFeature(float[] feature) {
-        return null;
+    protected ReadableQueryConfig queryConfigForFeature(QueryConfig qc, float[] feature) {
+        return qc;
     }
 
     /**

@@ -81,7 +81,6 @@ public abstract class CENS extends StagedFeatureModule {
         /* Apply fields. */
         this.minFrequency = minFrequency;
         this.maxFrequency = maxFrequency;
-        this.maxLookups =  QUERY_SETTINGS.length * 3;
     }
 
 
@@ -202,5 +201,19 @@ public abstract class CENS extends StagedFeatureModule {
         }
 
         return features;
+    }
+
+    /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
+     *
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
+     */
+    protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
+                .addHint(ReadableQueryConfig.Hints.lsh);
     }
 }

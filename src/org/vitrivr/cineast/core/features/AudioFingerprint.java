@@ -108,6 +108,9 @@ public class AudioFingerprint extends StagedFeatureModule {
             });
         }
 
+        /* Return immediately if no partial results are available.  */
+        if (map.isEmpty()) return results;
+
         /* Prepare final results. */
         final CorrespondenceFunction correspondence = CorrespondenceFunction.linear(statistics.getMean());
         map.forEach((key, value) -> results.add(value.toScore(correspondence)));
@@ -135,20 +138,21 @@ public class AudioFingerprint extends StagedFeatureModule {
     }
 
     /**
-     * Returns a weight-vector for the given feature. Defaults to null,
-     * i.e. all components are weighted equally.
+     * Returns a modified QueryConfig for the given feature. This implementation copies the original configuaration and
+     * sets a weight-vector, which depends on the feature vector.
      *
+     * @param qc Original query config
      * @param feature Feature for which a weight-vector is required.
-     * @return Weight vector for feature.
+     * @return New query config.
      */
-    protected float[] weightsForFeature(float[] feature) {
+    protected ReadableQueryConfig queryConfigForFeature(QueryConfig qc, float[] feature) {
         float[] weight = new float[feature.length];
         for (int i=0;i<feature.length;i++) {
             if (feature[i] > 0) {
                 weight[i] = 1.0f;
             }
         }
-        return weight;
+        return qc.clone().setDistanceWeights(weight);
     }
 
     /**
