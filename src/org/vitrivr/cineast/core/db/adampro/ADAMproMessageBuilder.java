@@ -265,11 +265,11 @@ public class ADAMproMessageBuilder {
 
                 float norm = qc.getNorm().orElse(1f);
 
-                if (Math.abs(norm - 1f) < 1e6f) {
+                if (Math.abs(norm - 1f) < 1e-6f) {
                     return manhattan;
                 }
 
-                if (Math.abs(norm - 2f) < 1e6f) {
+                if (Math.abs(norm - 2f) < 1e-6f) {
                     return euclidean;
                 }
 
