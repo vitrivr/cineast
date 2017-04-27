@@ -51,7 +51,6 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     /**
      * Needs to be public so the extraction runner has access with a config-object
      */
-    @SuppressWarnings("unused")
     public NeuralNetVGG16Feature(com.eclipsesource.json.JsonObject config) {
         this(NeuralNetConfig.parse(config));
     }

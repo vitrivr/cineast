@@ -134,6 +134,8 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
 
     Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
 
+    sl.close();
+    
     for (String id : ids) {
       SegmentDescriptor sd = map.get(id);
       if (sd != null) {
@@ -161,6 +163,8 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
 
     Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
 
+    sl.close();
+    
     HashSet<String> videoIds = new HashSet<>();
     for (String id : ids) {
       SegmentDescriptor sd = map.get(id);
@@ -180,6 +184,8 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
 
     Map<String, MultimediaObjectDescriptor> vmap = vl.lookUpObjects(vids);
 
+    vl.close();
+    
     for (String vid : vids) {
       vdList.add(vmap.get(vid));
     }

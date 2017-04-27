@@ -1,18 +1,44 @@
 package org.vitrivr.cineast.core.config;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.art.modules.*;
+import org.vitrivr.cineast.art.modules.VisualizationAverageColorGradient;
+import org.vitrivr.cineast.art.modules.VisualizationAverageColorGrid8;
+import org.vitrivr.cineast.art.modules.VisualizationAverageColorGrid8Square;
+import org.vitrivr.cineast.art.modules.VisualizationAverageColorStreamgraph;
+import org.vitrivr.cineast.art.modules.VisualizationAverageColorStreamgraphReal;
+import org.vitrivr.cineast.art.modules.VisualizationAverageColorStripe;
+import org.vitrivr.cineast.art.modules.VisualizationAverageColorStripeVariable;
+import org.vitrivr.cineast.art.modules.VisualizationAverageColorSunburst;
+import org.vitrivr.cineast.art.modules.VisualizationAverageColorSunburstReal;
+import org.vitrivr.cineast.art.modules.VisualizationDominantColorGradient;
+import org.vitrivr.cineast.art.modules.VisualizationDominantColorStripe;
+import org.vitrivr.cineast.art.modules.VisualizationDominantColorStripeVariable;
+import org.vitrivr.cineast.art.modules.VisualizationDominantColorSunburst;
+import org.vitrivr.cineast.art.modules.VisualizationDominantColorSunburstReal;
+import org.vitrivr.cineast.art.modules.VisualizationDominantEdgeAverageColorGrid16;
+import org.vitrivr.cineast.art.modules.VisualizationDominantEdgeAverageColorGrid8;
+import org.vitrivr.cineast.art.modules.VisualizationDominantEdgeGrid16;
+import org.vitrivr.cineast.art.modules.VisualizationDominantEdgeGrid8;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorGradient;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorGrid8;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorGrid8Square;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorStreamgraph;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorStreamgraphReal;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorStripe;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorStripeVariable;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorSunburst;
+import org.vitrivr.cineast.art.modules.VisualizationMedianColorSunburstReal;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
-import org.vitrivr.cineast.core.data.DoublePair;
-import org.vitrivr.cineast.core.util.ReflectionHelper;
 
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class VisualizationConfig {
 

@@ -33,7 +33,6 @@ import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.db.DBResultCache;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
@@ -196,8 +195,8 @@ public class JSONAPIThread extends Thread {
 
         }
         
-        String resultName = DBResultCache.newCachedResult(shotids);
-        JSONUtils.printResultName(printer, resultName);
+//        String resultName = DBResultCache.newCachedResult(shotids);
+//        JSONUtils.printResultName(printer, resultName);
         break;
       }
 
@@ -219,7 +218,7 @@ public class JSONAPIThread extends Thread {
         
         QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
         
-        DBResultCache.createIfNecessary(resultCacheName);
+//        DBResultCache.createIfNecessary(resultCacheName);
         
         int index = 1;
         for (Iterator<JsonValue> it = queryArray.iterator(); it.hasNext(); ++index) {
@@ -245,8 +244,8 @@ public class JSONAPIThread extends Thread {
           }
         }
 
-        String resultName = DBResultCache.newCachedResult(shotids);
-        JSONUtils.printResultName(printer, resultName);
+//        String resultName = DBResultCache.newCachedResult(shotids);
+//        JSONUtils.printResultName(printer, resultName);
 
         break;
       }
@@ -264,7 +263,7 @@ public class JSONAPIThread extends Thread {
         
         QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
         
-        DBResultCache.createIfNecessary(resultCacheName);
+//        DBResultCache.createIfNecessary(resultCacheName);
         
         HashMap<String, ArrayList<ImageQueryContainer>> categoryMap = new HashMap<>();
         

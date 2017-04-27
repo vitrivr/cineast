@@ -64,6 +64,7 @@ public class FullVisualizationMedianColorSunburst extends AbstractVisualizationM
       allData.addAll(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimedia.getObjectId()));
       System.out.println(multimedia.getObjectId());
     }
+    lookup.close();
     return visualizeMulti(allData);
   }
 
