@@ -139,6 +139,8 @@ public class BenchmarkImpl implements Benchmark {
         data.put(FIELD_NAME, this.name);
         data.put(FIELD_RUN, this.run);
         data.put(FIELD_TOTAL, this.duration(this.start, this.end));
+        data.put(FIELD_START, this.start);
+        data.put(FIELD_END, this.end);
 
         /* Calculate the split durations and add them as well. */
         for (int i=0; i<splits.size(); i++) {
@@ -146,9 +148,6 @@ public class BenchmarkImpl implements Benchmark {
             long end = (i == splits.size()-1) ? this.end : this.splits.get(i+1).second;
             data.put(this.splits.get(i).first, this.duration(begin, end));
         }
-
-        data.put(FIELD_START, this.start);
-        data.put(FIELD_END, this.end);
 
         return data;
     }

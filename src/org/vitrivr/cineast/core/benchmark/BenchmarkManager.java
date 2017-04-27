@@ -15,10 +15,10 @@ import java.util.HashMap;
  */
 public final class BenchmarkManager {
 
-    /** */
-    private static String DEFAULT_ENGINE = "DEFAULT";
+    /** Name of the default benchmark-engine. */
+    private static String DEFAULT_ENGINE = "benchmark-default";
 
-    /** */
+    /** List uf currently running BenchmarkEngines. */
     private static final HashMap<String,BenchmarkEngine> RUNNING = new HashMap<>();
 
     /**
@@ -27,8 +27,11 @@ public final class BenchmarkManager {
     private BenchmarkManager() {}
 
     /**
+     * Returns the default BenchmarkEngine configured in the config.json file. Only a single
+     * instance of the default BenchmarkEngine exists and it is re-used between calls of this
+     * method.
      *
-     * @return
+     * @return Instance of the default BenchmarkEngine.
      */
     public static BenchmarkEngine getDefaultEngine() {
         BenchmarkMode defaultMode = Config.sharedConfig().getBenchmark().getMode();
@@ -37,11 +40,13 @@ public final class BenchmarkManager {
     }
 
     /**
+     * Returns a new BenchmarkEngine that uses the provided name and configuration. If a BenchmarkEngine for
+     * that name was instantiated before, that engine is re-used between calls to this methods.
      *
-     * @param name
-     * @param mode
-     * @param path
-     * @return
+     * @param name Name of the BenchmarkEngine.
+     * @param mode BenchmarkMode to use with the new engine.
+     * @param path Path where the benchmark-engine should write its output. Has no effect for every mode except BenchmarkMode.STORE
+     * @return Instance of named BenchmarkEngine
      */
     public static BenchmarkEngine getEngine(String name, BenchmarkMode mode, Path path) {
         synchronized (RUNNING) {
@@ -51,14 +56,15 @@ public final class BenchmarkManager {
     }
 
     /**
+     * Stops a named BenchmarkEngine and removes it from the list of running BenchmarkEngines.
      *
-     * @param name
-     * @return
+     * @param name Name of the BenchmarkEngine to stop
      */
     public static void stopEngine(String name) {
         if (name.equals(DEFAULT_ENGINE)) throw new IllegalArgumentException("You cannot stop the default benchmark engine.");
         synchronized(RUNNING){
             if (RUNNING.containsKey(name)) {
+                RUNNING.get(name).stop();
                 RUNNING.remove(name);
             }
         }

@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.benchmark.engine;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.benchmark.model.Benchmark;
@@ -27,6 +28,12 @@ import java.util.Map;
 public class BenchmarkWriter implements Runnable {
     /** LogManager instance used to log Benchmark results. */
     private static final Logger LOGGER = LogManager.getLogger();
+
+    /** Delimiter used to separate entries. */
+    private static final String DELIMITER_COLUMNS = ",";
+
+    /** Delimiter used to separate split-name and value. */
+    private static final String DELIMITER_LABEL = ":";
 
     /** BenchmarkEngine that has been assigned to the current instance of BenchmarkWriter. */
     private final BenchmarkEngine engine;
@@ -67,15 +74,15 @@ public class BenchmarkWriter implements Runnable {
         /* Timeout between flushing the benchmark-queue. */
         int timeout = 30000;
 
+        /* Estimated of BenchmarkObjects being added. */
+        float rate = 0;
+
         /*
          * Loop: Writes the content of the BenchmarkEngine to disk at regular intervals.
          */
         while(true) {
             /* Writes the latest Benchmark entries to disk. */
             int written = this.write();
-
-            /* Adjusts timeout-values. */
-
 
             /* Sets timeout. */
             try {
@@ -132,8 +139,10 @@ public class BenchmarkWriter implements Runnable {
         try {
             for (Benchmark benchmark : benchmarks) {
                 for (Map.Entry<String,Object> data : benchmark.data().entrySet()) {
+                    this.writer.append(data.getKey());
+                    this.writer.append(DELIMITER_LABEL);
                     this.writer.append(data.getValue().toString());
-                    this.writer.append("; ");
+                    this.writer.append(DELIMITER_COLUMNS);
                 }
                 this.writer.newLine();
                 counter += 1;

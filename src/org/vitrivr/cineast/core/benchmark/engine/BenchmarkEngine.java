@@ -188,7 +188,11 @@ public class BenchmarkEngine {
     }
 
     /**
-     * Stops the BenchmarkEngine which means that no more new Benchmarks can be created.
+     * Stops the BenchmarkEngine which means that no more new Benchmarks can be created from now on.
+     * Benchmarks that are still running, can still be used and completed.
+     *
+     * Calling this method will also cause the underlying BenchmarkWriter to stop its work. Hence,
+     * Benchmarks that are still running will not be written to disk.
      */
     public void stop() {
         if (this.writerThread != null) {
