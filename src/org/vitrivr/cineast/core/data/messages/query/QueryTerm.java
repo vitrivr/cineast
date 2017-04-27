@@ -15,6 +15,7 @@ import org.vitrivr.cineast.core.util.web.MeshParser;
 import org.vitrivr.cineast.core.util.web.AudioParser;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,12 +53,16 @@ public class QueryTerm {
     }
 
     /**
-     * Getter for categories.
+     * Getter for feature categories.
      * 
      * @return
      */
     public List<String> getCategories() {
-        return Arrays.asList(this.categories);
+        if (this.categories != null) {
+            return Arrays.asList(this.categories);
+        } else {
+            return new ArrayList<>(0);
+        }
     }
 
     /**
@@ -80,6 +85,7 @@ public class QueryTerm {
      */
     public QueryContainer toContainer() {
         if (this.cachedQueryContainer == null) {
+            if (this.data == null) return null;
             switch (this.type) {
                 case IMAGE:
                     BufferedImage image = ImageParser.dataURLtoBufferedImage(this.data);
