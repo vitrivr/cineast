@@ -15,18 +15,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This implementation of the AbstractFeatureModule executes every query, either based on a SegmentContainer
+ * or on an existing segment, in three stages. This for in-depth analysis and benchmarking of the different
+ * stages as well as a unified approach to similarity search.
+ *
+ * When implementing this class, you are expected to override the methods that represent the different stages
+ * instead of implementing the getSimilar() methods.
+ *
  * @author rgasser
  * @version 1.0
  * @created 25.04.17
  */
 public abstract class StagedFeatureModule extends AbstractFeatureModule {
 
-
+    /** Instance of the BenchmarkEngine that is used to benchmark queries. */
     private final static BenchmarkEngine BENCHMARK_ENGINE = BenchmarkManager.getDefaultEngine();
 
-
+    /**
+     * Split markers used for benchmarking.
+     */
     private final static String BENCHMARK_SPLITNAME_PREPROCESSING = "PREPROCESSING";
     private final static String BENCHMARK_SPLITNAME_LOOKUP = "LOOKUP";
+    private final static String BENCHMARK_SPLITNAME_SIMILARITY = "SIMILARITY";
     private final static String BENCHMARK_SPLITNAME_POSTPROCESSING = "POSTPROCESSING";
 
     /**
@@ -39,10 +49,23 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
     }
 
     /**
+     * This method executes a regular similarity query based on a provided SegmentContainer. The query
+     * is executed in three stages (hence the name of the class):
      *
-     * @param sc
-     * @param qc
-     * @return
+     * <ol>
+     *     <li>Pre-processing: Extracting features from the SegmentContainer.</li>
+     *     <li>Similarity search: Performing the similarity query in the underlying storage engine.</li>
+     *     <li>Post-processing: Aggregating the query results into the final Score elements.</li>
+     * </ol>
+     *
+     * Every step is captured by a benchmarking object, allowing for in-depth analysis of the query process.
+     *
+     * Even though it is possible to re-implement this method, it is not recommended. Instead, try to override
+     * the methods that represent the different stages.
+     *
+     * @param sc SegmentContainer to base the query on.
+     * @param qc QueryConfiguration
+     * @return List of results
      */
     public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Initialize new Benchmark object. */
@@ -56,7 +79,50 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         List<float[]> features = this.preprocessQuery(sc, qcc);
 
         /* Start query lookup phase. */
+        benchmark.split(BENCHMARK_SPLITNAME_SIMILARITY);
+        List<DistanceElement> partialResults = this.lookup(features, qcc);
+
+        /* Start query-results post-processing phase. */
+        benchmark.split(BENCHMARK_SPLITNAME_POSTPROCESSING);
+        List<ScoreElement> results = this.postprocessQuery(partialResults, qcc);
+
+        /* End the benchmark and return the results. */
+        benchmark.end();
+        return results;
+    }
+
+    /**
+     * This method executes a similarity query based on an existing segment. The query is executed in three stages
+     * (hence the name of the class):
+     *
+     * <ol>
+     *     <li>Lookup: Retrieving the features associated with the provided segment ID.</li>
+     *     <li>Similarity search: Performing the similarity query in the underlying storage engine.</li>
+     *     <li>Post-processing: Aggregating the query results into the final Score elements.</li>
+     * </ol>
+     *
+     * Every step is captured by a benchmarking object, allowing for in-depth analysis of the query process.
+     *
+     * Even though it is possible to re-implement this method, it is not recommended. Instead, try to override
+     * the methods that represent the different stages.
+     *
+     * @param segmentId ID of the segment that is used as example.
+     * @param qc QueryConfiguration
+     * @return List of results
+     */
+    public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
+        /* Initialize new Benchmark object. */
+        Benchmark benchmark = BENCHMARK_ENGINE.startNew(this.getClass());
+
+        /* Adjust query-config. */
+        QueryConfig qcc = this.defaultQueryConfig(qc);
+
+        /* Start query pre-processing phase. */
         benchmark.split(BENCHMARK_SPLITNAME_LOOKUP);
+        List<float[]> features = this.selector.getFeatureVectors("id", segmentId, "feature");
+
+        /* Start query lookup phase. */
+        benchmark.split(BENCHMARK_SPLITNAME_SIMILARITY);
         List<DistanceElement> partialResults = this.lookup(features, qcc);
 
         /* Start query-results post-processing phase. */
