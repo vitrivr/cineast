@@ -37,7 +37,14 @@ junitPlatform {
     }
 }
 
-compileJava.options.encoding = 'UTF-8'
+compileJava {
+  options.encoding = 'UTF-8'
+  // Important warnings that are currently missing simply because there are too many: "cast", "rawtypes", "serial". Ideally, "all" should be used in the future
+  options.compilerArgs += ["-Xlint:deprecation", "-Xlint:overrides", "-Xlint:static", "-Xlint:unchecked", "-Xlint:varargs"]
+}
+
+compileTestJava.options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+
 protobuf {
   protoc {
     artifact = 'com.google.protobuf:protoc:3.1.0'

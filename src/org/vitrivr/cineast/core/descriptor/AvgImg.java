@@ -19,7 +19,7 @@ public class AvgImg {
 	
 	public static MultiImage getAvg(List<VideoFrame> videoFrames){
 		TimeHelper.tic();
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		MultiImage first = videoFrames.get(0).getImage();
 		int width = first.getWidth(), height = first.getHeight();
 		double[] buffer = new double[width * height * 3];
@@ -62,7 +62,7 @@ public class AvgImg {
 		
 		System.gc();
 		LOGGER.debug("AvgImg.getAvg() done in {}", TimeHelper.toc());
-		LOGGER.exit();
+		LOGGER.traceExit();
 		return MultiImageFactory.newMultiImage(width, height, colors);
 	}
 	

@@ -26,6 +26,7 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
     this.phandler.setFieldNames("id", "sums", "hist");
   }
 
+  @SuppressWarnings("unchecked")
   protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {
     PersistentTuple tuple = this.phandler.generateTuple(shotId, fs1, fs2);
     this.phandler.persist(tuple);

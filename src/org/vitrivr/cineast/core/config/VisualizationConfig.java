@@ -33,7 +33,7 @@ public final class VisualizationConfig {
     //add all categories with their containing visualizations
     List<Class<? extends Visualization>> list;
 
-    list = new ArrayList();
+    list = new ArrayList<>();
     list.add(VisualizationAverageColorGrid8.class);
     list.add(VisualizationMedianColorGrid8.class);
     list.add(VisualizationDominantEdgeGrid8.class);
@@ -42,7 +42,7 @@ public final class VisualizationConfig {
     list.add(VisualizationDominantEdgeAverageColorGrid16.class);
     DEFAULT_VISUALIZATION_CATEGORIES.put("segments", list);
 
-    list = new ArrayList();
+    list = new ArrayList<>();
     list.add(VisualizationAverageColorGrid8.class);
     list.add(VisualizationMedianColorGrid8.class);
     list.add(VisualizationAverageColorGradient.class);
@@ -68,7 +68,7 @@ public final class VisualizationConfig {
     list.add(VisualizationMedianColorStreamgraphReal.class);
     DEFAULT_VISUALIZATION_CATEGORIES.put("multimediaobjects", list);
 
-    list = new ArrayList();
+    list = new ArrayList<>();
     list.add(VisualizationAverageColorGrid8.class);
     list.add(VisualizationAverageColorGrid8.class);
     list.add(VisualizationAverageColorStripe.class);
@@ -113,7 +113,7 @@ public final class VisualizationConfig {
     this.cacheEnabled = cacheEnabled;
   }
 
-  public boolean isValidVisualization(Class vizClass) {
+  public boolean isValidVisualization(Class<?> vizClass) {
     for (Map.Entry<String, List<Class<? extends Visualization>>> entry : visualizationCategories.entrySet()) {
       for (Class<? extends Visualization> visualization : entry.getValue()) {
         if(visualization.equals(vizClass)){

@@ -70,6 +70,7 @@ public class ReflectionHelper {
 	 * @param name Name of the CodebookGenerator.
 	 * @return Instance of CodebookGenerator or null, if instantiation fails.
 	 */
+	@SuppressWarnings("unchecked")
 	public static CodebookGenerator newCodebookGenerator(String name) {
 		Class<CodebookGenerator> c = null;
 		try {
@@ -121,6 +122,7 @@ public class ReflectionHelper {
 	 * @param name Name of the Exporter.
 	 * @return Instance of Exporter or null, if instantiation fails.
 	 */
+	@SuppressWarnings("unchecked")
 	public static Extractor newExporter(String name, HashMap<String, String> configuration) {
 		Class<Extractor> c = null;
 		try {
@@ -151,6 +153,7 @@ public class ReflectionHelper {
 	 * @param name Name of the MetadataExtractor.
 	 * @return Instance of MetadataExtractor or null, if instantiation fails.
 	 */
+	@SuppressWarnings("unchecked")
 	public static MetadataExtractor newMetadataExtractor(String name) {
 		Class<MetadataExtractor> c = null;
 		try {

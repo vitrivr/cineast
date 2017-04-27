@@ -63,20 +63,20 @@ public class MedianColor extends AbstractFeatureModule {
   public void processShot(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       TimeHelper.tic();
-      LOGGER.entry();
+      LOGGER.traceEntry();
       LabContainer median = getMedian(shot);
 
       persist(shot.getId(), median);
       LOGGER.debug("MedianColor.processShot() done in {}", TimeHelper.toc());
-      LOGGER.exit();
+      LOGGER.traceExit();
     }
   }
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    LOGGER.entry();
+    LOGGER.traceEntry();
     LabContainer query = getMedian(sc.getMedianImg());
-    return LOGGER.exit(getSimilar(ReadableFloatVector.toArray(query), qc));
+    return LOGGER.traceExit(getSimilar(ReadableFloatVector.toArray(query), qc));
   }
 
 }

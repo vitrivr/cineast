@@ -54,8 +54,8 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
 
     FloatArrayDistance distance = FloatArrayDistance.fromQueryConfig(config);
 
-    FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn = new FixedSizePriorityQueue<>(k,
-        new PrimitiveTypeMapDistanceComparator(column, vector, distance));
+    FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn = FixedSizePriorityQueue
+        .create(k, new PrimitiveTypeMapDistanceComparator(column, vector, distance));
 
     Map<String, PrimitiveTypeProvider> map;
     while ((map = importer.readNextAsMap()) != null) {
