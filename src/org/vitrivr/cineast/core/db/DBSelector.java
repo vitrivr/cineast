@@ -28,8 +28,8 @@ public interface DBSelector {
   <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column, Class<T> distanceElementClass, ReadableQueryConfig config);
 
   /**
-   * Performs a batched kNN-search with multiple vectors. That is, ADAM pro is tasked to perform the kNN search for each vector in the
-   * provided list and return results of each query.
+   * Performs a batched kNN-search with multiple vectors. That is, the storage engine is tasked to perform the kNN search for each vector in the
+   * provided list and return the union of the results for every query.
    *
    * @param k The number k vectors to return per query.
    * @param vectors The list of vectors to use.
