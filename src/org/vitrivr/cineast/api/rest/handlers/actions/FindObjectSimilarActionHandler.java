@@ -10,7 +10,7 @@ import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.messages.query.Query;
+import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.QueryTerm;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
@@ -22,29 +22,18 @@ import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
  * @version 1.0
  * @created 11.01.17
  */
-public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> {
+public class FindObjectSimilarActionHandler extends ParsingActionHandler<SimilarityQuery> {
   @Override
-  public Object invoke(Query query, Map<String, String> parameters) {
+  public Object invoke(SimilarityQuery similarityQuery, Map<String, String> parameters) {
 
-    // TODO: Remove code duplication shared with FindObjectSimilarActionHandler
     /*
-     * Prepare map that maps categories to QueryTerm components.
-     */
-    HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
-    for (QueryComponent component : query.getContainers()) {
-      for (QueryTerm term : component.getTerms()) {
-        if (term.getCategories() == null) {
-          continue;
-        }
-        term.getCategories().forEach((String category) -> {
-          if (!categoryMap.containsKey(category)) {
-            categoryMap.put(category, new ArrayList<QueryContainer>());
-          }
-          categoryMap.get(category).add(term.toContainer());
-        });
-      }
-    }
+    * Prepare map that maps category to QueryTerm components.
+      */
+    HashMap<String, ArrayList<QueryContainer>> categoryMap = QueryComponent.toCategoryMap(similarityQuery.getComponents());
 
+  /*
+   * Execute similarity queries for all Category -> QueryContainer combinations in the map.
+   */
     QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
     for (String category : categoryMap.keySet()) {
       TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
@@ -90,7 +79,7 @@ public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> 
   }
 
   @Override
-  public Class<Query> inClass() {
-    return Query.class;
+  public Class<SimilarityQuery> inClass() {
+    return SimilarityQuery.class;
   }
 }

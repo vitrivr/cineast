@@ -7,7 +7,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 
 import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.QueryMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.MoreLikeThisQueryMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
 import org.vitrivr.cineast.core.config.Config;
@@ -61,7 +62,8 @@ public class WebsocketAPI {
 
     /* Register the MessageHandlers for the different messages. */
     static {
-        STATELESS_HANDLERS.put(MessageTypes.Q_QUERY, new QueryMessageHandler());
+        STATELESS_HANDLERS.put(MessageTypes.Q_SIM, new SimilarityQueryMessageHandler());
+        STATELESS_HANDLERS.put(MessageTypes.Q_MLT, new MoreLikeThisQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageTypes.PING, new StatusMessageHandler());
         STATELESS_HANDLERS.put(MessageTypes.M_LOOKUP, new MetadataLookupMessageHandler());
     }
@@ -152,8 +154,7 @@ public class WebsocketAPI {
      * @param error
      */
     @OnWebSocketError
-    public void onWebSocketException(Session session, Throwable error)
-    {
+    public void onWebSocketException(Session session, Throwable error) {
         LOGGER.fatal("An unhandled error occurred during message handling.", LogHelper.getStackTrace(error));
     }
 
