@@ -1,35 +1,28 @@
-package org.vitrivr.cineast.core.db;
+package org.vitrivr.cineast.core.db.adampro;
 
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.ListenableFuture;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.adampro.grpc.AdamGrpc;
+
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
+import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.DistanceType;
 import org.vitrivr.adampro.grpc.AdamGrpc.EntityPropertiesMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ExternalHandlerQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.ProjectionMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.PropertiesMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultInfoMessage;
@@ -37,12 +30,14 @@ import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultTupleMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
+
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.DefaultValueHashMap;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 public class ADAMproSelector implements DBSelector {
@@ -53,58 +48,25 @@ public class ADAMproSelector implements DBSelector {
    */
   private static boolean useGlobalWrapper = true;
 
-  private static final ADAMproWrapper GLOBAL_ADAMPRO_WRAPPER = useGlobalWrapper
-      ? new ADAMproWrapper() : null;
+  private static final Logger LOGGER = LogManager.getLogger();
+
+  private static final ADAMproWrapper GLOBAL_ADAMPRO_WRAPPER = useGlobalWrapper ? new ADAMproWrapper() : null;
 
   private ADAMproWrapper adampro = useGlobalWrapper ? GLOBAL_ADAMPRO_WRAPPER : new ADAMproWrapper();
 
-  private FromMessage.Builder fromBuilder = FromMessage.newBuilder();
-  private final QueryMessage.Builder qmBuilder = QueryMessage.newBuilder();
-  private final NearestNeighbourQueryMessage.Builder nnqmBuilder = NearestNeighbourQueryMessage
-      .newBuilder();
-  private final BooleanQueryMessage.Builder bqmBuilder = BooleanQueryMessage.newBuilder();
-  private final WhereMessage.Builder wmBuilder = WhereMessage.newBuilder();
-  private final DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
-  private static final Logger LOGGER = LogManager.getLogger();
+  /** MessageBuilder instance used to create the query messages. */
+  private final ADAMproMessageBuilder mb = new ADAMproMessageBuilder();
 
-  private static ArrayList<String> hints = new ArrayList<>(1);
-  private static ProjectionMessage projectionMessage;
-
+  /** Name of the entity the current instance of ADAMproSelector uses. */
   private String entityName;
 
-  private static final DistanceMessage chisquared, correlation, cosine, hamming, jaccard,
-      kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, spannorm, haversine;
-
-  static {
-
-    hints.add("exact");
-
-    projectionMessage = AdamGrpc.ProjectionMessage.newBuilder()
-        .setAttributes(AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder()
-            .addAttribute("ap_distance").addAttribute("id"))
-        .build();
-
-    DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
-
-    chisquared = dmBuilder.clear().setDistancetype(DistanceType.chisquared).build();
-    correlation = dmBuilder.clear().setDistancetype(DistanceType.correlation).build();
-    cosine = dmBuilder.clear().setDistancetype(DistanceType.cosine).build();
-    hamming = dmBuilder.clear().setDistancetype(DistanceType.hamming).build();
-    jaccard = dmBuilder.clear().setDistancetype(DistanceType.jaccard).build();
-    kullbackleibler = dmBuilder.clear().setDistancetype(DistanceType.kullbackleibler).build();
-    chebyshev = dmBuilder.clear().setDistancetype(DistanceType.chebyshev).build();
-    euclidean = dmBuilder.clear().setDistancetype(DistanceType.euclidean).build();
-    squaredeuclidean = dmBuilder.clear().setDistancetype(DistanceType.squaredeuclidean).build();
-    manhattan = dmBuilder.clear().setDistancetype(DistanceType.manhattan).build();
-    spannorm = dmBuilder.clear().setDistancetype(DistanceType.spannorm).build();
-    haversine = dmBuilder.clear().setDistancetype(DistanceType.haversine).build();
-
-  }
+  /** FromMessaged used by the instance of ADAMproSelector. */
+  private FromMessage fromMessage;
 
   @Override
   public boolean open(String name) {
-    this.fromBuilder.setEntity(name);
     this.entityName = name;
+    this.fromMessage = this.mb.buildFromMessage(name);
     return true;
   }
 
@@ -117,145 +79,8 @@ public class ADAMproSelector implements DBSelector {
     return true;
   }
 
-  private QueryMessage buildQueryMessage(ArrayList<String> hints, FromMessage.Builder fb,
-      BooleanQueryMessage bqMessage, ProjectionMessage pMessage,
-      NearestNeighbourQueryMessage nnqMessage) {
-    synchronized (qmBuilder) {
-      qmBuilder.clear();
-      qmBuilder.setFrom(fb);
-      if (hints != null && !hints.isEmpty()) {
-        qmBuilder.addAllHints(hints);
-      }
-      if (bqMessage != null) {
-        qmBuilder.setBq(bqMessage);
-      }
-      if (pMessage != null) {
-        qmBuilder.setProjection(pMessage);
-      }
-      if (nnqMessage != null) {
-        qmBuilder.setNnq(nnqMessage);
-      }
-
-      return qmBuilder.build();
-    }
-  }
-
-  private QueryMessage buildQueryMessage(ArrayList<String> hints, BooleanQueryMessage bqMessage,
-      ProjectionMessage pMessage, NearestNeighbourQueryMessage nnqMessage) {
-    return buildQueryMessage(hints, fromBuilder, bqMessage, pMessage, nnqMessage);
-  }
-
-  private BooleanQueryMessage buildBooleanQueryMessage(WhereMessage where,
-      WhereMessage... whereMessages) {
-    ArrayList<WhereMessage> tmp = new ArrayList<>(
-        1 + (whereMessages == null ? 0 : whereMessages.length));
-    tmp.add(where);
-    if (whereMessages != null) {
-      Collections.addAll(tmp, whereMessages);
-    }
-    synchronized (bqmBuilder) {
-      bqmBuilder.clear();
-      return bqmBuilder.addAllWhere(tmp).build();
-    }
-  }
-
-  private WhereMessage buildWhereMessage(String key, String value) {
-    return buildWhereMessage(key, Collections.singleton(value));
-  }
-
-  private WhereMessage buildWhereMessage(String key, Iterable<String> values) {
-    synchronized (wmBuilder) {
-      wmBuilder.clear();
-      DataMessage.Builder damBuilder = DataMessage.newBuilder();
-
-      wmBuilder.setAttribute(key);
-
-      for (String value : values) {
-        wmBuilder.addValues(damBuilder.setStringData(value).build());
-      }
-
-      return wmBuilder.build();
-    }
-  }
-
-  private NearestNeighbourQueryMessage buildNearestNeighbourQueryMessage(String column,
-      VectorMessage fvm, int k, ReadableQueryConfig qc) {
-    synchronized (nnqmBuilder) {
-      this.nnqmBuilder.clear();
-      nnqmBuilder.setAttribute(column).setQuery(fvm).setK(k);
-      nnqmBuilder.setDistance(buildDistanceMessage(qc));
-      if (qc != null) {
-        Optional<float[]> weights = qc.getDistanceWeights();
-        if (weights.isPresent()) {
-          nnqmBuilder.setWeights(DataMessageConverter.convertVectorMessage(weights.get()));
-        }
-      }
-      return nnqmBuilder.build();
-    }
-  }
-
-  private DistanceMessage buildDistanceMessage(ReadableQueryConfig qc) {
-    if (qc == null) {
-      return manhattan;
-    }
-    Optional<Distance> distance = qc.getDistance();
-    if (!distance.isPresent()) {
-      return manhattan;
-    }
-    switch (distance.get()) {
-      case chebyshev:
-        return chebyshev;
-      case chisquared:
-        return chisquared;
-      case correlation:
-        return correlation;
-      case cosine:
-        return cosine;
-      case euclidean:
-        return euclidean;
-      case hamming:
-        return hamming;
-      case jaccard:
-        return jaccard;
-      case kullbackleibler:
-        return kullbackleibler;
-      case manhattan:
-        return manhattan;
-      case minkowski: {
-
-        float norm = qc.getNorm().orElse(1f);
-
-        if (Math.abs(norm - 1f) < 1e6f) {
-          return manhattan;
-        }
-
-        if (Math.abs(norm - 2f) < 1e6f) {
-          return euclidean;
-        }
-
-        HashMap<String, String> tmp = new HashMap<>();
-        tmp.put("norm", Float.toString(norm));
-
-        synchronized (dmBuilder) {
-          return dmBuilder.clear().setDistancetype(DistanceType.minkowski).putAllOptions(tmp)
-              .build();
-        }
-
-      }
-      case spannorm:
-        return spannorm;
-      case squaredeuclidean:
-        return squaredeuclidean;
-      case haversine:
-        return haversine;
-      default:
-        return manhattan;
-    }
-  }
-
   public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
-    QueryMessage qbqm = buildQueryMessage(hints,
-        buildBooleanQueryMessage(buildWhereMessage(fieldName, value)), null, null);
+    QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage, this.mb.buildBooleanQueryMessage(this.mb.buildWhereMessage(fieldName, value)), null, null);
 
     ListenableFuture<QueryResultsMessage> f = this.adampro.booleanQuery(qbqm);
     ArrayList<float[]> _return = new ArrayList<>();
@@ -320,12 +145,89 @@ public class ADAMproSelector implements DBSelector {
 
   }
 
+  /**
+   * Performs a batched kNN-search with multiple vectors. That is, ADAM pro is tasked to perform the kNN search for each vector in the
+   * provided list and return results of each query.
+   *
+   * @param k The number k vectors to return per query.
+   * @param vectors The list of vectors to use.
+   * @param column The column to perform the kNN search on.
+   * @param distanceElementClass The class to use to create the resulting DistanceElements
+   * @param configs The query configurations, which may contain distance definitions or query-hints. Every feature should have its own QueryConfig object.
+   * @param <T> The type T of the resulting DistanceElements.
+   * @return List of results.
+   */
+  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs) {
+    /* Check if sizes of configs and vectors array correspond. */
+    if (vectors.size() > configs.size()) throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
+
+    /* Prepare list of QueryMessages. */
+    List<QueryMessage> queryMessages = new ArrayList<>(vectors.size());
+    for (int i = 0; i<vectors.size(); i++) {
+      float[] vector = vectors.get(i);
+      ReadableQueryConfig config = configs.get(i);
+
+      /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
+      Collection<String> hints;
+      if (!config.getHints().isEmpty()) {
+        hints = config.getHints().stream().map(Enum::name).collect(Collectors.toList());
+      } else {
+        hints = ADAMproMessageBuilder.DEFAULT_HINT;
+      }
+
+      NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertVectorMessage(vector), k, config);
+      queryMessages.add(this.mb.buildQueryMessage(hints, this.fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage));
+    }
+
+    /* Prepare a BatchedQueryMessage. */
+    BatchedQueryMessage batchedQueryMessage = this.mb.buildBatchedQueryMessage(queryMessages);
+
+    ListenableFuture<BatchedQueryResultsMessage> future = this.adampro.batchedQuery(batchedQueryMessage);
+
+    BatchedQueryResultsMessage result;
+    try {
+      result = future.get();
+    } catch (InterruptedException | ExecutionException e) {
+      LOGGER.error(LogHelper.getStackTrace(e));
+      return new ArrayList<>(0);
+    }
+
+    /* Prepare empty list of results. */
+    List<T> results = new ArrayList<>(result.getResultsCount());
+
+    /*
+     * Merge results of the partial queries.
+     */
+    for (int i = 0; i<result.getResultsCount(); i++) {
+      QueryResultsMessage partial = result.getResults(i);
+      AckMessage ack = partial.getAck();
+      if (ack.getCode() != AckMessage.Code.OK) {
+        LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
+        continue;
+      }
+
+      if (partial.getResponsesCount() == 0) continue;
+
+      QueryResultInfoMessage response = partial.getResponses(0); // only head (end-result) is important
+      results.addAll(handleNearestNeighbourResponse(response, k, distanceElementClass, configs.get(i)));
+    }
+
+    return results;
+  }
+
   @Override
-  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
-      Class<T> distanceElementClass, ReadableQueryConfig config) {
-    NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column,
-        DataMessageConverter.convertVectorMessage(vector), k, config);
-    QueryMessage sqMessage = buildQueryMessage(hints, null, projectionMessage, nnqMessage);
+  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column, Class<T> distanceElementClass, ReadableQueryConfig config) {
+    NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertVectorMessage(vector), k, config);
+
+    /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
+    Collection<String> hints;
+    if (!config.getHints().isEmpty()) {
+      hints = config.getHints().stream().map(Enum::name).collect(Collectors.toList());
+    } else {
+      hints = ADAMproMessageBuilder.DEFAULT_HINT;
+    }
+
+    QueryMessage sqMessage = this.mb.buildQueryMessage(hints, this.fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
     ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 
     QueryResultsMessage result;
@@ -383,8 +285,8 @@ public class ADAMproSelector implements DBSelector {
       return new ArrayList<>(0);
     }
 
-    WhereMessage where = buildWhereMessage(fieldName, values);
-    BooleanQueryMessage bqMessage = buildBooleanQueryMessage(where);
+    WhereMessage where = this.mb.buildWhereMessage(fieldName, values);
+    BooleanQueryMessage bqMessage = this.mb.buildBooleanQueryMessage(where);
     return executeBooleanQuery(bqMessage);
   }
 
@@ -405,19 +307,19 @@ public class ADAMproSelector implements DBSelector {
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
     ListenableFuture<PropertiesMessage> future = this.adampro.getProperties(
-        EntityPropertiesMessage.newBuilder().setEntity(fromBuilder.getEntity()).build());
+        EntityPropertiesMessage.newBuilder().setEntity(this.entityName).build());
     int count = 1_000;
     PropertiesMessage propertiesMessage;
     try {
       propertiesMessage = future.get();
     } catch (InterruptedException | ExecutionException e) {
-      LOGGER.error("error in getAll, entitiy {}: {}", entityName, LogHelper.getStackTrace(e));
+      LOGGER.error("error in getAll, entitiy {}: {}", this.entityName, LogHelper.getStackTrace(e));
       return new ArrayList<>(0);
     }
     try {
       count = Integer.parseInt(propertiesMessage.getPropertiesMap().get("count"));
     } catch (Exception e) {
-      LOGGER.error("error in getAll, entitiy {}: {}", entityName, LogHelper.getStackTrace(e));
+      LOGGER.error("error in getAll, entitiy {}: {}", this.entityName, LogHelper.getStackTrace(e));
     }
     return preview(count);
   }
@@ -428,14 +330,14 @@ public class ADAMproSelector implements DBSelector {
     try {
       return future.get().getExists();
     } catch (InterruptedException | ExecutionException e) {
-      LOGGER.error("error in existsEntity, entitiy {}: {}", entityName, LogHelper.getStackTrace(e));
+      LOGGER.error("error in existsEntity, entitiy {}: {}", this.entityName, LogHelper.getStackTrace(e));
       return false;
     }
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> preview(int k) {
-    PreviewMessage msg = PreviewMessage.newBuilder().setEntity(this.fromBuilder.getEntity()).setN(k)
+    PreviewMessage msg = PreviewMessage.newBuilder().setEntity(this.entityName).setN(k)
         .build();
     ListenableFuture<QueryResultsMessage> f = this.adampro.previewEntity(msg);
     QueryResultsMessage result;
@@ -513,7 +415,7 @@ public class ADAMproSelector implements DBSelector {
   }
 
   private List<Map<String, PrimitiveTypeProvider>> executeBooleanQuery(BooleanQueryMessage bqm) {
-    QueryMessage qbqm = buildQueryMessage(hints, bqm, null, null);
+    QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage,  bqm, null, null);
     return executeQuery(qbqm);
   }
 
@@ -524,12 +426,19 @@ public class ADAMproSelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
-      String column, ReadableQueryConfig config) {
-    NearestNeighbourQueryMessage nnqMessage = buildNearestNeighbourQueryMessage(column,
+  public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config) {
+    NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column,
         DataMessageConverter.convertVectorMessage(vector), k, config);
 
-    QueryMessage sqMessage = buildQueryMessage(hints, null, null, nnqMessage);
+    /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
+    Collection<String> hints;
+    if (!config.getHints().isEmpty()) {
+      hints = config.getHints().stream().map(Enum::name).collect(Collectors.toList());
+    } else {
+      hints = ADAMproMessageBuilder.DEFAULT_HINT;
+    }
+
+    QueryMessage sqMessage = this.mb.buildQueryMessage(hints, this.fromMessage, null, null, nnqMessage);
 
     ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 
@@ -557,8 +466,9 @@ public class ADAMproSelector implements DBSelector {
     return resultsToMap(response.getResultsList());
   }
 
-  public List<Map<String, PrimitiveTypeProvider>> getFromExternal(String externalHandlerName,
-      Map<String, String> parameters) {
+
+
+  public List<Map<String, PrimitiveTypeProvider>> getFromExternal(String externalHandlerName, Map<String, String> parameters) {
 
     ExternalHandlerQueryMessage.Builder ehqmBuilder = ExternalHandlerQueryMessage.newBuilder();
     ehqmBuilder.setEntity(this.entityName);
@@ -572,7 +482,7 @@ public class ADAMproSelector implements DBSelector {
     FromMessage.Builder fmBuilder = FromMessage.newBuilder();
     fmBuilder.setExpression(seqmBuilder);
 
-    QueryMessage qm = buildQueryMessage(hints, fmBuilder, null, null, null);
+    QueryMessage qm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fmBuilder, null, null, null);
 
     return executeQuery(qm);
   }

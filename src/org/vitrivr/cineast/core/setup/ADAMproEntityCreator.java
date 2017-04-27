@@ -10,7 +10,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc.CreateEntityMessage;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
-import org.vitrivr.cineast.core.db.ADAMproWrapper;
+import org.vitrivr.cineast.core.db.adampro.ADAMproWrapper;
 
 import com.google.common.collect.ImmutableMap;
 

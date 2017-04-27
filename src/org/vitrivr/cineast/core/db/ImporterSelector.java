@@ -44,6 +44,27 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
         .collect(Collectors.toList());
   }
 
+  /**
+   *
+   * @param k The number k vectors to return per query.
+   * @param vectors The list of vectors to use.
+   * @param column The column to perform the kNN search on.
+   * @param distanceElementClass class of the {@link DistanceElement} type
+   * @param configs The query configurations, which may contain distance definitions or query-hints.
+   * @param <T>
+   * @return
+   */
+  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs) {
+    /* Check if size of configs and vectors array corresponds. */
+    if (vectors.size() > configs.size()) throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
+
+    List<T> results = new ArrayList<>();
+    for (int i = 0; i< vectors.size(); i++) {
+      results.addAll(this.getNearestNeighbours(k, vectors.get(i), column, distanceElementClass, configs.get(i)));
+    }
+    return results;
+  }
+
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
       String column, ReadableQueryConfig config) {

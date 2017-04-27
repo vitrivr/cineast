@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.db;
+package org.vitrivr.cineast.core.db.json;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +9,8 @@ import org.vitrivr.cineast.core.config.Config;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistentTuple;
 
 public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
 

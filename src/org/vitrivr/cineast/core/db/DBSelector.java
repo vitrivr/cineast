@@ -25,11 +25,23 @@ public interface DBSelector {
    * @param <T> type of the {@link DistanceElement}
    * @return a list of elements with their distance
    */
-  <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
-      Class<T> distanceElementClass, ReadableQueryConfig config);
+  <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column, Class<T> distanceElementClass, ReadableQueryConfig config);
 
-  List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
-      String column, ReadableQueryConfig config);
+  /**
+   * Performs a batched kNN-search with multiple vectors. That is, ADAM pro is tasked to perform the kNN search for each vector in the
+   * provided list and return results of each query.
+   *
+   * @param k The number k vectors to return per query.
+   * @param vectors The list of vectors to use.
+   * @param column The column to perform the kNN search on.
+   * @param distanceElementClass class of the {@link DistanceElement} type
+   * @param configs The query configuration, which may contain distance definitions or query-hints.
+   * @param <T> The type T of the resulting <T> type of the {@link DistanceElement}.
+   * @return List of results.
+   */
+  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs);
+
+  List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector, String column, ReadableQueryConfig config);
 
   List<float[]> getFeatureVectors(String fieldName, String value, String vectorName);
 

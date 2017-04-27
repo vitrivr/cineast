@@ -30,6 +30,22 @@ public class NoDBSelector implements DBSelector {
     return new ArrayList<>(0);
   }
 
+  /**
+   * Performs a batched kNN-search with multiple vectors. That is, ADAM pro is tasked to perform the kNN search for each vector in the
+   * provided list and return results of each query.
+   *
+   * @param k                    The number k vectors to return per query.
+   * @param vectors              The list of vectors to use.
+   * @param column               The column to perform the kNN search on.
+   * @param distanceElementClass class of the {@link DistanceElement} type
+   * @param configs              The query configuration, which may contain distance definitions or query-hints.
+   * @return List of results.
+   */
+  @Override
+  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs) {
+    return new ArrayList<>(0);
+  }
+
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
       String column, ReadableQueryConfig config) {

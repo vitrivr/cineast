@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.db;
+package org.vitrivr.cineast.core.db.adampro;
 
 import java.util.concurrent.ExecutionException;
 
@@ -6,7 +6,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamDefinitionGrpc;
 import org.vitrivr.adampro.grpc.AdamDefinitionGrpc.AdamDefinitionFutureStub;
+import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.CreateEntityMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.EntityPropertiesMessage;
@@ -40,8 +42,8 @@ public class ADAMproWrapper {
       .newBuilder().setAck(INTERRUPTED_ACK_MESSAGE).build();
 
   private ManagedChannel channel;
-  private AdamDefinitionFutureStub definitionStub;
-  private AdamSearchFutureStub searchStub;
+  private final AdamDefinitionFutureStub definitionStub;
+  private final AdamSearchFutureStub searchStub;
 
   private static final int maxMessageSize = 10_000_000;
   
@@ -110,11 +112,18 @@ public class ADAMproWrapper {
     return standardQuery(message);
   }
 
-  public ListenableFuture<QueryResultsMessage> standardQuery(QueryMessage message) {
+   public ListenableFuture<QueryResultsMessage> standardQuery(QueryMessage message) {
     synchronized (this.searchStub) {
       return this.searchStub.doQuery(message);
     }
   }
+
+  public ListenableFuture<AdamGrpc.BatchedQueryResultsMessage> batchedQuery(BatchedQueryMessage message) {
+    synchronized (this.searchStub) {
+      return this.searchStub.doBatchQuery(message);
+    }
+  }
+
 
   public ListenableFuture<QueryResultsMessage> previewEntity(PreviewMessage message) {
     ListenableFuture<QueryResultsMessage> future;

@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.db;
+package org.vitrivr.cineast.core.db.protobuf;
 
 import java.util.HashMap;
 
@@ -12,6 +12,8 @@ import org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.IntArrayIterable;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistentTuple;
 
 public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<TupleInsertMessage> {
 

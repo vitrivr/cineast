@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.db;
+package org.vitrivr.cineast.core.db.adampro;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,8 @@ import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultInfoMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
+import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.core.db.protobuf.ProtobufTupleGenerator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import com.google.common.util.concurrent.ListenableFuture;
