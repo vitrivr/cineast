@@ -3,10 +3,7 @@ package org.vitrivr.cineast.core.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.vitrivr.cineast.core.benchmark.BenchmarkMode;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
 
 /**
  * @author rgasser
@@ -30,8 +27,8 @@ public class BenchmarkConfig {
     }
 
     @JsonProperty
-    public Path getPath() {
-        return Paths.get(this.path);
+    public String getPath() {
+        return this.path;
     }
     public void setPath(String path) {
         this.path = path;

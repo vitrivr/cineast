@@ -1,6 +1,12 @@
 package org.vitrivr.cineast.core.benchmark;
 
+import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
+import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
 import org.vitrivr.cineast.core.config.Config;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 
 /**
  * @author rgasser
@@ -10,7 +16,10 @@ import org.vitrivr.cineast.core.config.Config;
 public final class BenchmarkManager {
 
     /** */
-    private static BenchmarkEngine DEFAULT_ENGINE;
+    private static String DEFAULT_ENGINE = "DEFAULT";
+
+    /** */
+    private static final HashMap<String,BenchmarkEngine> RUNNING = new HashMap<>();
 
     /**
      * Private constructor; no instantiation.
@@ -22,19 +31,36 @@ public final class BenchmarkManager {
      * @return
      */
     public static BenchmarkEngine getDefaultEngine() {
-        if (DEFAULT_ENGINE == null) {
-            DEFAULT_ENGINE = new BenchmarkEngine(Config.sharedConfig().getBenchmark().getMode(),10);
-        }
-        return DEFAULT_ENGINE;
+        BenchmarkMode defaultMode = Config.sharedConfig().getBenchmark().getMode();
+        Path defaultPath = Paths.get(Config.sharedConfig().getBenchmark().getPath());
+        return getEngine(DEFAULT_ENGINE, defaultMode, defaultPath);
     }
 
     /**
      *
+     * @param name
      * @param mode
+     * @param path
      * @return
      */
-    public static BenchmarkEngine getEngine(BenchmarkMode mode) {
-        return new BenchmarkEngine(mode, 10);
+    public static BenchmarkEngine getEngine(String name, BenchmarkMode mode, Path path) {
+        synchronized (RUNNING) {
+            if (!RUNNING.containsKey(name)) RUNNING.put(name, new BenchmarkEngine(name, mode, path));
+        }
+        return RUNNING.get(name);
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
+    public static void stopEngine(String name) {
+        if (name.equals(DEFAULT_ENGINE)) throw new IllegalArgumentException("You cannot stop the default benchmark engine.");
+        synchronized(RUNNING){
+            if (RUNNING.containsKey(name)) {
+                RUNNING.remove(name);
+            }
+        }
+    }
 }

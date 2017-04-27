@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.benchmark;
+package org.vitrivr.cineast.core.benchmark.model;
 
 /**
  * @author rgasser
