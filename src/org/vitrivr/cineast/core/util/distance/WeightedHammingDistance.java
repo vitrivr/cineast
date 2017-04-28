@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class WeightedHammingDistance extends HammingDistance {
 
+  private static final long serialVersionUID = -3349581065511403145L;
   private final float[] weights;
 
   WeightedHammingDistance(float[] weights) {

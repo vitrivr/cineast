@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class WeightedKLDivergence extends KLDivergence {
 
+  private static final long serialVersionUID = 4633114017462209515L;
   private final float[] weights;
 
   WeightedKLDivergence(float[] weights) {

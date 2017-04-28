@@ -24,13 +24,13 @@ public abstract class AbstractVisualizationModule implements Visualization {
   protected static final Logger LOGGER = LogManager.getLogger();
 
   protected AbstractVisualizationModule() {
-    this.tableNames = new HashMap();
+    this.tableNames = new HashMap<>();
     this.multimediaobjectTable = "cineast_multimediaobject";
     this.segmentTable = "cineast_segment";
   }
 
   public void init(DBSelectorSupplier supplier) {
-    selectors = new HashMap();
+    selectors = new HashMap<>();
 
     DBSelector selector;
     for (Map.Entry<String, String> entry : tableNames.entrySet()) {

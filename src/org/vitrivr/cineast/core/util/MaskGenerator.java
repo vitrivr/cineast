@@ -220,6 +220,7 @@ public class MaskGenerator {
 			for(int x = 0; x < width; ++x){
 				for(int y = 0; y < height; ++y){
 					double[] point = {x, y};
+					@SuppressWarnings("unchecked")
 					FastQueue<NnData<Integer>> results = new FastQueue(5,NnData.class,true);
 					nn.findNearest(point, -1, 5, results);
 					int sum = 0;

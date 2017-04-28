@@ -62,12 +62,12 @@ public class DominantColors extends AbstractFeatureModule {
   public void processShot(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       TimeHelper.tic();
-      LOGGER.entry();
+      LOGGER.traceEntry();
       LabContainer[] dominant = getDominantColor(shot.getMostRepresentativeFrame().getImage());
 
       persist(shot.getId(), dominant);
       LOGGER.debug("DominantColor.processShot() done in {}", TimeHelper.toc());
-      LOGGER.exit();
+      LOGGER.traceExit();
     }
   }
 

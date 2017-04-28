@@ -75,7 +75,7 @@ public class DataImportHandler {
   private final int batchsize;
 
   /** */
-  private final ArrayList<Future> futures = new ArrayList<>();
+  private final ArrayList<Future<?>> futures = new ArrayList<>();
 
   /**
    * Default constructor; creates DataImportHandler with two threads and a batchsize of 100.

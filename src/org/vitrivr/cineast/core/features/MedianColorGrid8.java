@@ -36,13 +36,13 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
 
   @Override
   public void processShot(SegmentContainer shot) {
-    LOGGER.entry();
+    LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {
       MultiImage medimg = shot.getMedianImg();
 
       persist(shot.getId(), partition(medimg).first);
     }
-    LOGGER.exit();
+    LOGGER.traceExit();
 
   }
 

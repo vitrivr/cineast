@@ -128,6 +128,7 @@ public class BasicPlaneManager<T extends Printable>
       }
     }
 
+    @SuppressWarnings("unchecked")
     VisualizationElement<T>[][] flatPlane = new VisualizationElement[i * maxX][j * maxY];
     for (int x = 0; x < plane.getPlane().length; x++) {
       for (int y = 0; y < plane.getPlane()[x].length; y++) {

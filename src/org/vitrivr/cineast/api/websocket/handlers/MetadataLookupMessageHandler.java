@@ -31,5 +31,6 @@ public class MetadataLookupMessageHandler extends StatelessWebsocketMessageHandl
         MultimediaMetadataReader reader = new MultimediaMetadataReader();
         List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(message.getObjectids());
         this.write(session, new MetadataQueryResult("test", descriptors));
+        reader.close();
     }
 }

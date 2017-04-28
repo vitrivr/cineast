@@ -55,6 +55,7 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
      *
      * @param properties HashMap of named parameters.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void init(HashMap<String, String> properties) {
         String assignment = properties.get(PROPERTY_NAME_ASSIGNMENT);

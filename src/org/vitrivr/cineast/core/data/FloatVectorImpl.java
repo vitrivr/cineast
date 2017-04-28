@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.data;
 
-import gnu.trove.list.array.TFloatArrayList;
-import java.util.ArrayList;
 import java.util.List;
+
+import gnu.trove.list.array.TFloatArrayList;
 
 public class FloatVectorImpl implements FloatVector {
 

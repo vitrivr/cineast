@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class ManhattanDistance implements FloatArrayDistance {
 
+  private static final long serialVersionUID = -8292041573308715141L;
+
   @Override
   public double applyAsDouble(float[] t, float[] u) {
     if (t == null || u == null) {

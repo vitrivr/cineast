@@ -24,7 +24,7 @@ public class MedianImg {
 	
 	public static MultiImage getMedian(List<VideoFrame> videoFrames){
 		
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		
 		MultiImage first = videoFrames.get(0).getImage();
 		int width = first.getWidth(), height = first.getHeight();
@@ -100,7 +100,7 @@ public class MedianImg {
 		buffer = null;
 		
 		System.gc();
-		LOGGER.exit();
+		LOGGER.traceExit();
 		return MultiImageFactory.newMultiImage(width, height, result);
 		
 		

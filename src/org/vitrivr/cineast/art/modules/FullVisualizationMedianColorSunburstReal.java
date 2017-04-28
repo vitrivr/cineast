@@ -82,12 +82,13 @@ public class FullVisualizationMedianColorSunburstReal extends AbstractVisualizat
       allData.addAll(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimedia.getObjectId()));
       System.out.println(multimedia.getObjectId());
     }
+    lookup.close();
     return visualizeMulti(allData);
   }
 
   @Override
   public List<VisualizationType> getVisualizations() {
-    List<VisualizationType> types = new ArrayList();
+    List<VisualizationType> types = new ArrayList<>();
     types.add(VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT);
     return types;
   }

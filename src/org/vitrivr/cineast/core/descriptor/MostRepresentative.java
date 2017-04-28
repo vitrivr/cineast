@@ -13,7 +13,7 @@ public class MostRepresentative {
 	private MostRepresentative(){}
 	
 	public static VideoFrame getMostRepresentative(VideoSegment videoSegment){
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		MultiImage reference = videoSegment.getAvgImg();
 		VideoFrame _return = null;
 		double minDist = Double.POSITIVE_INFINITY;
@@ -24,7 +24,7 @@ public class MostRepresentative {
 				_return = f;
 			}
 		}
-		return LOGGER.exit(_return);
+		return LOGGER.traceExit(_return);
 	}
 	
 }

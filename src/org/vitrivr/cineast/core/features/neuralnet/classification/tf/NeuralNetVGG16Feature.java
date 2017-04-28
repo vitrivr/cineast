@@ -51,7 +51,6 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
     /**
      * Needs to be public so the extraction runner has access with a config-object
      */
-    @SuppressWarnings("unused")
     public NeuralNetVGG16Feature(com.eclipsesource.json.JsonObject config) {
         this(NeuralNetConfig.parse(config));
     }
@@ -115,8 +114,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
             if(probabilities[maxIdx]>0.1){
                 LOGGER.info("Actually persisting result");
                 String id = UUID.randomUUID().toString();
-                PersistentTuple tuple = classificationWriter.generateTuple(id, shot.getId(), getNet().getSynSetLabels()[maxIdx], probabilities[maxIdx]);
-                classificationWriter.persist(tuple);
+                persistTuple(classificationWriter.generateTuple(id, shot.getId(), getNet().getSynSetLabels()[maxIdx], probabilities[maxIdx]));
             }
 
             persist(shot.getId(), new FloatVectorImpl(probabilities));
@@ -124,6 +122,11 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
                     TimeHelper.toc());
         }
         LOGGER.traceExit();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void persistTuple(PersistentTuple tuple) {
+        classificationWriter.persist(tuple);
     }
 
     /**

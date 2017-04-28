@@ -32,7 +32,7 @@ public class EdgeList {
 	private static final float THRESHOLD_LOW = 0.1f, THRESHOLD_HIGH = 0.3f;
 
 	public static List<EdgeContour> getEdgeList(MultiImage img){
-		LOGGER.entry();
+		LOGGER.traceEntry();
 		BufferedImage withBackground = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 		Graphics g = withBackground.getGraphics();
 		g.setColor(Color.white);
@@ -42,7 +42,7 @@ public class EdgeList {
 		CannyEdge<GrayU8, GrayS16> canny = getCanny();
 		canny.process(gray, THRESHOLD_LOW, THRESHOLD_HIGH, null);
 		List<EdgeContour> _return = canny.getContours();
-		LOGGER.exit();
+		LOGGER.traceExit();
 		return _return;
 	}
 	

@@ -74,6 +74,7 @@ public class VisualizationMedianColorStripeVariable extends AbstractVisualizatio
     SegmentLookup segmentLookup = new SegmentLookup();
     Map<String, SegmentDescriptor> segmentMap = segmentLookup.lookUpSegments(segmentIds);
     List<SegmentDescriptor> segments = new ArrayList<>();
+    segmentLookup.close();
     for (Map.Entry<String, SegmentDescriptor> entry : segmentMap.entrySet()) {
       segments.add(entry.getValue());
     }
@@ -84,12 +85,13 @@ public class VisualizationMedianColorStripeVariable extends AbstractVisualizatio
   public String visualizeMultimediaobject(String multimediaobjectId) {
     SegmentLookup segmentLookup = new SegmentLookup();
     List<SegmentDescriptor> segments = segmentLookup.lookUpSegmentsOfObject(multimediaobjectId);
+    segmentLookup.close();
     return visualizeMulti(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimediaobjectId), segments);
   }
 
   @Override
   public List<VisualizationType> getVisualizations() {
-    List<VisualizationType> types = new ArrayList();
+    List<VisualizationType> types = new ArrayList<>();
     types.add(VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT);
     return types;
   }

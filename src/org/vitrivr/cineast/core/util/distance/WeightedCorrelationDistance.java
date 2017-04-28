@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class WeightedCorrelationDistance extends CorrelationDistance {
 
+  private static final long serialVersionUID = -6136429047726610016L;
   private final float[] weights;
 
   WeightedCorrelationDistance(float[] weights) {

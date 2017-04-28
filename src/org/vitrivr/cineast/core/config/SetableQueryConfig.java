@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.config;
 
-import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
-
 public class SetableQueryConfig extends QueryConfig {
 
   public SetableQueryConfig(ReadableQueryConfig qc) {

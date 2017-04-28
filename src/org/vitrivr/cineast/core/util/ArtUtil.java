@@ -43,9 +43,9 @@ public class ArtUtil {
         for(int y=0;y<sizeY;y++) {
           RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[count], arr[count + 1], arr[count + 2]));
           int color = rgbContainer.toIntColor();
-          pixels[y][x][0] = rgbContainer.getRed(color);
-          pixels[y][x][1] = rgbContainer.getGreen(color);
-          pixels[y][x][2] = rgbContainer.getBlue(color);
+          pixels[y][x][0] = RGBContainer.getRed(color);
+          pixels[y][x][1] = RGBContainer.getGreen(color);
+          pixels[y][x][2] = RGBContainer.getBlue(color);
           count+=3;
         }
       }
@@ -61,9 +61,9 @@ public class ArtUtil {
       for(int y=0;y<sizeY;y++) {
         RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(featureData[count], featureData[count + 1], featureData[count + 2]));
         int color = rgbContainer.toIntColor();
-        pixels[y][x][0] = rgbContainer.getRed(color);
-        pixels[y][x][1] = rgbContainer.getGreen(color);
-        pixels[y][x][2] = rgbContainer.getBlue(color);
+        pixels[y][x][0] = RGBContainer.getRed(color);
+        pixels[y][x][1] = RGBContainer.getGreen(color);
+        pixels[y][x][2] = RGBContainer.getBlue(color);
         count+=3;
       }
     }
@@ -107,8 +107,8 @@ public class ArtUtil {
     SegmentLookup segmentLookup = new SegmentLookup();
     List<SegmentDescriptor> segments = segmentLookup.lookUpSegmentsOfObject(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
-    List<String> segmentIds = new ArrayList();
-    Map<String, Integer> sequenceMapping = new HashMap();
+    List<String> segmentIds = new ArrayList<>();
+    Map<String, Integer> sequenceMapping = new HashMap<>();
     for(SegmentDescriptor segment: segments){
       segmentIds.add(segment.getSegmentId());
       sequenceMapping.put(segment.getSegmentId(), segment.getSequenceNumber());
@@ -116,6 +116,7 @@ public class ArtUtil {
     List<Map<String, PrimitiveTypeProvider>> featureData = selector.getRows("id", segmentIds.toArray(new String[segmentIds.size()]));
 
     //sort by sequence number
+    @SuppressWarnings("unchecked")
     Map<String, PrimitiveTypeProvider>[] featureDataSorted = new HashMap[featureData.size()];
     for(Map<String, PrimitiveTypeProvider> entry: featureData){
       featureDataSorted[sequenceMapping.get(entry.get("id").getString()) - 1] = entry;
@@ -126,7 +127,7 @@ public class ArtUtil {
 
   public static List<Map<String, PrimitiveTypeProvider>> getFeatureData(DBSelector selector, List<String> segmentIds){
     Map<String, SegmentDescriptor> segments = new SegmentLookup().lookUpSegments(segmentIds);
-    Map<String, Integer> sequenceMapping = new HashMap();
+    Map<String, Integer> sequenceMapping = new HashMap<>();
     for (SegmentDescriptor segment : segments.values()) {
       segmentIds.add(segment.getSegmentId());
       sequenceMapping.put(segment.getSegmentId(), segment.getSequenceNumber());

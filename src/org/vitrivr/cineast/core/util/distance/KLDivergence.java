@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class KLDivergence implements FloatArrayDistance {
 
+  private static final long serialVersionUID = 2390880385355432436L;
+
   @Override
   public double applyAsDouble(float[] t, float[] u) {
     if (t == null || u == null) {

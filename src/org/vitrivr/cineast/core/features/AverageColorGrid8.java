@@ -35,13 +35,13 @@ public class AverageColorGrid8 extends AbstractFeatureModule {
 
   @Override
   public void processShot(SegmentContainer shot) {
-    LOGGER.entry();
+    LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {
       MultiImage avgimg = shot.getAvgImg();
 
       persist(shot.getId(), partition(avgimg).first);
     }
-    LOGGER.exit();
+    LOGGER.traceExit();
   }
 
   protected static Pair<FloatVector, float[]> partition(MultiImage img) {

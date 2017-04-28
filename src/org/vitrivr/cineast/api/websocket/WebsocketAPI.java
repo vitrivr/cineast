@@ -56,7 +56,7 @@ public class WebsocketAPI {
     private static final String VERSION = "v1";
 
     /** List of stateless WebsocketMessageHandler classes for the API. */
-    private static final HashMap<MessageTypes, WebsocketMessageHandler> STATELESS_HANDLERS = new HashMap<>();
+    private static final HashMap<MessageTypes, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
 
     /** Flag that indicates whether the WebSocket API is running. */
     private static AtomicBoolean RUNNING = new AtomicBoolean(false);
@@ -113,7 +113,7 @@ public class WebsocketAPI {
      * @param type MessageType for which a new handler should be regiestered.
      * @param handler Instance of WebsocketMessageHandler.
      */
-    private static void registerHandlerForMessageType(MessageTypes type, WebsocketMessageHandler handler) {
+    private static void registerHandlerForMessageType(MessageTypes type, WebsocketMessageHandler<?> handler) {
         if (handler.isStateless()) {
             STATELESS_HANDLERS.put(type, handler);
         }

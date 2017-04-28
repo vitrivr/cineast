@@ -73,6 +73,7 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
   public String visualizeMultipleSegments(List<String> segmentIds){
     SegmentLookup segmentLookup = new SegmentLookup();
     Map<String, SegmentDescriptor> segmentMap = segmentLookup.lookUpSegments(segmentIds);
+    segmentLookup.close();
     List<SegmentDescriptor> segments = new ArrayList<>();
     for (Map.Entry<String, SegmentDescriptor> entry : segmentMap.entrySet()) {
       segments.add(entry.getValue());
@@ -84,12 +85,13 @@ public class VisualizationAverageColorStripeVariable extends AbstractVisualizati
   public String visualizeMultimediaobject(String multimediaobjectId) {
     SegmentLookup segmentLookup = new SegmentLookup();
     List<SegmentDescriptor> segments = segmentLookup.lookUpSegmentsOfObject(multimediaobjectId);
+    segmentLookup.close();
     return visualizeMulti(ArtUtil.getFeatureData(selectors.get("AverageColor"), multimediaobjectId), segments);
   }
 
   @Override
   public List<VisualizationType> getVisualizations() {
-    List<VisualizationType> types = new ArrayList();
+    List<VisualizationType> types = new ArrayList<>();
     types.add(VisualizationType.VISUALIZATION_MULTIMEDIAOBJECT);
     return types;
   }
