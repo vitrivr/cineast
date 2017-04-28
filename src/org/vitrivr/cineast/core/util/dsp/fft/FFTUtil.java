@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.util.dsp.fft;
 
+import org.vitrivr.cineast.core.data.Pair;
+
 /**
  * Some utility functions in the context of FFT and STFT.
  *
@@ -105,6 +107,21 @@ public class FFTUtil {
      */
     public static int nextPowerOf2(int number) {
         return (int)Math.pow(2, Math.ceil(Math.log(number)/Math.log(2)));
+    }
+
+
+    /**
+     * Calculates and returns the windowsize in samples and the zero-padding in samples so as to achieve
+     * a certain window-duration in seconds.
+     *
+     * @param samplingrate The samplingrate of the original data.
+     * @param windowduration Duration of the window in seconds.
+     * @return Pair of integers; first integer determines the windowsize and the second determines the padding.
+     */
+    public static Pair<Integer,Integer> parametersForDuration(float samplingrate, float windowduration){
+        int samples = (int)(samplingrate * windowduration);
+        int windowsize = nextPowerOf2(samples);
+        return new Pair<>(windowsize,(windowsize-samples)/2);
     }
 
     /**
