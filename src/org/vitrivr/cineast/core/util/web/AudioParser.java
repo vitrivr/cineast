@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.util.web;
 
+import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -43,6 +44,9 @@ public class AudioParser extends DataURLParser {
             AudioFormat targetFormat = new AudioFormat(samplerate, 16, channels, true, false);
             AudioInputStream convertedAudio = AudioSystem.getAudioInputStream(targetFormat, inputAudio);
 
+            /* Estimate duration of the segment. */
+            long duration = (long) Math.floor((convertedAudio.getFrameLength()/samplerate));
+
             /* Constants:
              * - Length of a single AudioFrame (in bytes)
              * - Total length of the frames data in the AudioInputStream.
@@ -71,7 +75,7 @@ public class AudioParser extends DataURLParser {
                 }
                 /* Read frames-data and create AudioFrame. */
                 int len = convertedAudio.read(data, 0, data.length);
-                list.add(new AudioFrame(idx, timestamp, targetFormat.getSampleRate(), targetFormat.getChannels(), data));
+                list.add(new AudioFrame(idx, timestamp, data, new AudioDescriptor(targetFormat.getSampleRate(), targetFormat.getChannels(), duration)));
                 timestamp += (len*1000.0f)/(bytesPerSample * targetFormat.getChannels() * targetFormat.getSampleRate());
                 idx += 1;
                 read += len;

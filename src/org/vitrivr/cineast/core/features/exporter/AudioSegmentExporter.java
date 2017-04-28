@@ -76,7 +76,7 @@ public class AudioSegmentExporter implements Extractor {
             ByteBuffer buffer = ByteBuffer.allocate(44 + data.length*2).order(ByteOrder.LITTLE_ENDIAN);
 
             /* Write header of WAV file. */
-            this.writeWaveHeader(buffer, shot.getSampleRate(), data.length * 2);
+            this.writeWaveHeader(buffer, shot.getSamplingrate(), data.length * 2);
 
             /* Write actual data. */
             for (short sample : data) {
