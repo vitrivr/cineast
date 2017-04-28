@@ -34,7 +34,7 @@ public class KLF0PitchEstimator {
     private static final int DEFAULT_MAX_PITCH = 96;
 
     /** α value as defined in [1]. Suitable only for an analysis window of 96ms. */
-    private static final float ALPHA = 50.0f;
+    private static final float ALPHA = 27.0f;
 
     /** β value as defined in [1]. Suitable only for an analysis window of 96ms. */
     private static final float BETA = 320.0f;
@@ -144,7 +144,7 @@ public class KLF0PitchEstimator {
                         max_bin = offset;
                     }
                 }
-                spectrum.setValue(max_bin, spectrum.getValue(max_bin) - 0.89f * spectrum.getValue(max_bin) * this.g(f0, m));
+                spectrum.setValue(max_bin, spectrum.getValue(max_bin) - spectrum.getValue(max_bin) * this.g(f0, m));
             }
         }
 
