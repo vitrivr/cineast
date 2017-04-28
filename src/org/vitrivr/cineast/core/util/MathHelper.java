@@ -117,6 +117,32 @@ public class MathHelper {
 		return false;
 	}
 
+	/**
+	 * Checks whether the provided array is a zero array or not.
+	 *
+	 * @param array Array to check
+	 * @return true if array is not zero, false otherwise.
+	 */
+	public static boolean checkNotNaN(double[] array) {
+		for (double v : array) {
+			if (Double.isNaN(v)) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Checks whether the provided array is a zero array or not.
+	 *
+	 * @param array Array to check
+	 * @return true if array is not zero, false otherwise.
+	 */
+	public static boolean checkNotNaN(float[] array) {
+		for (float v : array) {
+			if (Float.isNaN(v)) return false;
+		}
+		return true;
+	}
+
 	public static float limit(float val, float min, float max){
 		val = val > max ? max : val;
 		val = val < min ? min : val;
