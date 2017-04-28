@@ -530,7 +530,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         AVRational timebase = this.pFormatCtx.streams(this.audioStream).time_base();
         long duration = (1000L * timebase.num() * this.pFormatCtx.streams(this.audioStream).duration()/timebase.den());
         if (this.swr_ctx == null) {
-            this.audioDescriptor = new AudioDescriptor(this.pFrame.sample_rate(), this.pFrame.channels(), duration);
+            this.audioDescriptor = new AudioDescriptor(this.pCodecCtxAudio.sample_rate(), this.pCodecCtxAudio.channels(), duration);
         } else {
             this.audioDescriptor = new AudioDescriptor(this.resampledFrame.sample_rate(), this.resampledFrame.channels(), duration);
         }

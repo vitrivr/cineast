@@ -338,7 +338,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         long duration = (1000L * timebase.num() * this.pFormatCtx.streams(this.audioStream).duration()/timebase.den());
 
         if (this.swr_ctx == null) {
-            this.descriptor = new AudioDescriptor(this.decodedFrame.sample_rate(), this.decodedFrame.channels(), duration);
+            this.descriptor = new AudioDescriptor(this.pCodecCtx.sample_rate(), this.pCodecCtx.channels(), duration);
         } else {
             this.descriptor = new AudioDescriptor(this.resampledFrame.sample_rate(), this.resampledFrame.channels(), duration);
         }
