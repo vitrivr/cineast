@@ -18,8 +18,10 @@ import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 
+import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,18 +34,18 @@ import java.util.stream.Collectors;
  *
  * [1] Grosche, P., & Muller, M. (2012). Toward characteristic audio shingles for efficient cross-version music retrieval.
  *      In 2012 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) (pp. 473–476). IEEE. http://doi.org/10.1109/ICASSP.2012.6287919
-
+ *
+ * [2] Kurth, F., & Müler, M. (2008). Efficient index-based audio matching.
+ *      IEEE Transactions on Audio, Speech and Language Processing, 16(2), 382–395. http://doi.org/10.1109/TASL.2007.911552
+ *
  * @author rgasser
  * @version 1.0
  * @created 16.02.17
  */
 public abstract class CENS extends StagedFeatureModule {
 
-    /** Size of the window during STFT in # samples. */
-    private final static int WINDOW_SIZE = 4096;
-
-    /** Overlap between two subsequent frames during STFT in # samples. */
-    private final static int WINDOW_OVERLAP = 1024;
+    /** Size of the window during STFT in seconds (as proposed in [2]). */
+    private final static float WINDOW_SIZE = 0.1f;
 
     /**
      * Size of a shingle in number of HPCP features.
@@ -59,7 +61,7 @@ public abstract class CENS extends StagedFeatureModule {
      * 0 - Window size (w)
      * 1 - Downsampling ratio (d)
      */
-    private final static int[][] QUERY_SETTINGS = {{5,1}, {11,2}, {21,5}, {41,10}, {81,20}};
+    private final static int[][] QUERY_SETTINGS = {{11,2}, {21,5}, {41,10}, {81,20}};
 
     /** Maximum resolution to consider in HPCP calculation. */
     private final float minFrequency;
@@ -101,7 +103,8 @@ public abstract class CENS extends StagedFeatureModule {
         List<float[]> features = new ArrayList<>(3 * QUERY_SETTINGS.length);
 
         /* Create STFT. If this fails, return empty list. */
-        STFT stft = sc.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
+        Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(sc.getSamplingrate(), WINDOW_SIZE);
+        STFT stft = sc.getSTFT(parameters.first, (parameters.first-2*parameters.second)/3 ,parameters.second, new BlackmanHarrisWindow());
         if (stft == null) return features;
 
         /* Prepare HPCPs... */
@@ -114,10 +117,8 @@ public abstract class CENS extends StagedFeatureModule {
          */
         for (int[] QUERY_SETTING : QUERY_SETTINGS) {
             List<float[]> cens = this.getFeatures(hpcps, QUERY_SETTING[0], QUERY_SETTING[1]);
-            if (cens.size() > 0) {
-                features.add(cens.get(0));
-                features.add(cens.get(cens.size()/2));
-                features.add(cens.get(cens.size()-1));
+            for (int i=0; i<cens.size(); i++) {
+                if (i % SHINGLE_SIZE == 0) features.add(cens.get(i));
             }
         }
 
@@ -156,21 +157,37 @@ public abstract class CENS extends StagedFeatureModule {
     }
 
     /**
+     * Processes a SegmentContainer for later persisting it in the storage layer.
      *
-     * @param shot
+     * @param sc The SegmentContainer that should be processed.
      */
     @Override
-    public void processShot(SegmentContainer shot) {
+    public void processShot(SegmentContainer sc) {
         /* Create STFT. If this fails, return empty list. */
-        STFT stft = shot.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
+        Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(sc.getSamplingrate(), WINDOW_SIZE);
+        STFT stft = sc.getSTFT(parameters.first, (parameters.first-2*parameters.second)/3, parameters.second, new HanningWindow());
         if (stft == null) return;
 
         /* Prepare HPCPs... */
         HPCP hpcps = new HPCP(HPCP.Resolution.FULLSEMITONE, minFrequency, maxFrequency);
         hpcps.addContribution(stft);
 
-        List<float[]> features = this.getFeatures(hpcps, 21, 5);
-        features.forEach(f -> this.persist(shot.getId(), new FloatVectorImpl(f)));
+        List<float[]> features = this.getFeatures(hpcps, 41, 10);
+        features.forEach(f -> this.persist(sc.getId(), new FloatVectorImpl(f)));
+    }
+
+    /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
+     *
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
+     */
+    protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
+                .addHint(ReadableQueryConfig.Hints.inexact);
     }
 
     /**
@@ -195,25 +212,11 @@ public abstract class CENS extends StagedFeatureModule {
                    feature[j*HPCP.Resolution.FULLSEMITONE.bins + k] =  (float)cens[j + i][k];
                 }
             }
-            if (MathHelper.checkNotZero(feature)) {
+            if (MathHelper.checkNotZero(feature) && MathHelper.checkNotNaN(feature)) {
                 features.add(MathHelper.normalizeL2(feature));
             }
         }
 
         return features;
-    }
-
-    /**
-     * Merges the provided QueryConfig with the default QueryConfig enforced by the
-     * feature module.
-     *
-     * @param qc QueryConfig provided by the caller of the feature module.
-     * @return Modified QueryConfig.
-     */
-    protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
-        return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
-                .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
-                .addHint(ReadableQueryConfig.Hints.inexact);
     }
 }

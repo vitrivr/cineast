@@ -18,6 +18,7 @@ import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +134,7 @@ public abstract class AverageHPCP extends StagedFeatureModule {
      */
     private List<float[]> getFeatures(SegmentContainer segment) {
         /* Create STFT. IF this fails, return empty list. */
-        STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
+        STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new HanningWindow());
         if (stft == null) return new ArrayList<>();
 
         HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);

@@ -1,17 +1,21 @@
 package org.vitrivr.cineast.core.features;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.MFCC;
+import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
@@ -22,61 +26,69 @@ import java.util.*;
  * @version 1.0
  * @created 28.02.17
  */
-public class MFCCShingle extends AbstractFeatureModule {
+public class MFCCShingle extends StagedFeatureModule {
 
     /** Size of the window during STFT in # samples. */
-    private final static int WINDOW_SIZE = 4096;
+    private final static float WINDOW_SIZE = 0.2f;
 
-    /** Overlap between two subsequent frames during STFT in # samples. */
-    private final static int WINDOW_OVERLAP = 2205;
-
-    /** */
+    /** Size of a single MFCC Shingle. */
     private final static int SHINGLE_SIZE = 30;
 
-    /** */
-    private final float threshold;
+    /** Distance-threshold used to sort out vectors that should should not count in the final scoring stage. */
+    private final float distanceThreshold;
 
     /**
      *
      */
     public MFCCShingle() {
         super("features_mfccshingles", 2.0f);
-        this.threshold = 2.0f*this.maxDist/4.0f;
+        this.distanceThreshold = 1.0f;
     }
 
+    /**
+     * This method represents the first step that's executed when processing query. The associated SegmentContainer is
+     * examined and feature-vectors are being generated. The generated vectors are returned by this method together with an
+     * optional weight-vector.
+     * <p>
+     * <strong>Important: </strong> The weight-vector must have the same size as the feature-vectors returned by the method.
+     *
+     * @param sc SegmentContainer that was submitted to the feature module
+     * @param qc A QueryConfig object that contains query-related configuration parameters. Can still be edited.
+     * @return A pair containing a List of features and an optional weight vector.
+     */
     @Override
-    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+    protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Extract MFCC shingle features from QueryObject. */
-        List<float[]> features = this.getFeatures(sc);
+        final List<float[]> features = this.getFeatures(sc);
+        features.removeIf(f -> features.indexOf(f) % SHINGLE_SIZE != 0);
+        return features;
+    }
 
-        /* Prepare helper data-structures. */
+    /**
+     * This method represents the last step that's executed when processing a query. A list of partial-results (DistanceElements) returned by
+     * the lookup stage is processed based on some internal method and finally converted to a list of ScoreElements. The filtered list of
+     * ScoreElements is returned by the feature module during retrieval.
+     *
+     * @param partialResults List of partial results returned by the lookup stage.
+     * @param qc             A ReadableQueryConfig object that contains query-related configuration parameters.
+     * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
+     */
+    @Override
+    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+         /* Prepare helper data-structures. */
         final List<ScoreElement> results = new ArrayList<>();
-        final TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
-        final HashSet<String> seen = new HashSet<>(Config.sharedConfig().getRetriever().getMaxResultsPerModule());
+        final TObjectIntHashMap<String> scoreMap = new TObjectIntHashMap<>();
 
-        /* Determine, how many lookups should be performed. */
-        final int maxlookup = 5;
-        final int stepsize = Math.max((int)Math.floor(features.size()/maxlookup), 1);
-        final double maxDist = ((features.size()/stepsize) * this.maxDist);
-
-       /* Set QueryConfig and extract correspondence function. */
+         /* Set QueryConfig and extract correspondence function. */
         qc = this.setQueryConfig(qc);
         final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
-
-        for (int i = 0; i<features.size()-stepsize;i+=stepsize) {
-            List<SegmentDistanceElement> partial = this.selector.getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), features.get(i), "feature", SegmentDistanceElement.class, qc);
-            seen.clear();
-            for (SegmentDistanceElement hit : partial) {
-                if (hit.getDistance() > this.threshold) break;
-                if (!seen.contains(hit.getSegmentId())) {
-                    map.adjustOrPutValue(hit.getSegmentId(), this.maxDist - hit.getDistance(), 0.0);
-                    seen.add(hit.getSegmentId());
-                }
-            }
+        for (DistanceElement hit : partialResults) {
+            if (hit.getDistance() > this.distanceThreshold) break;
+            scoreMap.adjustOrPutValue(hit.getId(), 1, 1);
         }
 
         /* Prepare final result-set. */
-        map.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, correspondence.applyAsDouble(value))));
+        scoreMap.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, 1.0 - 1.0/value)));
         ScoreElement.filterMaximumScores(results.stream());
         return results;
     }
@@ -88,10 +100,11 @@ public class MFCCShingle extends AbstractFeatureModule {
      * @param qc QueryConfig provided by the caller of the feature module.
      * @return Modified QueryConfig.
      */
-    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+    protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
                 .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
-                .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
+                .addHint(ReadableQueryConfig.Hints.inexact);
     }
 
     /**
@@ -108,11 +121,12 @@ public class MFCCShingle extends AbstractFeatureModule {
      * Derives and returns a list of MFCC features for a SegmentContainer.
      *
      * @param segment SegmentContainer to derive the MFCC features from.
-     * @return List of MFCC shingles.
+     * @return List of MFCC Shingles.
      */
     private List<float[]> getFeatures(SegmentContainer segment) {
-        STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new HanningWindow());
-        List<MFCC> mfccs = MFCC.calculate(stft);
+        final Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
+        final STFT stft = segment.getSTFT(parameters.first, (parameters.first-2*parameters.second)/2, parameters.second, new HanningWindow());
+        final List<MFCC> mfccs = MFCC.calculate(stft);
         int vectors = mfccs.size() - SHINGLE_SIZE;
 
         List<float[]> features = new ArrayList<>(Math.max(1, vectors));
@@ -123,7 +137,9 @@ public class MFCCShingle extends AbstractFeatureModule {
                     MFCC mfcc = mfccs.get(i + j);
                     System.arraycopy(mfcc.getCepstra(), 0, feature, 13 * j, 13);
                 }
-                features.add(MathHelper.normalizeL2(feature));
+                if (MathHelper.checkNotZero(feature) && MathHelper.checkNotNaN(feature)) {
+                    features.add(MathHelper.normalizeL2(feature));
+                }
             }
         }
         return features;

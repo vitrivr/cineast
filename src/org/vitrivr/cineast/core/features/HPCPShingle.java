@@ -1,23 +1,21 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.*;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
-import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
+import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,11 +33,8 @@ import java.util.stream.Collectors;
  */
 public abstract class HPCPShingle extends StagedFeatureModule {
 
-    /** Size of the window during STFT in samples. */
-    private final static int WINDOW_SIZE = 8192;
-
-    /** Overlap between two subsequent frames during STFT in samples. */
-    private final static int WINDOW_OVERLAP = 2205;
+    /** Duration of the window during STFT in seconds. */
+    private final static float WINDOW_SIZE = 0.200f;
 
     /**
      * Size of a shingle in number of HPCP features.
@@ -57,6 +52,9 @@ public abstract class HPCPShingle extends StagedFeatureModule {
     /** HPCP resolution (12, 24, 36 bins). */
     private final HPCP.Resolution resolution;
 
+    /** Distance-threshold used to sort out vectors that should should not count in the final scoring stage. */
+    private final float distanceThreshold;
+
     /**
      * Default constructor.
      *
@@ -72,6 +70,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
         this.min_frequency = min_frequency;
         this.max_frequency = max_frequency;
         this.resolution = resolution;
+        this.distanceThreshold = 1.0f;
     }
 
     /**
@@ -87,6 +86,8 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      */
     @Override
     protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
+        final List<float[]> features = this.getFeatures(sc);
+        features.removeIf(f -> features.indexOf(f) % SHINGLE_SIZE != 0);
         return this.getFeatures(sc);
     }
 
@@ -103,16 +104,16 @@ public abstract class HPCPShingle extends StagedFeatureModule {
     protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
         /* Prepare helper data-structures. */
         final List<ScoreElement> results = new ArrayList<>();
-        final TObjectIntHashMap<String> map = new TObjectIntHashMap<>();
+        final TObjectIntHashMap<String> scoreMap = new TObjectIntHashMap<>();
 
         for (DistanceElement hit : partialResults) {
-            if (hit.getDistance() <= 0.9f) {
-                map.adjustOrPutValue(hit.getId(), 1, 1);
+            if (hit.getDistance() <= this.distanceThreshold) {
+                scoreMap.adjustOrPutValue(hit.getId(), 1, 1);
             }
         }
 
          /* Prepare final result-set. */
-        map.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, 1-(1.0/value))));
+        scoreMap.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, 1.0-(1.0/value))));
         return ScoreElement.filterMaximumScores(results.stream());
     }
 
@@ -128,6 +129,20 @@ public abstract class HPCPShingle extends StagedFeatureModule {
     }
 
     /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
+     *
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
+     */
+    protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
+                .addHint(ReadableQueryConfig.Hints.inexact);
+    }
+
+    /**
      * Returns a list of feature vectors given a SegmentContainer.
      *
      * @param segment SegmentContainer for which to calculate the feature vectors.
@@ -135,7 +150,8 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      */
     private List<float[]> getFeatures(SegmentContainer segment) {
         /* Create STFT; If this fails, return empty list. */
-        STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new BlackmanHarrisWindow());
+        Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
+        STFT stft = segment.getSTFT(parameters.first,(parameters.first - 2*parameters.second)/2, parameters.second, new HanningWindow());
         if (stft == null) return new ArrayList<>();
 
         HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);
