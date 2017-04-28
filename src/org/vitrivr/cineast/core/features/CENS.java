@@ -191,7 +191,7 @@ public abstract class CENS extends StagedFeatureModule {
         for (int i = 0; i < numberoffeatures; i++) {
             float[] feature = new float[SHINGLE_SIZE * HPCP.Resolution.FULLSEMITONE.bins];
             for (int j = 0; j < SHINGLE_SIZE; j++) {
-                for (int k = 0; k< HPCP.Resolution.FULLSEMITONE.bins; k++) {
+                for (int k = 0; k < HPCP.Resolution.FULLSEMITONE.bins; k++) {
                    feature[j*HPCP.Resolution.FULLSEMITONE.bins + k] =  (float)cens[j + i][k];
                 }
             }
@@ -214,6 +214,6 @@ public abstract class CENS extends StagedFeatureModule {
         return new QueryConfig(qc)
                 .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
-                .addHint(ReadableQueryConfig.Hints.lsh);
+                .addHint(ReadableQueryConfig.Hints.inexact);
     }
 }
