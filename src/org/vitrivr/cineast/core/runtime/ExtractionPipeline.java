@@ -109,15 +109,21 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     }
 
     /**
-     * Can be used to emit a SegmentContainer into the ExtractionPipeline. Invoking this
-     * method will add the container to the local queue. If that queue is full, this method
-     * will block until space becomes available.
+     * Can be used to emit a SegmentContainer into the ExtractionPipeline. Invoking this method will add
+     * the container to the local queue.
+     *
+     * If that queue is full, this method will block for the specified amount of time or until
+     * space to becomes available. If during that time, no space becomes available, the method
+     * returns false. This is an indication that emission of the segment should be retried later.
      *
      * @param container SegmentContainer to add to the queue.
+     * @param timeout Time to wait for space to become available in ms.
+     * @return true if SegmentContainer was emitted, false otherwise.
+     *
      * @throws InterruptedException
      */
-    public void emit(SegmentContainer container) throws InterruptedException {
-        this.segmentQueue.put(container);
+    public boolean emit(SegmentContainer container, int timeout) throws InterruptedException {
+        return this.segmentQueue.offer(container, timeout,  TimeUnit.MILLISECONDS);
     }
 
     /**

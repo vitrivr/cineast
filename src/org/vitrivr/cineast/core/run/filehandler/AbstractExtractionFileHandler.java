@@ -171,6 +171,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                 final String objectId = descriptor.getObjectId();
                 int segmentNumber = 1;
 
+                /* Timeout in ms used when emitting segments into the ExtractionPipeline. */
+                int emissionTimout = 1000;
+
                 /* Initialize segmenter and pass to executor service. */
                 segmenter.init(decoder, descriptor);
                 this.executorService.execute(segmenter);
@@ -194,7 +197,10 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                             container.setSuperId(segmentDescriptor.getObjectId());
 
                             /* Emit container to extraction pipeline. */
-                            this.pipeline.emit(container);
+                            while(!this.pipeline.emit(container, emissionTimout)) {
+                                LOGGER.warn("ExtractionPipeline is full - deferring emission of segment. Consider increasing the thread-pool count for the extraction pipeline.");
+                                Thread.sleep(emissionTimout);
+                            }
 
                              /* Increase the segment number. */
                             segmentNumber += 1;
