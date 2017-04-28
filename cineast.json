@@ -4,7 +4,10 @@
 		"port": 5890,
 		"plaintext": true
 	},
-	
+	"benchmark": {
+		"mode":"STORE",
+		"path":"/Users/rgasser/Desktop"
+	},
 	"retriever": {
 		"threadPoolSize": 2,
 		"maxResults": 200,
@@ -72,6 +75,11 @@
 			"audiomelody" : [
 				{"feature": "CENS12MelodyShingle",				"weight": 1.5},
 				{"feature": "HPCP12MelodyShingle",				"weight": 1.0}
+
+			],
+			"hpcpaverage" : [
+				{"feature": "AverageHPCP20F36B",				"weight": 1.0},
+				{"feature": "AverageHPCP30F36B",				"weight": 1.25}
 			],
 			"mfcc" : [
 				{"feature": "MFCCShingle",						"weight": 1.0}
@@ -82,6 +90,9 @@
 			],
 			"sphericalharmonics" : [
 				{"feature": "SphericalHarmonics",				"weight": 1.0}
+			],
+			"pitchsequence" : [
+				{"feature": "MelodyEstimate",				"weight": 1.0}
 			]
 		}
 	},
@@ -103,14 +114,14 @@
 		"AUDIO":{
 			"decoder": "FFMpegAudioDecoder",
 			"properties": {
-				"samplerate":22050,
+				"samplerate":44100,
 				"channels":2
 			}
 		}
 	},
 	
 	"extractor": {
-		"threadPoolSize": 1,
+		"threadPoolSize": 4,
 		"outputLocation": "out"
 	},
 	
@@ -123,6 +134,7 @@
 		"enableCLI": false,
 		"enableWebsocket": true,
 		"enableLegacy":false,
+		"maxMessageSize":40960000,
 		"httpPort": 4567,
 		"legacyPort": 12345,
 		"threadPoolSize" : 8
