@@ -181,12 +181,16 @@ public class PitchTracker {
                     Pitch melodyPitch = new Pitch(contour.getPitch(i).getFrequency());
                     int j = i;
                     double time = this.t_stepsize;
+                    double salience = contour.getPitch(i).getSalience();
                     while (contour.getPitch(j) != null) {
                         time += this.t_stepsize;
+                        salience += contour.getPitch(j).getSalience();
                         j+= 1;
                     }
                     if (time > 0.1f) {
                         melodyPitch.setDuration((int)(time * 1000));
+                        melodyPitch.setSalience(salience);
+
                         melody.append(melodyPitch);
                         i=j-1;
                     }
