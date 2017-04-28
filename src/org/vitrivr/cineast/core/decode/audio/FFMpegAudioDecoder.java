@@ -32,6 +32,7 @@ import org.bytedeco.javacpp.avutil.AVDictionary;
 import org.bytedeco.javacpp.avutil.AVFrame;
 
 import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -85,6 +86,8 @@ public class FFMpegAudioDecoder implements AudioDecoder {
     private SwrContext swr_ctx = null;
 
     private AtomicBoolean complete = new AtomicBoolean(false);
+
+    private AudioDescriptor descriptor = null;
 
     /**
      * Reads the next packet from the stream containing 1:n frames. If queue is set to true,
@@ -160,7 +163,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         this.decodedFrame.data(0).position(0).get(buffer);
 
         /* ... and add frame to queue. */
-        this.frameQueue.add(new AudioFrame(this.getFrameNumber(), this.getFrameTimestamp(), this.decodedFrame.sample_rate(), this.decodedFrame.channels(), buffer));
+        this.frameQueue.add(new AudioFrame(this.getFrameNumber(), this.getFrameTimestamp(), buffer, this.descriptor));
     }
 
 
@@ -199,7 +202,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
             try {
                 stream.write(buffer);
             } catch (IOException e) {
-                LOGGER.error("Could not write resampled frame to ByteArrayOutputStream due to an exception ({}).", LogHelper.getStackTrace(e));
+                LOGGER.error("Could not write re-sampled frame to ByteArrayOutputStream due to an exception ({}).", LogHelper.getStackTrace(e));
                 break;
             }
 
@@ -207,7 +210,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         }
 
         /* ... and add frame to queue. */
-        this.frameQueue.add(new AudioFrame(this.getFrameNumber(), this.getFrameTimestamp(), this.resampledFrame.sample_rate(), this.resampledFrame.channels(), stream.toByteArray()));
+        this.frameQueue.add(new AudioFrame(this.getFrameNumber(), this.getFrameTimestamp(), stream.toByteArray(), this.descriptor));
     }
 
     /**
@@ -328,6 +331,17 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         this.resampledFrame.sample_rate(samplerate);
         this.resampledFrame.channels(channels);
         this.resampledFrame.format(TARGET_FORMAT);
+
+
+        /* Initialize the AudioDescriptor. */
+        AVRational timebase = this.pFormatCtx.streams(this.audioStream).time_base();
+        long duration = (1000L * timebase.num() * this.pFormatCtx.streams(this.audioStream).duration()/timebase.den());
+
+        if (this.swr_ctx == null) {
+            this.descriptor = new AudioDescriptor(this.decodedFrame.sample_rate(), this.decodedFrame.channels(), duration);
+        } else {
+            this.descriptor = new AudioDescriptor(this.resampledFrame.sample_rate(), this.resampledFrame.channels(), duration);
+        }
 
         /* Completed initialization. */
         LOGGER.debug("{} was initialized successfully.", this.getClass().getName());

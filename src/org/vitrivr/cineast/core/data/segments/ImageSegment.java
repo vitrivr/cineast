@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.data.segments;
 
+import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
@@ -29,7 +30,7 @@ public class ImageSegment implements SegmentContainer {
      */
     public ImageSegment(BufferedImage image) {
         this.image = MultiImageFactory.newMultiImage(image);
-        this.videoFrame = new VideoFrame(1, this.image);
+        this.videoFrame = new VideoFrame(1, 0, this.image, new VideoDescriptor(25, 40, this.image.getWidth(), this.image.getHeight()));
     }
 
     /**

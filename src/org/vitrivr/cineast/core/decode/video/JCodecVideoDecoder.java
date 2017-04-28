@@ -10,6 +10,7 @@ import org.jcodec.api.JCodecException;
 import org.jcodec.common.FileChannelWrapper;
 import org.jcodec.common.NIOUtils;
 import org.jcodec.common.model.Picture;
+import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -93,7 +94,11 @@ public class JCodecVideoDecoder implements VideoDecoder {
 		if(_return == null){
 			return null;
 		}
-		return new VideoFrame((int)this.fg.getCurrentFrameNum(), MultiImageFactory.newMultiImage(width, height, _return));
+
+		long timestamp = (long)(this.fg.getCurrentFrameNum()/this.getFPS()) * 1000;
+		long duration = (long)(1000L * this.getTotalFrameCount()/this.getFPS());
+
+		return new VideoFrame((int)this.fg.getCurrentFrameNum(),timestamp, MultiImageFactory.newMultiImage(width, height, _return), new VideoDescriptor((float)this.getFPS(), duration, width, height));
 	}
 	
 	/* (non-Javadoc)

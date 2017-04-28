@@ -7,7 +7,9 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
+import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
@@ -38,38 +40,37 @@ public class VideoSegment implements SegmentContainer {
 	private String movieId;
 	private String shotId;
 
-	private final int movieFrameCount;
-
     /** Total number of samples in the AudioSegment. */
     private int totalSamples;
 
     /** Total duration of the AudioSegment in seconds. */
-    private float totalDuration;
+    private float totalAudioDuration;
 
-    /** Sample rate of the AudioSegment. Determined by the sample rate of the first AudioFrame. */
-    private Float samplerate;
+	/** AudioDescriptor for the audio stream in this VideoSegment. */
+	private AudioDescriptor audioDescriptor = null;
 
-    /** Number of channels in the AudioSegment. Determined by the number of channels in the first AudioFrame. */
-    private Integer channels;
+	/** VideoDescriptor for the video stream in this VideoSegment. */
+	private VideoDescriptor videoDescriptor = null;
 
 	/**
 	 *
-	 * @param movieFrameCount
 	 */
-	public VideoSegment(int movieFrameCount) {
-		this.movieFrameCount = movieFrameCount;
+	public VideoSegment() {
+
 	}
 
 	/**
 	 *
 	 * @param movieId
-	 * @param movieFrameCount
 	 */
-	public VideoSegment(String movieId, int movieFrameCount){
+	public VideoSegment(String movieId){
 		this.movieId = movieId;
-		this.movieFrameCount = movieFrameCount;
 	}
-	
+
+	/**
+	 *
+	 * @return
+	 */
 	public int getNumberOfFrames(){
 		return this.videoFrames.size();
 	}
@@ -95,11 +96,16 @@ public class VideoSegment implements SegmentContainer {
      * Adds a VideoFrame to the current VideoSegment. If the VideoFrame contains
      * audio, that audio is added too.
      *
-     * @param f VideoFrame to add to the container.
+     * @param frame VideoFrame to add to the container.
      */
-	public void addFrame(VideoFrame f){
-        this.videoFrames.add(f);
-        if (f.hasAudio()) this.addAudioFrame(f.getAudio());
+	public boolean addVideoFrame(VideoFrame frame){
+		if (frame == null) return false;
+		if (this.videoDescriptor == null) this.videoDescriptor = frame.getDescriptor();
+		if (!this.videoDescriptor.equals(frame.getDescriptor())) return false;
+
+        this.videoFrames.add(frame);
+        if (frame.hasAudio()) this.addAudioFrame(frame.getAudio());
+        return true;
 	}
 
     /**
@@ -111,15 +117,11 @@ public class VideoSegment implements SegmentContainer {
      */
     public boolean addAudioFrame(AudioFrame frame) {
         if (frame == null) return false;
-        if (this.channels == null) this.channels = frame.getChannels();
-        if (this.samplerate == null) this.samplerate = frame.getSampleRate();
-
-        if (this.channels != frame.getChannels() || this.samplerate != frame.getSampleRate()) {
-            return false;
-        }
+        if (this.audioDescriptor == null) this.audioDescriptor = frame.getDescriptor();
+        if (!this.audioDescriptor.equals(frame.getDescriptor())) return false;
 
         this.totalSamples += frame.numberOfSamples();
-        this.totalDuration += frame.getDuration();
+        this.totalAudioDuration += frame.getDuration();
         this.audioFrames.add(frame);
 
         return true;
@@ -140,15 +142,16 @@ public class VideoSegment implements SegmentContainer {
      * @return
      */
     public float getAudioDuration() {
-        return totalDuration;
+        return totalAudioDuration;
     }
 
     /**
-     *
+     * Getter for samplingrate of the AudioSegment.
+	 *
      * @return
      */
-    public float getSampleRate() {
-        return this.samplerate;
+    public float getSamplingrate() {
+        return this.audioDescriptor.getSamplingrate();
     }
 
     /**
@@ -156,7 +159,7 @@ public class VideoSegment implements SegmentContainer {
      * @return
      */
     public int getChannels() {
-        return this.channels;
+        return this.audioDescriptor.getChannels();
     }
 
     /**
@@ -173,7 +176,7 @@ public class VideoSegment implements SegmentContainer {
     @Override
     public STFT getSTFT(int windowsize, int overlap, int padding, WindowFunction function) {
 		if (2*padding >= windowsize) throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
-		STFT stft = new STFT(windowsize, overlap, padding, function, this.samplerate);
+		STFT stft = new STFT(windowsize, overlap, padding, function, this.audioDescriptor.getSamplingrate());
 		stft.forward(this.getMeanSamplesAsDouble());
 		return stft;
     }
@@ -264,22 +267,6 @@ public class VideoSegment implements SegmentContainer {
 			return this.mostRepresentative;
 		}
 	}
-
-	public int getStart(){
-		if (!this.videoFrames.isEmpty()) {
-			return this.videoFrames.get(0).getId();
-		} else {
-			return 0;
-		}
-	}
-	
-	public int getEnd(){
-		if (!this.videoFrames.isEmpty()) {
-			return this.videoFrames.get(this.videoFrames.size()-1).getId();
-		} else {
-			return 0;
-		}
-	}
 	
 	public String getId(){
 		return this.shotId;
@@ -317,14 +304,80 @@ public class VideoSegment implements SegmentContainer {
 		return this.subItems;
 	}
 
+	/**
+	 * Returns the frame-number of the first frame in the segment (relative to the entire stream).
+	 *
+	 * @return
+	 */
 	@Override
-	public float getRelativeStart() {
-		return (getStart() / (float)this.movieFrameCount);
+	public int getStart(){
+		if (!this.videoFrames.isEmpty()) {
+			return this.videoFrames.get(0).getId();
+		} else {
+			return 0;
+		}
 	}
 
+	/**
+	 * Returns the frame-number of the last frame in the segment (relative to the entire stream).
+	 *
+	 * @return
+	 */
+	@Override
+	public int getEnd(){
+		if (!this.videoFrames.isEmpty()) {
+			return this.videoFrames.get(this.videoFrames.size()-1).getId();
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * Returns the relative start of the VideoSegment in percent (relative to the entire stream).
+	 *
+	 * @return
+	 */
+	@Override
+	public float getRelativeStart() {
+		return (1000.0f * this.getStart()) / this.videoDescriptor.getDuration();
+	}
+
+	/**
+	 * Returns the relative end of the VideoSegment in percent (relative to the entire stream).
+	 *
+	 * @return
+	 */
 	@Override
 	public float getRelativeEnd() {
-		return (getEnd() / (float)this.movieFrameCount);
+		return (1000.0f * this.getEnd()) / this.videoDescriptor.getDuration();
+	}
+
+	/**
+	 * Returns the absolute start of the VideoSegment in seconds (relative to the entire stream).
+	 *
+	 * @return
+	 */
+	@Override
+	public float getAbsoluteStart() {
+		if (!this.videoFrames.isEmpty()) {
+			return this.videoFrames.get(0).getStart();
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * Returns the absolute end of the VideoSegment in seconds (relative to the entire stream).
+	 *
+	 * @return
+	 */
+	@Override
+	public float getAbsoluteEnd() {
+		if (!this.videoFrames.isEmpty()) {
+			return this.videoFrames.get(this.videoFrames.size()-1).getEnd();
+		} else {
+			return 0;
+		}
 	}
 	
 	@Override

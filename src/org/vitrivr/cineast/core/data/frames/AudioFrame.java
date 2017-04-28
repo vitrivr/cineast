@@ -18,9 +18,8 @@ import java.nio.ByteOrder;
  * @created 30.11.16
  */
 public class AudioFrame {
-
     /** Default empty frames frame. Encodes a single, mute sample for one channel. */
-    public final static AudioFrame EMPTY_FRAME = new AudioFrame(0,0,22050, 1, new byte[2]);
+    public final static AudioFrame EMPTY_FRAME = new AudioFrame(0,0, new byte[2], new AudioDescriptor(22050, 1, 1));
 
     /** Number of bits in a sample. */
     public final static int BITS_PER_SAMPLE = 16;
@@ -28,14 +27,8 @@ public class AudioFrame {
     /** Index of the AudioFrame usually generated in the decoding context (e.g. i-th frame of the decoded file). */
     private final long idx;
 
-    /** Timestamp in milliseconds of the first sample in the AudioFrame (relative to the whole file). */
-    private final long starttimepstamp;
-
-    /** Sample rate of this AudioFrame. */
-    private final float sampleRate;
-
-    /** Number of channels in this AudioFrame. */
-    private final int channels;
+    /** Timestamp in milliseconds of the first sample in the AudioFrame, relative to the whole file. */
+    private final long timestamp;
 
     /** Number of samples per channel in this AudioFrame. */
     private int numberOfSamples;
@@ -43,20 +36,21 @@ public class AudioFrame {
     /** ByteBuffer holding the raw 16bit int data. */
     private ByteBuffer data;
 
+    /** AudioDescriptor that describes the audio in this frame. */
+    private final AudioDescriptor descriptor;
+
     /**
      * Default constructor.
      *
      * @param idx Index of the first sample (pair) in the AudioFrame.
-     * @param starttimestamp Index of the first sample.
-     * @param sampleRate Sample-rate of the new AudioFrame.
-     * @param channels Number of channels of the new AudioFrame.
+     * @param timestamp Index of the first sample.
+     * @param descriptor AudioDescriptor for the stream this frame stems from.
      * @param data Byte array containing 16bit signed PCM data.
      */
-    public AudioFrame(long idx, long starttimestamp, float sampleRate, int channels, byte[] data) {
+    public AudioFrame(long idx, long timestamp, byte[] data, AudioDescriptor descriptor) {
         this.idx = idx;
-        this.channels = channels;
-        this.sampleRate = sampleRate;
-        this.starttimepstamp = starttimestamp;
+        this.descriptor = descriptor;
+        this.timestamp = timestamp;
         this.setData(data);
     }
 
@@ -67,7 +61,25 @@ public class AudioFrame {
      * @return AudioFormat
      */
     public final AudioFormat getFormat() {
-        return new AudioFormat(this.sampleRate, BITS_PER_SAMPLE, this.channels, true, false);
+        return new AudioFormat(this.descriptor.getSamplingrate(), BITS_PER_SAMPLE, this.descriptor.getChannels(), true, false);
+    }
+
+    /**
+     *  Returns the AudioDescriptor associated with the this AudioFrame.
+     *
+     * @return AudioDescriptor
+     */
+    public final AudioDescriptor getDescriptor() {
+        return this.descriptor;
+    }
+
+    /**
+     * Returns the presentation timestamp of the first sample.
+     *
+     * @return Presentation timestamp pf the first sample.
+     */
+    public long getTimestamp() {
+        return this.timestamp;
     }
 
     /**
@@ -110,8 +122,8 @@ public class AudioFrame {
      *
      * @return Sample rate of this AudioFrame.
      */
-    public final float getSampleRate() {
-        return this.sampleRate;
+    public final float getSamplingrate() {
+        return this.descriptor.getSamplingrate();
     }
 
     /**
@@ -120,7 +132,7 @@ public class AudioFrame {
      * @return
      */
     public final float getDuration() {
-        return this.numberOfSamples/this.sampleRate;
+        return this.numberOfSamples/this.descriptor.getSamplingrate();
     }
 
     /**
@@ -129,7 +141,7 @@ public class AudioFrame {
      * @return
      */
     public final float getStart() {
-        return this.starttimepstamp/1000.0f;
+        return this.timestamp /1000.0f;
     }
 
     /**
@@ -138,7 +150,7 @@ public class AudioFrame {
      * @return
      */
     public final float getEnd() {
-        return this.getStart() + this.numberOfSamples/this.sampleRate;
+        return this.getStart() + this.numberOfSamples/this.descriptor.getSamplingrate();
     }
 
     /**
@@ -147,7 +159,7 @@ public class AudioFrame {
      * @return Number of channels in this AudioFrame.
      */
     public final int getChannels() {
-        return channels;
+        return this.descriptor.getChannels();
     }
 
     /**
@@ -158,8 +170,8 @@ public class AudioFrame {
      * @return Sample value for the specified channel at the specified index.
      */
     public final short getSampleAsShort(int idx, int channel) {
-        if (channel < this.channels) {
-            return this.data.getShort(2*idx * this.channels + 2*channel);
+        if (channel < this.descriptor.getChannels()) {
+            return this.data.getShort(2*idx * this.descriptor.getChannels() + 2*channel);
         } else {
             throw new IllegalArgumentException("The channel indexed must not exceed the number of channels!");
         }
@@ -186,10 +198,10 @@ public class AudioFrame {
      */
     public final short getMeanSampleAsShort(int idx) {
         int meanSample = 0;
-        for (int i=0;i<this.channels;i++) {
+        for (int i=0;i<this.descriptor.getChannels();i++) {
             meanSample += this.getSampleAsShort(idx, i);
         }
-        return (short)(meanSample/this.channels);
+        return (short)(meanSample/this.descriptor.getChannels());
     }
 
     /**
@@ -201,10 +213,10 @@ public class AudioFrame {
      */
     public final double getMeanSampleAsDouble(int idx) {
         float meanSample = 0;
-        for (int i=0;i<this.channels;i++) {
+        for (int i=0;i<this.descriptor.getChannels();i++) {
             meanSample += this.getSampleAsShort(idx, i);
         }
-        return (meanSample/(this.channels * Short.MAX_VALUE));
+        return (meanSample/(this.descriptor.getChannels() * Short.MAX_VALUE));
     }
 
     /**
@@ -217,8 +229,8 @@ public class AudioFrame {
      * @return true if appending was successful, false otherwise.
      */
     public boolean append(AudioFrame that, int numberOfSamples) {
-        if (this.sampleRate != that.sampleRate && this.channels != that.channels) return false;
-        int bytes = that.channels * numberOfSamples * (BITS_PER_SAMPLE/8);
+        if (!this.descriptor.equals(that.descriptor)) return false;
+        int bytes = that.descriptor.getChannels() * numberOfSamples * (BITS_PER_SAMPLE/8);
         if (bytes > that.data.capacity()) return false;
 
         /* Copy data. */
@@ -246,7 +258,6 @@ public class AudioFrame {
      */
     private void setData(byte[] data) {
         this.data = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
-        this.numberOfSamples = data.length/(2 * this.channels);
+        this.numberOfSamples = data.length/(2 * this.descriptor.getChannels());
     }
-
 }

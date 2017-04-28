@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
+import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
@@ -14,9 +15,7 @@ import java.util.List;
  */
 public class AudioQueryContainer implements QueryContainer {
 
-    /**
-     *
-     */
+    /** List of {@link AudioFrame}s. */
     private final List<AudioFrame> frames;
 
     /** Total number of samples in the AudioSegment. */
@@ -25,13 +24,11 @@ public class AudioQueryContainer implements QueryContainer {
     /** Total duration of the AudioSegment in seconds. */
     private float totalDuration;
 
+    /** */
     private float weight = 1.0f;
 
-    /** Sample rate of the AudioSegment. Determined by the sample rate of the first AudioFrame. */
-    private Float samplerate;
-
-    /** Number of channels in the AudioSegment. Determined by the number of channels in the first AudioFrame. */
-    private Integer channels;
+    /** {@link AudioDescriptor} describing the properties of the underlying audio stream. */
+    private AudioDescriptor descriptor;
 
     /**
      * Returns a list of audio-frames contained in the AudioSegment. The
@@ -42,8 +39,8 @@ public class AudioQueryContainer implements QueryContainer {
     public AudioQueryContainer(List<AudioFrame> frames) {
         this.frames = frames;
         for (AudioFrame frame : this.frames) {
-            if (this.channels == null) this.channels = frame.getChannels();
-            if (this.samplerate == null) this.samplerate = frame.getSampleRate();
+            if (this.descriptor == null) this.descriptor = frame.getDescriptor();
+            if (!this.descriptor.equals(frame.getDescriptor())) throw new IllegalArgumentException("All the provided AudioFrames must share the same AudioDescriptor!");
             this.totalSamples += frame.numberOfSamples();
             this.totalDuration += frame.getDuration();
         }
@@ -139,7 +136,7 @@ public class AudioQueryContainer implements QueryContainer {
     @Override
     public STFT getSTFT(int windowsize, int overlap, int padding, WindowFunction function) {
         if (2*padding >= windowsize) throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
-        STFT stft = new STFT(windowsize, overlap, padding, function, this.samplerate);
+        STFT stft = new STFT(windowsize, overlap, padding, function, this.descriptor.getSamplingrate());
         stft.forward(this.getMeanSamplesAsDouble());
         return stft;
     }
