@@ -69,4 +69,27 @@ public class SphericalHarmonicsFunction {
    public static double getFactor(int l, int m) {
        return FastMath.sqrt(((2*l + 1)/(4*Math.PI)) * ((double)CombinatoricsUtils.factorial(l-FastMath.abs(m)) / (double)CombinatoricsUtils.factorial(l+FastMath.abs(m))));
    }
+
+    /**
+     * Calculates and returns the number of coefficients that are expected for all spherical harmonics
+     * up to max_l.
+     *
+     * @param max_l The maximum harmonic to consider.
+     * @return
+     */
+   public static int numberOfCoefficients(int max_l, boolean onesided) {
+        int number = 0;
+        for (int l=0; l<=max_l; l++) {
+            if (onesided) {
+                for (int m=0; m<=l; m++) {
+                    number += 1;
+                }
+            } else {
+                for (int m=-l; m<=l; m++) {
+                    number += 1;
+                }
+            }
+        }
+        return number;
+   }
 }

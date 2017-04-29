@@ -32,22 +32,32 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @created 16.02.17
  */
-public class SphericalHarmonics extends StagedFeatureModule {
+public abstract class SphericalHarmonics extends StagedFeatureModule {
+    /** Voxelizer instance used with thes feature module. */
+    private final Voxelizer voxelizer;
 
     /* Size of the Voxel Grid in each of the three dimensions. */
-    private static final int GRID_SIZE = 64;
+    private final int grid_size;
 
-    /* Resolution of the grid. */
-    private static final int R = GRID_SIZE/2;
+    /* The maximum harmonic to consider for the feature vector. */
+    private final int min_l;
 
-    /** Voxelizer instance used with thes feature module. */
-    private Voxelizer voxelizer = new Voxelizer(1.0f/R);
+    /* The maximum harmonic to consider for the feature vector. */
+    private final int max_l;
 
     /**
-     * Default constructor for SphericalHarmonics class.
+     * Constructor for SphericalHarmonics feature module.
+     *
+     * @param name Name of the entity for storage.
+     * @param grid_size Size of the Voxel-Grid
+     * @param max_l Maximum harmonic l to consider for feature vector.
      */
-    public SphericalHarmonics() {
-        super("features_sphericalharmonics", 2.0f);
+    public SphericalHarmonics(String name, int grid_size, int min_l, int max_l) {
+        super(name, 2.0f);
+        this.grid_size = grid_size;
+        this.min_l = min_l;
+        this.max_l = max_l;
+        this.voxelizer = new Voxelizer(2.0f/grid_size);
     }
 
     /**
@@ -128,15 +138,16 @@ public class SphericalHarmonics extends StagedFeatureModule {
      * @return
      */
     private float[] featureVectorFromMesh(ReadableMesh mesh) {
-        final float increment = 0.1f; /* Increment of the radius during calculation of the descriptors. Results in 7 different radii. */
-        final int cap = 8;
-
+        final float increment = 0.1f; /* Increment of the angles during calculation of the descriptors. */
+        final int cap = 10; /* Cap on R (i.e. radii up to R-cap are considered). */
+        final int R = this.grid_size/2;
+        final int numberOfCoefficients = SphericalHarmonicsFunction.numberOfCoefficients(this.max_l, true) - SphericalHarmonicsFunction.numberOfCoefficients(this.min_l-1, true);
 
         /* Prepares an empty array for the feature vector. */
-        float[] feature = new float[(R-cap)*25];
+        float[] feature = new float[(R-cap)*numberOfCoefficients];
 
         /* Voxelizes the grid from the mesh. If the resulting grid is invisible, the method returns immediately. */
-        VoxelGrid grid = this.voxelizer.voxelize(mesh, GRID_SIZE + 1, GRID_SIZE + 1, GRID_SIZE + 1);
+        VoxelGrid grid = this.voxelizer.voxelize(mesh, this.grid_size + 1, this.grid_size + 1, this.grid_size + 1);
         if (!grid.isVisible()) return feature;
 
         List<List<Complex>> descriptors = new ArrayList<>();
@@ -145,11 +156,10 @@ public class SphericalHarmonics extends StagedFeatureModule {
          * Outer-loops; iterate from l=0 to 5 and m=-l to +l. For each combination, a new SphericalHarmonicsFunction is
          * created.
          */
-        for (int l = 0; l<5; l++) {
-            for (int m = -l; m <= l; m++) {
+        for (int l = this.min_l; l<=this.max_l; l++) {
+            for (int m = 0; m <= l; m++) {
 
                 final SphericalHarmonicsFunction fkt = new SphericalHarmonicsFunction(l,m);
-
 
                 /*
                  * Middle-loop; Iterate over the 7 radii.
@@ -180,8 +190,6 @@ public class SphericalHarmonics extends StagedFeatureModule {
                 }
             }
         }
-
-
 
         /* Assembles the actual feature vector. */
         int i = 0;
