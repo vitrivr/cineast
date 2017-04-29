@@ -42,6 +42,25 @@ public class MathHelper {
 	}
 
 	/**
+	 * Normalizes a float array with respect to the L2 (Euclidian) norm. The
+	 * method will perform the normalisation in place.
+	 *
+	 * @param v Array that should be normalized.
+	 * @return Normalized array.
+	 */
+	public static float[] normalizeL2InPlace(float[] v) {
+		double norm = normL2(v);
+		if (norm > 0.0f) {
+			for (int i = 0; i < v.length; i++) {
+				v[i] = (float) (v[i] / norm);
+			}
+			return v;
+		} else {
+			return v;
+		}
+	}
+
+	/**
 	 * Normalizes a double array with respect to the L2 (euclidian) norm. The
 	 * method will return a new array and leave the original array unchanged.
 	 *
