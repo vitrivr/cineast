@@ -4,7 +4,6 @@ import org.apache.commons.math3.complex.Complex;
 
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.Pair;
 
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.images.ZernikeHelper;
@@ -21,6 +20,8 @@ import java.util.List;
  * @created 17.03.17
  */
 public class LightfieldZernike extends Lightfield {
+    /** Size of the feature vector. */
+    private static final int SIZE = 36 + 1; /* Number of Coefficients + Pose Idx */
 
     /**
      * Default constructor for LightfieldZernike class.
@@ -30,18 +31,37 @@ public class LightfieldZernike extends Lightfield {
     }
 
     /**
-     * Merges the provided QueryConfig with the default QueryConfig enforced by the
-     * feature module.
+     * Weights used for kNN retrieval based on images / sketches. Higher frequency components (standing for finer details)
+     * have less weight towards the final result.
      *
-     * @param qc QueryConfig provided by the caller of the feature module.
-     * @return Modified QueryConfig.
+     * Also, the first entry (pose-idx) does count less towards the final distance, if known, and not at all if is unknown.
      */
-    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
-        return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
-                .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
+    private static final float[] WEIGHTS_POSE = new float[SIZE];
+    private static final float[] WEIGHTS_NOPOSE = new float[SIZE];
+    static {
+        WEIGHTS_POSE[0] = 1.50f;
+        WEIGHTS_NOPOSE[0] = 0.0f;
+        for (int i = 1; i< SIZE; i++) {
+            WEIGHTS_POSE[i] = 1.0f - (i-2)*(1.0f/(2*SIZE));
+            WEIGHTS_NOPOSE[i] = 1.0f - (i-2)*(1.0f/(2*SIZE));
+        }
     }
 
+    /**
+     * Returns the modified QueryConfig for the provided feature vector. Creates a weighted
+     * version of the original configuration.
+     *
+     * @param qc Original query config
+     * @param feature Feature for which a weight-vector is required.
+     * @return
+     */
+    protected ReadableQueryConfig queryConfigForFeature(QueryConfig qc, float[] feature) {
+        if (feature[0] == POSEIDX_UNKNOWN) {
+            return qc.clone().setDistanceWeights(WEIGHTS_NOPOSE);
+        } else {
+            return qc.clone().setDistanceWeights(WEIGHTS_POSE);
+        }
+    }
 
     /**
      * Extracts the Lightfield Fourier descriptors from a provided BufferedImage. The returned list contains
@@ -51,17 +71,19 @@ public class LightfieldZernike extends Lightfield {
      * @param poseidx Poseidx of the extracted image.
      * @return List of descriptors for image.
      */
-    protected List<Pair<Integer,float[]>> featureVectorsFromImage(BufferedImage image, int poseidx) {
-        List<ZernikeMoments> moments = ZernikeHelper.zernikeMomentsForShapes(image, SIZE/2, 10);
-        List<Pair<Integer,float[]>> features = new ArrayList<>();
+    protected List<float[]> featureVectorsFromImage(BufferedImage image, int poseidx) {
+        final List<ZernikeMoments> moments = ZernikeHelper.zernikeMomentsForShapes(image, RENDERING_SIZE /2, 10);
+        final List<float[]> features = new ArrayList<>(moments.size());
         for (ZernikeMoments moment : moments) {
-            float[] vector = new float[36];
+            float[] feature = new float[SIZE];
             int i = 0;
             for (Complex m : moment.getMoments()) {
-                vector[i] = (float)m.abs();
+                feature[i] = (float)m.abs();
                 i++;
             }
-            features.add(new Pair<>(poseidx, MathHelper.normalizeL2(vector)));
+            feature = MathHelper.normalizeL2InPlace(feature);
+            feature[0] = poseidx;
+            features.add(feature);
         }
         return features;
     }

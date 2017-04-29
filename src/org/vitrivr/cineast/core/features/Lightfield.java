@@ -1,59 +1,43 @@
 package org.vitrivr.cineast.core.features;
 
 import com.twelvemonkeys.image.ImageUtil;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.Renderer;
-import org.vitrivr.cineast.core.setup.AttributeDefinition;
-import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 17.03.17
  */
-public abstract class Lightfield extends AbstractFeatureModule {
-
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    /** Field names of the entity associated with this feature module. */
-    private final static String[] FIELDS = {"id", "feature", "poseidx"};
+public abstract class Lightfield extends StagedFeatureModule {
 
     /** Size of the rendering environment. */
-    protected final static int SIZE = 256;
+    protected final static int RENDERING_SIZE = 256;
 
     /** Default value for an unknown pose index. */
-    private final static int POSEIDX_UNKNOWN = -1;
+    protected final static int POSEIDX_UNKNOWN = -1;
 
-    /** Camera positions used to create lightfield descriptions.
+    /**
+     *  Camera positions used to create lightfield descriptions.
      *  - First index indicates the position-index
      *  - Second index can be used to address the x,y and z coordinates.
      *
@@ -85,7 +69,7 @@ public abstract class Lightfield extends AbstractFeatureModule {
          */
         JOGLOffscreenRenderer renderer = null;
         try {
-            renderer = new JOGLOffscreenRenderer(SIZE, SIZE);
+            renderer = new JOGLOffscreenRenderer(RENDERING_SIZE, RENDERING_SIZE);
         } catch (Exception exception) {
             LOGGER.error("Could not instantiate JOGLOffscreenRenderer! This instance of {} will not create any results or features!", this.getClass().getSimpleName());
         } finally {
@@ -93,61 +77,78 @@ public abstract class Lightfield extends AbstractFeatureModule {
         }
     }
 
-    /**
-     * Processes a SegmentContainer that has been transmitted for retrieval.
-     *
-     * @param sc SegmentContainer
-     * @param qc QueryConfiguration
-     */
-    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-        /* Initialize list with empty results. */
-        List<ScoreElement> results = new ArrayList<>();
 
+    /**
+     * This method represents the first step that's executed when processing query. The associated SegmentContainer is
+     * examined and feature-vectors are being generated. The generated vectors are returned by this method together with an
+     * optional weight-vector.
+     * <p>
+     * <strong>Important: </strong> The weight-vector must have the same size as the feature-vectors returned by the method.
+     *
+     * @param sc SegmentContainer that was submitted to the feature module
+     * @param qc A QueryConfig object that contains query-related configuration parameters. Can still be edited.
+     * @return A pair containing a List of features and an optional weight vector.
+     */
+    @Override
+    protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Check if renderer could be initialised. */
         if (this.renderer == null) {
             LOGGER.error("No renderer found. {} does not return any results.", this.getClass().getSimpleName());
-            return results;
+            return new ArrayList<>(0);
         }
-
-        /* Set QueryConfig and extract correspondence function. */
-        qc = this.setQueryConfig(qc);
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
-
-        /* Initialize helper data structures. */
-        TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), 0.5f, 0.0f);
-        List<Pair<Integer,float[]>> features;
 
         /* Extract features from either the provided Mesh (1) or image (2). */
         ReadableMesh mesh = sc.getNormalizedMesh();
+        List<float[]> features;
         if (mesh.isEmpty()) {
-            BufferedImage image = ImageUtil.createResampled(sc.getAvgImg().getBufferedImage(), SIZE, SIZE, Image.SCALE_SMOOTH);
+            BufferedImage image = ImageUtil.createResampled(sc.getAvgImg().getBufferedImage(), RENDERING_SIZE, RENDERING_SIZE, Image.SCALE_SMOOTH);
             features = this.featureVectorsFromImage(image,POSEIDX_UNKNOWN);
         } else {
             features = this.featureVectorsFromMesh(mesh);
         }
 
-        /* Perform search for each extracted feature and adjust scores. */
-        for (Pair<Integer,float[]> feature : features) {
-            for (Map<String, PrimitiveTypeProvider> result : this.selector.getNearestNeighbourRows(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), feature.second, FIELDS[1], qc)) {
-                /* Extract fields from resultset. */
-                final String id = result.get(FIELDS[0]).getString();
-                final int poseidx = result.get(FIELDS[2]).getInt();
-                final double distance = result.get("ap_distance").getDouble();
-                final double penalty = (poseidx == feature.first) ? 0.0 : 0.1;
+        return features;
+    }
 
-                /* Adjust distance in map. */
-                if (map.containsKey(id)) {
-                    double current = map.get(id);
-                    map.adjustValue(id, (distance-current)/2.0 + penalty);
+    /**
+     * This method represents the last step that's executed when processing a query. A list of partial-results (DistanceElements) returned by
+     * the lookup stage is processed based on some internal method and finally converted to a list of ScoreElements. The filtered list of
+     * ScoreElements is returned by the feature module during retrieval.
+     *
+     * @param partialResults List of partial results returned by the lookup stage.
+     * @param qc             A ReadableQueryConfig object that contains query-related configuration parameters.
+     * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
+     */
+    @Override
+    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+        /* Perform search for each extracted feature and adjust scores.  */
+        HashMap<String,DistanceElement> map = new HashMap<>();
+        for (DistanceElement result : partialResults) {
+            map.merge(result.getId(), result, (v1, v2) -> {
+                if (v1.getDistance() < v2.getDistance()) {
+                    return v1;
                 } else {
-                    map.put(id, distance + penalty);
+                    return v2;
                 }
-            }
+            });
         }
 
         /* Add results to list and return list of results. */
-        map.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, correspondence.applyAsDouble(value))));
-        return results;
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        return ScoreElement.filterMaximumScores(map.entrySet().stream().map((e) -> e.getValue().toScore(correspondence)));
+    }
+
+    /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
+     *
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
+     */
+    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 
     /**
@@ -171,10 +172,9 @@ public abstract class Lightfield extends AbstractFeatureModule {
         }
 
         /* Extract and persist all features. */
-        List<Pair<Integer,float[]>> features = this.featureVectorsFromMesh(mesh);
-        for (Pair<Integer,float[]> feature : features) {
-            PersistentTuple tuple = this.phandler.generateTuple(sc.getId(), new FloatVectorImpl(feature.second), feature.first);
-            this.phandler.persist(tuple);
+        List<float[]> features = this.featureVectorsFromMesh(mesh);
+        for (float[] feature : features) {
+            this.persist(sc.getId(), new FloatVectorImpl(feature));
         }
     }
 
@@ -186,9 +186,9 @@ public abstract class Lightfield extends AbstractFeatureModule {
      * @param mesh Mesh for which to extract the Lightfield Fourier descriptors.
      * @return List of descriptors for mesh.
      */
-    protected List<Pair<Integer,float[]>> featureVectorsFromMesh(ReadableMesh mesh) {
+    protected List<float[]> featureVectorsFromMesh(ReadableMesh mesh) {
         /* Prepare empty list of features. */
-        List<Pair<Integer,float[]>> features = new ArrayList<>(20);
+        List<float[]> features = new ArrayList<>(20);
 
         /* Retains the renderer and returns if retention fails. */
         if (!this.renderer.retain()) return features;
@@ -231,7 +231,7 @@ public abstract class Lightfield extends AbstractFeatureModule {
      * @param poseidx
      * @return
      */
-    protected abstract List<Pair<Integer,float[]>> featureVectorsFromImage(BufferedImage image, int poseidx);
+    protected abstract List<float[]> featureVectorsFromImage(BufferedImage image, int poseidx);
 
     /**
      *
@@ -244,25 +244,5 @@ public abstract class Lightfield extends AbstractFeatureModule {
         } else {
             return null;
         }
-    }
-
-    /**
-     *
-     * @param phandlerSupply
-     */
-    @Override
-    public void init(PersistencyWriterSupplier phandlerSupply) {
-        this.phandler = phandlerSupply.get();
-        this.phandler.open(this.tableName);
-        this.phandler.setFieldNames(FIELDS[0],FIELDS[1],FIELDS[2]);
-    }
-
-    /**
-     *
-     * @param supply
-     */
-    @Override
-    public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-        supply.get().createFeatureEntity(this.tableName, false, new AttributeDefinition(FIELDS[1], AttributeDefinition.AttributeType.VECTOR), new AttributeDefinition(FIELDS[2], AttributeDefinition.AttributeType.INT));
     }
 }
