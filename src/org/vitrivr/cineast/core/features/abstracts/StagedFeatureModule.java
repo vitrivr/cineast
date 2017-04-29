@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import org.apache.logging.log4j.LogManager;
 import org.vitrivr.cineast.core.benchmark.model.Benchmark;
 import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
 import org.vitrivr.cineast.core.benchmark.BenchmarkManager;
@@ -27,6 +28,9 @@ import java.util.List;
  * @created 25.04.17
  */
 public abstract class StagedFeatureModule extends AbstractFeatureModule {
+
+    protected static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
+
 
     /** Instance of the BenchmarkEngine that is used to benchmark queries. */
     private final static BenchmarkEngine BENCHMARK_ENGINE = BenchmarkManager.getDefaultEngine();
@@ -77,6 +81,11 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         /* Start query pre-processing phase. */
         benchmark.split(BENCHMARK_SPLITNAME_PREPROCESSING);
         List<float[]> features = this.preprocessQuery(sc, qcc);
+        if (features.size() == 0) {
+            LOGGER.warn("No features could be generated from the provided query. Aborting query execution...");
+            benchmark.end();
+            return new ArrayList<>(0);
+        }
 
         /* Start query lookup phase. */
         benchmark.split(BENCHMARK_SPLITNAME_SIMILARITY);
@@ -120,6 +129,11 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         /* Start query pre-processing phase. */
         benchmark.split(BENCHMARK_SPLITNAME_LOOKUP);
         List<float[]> features = this.selector.getFeatureVectors("id", segmentId, "feature");
+        if (features.size() == 0) {
+            LOGGER.warn("No features could be fetched for the provided segmentId '{}'. Aborting query execution...", segmentId);
+            benchmark.end();
+            return new ArrayList<>(0);
+        }
 
         /* Start query lookup phase. */
         benchmark.split(BENCHMARK_SPLITNAME_SIMILARITY);
