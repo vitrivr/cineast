@@ -46,21 +46,21 @@
 				{"feature": "CLDReduced15",							"weight": 1.0}
 			],
 			"asr": [
-				{"feature": "SubtitleFulltextSearch",				"weight": 1.0}
+				{"feature": "SubtitleFulltextSearch",			"weight": 1.0}
 			],
 			"ocr": [
-				{"feature": "OCRSearch",							"weight": 1.0}
+				{"feature": "OCRSearch",						"weight": 1.0}
 			],
 			"description": [
-				{"feature": "DescriptionTextSearch",				"weight": 1.0}
+				{"feature": "DescriptionTextSearch",			"weight": 1.0}
 			],
 			"localfeatures" : [
-				{"feature": "SURFMirflickr25K512",					"weight": 1.75},
-				{"feature": "HOGMirflickr25K512",					"weight": 1.0}
+				{"feature": "SURFMirflickr25K512",				"weight": 1.75},
+				{"feature": "HOGMirflickr25K512",				"weight": 1.0}
 			],
 			"localfeatures_fast" : [
-				{"feature": "SURFMirflickr25K256",					"weight": 1.75},
-				{"feature": "HOGMirflickr25K256",					"weight": 1.0}
+				{"feature": "SURFMirflickr25K256",				"weight": 1.75},
+				{"feature": "HOGMirflickr25K256",				"weight": 1.0}
 			],
 			"meta": [
 				{"feature": "VideoMetadata",					"weight": 1.0}
@@ -69,30 +69,33 @@
 				{"feature": "AudioFingerprint",					"weight": 1.0}
 			],
 			"audiobassline" : [
-				{"feature": "CENS12BasslineShingle",			"weight": 1.5},
-				{"feature": "HPCP12BasslineShingle",			"weight": 1.0}
+				{"feature": "CENS12BasslineShingle",			"weight": 1.5}
 			],
 			"audiomelody" : [
-				{"feature": "CENS12MelodyShingle",				"weight": 1.5},
-				{"feature": "HPCP12MelodyShingle",				"weight": 1.0}
-
+				{"feature": "CENS12MelodyShingle",				"weight": 1.5}
 			],
 			"hpcpaverage" : [
-				{"feature": "AverageHPCP20F36B",				"weight": 1.0},
-				{"feature": "AverageHPCP30F36B",				"weight": 1.25}
+				{"feature": "AverageHPCP20F36B",				"weight": 1.5},
+				{"feature": "AverageHPCP30F36B",				"weight": 0.75}
 			],
 			"mfcc" : [
 				{"feature": "MFCCShingle",						"weight": 1.0}
 			],
 			"lightfield" : [
-				{"feature": "LightfieldFourier",				"weight": 1.0},
-				{"feature": "LightfieldZernike",				"weight": 1.0}
+				{"feature": "LightfieldFourier",				"weight": 1.25},
+				{"feature": "LightfieldZernike",				"weight": 1.75}
 			],
-			"sphericalharmonics" : [
-				{"feature": "SphericalHarmonics",				"weight": 1.0}
+			"sphericalharmonicslow" : [
+				{"feature": "SphericalHarmonicsLow",			"weight": 1.0}
+			],
+			"sphericalharmonicsdefault" : [
+				{"feature": "SphericalHarmonicsDefault",		"weight": 1.0}
+			],
+			"sphericalharmonicshigh" : [
+				{"feature": "SphericalHarmonicsHigh",			"weight": 1.0}
 			],
 			"pitchsequence" : [
-				{"feature": "MelodyEstimate",				"weight": 1.0}
+				{"feature": "MelodyEstimate",			 		"weight": 1.0}
 			]
 		}
 	},
