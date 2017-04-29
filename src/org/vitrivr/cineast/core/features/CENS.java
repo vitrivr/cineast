@@ -1,9 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
-
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
@@ -11,7 +8,6 @@ import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
@@ -26,7 +22,6 @@ import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * An Extraction and Retrieval module that leverages pure HPCP based CENS shingles according to [1]. These shingles can be used
@@ -136,11 +131,8 @@ public abstract class CENS extends StagedFeatureModule {
      */
     @Override
     protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
-        /* Prepare empty list of results and correspondence function. */
-        final List<ScoreElement> results = new ArrayList<>();
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        /* Prepare map to build a unique set of results. */
         final HashMap<String,DistanceElement> map = new HashMap<>();
-
         for (DistanceElement hit : partialResults) {
             if (map.containsKey(hit.getId())) {
                 if (map.get(hit.getId()).getDistance() > hit.getDistance()) {
@@ -151,9 +143,9 @@ public abstract class CENS extends StagedFeatureModule {
             }
         }
 
-        /* Prepare final result-set. */
-        map.forEach((key, value) -> results.add(value.toScore(correspondence)));
-        return ScoreElement.filterMaximumScores(results.stream());
+        /* Prepare final list of results. */
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        return ScoreElement.filterMaximumScores(map.entrySet().stream().map((e) -> e.getValue().toScore(correspondence)));
     }
 
     /**
