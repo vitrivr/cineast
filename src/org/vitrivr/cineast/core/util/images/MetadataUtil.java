@@ -4,18 +4,25 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import java.io.File;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
+// TODO: move class out of images package
 public final class MetadataUtil {
   private MetadataUtil() {}
 
   private static final Logger logger = LogManager.getLogger();
+  private static final ObjectMapper mapper = new ObjectMapper();
+  private static final String JSON_EXTENSION = "json";
 
   /**
    * Reads the {@link Metadata} from the given {@link Path} and returns the first {@link Directory}
@@ -40,5 +47,32 @@ public final class MetadataUtil {
       logger.error("Error while reading exif data of file {}: {}", path, LogHelper.getStackTrace(e));
     }
     return metadata.map(m -> m.getFirstDirectoryOfType(directoryType));
+  }
+
+  /**
+   * Extracts the JSON tree structure as a {@link JsonNode} of the accompanying JSON metadata file
+   * named after the given file. That is, both files have the same name without the respective
+   * extension, e.g. {@code image_00001.json} for {@code image_00001.jpg}.
+   *
+   * @param objectPath the path to the original file
+   * @return an {@link Optional} containing the JSON as a {@code JsonNode}, if available and valid,
+   *         otherwise an empty {@code Optional}.
+   */
+  public static Optional<JsonNode> getJsonMetadata(Path objectPath) {
+    String fileName = objectPath.getFileName().toString();
+    String fileNameWithoutExtension = com.google.common.io.Files.getNameWithoutExtension(fileName);
+    Path metadataPath = objectPath.resolveSibling(fileNameWithoutExtension + '.' + JSON_EXTENSION);
+
+    try {
+      return Optional.of(JacksonJsonProvider.getMapper().readTree(metadataPath.toFile()));
+    } catch (JsonParseException e) {
+      logger.error("Cannot parse JSON file {}: {}", metadataPath, LogHelper.getStackTrace(e));
+    } catch (FileNotFoundException e) {
+      logger.info("JSON file {} for file {} does not exist.", metadataPath, objectPath);
+    } catch (IOException e) {
+      logger.error("I/O error while reading JSON file {}: {}", metadataPath, LogHelper.getStackTrace(e));
+    }
+
+    return Optional.empty();
   }
 }
