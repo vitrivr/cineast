@@ -2,49 +2,85 @@ package org.vitrivr.cineast.core.data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.vitrivr.cineast.core.data.Location;
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class LocationTest {
+  private static final float COORDINATES_DELTA = 1e-5f;
+
   @Test
   @DisplayName("Null Island")
   public void testNullIsland() {
-    testLocationValues(0f, 0f, 0f, 0f);
+    assertFixedCoordinates(0f, 0f);
   }
 
   @Test
   @DisplayName("Positive Values")
   public void testPositiveValues() {
-    testLocationValues(47.23f, 7.34f, 47.23f, 7.34f);
+    assertFixedCoordinates(47.23f, 7.34f);
   }
 
   @Test
   @DisplayName("Negative Values")
   public void testNegativeValues() {
-    testLocationValues(-13.163077f, -72.5473746f, -13.163077f,-72.5473746f);
+    assertFixedCoordinates(-13.163077f, -72.5473746f);
   }
 
   @Test
   @DisplayName("Latitude Clamping")
   public void testLatitudeClamping() {
-    testLocationValues(90f, 0f, 123f, 0f);
-    testLocationValues(-90f, 0f, -123f, 0f);
+    assertNormalizedCoordinates(90f, 0f, 123f, 0f);
+    assertNormalizedCoordinates(-90f, 0f, -123f, 0f);
   }
 
   @Test
   @DisplayName("Longitude Wrapping")
   public void testLongitudeWrapping() {
-    testLocationValues(0f, 0f, 0f, 360f);
-    testLocationValues(0f, -135f, 0f, 225f);
-    testLocationValues(0f, -180f, 0f, 180f);
+    assertNormalizedCoordinates(0f, 0f, 0f, 360f);
+    assertNormalizedCoordinates(0f, -135f, 0f, 225f);
+    assertNormalizedCoordinates(0f, -180f, 0f, 180f);
   }
 
-  private static void testLocationValues(float expectedLat, float expectedLng, float actualLat, float actualLng) {
-    Location l = Location.of(actualLat, actualLng);
-    assertEquals(expectedLat, l.getLatitude(), 1e-5f,
-        "Parsed latitude from Location did not match expected");
-    assertEquals(expectedLng, l.getLongitude(),1e-5f,
-        "Parsed longitude from Location did not match expected");
+  @Test
+  @DisplayName("Invalid Float Array")
+  public void testInvalidFloatArray() {
+    List<float[]> invalidArrays = ImmutableList
+        .of(new float[] {}, new float[]{ 0f }, new float[]{ 0f, 1f, 2f });
+    for (float[] array : invalidArrays) {
+      assertThrows(IllegalArgumentException.class, () -> Location.of(array));
+    }
+  }
+
+  private static void assertFixedCoordinates(float latitude, float longitude) {
+    for (Location location : getTestLocations(latitude, longitude)) {
+      assertLocationEquals(latitude, longitude, location);
+    }
+  }
+
+  private static void assertNormalizedCoordinates(float expectedLat, float expectedLng, float actualLat, float actualLng) {
+    for (Location location : getTestLocations(actualLat, actualLng)) {
+      assertLocationEquals(expectedLat, expectedLng, location);
+    }
+  }
+
+  private static List<Location> getTestLocations(float latitude, float longitude) {
+    return ImmutableList.of(
+        Location.of(latitude, longitude),
+        Location.of(new float[] { latitude, longitude })
+    );
+  }
+
+  private static void assertLocationEquals(float expectedLatitude, float expectedLongitude, Location actual) {
+    assertEquals(expectedLatitude, actual.getLatitude(), COORDINATES_DELTA,
+        "Latitude of Location did not match expected");
+    assertEquals(expectedLongitude, actual.getLongitude(), COORDINATES_DELTA,
+        "Longitude of Location did not match expected");
+
+    assertEquals(expectedLatitude, actual.getElement(0), COORDINATES_DELTA,
+        "First element of Location did not match expected");
+    assertEquals(expectedLongitude, actual.getElement(1), COORDINATES_DELTA,
+        "Second element of Location did not match expected");
   }
 }
