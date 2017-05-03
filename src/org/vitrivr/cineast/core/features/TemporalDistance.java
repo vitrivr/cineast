@@ -12,7 +12,6 @@ import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 
-// TODO: Add javadoc
 // TODO: Change from Instant to Range<Instant>
 
 /**
