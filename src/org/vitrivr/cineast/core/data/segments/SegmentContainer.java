@@ -12,6 +12,7 @@ import org.vitrivr.cineast.core.data.providers.MostRepresentativeFrameProvider;
 import org.vitrivr.cineast.core.data.providers.PathProvider;
 import org.vitrivr.cineast.core.data.providers.SubtitleItemProvider;
 import org.vitrivr.cineast.core.data.providers.TagProvider;
+import org.vitrivr.cineast.core.data.providers.TimeProvider;
 
 public interface SegmentContainer extends
     IdProvider,
@@ -25,5 +26,6 @@ public interface SegmentContainer extends
     FrameListProvider,
     AudioFrameProvider,
     AudioSTFTProvider,
-    LocationProvider {
+    LocationProvider,
+    TimeProvider {
 }
