@@ -38,13 +38,14 @@ junitPlatform {
     }
 }
 
+// Important warnings that are currently missing simply because there are too many: "cast", "rawtypes". Ideally, "all" should be used in the future
+def enabledWarnings = ["-Xlint:deprecation", "-Xlint:empty", "-Xlint:overrides", "-Xlint:serial", "-Xlint:static", "-Xlint:unchecked", "-Xlint:varargs"]
 compileJava {
   options.encoding = 'UTF-8'
-  // Important warnings that are currently missing simply because there are too many: "cast", "rawtypes", "serial". Ideally, "all" should be used in the future
-  options.compilerArgs += ["-Xlint:deprecation", "-Xlint:overrides", "-Xlint:static", "-Xlint:unchecked", "-Xlint:varargs"]
+  options.compilerArgs += enabledWarnings
 }
 
-compileTestJava.options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xlint:empty" << "-Xlint:serial"
+compileTestJava.options.compilerArgs += enabledWarnings
 
 protobuf {
   protoc {
