@@ -190,23 +190,4 @@ public class GpsData {
   public int hashCode() {
     return Objects.hash(location, time);
   }
-
-  public static void main(String[] args) throws IOException {
-    //System.in.read();
-    //Path p = Paths.get("/home/becluk00/Documents/Repositories/cineast/spatial_images/20120111_020539.jpg");
-    Path p = Paths.get("/home/becluk00/Documents/Repositories/cineast/images/0a0a9678-f1f3-11e6-89fe-901b0ebdf665.jpeg");
-    //Path p = Paths.get("/home/becluk00/Documents/Repositories/cineast/images/0a0d814e-f22a-11e6-8a07-901b0ebdf665.jpeg");
-
-    System.out.println(of(p));
-
-    /*
-    Path dir = Paths.get("/home/becluk00/Documents/Repositories/cineast/images");
-    TimeHelper.tic();
-    List<GpsData> list = Files.list(dir).filter(path -> path.toString().endsWith(".jpeg")).map(GpsData::of).collect(Collectors.toList());
-    double t = TimeHelper.toc();
-    System.out.println(t);
-    System.out.println(list.size());
-    System.in.read();
-    */
-  }
 }
