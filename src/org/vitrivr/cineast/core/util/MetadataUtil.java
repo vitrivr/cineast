@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
-// TODO: move class out of images package
 public final class MetadataUtil {
   private MetadataUtil() {}
 
