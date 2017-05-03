@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.util.images;
+package org.vitrivr.cineast.core.util;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;

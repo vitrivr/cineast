@@ -5,9 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.drew.metadata.exif.GpsDirectory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.MoreObjects;
-import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
@@ -18,8 +16,8 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.MetadataUtil;
 import org.vitrivr.cineast.core.util.OptionalUtil;
-import org.vitrivr.cineast.core.util.images.MetadataUtil;
 
 /**
  * Container for GPS data, i.e. location and datetime. The data is extracted from either the Exif

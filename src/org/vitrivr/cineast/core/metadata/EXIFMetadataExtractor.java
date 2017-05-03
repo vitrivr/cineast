@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
-import org.vitrivr.cineast.core.util.images.MetadataUtil;
+import org.vitrivr.cineast.core.util.MetadataUtil;
 
 /**
  * @author rgasser
