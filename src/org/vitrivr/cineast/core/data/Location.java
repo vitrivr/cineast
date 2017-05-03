@@ -1,19 +1,42 @@
 package org.vitrivr.cineast.core.data;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import com.drew.lang.GeoLocation;
 import java.util.Objects;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Location implements ReadableFloatVector {
   private static final int ELEMENT_COUNT = 2;
+
+  private static final Logger logger = LogManager.getLogger();
 
   private final float latitude;
   private final float longitude;
 
   private Location(float latitude, float longitude) {
-    this.latitude = latitude;
-    this.longitude = longitude;
+    this.latitude = clampLatitude(latitude);
+    this.longitude = wrapLongitude(longitude);
+  }
+
+  private float clampLatitude(float latitude) {
+    float clamped = Math.max(-90f, Math.min(90f, latitude));
+    if (latitude < -90f || latitude > 90f) {
+      logger.warn("Latitude value must lie between [-90,90] but found {}, clamping to {}",
+          latitude, clamped);
+    }
+    return clamped;
+  }
+
+  private float wrapLongitude(float longitude) {
+    float wrapped = (longitude % 360f + 360f) % 360f;
+    wrapped = wrapped < 180f ? wrapped : wrapped - 360f;
+    if (longitude < -180f || longitude >= 180f) {
+      logger.warn("Longitude value must lie between [-180,180) but found {}, wrapping around to {}",
+          longitude, wrapped);
+    }
+    return wrapped;
   }
 
   public static Location of(float latitude, float longitude) {
@@ -66,8 +89,8 @@ public class Location implements ReadableFloatVector {
       return false;
     }
     Location location = (Location) o;
-    return Float.compare(location.latitude, latitude) == 0 &&
-        Float.compare(location.longitude, longitude) == 0;
+    return Float.compare(location.latitude, latitude)   == 0
+        && Float.compare(location.longitude, longitude) == 0;
   }
 
   @Override
