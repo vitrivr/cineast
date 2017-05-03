@@ -34,7 +34,7 @@ junitPlatform {
     enableStandardTestTask true
     selectors {
         packages 'org.vitrivr.cineast.tests'
-	packages 'org.vitrivr.cineast'
+        packages 'org.vitrivr.cineast'
     }
 }
 
