@@ -16,6 +16,7 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.ObjectDistanceElement;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -26,16 +27,17 @@ import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+import org.vitrivr.cineast.core.metadata.MetadataFeatureExtractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 
 /**
  * Feature module that bases its feature data on the object (usually metadata) itself instead of
- * individual segments.
+ * individual segments by combining {@link MetadataFeatureExtractor} and {@link Retriever}.
  *
- * @param <T> the type of the feature data
+ * @param <T> the specific type of the feature data
  */
 public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
-    implements MetadataExtractor, Retriever {
+    implements MetadataFeatureExtractor<T>, Retriever {
   private static final String ID_COLUMN_NAME = "id"; // Constant used in ADAMproEntityCreator
   private static final String FEATURE_COLUMN_NAME = "feature";
   private static final int WRITER_BATCHSIZE = 10; // Taken from AbstractFeatureModule
@@ -54,15 +56,6 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
 
   /** Returns the default correspondence function if none is set. */
   public abstract CorrespondenceFunction defaultCorrespondence();
-
-  /** Returns a list of descriptors of the given feature data. */
-  public abstract List<MultimediaMetadataDescriptor> createDescriptors(String objectId, T feature);
-
-  /**
-   * Returns an {@link Optional} containing the extracted feature data from the file, if found,
-   * otherwise an empty {@code Optional}.
-   */
-  public abstract Optional<T> extractFeature(Path path);
 
   /**
    * Returns an {@link Optional} containing the extracted feature data from the segment container,
@@ -122,8 +115,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   }
 
   /**
-   * Extracts the feature data from a given object, stores it if present and returns a list of
-   * descriptors based on the data.
+   * Extracts the feature data, <i>stores it</i> and returns a list of descriptors from the feature.
    */
   @Override
   public List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
@@ -156,9 +148,9 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig rqc) {
     this.checkIfRetrieverInitialized();
     return this.segmentLookup.lookUpSegment(segmentId)
-        .map(descriptor -> descriptor.getObjectId())
+        .map(SegmentDescriptor::getObjectId)
         .map(objId -> this.dbSelector.getFeatureVectors(ID_COLUMN_NAME, objId, FEATURE_COLUMN_NAME))
-        .flatMap(features -> features.stream().findFirst())
+        .flatMap(features -> features.stream().findFirst()) // Feature vectors are unique per id
         .map(feature -> this.getSimilar(feature, rqc))
         .orElse(Collections.emptyList());
   }
@@ -169,8 +161,8 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
 
   private List<ScoreElement> getSimilar(float[] feature, ReadableQueryConfig rqc) {
     QueryConfig qc = QueryConfig.clone(rqc).setDistanceIfEmpty(this.defaultDistance());
-
     int maxResultsPerModule = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
+
     List<ObjectDistanceElement> distances = this.dbSelector.getNearestNeighbours(
         maxResultsPerModule,
         feature,
