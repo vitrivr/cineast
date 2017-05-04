@@ -32,7 +32,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
   protected CorrespondenceFunction linearCorrespondence;
 
   protected AbstractFeatureModule(String tableName, float maxDist) {
-    this.tableName = tableName.toLowerCase();
+    this.tableName = tableName;
     this.maxDist = maxDist;
     this.linearCorrespondence = CorrespondenceFunction.linear(maxDist);
   }
