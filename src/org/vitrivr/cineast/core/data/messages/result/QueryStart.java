@@ -20,8 +20,8 @@ public class QueryStart implements Message {
     /**
      * Default constructor; generates the QueryId as random UUID.
      */
-    public QueryStart() {
-        this.queryId = UUID.randomUUID().toString();
+    public QueryStart(String queryId) {
+        this.queryId = queryId;
     }
 
     /**

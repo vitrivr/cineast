@@ -46,8 +46,13 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
      */
     @Override
     public void handle(Session session, SimilarityQuery message) {
-    /* Begin of Query: Send QueryStart Message to Client. */
-        QueryStart startMarker = new QueryStart();
+        /* Prepare QueryConfig (so as to obtain a QueryId). */
+        QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
+
+        /*
+         * Begin of Query: Send QueryStart Message to Client.
+         */
+        QueryStart startMarker = new QueryStart(qconf.getQueryId().toString());
         this.write(session, startMarker);
 
         /*
@@ -58,7 +63,6 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
         /*
          * Execute similarity queries for all Category -> QueryContainer combinations in the map.
          */
-        QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
         for (String category : categoryMap.keySet()) {
             TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
             for (QueryContainer qc : categoryMap.get(category)) {
