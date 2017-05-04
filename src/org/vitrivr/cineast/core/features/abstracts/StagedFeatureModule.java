@@ -31,10 +31,6 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
 
     protected static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
 
-
-    /** Instance of the BenchmarkEngine that is used to benchmark queries. */
-    private final static BenchmarkEngine BENCHMARK_ENGINE = BenchmarkManager.getDefaultEngine();
-
     /**
      * Split markers used for benchmarking.
      */
@@ -43,6 +39,9 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
     private final static String BENCHMARK_SPLITNAME_SIMILARITY = "SIMILARITY";
     private final static String BENCHMARK_SPLITNAME_POSTPROCESSING = "POSTPROCESSING";
 
+    /** Instance of the BenchmarkEngine that is used to benchmark queries. */
+    private final BenchmarkEngine benchmark_engine;
+
     /**
      *
      * @param tableName
@@ -50,6 +49,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      */
     protected StagedFeatureModule(String tableName, float maxDist) {
         super(tableName, maxDist);
+        this.benchmark_engine = BenchmarkManager.getDefaultEngine();
     }
 
     /**
@@ -73,7 +73,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      */
     public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Initialize new Benchmark object. */
-        Benchmark benchmark = BENCHMARK_ENGINE.startNew(this.getClass());
+        Benchmark benchmark = benchmark_engine.startNew(this.getClass());
 
         /* Adjust query-config. */
         QueryConfig qcc = this.defaultQueryConfig(qc);
@@ -121,7 +121,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      */
     public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
         /* Initialize new Benchmark object. */
-        Benchmark benchmark = BENCHMARK_ENGINE.startNew(this.getClass());
+        Benchmark benchmark = benchmark_engine.startNew(this.getClass());
 
         /* Adjust query-config. */
         QueryConfig qcc = this.defaultQueryConfig(qc);
