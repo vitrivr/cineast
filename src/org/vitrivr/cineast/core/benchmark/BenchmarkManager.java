@@ -35,7 +35,7 @@ public final class BenchmarkManager {
      */
     public static BenchmarkEngine getDefaultEngine() {
         BenchmarkMode defaultMode = Config.sharedConfig().getBenchmark().getMode();
-        Path defaultPath = Paths.get(Config.sharedConfig().getBenchmark().getPath());
+        Path defaultPath = Config.sharedConfig().getBenchmark().getPath();
         return getEngine(DEFAULT_ENGINE, defaultMode, defaultPath);
     }
 

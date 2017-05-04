@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * @author rgasser
  * @version 1.0
@@ -27,8 +30,12 @@ public class BenchmarkConfig {
     }
 
     @JsonProperty
-    public String getPath() {
-        return this.path;
+    public Path getPath() {
+        if (this.path != null) {
+            return Paths.get(this.path);
+        } else {
+            return Paths.get(".");
+        }
     }
     public void setPath(String path) {
         this.path = path;
