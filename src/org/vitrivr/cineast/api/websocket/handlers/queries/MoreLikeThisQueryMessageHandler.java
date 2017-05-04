@@ -28,8 +28,11 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
      */
     @Override
     public void handle(Session session, MoreLikeThisQuery message) {
+        /* Prepare QueryConfig (so as to obtain a QueryId). */
+        final QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
+
         /* Begin of Query: Send QueryStart Message to Client. */
-        QueryStart startMarker = new QueryStart();
+        final QueryStart startMarker = new QueryStart(qconf.getQueryId().toString());
         this.write(session, startMarker);
 
         /* Extract categories from MoreLikeThisQuery. */
@@ -41,7 +44,6 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
         });
 
         /* Retrieve per-category results and return them. */
-        final QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
         for (String category : categoryMap) {
             List<StringDoublePair> results = ContinuousRetrievalLogic.retrieve(message.getSegmentId(), category, qconf).stream()
                     .map(score -> new StringDoublePair(score.getSegmentId(), score.getScore()))
