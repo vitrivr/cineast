@@ -21,6 +21,7 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.MathHelper;
+import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
@@ -40,6 +41,9 @@ public class AudioFingerprint extends StagedFeatureModule {
 
     /** Length of an individual fingerprint (size of FV). */
     private static final int FINGERPRINT = 20 * (RANGES.length-1);
+
+    /** Size of the window during STFT in seconds (as proposed in [2]). */
+    private static final float WINDOW_SIZE = 0.2f;
 
     /**
      * Default constructor;
@@ -66,13 +70,14 @@ public class AudioFingerprint extends StagedFeatureModule {
 
         /* Extract filtered spectrum and create query-vectors. */
         TIntArrayList filteredSpectrum = this.filterSpectrum(sc);
-        int lookups = filteredSpectrum.size() / FINGERPRINT;
+        int lookups = (filteredSpectrum.size() / FINGERPRINT + 1);
 
-        float[] feature = new float[FINGERPRINT];
-        for (int i=0;i<=lookups;i++) {
+
+        for (int i=0;i<lookups;i++) {
+            float[] feature = new float[FINGERPRINT];
             for (int j=0; j< FINGERPRINT; j++) {
-                if (i * lookups + j < filteredSpectrum.size()) {
-                    feature[j] = filteredSpectrum.get(i * lookups + j);
+                if (i * FINGERPRINT + j < filteredSpectrum.size()) {
+                    feature[j] = filteredSpectrum.get(i * FINGERPRINT + j);
                 }
             }
             features.add(feature);
@@ -168,7 +173,6 @@ public class AudioFingerprint extends StagedFeatureModule {
                 .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.manhattan)
                 .setDistanceWeights(weights);
-
     }
 
     /**
@@ -181,7 +185,8 @@ public class AudioFingerprint extends StagedFeatureModule {
         TIntArrayList candidates = new TIntArrayList();
 
         /* Perform STFT and extract the Spectra. If this fails, return empty list. */
-        STFT stft = segment.getSTFT(4096, 0, new HanningWindow());
+        Pair<Integer,Integer> properties = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
+        STFT stft = segment.getSTFT(properties.first, (properties.first-properties.second)/4, properties.second, new HanningWindow());
         if (stft == null) return candidates;
         List<Spectrum> spectra = stft.getPowerSpectrum();
 
