@@ -58,7 +58,7 @@ public class TemporalDistance extends MetadataFeatureModule<InstantVector> {
 
   @Override
   public Optional<InstantVector> extractFeature(SegmentContainer segmentContainer) {
-    return segmentContainer.getTime().map(InstantVector::of);
+    return segmentContainer.getInstant().map(InstantVector::of);
   }
 
   /**
