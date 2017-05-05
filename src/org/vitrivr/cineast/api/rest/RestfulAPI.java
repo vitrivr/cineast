@@ -1,17 +1,21 @@
 package org.vitrivr.cineast.api.rest;
 
+import static spark.Spark.after;
+import static spark.Spark.exception;
+import static spark.Spark.get;
+import static spark.Spark.post;
+import static spark.Spark.threadPool;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectAllActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectByActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectSimilarActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentAllByObjectIdActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
 
 import spark.Spark;
-
-import static spark.Spark.*;
 
 /**
  * This class establishes a RESTful endpoint listening on the specified port. Incoming requests are
@@ -54,19 +58,21 @@ public class RestfulAPI {
     get(path("status"), new StatusInvokationHandler());
     get(path("find/object/by/:attribute/:value"), new FindObjectByActionHandler());
     get(path("find/object/all/:type"), new FindObjectAllActionHandler());
-    // post(path("find/object/similar"), new FindObjectSimilarActionHandler());
+    post(path("find/object/similar/"), new FindObjectSimilarActionHandler());
 
     get(path("find/segment/all/object/:id"), new FindSegmentAllByObjectIdActionHandler());
     
-    get(path("find/segment/all/:attribute/:value"), (request, response) -> {
-      /* TODO: Implement! */
-      return null;
-    });
-    get(path("find/segment/all/:type"), (request, response) -> {
-      /* TODO: Implement! */
-      return null;
-    });
+//    get(path("find/segment/all/:attribute/:value"), (request, response) -> {
+//      /* TODO: Implement! */
+//      return null;
+//    });
+//    get(path("find/segment/all/:type"), (request, response) -> {
+//      /* TODO: Implement! */
+//      return null;
+//    });
 
+    
+    
     /*
      * Configure the result after processing was completed.
      */

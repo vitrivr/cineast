@@ -24,8 +24,10 @@ import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
  */
 public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> {
   @Override
-  public Object invoke(Query query, Map<String, String> parameters) {
+  public Object invoke(Query query, Map<String, String> parameters) { //FIXME duplicate fusion logic
 
+    HashMap<String, List<StringDoublePair>> returnMap = new HashMap<>();
+    
     // TODO: Remove code duplication shared with FindObjectSimilarActionHandler
     /*
      * Prepare map that maps categories to QueryTerm components.
@@ -49,6 +51,11 @@ public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> 
     for (String category : categoryMap.keySet()) {
       TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
       for (QueryContainer qc : categoryMap.get(category)) {
+        
+        if(qc == null){
+          continue;
+        }
+        
         float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation
 
         List<SegmentScoreElement> scoreResults;
@@ -68,25 +75,26 @@ public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> 
           scoreBySegmentId.adjustOrPutValue(segmentId, weightedScore, weightedScore);
         }
 
-        final List<StringDoublePair> list = new ArrayList<>(scoreBySegmentId.size());
-        scoreBySegmentId.forEachEntry((segmentId, score) -> {
-          if (score > 0) {
-            list.add(new StringDoublePair(segmentId, score));
-          }
-          return true;
-        });
-
-        Collections.sort(list, StringDoublePair.COMPARATOR);
-
-        final int MAX_RESULTS = Config.sharedConfig().getRetriever().getMaxResults();
-        List<StringDoublePair> resultList = list;
-        if (list.size() > MAX_RESULTS) {
-          resultList = resultList.subList(0, MAX_RESULTS);
-        }
       }
+      final List<StringDoublePair> list = new ArrayList<>(scoreBySegmentId.size());
+      scoreBySegmentId.forEachEntry((segmentId, score) -> {
+        if (score > 0) {
+          list.add(new StringDoublePair(segmentId, score));
+        }
+        return true;
+      });
+
+      Collections.sort(list, StringDoublePair.COMPARATOR);
+
+      final int MAX_RESULTS = Config.sharedConfig().getRetriever().getMaxResults();
+      List<StringDoublePair> resultList = list;
+      if (list.size() > MAX_RESULTS) {
+        resultList = resultList.subList(0, MAX_RESULTS);
+      }
+      returnMap.put(category, resultList);
     }
 
-    return null;
+    return returnMap;
   }
 
   @Override
