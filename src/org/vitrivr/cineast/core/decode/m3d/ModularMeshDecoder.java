@@ -38,6 +38,7 @@ public class ModularMeshDecoder implements MeshDecoder {
         HashSet<String> tmp = new HashSet<>();
         tmp.add("application/3d-stl");
         tmp.add("application/3d-obj");
+        tmp.add("application/3d-off");
         supportedFiles = Collections.unmodifiableSet(tmp);
     }
 
@@ -167,6 +168,8 @@ public class ModularMeshDecoder implements MeshDecoder {
                 return new OBJMeshDecoder();
             case "application/3d-stl":
                 return new STLMeshDecoder();
+            case "application/3d-off":
+                return new OFFMeshDecoder();
             default:
                 return null;
         }
