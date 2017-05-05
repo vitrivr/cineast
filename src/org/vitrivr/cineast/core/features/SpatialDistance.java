@@ -88,12 +88,11 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
   @Override
   public List<MultimediaMetadataDescriptor> createDescriptors(String objectId, Location location) {
     return ImmutableList.of(
-        MultimediaMetadataDescriptor
-            .newMultimediaMetadataDescriptor(objectId, this.domain(),
-                GpsData.KEY_LATITUDE, location.getLatitude()),
-        MultimediaMetadataDescriptor
-            .newMultimediaMetadataDescriptor(objectId, this.domain(),
-                GpsData.KEY_LONGITUDE, location.getLongitude())
+        MultimediaMetadataDescriptor.of(objectId, this.domain(),
+            GpsData.KEY_LATITUDE, Float.toString(location.getLatitude())),
+        MultimediaMetadataDescriptor.of(objectId, this.domain(),
+            GpsData.KEY_LONGITUDE, Float.toString(location.getLongitude()))
     );
   }
 }
+

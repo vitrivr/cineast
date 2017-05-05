@@ -78,9 +78,7 @@ public class TemporalDistance extends MetadataFeatureModule<InstantVector> {
   @Override
   public List<MultimediaMetadataDescriptor> createDescriptors(String objectId,
       InstantVector feature) {
-    return ImmutableList.of(
-        MultimediaMetadataDescriptor
-            .newMultimediaMetadataDescriptor(objectId, this.domain(),
-                GpsData.KEY_DATETIME, feature.getInstant().toString()));
+    return ImmutableList.of(MultimediaMetadataDescriptor
+        .of(objectId, this.domain(), GpsData.KEY_DATETIME, feature.getInstant().toString()));
   }
 }
