@@ -26,7 +26,6 @@ import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.metadata.MetadataFeatureExtractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 
@@ -155,10 +154,6 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
         .orElse(Collections.emptyList());
   }
 
-  private void checkIfRetrieverInitialized() {
-    checkState(this.isRetrieverInitialized(), "getSimilar called before init");
-  }
-
   private List<ScoreElement> getSimilar(float[] feature, ReadableQueryConfig rqc) {
     QueryConfig qc = QueryConfig.clone(rqc).setDistanceIfEmpty(this.defaultDistance());
     int maxResultsPerModule = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
@@ -174,5 +169,9 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     CorrespondenceFunction correspondence = qc.getCorrespondenceFunction()
         .orElse(this.defaultCorrespondence());
     return DistanceElement.toScore(distances, correspondence);
+  }
+
+  private void checkIfRetrieverInitialized() {
+    checkState(this.isRetrieverInitialized(), "getSimilar called before init");
   }
 }

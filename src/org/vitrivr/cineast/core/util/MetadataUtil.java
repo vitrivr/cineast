@@ -6,21 +6,18 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 public final class MetadataUtil {
   private MetadataUtil() {}
 
   private static final Logger logger = LogManager.getLogger();
-  private static final ObjectMapper mapper = new ObjectMapper();
   private static final String JSON_EXTENSION = "json";
 
   /**
@@ -38,12 +35,14 @@ public final class MetadataUtil {
    * @return an {@link Optional} containing the first {@code Directory} of type {@code T} of the
    *         metadata of the file, if present, otherwise an empty {@code Optional}.
    */
-  public static <T extends Directory> Optional<T> getMetadataDirectoryOfType(Path path, Class<T> directoryType) {
+  public static <T extends Directory> Optional<T> getMetadataDirectoryOfType(Path path,
+      Class<T> directoryType) {
     Optional<Metadata> metadata = Optional.empty();
     try {
       metadata = Optional.of(ImageMetadataReader.readMetadata(path.toFile()));
     } catch (ImageProcessingException | IOException e) {
-      logger.error("Error while reading exif data of file {}: {}", path, LogHelper.getStackTrace(e));
+      logger.error("Error while reading exif data of file {}: {}",
+          path, LogHelper.getStackTrace(e));
     }
     return metadata.map(m -> m.getFirstDirectoryOfType(directoryType));
   }
@@ -69,7 +68,8 @@ public final class MetadataUtil {
     } catch (FileNotFoundException e) {
       logger.info("JSON file {} for file {} does not exist.", metadataPath, objectPath);
     } catch (IOException e) {
-      logger.error("I/O error while reading JSON file {}: {}", metadataPath, LogHelper.getStackTrace(e));
+      logger.error("I/O error while reading JSON file {}: {}",
+          metadataPath, LogHelper.getStackTrace(e));
     }
 
     return Optional.empty();
