@@ -475,7 +475,7 @@ public class API {
               Ordering<MultimediaMetadataDescriptor> ordering =
                   Ordering.explicit(ids).onResultOf(d -> d.getObjectId());
               try (MultimediaMetadataReader r = new MultimediaMetadataReader()) {
-                List<MultimediaMetadataDescriptor> descriptors = r.lookupMultimediaMetadata(ids.toArray(new String[] {}));
+                List<MultimediaMetadataDescriptor> descriptors = r.lookupMultimediaMetadata(ids);
                 descriptors.sort(ordering);
                 descriptors.forEach(System.out::println);
               }
