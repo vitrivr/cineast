@@ -34,6 +34,7 @@ junitPlatform {
     enableStandardTestTask true
     selectors {
         packages 'org.vitrivr.cineast.tests'
+        packages 'org.vitrivr.cineast'
     }
 }
 
@@ -169,7 +170,6 @@ sourceSets {
     }
     test {
         java {
-            srcDir 'src'
             srcDir 'tests'
         }
     }

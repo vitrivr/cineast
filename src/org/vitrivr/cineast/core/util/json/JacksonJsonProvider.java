@@ -46,6 +46,10 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter {
     MAPPER.configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
   }
 
+  public static ObjectMapper getMapper() {
+    return MAPPER;
+  }
+
   @Override
   public <T> T toObject(String jsonString, Class<T> c) {
     try {
