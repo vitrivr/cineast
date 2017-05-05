@@ -49,7 +49,7 @@ public class EXIFMetadataExtractor implements MetadataExtractor {
             .entrySet().stream()
             .filter(e -> e.getValue() != null)
             .map(e -> MultimediaMetadataDescriptor
-                .newMultimediaMetadataDescriptor(objectId, this.domain(), e.getKey(), e.getValue()))
+                .of(objectId, this.domain(), e.getKey(), e.getValue()))
         ).orElse(Stream.empty()).collect(Collectors.toList());
   }
 

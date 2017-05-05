@@ -48,7 +48,7 @@ public class JsonMetadataExtractor implements MetadataExtractor {
       Map<String, Object> jsonValues) {
     return jsonValues.entrySet().stream()
         .map(e -> MultimediaMetadataDescriptor
-            .newMultimediaMetadataDescriptor(objectId, this.domain(), e.getKey(), e.getValue()))
+            .of(objectId, this.domain(), e.getKey(), e.getValue()))
         .collect(Collectors.toList());
   }
 }
