@@ -92,8 +92,13 @@ public class BenchmarkEngine {
         }
 
         @Override
+        public Map<String, Float> splitDurations() {
+            return new LinkedHashMap<>(0);
+        }
+
+        @Override
         public Map<String,Object> data() {
-            return new HashMap<>();
+            return new HashMap<>(0);
         }
     };
 
