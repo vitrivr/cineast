@@ -113,6 +113,24 @@ public class BenchmarkImpl implements Benchmark {
     }
 
     /**
+     * Returns a Map that maps the split names to their duration.
+     *
+     * <strong>Important:</strong> When iterating over the map, the splits are supposed
+     * to occur in the order they were created!
+     *
+     * @return Map of splits and associated durations.
+     */
+    public Map<String,Float> splitDurations() {
+        LinkedHashMap<String,Float> map = new LinkedHashMap<>();
+        for (int i=0; i<splits.size(); i++) {
+            long begin = this.splits.get(i).second;
+            long end = (i==splits.size()-1) ? this.end : this.splits.get(i+1).second;
+            map.put(this.splits.get(i).first, this.duration(begin, end));
+        }
+        return map;
+    }
+
+    /**
      * Returns a Map containing the data of the Benchmark. The fieldnames defined above
      * can be used to access that data. Furthermore, some fields may be related to named
      * splits. This implementation uses a LinkedHashMap, i.e. when iterating, the key-value pairs
@@ -133,7 +151,7 @@ public class BenchmarkImpl implements Benchmark {
      * @return Map with the Benchmark-data
      */
     public Map<String,Object> data() {
-            /* Prepare TreeMap and add the default fields. */
+        /* Prepare TreeMap and add the default fields. */
         final LinkedHashMap<String,Object> data = new LinkedHashMap<>();
         data.put(FIELD_DATE, this.date);
         data.put(FIELD_NAME, this.name);
@@ -143,10 +161,9 @@ public class BenchmarkImpl implements Benchmark {
         data.put(FIELD_END, this.end);
 
         /* Calculate the split durations and add them as well. */
-        for (int i=0; i<splits.size(); i++) {
-            long begin = this.splits.get(i).second;
-            long end = (i == splits.size()-1) ? this.end : this.splits.get(i+1).second;
-            data.put(this.splits.get(i).first, this.duration(begin, end));
+        Map<String,Float> splits = this.splitDurations();
+        for (Map.Entry<String,Float> split : splits.entrySet()) {
+            data.put(split.getKey(), split.getValue());
         }
 
         return data;

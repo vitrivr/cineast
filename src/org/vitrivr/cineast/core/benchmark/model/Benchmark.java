@@ -26,6 +26,10 @@ public interface Benchmark {
     /**
      * Registers a named split. A name can only be used once.
      *
+     * Invocation of this method marks the BEGINNING of a piece of code
+     * that should be benchmarked and the end of the previous split,
+     * if one exists.
+     *
      * @param name Name of the split.
      */
     void split(String name);
@@ -58,7 +62,17 @@ public interface Benchmark {
     int getRun();
 
     /**
-     * Returns a Map containing the data of the Benchmark. The fieldnames defined above
+     * Returns a Map that maps the split names to their duration.
+     *
+     * <strong>Important:</strong> When iterating over the map, the splits are supposed
+     * to occur in the order they were created!
+     *
+     * @return Map of splits and associated durations.
+     */
+    Map<String,Float> splitDurations();
+
+    /**
+     * Returns a Map containing the data of the Benchmark. The field names defined above
      * can be used to access that data. Furthermore, some fields may be related to named
      * splits.
      *
