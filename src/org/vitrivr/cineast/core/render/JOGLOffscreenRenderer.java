@@ -49,13 +49,16 @@ public class JOGLOffscreenRenderer implements Renderer {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Default GLProfile to be used. Should be GL2. */
-    private static final GLProfile glprofile = GLProfile.get(GLProfile.GL2);
+    private static final GLProfile GL_PROFILE = GLProfile.get(GLProfile.GL2);
 
     /** GLCapabilities. Can be used to enable/disable hardware acceleration etc. */
-    private static final GLCapabilities capabilities = new GLCapabilities(glprofile);
+    private static final GLCapabilities GL_CAPABILITIES = new GLCapabilities(GL_PROFILE);
 
     /** OpenGL Utility Library reference */
     private final GLU glu;
+
+    /** OpenGL drawable reference. */
+    private final GLOffscreenAutoDrawable drawable;
 
     /** OpenGL context reference used for drawing. */
     private final GL2 gl;
@@ -79,11 +82,11 @@ public class JOGLOffscreenRenderer implements Renderer {
     private final List<Integer> objects = new ArrayList<>();
 
     /*
-     * This code-block can be used to configure the off-screen renderer's capabilities.
+     * This code-block can be used to configure the off-screen renderer's GL_CAPABILITIES.
      */
     static {
-        capabilities.setOnscreen(false);
-        capabilities.setHardwareAccelerated(true);
+        GL_CAPABILITIES.setOnscreen(false);
+        GL_CAPABILITIES.setHardwareAccelerated(true);
     }
 
     /**
@@ -100,9 +103,9 @@ public class JOGLOffscreenRenderer implements Renderer {
         this.aspect = (float) width / (float) height;
 
         /* Initialize GLOffscreenAutoDrawable. */
-        GLDrawableFactory factory = GLDrawableFactory.getFactory(glprofile);
-        GLOffscreenAutoDrawable drawable = factory.createOffscreenAutoDrawable(null,capabilities,null,width,height);
-        drawable.display();
+        GLDrawableFactory factory = GLDrawableFactory.getFactory(GL_PROFILE);
+        this.drawable = factory.createOffscreenAutoDrawable(null, GL_CAPABILITIES,null,width,height);
+        this.drawable.display();
 
         /* Initialize GLU and GL2. */
         this.glu = new GLU();
@@ -413,6 +416,16 @@ public class JOGLOffscreenRenderer implements Renderer {
             return false;
         } else {
             return true;
+        }
+    }
+
+    /**
+     * Invoked upon garbage collection; destroy the GLDrawable in order to free
+     * bound resources.
+     */
+    public void finalize() {
+        if (this.drawable != null) {
+            this.drawable.destroy();
         }
     }
 }
