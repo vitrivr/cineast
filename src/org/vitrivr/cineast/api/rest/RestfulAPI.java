@@ -55,12 +55,12 @@ public class RestfulAPI {
     threadPool(numberOfThreads, 2, 30000);
 
     /* Register routes! */
-    get(path("status"), new StatusInvokationHandler());
-    get(path("find/object/by/:attribute/:value"), new FindObjectByActionHandler());
-    get(path("find/object/all/:type"), new FindObjectAllActionHandler());
-    post(path("find/object/similar/"), new FindObjectSimilarActionHandler());
+    get(makePath("status"), new StatusInvokationHandler());
+    get(makePath("find/object/by/:attribute/:value"), new FindObjectByActionHandler());
+    get(makePath("find/object/all/:type"), new FindObjectAllActionHandler());
+    post(makePath("find/object/similar/"), new FindObjectSimilarActionHandler());
 
-    get(path("find/segment/all/object/:id"), new FindSegmentAllByObjectIdActionHandler());
+    get(makePath("find/segment/all/object/:id"), new FindSegmentAllByObjectIdActionHandler());
     
 //    get(path("find/segment/all/:attribute/:value"), (request, response) -> {
 //      /* TODO: Implement! */
@@ -94,7 +94,7 @@ public class RestfulAPI {
    * @param name
    * @return
    */
-  private static String path(String name) {
+  private static String makePath(String name) {
     return String.format("/%s/%s/%s", CONTEXT, VERSION, name);
   }
 }
