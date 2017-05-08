@@ -34,6 +34,9 @@ import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
+import org.vitrivr.cineast.core.evaluation.EvaluationConfig;
+import org.vitrivr.cineast.core.evaluation.EvaluationException;
+import org.vitrivr.cineast.core.evaluation.EvaluationRuntime;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
@@ -217,7 +220,7 @@ public class API {
 
   /**
    * Starts the extraction process (CLI and program-argument). A valid configuration file (JSON)
-   * must be provided in order to configure that extraction run. Refer to ExtractionConfig class for
+   * must be provided in order to configure that extraction run. Refer to {@link IngestConfig} class for
    * structural information.
    *
    * @param file Configuration file for the extraction.
@@ -236,8 +239,29 @@ public class API {
       }
     } catch (IOException e) {
       System.err.println(String.format(
-          "Could not start handleExtraction with configuration file '%s' due to a serious IO error.",
+          "Could not start handleExtraction with configuration file '%s' due to a IO error.",
           file.toString()));
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Starts an evaluation process. A valid configuration file (JSON) must be provided in order
+   * to configure that evaluation run. Refer to {@link EvaluationConfig} class for
+   * structural information.
+   *
+   * @param path Path to the configuration file for the extraction.
+   * @see EvaluationConfig
+   */
+  private static void handleEvaluation(Path path) {
+    try {
+      EvaluationRuntime runtime = new EvaluationRuntime(path);
+      runtime.call();
+    } catch (IOException e) {
+      System.err.println(String.format("Could not start evaluation with configuration file '%s' due to a IO error.", path.toString()));
+      e.printStackTrace();
+    } catch (EvaluationException e) {
+      System.err.println(String.format("Something went wrong during the evaluation wiht '%s'.", path.toString()));
       e.printStackTrace();
     }
   }
@@ -460,6 +484,16 @@ public class API {
               }
               System.out.println();
 
+              break;
+            }
+            case "evaluation":
+            case "evaluate": {
+              if (commands.size() < 2) {
+                System.err.println("You must specify the path to the evaluation configuration file (1 argument).");
+                break;
+              }
+              Path path = Paths.get(commands.get(1));
+              API.handleEvaluation(path);
               break;
             }
             case "exportresults": {
