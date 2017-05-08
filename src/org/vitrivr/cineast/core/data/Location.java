@@ -6,6 +6,7 @@ import com.drew.lang.GeoLocation;
 import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.util.MathHelper;
 
 public class Location implements ReadableFloatVector {
   private static final int ELEMENT_COUNT = 2;
@@ -16,12 +17,18 @@ public class Location implements ReadableFloatVector {
   private final float longitude;
 
   private Location(float latitude, float longitude) {
+    checkNotNaN(latitude, "latitude");
+    checkNotNaN(longitude, "longitude");
     this.latitude = clampLatitude(latitude);
     this.longitude = wrapLongitude(longitude);
   }
 
-  private float clampLatitude(float latitude) {
-    float clamped = Math.max(-90f, Math.min(90f, latitude));
+  private static void checkNotNaN(float value, String type) {
+    checkArgument(!Float.isNaN(value), type + " must be valid number, but found: %", value);
+  }
+
+  private static float clampLatitude(float latitude) {
+    float clamped = MathHelper.limit(latitude, -90f, 90f);
     if (latitude < -90f || latitude > 90f) {
       logger.warn("Latitude value must lie between [-90,90] but found {}, clamping to {}",
           latitude, clamped);
@@ -29,7 +36,7 @@ public class Location implements ReadableFloatVector {
     return clamped;
   }
 
-  private float wrapLongitude(float longitude) {
+  private static float wrapLongitude(float longitude) {
     float wrapped = (longitude % 360f + 360f) % 360f;
     wrapped = wrapped < 180f ? wrapped : wrapped - 360f;
     if (longitude < -180f || longitude >= 180f) {

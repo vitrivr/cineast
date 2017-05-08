@@ -53,6 +53,13 @@ public class LocationTest {
     }
   }
 
+  @Test
+  @DisplayName("NaN Values")
+  public void testNanValues() {
+    assertThrows(IllegalArgumentException.class, () -> Location.of(Float.NaN, 0f));
+    assertThrows(IllegalArgumentException.class, () -> Location.of(0f, Float.NaN));
+  }
+
   private static void assertFixedCoordinates(float latitude, float longitude) {
     for (Location location : getTestLocations(latitude, longitude)) {
       assertLocationEquals(latitude, longitude, location);
