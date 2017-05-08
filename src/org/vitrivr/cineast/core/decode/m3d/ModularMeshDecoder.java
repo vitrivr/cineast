@@ -4,6 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.query.containers.ModelQueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.decode.general.Converter;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -25,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version 1.0
  * @created 08.03.17
  */
-public class ModularMeshDecoder implements MeshDecoder {
+public class ModularMeshDecoder implements MeshDecoder, Converter {
     /** Default logging facility. */
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -108,6 +111,42 @@ public class ModularMeshDecoder implements MeshDecoder {
         } catch (IOException e) {
             LOGGER.error("Could not decode mesh file {} due to an IO exception ({})", this.inputFile.toString(), LogHelper.getStackTrace(e));
             this.complete.set(true);
+            return null;
+        }
+    }
+
+    /**
+     * Converts a single file to a QueryContainer.
+     *
+     * @param path Path the file that should be converted.
+     * @return QueryContainer for the specified file.
+     */
+    @Override
+    public QueryContainer convert(Path path) {
+        try {
+            MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
+            String contenttype = filetypes.getContentType(path.toFile());
+
+            /* Try to detach decoder from the list of cached decoders. */
+            Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
+
+            /* If decoder is null, create a new one. */
+            if (decoder == null) decoder = decoderForContenttype(contenttype);
+
+            /* If decoder is still null, return an emtpy Mesh. */
+            if (decoder == null) {
+                LOGGER.warn("Could not find mesh decoder for provided contenttype {}.", contenttype);
+                return null;
+            } else {
+                this.cachedDecoders.put(contenttype, decoder);
+            }
+
+            /* Initialize the decoder and return the decoded mesh. */
+            decoder.init(path, null);
+            Mesh mesh = decoder.getNext();
+            return new ModelQueryContainer(mesh);
+        } catch (IOException e) {
+            LOGGER.error("Could not decode mesh file {} due to an IO exception ({})", path.toString(), LogHelper.getStackTrace(e));
             return null;
         }
     }
