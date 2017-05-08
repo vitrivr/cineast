@@ -73,7 +73,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      */
     public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Initialize new Benchmark object. */
-        Benchmark benchmark = benchmark_engine.startNew(this.getClass().toString() + " (" + qc.getQueryId().toString() + ")");
+        Benchmark benchmark = benchmark_engine.startNew(this.getClass().getSimpleName() + " (" + qc.getQueryId().toString() + ")");
 
         /* Adjust query-config. */
         QueryConfig qcc = this.defaultQueryConfig(qc);
