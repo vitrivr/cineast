@@ -256,7 +256,7 @@ public class API {
   private static void handleEvaluation(Path path) {
     try {
       EvaluationRuntime runtime = new EvaluationRuntime(path);
-      runtime.call();
+      runtime.call(); /* TODO: This is a quick & dirty solution. On the long run, API should probably have a dedicated ExecutorService for the different kinds of tasks it can dispatch. */
     } catch (IOException e) {
       System.err.println(String.format("Could not start evaluation with configuration file '%s' due to a IO error.", path.toString()));
       e.printStackTrace();
