@@ -56,7 +56,7 @@ public class ReflectionHelper {
 			}
 			return instanciate(c);
 		} catch (ClassNotFoundException | InstantiationException  e) {
-			LOGGER.fatal("Failed to create ObjectIdGenerator. Could not find class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create ObjectIdGenerator. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
@@ -81,7 +81,7 @@ public class ReflectionHelper {
 			}
 			return instanciate(c);
 		} catch (ClassNotFoundException | InstantiationException e) {
-			LOGGER.fatal("Failed to create CodebookGenerator. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create CodebookGenerator. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
@@ -98,7 +98,7 @@ public class ReflectionHelper {
 			Class<Converter> c = (Class<Converter>) Class.forName(fqn);
 			return instanciate(c);
 		} catch (ClassNotFoundException e) {
-			LOGGER.fatal("Failed to create Converter. Could not find or access class with name {}.", fqn, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create Converter. Could not find or access class with name {} ({}).", fqn, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
@@ -124,7 +124,7 @@ public class ReflectionHelper {
 			}
 			return instanciate(c);
 		} catch (ClassNotFoundException | InstantiationException e) {
-			LOGGER.fatal("Failed to create Exporter. Could not find class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create Exporter. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
@@ -154,7 +154,7 @@ public class ReflectionHelper {
 				return instanciate(c, configuration);
 			}
 		} catch (ClassNotFoundException | InstantiationException e) {
-			LOGGER.fatal("Failed to create Exporter. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create Exporter. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
@@ -180,7 +180,7 @@ public class ReflectionHelper {
 
 			return instanciate(c);
 		} catch (ClassNotFoundException | InstantiationException e) {
-			LOGGER.fatal("Failed to create MetadataExtractor. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create MetadataExtractor. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
