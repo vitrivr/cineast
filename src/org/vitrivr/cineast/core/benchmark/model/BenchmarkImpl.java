@@ -28,6 +28,9 @@ public class BenchmarkImpl implements Benchmark {
     /** List of named splits. */
     private final List<Pair<String,Long>> splits = new ArrayList<>();
 
+    /** Boolean indicating, whether the Benchmark was aborted. */
+    protected boolean aborted = false;
+
     /**
      * Constructor of BenchmarkImpl.
      *
@@ -51,11 +54,18 @@ public class BenchmarkImpl implements Benchmark {
     }
 
     /**
-     * Ends the current Benchmark run and registers the time at which the
-     * method was invoked.
+     * Completes the Benchmark and sets the end-timestamp.
      */
     public void end() {
         this.end = System.currentTimeMillis();
+    }
+
+    /**
+     * Aborts the Benchmark.
+     */
+    public void abort() {
+        this.end = System.currentTimeMillis();
+        this.aborted = true;
     }
 
     /**

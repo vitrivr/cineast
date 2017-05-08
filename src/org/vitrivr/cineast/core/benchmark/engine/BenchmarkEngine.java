@@ -41,12 +41,24 @@ public class BenchmarkEngine {
         }
 
         /**
-         * Ends the current Benchmark run and registers the time at which the
-         * method was invoked.
+         * Completes the Benchmark and sets the end-timestamp. This marks the regular
+         * end of the Benchmark.
          */
         public void end() {
             super.end();
             BenchmarkEngine.LOGGER.debug("Ended Benchmark for {} (Elapsed: {}s).", this.name, this.elapsed());
+        }
+
+        /**
+         * Aborts the Benchmark. This marks an irregular end of the Benchmark,
+         * e.g. due to an error.
+         *
+         * An aborted Benchmark will not be stored!
+         */
+        public void abort() {
+            super.abort();
+            BenchmarkEngine.this.deque.remove(this);
+            BenchmarkEngine.LOGGER.debug("Aborted Benchmark for {} (Elapsed: {}s).", this.name, this.elapsed());
         }
 
         /**
@@ -75,6 +87,9 @@ public class BenchmarkEngine {
 
         @Override
         public void end() {}
+
+        @Override
+        public void abort() {}
 
         @Override
         public boolean isRunning() {

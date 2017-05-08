@@ -35,9 +35,16 @@ public interface Benchmark {
     void split(String name);
 
     /**
-     * Completes the Benchmark and sets the end-timestamp.
+     * Completes the Benchmark and sets the end-timestamp. This marks the
+     * regular end of the Benchmark.
      */
     void end();
+
+    /**
+     * Aborts the Benchmark. This marks an irregular end of the Benchmark,
+     * e.g. due to an error.
+     */
+    void abort();
 
     /**
      * Returns true if the Benchmark is still running and false otherwise.
