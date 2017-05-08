@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -17,8 +18,10 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 public final class MetadataUtil {
   private MetadataUtil() {}
 
-  private static final Logger logger = LogManager.getLogger();
   private static final String JSON_EXTENSION = "json";
+
+  private static final Logger logger = LogManager.getLogger();
+  private static final JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
 
   /**
    * Reads the {@link Metadata} from the given {@link Path} and returns the first {@link Directory}
@@ -61,17 +64,11 @@ public final class MetadataUtil {
     String fileNameWithoutExtension = com.google.common.io.Files.getNameWithoutExtension(fileName);
     Path metadataPath = objectPath.resolveSibling(fileNameWithoutExtension + '.' + JSON_EXTENSION);
 
-    try {
-      return Optional.of(JacksonJsonProvider.getMapper().readTree(metadataPath.toFile()));
-    } catch (JsonParseException e) {
-      logger.error("Cannot parse JSON file {}: {}", metadataPath, LogHelper.getStackTrace(e));
-    } catch (FileNotFoundException e) {
+    if (Files.notExists(metadataPath)) {
       logger.info("JSON file {} for file {} does not exist.", metadataPath, objectPath);
-    } catch (IOException e) {
-      logger.error("I/O error while reading JSON file {}: {}",
-          metadataPath, LogHelper.getStackTrace(e));
+      return Optional.empty();
     }
 
-    return Optional.empty();
+    return Optional.ofNullable(jsonProvider.toJsonNode(metadataPath));
   }
 }
