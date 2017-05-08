@@ -3,6 +3,7 @@ package org.vitrivr.cineast.api.rest;
 import static spark.Spark.after;
 import static spark.Spark.exception;
 import static spark.Spark.get;
+import static spark.Spark.path;
 import static spark.Spark.post;
 import static spark.Spark.threadPool;
 
@@ -14,6 +15,9 @@ import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectByActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectSimilarActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentAllByObjectIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
 
 import spark.Spark;
 
@@ -62,16 +66,12 @@ public class RestfulAPI {
 
     get(makePath("find/segment/all/object/:id"), new FindSegmentAllByObjectIdActionHandler());
     
-//    get(path("find/segment/all/:attribute/:value"), (request, response) -> {
-//      /* TODO: Implement! */
-//      return null;
-//    });
-//    get(path("find/segment/all/:type"), (request, response) -> {
-//      /* TODO: Implement! */
-//      return null;
-//    });
 
-    
+    path(makePath("session"), () -> {
+      post("/start", new StartSessionHandler());
+      get("/end/:id", new EndSessionHandler());
+      get("/validate/:id", new ValidateSessionHandler());
+    });
     
     /*
      * Configure the result after processing was completed.
