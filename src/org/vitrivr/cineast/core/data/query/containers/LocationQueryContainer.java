@@ -7,7 +7,7 @@ import org.vitrivr.cineast.core.data.Location;
 
 public class LocationQueryContainer implements QueryContainer {
   private final Location location;
-  private float weight = 0f;
+  private float weight = 1f;
 
   private LocationQueryContainer(Location location) {
     this.location = location;

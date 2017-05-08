@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public class InstantQueryContainer implements QueryContainer {
   private final Instant instant;
-  private float weight = 0f;
+  private float weight = 1f;
 
   private InstantQueryContainer(Instant instant) {
     this.instant = instant;
