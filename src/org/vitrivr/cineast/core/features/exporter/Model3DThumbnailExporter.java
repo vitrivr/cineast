@@ -35,6 +35,8 @@ public class Model3DThumbnailExporter implements Extractor {
     /** Property names that can be used in the configuration hash map. */
     private static final String PROPERTY_NAME_DESTINATION = "destination";
     private static final String PROPERTY_NAME_SIZE = "size";
+    private static final String DEFAULT_DESTINATION = ".";
+    private static final int DEFAULT_SIZE = 800;
 
     /** List of perspective that should be rendered. Azimuth and polar angles in degree. */
     private static final float[][] PERSPECTIVES = {
@@ -48,10 +50,10 @@ public class Model3DThumbnailExporter implements Extractor {
     private static final float DISTANCE = 2.0f;
 
     /** Destination path; can be set in the AudioWaveformExporter properties. */
-    private Path destination = Paths.get(Config.sharedConfig().getExtractor().getOutputLocation().toString());
+    private final Path destination;
 
     /** Size of the resulting image in pixels (image will have dimension size x size). */
-    private int size = 800;
+    private final int size;
 
     /** Offscreen rendering context. */
     private final JOGLOffscreenRenderer renderer;
@@ -74,10 +76,16 @@ public class Model3DThumbnailExporter implements Extractor {
     public Model3DThumbnailExporter(HashMap<String, String> properties) {
         if (properties.containsKey(PROPERTY_NAME_DESTINATION)) {
             this.destination = Paths.get(properties.get(PROPERTY_NAME_DESTINATION));
+        } else if (Config.sharedConfig().getExtractor().getOutputLocation() != null) {
+            this.destination = Paths.get(Config.sharedConfig().getExtractor().getOutputLocation().toString());
+        } else {
+            this.destination = Paths.get(DEFAULT_DESTINATION);
         }
 
         if (properties.containsKey(PROPERTY_NAME_SIZE)) {
             this.size = Integer.parseInt(properties.get(PROPERTY_NAME_SIZE));
+        } else {
+            this.size = DEFAULT_SIZE;
         }
 
         this.renderer = new JOGLOffscreenRenderer(this.size/2, this.size/2);
