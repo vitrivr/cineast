@@ -32,7 +32,7 @@ public class BenchmarkImplTest {
                 e.printStackTrace();
             }
             benchmark.end();
-            assertEquals(benchmark.elapsed(), timeout/1000.0f, 0.01f);
+            assertEquals(benchmark.elapsed(), timeout/1000.0f, 0.1f);
         }
     }
 
@@ -64,7 +64,7 @@ public class BenchmarkImplTest {
         assertEquals(durations.size(), splits);
         int k = 0;
         for (Map.Entry<String,Float> split : durations.entrySet()) {
-            assertEquals(split.getValue(), timeouts.get(k)/1000.0f, 0.01f);
+            assertEquals(split.getValue(), timeouts.get(k)/1000.0f, 0.1f);
             k++;
         }
     }
