@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -138,11 +139,11 @@ public class BenchmarkWriter implements Runnable {
         int counter = 0;
         try {
             for (Benchmark benchmark : benchmarks) {
-                for (Map.Entry<String,Object> data : benchmark.data().entrySet()) {
-                    this.writer.append(data.getKey());
-                    this.writer.append(DELIMITER_LABEL);
+                Iterator<Map.Entry<String,Object>> iterator = benchmark.data().entrySet().iterator();
+                while(iterator.hasNext()) {
+                    Map.Entry<String,Object> data = iterator.next();
                     this.writer.append(data.getValue().toString());
-                    this.writer.append(DELIMITER_COLUMNS);
+                    if (iterator.hasNext()) this.writer.append(DELIMITER_COLUMNS);
                 }
                 this.writer.newLine();
                 counter += 1;
