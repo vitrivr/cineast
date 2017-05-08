@@ -67,11 +67,11 @@ public class QueryTerm {
             .ofNullable(jsonProvider.toJsonNode(this.data))
             .flatMap(GpsData::parseLocationFromJson)
             .map(LocationQueryContainer::of)
-            .orElse(null); // TODO: use empty QueryContainer instead?
+            .orElse(null);
       case TIME:
         return GpsData.parseInstant(this.data)
             .map(InstantQueryContainer::of)
-            .orElse(null); // TODO: use empty QueryContainer instead?
+            .orElse(null);
       default:
         return null;
     }
