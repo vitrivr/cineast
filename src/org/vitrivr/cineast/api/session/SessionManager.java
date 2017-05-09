@@ -10,11 +10,14 @@ public class SessionManager {
 
   private static HashMap<String, Session> sessions = new HashMap<>();
 
-  public static Session newSession(int lifetime) {
+  public static Session newSession(int lifetime, SessionType type) {
     Session s;
+    if(type == null){
+      throw new NullPointerException("session type cannot be null");
+    }
     synchronized (sessions) {
       do {
-        s = new Session(lifetime);
+        s = new Session(type, lifetime);
       } while (sessions.containsKey(s.getSessionId()));
       sessions.put(s.getSessionId(), s);
     }

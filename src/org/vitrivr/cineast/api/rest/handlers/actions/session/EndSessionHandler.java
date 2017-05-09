@@ -5,6 +5,7 @@ import java.util.Map;
 import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.session.SessionManager;
+import org.vitrivr.cineast.api.session.SessionType;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
 import org.vitrivr.cineast.core.data.messages.session.SessionState;
 
@@ -21,7 +22,7 @@ public class EndSessionHandler extends ParsingActionHandler<AnyMessage> {
       SessionManager.endSession(sessionId);
     }
     
-    return new SessionState(sessionId, -1);
+    return new SessionState(sessionId, -1, SessionType.UNAUTHENTICATED);
   }
 
   @Override

@@ -6,6 +6,7 @@ import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.session.Session;
 import org.vitrivr.cineast.api.session.SessionManager;
+import org.vitrivr.cineast.api.session.SessionType;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
 import org.vitrivr.cineast.core.data.messages.session.SessionState;
 
@@ -17,13 +18,13 @@ public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage> {
 
     String sessionId = parameters.get(":id");
     if(sessionId == null){
-      return new SessionState("", -1);
+      return new SessionState("", -1, SessionType.UNAUTHENTICATED);
     }
     
     Session s = SessionManager.get(sessionId);
     
     if(s == null || !s.isValid()){
-      return new SessionState(sessionId, -1);
+      return new SessionState(sessionId, -1, SessionType.UNAUTHENTICATED);
     }
     
     //if session is valid: extend life time
