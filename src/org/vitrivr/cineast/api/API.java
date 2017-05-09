@@ -88,7 +88,6 @@ public class API {
       if (Config.sharedConfig().getApi().getEnableCli() || commandline.hasOption('i')) {
         CineastCLI cli = new CineastCLI();
         cli.start();
-        return;
       }
 
       /* Handle --setup; start database setup. */
