@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.vitrivr.cineast.api.rest.RestfulAPI;
+import org.vitrivr.cineast.api.session.CredentialManager;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
@@ -480,7 +481,21 @@ public class API {
               }
               break;
             }
-
+            case "adduser":{
+              if (commands.size() < 3) {
+                System.err.println("You must specify username and password of the user to add");
+                break;
+              }
+              
+              String username = commands.get(1);
+              String password = commands.get(2);
+              
+              boolean admin = commands.size() >= 4 && commands.get(3).equalsIgnoreCase("admin");
+              
+              CredentialManager.createUser(username, password, admin);
+              
+              break;
+            }
             case "exit":
             case "quit": {
               System.exit(0);
