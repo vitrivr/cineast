@@ -5,10 +5,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
+import javax.annotation.Nullable;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,31 +49,57 @@ public class JacksonJsonProvider implements JsonReader, JsonWriter {
     MAPPER.configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
   }
 
-  public static ObjectMapper getMapper() {
-    return MAPPER;
-  }
-
   @Override
+  @Nullable
   public <T> T toObject(String jsonString, Class<T> c) {
     try {
       return MAPPER.readValue(jsonString, c);
     } catch (IOException e) {
-      logIOExceptionOfReadValue(e, "string '" + jsonString + "'");
+      logIOExceptionOfRead(e, jsonString);
       return null;
     }
   }
 
   @Override
+  @Nullable
   public <T> T toObject(File json, Class<T> c) {
     try {
       return MAPPER.readValue(json, c);
     } catch (IOException e) {
-      logIOExceptionOfReadValue(e, "file '" + json + "'");
+      logIOExceptionOfRead(e, json);
       return null;
     }
   }
 
-  private static void logIOExceptionOfReadValue(IOException e, String jsonTypeMessage) {
+  @Nullable
+  public JsonNode toJsonNode(String jsonString) {
+    try {
+      return MAPPER.readTree(jsonString);
+    } catch (IOException e) {
+      logIOExceptionOfRead(e, jsonString);
+      return null;
+    }
+  }
+
+  @Nullable
+  public JsonNode toJsonNode(Path json) {
+    try {
+      return MAPPER.readTree(json.toFile());
+    } catch (IOException e) {
+      logIOExceptionOfRead(e, json.toFile());
+      return null;
+    }
+  }
+
+  private static void logIOExceptionOfRead(IOException e, String jsonString) {
+    logIOExceptionOfReadWithMessage(e, "string '" + jsonString + "'");
+  }
+
+  private static void logIOExceptionOfRead(IOException e, File jsonFile) {
+    logIOExceptionOfReadWithMessage(e, "file '" + jsonFile + "'");
+  }
+
+  private static void logIOExceptionOfReadWithMessage(IOException e, String jsonTypeMessage) {
     if (e instanceof JsonParseException) {
       LOGGER.error("Could not parse JSON {}: {}", jsonTypeMessage, LogHelper.getStackTrace(e));
     } else if (e instanceof JsonMappingException) {

@@ -75,6 +75,12 @@
 			],
 			"mfcc" : [
 				{"feature": "MFCCShingle",						"weight": 1.0}
+			],
+			"spatial" : [
+				{"feature": "SpatialDistance",					"weight": 1.0}
+			],
+			"temporal": [
+				{"feature": "TemporalDistance",					"weight": 1.0}
 			]
 		}
 	},

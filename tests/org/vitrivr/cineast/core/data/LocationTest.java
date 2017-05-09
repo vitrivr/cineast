@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
@@ -51,6 +52,13 @@ public class LocationTest {
     for (float[] array : invalidArrays) {
       assertThrows(IllegalArgumentException.class, () -> Location.of(array));
     }
+  }
+
+  @Test
+  @DisplayName("NaN Values")
+  public void testNanValues() {
+    assertThrows(IllegalArgumentException.class, () -> Location.of(Float.NaN, 0f));
+    assertThrows(IllegalArgumentException.class, () -> Location.of(0f, Float.NaN));
   }
 
   private static void assertFixedCoordinates(float latitude, float longitude) {

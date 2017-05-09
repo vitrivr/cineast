@@ -133,7 +133,8 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     this.checkIfRetrieverInitialized();
     return this.extractFeature(sc)
-        .map(floatVector -> this.getSimilar(ReadableFloatVector.toArray(floatVector), qc))
+        .map(ReadableFloatVector::toArray)
+        .map(array -> this.getSimilar(array, qc))
         .orElse(Collections.emptyList());
   }
 

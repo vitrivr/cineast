@@ -78,16 +78,18 @@ public class GpsData {
    * in the form of
    *
    * <pre>
-   *   {
-   *     ...
-   *     "location": { "latitude": 47.559601, "longitude": 7.588576 },
-   *     "datetime":  "2017-05-03T08:37:47Z"
-   *     ...
-   *   }</pre>
+   * {
+   *   ...
+   *   "location": { "latitude": 47.559601, "longitude": 7.588576 },
+   *   "datetime":  "2017-05-03T08:37:47Z"
+   *   ...
+   * }</pre>
    *
    * <p>Location information requires the key {@code "location"} containing an object with numbers
-   * for {@code "latitude"} and {@code "longitude"}. Time information requires an ISO 8601 string
-   * describing the instant for key {@code "datetime"}.
+   * for {@code "latitude"} and {@code "longitude"}. Alternatively, the coordinates can also be
+   * represented as an two-valued array with latitude first, longitude second, such as
+   * {@code [47.559601, 7.588576]}. Time information requires an ISO 8601 string describing the
+   * instant for key {@code "datetime"}.
    *
    * @param file file to extract json data from
    * @return an object containing the extracted information, if available, otherwise an
@@ -96,27 +98,76 @@ public class GpsData {
   public static GpsData ofJson(Path file) {
     Optional<JsonNode> root = MetadataUtil.getJsonMetadata(file);
 
-    // Check whether JsonNode is an object is omitted because JsonNode.get returns null otherwise
-    Optional<JsonNode> locationNode = root.map(o -> o.get(KEY_LOCATION));
-    Optional<Float> lat = locationNode.flatMap(n -> getFloatFromJsonNode(n, KEY_LATITUDE));
-    Optional<Float> lng = locationNode.flatMap(n -> getFloatFromJsonNode(n, KEY_LONGITUDE));
-    Optional<Location> location = OptionalUtil
-        .and(lat, () -> lng)
-        .map(p -> Location.of(p.first, p.second));
-
     Optional<Instant> instant = root
         .map(o -> o.get(KEY_DATETIME))
         .map(JsonNode::textValue)
-        .map(string -> {
-          try {
-            return Instant.parse(string);
-          } catch (DateTimeParseException e) {
-            logger.error("Could not parse {} as Instant: {}", string, LogHelper.getStackTrace(e));
-            return null;
-          }
-        });
+        .flatMap(GpsData::parseInstant);
+
+    Optional<Location> location = root
+        .map(o -> o.get(KEY_LOCATION))
+        .flatMap(GpsData::parseLocationFromJson);
 
     return ofData(location.orElse(null), instant.orElse(null));
+  }
+
+  /**
+   * Obtains an {@link Instant} of a given {@code String} such as {@code 2007-12-03T10:15:30.00Z}.
+   *
+   * <p>The string must represent a valid instant in UTC and is parsed using {@link Instant#parse}.
+   *
+   * @param string string to parse
+   * @return an {@link Optional} containing a {@code Instant}, if the given text contains a valid
+   *         instant, otherwise an empty {@code Optional}.
+   */
+  public static Optional<Instant> parseInstant(String string) {
+    try {
+      return Optional.of(Instant.parse(string));
+    } catch (DateTimeParseException e) {
+      logger.error("Could not parse {} as Instant: {}", string, LogHelper.getStackTrace(e));
+      return Optional.empty();
+    }
+  }
+
+  /**
+   * Extracts location information of the given {@link JsonNode} from the {@code latitude}
+   * and {@code longitude} fields. If not available or valid, the coordinates are extracted as
+   * an two-valued array with latitude first, longitude second. For example, the JsonNode may
+   * look like the following:
+   *
+   * <pre>{"latitude": 42.43, "longitude": 7.6}</pre>
+   * or
+   * <pre>[42.43, 7.6]</pre>
+   *
+   * @param node json node to extract location information from
+   * @return an {@link Optional} with a {@link Location}, if both "latitude" and "longitude"
+   *         coordinates are available and valid, otherwise an empty {@code Optional}.
+   */
+  public static Optional<Location> parseLocationFromJson(JsonNode node) {
+    return OptionalUtil.or(
+        getLocationFromJsonObject(node),
+        () -> getLocationFromJsonArray(node)
+    );
+  }
+
+  private static Optional<Location> getLocationFromJsonObject(JsonNode node) {
+    return getLocationFromFields(node.get(KEY_LATITUDE), node.get(KEY_LONGITUDE));
+  }
+
+  private static Optional<Location> getLocationFromJsonArray(JsonNode node) {
+    return getLocationFromFields(node.get(0), node.get(1));
+  }
+
+  private static Optional<Location> getLocationFromFields(@Nullable JsonNode latNode,
+      @Nullable JsonNode lngNode) {
+    return OptionalUtil
+        .and(nodeAsFloat(latNode), () -> nodeAsFloat(lngNode))
+        .map(p -> Location.of(p.first, p.second));
+  }
+
+  private static Optional<Float> nodeAsFloat(@Nullable JsonNode fieldNode) {
+    return Optional.ofNullable(fieldNode)
+        .map(JsonNode::numberValue)
+        .map(Number::floatValue);
   }
 
   private static GpsData ofData(@Nullable Location location, @Nullable Instant time) {
@@ -125,13 +176,6 @@ public class GpsData {
     } else {
       return new GpsData(location, time);
     }
-  }
-
-  private static Optional<Float> getFloatFromJsonNode(JsonNode node, String key) {
-    return Optional.of(node)
-        .map(o -> o.get(key))
-        .map(JsonNode::numberValue)
-        .map(Number::floatValue);
   }
 
   public Optional<Location> location() {
@@ -163,6 +207,7 @@ public class GpsData {
     return GpsData.ofData(l, i);
   }
 
+  @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)
         .omitNullValues()
