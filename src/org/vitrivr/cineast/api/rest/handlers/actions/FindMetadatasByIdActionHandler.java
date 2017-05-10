@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,14 +18,22 @@ public class FindMetadatasByIdActionHandler extends ParsingActionHandler<Metadat
   public Object invoke(MetadataLookup context, Map<String, String> parameters)
       throws ActionHandlerException {
     if(context == null || context.getObjectids().length == 0 ){
-      return Collections.emptyList();
+      return Collections.emptyMap();
     }
     
     MultimediaMetadataReader reader = new MultimediaMetadataReader();
     List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(context.getObjectids());
     reader.close();
     
-    return descriptors;
+    HashMap<String, ArrayList<MultimediaMetadataDescriptor>> map = new HashMap<>();
+    for(MultimediaMetadataDescriptor d : descriptors){
+      if(!map.containsKey(d.getObjectId())){
+        map.put(d.getObjectId(), new ArrayList<>());
+      }
+      map.get(d.getObjectId()).add(d);
+    }
+    
+    return map;
   }
 
   @Override
