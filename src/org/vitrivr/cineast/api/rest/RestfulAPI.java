@@ -10,10 +10,13 @@ import static spark.Spark.threadPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindMetadatasByIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectAllActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectByActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectSimilarActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectsByIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentAllByObjectIdActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentsByIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
@@ -60,11 +63,21 @@ public class RestfulAPI {
 
     /* Register routes! */
     get(makePath("status"), new StatusInvokationHandler());
-    get(makePath("find/object/by/:attribute/:value"), new FindObjectByActionHandler());
-    get(makePath("find/object/all/:type"), new FindObjectAllActionHandler());
-    post(makePath("find/object/similar/"), new FindObjectSimilarActionHandler());
-
-    get(makePath("find/segment/all/object/:id"), new FindSegmentAllByObjectIdActionHandler());
+    
+    path(makePath("find"), () -> {
+      get("/object/by/:attribute/:value", new FindObjectByActionHandler());
+      get("/object/all/:type", new FindObjectAllActionHandler());
+      
+      get("/segment/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
+            
+      post("/object/similar/", new FindObjectSimilarActionHandler());
+      
+      post("/segments/by/id", new FindSegmentsByIdActionHandler());
+      post("/objects/by/id", new FindObjectsByIdActionHandler());
+      post("/metas/by/id", new FindMetadatasByIdActionHandler());
+    });
+    
+    
     
 
     path(makePath("session"), () -> {
