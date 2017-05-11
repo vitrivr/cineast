@@ -1,12 +1,5 @@
 package org.vitrivr.cineast.api.rest;
 
-import static spark.Spark.after;
-import static spark.Spark.exception;
-import static spark.Spark.get;
-import static spark.Spark.path;
-import static spark.Spark.post;
-import static spark.Spark.threadPool;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +15,8 @@ import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
 
+import spark.RouteGroup;
+import spark.Service;
 import spark.Spark;
 
 /**
@@ -54,52 +49,53 @@ public class RestfulAPI {
    *          Maximum number of threads that should be used to handle messages.
    */
   public static void start(int port, int numberOfThreads) {
+    Service http = Service.ignite();
+    
     if (port > 0 && port < 65535) {
-      Spark.port(port);
+      http.port(port);
     } else {
       LOGGER.warn("The specified port {} is not valid. Fallback to default port.", port);
     }
-    threadPool(numberOfThreads, 2, 30000);
+    http.threadPool(numberOfThreads, 2, 30000);
+    //https.secure("keystore.jks", "password", null, null);
 
     /* Register routes! */
-    get(makePath("status"), new StatusInvokationHandler());
+    http.get(makePath("status"), new StatusInvokationHandler());
     
-    path(makePath("find"), () -> {
-      get("/object/by/:attribute/:value", new FindObjectByActionHandler());
-      get("/object/all/:type", new FindObjectAllActionHandler());
+    http.path(makePath("find"), () -> {
+      http.get("/object/by/:attribute/:value", new FindObjectByActionHandler());
+      http.get("/object/all/:type", new FindObjectAllActionHandler());
       
-      get("/segment/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
+      http.get("/segment/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
             
-      post("/object/similar/", new FindObjectSimilarActionHandler());
+      http.post("/object/similar/", new FindObjectSimilarActionHandler());
       
-      post("/segments/by/id", new FindSegmentsByIdActionHandler());
-      post("/objects/by/id", new FindObjectsByIdActionHandler());
-      post("/metas/by/id", new FindMetadatasByIdActionHandler());
+      http.post("/segments/by/id", new FindSegmentsByIdActionHandler());
+      http.post("/objects/by/id", new FindObjectsByIdActionHandler());
+      http.post("/metas/by/id", new FindMetadatasByIdActionHandler());
     });
-    
-    
-    
 
-    path(makePath("session"), () -> {
-      post("/start", new StartSessionHandler());
-      get("/end/:id", new EndSessionHandler());
-      get("/validate/:id", new ValidateSessionHandler());
+    
+    http.path(makePath("session"), () -> { //TODO move to separate service
+      http.post("/start", new StartSessionHandler());
+      http.get("/end/:id", new EndSessionHandler());
+      http.get("/validate/:id", new ValidateSessionHandler());
     });
     
     /*
      * Configure the result after processing was completed.
      */
-    after((request, response) -> {
+    http.after((request, response) -> {
       response.type("application/json");
       response.header("Access-Control-Allow-Origin", "*");
     });
 
     /* TODO: Add fine grained exception handling. */
-    exception(Exception.class, (exception, request, response) -> {
+    http.exception(Exception.class, (exception, request, response) -> {
       LOGGER.log(Level.ERROR, exception);
     });
 
-    Spark.awaitInitialization();
+    http.awaitInitialization();
   }
 
   /**
