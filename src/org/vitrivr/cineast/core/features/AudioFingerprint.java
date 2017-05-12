@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -37,7 +38,7 @@ import java.util.function.Supplier;
  */
 public class AudioFingerprint extends StagedFeatureModule {
     /** Frequency-ranges that should be used to calculate the fingerprint. */
-    private static final float[] RANGES = {20.0f, 40.0f, 80.0f, 120.0f, 180.0f, 300.0f, 420.0f};
+    private static final float[] RANGES = {30.0f, 40.0f, 80.0f, 120.0f, 180.0f, 300.0f, 480.0f};
 
     /** Length of an individual fingerprint (size of FV). */
     private static final int FINGERPRINT = 20 * (RANGES.length-1);
@@ -49,14 +50,33 @@ public class AudioFingerprint extends StagedFeatureModule {
      * Default constructor;
      */
     public AudioFingerprint() {
-        super("features_audiofingerprint", 100.0f);
+        super("features_audiofingerprint", 4000.0f);
+    }
+
+    /**
+     *
+     * @param segment
+     */
+    @Override
+    public void processShot(SegmentContainer segment) {
+        TIntArrayList filteredSpectrum = this.filterSpectrum(segment);
+        int vectors = filteredSpectrum.size()/FINGERPRINT;
+        List<PersistentTuple> tuples = new ArrayList<>();
+        for (int i = 0; i < vectors; i++) {
+            float[] feature = new float[FINGERPRINT];
+            for (int j=0; j < FINGERPRINT; j++) {
+                feature[j] = filteredSpectrum.get(i * FINGERPRINT + j);
+            }
+            tuples.add(this.phandler.generateTuple(segment.getId(), feature));
+        }
+        this.phandler.persist(tuples);
     }
 
     /**
      * This method represents the first step that's executed when processing query. The associated SegmentContainer is
      * examined and feature-vectors are being generated. The generated vectors are returned by this method together with an
      * optional weight-vector.
-     * <p>
+     *
      * <strong>Important: </strong> The weight-vector must have the same size as the feature-vectors returned by the method.
      *
      * @param sc SegmentContainer that was submitted to the feature module
@@ -69,20 +89,39 @@ public class AudioFingerprint extends StagedFeatureModule {
         List<float[]> features = new ArrayList<>();
 
         /* Extract filtered spectrum and create query-vectors. */
-        TIntArrayList filteredSpectrum = this.filterSpectrum(sc);
-        int lookups = (filteredSpectrum.size() / FINGERPRINT + 1);
+        final TIntArrayList filteredSpectrum = this.filterSpectrum(sc);
+        final int shift = RANGES.length-1;
+        final int lookups = Math.max(1,Math.min(30, filteredSpectrum.size() - FINGERPRINT));
 
-
-        for (int i=0;i<lookups;i++) {
+        for (int i=1;i<=lookups;i++) {
             float[] feature = new float[FINGERPRINT];
             for (int j=0; j< FINGERPRINT; j++) {
-                if (i * FINGERPRINT + j < filteredSpectrum.size()) {
-                    feature[j] = filteredSpectrum.get(i * FINGERPRINT + j);
+                if (i * shift + j < filteredSpectrum.size()) {
+                    feature[j] = filteredSpectrum.get(i * shift + j);
                 }
             }
             features.add(feature);
         }
         return features;
+    }
+
+    /**
+     *
+     * @param features A list of feature-vectors (usually generated in the first stage). For each feature, a lookup is executed. May be empty!
+     * @param configs A ReadableQueryConfig object that contains query-related configuration parameters.
+     * @return
+     */
+    protected List<DistanceElement> lookup(List<float[]> features, List<ReadableQueryConfig> configs) {
+        final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
+        List<DistanceElement> partialResults;
+        if (features.size() == 1) {
+            partialResults = this.selector.getNearestNeighbours(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
+        } else {
+            Map<String, String> options = new HashMap<>(1);
+            options.put("fuzzydefault", String.valueOf(Float.MAX_VALUE));
+            partialResults = this.selector.getBatchedNearestNeighbours(numberOfPartialResults, features, "feature", SegmentDistanceElement.class, configs);
+        }
+        return partialResults;
     }
 
     /**
@@ -98,13 +137,11 @@ public class AudioFingerprint extends StagedFeatureModule {
     protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
         /* Prepare empty list of results. */
         final ArrayList<ScoreElement> results = new ArrayList<>();
-        final SummaryStatistics statistics = new SummaryStatistics();
-        final HashMap<String,DistanceElement> map = new HashMap<>();
+        final HashMap<String, DistanceElement> map = new HashMap<>();
 
         /* Merge into map for final results; select the minimum distance. */
         for (DistanceElement result : partialResults) {
-            statistics.addValue(result.getDistance());
-            map.merge(result.getId(), result, (d1,d2) -> {
+            map.merge(result.getId(), result, (d1, d2)-> {
                 if (d1.getDistance() > d2.getDistance()) {
                     return d2;
                 } else {
@@ -117,62 +154,33 @@ public class AudioFingerprint extends StagedFeatureModule {
         if (map.isEmpty()) return results;
 
         /* Prepare final results. */
-        final CorrespondenceFunction correspondence = CorrespondenceFunction.linear(statistics.getMean());
-        map.forEach((key, value) -> results.add(value.toScore(correspondence)));
+        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        map.forEach((key, value) -> results.add(value.toScore(fkt)));
         return ScoreElement.filterMaximumScores(results.stream());
     }
 
     /**
-     *
-     * @param segment
-     */
-    @Override
-    public void processShot(SegmentContainer segment) {
-        TIntArrayList filteredSpectrum = this.filterSpectrum(segment);
-        int shift = RANGES.length-1;
-        int vectors = (filteredSpectrum.size() - FINGERPRINT) / shift;
-        List<PersistentTuple> tuples = new ArrayList<>();
-        for (int i = 0; i <= vectors; i++) {
-            float[] feature = new float[FINGERPRINT];
-            for (int j=0; j < FINGERPRINT; j++) {
-                feature[j] = filteredSpectrum.get(i * shift + j);
-            }
-            tuples.add(this.phandler.generateTuple(segment.getId(), feature));
-        }
-        this.phandler.persist(tuples);
-    }
-
-    /**
-     * Returns a modified QueryConfig for the given feature. This implementation copies the original configuaration and
-     * sets a weight-vector, which depends on the feature vector.
+     * Returns a list of QueryConfigs for the given list of features. By default, this method simply returns a list of the
+     * same the provided config. However, this method can be re-implemented to e.g. add a static or dynamic weight vectors.
      *
      * @param qc Original query config
-     * @param feature Feature for which a weight-vector is required.
-     * @return New query config.
+     * @param features List of features for which a QueryConfig is required.
+     * @return New query config (may be identical to the original one).
      */
-    protected ReadableQueryConfig queryConfigForFeature(QueryConfig qc, float[] feature) {
-        float[] weight = new float[feature.length];
-        for (int i=0;i<feature.length;i++) {
-            if (feature[i] > 0) {
-                weight[i] = 1.0f;
+    protected List<ReadableQueryConfig> generateQueryConfigsForFeatures(ReadableQueryConfig qc, List<float[]> features) {
+        ArrayList<ReadableQueryConfig> configs = new ArrayList<>(features.size());
+        for (float[] feature : features) {
+            float[] weight = new float[feature.length];
+            for (int i=0;i<feature.length;i++) {
+                if (feature[i] > 0) {
+                    weight[i] = 1.0f;
+                } else if (feature[i] == 0) {
+                    weight[i] = 0.1f;
+                }
             }
+            configs.add(new QueryConfig(qc).setDistanceWeights(weight));
         }
-        return qc.clone().setDistanceWeights(weight);
-    }
-
-    /**
-     * Merges the provided QueryConfig with the default QueryConfig enforced by the
-     * feature module.
-     *
-     * @param qc QueryConfig provided by the caller of the feature module.
-     * @param weights Weights to be used durign query.
-     * @return Modified QueryConfig.
-     */
-    protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc, float[] weights) {
-        return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
-                .setDistanceIfEmpty(QueryConfig.Distance.manhattan)
-                .setDistanceWeights(weights);
+        return configs;
     }
 
     /**
@@ -186,7 +194,7 @@ public class AudioFingerprint extends StagedFeatureModule {
 
         /* Perform STFT and extract the Spectra. If this fails, return empty list. */
         Pair<Integer,Integer> properties = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
-        STFT stft = segment.getSTFT(properties.first, (properties.first-properties.second)/4, properties.second, new HanningWindow());
+        STFT stft = segment.getSTFT(properties.first, (properties.first-2*properties.second)/2, properties.second, new HanningWindow());
         if (stft == null) return candidates;
         List<Spectrum> spectra = stft.getPowerSpectrum();
 
@@ -210,5 +218,18 @@ public class AudioFingerprint extends StagedFeatureModule {
             }
         }
         return candidates;
+    }
+
+    /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
+     *
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
+     */
+    protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.manhattan);
     }
 }
