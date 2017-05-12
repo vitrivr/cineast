@@ -2,11 +2,12 @@ package org.vitrivr.cineast.core.features;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 
-import org.vitrivr.cineast.core.config.QueryConfig;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
@@ -16,8 +17,9 @@ import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
+
+import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
-import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import java.util.ArrayList;
@@ -30,10 +32,7 @@ import java.util.List;
  */
 public abstract class AverageHPCP extends StagedFeatureModule {
     /** Size of the window during STFT in samples. */
-    private final static int WINDOW_SIZE = 8192;
-
-    /** Overlap between two subsequent average during STFT in samples. */
-    private final static int WINDOW_OVERLAP = 2205;
+    private final static float WINDOW_SIZE = 0.2f;
 
     /** Minimum resolution to consider in HPCP calculation. */
     private final float min_frequency;
@@ -134,7 +133,8 @@ public abstract class AverageHPCP extends StagedFeatureModule {
      */
     private List<float[]> getFeatures(SegmentContainer segment) {
         /* Create STFT. IF this fails, return empty list. */
-        STFT stft = segment.getSTFT(WINDOW_SIZE, WINDOW_OVERLAP, new HanningWindow());
+        Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
+        STFT stft = segment.getSTFT(parameters.first, (parameters.first-2*parameters.second)/2,parameters.second, new HanningWindow());
         if (stft == null) return new ArrayList<>();
 
         HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);
@@ -145,11 +145,17 @@ public abstract class AverageHPCP extends StagedFeatureModule {
 
         List<float[]> features = new ArrayList<>(vectors);
         for (int i = 0; i < vectors; i++) {
-            float[] feature = new float[this.resolution.bins];
+            float[] feature = new float[2*this.resolution.bins];
+            SummaryStatistics[] statistics = new SummaryStatistics[this.resolution.bins];
             for (int j = 0; j<this.average; j++) {
                 for (int k=0; k<this.resolution.bins;k++) {
-                    feature[k] += hpcps.getHpcp(i*this.average + j)[k];
+                    if (statistics[k] == null) statistics[k] = new SummaryStatistics();
+                    statistics[k].addValue(hpcps.getHpcp(i*this.average + j)[k]);
                 }
+            }
+            for (int k=0; k<this.resolution.bins;k++) {
+                feature[2*k] = (float)statistics[k].getMean();
+                feature[2*k+1] = (float)statistics[k].getStandardDeviation();
             }
             features.add(MathHelper.normalizeL2(feature));
         }
