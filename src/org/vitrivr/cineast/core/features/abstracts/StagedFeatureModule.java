@@ -75,21 +75,27 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         /* Initialize new Benchmark object. */
         Benchmark benchmark = benchmark_engine.startNew(this.getClass().getSimpleName() + " (" + qc.getQueryId().toString() + ")");
 
-        /* Adjust query-config. */
-        QueryConfig qcc = this.defaultQueryConfig(qc);
-
         /* Start query pre-processing phase. */
         benchmark.split(BENCHMARK_SPLITNAME_PREPROCESSING);
+
+        /* Load default query-config. */
+        QueryConfig qcc = this.defaultQueryConfig(qc);
+
+        /* Extract features. */
         List<float[]> features = this.preprocessQuery(sc, qcc);
+
         if (features.size() == 0) {
             LOGGER.warn("No features could be generated from the provided query. Aborting query execution...");
             benchmark.abort();
             return new ArrayList<>(0);
         }
 
+        /* Generates a list of QueryConfigs for the feature. */
+        List<ReadableQueryConfig> configs = this.generateQueryConfigsForFeatures(qcc, features);
+
         /* Start query lookup phase. */
         benchmark.split(BENCHMARK_SPLITNAME_SIMILARITY);
-        List<DistanceElement> partialResults = this.lookup(features, qcc);
+        List<DistanceElement> partialResults = this.lookup(features, configs);
 
         /* Start query-results post-processing phase. */
         benchmark.split(BENCHMARK_SPLITNAME_POSTPROCESSING);
@@ -123,11 +129,13 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         /* Initialize new Benchmark object. */
         Benchmark benchmark = benchmark_engine.startNew(this.getClass());
 
-        /* Adjust query-config. */
-        QueryConfig qcc = this.defaultQueryConfig(qc);
-
         /* Start query pre-processing phase. */
         benchmark.split(BENCHMARK_SPLITNAME_LOOKUP);
+
+        /* Load default query-config. */
+        QueryConfig qcc = this.defaultQueryConfig(qc);
+
+        /* Lookup features. */
         List<float[]> features = this.selector.getFeatureVectors("id", segmentId, "feature");
         if (features.size() == 0) {
             LOGGER.warn("No features could be fetched for the provided segmentId '{}'. Aborting query execution...", segmentId);
@@ -135,9 +143,12 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
             return new ArrayList<>(0);
         }
 
+        /* Generate a list of QueryConfigs for the feature. */
+        List<ReadableQueryConfig> configs = this.generateQueryConfigsForFeatures(qcc, features);
+
         /* Start query lookup phase. */
         benchmark.split(BENCHMARK_SPLITNAME_SIMILARITY);
-        List<DistanceElement> partialResults = this.lookup(features, qcc);
+        List<DistanceElement> partialResults = this.lookup(features, configs);
 
         /* Start query-results post-processing phase. */
         benchmark.split(BENCHMARK_SPLITNAME_POSTPROCESSING);
@@ -169,20 +180,16 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      * <strong>Important: </strong> The weight-vector must have the same size as the feature-vectors returned by the method.
      *
      * @param features A list of feature-vectors (usually generated in the first stage). For each feature, a lookup is executed. May be empty!
-     * @param qc A ReadableQueryConfig object that contains query-related configuration parameters.
+     * @param configs A ReadableQueryConfig object that contains query-related configuration parameters.
      * @return Unfiltered list of partial results. May exceed the number of results a module is supposed to return and entries may occur multiple times.
      */
-    protected List<DistanceElement> lookup(List<float[]> features, QueryConfig qc) {
+    protected List<DistanceElement> lookup(List<float[]> features, List<ReadableQueryConfig> configs) {
         final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
-        List<DistanceElement> partialResults = new ArrayList<>();
+        List<DistanceElement> partialResults;
         if (features.size() == 1) {
-            partialResults.addAll(this.selector.getNearestNeighbours(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, this.queryConfigForFeature(qc, features.get(0))));
+            partialResults = this.selector.getNearestNeighbours(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
         } else {
-            List<ReadableQueryConfig> configs = new ArrayList<>(features.size());
-            for (float[] feature : features) {
-                configs.add(this.queryConfigForFeature(qc, feature));
-            }
-            partialResults.addAll(this.selector.getNearestNeighbours(numberOfPartialResults, features, "feature", SegmentDistanceElement.class, configs));
+            partialResults = this.selector.getBatchedNearestNeighbours(numberOfPartialResults, features, "feature", SegmentDistanceElement.class, configs);
         }
         return partialResults;
     }
@@ -193,21 +200,24 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      * ScoreElements is returned by the feature module during retrieval.
      *
      * @param partialResults List of partial results returned by the lookup stage.
-     * @param qc A ReadableQueryConfig object that contains query-related configuration parameters.
      * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
-    protected abstract List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc);
+    protected abstract List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qcc);
 
     /**
-     * Returns a modified QueryConfig for the given feature. By default, this method simply returns the original config. However,
-     * this method can be re-implemented to e.g. add a static or dynamic weight vector.
+     * Returns a list of QueryConfigs for the given list of features. By default, this method simply returns a list of the
+     * same the provided config. However, this method can be re-implemented to e.g. add a static or dynamic weight vectors.
      *
      * @param qc Original query config
-     * @param feature Feature for which a weight-vector is required.
+     * @param features List of features for which a QueryConfig is required.
      * @return New query config (may be identical to the original one).
      */
-    protected ReadableQueryConfig queryConfigForFeature(QueryConfig qc, float[] feature) {
-        return qc;
+    protected List<ReadableQueryConfig> generateQueryConfigsForFeatures(ReadableQueryConfig qc, List<float[]> features) {
+        List<ReadableQueryConfig> configs = new ArrayList<>(features.size());
+        for (int i=0;i<features.size();i++) {
+            configs.add(qc);
+        }
+        return configs;
     }
 
     /**
