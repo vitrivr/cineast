@@ -1,17 +1,13 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.*;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
-import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.MFCC;
@@ -20,6 +16,7 @@ import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author rgasser
@@ -32,7 +29,7 @@ public class MFCCShingle extends StagedFeatureModule {
     private final static float WINDOW_SIZE = 0.2f;
 
     /** Size of a single MFCC Shingle. */
-    private final static int SHINGLE_SIZE = 30;
+    private final static int SHINGLE_SIZE = 25;
 
     /** Distance-threshold used to sort out vectors that should should not count in the final scoring stage. */
     private final float distanceThreshold;
@@ -42,7 +39,7 @@ public class MFCCShingle extends StagedFeatureModule {
      */
     public MFCCShingle() {
         super("features_mfccshingles", 2.0f);
-        this.distanceThreshold = 1.0f;
+        this.distanceThreshold = 0.1f;
     }
 
     /**
@@ -59,9 +56,7 @@ public class MFCCShingle extends StagedFeatureModule {
     @Override
     protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Extract MFCC shingle features from QueryObject. */
-        final List<float[]> features = this.getFeatures(sc);
-        features.removeIf(f -> features.indexOf(f) % SHINGLE_SIZE != 0);
-        return features;
+        return this.getFeatures(sc).stream().limit(SHINGLE_SIZE * 2).collect(Collectors.toList());
     }
 
     /**
@@ -83,8 +78,9 @@ public class MFCCShingle extends StagedFeatureModule {
         qc = this.setQueryConfig(qc);
         final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
         for (DistanceElement hit : partialResults) {
-            if (hit.getDistance() > this.distanceThreshold) break;
-            scoreMap.adjustOrPutValue(hit.getId(), 1, 1);
+            if (hit.getDistance() < this.distanceThreshold) {
+                scoreMap.adjustOrPutValue(hit.getId(), 1, scoreMap.get(hit.getId())/2);
+            }
         }
 
         /* Prepare final result-set. */
@@ -109,12 +105,18 @@ public class MFCCShingle extends StagedFeatureModule {
 
     /**
      *
-     * @param sc
+     * @param segment
      */
     @Override
-    public void processShot(SegmentContainer sc) {
-        List<float[]> features = this.getFeatures(sc);
-        features.forEach(f -> this.persist(sc.getId(), new FloatVectorImpl(f)));
+    public void processShot(SegmentContainer segment) {
+        List<float[]> features = this.getFeatures(segment);
+
+        /*
+         * Persists only the individual, disjoint shingle vectors
+         */
+        features.stream()
+                .filter((feature) -> features.indexOf(feature) % SHINGLE_SIZE != 0)
+                .forEach((feature) -> this.persist(segment.getId(), new FloatVectorImpl(feature)));
     }
 
     /**

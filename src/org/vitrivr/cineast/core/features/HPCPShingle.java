@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import gnu.trove.map.hash.TObjectIntHashMap;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.*;
@@ -10,11 +11,11 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
+
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
-import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import java.util.*;
@@ -41,7 +42,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      *
      * The final feature vector has SHINGLE_SIZE * HPCP.Resolution.Bins components
      */
-    private final static int SHINGLE_SIZE = 30;
+    private final static int SHINGLE_SIZE = 25;
 
     /** Minimum resolution to consider in HPCP calculation. */
     private final float min_frequency;
@@ -70,7 +71,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
         this.min_frequency = min_frequency;
         this.max_frequency = max_frequency;
         this.resolution = resolution;
-        this.distanceThreshold = 1.0f;
+        this.distanceThreshold = 0.9f;
     }
 
     /**
@@ -86,9 +87,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      */
     @Override
     protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-        final List<float[]> features = this.getFeatures(sc);
-        features.removeIf(f -> features.indexOf(f) % SHINGLE_SIZE != 0);
-        return this.getFeatures(sc);
+        return this.getFeatures(sc).stream().limit(SHINGLE_SIZE * 2).collect(Collectors.toList());
     }
 
     /**
@@ -124,8 +123,32 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      * @param segment SegmentContainer to process.
      */
     public void processShot(SegmentContainer segment) {
-        List<float[]> list = this.getFeatures(segment);
-        list.forEach(f -> this.persist(segment.getId(), new FloatVectorImpl(f)));
+        final List<float[]> features = this.getFeatures(segment);
+
+        /*
+         * Persists only the individual, disjoint shingle vectors
+         */
+        features.stream()
+                .filter((feature) -> features.indexOf(feature) % SHINGLE_SIZE != 0)
+                .forEach((feature) -> this.persist(segment.getId(), new FloatVectorImpl(feature)));
+    }
+
+    /**
+     * Returns a modified QueryConfig for the given feature. This implementation copies the original configuaration and
+     * sets a weight-vector, which depends on the feature vector.
+     *
+     * @param qc Original query config
+     * @param feature Feature for which a weight-vector is required.
+     * @return New query config.
+     */
+    protected ReadableQueryConfig queryConfigForFeature(QueryConfig qc, float[] feature) {
+        float[] weight = new float[feature.length];
+        for (int i=0;i<feature.length;i++) {
+            if (feature[i] == 0.0f) {
+                weight[i] = 10.0f;
+            }
+        }
+        return qc.clone().setDistanceWeights(weight);
     }
 
     /**
@@ -167,7 +190,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
             statistics.addValue(feature.first);
         }
 
-        final double threshold = statistics.getMean() - 0.9f * statistics.getStandardDeviation();
+        final double threshold = 0.25*statistics.getGeometricMean();
         return features.stream().filter(f -> (f.first > threshold)).map(f -> f.second).collect(Collectors.toList());
     }
 
