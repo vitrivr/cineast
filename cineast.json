@@ -10,7 +10,7 @@
 	},
 	"retriever": {
 		"threadPoolSize": 2,
-		"maxResults": 200,
+		"maxResults": 250,
 		"resultsPerModule": 250,
 		"features" : {
 			"globalcolor": [
@@ -68,22 +68,18 @@
 			"audiofingerprint": [
 				{"feature": "AudioFingerprint",					"weight": 1.0}
 			],
-			"audiobassline" : [
-				{"feature": "CENS12BasslineShingle",			"weight": 1.5}
-			],
-			"audiomelody" : [
-				{"feature": "CENS12MelodyShingle",				"weight": 1.5}
-			],
 			"hpcpaverage" : [
 				{"feature": "AverageHPCP20F36B",				"weight": 1.5},
 				{"feature": "AverageHPCP30F36B",				"weight": 0.75}
 			],
-			"mfcc" : [
-				{"feature": "MFCCShingle",						"weight": 1.0}
+			"audiomatching" : [
+				{"feature": "CENS12Shingle",						"weight": 2.0},
+				{"feature": "HPCP12Shingle",						"weight": 1.0},
+				{"feature": "MFCCShingle",							"weight": 0.5}
 			],
 			"lightfield" : [
-				{"feature": "LightfieldFourier",				"weight": 1.25},
-				{"feature": "LightfieldZernike",				"weight": 1.75}
+				{"feature": "LightfieldFourier",				"weight": 1.0},
+				{"feature": "LightfieldZernike",				"weight": 2.5}
 			],
 			"sphericalharmonicslow" : [
 				{"feature": "SphericalHarmonicsLow",			"weight": 1.0}
