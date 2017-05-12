@@ -64,11 +64,11 @@ public class RestfulAPI {
     
     http.path(makePath("find"), () -> {
       http.get("/object/by/:attribute/:value", new FindObjectByActionHandler());
-      http.get("/object/all/:type", new FindObjectAllActionHandler());
+      http.get("/objects/all/:type", new FindObjectAllActionHandler());
       
-      http.get("/segment/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
+      http.get("/segments/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
             
-      http.post("/object/similar/", new FindObjectSimilarActionHandler());
+      http.post("/segments/similar/", new FindObjectSimilarActionHandler());
       
       http.post("/segments/by/id", new FindSegmentsByIdActionHandler());
       http.post("/objects/by/id", new FindObjectsByIdActionHandler());
