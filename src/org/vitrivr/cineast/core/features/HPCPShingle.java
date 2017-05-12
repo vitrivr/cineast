@@ -129,7 +129,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
          * Persists only the individual, disjoint shingle vectors
          */
         features.stream()
-                .filter((feature) -> features.indexOf(feature) % SHINGLE_SIZE != 0)
+                .filter((feature) -> features.indexOf(feature) % SHINGLE_SIZE == 0)
                 .forEach((feature) -> this.persist(segment.getId(), new FloatVectorImpl(feature)));
     }
 
