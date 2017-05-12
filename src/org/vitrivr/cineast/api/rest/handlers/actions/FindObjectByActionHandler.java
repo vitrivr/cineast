@@ -1,13 +1,16 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
+import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 
-import java.util.Map;
+import com.google.common.collect.Lists;
 
 /**
  * @author rgasser
@@ -22,7 +25,7 @@ public class FindObjectByActionHandler extends ParsingActionHandler<AnyMessage> 
   private static final Logger LOGGER = LogManager.getLogger();
   
   @Override
-  public Object invoke(AnyMessage type, Map<String, String> parameters) {
+  public ObjectQueryResult invoke(AnyMessage type, Map<String, String> parameters) {
     String attribute = parameters.get(ATTRIBUTE_NAME);
     String value = parameters.get(VALUE_NAME);
     
@@ -48,7 +51,7 @@ public class FindObjectByActionHandler extends ParsingActionHandler<AnyMessage> 
     }
 
     ol.close();
-    return object;
+    return new ObjectQueryResult("", Lists.newArrayList(object));
   }
 
   @Override

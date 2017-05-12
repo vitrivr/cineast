@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -13,9 +13,12 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.messages.query.Query;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.QueryTerm;
+import org.vitrivr.cineast.core.data.messages.result.SimilarityQueryResultBatch;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
+
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 /**
  * @author rgasser
@@ -24,7 +27,7 @@ import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
  */
 public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> {
   @Override
-  public Object invoke(Query query, Map<String, String> parameters) { //FIXME duplicate fusion logic
+  public SimilarityQueryResultBatch invoke(Query query, Map<String, String> parameters) { //FIXME duplicate fusion logic
 
     HashMap<String, List<StringDoublePair>> returnMap = new HashMap<>();
     
@@ -94,7 +97,7 @@ public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> 
       returnMap.put(category, resultList);
     }
 
-    return returnMap;
+    return new SimilarityQueryResultBatch(returnMap, "");
   }
 
   @Override
