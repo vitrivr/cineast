@@ -83,6 +83,15 @@ public class AdamSearchGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
+      org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_PARALLEL_QUERY =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING,
+          generateFullMethodName(
+              "AdamSearch", "DoParallelQuery"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_PROGRESSIVE_QUERY =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING,
@@ -99,6 +108,15 @@ public class AdamSearchGrpc {
               "AdamSearch", "GetCachedResults"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage,
+      org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage> METHOD_GET_SCORED_EXECUTION_PATH =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamSearch", "GetScoredExecutionPath"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.getDefaultInstance()));
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -178,6 +196,13 @@ public class AdamSearchGrpc {
 
     /**
      */
+    public void doParallelQuery(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_DO_PARALLEL_QUERY, responseObserver);
+    }
+
+    /**
+     */
     public void doProgressiveQuery(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_DO_PROGRESSIVE_QUERY, responseObserver);
@@ -191,6 +216,16 @@ public class AdamSearchGrpc {
     public void getCachedResults(org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_GET_CACHED_RESULTS, responseObserver);
+    }
+
+    /**
+     * <pre>
+     *get scores for execution paths under empirical querying
+     * </pre>
+     */
+    public void getScoredExecutionPath(org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_GET_SCORED_EXECUTION_PATH, responseObserver);
     }
 
     @java.lang.Override public io.grpc.ServerServiceDefinition bindService() {
@@ -238,6 +273,13 @@ public class AdamSearchGrpc {
                 org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage>(
                   this, METHODID_DO_BATCH_QUERY)))
           .addMethod(
+            METHOD_DO_PARALLEL_QUERY,
+            asyncServerStreamingCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
+                  this, METHODID_DO_PARALLEL_QUERY)))
+          .addMethod(
             METHOD_DO_PROGRESSIVE_QUERY,
             asyncServerStreamingCall(
               new MethodHandlers<
@@ -251,6 +293,13 @@ public class AdamSearchGrpc {
                 org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage,
                 org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>(
                   this, METHODID_GET_CACHED_RESULTS)))
+          .addMethod(
+            METHOD_GET_SCORED_EXECUTION_PATH,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage>(
+                  this, METHODID_GET_SCORED_EXECUTION_PATH)))
           .build();
     }
   }
@@ -330,6 +379,14 @@ public class AdamSearchGrpc {
 
     /**
      */
+    public void doParallelQuery(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
+      asyncServerStreamingCall(
+          getChannel().newCall(METHOD_DO_PARALLEL_QUERY, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void doProgressiveQuery(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       asyncServerStreamingCall(
@@ -345,6 +402,17 @@ public class AdamSearchGrpc {
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_GET_CACHED_RESULTS, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     *get scores for execution paths under empirical querying
+     * </pre>
+     */
+    public void getScoredExecutionPath(org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_GET_SCORED_EXECUTION_PATH, getCallOptions()), request, responseObserver);
     }
   }
 
@@ -410,6 +478,14 @@ public class AdamSearchGrpc {
 
     /**
      */
+    public java.util.Iterator<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> doParallelQuery(
+        org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request) {
+      return blockingServerStreamingCall(
+          getChannel(), METHOD_DO_PARALLEL_QUERY, getCallOptions(), request);
+    }
+
+    /**
+     */
     public java.util.Iterator<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> doProgressiveQuery(
         org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage request) {
       return blockingServerStreamingCall(
@@ -424,6 +500,16 @@ public class AdamSearchGrpc {
     public org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage getCachedResults(org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_GET_CACHED_RESULTS, getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     *get scores for execution paths under empirical querying
+     * </pre>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage getScoredExecutionPath(org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_GET_SCORED_EXECUTION_PATH, getCallOptions(), request);
     }
   }
 
@@ -502,6 +588,17 @@ public class AdamSearchGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_GET_CACHED_RESULTS, getCallOptions()), request);
     }
+
+    /**
+     * <pre>
+     *get scores for execution paths under empirical querying
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage> getScoredExecutionPath(
+        org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_GET_SCORED_EXECUTION_PATH, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CACHE_INDEX = 0;
@@ -509,9 +606,11 @@ public class AdamSearchGrpc {
   private static final int METHODID_PREVIEW = 2;
   private static final int METHODID_DO_QUERY = 3;
   private static final int METHODID_DO_BATCH_QUERY = 4;
-  private static final int METHODID_DO_PROGRESSIVE_QUERY = 5;
-  private static final int METHODID_GET_CACHED_RESULTS = 6;
-  private static final int METHODID_DO_STREAMING_QUERY = 7;
+  private static final int METHODID_DO_PARALLEL_QUERY = 5;
+  private static final int METHODID_DO_PROGRESSIVE_QUERY = 6;
+  private static final int METHODID_GET_CACHED_RESULTS = 7;
+  private static final int METHODID_GET_SCORED_EXECUTION_PATH = 8;
+  private static final int METHODID_DO_STREAMING_QUERY = 9;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -550,6 +649,10 @@ public class AdamSearchGrpc {
           serviceImpl.doBatchQuery((org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage>) responseObserver);
           break;
+        case METHODID_DO_PARALLEL_QUERY:
+          serviceImpl.doParallelQuery((org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage) request,
+              (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>) responseObserver);
+          break;
         case METHODID_DO_PROGRESSIVE_QUERY:
           serviceImpl.doProgressiveQuery((org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>) responseObserver);
@@ -557,6 +660,10 @@ public class AdamSearchGrpc {
         case METHODID_GET_CACHED_RESULTS:
           serviceImpl.getCachedResults((org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>) responseObserver);
+          break;
+        case METHODID_GET_SCORED_EXECUTION_PATH:
+          serviceImpl.getScoredExecutionPath((org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage) request,
+              (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -585,8 +692,10 @@ public class AdamSearchGrpc {
         METHOD_DO_QUERY,
         METHOD_DO_STREAMING_QUERY,
         METHOD_DO_BATCH_QUERY,
+        METHOD_DO_PARALLEL_QUERY,
         METHOD_DO_PROGRESSIVE_QUERY,
-        METHOD_GET_CACHED_RESULTS);
+        METHOD_GET_CACHED_RESULTS,
+        METHOD_GET_SCORED_EXECUTION_PATH);
   }
 
 }

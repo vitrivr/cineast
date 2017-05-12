@@ -8,15 +8,20 @@ import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.DistanceType;
+import org.vitrivr.adampro.grpc.AdamGrpc.ExpressionQueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.ExpressionQueryMessage.Operation;
 import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ProjectionMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
+
 import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
 
+import javax.management.Query;
 import java.util.*;
 
 /**
@@ -37,11 +42,7 @@ public class ADAMproMessageBuilder {
             kullbackleibler, chebyshev, euclidean, squaredeuclidean, manhattan, spannorm, haversine;
 
     static {
-        DEFAULT_PROJECTION_MESSAGE = AdamGrpc.ProjectionMessage.newBuilder()
-                .setAttributes(
-                        AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("ap_distance").addAttribute("id")
-                ).build();
-
+        DEFAULT_PROJECTION_MESSAGE = AdamGrpc.ProjectionMessage.newBuilder().setAttributes(AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("ap_distance").addAttribute("id")).build();
         DEFAULT_HINT.add(ReadableQueryConfig.Hints.exact.name());
 
         DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
@@ -60,9 +61,10 @@ public class ADAMproMessageBuilder {
         haversine = dmBuilder.clear().setDistancetype(DistanceType.haversine).build();
     }
 
-
     private final AdamGrpc.FromMessage.Builder fromBuilder = AdamGrpc.FromMessage.newBuilder();
     private final AdamGrpc.QueryMessage.Builder qmBuilder = AdamGrpc.QueryMessage.newBuilder();
+    private final AdamGrpc.SubExpressionQueryMessage.Builder seqmBuilder = AdamGrpc.SubExpressionQueryMessage.newBuilder();
+    private final AdamGrpc.ExpressionQueryMessage.Builder eqmBuilder = AdamGrpc.ExpressionQueryMessage.newBuilder();
     private final AdamGrpc.BatchedQueryMessage.Builder baqmBuilder = AdamGrpc.BatchedQueryMessage.newBuilder();
     private final AdamGrpc.NearestNeighbourQueryMessage.Builder nnqmBuilder = AdamGrpc.NearestNeighbourQueryMessage.newBuilder();
     private final AdamGrpc.BooleanQueryMessage.Builder bqmBuilder = AdamGrpc.BooleanQueryMessage.newBuilder();
@@ -82,6 +84,8 @@ public class ADAMproMessageBuilder {
             return baqmBuilder.build();
         }
     }
+
+
 
     /**
      *
@@ -153,6 +157,100 @@ public class ADAMproMessageBuilder {
             this.fromBuilder.setEntity(entity);
             return this.fromBuilder.build();
         }
+    }
+
+    /**
+     * Builds a FromMessage from a SubExpressionQueryMessage. This method can be used to select
+     * from a set that has been built up previously
+     *
+     * @param message SubExpressionQueryMessage message
+     * @return FromMessage
+     */
+    public FromMessage buildFromSubExpressionMessage(SubExpressionQueryMessage message) {
+        synchronized (this.fromBuilder) {
+            this.fromBuilder.clear();
+            this.fromBuilder.setExpression(message);
+            return this.fromBuilder.build();
+        }
+    }
+
+    /**
+     * Builds a SubExpressionQueryMessage from a QueryMessage.
+     *
+     * @param message
+     */
+    public SubExpressionQueryMessage buildSubExpressionQueryMessage(QueryMessage message) {
+        synchronized (this.seqmBuilder) {
+            this.seqmBuilder.clear();
+            this.seqmBuilder.setQm(message);
+            return this.seqmBuilder.build();
+        }
+    }
+
+    /**
+     * Builds a SubExpressionQueryMessage from a ExpressionQueryMessage.
+     *
+     * @param message
+     */
+    public SubExpressionQueryMessage buildSubExpressionQueryMessage(ExpressionQueryMessage message) {
+        synchronized (this.seqmBuilder) {
+            this.seqmBuilder.clear();
+            this.seqmBuilder.setEqm(message);
+            return this.seqmBuilder.build();
+        }
+    }
+
+    /**
+     * Builds an ExpressionQueryMesssage, that is a QueryMessage that combines the results of two
+     * SubExpressionQuerymessages using a Set operation.
+     *
+     * @param left First SubExpressionQueryMessage to combine.
+     * @param right Second SubExpressionQueryMessage to combine.
+     * @param operation Set operation.
+     * @param options Named options that should be passed to the ExpressionQueryMessage.
+     * @return ExpressionQueryMessage
+     */
+    public AdamGrpc.ExpressionQueryMessage buildExpressionQueryMessage(SubExpressionQueryMessage left, SubExpressionQueryMessage right, Operation operation, Map<String,String> options) {
+        synchronized (this.eqmBuilder) {
+            this.eqmBuilder.clear();
+            this.eqmBuilder.setLeft(left);
+            this.eqmBuilder.setRight(right);
+            this.eqmBuilder.setOperation(operation);
+            this.eqmBuilder.setOrder(ExpressionQueryMessage.OperationOrder.PARALLEL);
+            if (options != null && options.size() > 0) {
+                this.eqmBuilder.putAllOptions(options);
+            }
+            return this.eqmBuilder.build();
+        }
+    }
+
+    /**
+     * This method recursively combines a list of SubExpressionQueryMessages into a single SubExpressionQueryMessage by
+     * building corresponding ExpressionQueryMessage. Calling this method for a list of SubExpressionQueryMessage creates
+     * a new SubExpressionQueryMessage that combines the query results of each SubExpressionQueryMessage under the
+     * provided operation.
+     *
+     * @param expressions List of SubExpressionQueryMessages
+     * @param operation Set operation used for combining partial results
+     * @return
+     */
+    public SubExpressionQueryMessage mergeSubexpressions(List<SubExpressionQueryMessage> expressions, Operation operation, Map<String,String> options) {
+        /* If list only contains one SubExpressionQueryMessage then return it. */
+        if (expressions.size() == 1) return expressions.get(0);
+
+        /* Take first and second message and remove them from the list. */
+        SubExpressionQueryMessage m1 = expressions.get(0);
+        SubExpressionQueryMessage m2 = expressions.get(1);
+        expressions.remove(0);
+        expressions.remove(0);
+
+        /* Merge expressions into an ExpressionQueryMessage using the operation and add them to the list. */
+        ExpressionQueryMessage eqm = buildExpressionQueryMessage(m1, m2, operation, options);
+        SubExpressionQueryMessage sqm = buildSubExpressionQueryMessage(eqm);
+        expressions.add(sqm);
+
+        /* Call again. */
+        return mergeSubexpressions(expressions, operation, options);
     }
 
     /**

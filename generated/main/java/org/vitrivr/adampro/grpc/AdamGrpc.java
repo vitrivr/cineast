@@ -372,6 +372,104 @@ public final class AdamGrpc {
     // @@protoc_insertion_point(enum_scope:IndexType)
   }
 
+  /**
+   * Protobuf enum {@code Optimizer}
+   */
+  public enum Optimizer
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>SVM_OPTIMIZER = 0;</code>
+     */
+    SVM_OPTIMIZER(0),
+    /**
+     * <code>NAIVE_OPTIMIZER = 1;</code>
+     */
+    NAIVE_OPTIMIZER(1),
+    UNRECOGNIZED(-1),
+    ;
+
+    /**
+     * <code>SVM_OPTIMIZER = 0;</code>
+     */
+    public static final int SVM_OPTIMIZER_VALUE = 0;
+    /**
+     * <code>NAIVE_OPTIMIZER = 1;</code>
+     */
+    public static final int NAIVE_OPTIMIZER_VALUE = 1;
+
+
+    public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
+      return value;
+    }
+
+    /**
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static Optimizer valueOf(int value) {
+      return forNumber(value);
+    }
+
+    public static Optimizer forNumber(int value) {
+      switch (value) {
+        case 0: return SVM_OPTIMIZER;
+        case 1: return NAIVE_OPTIMIZER;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<Optimizer>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+        Optimizer> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<Optimizer>() {
+            public Optimizer findValueByNumber(int number) {
+              return Optimizer.forNumber(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return org.vitrivr.adampro.grpc.AdamGrpc.getDescriptor().getEnumTypes().get(2);
+    }
+
+    private static final Optimizer[] VALUES = values();
+
+    public static Optimizer valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int value;
+
+    private Optimizer(int value) {
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:Optimizer)
+  }
+
   public interface EmptyMessageOrBuilder extends
       // @@protoc_insertion_point(interface_extends:EmptyMessage)
       com.google.protobuf.MessageOrBuilder {
@@ -19338,6 +19436,15 @@ public final class AdamGrpc {
 
     java.lang.String getOptionsOrThrow(
         java.lang.String key);
+
+    /**
+     * <code>optional .Optimizer optimizer = 6;</code>
+     */
+    int getOptimizerValue();
+    /**
+     * <code>optional .Optimizer optimizer = 6;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.Optimizer getOptimizer();
   }
   /**
    * Protobuf type {@code AdaptScanMethodsMessage}
@@ -19355,6 +19462,7 @@ public final class AdamGrpc {
       attribute_ = "";
       ic_ = 0;
       qc_ = 0;
+      optimizer_ = 0;
     }
 
     @java.lang.Override
@@ -19417,6 +19525,12 @@ public final class AdamGrpc {
                   OptionsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
               options_.getMutableMap().put(
                   options__.getKey(), options__.getValue());
+              break;
+            }
+            case 48: {
+              int rawValue = input.readEnum();
+
+              optimizer_ = rawValue;
               break;
             }
           }
@@ -19826,6 +19940,22 @@ public final class AdamGrpc {
       return map.get(key);
     }
 
+    public static final int OPTIMIZER_FIELD_NUMBER = 6;
+    private int optimizer_;
+    /**
+     * <code>optional .Optimizer optimizer = 6;</code>
+     */
+    public int getOptimizerValue() {
+      return optimizer_;
+    }
+    /**
+     * <code>optional .Optimizer optimizer = 6;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.Optimizer getOptimizer() {
+      org.vitrivr.adampro.grpc.AdamGrpc.Optimizer result = org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.valueOf(optimizer_);
+      return result == null ? org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.UNRECOGNIZED : result;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -19856,6 +19986,9 @@ public final class AdamGrpc {
           internalGetOptions(),
           OptionsDefaultEntryHolder.defaultEntry,
           5);
+      if (optimizer_ != org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.SVM_OPTIMIZER.getNumber()) {
+        output.writeEnum(6, optimizer_);
+      }
     }
 
     public int getSerializedSize() {
@@ -19887,6 +20020,10 @@ public final class AdamGrpc {
         size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(5, options__);
       }
+      if (optimizer_ != org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.SVM_OPTIMIZER.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(6, optimizer_);
+      }
       memoizedSize = size;
       return size;
     }
@@ -19911,6 +20048,7 @@ public final class AdamGrpc {
       result = result && qc_ == other.qc_;
       result = result && internalGetOptions().equals(
           other.internalGetOptions());
+      result = result && optimizer_ == other.optimizer_;
       return result;
     }
 
@@ -19933,6 +20071,8 @@ public final class AdamGrpc {
         hash = (37 * hash) + OPTIONS_FIELD_NUMBER;
         hash = (53 * hash) + internalGetOptions().hashCode();
       }
+      hash = (37 * hash) + OPTIMIZER_FIELD_NUMBER;
+      hash = (53 * hash) + optimizer_;
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -20082,6 +20222,8 @@ public final class AdamGrpc {
         qc_ = 0;
 
         internalGetMutableOptions().clear();
+        optimizer_ = 0;
+
         return this;
       }
 
@@ -20112,6 +20254,7 @@ public final class AdamGrpc {
         result.qc_ = qc_;
         result.options_ = internalGetOptions();
         result.options_.makeImmutable();
+        result.optimizer_ = optimizer_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -20170,6 +20313,9 @@ public final class AdamGrpc {
         }
         internalGetMutableOptions().mergeFrom(
             other.internalGetOptions());
+        if (other.optimizer_ != 0) {
+          setOptimizerValue(other.getOptimizerValue());
+        }
         onChanged();
         return this;
       }
@@ -20541,6 +20687,50 @@ public final class AdamGrpc {
         getMutableOptions().putAll(values);
         return this;
       }
+
+      private int optimizer_ = 0;
+      /**
+       * <code>optional .Optimizer optimizer = 6;</code>
+       */
+      public int getOptimizerValue() {
+        return optimizer_;
+      }
+      /**
+       * <code>optional .Optimizer optimizer = 6;</code>
+       */
+      public Builder setOptimizerValue(int value) {
+        optimizer_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .Optimizer optimizer = 6;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.Optimizer getOptimizer() {
+        org.vitrivr.adampro.grpc.AdamGrpc.Optimizer result = org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.valueOf(optimizer_);
+        return result == null ? org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>optional .Optimizer optimizer = 6;</code>
+       */
+      public Builder setOptimizer(org.vitrivr.adampro.grpc.AdamGrpc.Optimizer value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        optimizer_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .Optimizer optimizer = 6;</code>
+       */
+      public Builder clearOptimizer() {
+        
+        optimizer_ = 0;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
@@ -20585,6 +20775,795 @@ public final class AdamGrpc {
     }
 
     public org.vitrivr.adampro.grpc.AdamGrpc.AdaptScanMethodsMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface QuerySimulationMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:QuerySimulationMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    java.lang.String getEntity();
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getEntityBytes();
+
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+     */
+    boolean hasNnq();
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage getNnq();
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder();
+
+    /**
+     * <code>optional .Optimizer optimizer = 3;</code>
+     */
+    int getOptimizerValue();
+    /**
+     * <code>optional .Optimizer optimizer = 3;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.Optimizer getOptimizer();
+  }
+  /**
+   * Protobuf type {@code QuerySimulationMessage}
+   */
+  public  static final class QuerySimulationMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:QuerySimulationMessage)
+      QuerySimulationMessageOrBuilder {
+    // Use QuerySimulationMessage.newBuilder() to construct.
+    private QuerySimulationMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private QuerySimulationMessage() {
+      entity_ = "";
+      optimizer_ = 0;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private QuerySimulationMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              entity_ = s;
+              break;
+            }
+            case 18: {
+              org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.Builder subBuilder = null;
+              if (nnq_ != null) {
+                subBuilder = nnq_.toBuilder();
+              }
+              nnq_ = input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(nnq_);
+                nnq_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 24: {
+              int rawValue = input.readEnum();
+
+              optimizer_ = rawValue;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_QuerySimulationMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_QuerySimulationMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.Builder.class);
+    }
+
+    public static final int ENTITY_FIELD_NUMBER = 1;
+    private volatile java.lang.Object entity_;
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    public java.lang.String getEntity() {
+      java.lang.Object ref = entity_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        entity_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEntityBytes() {
+      java.lang.Object ref = entity_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        entity_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int NNQ_FIELD_NUMBER = 2;
+    private org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage nnq_;
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+     */
+    public boolean hasNnq() {
+      return nnq_ != null;
+    }
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage getNnq() {
+      return nnq_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
+    }
+    /**
+     * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
+      return getNnq();
+    }
+
+    public static final int OPTIMIZER_FIELD_NUMBER = 3;
+    private int optimizer_;
+    /**
+     * <code>optional .Optimizer optimizer = 3;</code>
+     */
+    public int getOptimizerValue() {
+      return optimizer_;
+    }
+    /**
+     * <code>optional .Optimizer optimizer = 3;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.Optimizer getOptimizer() {
+      org.vitrivr.adampro.grpc.AdamGrpc.Optimizer result = org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.valueOf(optimizer_);
+      return result == null ? org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.UNRECOGNIZED : result;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getEntityBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, entity_);
+      }
+      if (nnq_ != null) {
+        output.writeMessage(2, getNnq());
+      }
+      if (optimizer_ != org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.SVM_OPTIMIZER.getNumber()) {
+        output.writeEnum(3, optimizer_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getEntityBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, entity_);
+      }
+      if (nnq_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getNnq());
+      }
+      if (optimizer_ != org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.SVM_OPTIMIZER.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(3, optimizer_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage)) {
+        return super.equals(obj);
+      }
+      org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage other = (org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage) obj;
+
+      boolean result = true;
+      result = result && getEntity()
+          .equals(other.getEntity());
+      result = result && (hasNnq() == other.hasNnq());
+      if (hasNnq()) {
+        result = result && getNnq()
+            .equals(other.getNnq());
+      }
+      result = result && optimizer_ == other.optimizer_;
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      hash = (37 * hash) + ENTITY_FIELD_NUMBER;
+      hash = (53 * hash) + getEntity().hashCode();
+      if (hasNnq()) {
+        hash = (37 * hash) + NNQ_FIELD_NUMBER;
+        hash = (53 * hash) + getNnq().hashCode();
+      }
+      hash = (37 * hash) + OPTIMIZER_FIELD_NUMBER;
+      hash = (53 * hash) + optimizer_;
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code QuerySimulationMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:QuerySimulationMessage)
+        org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_QuerySimulationMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_QuerySimulationMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.Builder.class);
+      }
+
+      // Construct using org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        entity_ = "";
+
+        if (nnqBuilder_ == null) {
+          nnq_ = null;
+        } else {
+          nnq_ = null;
+          nnqBuilder_ = null;
+        }
+        optimizer_ = 0;
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_QuerySimulationMessage_descriptor;
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage getDefaultInstanceForType() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.getDefaultInstance();
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage build() {
+        org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage buildPartial() {
+        org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage result = new org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage(this);
+        result.entity_ = entity_;
+        if (nnqBuilder_ == null) {
+          result.nnq_ = nnq_;
+        } else {
+          result.nnq_ = nnqBuilder_.build();
+        }
+        result.optimizer_ = optimizer_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage) {
+          return mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage other) {
+        if (other == org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.getDefaultInstance()) return this;
+        if (!other.getEntity().isEmpty()) {
+          entity_ = other.entity_;
+          onChanged();
+        }
+        if (other.hasNnq()) {
+          mergeNnq(other.getNnq());
+        }
+        if (other.optimizer_ != 0) {
+          setOptimizerValue(other.getOptimizerValue());
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object entity_ = "";
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public java.lang.String getEntity() {
+        java.lang.Object ref = entity_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          entity_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEntityBytes() {
+        java.lang.Object ref = entity_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          entity_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public Builder setEntity(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        entity_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public Builder clearEntity() {
+        
+        entity_ = getDefaultInstance().getEntity();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public Builder setEntityBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        entity_ = value;
+        onChanged();
+        return this;
+      }
+
+      private org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage nnq_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage, org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessageOrBuilder> nnqBuilder_;
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+       */
+      public boolean hasNnq() {
+        return nnqBuilder_ != null || nnq_ != null;
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage getNnq() {
+        if (nnqBuilder_ == null) {
+          return nnq_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
+        } else {
+          return nnqBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+       */
+      public Builder setNnq(org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage value) {
+        if (nnqBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          nnq_ = value;
+          onChanged();
+        } else {
+          nnqBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+       */
+      public Builder setNnq(
+          org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.Builder builderForValue) {
+        if (nnqBuilder_ == null) {
+          nnq_ = builderForValue.build();
+          onChanged();
+        } else {
+          nnqBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+       */
+      public Builder mergeNnq(org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage value) {
+        if (nnqBuilder_ == null) {
+          if (nnq_ != null) {
+            nnq_ =
+              org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.newBuilder(nnq_).mergeFrom(value).buildPartial();
+          } else {
+            nnq_ = value;
+          }
+          onChanged();
+        } else {
+          nnqBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+       */
+      public Builder clearNnq() {
+        if (nnqBuilder_ == null) {
+          nnq_ = null;
+          onChanged();
+        } else {
+          nnq_ = null;
+          nnqBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.Builder getNnqBuilder() {
+        
+        onChanged();
+        return getNnqFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessageOrBuilder getNnqOrBuilder() {
+        if (nnqBuilder_ != null) {
+          return nnqBuilder_.getMessageOrBuilder();
+        } else {
+          return nnq_ == null ?
+              org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.getDefaultInstance() : nnq_;
+        }
+      }
+      /**
+       * <code>optional .NearestNeighbourQueryMessage nnq = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage, org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessageOrBuilder> 
+          getNnqFieldBuilder() {
+        if (nnqBuilder_ == null) {
+          nnqBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage, org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessageOrBuilder>(
+                  getNnq(),
+                  getParentForChildren(),
+                  isClean());
+          nnq_ = null;
+        }
+        return nnqBuilder_;
+      }
+
+      private int optimizer_ = 0;
+      /**
+       * <code>optional .Optimizer optimizer = 3;</code>
+       */
+      public int getOptimizerValue() {
+        return optimizer_;
+      }
+      /**
+       * <code>optional .Optimizer optimizer = 3;</code>
+       */
+      public Builder setOptimizerValue(int value) {
+        optimizer_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .Optimizer optimizer = 3;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.Optimizer getOptimizer() {
+        org.vitrivr.adampro.grpc.AdamGrpc.Optimizer result = org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.valueOf(optimizer_);
+        return result == null ? org.vitrivr.adampro.grpc.AdamGrpc.Optimizer.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>optional .Optimizer optimizer = 3;</code>
+       */
+      public Builder setOptimizer(org.vitrivr.adampro.grpc.AdamGrpc.Optimizer value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        optimizer_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .Optimizer optimizer = 3;</code>
+       */
+      public Builder clearOptimizer() {
+        
+        optimizer_ = 0;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:QuerySimulationMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:QuerySimulationMessage)
+    private static final org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage();
+    }
+
+    public static org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<QuerySimulationMessage>
+        PARSER = new com.google.protobuf.AbstractParser<QuerySimulationMessage>() {
+      public QuerySimulationMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new QuerySimulationMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<QuerySimulationMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<QuerySimulationMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -25743,7 +26722,7 @@ public final class AdamGrpc {
     /**
      * <pre>
      *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
      *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
      * </pre>
      *
@@ -25754,7 +26733,7 @@ public final class AdamGrpc {
     /**
      * <pre>
      *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
      *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
      * </pre>
      *
@@ -25764,7 +26743,7 @@ public final class AdamGrpc {
     /**
      * <pre>
      *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
      *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
      * </pre>
      *
@@ -25774,7 +26753,7 @@ public final class AdamGrpc {
     /**
      * <pre>
      *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
      *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
      * </pre>
      *
@@ -26377,7 +27356,7 @@ public final class AdamGrpc {
     /**
      * <pre>
      *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
      *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
      * </pre>
      *
@@ -26390,7 +27369,7 @@ public final class AdamGrpc {
     /**
      * <pre>
      *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
      *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
      * </pre>
      *
@@ -26402,7 +27381,7 @@ public final class AdamGrpc {
     /**
      * <pre>
      *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
      *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
      * </pre>
      *
@@ -26414,7 +27393,7 @@ public final class AdamGrpc {
     /**
      * <pre>
      *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+     *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
      *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
      * </pre>
      *
@@ -27774,7 +28753,7 @@ public final class AdamGrpc {
       /**
        * <pre>
        *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
        *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
        * </pre>
        *
@@ -27787,7 +28766,7 @@ public final class AdamGrpc {
       /**
        * <pre>
        *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
        *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
        * </pre>
        *
@@ -27799,7 +28778,7 @@ public final class AdamGrpc {
       /**
        * <pre>
        *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
        *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
        * </pre>
        *
@@ -27811,7 +28790,7 @@ public final class AdamGrpc {
       /**
        * <pre>
        *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
        *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
        * </pre>
        *
@@ -27824,7 +28803,7 @@ public final class AdamGrpc {
       /**
        * <pre>
        *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
        *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
        * </pre>
        *
@@ -27843,7 +28822,7 @@ public final class AdamGrpc {
       /**
        * <pre>
        *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
        *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
        * </pre>
        *
@@ -27862,7 +28841,7 @@ public final class AdamGrpc {
       /**
        * <pre>
        *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
        *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
        * </pre>
        *
@@ -27879,7 +28858,7 @@ public final class AdamGrpc {
       /**
        * <pre>
        *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
        *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
        * </pre>
        *
@@ -27894,7 +28873,7 @@ public final class AdamGrpc {
       /**
        * <pre>
        *for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
-       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "predictive"
+       *include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
        *hints are used to chooose whether an index scan or a sequential scan, etc. should be used
        * </pre>
        *
@@ -28287,6 +29266,40 @@ public final class AdamGrpc {
      * <code>optional .SubExpressionQueryMessage right = 5;</code>
      */
     org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessageOrBuilder getRightOrBuilder();
+
+    /**
+     * <code>map&lt;string, string&gt; options = 6;</code>
+     */
+    int getOptionsCount();
+    /**
+     * <code>map&lt;string, string&gt; options = 6;</code>
+     */
+    boolean containsOptions(
+        java.lang.String key);
+    /**
+     * Use {@link #getOptionsMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, java.lang.String>
+    getOptions();
+    /**
+     * <code>map&lt;string, string&gt; options = 6;</code>
+     */
+    java.util.Map<java.lang.String, java.lang.String>
+    getOptionsMap();
+    /**
+     * <code>map&lt;string, string&gt; options = 6;</code>
+     */
+
+    java.lang.String getOptionsOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue);
+    /**
+     * <code>map&lt;string, string&gt; options = 6;</code>
+     */
+
+    java.lang.String getOptionsOrThrow(
+        java.lang.String key);
   }
   /**
    * Protobuf type {@code ExpressionQueryMessage}
@@ -28374,6 +29387,19 @@ public final class AdamGrpc {
 
               break;
             }
+            case 50: {
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+                options_ = com.google.protobuf.MapField.newMapField(
+                    OptionsDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000020;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+              options__ = input.readMessage(
+                  OptionsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              options_.getMutableMap().put(
+                  options__.getKey(), options__.getValue());
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -28390,6 +29416,17 @@ public final class AdamGrpc {
       return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ExpressionQueryMessage_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 6:
+          return internalGetOptions();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ExpressionQueryMessage_fieldAccessorTable
@@ -28422,6 +29459,14 @@ public final class AdamGrpc {
        * <code>JOIN = 4;</code>
        */
       JOIN(4),
+      /**
+       * <code>FUZZYUNION = 5;</code>
+       */
+      FUZZYUNION(5),
+      /**
+       * <code>FUZZYINTERSECT = 6;</code>
+       */
+      FUZZYINTERSECT(6),
       UNRECOGNIZED(-1),
       ;
 
@@ -28445,6 +29490,14 @@ public final class AdamGrpc {
        * <code>JOIN = 4;</code>
        */
       public static final int JOIN_VALUE = 4;
+      /**
+       * <code>FUZZYUNION = 5;</code>
+       */
+      public static final int FUZZYUNION_VALUE = 5;
+      /**
+       * <code>FUZZYINTERSECT = 6;</code>
+       */
+      public static final int FUZZYINTERSECT_VALUE = 6;
 
 
       public final int getNumber() {
@@ -28470,6 +29523,8 @@ public final class AdamGrpc {
           case 2: return INTERSECT;
           case 3: return EXCEPT;
           case 4: return JOIN;
+          case 5: return FUZZYUNION;
+          case 6: return FUZZYINTERSECT;
           default: return null;
         }
       }
@@ -28638,6 +29693,7 @@ public final class AdamGrpc {
       // @@protoc_insertion_point(enum_scope:ExpressionQueryMessage.OperationOrder)
     }
 
+    private int bitField0_;
     public static final int QUERYID_FIELD_NUMBER = 1;
     private volatile java.lang.Object queryid_;
     /**
@@ -28746,6 +29802,82 @@ public final class AdamGrpc {
       return getRight();
     }
 
+    public static final int OPTIONS_FIELD_NUMBER = 6;
+    private static final class OptionsDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, java.lang.String> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, java.lang.String>newDefaultInstance(
+                  org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ExpressionQueryMessage_OptionsEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "");
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.String> options_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetOptions() {
+      if (options_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            OptionsDefaultEntryHolder.defaultEntry);
+      }
+      return options_;
+    }
+
+    public int getOptionsCount() {
+      return internalGetOptions().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, string&gt; options = 6;</code>
+     */
+
+    public boolean containsOptions(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetOptions().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getOptionsMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getOptions() {
+      return getOptionsMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; options = 6;</code>
+     */
+
+    public java.util.Map<java.lang.String, java.lang.String> getOptionsMap() {
+      return internalGetOptions().getMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; options = 6;</code>
+     */
+
+    public java.lang.String getOptionsOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetOptions().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, string&gt; options = 6;</code>
+     */
+
+    public java.lang.String getOptionsOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetOptions().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -28773,6 +29905,12 @@ public final class AdamGrpc {
       if (right_ != null) {
         output.writeMessage(5, getRight());
       }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetOptions(),
+          OptionsDefaultEntryHolder.defaultEntry,
+          6);
     }
 
     public int getSerializedSize() {
@@ -28798,6 +29936,16 @@ public final class AdamGrpc {
       if (right_ != null) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, getRight());
+      }
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+           : internalGetOptions().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+        options__ = OptionsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(6, options__);
       }
       memoizedSize = size;
       return size;
@@ -28829,6 +29977,8 @@ public final class AdamGrpc {
         result = result && getRight()
             .equals(other.getRight());
       }
+      result = result && internalGetOptions().equals(
+          other.internalGetOptions());
       return result;
     }
 
@@ -28852,6 +30002,10 @@ public final class AdamGrpc {
       if (hasRight()) {
         hash = (37 * hash) + RIGHT_FIELD_NUMBER;
         hash = (53 * hash) + getRight().hashCode();
+      }
+      if (!internalGetOptions().getMap().isEmpty()) {
+        hash = (37 * hash) + OPTIONS_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetOptions().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -28947,6 +30101,28 @@ public final class AdamGrpc {
         return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ExpressionQueryMessage_descriptor;
       }
 
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 6:
+            return internalGetOptions();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 6:
+            return internalGetMutableOptions();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ExpressionQueryMessage_fieldAccessorTable
@@ -28989,6 +30165,7 @@ public final class AdamGrpc {
           right_ = null;
           rightBuilder_ = null;
         }
+        internalGetMutableOptions().clear();
         return this;
       }
 
@@ -29011,6 +30188,8 @@ public final class AdamGrpc {
 
       public org.vitrivr.adampro.grpc.AdamGrpc.ExpressionQueryMessage buildPartial() {
         org.vitrivr.adampro.grpc.AdamGrpc.ExpressionQueryMessage result = new org.vitrivr.adampro.grpc.AdamGrpc.ExpressionQueryMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         result.queryid_ = queryid_;
         if (leftBuilder_ == null) {
           result.left_ = left_;
@@ -29024,6 +30203,9 @@ public final class AdamGrpc {
         } else {
           result.right_ = rightBuilder_.build();
         }
+        result.options_ = internalGetOptions();
+        result.options_.makeImmutable();
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -29081,6 +30263,8 @@ public final class AdamGrpc {
         if (other.hasRight()) {
           mergeRight(other.getRight());
         }
+        internalGetMutableOptions().mergeFrom(
+            other.internalGetOptions());
         onChanged();
         return this;
       }
@@ -29106,6 +30290,7 @@ public final class AdamGrpc {
         }
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object queryid_ = "";
       /**
@@ -29496,6 +30681,125 @@ public final class AdamGrpc {
           right_ = null;
         }
         return rightBuilder_;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, java.lang.String> options_;
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetOptions() {
+        if (options_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              OptionsDefaultEntryHolder.defaultEntry);
+        }
+        return options_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetMutableOptions() {
+        onChanged();;
+        if (options_ == null) {
+          options_ = com.google.protobuf.MapField.newMapField(
+              OptionsDefaultEntryHolder.defaultEntry);
+        }
+        if (!options_.isMutable()) {
+          options_ = options_.copy();
+        }
+        return options_;
+      }
+
+      public int getOptionsCount() {
+        return internalGetOptions().getMap().size();
+      }
+      /**
+       * <code>map&lt;string, string&gt; options = 6;</code>
+       */
+
+      public boolean containsOptions(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetOptions().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getOptionsMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String> getOptions() {
+        return getOptionsMap();
+      }
+      /**
+       * <code>map&lt;string, string&gt; options = 6;</code>
+       */
+
+      public java.util.Map<java.lang.String, java.lang.String> getOptionsMap() {
+        return internalGetOptions().getMap();
+      }
+      /**
+       * <code>map&lt;string, string&gt; options = 6;</code>
+       */
+
+      public java.lang.String getOptionsOrDefault(
+          java.lang.String key,
+          java.lang.String defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetOptions().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <code>map&lt;string, string&gt; options = 6;</code>
+       */
+
+      public java.lang.String getOptionsOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetOptions().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearOptions() {
+        getMutableOptions().clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;string, string&gt; options = 6;</code>
+       */
+
+      public Builder removeOptions(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        getMutableOptions().remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String>
+      getMutableOptions() {
+        return internalGetMutableOptions().getMutableMap();
+      }
+      /**
+       * <code>map&lt;string, string&gt; options = 6;</code>
+       */
+      public Builder putOptions(
+          java.lang.String key,
+          java.lang.String value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        getMutableOptions().put(key, value);
+        return this;
+      }
+      /**
+       * <code>map&lt;string, string&gt; options = 6;</code>
+       */
+
+      public Builder putAllOptions(
+          java.util.Map<java.lang.String, java.lang.String> values) {
+        getMutableOptions().putAll(values);
+        return this;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -52998,6 +54302,1781 @@ public final class AdamGrpc {
 
   }
 
+  public interface ScoredExecutionPathMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ScoredExecutionPathMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional double score = 1;</code>
+     */
+    double getScore();
+
+    /**
+     * <code>optional string scan = 2;</code>
+     */
+    java.lang.String getScan();
+    /**
+     * <code>optional string scan = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getScanBytes();
+
+    /**
+     * <code>optional string scantype = 3;</code>
+     */
+    java.lang.String getScantype();
+    /**
+     * <code>optional string scantype = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getScantypeBytes();
+
+    /**
+     * <code>optional string description = 4;</code>
+     */
+    java.lang.String getDescription();
+    /**
+     * <code>optional string description = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getDescriptionBytes();
+  }
+  /**
+   * Protobuf type {@code ScoredExecutionPathMessage}
+   */
+  public  static final class ScoredExecutionPathMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:ScoredExecutionPathMessage)
+      ScoredExecutionPathMessageOrBuilder {
+    // Use ScoredExecutionPathMessage.newBuilder() to construct.
+    private ScoredExecutionPathMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ScoredExecutionPathMessage() {
+      score_ = 0D;
+      scan_ = "";
+      scantype_ = "";
+      description_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private ScoredExecutionPathMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 9: {
+
+              score_ = input.readDouble();
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              scan_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              scantype_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              description_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ScoredExecutionPathMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ScoredExecutionPathMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder.class);
+    }
+
+    public static final int SCORE_FIELD_NUMBER = 1;
+    private double score_;
+    /**
+     * <code>optional double score = 1;</code>
+     */
+    public double getScore() {
+      return score_;
+    }
+
+    public static final int SCAN_FIELD_NUMBER = 2;
+    private volatile java.lang.Object scan_;
+    /**
+     * <code>optional string scan = 2;</code>
+     */
+    public java.lang.String getScan() {
+      java.lang.Object ref = scan_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        scan_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string scan = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getScanBytes() {
+      java.lang.Object ref = scan_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        scan_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int SCANTYPE_FIELD_NUMBER = 3;
+    private volatile java.lang.Object scantype_;
+    /**
+     * <code>optional string scantype = 3;</code>
+     */
+    public java.lang.String getScantype() {
+      java.lang.Object ref = scantype_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        scantype_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string scantype = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getScantypeBytes() {
+      java.lang.Object ref = scantype_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        scantype_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DESCRIPTION_FIELD_NUMBER = 4;
+    private volatile java.lang.Object description_;
+    /**
+     * <code>optional string description = 4;</code>
+     */
+    public java.lang.String getDescription() {
+      java.lang.Object ref = description_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        description_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string description = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDescriptionBytes() {
+      java.lang.Object ref = description_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        description_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (score_ != 0D) {
+        output.writeDouble(1, score_);
+      }
+      if (!getScanBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, scan_);
+      }
+      if (!getScantypeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, scantype_);
+      }
+      if (!getDescriptionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, description_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (score_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(1, score_);
+      }
+      if (!getScanBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, scan_);
+      }
+      if (!getScantypeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, scantype_);
+      }
+      if (!getDescriptionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, description_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage)) {
+        return super.equals(obj);
+      }
+      org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage other = (org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage) obj;
+
+      boolean result = true;
+      result = result && (
+          java.lang.Double.doubleToLongBits(getScore())
+          == java.lang.Double.doubleToLongBits(
+              other.getScore()));
+      result = result && getScan()
+          .equals(other.getScan());
+      result = result && getScantype()
+          .equals(other.getScantype());
+      result = result && getDescription()
+          .equals(other.getDescription());
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      hash = (37 * hash) + SCORE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getScore()));
+      hash = (37 * hash) + SCAN_FIELD_NUMBER;
+      hash = (53 * hash) + getScan().hashCode();
+      hash = (37 * hash) + SCANTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getScantype().hashCode();
+      hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
+      hash = (53 * hash) + getDescription().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ScoredExecutionPathMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ScoredExecutionPathMessage)
+        org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ScoredExecutionPathMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ScoredExecutionPathMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder.class);
+      }
+
+      // Construct using org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        score_ = 0D;
+
+        scan_ = "";
+
+        scantype_ = "";
+
+        description_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ScoredExecutionPathMessage_descriptor;
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage getDefaultInstanceForType() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.getDefaultInstance();
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage build() {
+        org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage buildPartial() {
+        org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage result = new org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage(this);
+        result.score_ = score_;
+        result.scan_ = scan_;
+        result.scantype_ = scantype_;
+        result.description_ = description_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage) {
+          return mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage other) {
+        if (other == org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.getDefaultInstance()) return this;
+        if (other.getScore() != 0D) {
+          setScore(other.getScore());
+        }
+        if (!other.getScan().isEmpty()) {
+          scan_ = other.scan_;
+          onChanged();
+        }
+        if (!other.getScantype().isEmpty()) {
+          scantype_ = other.scantype_;
+          onChanged();
+        }
+        if (!other.getDescription().isEmpty()) {
+          description_ = other.description_;
+          onChanged();
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private double score_ ;
+      /**
+       * <code>optional double score = 1;</code>
+       */
+      public double getScore() {
+        return score_;
+      }
+      /**
+       * <code>optional double score = 1;</code>
+       */
+      public Builder setScore(double value) {
+        
+        score_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional double score = 1;</code>
+       */
+      public Builder clearScore() {
+        
+        score_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object scan_ = "";
+      /**
+       * <code>optional string scan = 2;</code>
+       */
+      public java.lang.String getScan() {
+        java.lang.Object ref = scan_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          scan_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string scan = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getScanBytes() {
+        java.lang.Object ref = scan_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          scan_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string scan = 2;</code>
+       */
+      public Builder setScan(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        scan_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string scan = 2;</code>
+       */
+      public Builder clearScan() {
+        
+        scan_ = getDefaultInstance().getScan();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string scan = 2;</code>
+       */
+      public Builder setScanBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        scan_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object scantype_ = "";
+      /**
+       * <code>optional string scantype = 3;</code>
+       */
+      public java.lang.String getScantype() {
+        java.lang.Object ref = scantype_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          scantype_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string scantype = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getScantypeBytes() {
+        java.lang.Object ref = scantype_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          scantype_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string scantype = 3;</code>
+       */
+      public Builder setScantype(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        scantype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string scantype = 3;</code>
+       */
+      public Builder clearScantype() {
+        
+        scantype_ = getDefaultInstance().getScantype();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string scantype = 3;</code>
+       */
+      public Builder setScantypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        scantype_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object description_ = "";
+      /**
+       * <code>optional string description = 4;</code>
+       */
+      public java.lang.String getDescription() {
+        java.lang.Object ref = description_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          description_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string description = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDescriptionBytes() {
+        java.lang.Object ref = description_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          description_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string description = 4;</code>
+       */
+      public Builder setDescription(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        description_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string description = 4;</code>
+       */
+      public Builder clearDescription() {
+        
+        description_ = getDefaultInstance().getDescription();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string description = 4;</code>
+       */
+      public Builder setDescriptionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        description_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ScoredExecutionPathMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:ScoredExecutionPathMessage)
+    private static final org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage();
+    }
+
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ScoredExecutionPathMessage>
+        PARSER = new com.google.protobuf.AbstractParser<ScoredExecutionPathMessage>() {
+      public ScoredExecutionPathMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ScoredExecutionPathMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ScoredExecutionPathMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ScoredExecutionPathMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ScoredExecutionPathsMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ScoredExecutionPathsMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional .AckMessage ack = 1;</code>
+     */
+    boolean hasAck();
+    /**
+     * <code>optional .AckMessage ack = 1;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.AckMessage getAck();
+    /**
+     * <code>optional .AckMessage ack = 1;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.AckMessageOrBuilder getAckOrBuilder();
+
+    /**
+     * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+     */
+    java.util.List<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage> 
+        getExecutionpathsList();
+    /**
+     * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage getExecutionpaths(int index);
+    /**
+     * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+     */
+    int getExecutionpathsCount();
+    /**
+     * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+     */
+    java.util.List<? extends org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessageOrBuilder> 
+        getExecutionpathsOrBuilderList();
+    /**
+     * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessageOrBuilder getExecutionpathsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code ScoredExecutionPathsMessage}
+   */
+  public  static final class ScoredExecutionPathsMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:ScoredExecutionPathsMessage)
+      ScoredExecutionPathsMessageOrBuilder {
+    // Use ScoredExecutionPathsMessage.newBuilder() to construct.
+    private ScoredExecutionPathsMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ScoredExecutionPathsMessage() {
+      executionpaths_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private ScoredExecutionPathsMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Builder subBuilder = null;
+              if (ack_ != null) {
+                subBuilder = ack_.toBuilder();
+              }
+              ack_ = input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(ack_);
+                ack_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                executionpaths_ = new java.util.ArrayList<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              executionpaths_.add(
+                  input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.parser(), extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          executionpaths_ = java.util.Collections.unmodifiableList(executionpaths_);
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ScoredExecutionPathsMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ScoredExecutionPathsMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int ACK_FIELD_NUMBER = 1;
+    private org.vitrivr.adampro.grpc.AdamGrpc.AckMessage ack_;
+    /**
+     * <code>optional .AckMessage ack = 1;</code>
+     */
+    public boolean hasAck() {
+      return ack_ != null;
+    }
+    /**
+     * <code>optional .AckMessage ack = 1;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage getAck() {
+      return ack_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
+    }
+    /**
+     * <code>optional .AckMessage ack = 1;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
+      return getAck();
+    }
+
+    public static final int EXECUTIONPATHS_FIELD_NUMBER = 2;
+    private java.util.List<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage> executionpaths_;
+    /**
+     * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+     */
+    public java.util.List<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage> getExecutionpathsList() {
+      return executionpaths_;
+    }
+    /**
+     * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+     */
+    public java.util.List<? extends org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessageOrBuilder> 
+        getExecutionpathsOrBuilderList() {
+      return executionpaths_;
+    }
+    /**
+     * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+     */
+    public int getExecutionpathsCount() {
+      return executionpaths_.size();
+    }
+    /**
+     * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage getExecutionpaths(int index) {
+      return executionpaths_.get(index);
+    }
+    /**
+     * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessageOrBuilder getExecutionpathsOrBuilder(
+        int index) {
+      return executionpaths_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (ack_ != null) {
+        output.writeMessage(1, getAck());
+      }
+      for (int i = 0; i < executionpaths_.size(); i++) {
+        output.writeMessage(2, executionpaths_.get(i));
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (ack_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getAck());
+      }
+      for (int i = 0; i < executionpaths_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, executionpaths_.get(i));
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage)) {
+        return super.equals(obj);
+      }
+      org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage other = (org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage) obj;
+
+      boolean result = true;
+      result = result && (hasAck() == other.hasAck());
+      if (hasAck()) {
+        result = result && getAck()
+            .equals(other.getAck());
+      }
+      result = result && getExecutionpathsList()
+          .equals(other.getExecutionpathsList());
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasAck()) {
+        hash = (37 * hash) + ACK_FIELD_NUMBER;
+        hash = (53 * hash) + getAck().hashCode();
+      }
+      if (getExecutionpathsCount() > 0) {
+        hash = (37 * hash) + EXECUTIONPATHS_FIELD_NUMBER;
+        hash = (53 * hash) + getExecutionpathsList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ScoredExecutionPathsMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ScoredExecutionPathsMessage)
+        org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ScoredExecutionPathsMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ScoredExecutionPathsMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.Builder.class);
+      }
+
+      // Construct using org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getExecutionpathsFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (ackBuilder_ == null) {
+          ack_ = null;
+        } else {
+          ack_ = null;
+          ackBuilder_ = null;
+        }
+        if (executionpathsBuilder_ == null) {
+          executionpaths_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          executionpathsBuilder_.clear();
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_ScoredExecutionPathsMessage_descriptor;
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage getDefaultInstanceForType() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.getDefaultInstance();
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage build() {
+        org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage buildPartial() {
+        org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage result = new org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (ackBuilder_ == null) {
+          result.ack_ = ack_;
+        } else {
+          result.ack_ = ackBuilder_.build();
+        }
+        if (executionpathsBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            executionpaths_ = java.util.Collections.unmodifiableList(executionpaths_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.executionpaths_ = executionpaths_;
+        } else {
+          result.executionpaths_ = executionpathsBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage) {
+          return mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage other) {
+        if (other == org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.getDefaultInstance()) return this;
+        if (other.hasAck()) {
+          mergeAck(other.getAck());
+        }
+        if (executionpathsBuilder_ == null) {
+          if (!other.executionpaths_.isEmpty()) {
+            if (executionpaths_.isEmpty()) {
+              executionpaths_ = other.executionpaths_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureExecutionpathsIsMutable();
+              executionpaths_.addAll(other.executionpaths_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.executionpaths_.isEmpty()) {
+            if (executionpathsBuilder_.isEmpty()) {
+              executionpathsBuilder_.dispose();
+              executionpathsBuilder_ = null;
+              executionpaths_ = other.executionpaths_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              executionpathsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getExecutionpathsFieldBuilder() : null;
+            } else {
+              executionpathsBuilder_.addAllMessages(other.executionpaths_);
+            }
+          }
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private org.vitrivr.adampro.grpc.AdamGrpc.AckMessage ack_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.vitrivr.adampro.grpc.AdamGrpc.AckMessage, org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.AckMessageOrBuilder> ackBuilder_;
+      /**
+       * <code>optional .AckMessage ack = 1;</code>
+       */
+      public boolean hasAck() {
+        return ackBuilder_ != null || ack_ != null;
+      }
+      /**
+       * <code>optional .AckMessage ack = 1;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage getAck() {
+        if (ackBuilder_ == null) {
+          return ack_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
+        } else {
+          return ackBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .AckMessage ack = 1;</code>
+       */
+      public Builder setAck(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage value) {
+        if (ackBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ack_ = value;
+          onChanged();
+        } else {
+          ackBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .AckMessage ack = 1;</code>
+       */
+      public Builder setAck(
+          org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Builder builderForValue) {
+        if (ackBuilder_ == null) {
+          ack_ = builderForValue.build();
+          onChanged();
+        } else {
+          ackBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .AckMessage ack = 1;</code>
+       */
+      public Builder mergeAck(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage value) {
+        if (ackBuilder_ == null) {
+          if (ack_ != null) {
+            ack_ =
+              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.newBuilder(ack_).mergeFrom(value).buildPartial();
+          } else {
+            ack_ = value;
+          }
+          onChanged();
+        } else {
+          ackBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .AckMessage ack = 1;</code>
+       */
+      public Builder clearAck() {
+        if (ackBuilder_ == null) {
+          ack_ = null;
+          onChanged();
+        } else {
+          ack_ = null;
+          ackBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .AckMessage ack = 1;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Builder getAckBuilder() {
+        
+        onChanged();
+        return getAckFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .AckMessage ack = 1;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.AckMessageOrBuilder getAckOrBuilder() {
+        if (ackBuilder_ != null) {
+          return ackBuilder_.getMessageOrBuilder();
+        } else {
+          return ack_ == null ?
+              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance() : ack_;
+        }
+      }
+      /**
+       * <code>optional .AckMessage ack = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.vitrivr.adampro.grpc.AdamGrpc.AckMessage, org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.AckMessageOrBuilder> 
+          getAckFieldBuilder() {
+        if (ackBuilder_ == null) {
+          ackBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage, org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.AckMessageOrBuilder>(
+                  getAck(),
+                  getParentForChildren(),
+                  isClean());
+          ack_ = null;
+        }
+        return ackBuilder_;
+      }
+
+      private java.util.List<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage> executionpaths_ =
+        java.util.Collections.emptyList();
+      private void ensureExecutionpathsIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          executionpaths_ = new java.util.ArrayList<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage>(executionpaths_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessageOrBuilder> executionpathsBuilder_;
+
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public java.util.List<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage> getExecutionpathsList() {
+        if (executionpathsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(executionpaths_);
+        } else {
+          return executionpathsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public int getExecutionpathsCount() {
+        if (executionpathsBuilder_ == null) {
+          return executionpaths_.size();
+        } else {
+          return executionpathsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage getExecutionpaths(int index) {
+        if (executionpathsBuilder_ == null) {
+          return executionpaths_.get(index);
+        } else {
+          return executionpathsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public Builder setExecutionpaths(
+          int index, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage value) {
+        if (executionpathsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureExecutionpathsIsMutable();
+          executionpaths_.set(index, value);
+          onChanged();
+        } else {
+          executionpathsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public Builder setExecutionpaths(
+          int index, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder builderForValue) {
+        if (executionpathsBuilder_ == null) {
+          ensureExecutionpathsIsMutable();
+          executionpaths_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          executionpathsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public Builder addExecutionpaths(org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage value) {
+        if (executionpathsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureExecutionpathsIsMutable();
+          executionpaths_.add(value);
+          onChanged();
+        } else {
+          executionpathsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public Builder addExecutionpaths(
+          int index, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage value) {
+        if (executionpathsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureExecutionpathsIsMutable();
+          executionpaths_.add(index, value);
+          onChanged();
+        } else {
+          executionpathsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public Builder addExecutionpaths(
+          org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder builderForValue) {
+        if (executionpathsBuilder_ == null) {
+          ensureExecutionpathsIsMutable();
+          executionpaths_.add(builderForValue.build());
+          onChanged();
+        } else {
+          executionpathsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public Builder addExecutionpaths(
+          int index, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder builderForValue) {
+        if (executionpathsBuilder_ == null) {
+          ensureExecutionpathsIsMutable();
+          executionpaths_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          executionpathsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public Builder addAllExecutionpaths(
+          java.lang.Iterable<? extends org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage> values) {
+        if (executionpathsBuilder_ == null) {
+          ensureExecutionpathsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, executionpaths_);
+          onChanged();
+        } else {
+          executionpathsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public Builder clearExecutionpaths() {
+        if (executionpathsBuilder_ == null) {
+          executionpaths_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          executionpathsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public Builder removeExecutionpaths(int index) {
+        if (executionpathsBuilder_ == null) {
+          ensureExecutionpathsIsMutable();
+          executionpaths_.remove(index);
+          onChanged();
+        } else {
+          executionpathsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder getExecutionpathsBuilder(
+          int index) {
+        return getExecutionpathsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessageOrBuilder getExecutionpathsOrBuilder(
+          int index) {
+        if (executionpathsBuilder_ == null) {
+          return executionpaths_.get(index);  } else {
+          return executionpathsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public java.util.List<? extends org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessageOrBuilder> 
+           getExecutionpathsOrBuilderList() {
+        if (executionpathsBuilder_ != null) {
+          return executionpathsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(executionpaths_);
+        }
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder addExecutionpathsBuilder() {
+        return getExecutionpathsFieldBuilder().addBuilder(
+            org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder addExecutionpathsBuilder(
+          int index) {
+        return getExecutionpathsFieldBuilder().addBuilder(
+            index, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ScoredExecutionPathMessage executionpaths = 2;</code>
+       */
+      public java.util.List<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder> 
+           getExecutionpathsBuilderList() {
+        return getExecutionpathsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessageOrBuilder> 
+          getExecutionpathsFieldBuilder() {
+        if (executionpathsBuilder_ == null) {
+          executionpathsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathMessageOrBuilder>(
+                  executionpaths_,
+                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  getParentForChildren(),
+                  isClean());
+          executionpaths_ = null;
+        }
+        return executionpathsBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ScoredExecutionPathsMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:ScoredExecutionPathsMessage)
+    private static final org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage();
+    }
+
+    public static org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ScoredExecutionPathsMessage>
+        PARSER = new com.google.protobuf.AbstractParser<ScoredExecutionPathsMessage>() {
+      public ScoredExecutionPathsMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ScoredExecutionPathsMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ScoredExecutionPathsMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ScoredExecutionPathsMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_EmptyMessage_descriptor;
   private static final 
@@ -53159,6 +56238,11 @@ public final class AdamGrpc {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_AdaptScanMethodsMessage_OptionsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_QuerySimulationMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_QuerySimulationMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_SparsifyEntityMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -53203,6 +56287,11 @@ public final class AdamGrpc {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_ExpressionQueryMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ExpressionQueryMessage_OptionsEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ExpressionQueryMessage_OptionsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_SubExpressionQueryMessage_descriptor;
   private static final 
@@ -53363,6 +56452,16 @@ public final class AdamGrpc {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_BatchedQueryResultsMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ScoredExecutionPathMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ScoredExecutionPathMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ScoredExecutionPathsMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ScoredExecutionPathsMessage_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -53440,190 +56539,207 @@ public final class AdamGrpc {
       "REATE_TEMP\020\002\"-\n\013Partitioner\022\t\n\005SPARK\020\000\022\n" +
       "\n\006RANDOM\020\001\022\007\n\003ECP\020\006\"B\n\rWeightMessage\022\016\n\006" +
       "entity\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\022\016\n\006weigh" +
-      "t\030\003 \001(\002\"\205\003\n\027AdaptScanMethodsMessage\022\016\n\006e" +
+      "t\030\003 \001(\002\"\244\003\n\027AdaptScanMethodsMessage\022\016\n\006e" +
       "ntity\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\0224\n\002ic\030\003 \001",
       "(\0162(.AdaptScanMethodsMessage.IndexCollec" +
       "tion\0224\n\002qc\030\004 \001(\0162(.AdaptScanMethodsMessa" +
       "ge.QueryCollection\0226\n\007options\030\005 \003(\0132%.Ad" +
-      "aptScanMethodsMessage.OptionsEntry\032.\n\014Op" +
-      "tionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\002" +
-      "8\001\"8\n\017IndexCollection\022\024\n\020EXISTING_INDEXE" +
-      "S\020\000\022\017\n\013NEW_INDEXES\020\001\"9\n\017QueryCollection\022" +
-      "\022\n\016LOGGED_QUERIES\020\000\022\022\n\016RANDOM_QUERIES\020\001\"" +
-      ":\n\025SparsifyEntityMessage\022\016\n\006entity\030\001 \001(\t" +
-      "\022\021\n\tattribute\030\002 \001(\t\"S\n\rImportMessage\022\014\n\004",
-      "host\030\001 \001(\t\022\020\n\010database\030\002 \001(\t\022\020\n\010username" +
-      "\030\003 \001(\t\022\020\n\010password\030\004 \001(\t\"\"\n\022ProtoImportM" +
-      "essage\022\014\n\004path\030\001 \001(\t\"2\n\022ProtoExportMessa" +
-      "ge\022\014\n\004path\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\"B\n\026Stor" +
-      "ageHandlersMessage\022(\n\010handlers\030\001 \003(\0132\026.S" +
-      "torageHandlerMessage\"M\n\025StorageHandlerMe" +
-      "ssage\022\014\n\004name\030\001 \001(\t\022&\n\016attributetypes\030\002 " +
-      "\003(\0162\016.AttributeType\"T\n\035TransferStorageHa" +
-      "ndlerMessage\022\016\n\006entity\030\001 \001(\t\022\022\n\nattribut" +
-      "es\030\002 \003(\t\022\017\n\007handler\030\003 \001(\t\"\213\004\n\014QueryMessa",
-      "ge\022\017\n\007queryid\030\001 \001(\t\022&\n\nprojection\030\002 \001(\0132" +
-      "\022.ProjectionMessage\022\032\n\004from\030\003 \001(\0132\014.From" +
-      "Message\022 \n\002bq\030\006 \001(\0132\024.BooleanQueryMessag" +
-      "e\022*\n\003nnq\030\007 \001(\0132\035.NearestNeighbourQueryMe" +
-      "ssage\022\r\n\005hints\030\010 \003(\t\022\022\n\nnoFallback\030\t \001(\010" +
-      "\022\014\n\004time\030\n \001(\003\022\025\n\rreadFromCache\030\013 \001(\010\022\022\n" +
-      "\nputInCache\030\014 \001(\010\0223\n\013information\030\r \003(\0162\036" +
-      ".QueryMessage.InformationLevel\"\306\001\n\020Infor" +
-      "mationLevel\022\031\n\025INFORMATION_FULL_TREE\020\000\022\036" +
-      "\n\032INFORMATION_LAST_STEP_ONLY\020\001\022$\n INFORM",
-      "ATION_INTERMEDIATE_RESULTS\020\002\022)\n%WITH_PRO" +
-      "VENANCE_PARTITION_INFORMATION\020\003\022&\n\"WITH_" +
-      "PROVENANCE_SOURCE_INFORMATION\020\004\"\210\003\n\026Expr" +
-      "essionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022(\n\004l" +
-      "eft\030\002 \001(\0132\032.SubExpressionQueryMessage\0224\n" +
-      "\toperation\030\003 \001(\0162!.ExpressionQueryMessag" +
-      "e.Operation\0225\n\005order\030\004 \001(\0162&.ExpressionQ" +
-      "ueryMessage.OperationOrder\022)\n\005right\030\005 \001(" +
-      "\0132\032.SubExpressionQueryMessage\"M\n\tOperati" +
-      "on\022\020\n\014UNKNOWNEXPOP\020\000\022\t\n\005UNION\020\001\022\r\n\tINTER",
-      "SECT\020\002\022\n\n\006EXCEPT\020\003\022\010\n\004JOIN\020\004\"L\n\016Operatio" +
-      "nOrder\022\r\n\tUNKNOWNOO\020\000\022\r\n\tLEFTFIRST\020\001\022\016\n\n" +
-      "RIGHTFIRST\020\002\022\014\n\010PARALLEL\020\003\"\255\001\n\031SubExpres" +
-      "sionQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\033\n\002qm\030" +
-      "\002 \001(\0132\r.QueryMessageH\000\022&\n\003eqm\030\003 \001(\0132\027.Ex" +
-      "pressionQueryMessageH\000\022,\n\004ehqm\030\004 \001(\0132\034.E" +
-      "xternalHandlerQueryMessageH\000B\014\n\nsubmessa" +
-      "ge\"\352\001\n\021ProjectionMessage\022;\n\nattributes\030\001" +
-      " \001(\0132\'.ProjectionMessage.AttributeNameMe" +
-      "ssage\022(\n\002op\030\002 \001(\0162\034.ProjectionMessage.Op",
-      "eration\032)\n\024AttributeNameMessage\022\021\n\tattri" +
-      "bute\030\001 \003(\t\"C\n\tOperation\022\021\n\rUNKNOWNPROJOP" +
-      "\020\000\022\t\n\005COUNT\020\001\022\n\n\006EXISTS\020\002\022\014\n\010DISTINCT\020\003\"" +
-      "\222\001\n\013FromMessage\022\020\n\006entity\030\001 \001(\tH\000\022\017\n\005ind" +
-      "ex\030\002 \001(\tH\000\022$\n\007indexes\030\003 \001(\0132\021.IndexListM" +
-      "essageH\000\0220\n\nexpression\030\004 \001(\0132\032.SubExpres" +
-      "sionQueryMessageH\000B\010\n\006source\"#\n\020IndexLis" +
-      "tMessage\022\017\n\007indexes\030\001 \003(\t\"\264\002\n\034NearestNei" +
-      "ghbourQueryMessage\022\021\n\tattribute\030\001 \001(\t\022\035\n" +
-      "\005query\030\002 \001(\0132\016.VectorMessage\022\037\n\007weights\030",
-      "\003 \001(\0132\016.VectorMessage\022\"\n\010distance\030\004 \001(\0132" +
-      "\020.DistanceMessage\022\t\n\001k\030\005 \001(\005\022;\n\007options\030" +
-      "\006 \003(\0132*.NearestNeighbourQueryMessage.Opt" +
-      "ionsEntry\022\021\n\tindexOnly\030\007 \001(\010\022\022\n\npartitio" +
-      "ns\030\010 \003(\005\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n" +
-      "\005value\030\002 \001(\t:\0028\001\"\234\003\n\017DistanceMessage\0223\n\014" +
-      "distancetype\030\001 \001(\0162\035.DistanceMessage.Dis" +
-      "tanceType\022.\n\007options\030\002 \003(\0132\035.DistanceMes" +
-      "sage.OptionsEntry\032.\n\014OptionsEntry\022\013\n\003key" +
-      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\363\001\n\014DistanceTy",
-      "pe\022\014\n\010UNKNOWND\020\000\022\016\n\nchisquared\020\001\022\017\n\013corr" +
-      "elation\020\002\022\n\n\006cosine\020\003\022\013\n\007hamming\020\004\022\013\n\007ja" +
-      "ccard\020\005\022\023\n\017kullbackleibler\020\006\022\r\n\tchebyshe" +
-      "v\020\007\022\r\n\teuclidean\020\010\022\024\n\020squaredeuclidean\020\t" +
-      "\022\r\n\tmanhattan\020\n\022\r\n\tminkowski\020\013\022\014\n\010spanno" +
-      "rm\020\014\022\n\n\006modulo\020\r\022\r\n\thaversine\020\016\"\306\001\n\023Bool" +
-      "eanQueryMessage\0220\n\005where\030\001 \003(\0132!.Boolean" +
-      "QueryMessage.WhereMessage\032K\n\014WhereMessag" +
-      "e\022\021\n\tattribute\030\001 \001(\t\022\034\n\006values\030\002 \003(\0132\014.D" +
-      "ataMessage\022\n\n\002op\030\003 \001(\t\0320\n\013JoinMessage\022\r\n",
-      "\005table\030\001 \001(\t\022\022\n\nattributes\030\002 \003(\t\"\270\001\n\033Ext" +
-      "ernalHandlerQueryMessage\022\017\n\007queryid\030\001 \001(" +
-      "\t\022\016\n\006entity\030\002 \001(\t\022\017\n\007handler\030\003 \001(\t\0228\n\006pa" +
-      "rams\030\004 \003(\0132(.ExternalHandlerQueryMessage" +
-      ".ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t" +
-      "\022\r\n\005value\030\002 \001(\t:\0028\001\"\'\n\024CachedResultsMess" +
-      "age\022\017\n\007queryid\030\001 \001(\t\"5\n\023BatchedQueryMess" +
-      "age\022\036\n\007queries\030\001 \003(\0132\r.QueryMessage\"+\n\016P" +
-      "reviewMessage\022\016\n\006entity\030\001 \001(\t\022\t\n\001n\030\002 \001(\005" +
-      "\"X\n\nAckMessage\022\036\n\004code\030\001 \001(\0162\020.AckMessag",
-      "e.Code\022\017\n\007message\030\002 \001(\t\"\031\n\004Code\022\t\n\005ERROR" +
-      "\020\000\022\006\n\002OK\020\001\"=\n\017EntitiesMessage\022\030\n\003ack\030\001 \001" +
-      "(\0132\013.AckMessage\022\020\n\010entities\030\002 \003(\t\"b\n\036Ava" +
-      "ilableAttributeTypesMessage\022\030\n\003ack\030\001 \001(\013" +
-      "2\013.AckMessage\022&\n\016attributetypes\030\002 \003(\0162\016." +
-      "AttributeType\"9\n\rExistsMessage\022\030\n\003ack\030\001 " +
-      "\001(\0132\013.AckMessage\022\016\n\006exists\030\002 \001(\010\"\252\001\n\016Ind" +
-      "exesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022-\n" +
-      "\007indexes\030\002 \003(\0132\034.IndexesMessage.IndexMes" +
-      "sage\032O\n\014IndexMessage\022\r\n\005index\030\001 \001(\t\022\021\n\ta",
-      "ttribute\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\0162\n.Inde" +
-      "xType\"\250\001\n\021PropertiesMessage\022\030\n\003ack\030\001 \001(\013" +
-      "2\013.AckMessage\022\016\n\006entity\030\002 \001(\t\0226\n\npropert" +
-      "ies\030\003 \003(\0132\".PropertiesMessage.Properties" +
-      "Entry\0321\n\017PropertiesEntry\022\013\n\003key\030\001 \001(\t\022\r\n" +
-      "\005value\030\002 \001(\t:\0028\001\"[\n\023QueryResultsMessage\022" +
-      "\030\n\003ack\030\001 \001(\0132\013.AckMessage\022*\n\tresponses\030\002" +
-      " \003(\0132\027.QueryResultInfoMessage\"\376\001\n\026QueryR" +
-      "esultInfoMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessa" +
-      "ge\022\017\n\007queryid\030\002 \001(\t\022\022\n\nconfidence\030\003 \001(\001\022",
-      "\014\n\004time\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022/\n\004info\030\006 " +
-      "\003(\0132!.QueryResultInfoMessage.InfoEntry\022)" +
-      "\n\007results\030\007 \003(\0132\030.QueryResultTupleMessag" +
-      "e\032+\n\tInfoEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001" +
-      "(\t:\0028\001\"\206\001\n\027QueryResultTupleMessage\0220\n\004da" +
-      "ta\030\001 \003(\0132\".QueryResultTupleMessage.DataE" +
-      "ntry\0329\n\tDataEntry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030" +
-      "\002 \001(\0132\014.DataMessage:\0028\001\"[\n\025ExportDataFil" +
-      "eMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\026\n\016de" +
-      "finitionfile\030\002 \001(\014\022\020\n\010datafile\030\003 \001(\014\"C\n\032",
-      "BatchedQueryResultsMessage\022%\n\007results\030\001 " +
-      "\003(\0132\024.QueryResultsMessage*\257\001\n\rAttributeT" +
-      "ype\022\014\n\010UNKOWNAT\020\000\022\010\n\004AUTO\020\001\022\010\n\004LONG\020\002\022\007\n" +
-      "\003INT\020\003\022\t\n\005FLOAT\020\004\022\n\n\006DOUBLE\020\005\022\n\n\006STRING\020" +
-      "\006\022\010\n\004TEXT\020\007\022\013\n\007BOOLEAN\020\010\022\n\n\006VECTOR\020\t\022\020\n\014" +
-      "SPARSEVECTOR\020\r\022\014\n\010GEOMETRY\020\n\022\r\n\tGEOGRAPH" +
-      "Y\020\013*_\n\tIndexType\022\r\n\tUNKNOWNIT\020\000\022\007\n\003ecp\020\001" +
-      "\022\007\n\003lsh\020\002\022\006\n\002mi\020\003\022\006\n\002pq\020\004\022\006\n\002sh\020\005\022\007\n\003vaf" +
-      "\020\006\022\007\n\003vav\020\007\022\007\n\003vap\020\0102\260\014\n\016AdamDefinition\022" +
-      "3\n\014CreateEntity\022\024.CreateEntityMessage\032\013.",
-      "AckMessage\"\000\022K\n\027AvailableAttributeTypes\022" +
-      "\r.EmptyMessage\032\037.AvailableAttributeTypes" +
-      "Message\"\000\022*\n\005Count\022\022.EntityNameMessage\032\013" +
-      ".AckMessage\"\000\022/\n\nDropEntity\022\022.EntityName" +
-      "Message\032\013.AckMessage\"\000\0224\n\014ExistsEntity\022\022" +
-      ".EntityNameMessage\032\016.ExistsMessage\"\000\022\'\n\006" +
-      "Insert\022\016.InsertMessage\032\013.AckMessage\"\000\0221\n" +
-      "\014StreamInsert\022\016.InsertMessage\032\013.AckMessa" +
-      "ge\"\000(\0010\001\0221\n\014VacuumEntity\022\022.EntityNameMes" +
-      "sage\032\013.AckMessage\"\000\022\'\n\006Delete\022\016.DeleteMe",
-      "ssage\032\013.AckMessage\"\000\022%\n\005Index\022\r.IndexMes" +
-      "sage\032\013.AckMessage\"\000\0222\n\022GenerateAllIndexe" +
-      "s\022\r.IndexMessage\032\013.AckMessage\"\000\022.\n\013Exist" +
-      "sIndex\022\r.IndexMessage\032\016.ExistsMessage\"\000\022" +
-      "-\n\tDropIndex\022\021.IndexNameMessage\032\013.AckMes" +
-      "sage\"\000\0224\n\013ListIndexes\022\022.EntityNameMessag" +
-      "e\032\017.IndexesMessage\"\000\022?\n\022GenerateRandomDa" +
-      "ta\022\032.GenerateRandomDataMessage\032\013.AckMess" +
-      "age\"\000\0221\n\014ListEntities\022\r.EmptyMessage\032\020.E" +
-      "ntitiesMessage\"\000\022E\n\023GetEntityProperties\022",
-      "\030.EntityPropertiesMessage\032\022.PropertiesMe" +
-      "ssage\"\000\022K\n\026GetAttributeProperties\022\033.Attr" +
-      "ibutePropertiesMessage\032\022.PropertiesMessa" +
-      "ge\"\000\022C\n\022GetIndexProperties\022\027.IndexProper" +
-      "tiesMessage\032\022.PropertiesMessage\"\000\022;\n\025Rep" +
-      "artitionEntityData\022\023.RepartitionMessage\032" +
-      "\013.AckMessage\"\000\022:\n\024RepartitionIndexData\022\023" +
-      ".RepartitionMessage\032\013.AckMessage\"\000\022;\n\020Ad" +
-      "aptScanMethods\022\030.AdaptScanMethodsMessage" +
-      "\032\013.AckMessage\"\000\0227\n\016SparsifyEntity\022\026.Spar",
-      "sifyEntityMessage\032\013.AckMessage\"\000\022+\n\nImpo" +
-      "rtData\022\016.ImportMessage\032\013.AckMessage\"\000\0227\n" +
-      "\017ProtoImportData\022\023.ProtoImportMessage\032\013." +
-      "AckMessage\"\0000\001\0225\n\017ProtoExportData\022\023.Prot" +
-      "oExportMessage\032\013.AckMessage\"\000\022?\n\023ListSto" +
-      "rageHandlers\022\r.EmptyMessage\032\027.StorageHan" +
-      "dlersMessage\"\000\022G\n\026TransferStorageHandler" +
-      "\022\036.TransferStorageHandlerMessage\032\013.AckMe" +
-      "ssage\"\0002\332\003\n\nAdamSearch\022.\n\nCacheIndex\022\021.I" +
-      "ndexNameMessage\032\013.AckMessage\"\000\0220\n\013CacheE",
-      "ntity\022\022.EntityNameMessage\032\013.AckMessage\"\000" +
-      "\0222\n\007Preview\022\017.PreviewMessage\032\024.QueryResu" +
-      "ltsMessage\"\000\0220\n\007DoQuery\022\r.QueryMessage\032\024" +
-      ".QueryResultsMessage\"\000\022=\n\020DoStreamingQue" +
-      "ry\022\r.QueryMessage\032\024.QueryResultsMessage\"" +
-      "\000(\0010\001\022C\n\014DoBatchQuery\022\024.BatchedQueryMess" +
-      "age\032\033.BatchedQueryResultsMessage\"\000\022=\n\022Do" +
-      "ProgressiveQuery\022\r.QueryMessage\032\024.QueryR" +
-      "esultsMessage\"\0000\001\022A\n\020GetCachedResults\022\025." +
-      "CachedResultsMessage\032\024.QueryResultsMessa",
-      "ge\"\000B$\n\030org.vitrivr.adampro.grpcB\010AdamGr" +
-      "pcb\006proto3"
+      "aptScanMethodsMessage.OptionsEntry\022\035\n\top" +
+      "timizer\030\006 \001(\0162\n.Optimizer\032.\n\014OptionsEntr" +
+      "y\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"8\n\017Ind" +
+      "exCollection\022\024\n\020EXISTING_INDEXES\020\000\022\017\n\013NE" +
+      "W_INDEXES\020\001\"9\n\017QueryCollection\022\022\n\016LOGGED" +
+      "_QUERIES\020\000\022\022\n\016RANDOM_QUERIES\020\001\"s\n\026QueryS" +
+      "imulationMessage\022\016\n\006entity\030\001 \001(\t\022*\n\003nnq\030",
+      "\002 \001(\0132\035.NearestNeighbourQueryMessage\022\035\n\t" +
+      "optimizer\030\003 \001(\0162\n.Optimizer\":\n\025SparsifyE" +
+      "ntityMessage\022\016\n\006entity\030\001 \001(\t\022\021\n\tattribut" +
+      "e\030\002 \001(\t\"S\n\rImportMessage\022\014\n\004host\030\001 \001(\t\022\020" +
+      "\n\010database\030\002 \001(\t\022\020\n\010username\030\003 \001(\t\022\020\n\010pa" +
+      "ssword\030\004 \001(\t\"\"\n\022ProtoImportMessage\022\014\n\004pa" +
+      "th\030\001 \001(\t\"2\n\022ProtoExportMessage\022\014\n\004path\030\001" +
+      " \001(\t\022\016\n\006entity\030\002 \001(\t\"B\n\026StorageHandlersM" +
+      "essage\022(\n\010handlers\030\001 \003(\0132\026.StorageHandle" +
+      "rMessage\"M\n\025StorageHandlerMessage\022\014\n\004nam",
+      "e\030\001 \001(\t\022&\n\016attributetypes\030\002 \003(\0162\016.Attrib" +
+      "uteType\"T\n\035TransferStorageHandlerMessage" +
+      "\022\016\n\006entity\030\001 \001(\t\022\022\n\nattributes\030\002 \003(\t\022\017\n\007" +
+      "handler\030\003 \001(\t\"\213\004\n\014QueryMessage\022\017\n\007queryi" +
+      "d\030\001 \001(\t\022&\n\nprojection\030\002 \001(\0132\022.Projection" +
+      "Message\022\032\n\004from\030\003 \001(\0132\014.FromMessage\022 \n\002b" +
+      "q\030\006 \001(\0132\024.BooleanQueryMessage\022*\n\003nnq\030\007 \001" +
+      "(\0132\035.NearestNeighbourQueryMessage\022\r\n\005hin" +
+      "ts\030\010 \003(\t\022\022\n\nnoFallback\030\t \001(\010\022\014\n\004time\030\n \001" +
+      "(\003\022\025\n\rreadFromCache\030\013 \001(\010\022\022\n\nputInCache\030",
+      "\014 \001(\010\0223\n\013information\030\r \003(\0162\036.QueryMessag" +
+      "e.InformationLevel\"\306\001\n\020InformationLevel\022" +
+      "\031\n\025INFORMATION_FULL_TREE\020\000\022\036\n\032INFORMATIO" +
+      "N_LAST_STEP_ONLY\020\001\022$\n INFORMATION_INTERM" +
+      "EDIATE_RESULTS\020\002\022)\n%WITH_PROVENANCE_PART" +
+      "ITION_INFORMATION\020\003\022&\n\"WITH_PROVENANCE_S" +
+      "OURCE_INFORMATION\020\004\"\223\004\n\026ExpressionQueryM" +
+      "essage\022\017\n\007queryid\030\001 \001(\t\022(\n\004left\030\002 \001(\0132\032." +
+      "SubExpressionQueryMessage\0224\n\toperation\030\003" +
+      " \001(\0162!.ExpressionQueryMessage.Operation\022",
+      "5\n\005order\030\004 \001(\0162&.ExpressionQueryMessage." +
+      "OperationOrder\022)\n\005right\030\005 \001(\0132\032.SubExpre" +
+      "ssionQueryMessage\0225\n\007options\030\006 \003(\0132$.Exp" +
+      "ressionQueryMessage.OptionsEntry\032.\n\014Opti" +
+      "onsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001" +
+      "\"q\n\tOperation\022\020\n\014UNKNOWNEXPOP\020\000\022\t\n\005UNION" +
+      "\020\001\022\r\n\tINTERSECT\020\002\022\n\n\006EXCEPT\020\003\022\010\n\004JOIN\020\004\022" +
+      "\016\n\nFUZZYUNION\020\005\022\022\n\016FUZZYINTERSECT\020\006\"L\n\016O" +
+      "perationOrder\022\r\n\tUNKNOWNOO\020\000\022\r\n\tLEFTFIRS" +
+      "T\020\001\022\016\n\nRIGHTFIRST\020\002\022\014\n\010PARALLEL\020\003\"\255\001\n\031Su",
+      "bExpressionQueryMessage\022\017\n\007queryid\030\001 \001(\t" +
+      "\022\033\n\002qm\030\002 \001(\0132\r.QueryMessageH\000\022&\n\003eqm\030\003 \001" +
+      "(\0132\027.ExpressionQueryMessageH\000\022,\n\004ehqm\030\004 " +
+      "\001(\0132\034.ExternalHandlerQueryMessageH\000B\014\n\ns" +
+      "ubmessage\"\352\001\n\021ProjectionMessage\022;\n\nattri" +
+      "butes\030\001 \001(\0132\'.ProjectionMessage.Attribut" +
+      "eNameMessage\022(\n\002op\030\002 \001(\0162\034.ProjectionMes" +
+      "sage.Operation\032)\n\024AttributeNameMessage\022\021" +
+      "\n\tattribute\030\001 \003(\t\"C\n\tOperation\022\021\n\rUNKNOW" +
+      "NPROJOP\020\000\022\t\n\005COUNT\020\001\022\n\n\006EXISTS\020\002\022\014\n\010DIST",
+      "INCT\020\003\"\222\001\n\013FromMessage\022\020\n\006entity\030\001 \001(\tH\000" +
+      "\022\017\n\005index\030\002 \001(\tH\000\022$\n\007indexes\030\003 \001(\0132\021.Ind" +
+      "exListMessageH\000\0220\n\nexpression\030\004 \001(\0132\032.Su" +
+      "bExpressionQueryMessageH\000B\010\n\006source\"#\n\020I" +
+      "ndexListMessage\022\017\n\007indexes\030\001 \003(\t\"\264\002\n\034Nea" +
+      "restNeighbourQueryMessage\022\021\n\tattribute\030\001" +
+      " \001(\t\022\035\n\005query\030\002 \001(\0132\016.VectorMessage\022\037\n\007w" +
+      "eights\030\003 \001(\0132\016.VectorMessage\022\"\n\010distance" +
+      "\030\004 \001(\0132\020.DistanceMessage\022\t\n\001k\030\005 \001(\005\022;\n\007o" +
+      "ptions\030\006 \003(\0132*.NearestNeighbourQueryMess",
+      "age.OptionsEntry\022\021\n\tindexOnly\030\007 \001(\010\022\022\n\np" +
+      "artitions\030\010 \003(\005\032.\n\014OptionsEntry\022\013\n\003key\030\001" +
+      " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\234\003\n\017DistanceMess" +
+      "age\0223\n\014distancetype\030\001 \001(\0162\035.DistanceMess" +
+      "age.DistanceType\022.\n\007options\030\002 \003(\0132\035.Dist" +
+      "anceMessage.OptionsEntry\032.\n\014OptionsEntry" +
+      "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\363\001\n\014Dis" +
+      "tanceType\022\014\n\010UNKNOWND\020\000\022\016\n\nchisquared\020\001\022" +
+      "\017\n\013correlation\020\002\022\n\n\006cosine\020\003\022\013\n\007hamming\020" +
+      "\004\022\013\n\007jaccard\020\005\022\023\n\017kullbackleibler\020\006\022\r\n\tc",
+      "hebyshev\020\007\022\r\n\teuclidean\020\010\022\024\n\020squaredeucl" +
+      "idean\020\t\022\r\n\tmanhattan\020\n\022\r\n\tminkowski\020\013\022\014\n" +
+      "\010spannorm\020\014\022\n\n\006modulo\020\r\022\r\n\thaversine\020\016\"\306" +
+      "\001\n\023BooleanQueryMessage\0220\n\005where\030\001 \003(\0132!." +
+      "BooleanQueryMessage.WhereMessage\032K\n\014Wher" +
+      "eMessage\022\021\n\tattribute\030\001 \001(\t\022\034\n\006values\030\002 " +
+      "\003(\0132\014.DataMessage\022\n\n\002op\030\003 \001(\t\0320\n\013JoinMes" +
+      "sage\022\r\n\005table\030\001 \001(\t\022\022\n\nattributes\030\002 \003(\t\"" +
+      "\270\001\n\033ExternalHandlerQueryMessage\022\017\n\007query" +
+      "id\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\017\n\007handler\030\003 \001(",
+      "\t\0228\n\006params\030\004 \003(\0132(.ExternalHandlerQuery" +
+      "Message.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003ke" +
+      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\'\n\024CachedResu" +
+      "ltsMessage\022\017\n\007queryid\030\001 \001(\t\"5\n\023BatchedQu" +
+      "eryMessage\022\036\n\007queries\030\001 \003(\0132\r.QueryMessa" +
+      "ge\"+\n\016PreviewMessage\022\016\n\006entity\030\001 \001(\t\022\t\n\001" +
+      "n\030\002 \001(\005\"X\n\nAckMessage\022\036\n\004code\030\001 \001(\0162\020.Ac" +
+      "kMessage.Code\022\017\n\007message\030\002 \001(\t\"\031\n\004Code\022\t" +
+      "\n\005ERROR\020\000\022\006\n\002OK\020\001\"=\n\017EntitiesMessage\022\030\n\003" +
+      "ack\030\001 \001(\0132\013.AckMessage\022\020\n\010entities\030\002 \003(\t",
+      "\"b\n\036AvailableAttributeTypesMessage\022\030\n\003ac" +
+      "k\030\001 \001(\0132\013.AckMessage\022&\n\016attributetypes\030\002" +
+      " \003(\0162\016.AttributeType\"9\n\rExistsMessage\022\030\n" +
+      "\003ack\030\001 \001(\0132\013.AckMessage\022\016\n\006exists\030\002 \001(\010\"" +
+      "\252\001\n\016IndexesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMes" +
+      "sage\022-\n\007indexes\030\002 \003(\0132\034.IndexesMessage.I" +
+      "ndexMessage\032O\n\014IndexMessage\022\r\n\005index\030\001 \001" +
+      "(\t\022\021\n\tattribute\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\016" +
+      "2\n.IndexType\"\250\001\n\021PropertiesMessage\022\030\n\003ac" +
+      "k\030\001 \001(\0132\013.AckMessage\022\016\n\006entity\030\002 \001(\t\0226\n\n",
+      "properties\030\003 \003(\0132\".PropertiesMessage.Pro" +
+      "pertiesEntry\0321\n\017PropertiesEntry\022\013\n\003key\030\001" +
+      " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"[\n\023QueryResultsM" +
+      "essage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022*\n\tresp" +
+      "onses\030\002 \003(\0132\027.QueryResultInfoMessage\"\376\001\n" +
+      "\026QueryResultInfoMessage\022\030\n\003ack\030\001 \001(\0132\013.A" +
+      "ckMessage\022\017\n\007queryid\030\002 \001(\t\022\022\n\nconfidence" +
+      "\030\003 \001(\001\022\014\n\004time\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022/\n\004" +
+      "info\030\006 \003(\0132!.QueryResultInfoMessage.Info" +
+      "Entry\022)\n\007results\030\007 \003(\0132\030.QueryResultTupl",
+      "eMessage\032+\n\tInfoEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va" +
+      "lue\030\002 \001(\t:\0028\001\"\206\001\n\027QueryResultTupleMessag" +
+      "e\0220\n\004data\030\001 \003(\0132\".QueryResultTupleMessag" +
+      "e.DataEntry\0329\n\tDataEntry\022\013\n\003key\030\001 \001(\t\022\033\n" +
+      "\005value\030\002 \001(\0132\014.DataMessage:\0028\001\"[\n\025Export" +
+      "DataFileMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessag" +
+      "e\022\026\n\016definitionfile\030\002 \001(\014\022\020\n\010datafile\030\003 " +
+      "\001(\014\"C\n\032BatchedQueryResultsMessage\022%\n\007res" +
+      "ults\030\001 \003(\0132\024.QueryResultsMessage\"`\n\032Scor" +
+      "edExecutionPathMessage\022\r\n\005score\030\001 \001(\001\022\014\n",
+      "\004scan\030\002 \001(\t\022\020\n\010scantype\030\003 \001(\t\022\023\n\013descrip" +
+      "tion\030\004 \001(\t\"l\n\033ScoredExecutionPathsMessag" +
+      "e\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\0223\n\016execution" +
+      "paths\030\002 \003(\0132\033.ScoredExecutionPathMessage" +
+      "*\257\001\n\rAttributeType\022\014\n\010UNKOWNAT\020\000\022\010\n\004AUTO" +
+      "\020\001\022\010\n\004LONG\020\002\022\007\n\003INT\020\003\022\t\n\005FLOAT\020\004\022\n\n\006DOUB" +
+      "LE\020\005\022\n\n\006STRING\020\006\022\010\n\004TEXT\020\007\022\013\n\007BOOLEAN\020\010\022" +
+      "\n\n\006VECTOR\020\t\022\020\n\014SPARSEVECTOR\020\r\022\014\n\010GEOMETR" +
+      "Y\020\n\022\r\n\tGEOGRAPHY\020\013*_\n\tIndexType\022\r\n\tUNKNO" +
+      "WNIT\020\000\022\007\n\003ecp\020\001\022\007\n\003lsh\020\002\022\006\n\002mi\020\003\022\006\n\002pq\020\004",
+      "\022\006\n\002sh\020\005\022\007\n\003vaf\020\006\022\007\n\003vav\020\007\022\007\n\003vap\020\010*3\n\tO" +
+      "ptimizer\022\021\n\rSVM_OPTIMIZER\020\000\022\023\n\017NAIVE_OPT" +
+      "IMIZER\020\0012\260\014\n\016AdamDefinition\0223\n\014CreateEnt" +
+      "ity\022\024.CreateEntityMessage\032\013.AckMessage\"\000" +
+      "\022K\n\027AvailableAttributeTypes\022\r.EmptyMessa" +
+      "ge\032\037.AvailableAttributeTypesMessage\"\000\022*\n" +
+      "\005Count\022\022.EntityNameMessage\032\013.AckMessage\"" +
+      "\000\022/\n\nDropEntity\022\022.EntityNameMessage\032\013.Ac" +
+      "kMessage\"\000\0224\n\014ExistsEntity\022\022.EntityNameM" +
+      "essage\032\016.ExistsMessage\"\000\022\'\n\006Insert\022\016.Ins",
+      "ertMessage\032\013.AckMessage\"\000\0221\n\014StreamInser" +
+      "t\022\016.InsertMessage\032\013.AckMessage\"\000(\0010\001\0221\n\014" +
+      "VacuumEntity\022\022.EntityNameMessage\032\013.AckMe" +
+      "ssage\"\000\022\'\n\006Delete\022\016.DeleteMessage\032\013.AckM" +
+      "essage\"\000\022%\n\005Index\022\r.IndexMessage\032\013.AckMe" +
+      "ssage\"\000\0222\n\022GenerateAllIndexes\022\r.IndexMes" +
+      "sage\032\013.AckMessage\"\000\022.\n\013ExistsIndex\022\r.Ind" +
+      "exMessage\032\016.ExistsMessage\"\000\022-\n\tDropIndex" +
+      "\022\021.IndexNameMessage\032\013.AckMessage\"\000\0224\n\013Li" +
+      "stIndexes\022\022.EntityNameMessage\032\017.IndexesM",
+      "essage\"\000\022?\n\022GenerateRandomData\022\032.Generat" +
+      "eRandomDataMessage\032\013.AckMessage\"\000\0221\n\014Lis" +
+      "tEntities\022\r.EmptyMessage\032\020.EntitiesMessa" +
+      "ge\"\000\022E\n\023GetEntityProperties\022\030.EntityProp" +
+      "ertiesMessage\032\022.PropertiesMessage\"\000\022K\n\026G" +
+      "etAttributeProperties\022\033.AttributePropert" +
+      "iesMessage\032\022.PropertiesMessage\"\000\022C\n\022GetI" +
+      "ndexProperties\022\027.IndexPropertiesMessage\032" +
+      "\022.PropertiesMessage\"\000\022;\n\025RepartitionEnti" +
+      "tyData\022\023.RepartitionMessage\032\013.AckMessage",
+      "\"\000\022:\n\024RepartitionIndexData\022\023.Repartition" +
+      "Message\032\013.AckMessage\"\000\022;\n\020AdaptScanMetho" +
+      "ds\022\030.AdaptScanMethodsMessage\032\013.AckMessag" +
+      "e\"\000\0227\n\016SparsifyEntity\022\026.SparsifyEntityMe" +
+      "ssage\032\013.AckMessage\"\000\022+\n\nImportData\022\016.Imp" +
+      "ortMessage\032\013.AckMessage\"\000\0227\n\017ProtoImport" +
+      "Data\022\023.ProtoImportMessage\032\013.AckMessage\"\000" +
+      "0\001\0225\n\017ProtoExportData\022\023.ProtoExportMessa" +
+      "ge\032\013.AckMessage\"\000\022?\n\023ListStorageHandlers" +
+      "\022\r.EmptyMessage\032\027.StorageHandlersMessage",
+      "\"\000\022G\n\026TransferStorageHandler\022\036.TransferS" +
+      "torageHandlerMessage\032\013.AckMessage\"\0002\351\004\n\n" +
+      "AdamSearch\022.\n\nCacheIndex\022\021.IndexNameMess" +
+      "age\032\013.AckMessage\"\000\0220\n\013CacheEntity\022\022.Enti" +
+      "tyNameMessage\032\013.AckMessage\"\000\0222\n\007Preview\022" +
+      "\017.PreviewMessage\032\024.QueryResultsMessage\"\000" +
+      "\0220\n\007DoQuery\022\r.QueryMessage\032\024.QueryResult" +
+      "sMessage\"\000\022=\n\020DoStreamingQuery\022\r.QueryMe" +
+      "ssage\032\024.QueryResultsMessage\"\000(\0010\001\022C\n\014DoB" +
+      "atchQuery\022\024.BatchedQueryMessage\032\033.Batche",
+      "dQueryResultsMessage\"\000\022:\n\017DoParallelQuer" +
+      "y\022\r.QueryMessage\032\024.QueryResultsMessage\"\000" +
+      "0\001\022=\n\022DoProgressiveQuery\022\r.QueryMessage\032" +
+      "\024.QueryResultsMessage\"\0000\001\022A\n\020GetCachedRe" +
+      "sults\022\025.CachedResultsMessage\032\024.QueryResu" +
+      "ltsMessage\"\000\022Q\n\026GetScoredExecutionPath\022\027" +
+      ".QuerySimulationMessage\032\034.ScoredExecutio" +
+      "nPathsMessage\"\000B$\n\030org.vitrivr.adampro.g" +
+      "rpcB\010AdamGrpcb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -53822,75 +56938,87 @@ public final class AdamGrpc {
     internal_static_AdaptScanMethodsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_AdaptScanMethodsMessage_descriptor,
-        new java.lang.String[] { "Entity", "Attribute", "Ic", "Qc", "Options", });
+        new java.lang.String[] { "Entity", "Attribute", "Ic", "Qc", "Options", "Optimizer", });
     internal_static_AdaptScanMethodsMessage_OptionsEntry_descriptor =
       internal_static_AdaptScanMethodsMessage_descriptor.getNestedTypes().get(0);
     internal_static_AdaptScanMethodsMessage_OptionsEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_AdaptScanMethodsMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_SparsifyEntityMessage_descriptor =
+    internal_static_QuerySimulationMessage_descriptor =
       getDescriptor().getMessageTypes().get(21);
+    internal_static_QuerySimulationMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_QuerySimulationMessage_descriptor,
+        new java.lang.String[] { "Entity", "Nnq", "Optimizer", });
+    internal_static_SparsifyEntityMessage_descriptor =
+      getDescriptor().getMessageTypes().get(22);
     internal_static_SparsifyEntityMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SparsifyEntityMessage_descriptor,
         new java.lang.String[] { "Entity", "Attribute", });
     internal_static_ImportMessage_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_ImportMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ImportMessage_descriptor,
         new java.lang.String[] { "Host", "Database", "Username", "Password", });
     internal_static_ProtoImportMessage_descriptor =
-      getDescriptor().getMessageTypes().get(23);
+      getDescriptor().getMessageTypes().get(24);
     internal_static_ProtoImportMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ProtoImportMessage_descriptor,
         new java.lang.String[] { "Path", });
     internal_static_ProtoExportMessage_descriptor =
-      getDescriptor().getMessageTypes().get(24);
+      getDescriptor().getMessageTypes().get(25);
     internal_static_ProtoExportMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ProtoExportMessage_descriptor,
         new java.lang.String[] { "Path", "Entity", });
     internal_static_StorageHandlersMessage_descriptor =
-      getDescriptor().getMessageTypes().get(25);
+      getDescriptor().getMessageTypes().get(26);
     internal_static_StorageHandlersMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_StorageHandlersMessage_descriptor,
         new java.lang.String[] { "Handlers", });
     internal_static_StorageHandlerMessage_descriptor =
-      getDescriptor().getMessageTypes().get(26);
+      getDescriptor().getMessageTypes().get(27);
     internal_static_StorageHandlerMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_StorageHandlerMessage_descriptor,
         new java.lang.String[] { "Name", "Attributetypes", });
     internal_static_TransferStorageHandlerMessage_descriptor =
-      getDescriptor().getMessageTypes().get(27);
+      getDescriptor().getMessageTypes().get(28);
     internal_static_TransferStorageHandlerMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_TransferStorageHandlerMessage_descriptor,
         new java.lang.String[] { "Entity", "Attributes", "Handler", });
     internal_static_QueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(28);
+      getDescriptor().getMessageTypes().get(29);
     internal_static_QueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Projection", "From", "Bq", "Nnq", "Hints", "NoFallback", "Time", "ReadFromCache", "PutInCache", "Information", });
     internal_static_ExpressionQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(29);
+      getDescriptor().getMessageTypes().get(30);
     internal_static_ExpressionQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ExpressionQueryMessage_descriptor,
-        new java.lang.String[] { "Queryid", "Left", "Operation", "Order", "Right", });
+        new java.lang.String[] { "Queryid", "Left", "Operation", "Order", "Right", "Options", });
+    internal_static_ExpressionQueryMessage_OptionsEntry_descriptor =
+      internal_static_ExpressionQueryMessage_descriptor.getNestedTypes().get(0);
+    internal_static_ExpressionQueryMessage_OptionsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ExpressionQueryMessage_OptionsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     internal_static_SubExpressionQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(30);
+      getDescriptor().getMessageTypes().get(31);
     internal_static_SubExpressionQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SubExpressionQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Qm", "Eqm", "Ehqm", "Submessage", });
     internal_static_ProjectionMessage_descriptor =
-      getDescriptor().getMessageTypes().get(31);
+      getDescriptor().getMessageTypes().get(32);
     internal_static_ProjectionMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ProjectionMessage_descriptor,
@@ -53902,19 +57030,19 @@ public final class AdamGrpc {
         internal_static_ProjectionMessage_AttributeNameMessage_descriptor,
         new java.lang.String[] { "Attribute", });
     internal_static_FromMessage_descriptor =
-      getDescriptor().getMessageTypes().get(32);
+      getDescriptor().getMessageTypes().get(33);
     internal_static_FromMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_FromMessage_descriptor,
         new java.lang.String[] { "Entity", "Index", "Indexes", "Expression", "Source", });
     internal_static_IndexListMessage_descriptor =
-      getDescriptor().getMessageTypes().get(33);
+      getDescriptor().getMessageTypes().get(34);
     internal_static_IndexListMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_IndexListMessage_descriptor,
         new java.lang.String[] { "Indexes", });
     internal_static_NearestNeighbourQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(34);
+      getDescriptor().getMessageTypes().get(35);
     internal_static_NearestNeighbourQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NearestNeighbourQueryMessage_descriptor,
@@ -53926,7 +57054,7 @@ public final class AdamGrpc {
         internal_static_NearestNeighbourQueryMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DistanceMessage_descriptor =
-      getDescriptor().getMessageTypes().get(35);
+      getDescriptor().getMessageTypes().get(36);
     internal_static_DistanceMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DistanceMessage_descriptor,
@@ -53938,7 +57066,7 @@ public final class AdamGrpc {
         internal_static_DistanceMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_BooleanQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(36);
+      getDescriptor().getMessageTypes().get(37);
     internal_static_BooleanQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BooleanQueryMessage_descriptor,
@@ -53956,7 +57084,7 @@ public final class AdamGrpc {
         internal_static_BooleanQueryMessage_JoinMessage_descriptor,
         new java.lang.String[] { "Table", "Attributes", });
     internal_static_ExternalHandlerQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(37);
+      getDescriptor().getMessageTypes().get(38);
     internal_static_ExternalHandlerQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ExternalHandlerQueryMessage_descriptor,
@@ -53968,49 +57096,49 @@ public final class AdamGrpc {
         internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_CachedResultsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(38);
+      getDescriptor().getMessageTypes().get(39);
     internal_static_CachedResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CachedResultsMessage_descriptor,
         new java.lang.String[] { "Queryid", });
     internal_static_BatchedQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(39);
+      getDescriptor().getMessageTypes().get(40);
     internal_static_BatchedQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BatchedQueryMessage_descriptor,
         new java.lang.String[] { "Queries", });
     internal_static_PreviewMessage_descriptor =
-      getDescriptor().getMessageTypes().get(40);
+      getDescriptor().getMessageTypes().get(41);
     internal_static_PreviewMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PreviewMessage_descriptor,
         new java.lang.String[] { "Entity", "N", });
     internal_static_AckMessage_descriptor =
-      getDescriptor().getMessageTypes().get(41);
+      getDescriptor().getMessageTypes().get(42);
     internal_static_AckMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_AckMessage_descriptor,
         new java.lang.String[] { "Code", "Message", });
     internal_static_EntitiesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(42);
+      getDescriptor().getMessageTypes().get(43);
     internal_static_EntitiesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_EntitiesMessage_descriptor,
         new java.lang.String[] { "Ack", "Entities", });
     internal_static_AvailableAttributeTypesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(43);
+      getDescriptor().getMessageTypes().get(44);
     internal_static_AvailableAttributeTypesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_AvailableAttributeTypesMessage_descriptor,
         new java.lang.String[] { "Ack", "Attributetypes", });
     internal_static_ExistsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(44);
+      getDescriptor().getMessageTypes().get(45);
     internal_static_ExistsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ExistsMessage_descriptor,
         new java.lang.String[] { "Ack", "Exists", });
     internal_static_IndexesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(45);
+      getDescriptor().getMessageTypes().get(46);
     internal_static_IndexesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_IndexesMessage_descriptor,
@@ -54022,7 +57150,7 @@ public final class AdamGrpc {
         internal_static_IndexesMessage_IndexMessage_descriptor,
         new java.lang.String[] { "Index", "Attribute", "Indextype", });
     internal_static_PropertiesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(46);
+      getDescriptor().getMessageTypes().get(47);
     internal_static_PropertiesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PropertiesMessage_descriptor,
@@ -54034,13 +57162,13 @@ public final class AdamGrpc {
         internal_static_PropertiesMessage_PropertiesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_QueryResultsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(47);
+      getDescriptor().getMessageTypes().get(48);
     internal_static_QueryResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QueryResultsMessage_descriptor,
         new java.lang.String[] { "Ack", "Responses", });
     internal_static_QueryResultInfoMessage_descriptor =
-      getDescriptor().getMessageTypes().get(48);
+      getDescriptor().getMessageTypes().get(49);
     internal_static_QueryResultInfoMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QueryResultInfoMessage_descriptor,
@@ -54052,7 +57180,7 @@ public final class AdamGrpc {
         internal_static_QueryResultInfoMessage_InfoEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_QueryResultTupleMessage_descriptor =
-      getDescriptor().getMessageTypes().get(49);
+      getDescriptor().getMessageTypes().get(50);
     internal_static_QueryResultTupleMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QueryResultTupleMessage_descriptor,
@@ -54064,17 +57192,29 @@ public final class AdamGrpc {
         internal_static_QueryResultTupleMessage_DataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_ExportDataFileMessage_descriptor =
-      getDescriptor().getMessageTypes().get(50);
+      getDescriptor().getMessageTypes().get(51);
     internal_static_ExportDataFileMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ExportDataFileMessage_descriptor,
         new java.lang.String[] { "Ack", "Definitionfile", "Datafile", });
     internal_static_BatchedQueryResultsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(51);
+      getDescriptor().getMessageTypes().get(52);
     internal_static_BatchedQueryResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BatchedQueryResultsMessage_descriptor,
         new java.lang.String[] { "Results", });
+    internal_static_ScoredExecutionPathMessage_descriptor =
+      getDescriptor().getMessageTypes().get(53);
+    internal_static_ScoredExecutionPathMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ScoredExecutionPathMessage_descriptor,
+        new java.lang.String[] { "Score", "Scan", "Scantype", "Description", });
+    internal_static_ScoredExecutionPathsMessage_descriptor =
+      getDescriptor().getMessageTypes().get(54);
+    internal_static_ScoredExecutionPathsMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ScoredExecutionPathsMessage_descriptor,
+        new java.lang.String[] { "Ack", "Executionpaths", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
