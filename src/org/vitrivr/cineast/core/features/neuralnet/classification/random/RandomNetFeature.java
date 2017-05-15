@@ -85,7 +85,6 @@ public class RandomNetFeature extends NeuralNetFeature {
         LOGGER.traceExit();
     }
 
-    @SuppressWarnings("unchecked")
     private void persistTuple(PersistentTuple tuple) {
         classificationWriter.persist(tuple);
     }

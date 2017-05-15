@@ -18,11 +18,13 @@ public interface PersistencyWriter <R> {
 	
 	boolean exists(String key, String value);
 	
-	PersistentTuple<R> generateTuple(Object...objects);
+	PersistentTuple generateTuple(Object...objects);
 	
-	boolean persist(PersistentTuple<R> tuple);
+	boolean persist(PersistentTuple tuple);
 
 	void setFieldNames(String...names);
 
   boolean persist(List<PersistentTuple> tuples);
+  
+  R getPersistentRepresentation(PersistentTuple tuple);
 }

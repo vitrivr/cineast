@@ -34,7 +34,6 @@ public class MotionHistogram extends SubDivMotionHistogram {
     }
   }
 
-  @SuppressWarnings("unchecked")
   protected void persist(String shotId, double sum, ReadableFloatVector fs) {
     PersistentTuple tuple = this.phandler.generateTuple(shotId, sum, fs);
     this.phandler.persist(tuple);

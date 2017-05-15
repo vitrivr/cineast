@@ -124,7 +124,6 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
         LOGGER.traceExit();
     }
 
-    @SuppressWarnings("unchecked")
     private void persistTuple(PersistentTuple tuple) {
         classificationWriter.persist(tuple);
     }

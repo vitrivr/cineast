@@ -60,7 +60,6 @@ public class Copier {
 		this.writer.close();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void persistTuple(PersistentTuple tuple) {
 		this.writer.persist(tuple);
 	}
@@ -91,14 +90,12 @@ public class Copier {
     
     Object[] objects = new Object[names.length];
     
-    @SuppressWarnings("rawtypes")
     ArrayList<PersistentTuple> tupleCache = new ArrayList<>(batchSize);
     
     do{
       for(i = 0; i < names.length; ++i){
         objects[i] = PrimitiveTypeProvider.getObject(map.get(names[i]));
       }
-      @SuppressWarnings("rawtypes")
       PersistentTuple tuple = this.writer.generateTuple(objects);
       tupleCache.add(tuple);
       if(tupleCache.size() >= batchSize){

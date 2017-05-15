@@ -57,7 +57,6 @@ public class ForegroundBoundingBox extends AbstractFeatureModule {
 
   private float[] arrayCache = null;
 
-  @SuppressWarnings("unchecked")
   protected void persist(String shotId, long frameIdx, FloatVector fs) {
     PersistentTuple tuple = this.phandler
         .generateTuple(shotId, frameIdx, arrayCache = ReadableFloatVector
