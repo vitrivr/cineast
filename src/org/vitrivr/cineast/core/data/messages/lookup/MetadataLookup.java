@@ -15,7 +15,7 @@ public class MetadataLookup implements Message {
     /**
      *
      */
-    private String[] objectids;
+    private String[] objectIds;
 
     /**
      *
@@ -28,8 +28,8 @@ public class MetadataLookup implements Message {
      * @param domains
      */
     @JsonCreator
-    public MetadataLookup(@JsonProperty("objectids") String[] objectids, @JsonProperty("domains") String[] domains) {
-        this.objectids = objectids;
+    public MetadataLookup(@JsonProperty("objectIds") String[] objectids, @JsonProperty("domains") String[] domains) {
+        this.objectIds = objectids;
         this.domains = domains;
     }
 
@@ -38,7 +38,7 @@ public class MetadataLookup implements Message {
      * @return
      */
     public String[] getObjectids() {
-        return this.objectids;
+        return this.objectIds;
     }
 
     /**
