@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindMetadatasByIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectAllActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectByActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectSimilarActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentSimilarActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectsByIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentAllByObjectIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentsByIdActionHandler;
@@ -68,7 +68,7 @@ public class RestfulAPI {
       
       http.get("/segments/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
             
-      http.post("/segments/similar/", new FindObjectSimilarActionHandler());
+      http.post("/segments/similar/", new FindSegmentSimilarActionHandler());
       
       http.post("/segments/by/id", new FindSegmentsByIdActionHandler());
       http.post("/objects/by/id", new FindObjectsByIdActionHandler());

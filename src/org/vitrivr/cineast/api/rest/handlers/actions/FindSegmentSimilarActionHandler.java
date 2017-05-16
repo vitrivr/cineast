@@ -25,7 +25,7 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
  * @version 1.0
  * @created 11.01.17
  */
-public class FindObjectSimilarActionHandler extends ParsingActionHandler<Query> {
+public class FindSegmentSimilarActionHandler extends ParsingActionHandler<Query> {
   @Override
   public SimilarityQueryResultBatch invoke(Query query, Map<String, String> parameters) { //FIXME duplicate fusion logic
 
