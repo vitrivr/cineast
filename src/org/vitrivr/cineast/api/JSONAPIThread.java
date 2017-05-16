@@ -46,6 +46,7 @@ import org.vitrivr.cineast.explorative.PlaneManager;
  * Handles connection to and from the Client As the name of the class suggests,
  * communication is done via JSON-Objects
  */
+@Deprecated
 public class JSONAPIThread extends Thread {
 
   private Socket socket = null;

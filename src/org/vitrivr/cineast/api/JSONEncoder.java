@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-
+@Deprecated
 public final class JSONEncoder {
 
 	private JSONEncoder(){}
