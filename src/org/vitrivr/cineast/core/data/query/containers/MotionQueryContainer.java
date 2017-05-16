@@ -80,7 +80,7 @@ public class MotionQueryContainer implements QueryContainer {
       _return.addPath(path);
     }
     
-    JsonNode background = jsonNode.get("foreground");
+    JsonNode background = jsonNode.get("background");
     list = nodeToList(background);
     for(LinkedList<Point2D_F32> path : list){
       _return.addBgPath(path);
