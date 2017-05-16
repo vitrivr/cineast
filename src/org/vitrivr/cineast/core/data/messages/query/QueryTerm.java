@@ -15,6 +15,7 @@ import org.vitrivr.cineast.core.data.query.containers.AudioQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.InstantQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.LocationQueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.MotionQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
@@ -59,6 +60,8 @@ public class QueryTerm {
         // FIXME: image can be null
         BufferedImage image = WebUtils.dataURLtoBufferedImage(this.data);
         return new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(image));
+      case MOTION:
+        return MotionQueryContainer.fromJson(jsonProvider.toJsonNode(this.data));
       case AUDIO:
         List<AudioFrame> lists = WebUtils.dataURLtoAudioFrames(this.data);
         return new AudioQueryContainer(lists);
