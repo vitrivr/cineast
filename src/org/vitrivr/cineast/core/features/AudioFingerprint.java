@@ -230,6 +230,7 @@ public class AudioFingerprint extends StagedFeatureModule {
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
                 .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
-                .setDistanceIfEmpty(QueryConfig.Distance.manhattan);
+                .setDistanceIfEmpty(QueryConfig.Distance.manhattan)
+                .addHint(ReadableQueryConfig.Hints.inexact);
     }
 }
