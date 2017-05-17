@@ -144,9 +144,7 @@ public class API {
   private static void handleWebsocketStart() {
     if (!WebsocketAPI.isRunning()) {
       System.out.println("Starting WebSocket API...");
-      int port = Config.sharedConfig().getApi().getHttpPort();
-      int threadPoolSize = Config.sharedConfig().getApi().getThreadPoolSize();
-      WebsocketAPI.start(port, threadPoolSize);
+      WebsocketAPI.start(Config.sharedConfig().getApi());
       System.out.println("WebSocket API started!");
     } else {
       System.err.println("WebSocket API is already running...");

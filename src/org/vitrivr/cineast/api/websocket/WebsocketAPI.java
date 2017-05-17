@@ -11,6 +11,7 @@ import org.vitrivr.cineast.api.websocket.handlers.queries.MoreLikeThisQueryMessa
 import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
+import org.vitrivr.cineast.core.config.APIConfig;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
@@ -74,16 +75,19 @@ public class WebsocketAPI {
     /**
      * Starts the WebSocket API.
      *
-     * @param port Port on which the WebSocket endpoint should listen.
-     * @param numberOfThreads Maximum number of threads that should be used to handle messages.
+     * @param config APIConfig object.
      */
-    public static void start(int port, int numberOfThreads) {
-        if (port > 0 && port < 65535) {
-            Spark.port(port);
+    public static void start(APIConfig config) {
+        if (config.getHttpPort() > 0 && config.getHttpPort() < 65535) {
+            Spark.port(config.getHttpPort());
         } else {
-            LOGGER.warn("The specified port {} is not valid. Fallback to default port.", port);
+            LOGGER.warn("The specified port {} is not valid. Fallback to default port.", config.getHttpPort());
         }
-        Spark.threadPool(numberOfThreads, 2, 30000);
+        Spark.threadPool(config.getThreadPoolSize(), 2, 30000);
+        if (config.isSecure()) {
+            Spark.secure(config.getKeystore(), config.getKeystorePassword(), null, null);
+        }
+
         Spark.webSocket(String.format("/%s/%s", CONTEXT, VERSION), WebsocketAPI.class);
         Spark.init();
         Spark.awaitInitialization();

@@ -7,9 +7,12 @@ public final class APIConfig {
 
 	private boolean enableWebsocket = true;
 	private boolean enableRest = false;
+	private boolean secure = false;
+	private String keystore;
+	private String keystorePassword;
+
 	private int httpPort = 4567;
 	private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
-
 
 	private boolean enableLegacy = false;
 	private int legacyPort = 12345;
@@ -34,6 +37,30 @@ public final class APIConfig {
 	public boolean getEnableRest() {return this.enableRest;}
 	public void setEnableRest(boolean enableRest) {
 		this.enableRest = enableRest;
+	}
+
+	@JsonProperty
+	public boolean isSecure() {
+		return secure;
+	}
+	public void setSecure(boolean secure) {
+		this.secure = secure;
+	}
+
+	@JsonProperty
+	public String getKeystore() {
+		return keystore;
+	}
+	public void setKeystore(String keystore) {
+		this.keystore = keystore;
+	}
+
+	@JsonProperty
+	public String getKeystorePassword() {
+		return keystorePassword;
+	}
+	public void setKeystorePassword(String keystorePassword) {
+		this.keystorePassword = keystorePassword;
 	}
 
 	@JsonProperty
