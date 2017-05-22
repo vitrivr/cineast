@@ -36,7 +36,8 @@ import java.util.concurrent.Callable;
  * @version 1.0
  * @created 05.05.17
  */
-public class EvaluationRuntime implements Callable {
+public class
+EvaluationRuntime implements Callable {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -198,7 +199,7 @@ public class EvaluationRuntime implements Callable {
             SegmentScoreElement score = scores.get(k-1);
             MultimediaObjectDescriptor object = this.objectDescriptorForId(score.getSegmentId());
             if (object != null) {
-                if (fileClass.equals(result.getCl())) {
+                if (gt.classForDocId(object.getName()).orElse("<none>").equals(fileClass)) {
                     result.documentAvailable(object.getName(), k, true);
                 } else {
                     result.documentAvailable(object.getName(), k, false);
