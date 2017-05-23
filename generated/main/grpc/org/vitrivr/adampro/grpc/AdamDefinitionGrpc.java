@@ -127,13 +127,13 @@ public class AdamDefinitionGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.IndexMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.IndexMessage,
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage> METHOD_EXISTS_INDEX =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
               "AdamDefinition", "ExistsIndex"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.IndexMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage.getDefaultInstance()));
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage,
@@ -389,7 +389,7 @@ public class AdamDefinitionGrpc {
 
     /**
      */
-    public void existsIndex(org.vitrivr.adampro.grpc.AdamGrpc.IndexMessage request,
+    public void existsIndex(org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_EXISTS_INDEX, responseObserver);
     }
@@ -595,7 +595,7 @@ public class AdamDefinitionGrpc {
             METHOD_EXISTS_INDEX,
             asyncUnaryCall(
               new MethodHandlers<
-                org.vitrivr.adampro.grpc.AdamGrpc.IndexMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage,
                 org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage>(
                   this, METHODID_EXISTS_INDEX)))
           .addMethod(
@@ -825,7 +825,7 @@ public class AdamDefinitionGrpc {
 
     /**
      */
-    public void existsIndex(org.vitrivr.adampro.grpc.AdamGrpc.IndexMessage request,
+    public void existsIndex(org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage request,
         io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_EXISTS_INDEX, getCallOptions()), request, responseObserver);
@@ -1059,7 +1059,7 @@ public class AdamDefinitionGrpc {
 
     /**
      */
-    public org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage existsIndex(org.vitrivr.adampro.grpc.AdamGrpc.IndexMessage request) {
+    public org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage existsIndex(org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_EXISTS_INDEX, getCallOptions(), request);
     }
@@ -1288,7 +1288,7 @@ public class AdamDefinitionGrpc {
     /**
      */
     public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage> existsIndex(
-        org.vitrivr.adampro.grpc.AdamGrpc.IndexMessage request) {
+        org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_EXISTS_INDEX, getCallOptions()), request);
     }
@@ -1507,7 +1507,7 @@ public class AdamDefinitionGrpc {
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
           break;
         case METHODID_EXISTS_INDEX:
-          serviceImpl.existsIndex((org.vitrivr.adampro.grpc.AdamGrpc.IndexMessage) request,
+          serviceImpl.existsIndex((org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage>) responseObserver);
           break;
         case METHODID_DROP_INDEX:

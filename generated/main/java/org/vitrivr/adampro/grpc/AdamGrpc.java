@@ -17107,6 +17107,996 @@ public final class AdamGrpc {
 
   }
 
+  public interface IndexExistsMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:IndexExistsMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    java.lang.String getEntity();
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getEntityBytes();
+
+    /**
+     * <code>optional string attribute = 2;</code>
+     */
+    java.lang.String getAttribute();
+    /**
+     * <code>optional string attribute = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAttributeBytes();
+
+    /**
+     * <code>optional .IndexType indextype = 3;</code>
+     */
+    int getIndextypeValue();
+    /**
+     * <code>optional .IndexType indextype = 3;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.IndexType getIndextype();
+
+    /**
+     * <code>optional .DistanceMessage distance = 4;</code>
+     */
+    boolean hasDistance();
+    /**
+     * <code>optional .DistanceMessage distance = 4;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage getDistance();
+    /**
+     * <code>optional .DistanceMessage distance = 4;</code>
+     */
+    org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessageOrBuilder getDistanceOrBuilder();
+
+    /**
+     * <code>optional bool acceptStale = 5;</code>
+     */
+    boolean getAcceptStale();
+  }
+  /**
+   * Protobuf type {@code IndexExistsMessage}
+   */
+  public  static final class IndexExistsMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:IndexExistsMessage)
+      IndexExistsMessageOrBuilder {
+    // Use IndexExistsMessage.newBuilder() to construct.
+    private IndexExistsMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private IndexExistsMessage() {
+      entity_ = "";
+      attribute_ = "";
+      indextype_ = 0;
+      acceptStale_ = false;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private IndexExistsMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              entity_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              attribute_ = s;
+              break;
+            }
+            case 24: {
+              int rawValue = input.readEnum();
+
+              indextype_ = rawValue;
+              break;
+            }
+            case 34: {
+              org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.Builder subBuilder = null;
+              if (distance_ != null) {
+                subBuilder = distance_.toBuilder();
+              }
+              distance_ = input.readMessage(org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(distance_);
+                distance_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 40: {
+
+              acceptStale_ = input.readBool();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_IndexExistsMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_IndexExistsMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage.Builder.class);
+    }
+
+    public static final int ENTITY_FIELD_NUMBER = 1;
+    private volatile java.lang.Object entity_;
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    public java.lang.String getEntity() {
+      java.lang.Object ref = entity_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        entity_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string entity = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEntityBytes() {
+      java.lang.Object ref = entity_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        entity_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ATTRIBUTE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object attribute_;
+    /**
+     * <code>optional string attribute = 2;</code>
+     */
+    public java.lang.String getAttribute() {
+      java.lang.Object ref = attribute_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        attribute_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string attribute = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAttributeBytes() {
+      java.lang.Object ref = attribute_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        attribute_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int INDEXTYPE_FIELD_NUMBER = 3;
+    private int indextype_;
+    /**
+     * <code>optional .IndexType indextype = 3;</code>
+     */
+    public int getIndextypeValue() {
+      return indextype_;
+    }
+    /**
+     * <code>optional .IndexType indextype = 3;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.IndexType getIndextype() {
+      org.vitrivr.adampro.grpc.AdamGrpc.IndexType result = org.vitrivr.adampro.grpc.AdamGrpc.IndexType.valueOf(indextype_);
+      return result == null ? org.vitrivr.adampro.grpc.AdamGrpc.IndexType.UNRECOGNIZED : result;
+    }
+
+    public static final int DISTANCE_FIELD_NUMBER = 4;
+    private org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage distance_;
+    /**
+     * <code>optional .DistanceMessage distance = 4;</code>
+     */
+    public boolean hasDistance() {
+      return distance_ != null;
+    }
+    /**
+     * <code>optional .DistanceMessage distance = 4;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage getDistance() {
+      return distance_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.getDefaultInstance() : distance_;
+    }
+    /**
+     * <code>optional .DistanceMessage distance = 4;</code>
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessageOrBuilder getDistanceOrBuilder() {
+      return getDistance();
+    }
+
+    public static final int ACCEPTSTALE_FIELD_NUMBER = 5;
+    private boolean acceptStale_;
+    /**
+     * <code>optional bool acceptStale = 5;</code>
+     */
+    public boolean getAcceptStale() {
+      return acceptStale_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getEntityBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, entity_);
+      }
+      if (!getAttributeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, attribute_);
+      }
+      if (indextype_ != org.vitrivr.adampro.grpc.AdamGrpc.IndexType.UNKNOWNIT.getNumber()) {
+        output.writeEnum(3, indextype_);
+      }
+      if (distance_ != null) {
+        output.writeMessage(4, getDistance());
+      }
+      if (acceptStale_ != false) {
+        output.writeBool(5, acceptStale_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getEntityBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, entity_);
+      }
+      if (!getAttributeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, attribute_);
+      }
+      if (indextype_ != org.vitrivr.adampro.grpc.AdamGrpc.IndexType.UNKNOWNIT.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(3, indextype_);
+      }
+      if (distance_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, getDistance());
+      }
+      if (acceptStale_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(5, acceptStale_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage)) {
+        return super.equals(obj);
+      }
+      org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage other = (org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage) obj;
+
+      boolean result = true;
+      result = result && getEntity()
+          .equals(other.getEntity());
+      result = result && getAttribute()
+          .equals(other.getAttribute());
+      result = result && indextype_ == other.indextype_;
+      result = result && (hasDistance() == other.hasDistance());
+      if (hasDistance()) {
+        result = result && getDistance()
+            .equals(other.getDistance());
+      }
+      result = result && (getAcceptStale()
+          == other.getAcceptStale());
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      hash = (37 * hash) + ENTITY_FIELD_NUMBER;
+      hash = (53 * hash) + getEntity().hashCode();
+      hash = (37 * hash) + ATTRIBUTE_FIELD_NUMBER;
+      hash = (53 * hash) + getAttribute().hashCode();
+      hash = (37 * hash) + INDEXTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + indextype_;
+      if (hasDistance()) {
+        hash = (37 * hash) + DISTANCE_FIELD_NUMBER;
+        hash = (53 * hash) + getDistance().hashCode();
+      }
+      hash = (37 * hash) + ACCEPTSTALE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getAcceptStale());
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code IndexExistsMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:IndexExistsMessage)
+        org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_IndexExistsMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_IndexExistsMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage.class, org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage.Builder.class);
+      }
+
+      // Construct using org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        entity_ = "";
+
+        attribute_ = "";
+
+        indextype_ = 0;
+
+        if (distanceBuilder_ == null) {
+          distance_ = null;
+        } else {
+          distance_ = null;
+          distanceBuilder_ = null;
+        }
+        acceptStale_ = false;
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.internal_static_IndexExistsMessage_descriptor;
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage getDefaultInstanceForType() {
+        return org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage.getDefaultInstance();
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage build() {
+        org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage buildPartial() {
+        org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage result = new org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage(this);
+        result.entity_ = entity_;
+        result.attribute_ = attribute_;
+        result.indextype_ = indextype_;
+        if (distanceBuilder_ == null) {
+          result.distance_ = distance_;
+        } else {
+          result.distance_ = distanceBuilder_.build();
+        }
+        result.acceptStale_ = acceptStale_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage) {
+          return mergeFrom((org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage other) {
+        if (other == org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage.getDefaultInstance()) return this;
+        if (!other.getEntity().isEmpty()) {
+          entity_ = other.entity_;
+          onChanged();
+        }
+        if (!other.getAttribute().isEmpty()) {
+          attribute_ = other.attribute_;
+          onChanged();
+        }
+        if (other.indextype_ != 0) {
+          setIndextypeValue(other.getIndextypeValue());
+        }
+        if (other.hasDistance()) {
+          mergeDistance(other.getDistance());
+        }
+        if (other.getAcceptStale() != false) {
+          setAcceptStale(other.getAcceptStale());
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object entity_ = "";
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public java.lang.String getEntity() {
+        java.lang.Object ref = entity_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          entity_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEntityBytes() {
+        java.lang.Object ref = entity_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          entity_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public Builder setEntity(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        entity_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public Builder clearEntity() {
+        
+        entity_ = getDefaultInstance().getEntity();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string entity = 1;</code>
+       */
+      public Builder setEntityBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        entity_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object attribute_ = "";
+      /**
+       * <code>optional string attribute = 2;</code>
+       */
+      public java.lang.String getAttribute() {
+        java.lang.Object ref = attribute_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          attribute_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string attribute = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAttributeBytes() {
+        java.lang.Object ref = attribute_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          attribute_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string attribute = 2;</code>
+       */
+      public Builder setAttribute(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        attribute_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string attribute = 2;</code>
+       */
+      public Builder clearAttribute() {
+        
+        attribute_ = getDefaultInstance().getAttribute();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string attribute = 2;</code>
+       */
+      public Builder setAttributeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        attribute_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int indextype_ = 0;
+      /**
+       * <code>optional .IndexType indextype = 3;</code>
+       */
+      public int getIndextypeValue() {
+        return indextype_;
+      }
+      /**
+       * <code>optional .IndexType indextype = 3;</code>
+       */
+      public Builder setIndextypeValue(int value) {
+        indextype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .IndexType indextype = 3;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.IndexType getIndextype() {
+        org.vitrivr.adampro.grpc.AdamGrpc.IndexType result = org.vitrivr.adampro.grpc.AdamGrpc.IndexType.valueOf(indextype_);
+        return result == null ? org.vitrivr.adampro.grpc.AdamGrpc.IndexType.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>optional .IndexType indextype = 3;</code>
+       */
+      public Builder setIndextype(org.vitrivr.adampro.grpc.AdamGrpc.IndexType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        indextype_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .IndexType indextype = 3;</code>
+       */
+      public Builder clearIndextype() {
+        
+        indextype_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage distance_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage, org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessageOrBuilder> distanceBuilder_;
+      /**
+       * <code>optional .DistanceMessage distance = 4;</code>
+       */
+      public boolean hasDistance() {
+        return distanceBuilder_ != null || distance_ != null;
+      }
+      /**
+       * <code>optional .DistanceMessage distance = 4;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage getDistance() {
+        if (distanceBuilder_ == null) {
+          return distance_ == null ? org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.getDefaultInstance() : distance_;
+        } else {
+          return distanceBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .DistanceMessage distance = 4;</code>
+       */
+      public Builder setDistance(org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage value) {
+        if (distanceBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          distance_ = value;
+          onChanged();
+        } else {
+          distanceBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .DistanceMessage distance = 4;</code>
+       */
+      public Builder setDistance(
+          org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.Builder builderForValue) {
+        if (distanceBuilder_ == null) {
+          distance_ = builderForValue.build();
+          onChanged();
+        } else {
+          distanceBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .DistanceMessage distance = 4;</code>
+       */
+      public Builder mergeDistance(org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage value) {
+        if (distanceBuilder_ == null) {
+          if (distance_ != null) {
+            distance_ =
+              org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.newBuilder(distance_).mergeFrom(value).buildPartial();
+          } else {
+            distance_ = value;
+          }
+          onChanged();
+        } else {
+          distanceBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .DistanceMessage distance = 4;</code>
+       */
+      public Builder clearDistance() {
+        if (distanceBuilder_ == null) {
+          distance_ = null;
+          onChanged();
+        } else {
+          distance_ = null;
+          distanceBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>optional .DistanceMessage distance = 4;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.Builder getDistanceBuilder() {
+        
+        onChanged();
+        return getDistanceFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .DistanceMessage distance = 4;</code>
+       */
+      public org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessageOrBuilder getDistanceOrBuilder() {
+        if (distanceBuilder_ != null) {
+          return distanceBuilder_.getMessageOrBuilder();
+        } else {
+          return distance_ == null ?
+              org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.getDefaultInstance() : distance_;
+        }
+      }
+      /**
+       * <code>optional .DistanceMessage distance = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage, org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessageOrBuilder> 
+          getDistanceFieldBuilder() {
+        if (distanceBuilder_ == null) {
+          distanceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage, org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.Builder, org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessageOrBuilder>(
+                  getDistance(),
+                  getParentForChildren(),
+                  isClean());
+          distance_ = null;
+        }
+        return distanceBuilder_;
+      }
+
+      private boolean acceptStale_ ;
+      /**
+       * <code>optional bool acceptStale = 5;</code>
+       */
+      public boolean getAcceptStale() {
+        return acceptStale_;
+      }
+      /**
+       * <code>optional bool acceptStale = 5;</code>
+       */
+      public Builder setAcceptStale(boolean value) {
+        
+        acceptStale_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool acceptStale = 5;</code>
+       */
+      public Builder clearAcceptStale() {
+        
+        acceptStale_ = false;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:IndexExistsMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:IndexExistsMessage)
+    private static final org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage();
+    }
+
+    public static org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<IndexExistsMessage>
+        PARSER = new com.google.protobuf.AbstractParser<IndexExistsMessage>() {
+      public IndexExistsMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new IndexExistsMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<IndexExistsMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<IndexExistsMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public org.vitrivr.adampro.grpc.AdamGrpc.IndexExistsMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface RepartitionMessageOrBuilder extends
       // @@protoc_insertion_point(interface_extends:RepartitionMessage)
       com.google.protobuf.MessageOrBuilder {
@@ -56213,6 +57203,11 @@ public final class AdamGrpc {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_IndexMessage_OptionsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_IndexExistsMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_IndexExistsMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_RepartitionMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -56527,219 +57522,223 @@ public final class AdamGrpc {
       "stance\030\004 \001(\0132\020.DistanceMessage\022+\n\007option" +
       "s\030\005 \003(\0132\032.IndexMessage.OptionsEntry\032.\n\014O" +
       "ptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:" +
-      "\0028\001\"\235\003\n\022RepartitionMessage\022\016\n\006entity\030\001 \001" +
-      "(\t\022\032\n\022numberOfPartitions\030\002 \001(\005\022\022\n\nattrib" +
-      "utes\030\003 \001(\t\0224\n\006option\030\004 \001(\0162$.Repartition" +
-      "Message.PartitionOptions\0224\n\013partitioner\030",
-      "\005 \001(\0162\037.RepartitionMessage.Partitioner\0221" +
-      "\n\007options\030\006 \003(\0132 .RepartitionMessage.Opt" +
-      "ionsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r" +
-      "\n\005value\030\002 \001(\t:\0028\001\"I\n\020PartitionOptions\022\016\n" +
-      "\nCREATE_NEW\020\000\022\024\n\020REPLACE_EXISTING\020\001\022\017\n\013C" +
-      "REATE_TEMP\020\002\"-\n\013Partitioner\022\t\n\005SPARK\020\000\022\n" +
-      "\n\006RANDOM\020\001\022\007\n\003ECP\020\006\"B\n\rWeightMessage\022\016\n\006" +
-      "entity\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\022\016\n\006weigh" +
-      "t\030\003 \001(\002\"\244\003\n\027AdaptScanMethodsMessage\022\016\n\006e" +
-      "ntity\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\0224\n\002ic\030\003 \001",
-      "(\0162(.AdaptScanMethodsMessage.IndexCollec" +
-      "tion\0224\n\002qc\030\004 \001(\0162(.AdaptScanMethodsMessa" +
-      "ge.QueryCollection\0226\n\007options\030\005 \003(\0132%.Ad" +
-      "aptScanMethodsMessage.OptionsEntry\022\035\n\top" +
-      "timizer\030\006 \001(\0162\n.Optimizer\032.\n\014OptionsEntr" +
-      "y\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"8\n\017Ind" +
-      "exCollection\022\024\n\020EXISTING_INDEXES\020\000\022\017\n\013NE" +
-      "W_INDEXES\020\001\"9\n\017QueryCollection\022\022\n\016LOGGED" +
-      "_QUERIES\020\000\022\022\n\016RANDOM_QUERIES\020\001\"s\n\026QueryS" +
-      "imulationMessage\022\016\n\006entity\030\001 \001(\t\022*\n\003nnq\030",
-      "\002 \001(\0132\035.NearestNeighbourQueryMessage\022\035\n\t" +
-      "optimizer\030\003 \001(\0162\n.Optimizer\":\n\025SparsifyE" +
-      "ntityMessage\022\016\n\006entity\030\001 \001(\t\022\021\n\tattribut" +
-      "e\030\002 \001(\t\"S\n\rImportMessage\022\014\n\004host\030\001 \001(\t\022\020" +
-      "\n\010database\030\002 \001(\t\022\020\n\010username\030\003 \001(\t\022\020\n\010pa" +
-      "ssword\030\004 \001(\t\"\"\n\022ProtoImportMessage\022\014\n\004pa" +
-      "th\030\001 \001(\t\"2\n\022ProtoExportMessage\022\014\n\004path\030\001" +
-      " \001(\t\022\016\n\006entity\030\002 \001(\t\"B\n\026StorageHandlersM" +
-      "essage\022(\n\010handlers\030\001 \003(\0132\026.StorageHandle" +
-      "rMessage\"M\n\025StorageHandlerMessage\022\014\n\004nam",
-      "e\030\001 \001(\t\022&\n\016attributetypes\030\002 \003(\0162\016.Attrib" +
-      "uteType\"T\n\035TransferStorageHandlerMessage" +
-      "\022\016\n\006entity\030\001 \001(\t\022\022\n\nattributes\030\002 \003(\t\022\017\n\007" +
-      "handler\030\003 \001(\t\"\213\004\n\014QueryMessage\022\017\n\007queryi" +
-      "d\030\001 \001(\t\022&\n\nprojection\030\002 \001(\0132\022.Projection" +
-      "Message\022\032\n\004from\030\003 \001(\0132\014.FromMessage\022 \n\002b" +
-      "q\030\006 \001(\0132\024.BooleanQueryMessage\022*\n\003nnq\030\007 \001" +
-      "(\0132\035.NearestNeighbourQueryMessage\022\r\n\005hin" +
-      "ts\030\010 \003(\t\022\022\n\nnoFallback\030\t \001(\010\022\014\n\004time\030\n \001" +
-      "(\003\022\025\n\rreadFromCache\030\013 \001(\010\022\022\n\nputInCache\030",
-      "\014 \001(\010\0223\n\013information\030\r \003(\0162\036.QueryMessag" +
-      "e.InformationLevel\"\306\001\n\020InformationLevel\022" +
-      "\031\n\025INFORMATION_FULL_TREE\020\000\022\036\n\032INFORMATIO" +
-      "N_LAST_STEP_ONLY\020\001\022$\n INFORMATION_INTERM" +
-      "EDIATE_RESULTS\020\002\022)\n%WITH_PROVENANCE_PART" +
-      "ITION_INFORMATION\020\003\022&\n\"WITH_PROVENANCE_S" +
-      "OURCE_INFORMATION\020\004\"\223\004\n\026ExpressionQueryM" +
-      "essage\022\017\n\007queryid\030\001 \001(\t\022(\n\004left\030\002 \001(\0132\032." +
-      "SubExpressionQueryMessage\0224\n\toperation\030\003" +
-      " \001(\0162!.ExpressionQueryMessage.Operation\022",
-      "5\n\005order\030\004 \001(\0162&.ExpressionQueryMessage." +
-      "OperationOrder\022)\n\005right\030\005 \001(\0132\032.SubExpre" +
-      "ssionQueryMessage\0225\n\007options\030\006 \003(\0132$.Exp" +
-      "ressionQueryMessage.OptionsEntry\032.\n\014Opti" +
-      "onsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001" +
-      "\"q\n\tOperation\022\020\n\014UNKNOWNEXPOP\020\000\022\t\n\005UNION" +
-      "\020\001\022\r\n\tINTERSECT\020\002\022\n\n\006EXCEPT\020\003\022\010\n\004JOIN\020\004\022" +
-      "\016\n\nFUZZYUNION\020\005\022\022\n\016FUZZYINTERSECT\020\006\"L\n\016O" +
-      "perationOrder\022\r\n\tUNKNOWNOO\020\000\022\r\n\tLEFTFIRS" +
-      "T\020\001\022\016\n\nRIGHTFIRST\020\002\022\014\n\010PARALLEL\020\003\"\255\001\n\031Su",
-      "bExpressionQueryMessage\022\017\n\007queryid\030\001 \001(\t" +
-      "\022\033\n\002qm\030\002 \001(\0132\r.QueryMessageH\000\022&\n\003eqm\030\003 \001" +
-      "(\0132\027.ExpressionQueryMessageH\000\022,\n\004ehqm\030\004 " +
-      "\001(\0132\034.ExternalHandlerQueryMessageH\000B\014\n\ns" +
-      "ubmessage\"\352\001\n\021ProjectionMessage\022;\n\nattri" +
-      "butes\030\001 \001(\0132\'.ProjectionMessage.Attribut" +
-      "eNameMessage\022(\n\002op\030\002 \001(\0162\034.ProjectionMes" +
-      "sage.Operation\032)\n\024AttributeNameMessage\022\021" +
-      "\n\tattribute\030\001 \003(\t\"C\n\tOperation\022\021\n\rUNKNOW" +
-      "NPROJOP\020\000\022\t\n\005COUNT\020\001\022\n\n\006EXISTS\020\002\022\014\n\010DIST",
-      "INCT\020\003\"\222\001\n\013FromMessage\022\020\n\006entity\030\001 \001(\tH\000" +
-      "\022\017\n\005index\030\002 \001(\tH\000\022$\n\007indexes\030\003 \001(\0132\021.Ind" +
-      "exListMessageH\000\0220\n\nexpression\030\004 \001(\0132\032.Su" +
-      "bExpressionQueryMessageH\000B\010\n\006source\"#\n\020I" +
-      "ndexListMessage\022\017\n\007indexes\030\001 \003(\t\"\264\002\n\034Nea" +
-      "restNeighbourQueryMessage\022\021\n\tattribute\030\001" +
-      " \001(\t\022\035\n\005query\030\002 \001(\0132\016.VectorMessage\022\037\n\007w" +
-      "eights\030\003 \001(\0132\016.VectorMessage\022\"\n\010distance" +
-      "\030\004 \001(\0132\020.DistanceMessage\022\t\n\001k\030\005 \001(\005\022;\n\007o" +
-      "ptions\030\006 \003(\0132*.NearestNeighbourQueryMess",
-      "age.OptionsEntry\022\021\n\tindexOnly\030\007 \001(\010\022\022\n\np" +
-      "artitions\030\010 \003(\005\032.\n\014OptionsEntry\022\013\n\003key\030\001" +
-      " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\234\003\n\017DistanceMess" +
-      "age\0223\n\014distancetype\030\001 \001(\0162\035.DistanceMess" +
-      "age.DistanceType\022.\n\007options\030\002 \003(\0132\035.Dist" +
-      "anceMessage.OptionsEntry\032.\n\014OptionsEntry" +
-      "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\363\001\n\014Dis" +
-      "tanceType\022\014\n\010UNKNOWND\020\000\022\016\n\nchisquared\020\001\022" +
-      "\017\n\013correlation\020\002\022\n\n\006cosine\020\003\022\013\n\007hamming\020" +
-      "\004\022\013\n\007jaccard\020\005\022\023\n\017kullbackleibler\020\006\022\r\n\tc",
-      "hebyshev\020\007\022\r\n\teuclidean\020\010\022\024\n\020squaredeucl" +
-      "idean\020\t\022\r\n\tmanhattan\020\n\022\r\n\tminkowski\020\013\022\014\n" +
-      "\010spannorm\020\014\022\n\n\006modulo\020\r\022\r\n\thaversine\020\016\"\306" +
-      "\001\n\023BooleanQueryMessage\0220\n\005where\030\001 \003(\0132!." +
-      "BooleanQueryMessage.WhereMessage\032K\n\014Wher" +
-      "eMessage\022\021\n\tattribute\030\001 \001(\t\022\034\n\006values\030\002 " +
-      "\003(\0132\014.DataMessage\022\n\n\002op\030\003 \001(\t\0320\n\013JoinMes" +
-      "sage\022\r\n\005table\030\001 \001(\t\022\022\n\nattributes\030\002 \003(\t\"" +
-      "\270\001\n\033ExternalHandlerQueryMessage\022\017\n\007query" +
-      "id\030\001 \001(\t\022\016\n\006entity\030\002 \001(\t\022\017\n\007handler\030\003 \001(",
-      "\t\0228\n\006params\030\004 \003(\0132(.ExternalHandlerQuery" +
-      "Message.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003ke" +
-      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\'\n\024CachedResu" +
-      "ltsMessage\022\017\n\007queryid\030\001 \001(\t\"5\n\023BatchedQu" +
-      "eryMessage\022\036\n\007queries\030\001 \003(\0132\r.QueryMessa" +
-      "ge\"+\n\016PreviewMessage\022\016\n\006entity\030\001 \001(\t\022\t\n\001" +
-      "n\030\002 \001(\005\"X\n\nAckMessage\022\036\n\004code\030\001 \001(\0162\020.Ac" +
-      "kMessage.Code\022\017\n\007message\030\002 \001(\t\"\031\n\004Code\022\t" +
-      "\n\005ERROR\020\000\022\006\n\002OK\020\001\"=\n\017EntitiesMessage\022\030\n\003" +
-      "ack\030\001 \001(\0132\013.AckMessage\022\020\n\010entities\030\002 \003(\t",
-      "\"b\n\036AvailableAttributeTypesMessage\022\030\n\003ac" +
-      "k\030\001 \001(\0132\013.AckMessage\022&\n\016attributetypes\030\002" +
-      " \003(\0162\016.AttributeType\"9\n\rExistsMessage\022\030\n" +
-      "\003ack\030\001 \001(\0132\013.AckMessage\022\016\n\006exists\030\002 \001(\010\"" +
-      "\252\001\n\016IndexesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMes" +
-      "sage\022-\n\007indexes\030\002 \003(\0132\034.IndexesMessage.I" +
-      "ndexMessage\032O\n\014IndexMessage\022\r\n\005index\030\001 \001" +
+      "\0028\001\"\217\001\n\022IndexExistsMessage\022\016\n\006entity\030\001 \001" +
       "(\t\022\021\n\tattribute\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\016" +
-      "2\n.IndexType\"\250\001\n\021PropertiesMessage\022\030\n\003ac" +
-      "k\030\001 \001(\0132\013.AckMessage\022\016\n\006entity\030\002 \001(\t\0226\n\n",
-      "properties\030\003 \003(\0132\".PropertiesMessage.Pro" +
-      "pertiesEntry\0321\n\017PropertiesEntry\022\013\n\003key\030\001" +
-      " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"[\n\023QueryResultsM" +
-      "essage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022*\n\tresp" +
-      "onses\030\002 \003(\0132\027.QueryResultInfoMessage\"\376\001\n" +
-      "\026QueryResultInfoMessage\022\030\n\003ack\030\001 \001(\0132\013.A" +
-      "ckMessage\022\017\n\007queryid\030\002 \001(\t\022\022\n\nconfidence" +
-      "\030\003 \001(\001\022\014\n\004time\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022/\n\004" +
-      "info\030\006 \003(\0132!.QueryResultInfoMessage.Info" +
-      "Entry\022)\n\007results\030\007 \003(\0132\030.QueryResultTupl",
-      "eMessage\032+\n\tInfoEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va" +
-      "lue\030\002 \001(\t:\0028\001\"\206\001\n\027QueryResultTupleMessag" +
-      "e\0220\n\004data\030\001 \003(\0132\".QueryResultTupleMessag" +
-      "e.DataEntry\0329\n\tDataEntry\022\013\n\003key\030\001 \001(\t\022\033\n" +
-      "\005value\030\002 \001(\0132\014.DataMessage:\0028\001\"[\n\025Export" +
-      "DataFileMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessag" +
-      "e\022\026\n\016definitionfile\030\002 \001(\014\022\020\n\010datafile\030\003 " +
-      "\001(\014\"C\n\032BatchedQueryResultsMessage\022%\n\007res" +
-      "ults\030\001 \003(\0132\024.QueryResultsMessage\"`\n\032Scor" +
-      "edExecutionPathMessage\022\r\n\005score\030\001 \001(\001\022\014\n",
-      "\004scan\030\002 \001(\t\022\020\n\010scantype\030\003 \001(\t\022\023\n\013descrip" +
-      "tion\030\004 \001(\t\"l\n\033ScoredExecutionPathsMessag" +
-      "e\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\0223\n\016execution" +
-      "paths\030\002 \003(\0132\033.ScoredExecutionPathMessage" +
-      "*\257\001\n\rAttributeType\022\014\n\010UNKOWNAT\020\000\022\010\n\004AUTO" +
-      "\020\001\022\010\n\004LONG\020\002\022\007\n\003INT\020\003\022\t\n\005FLOAT\020\004\022\n\n\006DOUB" +
-      "LE\020\005\022\n\n\006STRING\020\006\022\010\n\004TEXT\020\007\022\013\n\007BOOLEAN\020\010\022" +
-      "\n\n\006VECTOR\020\t\022\020\n\014SPARSEVECTOR\020\r\022\014\n\010GEOMETR" +
-      "Y\020\n\022\r\n\tGEOGRAPHY\020\013*_\n\tIndexType\022\r\n\tUNKNO" +
-      "WNIT\020\000\022\007\n\003ecp\020\001\022\007\n\003lsh\020\002\022\006\n\002mi\020\003\022\006\n\002pq\020\004",
-      "\022\006\n\002sh\020\005\022\007\n\003vaf\020\006\022\007\n\003vav\020\007\022\007\n\003vap\020\010*3\n\tO" +
-      "ptimizer\022\021\n\rSVM_OPTIMIZER\020\000\022\023\n\017NAIVE_OPT" +
-      "IMIZER\020\0012\260\014\n\016AdamDefinition\0223\n\014CreateEnt" +
-      "ity\022\024.CreateEntityMessage\032\013.AckMessage\"\000" +
-      "\022K\n\027AvailableAttributeTypes\022\r.EmptyMessa" +
-      "ge\032\037.AvailableAttributeTypesMessage\"\000\022*\n" +
-      "\005Count\022\022.EntityNameMessage\032\013.AckMessage\"" +
-      "\000\022/\n\nDropEntity\022\022.EntityNameMessage\032\013.Ac" +
-      "kMessage\"\000\0224\n\014ExistsEntity\022\022.EntityNameM" +
-      "essage\032\016.ExistsMessage\"\000\022\'\n\006Insert\022\016.Ins",
-      "ertMessage\032\013.AckMessage\"\000\0221\n\014StreamInser" +
-      "t\022\016.InsertMessage\032\013.AckMessage\"\000(\0010\001\0221\n\014" +
-      "VacuumEntity\022\022.EntityNameMessage\032\013.AckMe" +
-      "ssage\"\000\022\'\n\006Delete\022\016.DeleteMessage\032\013.AckM" +
-      "essage\"\000\022%\n\005Index\022\r.IndexMessage\032\013.AckMe" +
-      "ssage\"\000\0222\n\022GenerateAllIndexes\022\r.IndexMes" +
-      "sage\032\013.AckMessage\"\000\022.\n\013ExistsIndex\022\r.Ind" +
-      "exMessage\032\016.ExistsMessage\"\000\022-\n\tDropIndex" +
-      "\022\021.IndexNameMessage\032\013.AckMessage\"\000\0224\n\013Li" +
-      "stIndexes\022\022.EntityNameMessage\032\017.IndexesM",
-      "essage\"\000\022?\n\022GenerateRandomData\022\032.Generat" +
-      "eRandomDataMessage\032\013.AckMessage\"\000\0221\n\014Lis" +
-      "tEntities\022\r.EmptyMessage\032\020.EntitiesMessa" +
-      "ge\"\000\022E\n\023GetEntityProperties\022\030.EntityProp" +
-      "ertiesMessage\032\022.PropertiesMessage\"\000\022K\n\026G" +
-      "etAttributeProperties\022\033.AttributePropert" +
-      "iesMessage\032\022.PropertiesMessage\"\000\022C\n\022GetI" +
-      "ndexProperties\022\027.IndexPropertiesMessage\032" +
-      "\022.PropertiesMessage\"\000\022;\n\025RepartitionEnti" +
-      "tyData\022\023.RepartitionMessage\032\013.AckMessage",
-      "\"\000\022:\n\024RepartitionIndexData\022\023.Repartition" +
-      "Message\032\013.AckMessage\"\000\022;\n\020AdaptScanMetho" +
-      "ds\022\030.AdaptScanMethodsMessage\032\013.AckMessag" +
-      "e\"\000\0227\n\016SparsifyEntity\022\026.SparsifyEntityMe" +
-      "ssage\032\013.AckMessage\"\000\022+\n\nImportData\022\016.Imp" +
-      "ortMessage\032\013.AckMessage\"\000\0227\n\017ProtoImport" +
-      "Data\022\023.ProtoImportMessage\032\013.AckMessage\"\000" +
-      "0\001\0225\n\017ProtoExportData\022\023.ProtoExportMessa" +
-      "ge\032\013.AckMessage\"\000\022?\n\023ListStorageHandlers" +
-      "\022\r.EmptyMessage\032\027.StorageHandlersMessage",
-      "\"\000\022G\n\026TransferStorageHandler\022\036.TransferS" +
-      "torageHandlerMessage\032\013.AckMessage\"\0002\351\004\n\n" +
-      "AdamSearch\022.\n\nCacheIndex\022\021.IndexNameMess" +
-      "age\032\013.AckMessage\"\000\0220\n\013CacheEntity\022\022.Enti" +
-      "tyNameMessage\032\013.AckMessage\"\000\0222\n\007Preview\022" +
-      "\017.PreviewMessage\032\024.QueryResultsMessage\"\000" +
-      "\0220\n\007DoQuery\022\r.QueryMessage\032\024.QueryResult" +
-      "sMessage\"\000\022=\n\020DoStreamingQuery\022\r.QueryMe" +
-      "ssage\032\024.QueryResultsMessage\"\000(\0010\001\022C\n\014DoB" +
-      "atchQuery\022\024.BatchedQueryMessage\032\033.Batche",
-      "dQueryResultsMessage\"\000\022:\n\017DoParallelQuer" +
-      "y\022\r.QueryMessage\032\024.QueryResultsMessage\"\000" +
-      "0\001\022=\n\022DoProgressiveQuery\022\r.QueryMessage\032" +
-      "\024.QueryResultsMessage\"\0000\001\022A\n\020GetCachedRe" +
-      "sults\022\025.CachedResultsMessage\032\024.QueryResu" +
-      "ltsMessage\"\000\022Q\n\026GetScoredExecutionPath\022\027" +
-      ".QuerySimulationMessage\032\034.ScoredExecutio" +
-      "nPathsMessage\"\000B$\n\030org.vitrivr.adampro.g" +
-      "rpcB\010AdamGrpcb\006proto3"
+      "2\n.IndexType\022\"\n\010distance\030\004 \001(\0132\020.Distanc" +
+      "eMessage\022\023\n\013acceptStale\030\005 \001(\010\"\235\003\n\022Repart",
+      "itionMessage\022\016\n\006entity\030\001 \001(\t\022\032\n\022numberOf" +
+      "Partitions\030\002 \001(\005\022\022\n\nattributes\030\003 \001(\t\0224\n\006" +
+      "option\030\004 \001(\0162$.RepartitionMessage.Partit" +
+      "ionOptions\0224\n\013partitioner\030\005 \001(\0162\037.Repart" +
+      "itionMessage.Partitioner\0221\n\007options\030\006 \003(" +
+      "\0132 .RepartitionMessage.OptionsEntry\032.\n\014O" +
+      "ptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:" +
+      "\0028\001\"I\n\020PartitionOptions\022\016\n\nCREATE_NEW\020\000\022" +
+      "\024\n\020REPLACE_EXISTING\020\001\022\017\n\013CREATE_TEMP\020\002\"-" +
+      "\n\013Partitioner\022\t\n\005SPARK\020\000\022\n\n\006RANDOM\020\001\022\007\n\003",
+      "ECP\020\006\"B\n\rWeightMessage\022\016\n\006entity\030\001 \001(\t\022\021" +
+      "\n\tattribute\030\002 \001(\t\022\016\n\006weight\030\003 \001(\002\"\244\003\n\027Ad" +
+      "aptScanMethodsMessage\022\016\n\006entity\030\001 \001(\t\022\021\n" +
+      "\tattribute\030\002 \001(\t\0224\n\002ic\030\003 \001(\0162(.AdaptScan" +
+      "MethodsMessage.IndexCollection\0224\n\002qc\030\004 \001" +
+      "(\0162(.AdaptScanMethodsMessage.QueryCollec" +
+      "tion\0226\n\007options\030\005 \003(\0132%.AdaptScanMethods" +
+      "Message.OptionsEntry\022\035\n\toptimizer\030\006 \001(\0162" +
+      "\n.Optimizer\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t" +
+      "\022\r\n\005value\030\002 \001(\t:\0028\001\"8\n\017IndexCollection\022\024",
+      "\n\020EXISTING_INDEXES\020\000\022\017\n\013NEW_INDEXES\020\001\"9\n" +
+      "\017QueryCollection\022\022\n\016LOGGED_QUERIES\020\000\022\022\n\016" +
+      "RANDOM_QUERIES\020\001\"s\n\026QuerySimulationMessa" +
+      "ge\022\016\n\006entity\030\001 \001(\t\022*\n\003nnq\030\002 \001(\0132\035.Neares" +
+      "tNeighbourQueryMessage\022\035\n\toptimizer\030\003 \001(" +
+      "\0162\n.Optimizer\":\n\025SparsifyEntityMessage\022\016" +
+      "\n\006entity\030\001 \001(\t\022\021\n\tattribute\030\002 \001(\t\"S\n\rImp" +
+      "ortMessage\022\014\n\004host\030\001 \001(\t\022\020\n\010database\030\002 \001" +
+      "(\t\022\020\n\010username\030\003 \001(\t\022\020\n\010password\030\004 \001(\t\"\"" +
+      "\n\022ProtoImportMessage\022\014\n\004path\030\001 \001(\t\"2\n\022Pr",
+      "otoExportMessage\022\014\n\004path\030\001 \001(\t\022\016\n\006entity" +
+      "\030\002 \001(\t\"B\n\026StorageHandlersMessage\022(\n\010hand" +
+      "lers\030\001 \003(\0132\026.StorageHandlerMessage\"M\n\025St" +
+      "orageHandlerMessage\022\014\n\004name\030\001 \001(\t\022&\n\016att" +
+      "ributetypes\030\002 \003(\0162\016.AttributeType\"T\n\035Tra" +
+      "nsferStorageHandlerMessage\022\016\n\006entity\030\001 \001" +
+      "(\t\022\022\n\nattributes\030\002 \003(\t\022\017\n\007handler\030\003 \001(\t\"" +
+      "\213\004\n\014QueryMessage\022\017\n\007queryid\030\001 \001(\t\022&\n\npro" +
+      "jection\030\002 \001(\0132\022.ProjectionMessage\022\032\n\004fro" +
+      "m\030\003 \001(\0132\014.FromMessage\022 \n\002bq\030\006 \001(\0132\024.Bool",
+      "eanQueryMessage\022*\n\003nnq\030\007 \001(\0132\035.NearestNe" +
+      "ighbourQueryMessage\022\r\n\005hints\030\010 \003(\t\022\022\n\nno" +
+      "Fallback\030\t \001(\010\022\014\n\004time\030\n \001(\003\022\025\n\rreadFrom" +
+      "Cache\030\013 \001(\010\022\022\n\nputInCache\030\014 \001(\010\0223\n\013infor" +
+      "mation\030\r \003(\0162\036.QueryMessage.InformationL" +
+      "evel\"\306\001\n\020InformationLevel\022\031\n\025INFORMATION" +
+      "_FULL_TREE\020\000\022\036\n\032INFORMATION_LAST_STEP_ON" +
+      "LY\020\001\022$\n INFORMATION_INTERMEDIATE_RESULTS" +
+      "\020\002\022)\n%WITH_PROVENANCE_PARTITION_INFORMAT" +
+      "ION\020\003\022&\n\"WITH_PROVENANCE_SOURCE_INFORMAT",
+      "ION\020\004\"\223\004\n\026ExpressionQueryMessage\022\017\n\007quer" +
+      "yid\030\001 \001(\t\022(\n\004left\030\002 \001(\0132\032.SubExpressionQ" +
+      "ueryMessage\0224\n\toperation\030\003 \001(\0162!.Express" +
+      "ionQueryMessage.Operation\0225\n\005order\030\004 \001(\016" +
+      "2&.ExpressionQueryMessage.OperationOrder" +
+      "\022)\n\005right\030\005 \001(\0132\032.SubExpressionQueryMess" +
+      "age\0225\n\007options\030\006 \003(\0132$.ExpressionQueryMe" +
+      "ssage.OptionsEntry\032.\n\014OptionsEntry\022\013\n\003ke" +
+      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"q\n\tOperation\022" +
+      "\020\n\014UNKNOWNEXPOP\020\000\022\t\n\005UNION\020\001\022\r\n\tINTERSEC",
+      "T\020\002\022\n\n\006EXCEPT\020\003\022\010\n\004JOIN\020\004\022\016\n\nFUZZYUNION\020" +
+      "\005\022\022\n\016FUZZYINTERSECT\020\006\"L\n\016OperationOrder\022" +
+      "\r\n\tUNKNOWNOO\020\000\022\r\n\tLEFTFIRST\020\001\022\016\n\nRIGHTFI" +
+      "RST\020\002\022\014\n\010PARALLEL\020\003\"\255\001\n\031SubExpressionQue" +
+      "ryMessage\022\017\n\007queryid\030\001 \001(\t\022\033\n\002qm\030\002 \001(\0132\r" +
+      ".QueryMessageH\000\022&\n\003eqm\030\003 \001(\0132\027.Expressio" +
+      "nQueryMessageH\000\022,\n\004ehqm\030\004 \001(\0132\034.External" +
+      "HandlerQueryMessageH\000B\014\n\nsubmessage\"\352\001\n\021" +
+      "ProjectionMessage\022;\n\nattributes\030\001 \001(\0132\'." +
+      "ProjectionMessage.AttributeNameMessage\022(",
+      "\n\002op\030\002 \001(\0162\034.ProjectionMessage.Operation" +
+      "\032)\n\024AttributeNameMessage\022\021\n\tattribute\030\001 " +
+      "\003(\t\"C\n\tOperation\022\021\n\rUNKNOWNPROJOP\020\000\022\t\n\005C" +
+      "OUNT\020\001\022\n\n\006EXISTS\020\002\022\014\n\010DISTINCT\020\003\"\222\001\n\013Fro" +
+      "mMessage\022\020\n\006entity\030\001 \001(\tH\000\022\017\n\005index\030\002 \001(" +
+      "\tH\000\022$\n\007indexes\030\003 \001(\0132\021.IndexListMessageH" +
+      "\000\0220\n\nexpression\030\004 \001(\0132\032.SubExpressionQue" +
+      "ryMessageH\000B\010\n\006source\"#\n\020IndexListMessag" +
+      "e\022\017\n\007indexes\030\001 \003(\t\"\264\002\n\034NearestNeighbourQ" +
+      "ueryMessage\022\021\n\tattribute\030\001 \001(\t\022\035\n\005query\030",
+      "\002 \001(\0132\016.VectorMessage\022\037\n\007weights\030\003 \001(\0132\016" +
+      ".VectorMessage\022\"\n\010distance\030\004 \001(\0132\020.Dista" +
+      "nceMessage\022\t\n\001k\030\005 \001(\005\022;\n\007options\030\006 \003(\0132*" +
+      ".NearestNeighbourQueryMessage.OptionsEnt" +
+      "ry\022\021\n\tindexOnly\030\007 \001(\010\022\022\n\npartitions\030\010 \003(" +
+      "\005\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
+      "\002 \001(\t:\0028\001\"\234\003\n\017DistanceMessage\0223\n\014distanc" +
+      "etype\030\001 \001(\0162\035.DistanceMessage.DistanceTy" +
+      "pe\022.\n\007options\030\002 \003(\0132\035.DistanceMessage.Op" +
+      "tionsEntry\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022",
+      "\r\n\005value\030\002 \001(\t:\0028\001\"\363\001\n\014DistanceType\022\014\n\010U" +
+      "NKNOWND\020\000\022\016\n\nchisquared\020\001\022\017\n\013correlation" +
+      "\020\002\022\n\n\006cosine\020\003\022\013\n\007hamming\020\004\022\013\n\007jaccard\020\005" +
+      "\022\023\n\017kullbackleibler\020\006\022\r\n\tchebyshev\020\007\022\r\n\t" +
+      "euclidean\020\010\022\024\n\020squaredeuclidean\020\t\022\r\n\tman" +
+      "hattan\020\n\022\r\n\tminkowski\020\013\022\014\n\010spannorm\020\014\022\n\n" +
+      "\006modulo\020\r\022\r\n\thaversine\020\016\"\306\001\n\023BooleanQuer" +
+      "yMessage\0220\n\005where\030\001 \003(\0132!.BooleanQueryMe" +
+      "ssage.WhereMessage\032K\n\014WhereMessage\022\021\n\tat" +
+      "tribute\030\001 \001(\t\022\034\n\006values\030\002 \003(\0132\014.DataMess",
+      "age\022\n\n\002op\030\003 \001(\t\0320\n\013JoinMessage\022\r\n\005table\030" +
+      "\001 \001(\t\022\022\n\nattributes\030\002 \003(\t\"\270\001\n\033ExternalHa" +
+      "ndlerQueryMessage\022\017\n\007queryid\030\001 \001(\t\022\016\n\006en" +
+      "tity\030\002 \001(\t\022\017\n\007handler\030\003 \001(\t\0228\n\006params\030\004 " +
+      "\003(\0132(.ExternalHandlerQueryMessage.Params" +
+      "Entry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005val" +
+      "ue\030\002 \001(\t:\0028\001\"\'\n\024CachedResultsMessage\022\017\n\007" +
+      "queryid\030\001 \001(\t\"5\n\023BatchedQueryMessage\022\036\n\007" +
+      "queries\030\001 \003(\0132\r.QueryMessage\"+\n\016PreviewM" +
+      "essage\022\016\n\006entity\030\001 \001(\t\022\t\n\001n\030\002 \001(\005\"X\n\nAck",
+      "Message\022\036\n\004code\030\001 \001(\0162\020.AckMessage.Code\022" +
+      "\017\n\007message\030\002 \001(\t\"\031\n\004Code\022\t\n\005ERROR\020\000\022\006\n\002O" +
+      "K\020\001\"=\n\017EntitiesMessage\022\030\n\003ack\030\001 \001(\0132\013.Ac" +
+      "kMessage\022\020\n\010entities\030\002 \003(\t\"b\n\036AvailableA" +
+      "ttributeTypesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckM" +
+      "essage\022&\n\016attributetypes\030\002 \003(\0162\016.Attribu" +
+      "teType\"9\n\rExistsMessage\022\030\n\003ack\030\001 \001(\0132\013.A" +
+      "ckMessage\022\016\n\006exists\030\002 \001(\010\"\252\001\n\016IndexesMes" +
+      "sage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022-\n\007indexe" +
+      "s\030\002 \003(\0132\034.IndexesMessage.IndexMessage\032O\n",
+      "\014IndexMessage\022\r\n\005index\030\001 \001(\t\022\021\n\tattribut" +
+      "e\030\002 \001(\t\022\035\n\tindextype\030\003 \001(\0162\n.IndexType\"\250" +
+      "\001\n\021PropertiesMessage\022\030\n\003ack\030\001 \001(\0132\013.AckM" +
+      "essage\022\016\n\006entity\030\002 \001(\t\0226\n\nproperties\030\003 \003" +
+      "(\0132\".PropertiesMessage.PropertiesEntry\0321" +
+      "\n\017PropertiesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
+      "\002 \001(\t:\0028\001\"[\n\023QueryResultsMessage\022\030\n\003ack\030" +
+      "\001 \001(\0132\013.AckMessage\022*\n\tresponses\030\002 \003(\0132\027." +
+      "QueryResultInfoMessage\"\376\001\n\026QueryResultIn" +
+      "foMessage\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\017\n\007q",
+      "ueryid\030\002 \001(\t\022\022\n\nconfidence\030\003 \001(\001\022\014\n\004time" +
+      "\030\004 \001(\003\022\016\n\006source\030\005 \001(\t\022/\n\004info\030\006 \003(\0132!.Q" +
+      "ueryResultInfoMessage.InfoEntry\022)\n\007resul" +
+      "ts\030\007 \003(\0132\030.QueryResultTupleMessage\032+\n\tIn" +
+      "foEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"" +
+      "\206\001\n\027QueryResultTupleMessage\0220\n\004data\030\001 \003(" +
+      "\0132\".QueryResultTupleMessage.DataEntry\0329\n" +
+      "\tDataEntry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 \001(\0132\014" +
+      ".DataMessage:\0028\001\"[\n\025ExportDataFileMessag" +
+      "e\022\030\n\003ack\030\001 \001(\0132\013.AckMessage\022\026\n\016definitio",
+      "nfile\030\002 \001(\014\022\020\n\010datafile\030\003 \001(\014\"C\n\032Batched" +
+      "QueryResultsMessage\022%\n\007results\030\001 \003(\0132\024.Q" +
+      "ueryResultsMessage\"`\n\032ScoredExecutionPat" +
+      "hMessage\022\r\n\005score\030\001 \001(\001\022\014\n\004scan\030\002 \001(\t\022\020\n" +
+      "\010scantype\030\003 \001(\t\022\023\n\013description\030\004 \001(\t\"l\n\033" +
+      "ScoredExecutionPathsMessage\022\030\n\003ack\030\001 \001(\013" +
+      "2\013.AckMessage\0223\n\016executionpaths\030\002 \003(\0132\033." +
+      "ScoredExecutionPathMessage*\257\001\n\rAttribute" +
+      "Type\022\014\n\010UNKOWNAT\020\000\022\010\n\004AUTO\020\001\022\010\n\004LONG\020\002\022\007" +
+      "\n\003INT\020\003\022\t\n\005FLOAT\020\004\022\n\n\006DOUBLE\020\005\022\n\n\006STRING",
+      "\020\006\022\010\n\004TEXT\020\007\022\013\n\007BOOLEAN\020\010\022\n\n\006VECTOR\020\t\022\020\n" +
+      "\014SPARSEVECTOR\020\r\022\014\n\010GEOMETRY\020\n\022\r\n\tGEOGRAP" +
+      "HY\020\013*_\n\tIndexType\022\r\n\tUNKNOWNIT\020\000\022\007\n\003ecp\020" +
+      "\001\022\007\n\003lsh\020\002\022\006\n\002mi\020\003\022\006\n\002pq\020\004\022\006\n\002sh\020\005\022\007\n\003va" +
+      "f\020\006\022\007\n\003vav\020\007\022\007\n\003vap\020\010*3\n\tOptimizer\022\021\n\rSV" +
+      "M_OPTIMIZER\020\000\022\023\n\017NAIVE_OPTIMIZER\020\0012\266\014\n\016A" +
+      "damDefinition\0223\n\014CreateEntity\022\024.CreateEn" +
+      "tityMessage\032\013.AckMessage\"\000\022K\n\027AvailableA" +
+      "ttributeTypes\022\r.EmptyMessage\032\037.Available" +
+      "AttributeTypesMessage\"\000\022*\n\005Count\022\022.Entit",
+      "yNameMessage\032\013.AckMessage\"\000\022/\n\nDropEntit" +
+      "y\022\022.EntityNameMessage\032\013.AckMessage\"\000\0224\n\014" +
+      "ExistsEntity\022\022.EntityNameMessage\032\016.Exist" +
+      "sMessage\"\000\022\'\n\006Insert\022\016.InsertMessage\032\013.A" +
+      "ckMessage\"\000\0221\n\014StreamInsert\022\016.InsertMess" +
+      "age\032\013.AckMessage\"\000(\0010\001\0221\n\014VacuumEntity\022\022" +
+      ".EntityNameMessage\032\013.AckMessage\"\000\022\'\n\006Del" +
+      "ete\022\016.DeleteMessage\032\013.AckMessage\"\000\022%\n\005In" +
+      "dex\022\r.IndexMessage\032\013.AckMessage\"\000\0222\n\022Gen" +
+      "erateAllIndexes\022\r.IndexMessage\032\013.AckMess",
+      "age\"\000\0224\n\013ExistsIndex\022\023.IndexExistsMessag" +
+      "e\032\016.ExistsMessage\"\000\022-\n\tDropIndex\022\021.Index" +
+      "NameMessage\032\013.AckMessage\"\000\0224\n\013ListIndexe" +
+      "s\022\022.EntityNameMessage\032\017.IndexesMessage\"\000" +
+      "\022?\n\022GenerateRandomData\022\032.GenerateRandomD" +
+      "ataMessage\032\013.AckMessage\"\000\0221\n\014ListEntitie" +
+      "s\022\r.EmptyMessage\032\020.EntitiesMessage\"\000\022E\n\023" +
+      "GetEntityProperties\022\030.EntityPropertiesMe" +
+      "ssage\032\022.PropertiesMessage\"\000\022K\n\026GetAttrib" +
+      "uteProperties\022\033.AttributePropertiesMessa",
+      "ge\032\022.PropertiesMessage\"\000\022C\n\022GetIndexProp" +
+      "erties\022\027.IndexPropertiesMessage\032\022.Proper" +
+      "tiesMessage\"\000\022;\n\025RepartitionEntityData\022\023" +
+      ".RepartitionMessage\032\013.AckMessage\"\000\022:\n\024Re" +
+      "partitionIndexData\022\023.RepartitionMessage\032" +
+      "\013.AckMessage\"\000\022;\n\020AdaptScanMethods\022\030.Ada" +
+      "ptScanMethodsMessage\032\013.AckMessage\"\000\0227\n\016S" +
+      "parsifyEntity\022\026.SparsifyEntityMessage\032\013." +
+      "AckMessage\"\000\022+\n\nImportData\022\016.ImportMessa" +
+      "ge\032\013.AckMessage\"\000\0227\n\017ProtoImportData\022\023.P",
+      "rotoImportMessage\032\013.AckMessage\"\0000\001\0225\n\017Pr" +
+      "otoExportData\022\023.ProtoExportMessage\032\013.Ack" +
+      "Message\"\000\022?\n\023ListStorageHandlers\022\r.Empty" +
+      "Message\032\027.StorageHandlersMessage\"\000\022G\n\026Tr" +
+      "ansferStorageHandler\022\036.TransferStorageHa" +
+      "ndlerMessage\032\013.AckMessage\"\0002\351\004\n\nAdamSear" +
+      "ch\022.\n\nCacheIndex\022\021.IndexNameMessage\032\013.Ac" +
+      "kMessage\"\000\0220\n\013CacheEntity\022\022.EntityNameMe" +
+      "ssage\032\013.AckMessage\"\000\0222\n\007Preview\022\017.Previe" +
+      "wMessage\032\024.QueryResultsMessage\"\000\0220\n\007DoQu",
+      "ery\022\r.QueryMessage\032\024.QueryResultsMessage" +
+      "\"\000\022=\n\020DoStreamingQuery\022\r.QueryMessage\032\024." +
+      "QueryResultsMessage\"\000(\0010\001\022C\n\014DoBatchQuer" +
+      "y\022\024.BatchedQueryMessage\032\033.BatchedQueryRe" +
+      "sultsMessage\"\000\022:\n\017DoParallelQuery\022\r.Quer" +
+      "yMessage\032\024.QueryResultsMessage\"\0000\001\022=\n\022Do" +
+      "ProgressiveQuery\022\r.QueryMessage\032\024.QueryR" +
+      "esultsMessage\"\0000\001\022A\n\020GetCachedResults\022\025." +
+      "CachedResultsMessage\032\024.QueryResultsMessa" +
+      "ge\"\000\022Q\n\026GetScoredExecutionPath\022\027.QuerySi",
+      "mulationMessage\032\034.ScoredExecutionPathsMe" +
+      "ssage\"\000B$\n\030org.vitrivr.adampro.grpcB\010Ada" +
+      "mGrpcb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -56915,8 +57914,14 @@ public final class AdamGrpc {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_IndexMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_RepartitionMessage_descriptor =
+    internal_static_IndexExistsMessage_descriptor =
       getDescriptor().getMessageTypes().get(18);
+    internal_static_IndexExistsMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_IndexExistsMessage_descriptor,
+        new java.lang.String[] { "Entity", "Attribute", "Indextype", "Distance", "AcceptStale", });
+    internal_static_RepartitionMessage_descriptor =
+      getDescriptor().getMessageTypes().get(19);
     internal_static_RepartitionMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_RepartitionMessage_descriptor,
@@ -56928,13 +57933,13 @@ public final class AdamGrpc {
         internal_static_RepartitionMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_WeightMessage_descriptor =
-      getDescriptor().getMessageTypes().get(19);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_WeightMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_WeightMessage_descriptor,
         new java.lang.String[] { "Entity", "Attribute", "Weight", });
     internal_static_AdaptScanMethodsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(20);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_AdaptScanMethodsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_AdaptScanMethodsMessage_descriptor,
@@ -56946,61 +57951,61 @@ public final class AdamGrpc {
         internal_static_AdaptScanMethodsMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_QuerySimulationMessage_descriptor =
-      getDescriptor().getMessageTypes().get(21);
+      getDescriptor().getMessageTypes().get(22);
     internal_static_QuerySimulationMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QuerySimulationMessage_descriptor,
         new java.lang.String[] { "Entity", "Nnq", "Optimizer", });
     internal_static_SparsifyEntityMessage_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_SparsifyEntityMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SparsifyEntityMessage_descriptor,
         new java.lang.String[] { "Entity", "Attribute", });
     internal_static_ImportMessage_descriptor =
-      getDescriptor().getMessageTypes().get(23);
+      getDescriptor().getMessageTypes().get(24);
     internal_static_ImportMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ImportMessage_descriptor,
         new java.lang.String[] { "Host", "Database", "Username", "Password", });
     internal_static_ProtoImportMessage_descriptor =
-      getDescriptor().getMessageTypes().get(24);
+      getDescriptor().getMessageTypes().get(25);
     internal_static_ProtoImportMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ProtoImportMessage_descriptor,
         new java.lang.String[] { "Path", });
     internal_static_ProtoExportMessage_descriptor =
-      getDescriptor().getMessageTypes().get(25);
+      getDescriptor().getMessageTypes().get(26);
     internal_static_ProtoExportMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ProtoExportMessage_descriptor,
         new java.lang.String[] { "Path", "Entity", });
     internal_static_StorageHandlersMessage_descriptor =
-      getDescriptor().getMessageTypes().get(26);
+      getDescriptor().getMessageTypes().get(27);
     internal_static_StorageHandlersMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_StorageHandlersMessage_descriptor,
         new java.lang.String[] { "Handlers", });
     internal_static_StorageHandlerMessage_descriptor =
-      getDescriptor().getMessageTypes().get(27);
+      getDescriptor().getMessageTypes().get(28);
     internal_static_StorageHandlerMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_StorageHandlerMessage_descriptor,
         new java.lang.String[] { "Name", "Attributetypes", });
     internal_static_TransferStorageHandlerMessage_descriptor =
-      getDescriptor().getMessageTypes().get(28);
+      getDescriptor().getMessageTypes().get(29);
     internal_static_TransferStorageHandlerMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_TransferStorageHandlerMessage_descriptor,
         new java.lang.String[] { "Entity", "Attributes", "Handler", });
     internal_static_QueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(29);
+      getDescriptor().getMessageTypes().get(30);
     internal_static_QueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Projection", "From", "Bq", "Nnq", "Hints", "NoFallback", "Time", "ReadFromCache", "PutInCache", "Information", });
     internal_static_ExpressionQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(30);
+      getDescriptor().getMessageTypes().get(31);
     internal_static_ExpressionQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ExpressionQueryMessage_descriptor,
@@ -57012,13 +58017,13 @@ public final class AdamGrpc {
         internal_static_ExpressionQueryMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_SubExpressionQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(31);
+      getDescriptor().getMessageTypes().get(32);
     internal_static_SubExpressionQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SubExpressionQueryMessage_descriptor,
         new java.lang.String[] { "Queryid", "Qm", "Eqm", "Ehqm", "Submessage", });
     internal_static_ProjectionMessage_descriptor =
-      getDescriptor().getMessageTypes().get(32);
+      getDescriptor().getMessageTypes().get(33);
     internal_static_ProjectionMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ProjectionMessage_descriptor,
@@ -57030,19 +58035,19 @@ public final class AdamGrpc {
         internal_static_ProjectionMessage_AttributeNameMessage_descriptor,
         new java.lang.String[] { "Attribute", });
     internal_static_FromMessage_descriptor =
-      getDescriptor().getMessageTypes().get(33);
+      getDescriptor().getMessageTypes().get(34);
     internal_static_FromMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_FromMessage_descriptor,
         new java.lang.String[] { "Entity", "Index", "Indexes", "Expression", "Source", });
     internal_static_IndexListMessage_descriptor =
-      getDescriptor().getMessageTypes().get(34);
+      getDescriptor().getMessageTypes().get(35);
     internal_static_IndexListMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_IndexListMessage_descriptor,
         new java.lang.String[] { "Indexes", });
     internal_static_NearestNeighbourQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(35);
+      getDescriptor().getMessageTypes().get(36);
     internal_static_NearestNeighbourQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NearestNeighbourQueryMessage_descriptor,
@@ -57054,7 +58059,7 @@ public final class AdamGrpc {
         internal_static_NearestNeighbourQueryMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DistanceMessage_descriptor =
-      getDescriptor().getMessageTypes().get(36);
+      getDescriptor().getMessageTypes().get(37);
     internal_static_DistanceMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DistanceMessage_descriptor,
@@ -57066,7 +58071,7 @@ public final class AdamGrpc {
         internal_static_DistanceMessage_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_BooleanQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(37);
+      getDescriptor().getMessageTypes().get(38);
     internal_static_BooleanQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BooleanQueryMessage_descriptor,
@@ -57084,7 +58089,7 @@ public final class AdamGrpc {
         internal_static_BooleanQueryMessage_JoinMessage_descriptor,
         new java.lang.String[] { "Table", "Attributes", });
     internal_static_ExternalHandlerQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(38);
+      getDescriptor().getMessageTypes().get(39);
     internal_static_ExternalHandlerQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ExternalHandlerQueryMessage_descriptor,
@@ -57096,49 +58101,49 @@ public final class AdamGrpc {
         internal_static_ExternalHandlerQueryMessage_ParamsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_CachedResultsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(39);
+      getDescriptor().getMessageTypes().get(40);
     internal_static_CachedResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CachedResultsMessage_descriptor,
         new java.lang.String[] { "Queryid", });
     internal_static_BatchedQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(40);
+      getDescriptor().getMessageTypes().get(41);
     internal_static_BatchedQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BatchedQueryMessage_descriptor,
         new java.lang.String[] { "Queries", });
     internal_static_PreviewMessage_descriptor =
-      getDescriptor().getMessageTypes().get(41);
+      getDescriptor().getMessageTypes().get(42);
     internal_static_PreviewMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PreviewMessage_descriptor,
         new java.lang.String[] { "Entity", "N", });
     internal_static_AckMessage_descriptor =
-      getDescriptor().getMessageTypes().get(42);
+      getDescriptor().getMessageTypes().get(43);
     internal_static_AckMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_AckMessage_descriptor,
         new java.lang.String[] { "Code", "Message", });
     internal_static_EntitiesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(43);
+      getDescriptor().getMessageTypes().get(44);
     internal_static_EntitiesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_EntitiesMessage_descriptor,
         new java.lang.String[] { "Ack", "Entities", });
     internal_static_AvailableAttributeTypesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(44);
+      getDescriptor().getMessageTypes().get(45);
     internal_static_AvailableAttributeTypesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_AvailableAttributeTypesMessage_descriptor,
         new java.lang.String[] { "Ack", "Attributetypes", });
     internal_static_ExistsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(45);
+      getDescriptor().getMessageTypes().get(46);
     internal_static_ExistsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ExistsMessage_descriptor,
         new java.lang.String[] { "Ack", "Exists", });
     internal_static_IndexesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(46);
+      getDescriptor().getMessageTypes().get(47);
     internal_static_IndexesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_IndexesMessage_descriptor,
@@ -57150,7 +58155,7 @@ public final class AdamGrpc {
         internal_static_IndexesMessage_IndexMessage_descriptor,
         new java.lang.String[] { "Index", "Attribute", "Indextype", });
     internal_static_PropertiesMessage_descriptor =
-      getDescriptor().getMessageTypes().get(47);
+      getDescriptor().getMessageTypes().get(48);
     internal_static_PropertiesMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PropertiesMessage_descriptor,
@@ -57162,13 +58167,13 @@ public final class AdamGrpc {
         internal_static_PropertiesMessage_PropertiesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_QueryResultsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(48);
+      getDescriptor().getMessageTypes().get(49);
     internal_static_QueryResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QueryResultsMessage_descriptor,
         new java.lang.String[] { "Ack", "Responses", });
     internal_static_QueryResultInfoMessage_descriptor =
-      getDescriptor().getMessageTypes().get(49);
+      getDescriptor().getMessageTypes().get(50);
     internal_static_QueryResultInfoMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QueryResultInfoMessage_descriptor,
@@ -57180,7 +58185,7 @@ public final class AdamGrpc {
         internal_static_QueryResultInfoMessage_InfoEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_QueryResultTupleMessage_descriptor =
-      getDescriptor().getMessageTypes().get(50);
+      getDescriptor().getMessageTypes().get(51);
     internal_static_QueryResultTupleMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QueryResultTupleMessage_descriptor,
@@ -57192,25 +58197,25 @@ public final class AdamGrpc {
         internal_static_QueryResultTupleMessage_DataEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_ExportDataFileMessage_descriptor =
-      getDescriptor().getMessageTypes().get(51);
+      getDescriptor().getMessageTypes().get(52);
     internal_static_ExportDataFileMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ExportDataFileMessage_descriptor,
         new java.lang.String[] { "Ack", "Definitionfile", "Datafile", });
     internal_static_BatchedQueryResultsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(52);
+      getDescriptor().getMessageTypes().get(53);
     internal_static_BatchedQueryResultsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BatchedQueryResultsMessage_descriptor,
         new java.lang.String[] { "Results", });
     internal_static_ScoredExecutionPathMessage_descriptor =
-      getDescriptor().getMessageTypes().get(53);
+      getDescriptor().getMessageTypes().get(54);
     internal_static_ScoredExecutionPathMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ScoredExecutionPathMessage_descriptor,
         new java.lang.String[] { "Score", "Scan", "Scantype", "Description", });
     internal_static_ScoredExecutionPathsMessage_descriptor =
-      getDescriptor().getMessageTypes().get(54);
+      getDescriptor().getMessageTypes().get(55);
     internal_static_ScoredExecutionPathsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ScoredExecutionPathsMessage_descriptor,
