@@ -55,22 +55,6 @@ public class LightfieldFourier extends Lightfield {
         this.transformer = new FastFourierTransformer(DftNormalization.STANDARD);
     }
 
-    /**
-     * Returns the modified QueryConfig for the provided feature vector. Creates a weighted
-     * version of the original configuration.
-     *
-     * @param qc Original query config
-     * @param feature Feature for which a weight-vector is required.
-     * @return
-     */
-    protected ReadableQueryConfig queryConfigForFeature(QueryConfig qc, float[] feature) {
-        if (feature[0] == POSEIDX_UNKNOWN) {
-            return qc.clone().setDistanceWeights(WEIGHTS_NOPOSE);
-        } else {
-            return qc.clone().setDistanceWeights(WEIGHTS_POSE);
-        }
-    }
-
 
     /**
      * Extracts the Lightfield Fourier descriptors from a provided BufferedImage. The returned list contains
@@ -105,5 +89,25 @@ public class LightfieldFourier extends Lightfield {
         }
 
         return features;
+    }
+
+    /**
+     * Returns a list of QueryConfigs for the given list of features. By default, this method simply returns a list of the
+     * same the provided config. However, this method can be re-implemented to e.g. add a static or dynamic weight vectors.
+     *
+     * @param qc Original query config
+     * @param features List of features for which a QueryConfig is required.
+     * @return New query config (may be identical to the original one).
+     */
+    protected List<ReadableQueryConfig> generateQueryConfigsForFeatures(ReadableQueryConfig qc, List<float[]> features) {
+        List<ReadableQueryConfig> configs = new ArrayList<>(features.size());
+        for (float[] feature : features) {
+            if (feature[0] == POSEIDX_UNKNOWN) {
+                configs.add(new QueryConfig(qc).setDistanceWeights(WEIGHTS_NOPOSE));
+            } else {
+                configs.add(new QueryConfig(qc).setDistanceWeights(WEIGHTS_POSE));
+            }
+        }
+        return configs;
     }
 }
