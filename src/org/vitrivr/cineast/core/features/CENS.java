@@ -1,15 +1,18 @@
 package org.vitrivr.cineast.core.features;
 
 
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
+import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
@@ -134,13 +137,7 @@ public abstract class CENS extends StagedFeatureModule {
         /* Prepare map to build a unique set of results. */
         final HashMap<String,DistanceElement> map = new HashMap<>();
         for (DistanceElement hit : partialResults) {
-            if (map.containsKey(hit.getId())) {
-                if (map.get(hit.getId()).getDistance() > hit.getDistance()) {
-                    map.replace(hit.getId(),hit);
-                }
-            } else {
-                map.put(hit.getId(), hit);
-            }
+            map.merge(hit.getId(), hit, (o, n) -> o.getDistance() > n.getDistance() ? n : o);
         }
 
         /* Prepare final list of results. */

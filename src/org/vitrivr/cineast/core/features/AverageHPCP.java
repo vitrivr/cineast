@@ -9,6 +9,7 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -23,6 +24,7 @@ import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -93,25 +95,16 @@ public abstract class AverageHPCP extends StagedFeatureModule {
     @Override
     protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
         /* Prepare helper data-structures. */
-        final List<ScoreElement> results = new ArrayList<>();
-        final TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
+        final HashMap<String,DistanceElement> map = new HashMap<>();
 
         /* Set QueryConfig and extract correspondence function. */
-        qc = this.setQueryConfig(qc);
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
-
         for (DistanceElement hit : partialResults) {
-            if (map.containsKey(hit.getId())) {
-                double current = map.get(hit.getId());
-                map.adjustValue(hit.getId(), (hit.getDistance()-current)/2.0f);
-            } else {
-                map.put(hit.getId(), hit.getDistance());
-            }
+            map.merge(hit.getId(), hit, (o,n) -> new SegmentDistanceElement(hit.getId(), (o.getDistance() + n.getDistance())/2));
         }
 
-         /* Prepare final result-set. */
-        map.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, correspondence.applyAsDouble(value))));
-        return ScoreElement.filterMaximumScores(results.stream());
+        /* Prepare final result-set. */
+        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        return ScoreElement.filterMaximumScores(map.entrySet().stream().map(e -> e.getValue().toScore(fkt)));
     }
 
     /**

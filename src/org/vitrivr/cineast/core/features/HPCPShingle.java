@@ -1,15 +1,21 @@
 package org.vitrivr.cineast.core.features;
 
+import gnu.trove.map.TObjectDoubleMap;
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.*;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 
 import org.vitrivr.cineast.core.util.MathHelper;
@@ -102,18 +108,16 @@ public abstract class HPCPShingle extends StagedFeatureModule {
     @Override
     protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
         /* Prepare helper data-structures. */
-        final List<ScoreElement> results = new ArrayList<>();
-        final TObjectIntHashMap<String> scoreMap = new TObjectIntHashMap<>();
-
+        final HashMap<String,DistanceElement> map = new HashMap<>();
         for (DistanceElement hit : partialResults) {
             if (hit.getDistance() <= this.distanceThreshold) {
-                scoreMap.adjustOrPutValue(hit.getId(), 1, 1);
+                map.merge(hit.getId(), hit, (o, n) -> new SegmentDistanceElement(o.getId(), (o.getDistance() + n.getDistance())/2));
             }
         }
 
-         /* Prepare final result-set. */
-        scoreMap.forEachEntry((key, value) -> results.add(new SegmentScoreElement(key, 1.0-(1.0/value))));
-        return ScoreElement.filterMaximumScores(results.stream());
+        /* Prepare final result-set. */
+        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        return ScoreElement.filterMaximumScores(map.entrySet().stream().map(e -> e.getValue().toScore(fkt)));
     }
 
     /**
