@@ -71,7 +71,7 @@ public class TemporalDistance extends MetadataFeatureModule<InstantVector> {
    *         JSON timestamp, if found, otherwise an empty {@code Optional}.
    */
   @Override
-  public Optional<InstantVector> extractFeature(Path object) {
+  public Optional<InstantVector> extractFeature(String objectId, Path object) {
     return GpsData.of(object).time().map(InstantVector::of);
   }
 

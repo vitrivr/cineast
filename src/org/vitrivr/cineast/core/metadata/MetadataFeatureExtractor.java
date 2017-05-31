@@ -22,7 +22,7 @@ public interface MetadataFeatureExtractor<T> extends MetadataExtractor {
    */
   @Override
   default List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
-    return this.extractFeature(path)
+    return this.extractFeature(objectId, path)
         .map(floatVector -> this.createDescriptors(objectId, floatVector))
         .orElse(Collections.emptyList());
   }
@@ -31,7 +31,7 @@ public interface MetadataFeatureExtractor<T> extends MetadataExtractor {
    * Returns an {@link Optional} containing the extracted feature data from the file, if found,
    * otherwise an empty {@code Optional}.
    */
-  Optional<T> extractFeature(Path path);
+  Optional<T> extractFeature(String objectId, Path path);
 
   /** Returns a list of descriptors of the given feature data. */
   List<MultimediaMetadataDescriptor> createDescriptors(String objectId, T feature);

@@ -119,7 +119,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   @Override
   public List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
     checkState(this.isExtractorInitialized(), "extract called before init");
-    Optional<T> feature = this.extractFeature(path);
+    Optional<T> feature = this.extractFeature(objectId, path);
     feature.ifPresent(v -> this.featureWriter.write(new SimpleFeatureDescriptor(objectId, v)));
     return feature
         .map(floatVector -> this.createDescriptors(objectId, floatVector))
