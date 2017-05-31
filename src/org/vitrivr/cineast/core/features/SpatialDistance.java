@@ -81,7 +81,7 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
    *         coordinates, if found, otherwise an empty {@code Optional}.
    */
   @Override
-  public Optional<Location> extractFeature(Path objectPath) {
+  public Optional<Location> extractFeature(String objectId, Path objectPath) {
     return GpsData.of(objectPath).location();
   }
 
