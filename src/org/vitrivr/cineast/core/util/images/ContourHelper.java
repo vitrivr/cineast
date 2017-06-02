@@ -14,6 +14,7 @@ import boofcv.struct.image.GrayU8;
 
 import georegression.struct.point.Point2D_I32;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -27,16 +28,26 @@ public final class ContourHelper {
     /**
      * Private constructor; do not instantiate!
      */
-    private ContourHelper() {
-    }
+    private ContourHelper() {}
 
     /**
+     * Applies a contour-detection algorithm on the provided image and returns a list of detected contours. First, the image
+     * is converted to a BinaryImage using a threshold algorithm (Otsu). Afterwards, blobs in the image are detected using
+     * an 8-connect rule.
      *
-     * @param image
-     * @return
+     * @param image BufferedImage in which contours should be detected.
+     * @return List of contours.
      */
     public static List<Contour> getContours(BufferedImage image) {
-        GrayF32 input = ConvertBufferedImage.convertFromSingle(image, null, GrayF32.class);
+        /* Draw a black frame around to image so as to make sure that all detected contours are internal contours. */
+        BufferedImage resized = new BufferedImage(image.getWidth() + 4, image.getHeight() + 4, image.getType());
+        Graphics g = resized.getGraphics();
+        g.setColor(Color.BLACK);
+        g.fillRect(0,0,resized.getWidth(),resized.getHeight());
+        g.drawImage(image, 2,2, image.getWidth(), image.getHeight(), null);
+
+        /* Convert to BufferedImage to Gray-scale image and prepare Binary image. */
+        GrayF32 input = ConvertBufferedImage.convertFromSingle(resized, null, GrayF32.class);
         GrayU8 binary = new GrayU8(input.width,input.height);
         GrayS32 label = new GrayS32(input.width,input.height);
 
@@ -44,13 +55,12 @@ public final class ContourHelper {
         double threshold = GThresholdImageOps.computeOtsu(input, 0, 255);
         ThresholdImageOps.threshold(input, binary,(float)threshold,true);
 
-        // remove small blobs through erosion and dilation
-        // The null in the input indicates that it should internally declare the work image it needs
-        // this is less efficient, but easier to code.
+        /* Remove small blobs through erosion and dilation;  The null in the input indicates that it should internally
+         * declare the work image it needs this is less efficient, but easier to code. */
         GrayU8 filtered = BinaryImageOps.erode8(binary, 1, null);
         filtered = BinaryImageOps.dilate8(filtered, 1, null);
 
-        // Detect blobs inside the image using an 8-connect rule
+        /* Detect blobs inside the image using an 8-connect rule. */
         return BinaryImageOps.contour(filtered, ConnectRule.EIGHT, label);
     }
 
