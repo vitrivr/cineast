@@ -127,7 +127,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      */
     public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
         /* Initialize new Benchmark object. */
-        Benchmark benchmark = benchmark_engine.startNew(this.getClass());
+        Benchmark benchmark = benchmark_engine.startNew(this.getClass().getSimpleName() + " (" + qc.getQueryId().toString() + ")");
 
         /* Start query pre-processing phase. */
         benchmark.split(BENCHMARK_SPLITNAME_LOOKUP);
