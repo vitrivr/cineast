@@ -16,9 +16,9 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
-import org.vitrivr.cineast.core.data.messages.query.Query;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.QueryTerm;
+import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
 import org.vitrivr.cineast.core.data.messages.result.QueryEnd;
 import org.vitrivr.cineast.core.data.messages.result.QueryStart;
@@ -35,24 +35,30 @@ import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
  * @version 1.0
  * @created 12.01.17
  */
-public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query> {
+public class QueryMessageHandler extends StatelessWebsocketMessageHandler<SimilarityQuery> {
   /**
    *
    * @param session
    * @param message
    */
   @Override
-  public void handle(Session session, Query message) {
-    /* Begin of Query: Send QueryStart Message to Client. */
-    QueryStart startMarker = new QueryStart();
+  public void handle(Session session, SimilarityQuery message) {
+    /* Prepare QueryConfig (so as to obtain a QueryId). */
+    QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
+
+    /*
+     * Begin of Query: Send QueryStart Message to Client.
+     */
+    QueryStart startMarker = new QueryStart(qconf.getQueryId().toString());
     this.write(session, startMarker);
+
 
     // TODO: Remove code duplication shared with FindObjectSimilarActionHandler
     /*
      * Prepare map that maps categories to QueryTerm components.
      */
     HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
-    for (QueryComponent component : message.getContainers()) {
+    for (QueryComponent component : message.getComponents()) {
       for (QueryTerm term : component.getTerms()) {
         if (term.getCategories() == null) {
           continue;
@@ -66,7 +72,6 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
       }
     }
 
-    QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
     List<SegmentScoreElement> result;
     for (String category : categoryMap.keySet()) {
       TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
@@ -135,7 +140,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
     Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
 
     sl.close();
-    
+
     for (String id : ids) {
       SegmentDescriptor sd = map.get(id);
       if (sd != null) {
@@ -164,7 +169,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
     Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
 
     sl.close();
-    
+
     HashSet<String> videoIds = new HashSet<>();
     for (String id : ids) {
       SegmentDescriptor sd = map.get(id);
@@ -185,7 +190,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Query>
     Map<String, MultimediaObjectDescriptor> vmap = vl.lookUpObjects(vids);
 
     vl.close();
-    
+
     for (String vid : vids) {
       vdList.add(vmap.get(vid));
     }

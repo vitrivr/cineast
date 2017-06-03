@@ -35,6 +35,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
 import org.vitrivr.cineast.core.evaluation.EvaluationConfig;
 import org.vitrivr.cineast.core.evaluation.EvaluationException;
 import org.vitrivr.cineast.core.evaluation.EvaluationRuntime;

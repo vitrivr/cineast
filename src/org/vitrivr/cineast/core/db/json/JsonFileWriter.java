@@ -107,7 +107,7 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
 
     JsonObject _return = new JsonObject();
 
-    for (Object o : tuple.elements) {
+    for (Object o : tuple.getElements()) {
       if (o instanceof float[]) {
         _return.add(names[nameIndex++], toArray((float[]) o));
       } else if (o instanceof int[]) {

@@ -6,7 +6,7 @@
 	},
 	"benchmark": {
 		"mode":"STORE",
-		"path":"/Users/rgasser/Desktop"
+		"path":"/home/ubuntu/benchmarks"
 	},
 	"retriever": {
 		"threadPoolSize": 2,

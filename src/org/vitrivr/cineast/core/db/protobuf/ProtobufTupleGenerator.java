@@ -100,7 +100,7 @@ public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<T
       HashMap<String, DataMessage> tmpMap = new HashMap<>();
       int nameIndex = 0;
       
-      for(Object o : tuple.elements){
+      for(Object o : tuple.getElements()){
         
         tmpMap.put(names[nameIndex++], generateInsertMessage(o));
         
