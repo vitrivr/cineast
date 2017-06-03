@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -97,7 +98,9 @@ public class MelodyEstimate extends StagedFeatureModule {
      */
     @Override
     protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
-       return null;
+        /* TODO: Improve... */
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        return ScoreElement.filterMaximumScores(partialResults.stream().map(d -> d.toScore(correspondence)));
     }
 
     /**
@@ -120,6 +123,9 @@ public class MelodyEstimate extends StagedFeatureModule {
      * @return
      */
     private List<float[]> getFeatures(Melody melody) {
+
+        /* TODO: Improve... */
+
         /* Prepare empty features array. */
         final int vectors = Math.max((melody.size()-2) - SHINGLE_SIZE, 0);
         final List<float[]> features = new ArrayList<>(vectors);
