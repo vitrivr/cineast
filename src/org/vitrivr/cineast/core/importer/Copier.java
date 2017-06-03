@@ -54,14 +54,16 @@ public class Copier {
 			for(i = 0; i < names.length; ++i){
 				objects[i] = PrimitiveTypeProvider.getObject(map.get(names[i]));
 			}
-			@SuppressWarnings("rawtypes")
-			PersistentTuple tuple = this.writer.generateTuple(objects);
-			this.writer.persist(tuple);
+			persistTuple(this.writer.generateTuple(objects));
 		}while((map = this.importer.readNextAsMap()) != null);
 		
 		this.writer.close();
 	}
-	
+
+	private void persistTuple(PersistentTuple tuple) {
+		this.writer.persist(tuple);
+	}
+
 	public void copyBatched(int batchSize){
 	  
 	  if(batchSize <= 0){
@@ -88,14 +90,12 @@ public class Copier {
     
     Object[] objects = new Object[names.length];
     
-    @SuppressWarnings("rawtypes")
     ArrayList<PersistentTuple> tupleCache = new ArrayList<>(batchSize);
     
     do{
       for(i = 0; i < names.length; ++i){
         objects[i] = PrimitiveTypeProvider.getObject(map.get(names[i]));
       }
-      @SuppressWarnings("rawtypes")
       PersistentTuple tuple = this.writer.generateTuple(objects);
       tupleCache.add(tuple);
       if(tupleCache.size() >= batchSize){

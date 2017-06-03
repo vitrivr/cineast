@@ -1,19 +1,18 @@
 package org.vitrivr.cineast.core.importer;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.util.LogHelper;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * @author rgasser
@@ -75,7 +74,7 @@ public class DataImportHandler {
   private final int batchsize;
 
   /** */
-  private final ArrayList<Future> futures = new ArrayList<>();
+  private final ArrayList<Future<?>> futures = new ArrayList<>();
 
   /**
    * Default constructor; creates DataImportHandler with two threads and a batchsize of 100.

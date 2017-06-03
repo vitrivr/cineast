@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.db.dao.writer;
 
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -9,6 +10,7 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
  * @version 1.0
  * @created 28.01.17
  */
+<<<<<<< HEAD
 public class SimpleFeatureDescriptorWriter extends AbstractBatchedEntityWriter<SimpleFeatureDescriptor>  {
 
     private final String entityname;
@@ -41,4 +43,47 @@ public class SimpleFeatureDescriptorWriter extends AbstractBatchedEntityWriter<S
         entity.getFeature().toArray(array);
         return this.writer.generateTuple(entity.getSegmentId(), array);
     }
+=======
+public class SimpleFeatureDescriptorWriter extends
+    AbstractBatchedEntityWriter<SimpleFeatureDescriptor> {
+
+  private final String entityname;
+
+
+  /**
+   * @param writer
+   */
+  public SimpleFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname) {
+    this(writer, entityname, 1);
+  }
+
+  /**
+   * @param writer
+   * @param batchsize
+   */
+  public SimpleFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname,
+      int batchsize) {
+    super(writer, batchsize, false);
+    this.entityname = entityname;
+    this.init();
+  }
+
+  /**
+   *
+   */
+  @Override
+  public void init() {
+    this.writer.open(this.entityname);
+  }
+
+  /**
+   * @param entity
+   * @return
+   */
+  @Override
+  protected PersistentTuple generateTuple(SimpleFeatureDescriptor entity) {
+    float[] array = ReadableFloatVector.toArray(entity.getFeature());
+    return this.writer.generateTuple(entity.getSegmentId(), array);
+  }
+>>>>>>> 280e6e0aa102c733e045956fd35d8b44a6b4ccaa
 }

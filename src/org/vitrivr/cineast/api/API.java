@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api;
 
+import com.google.common.collect.Ordering;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,9 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.imageio.ImageIO;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -28,10 +27,12 @@ import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.vitrivr.cineast.api.rest.RestfulAPI;
+import org.vitrivr.cineast.api.session.CredentialManager;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.evaluation.EvaluationConfig;
@@ -500,6 +501,37 @@ public class API {
               );
               System.out
                   .println("added RetrievalResultCSVExporter to ContinuousRetrievalLogic");
+              break;
+            }
+
+            case "metadata": {
+              if (commands.size() < 2) {
+                System.err.println("You must specify at least one object id to lookup.");
+                break;
+              }
+              List<String> ids = commands.subList(1, commands.size());
+              Ordering<MultimediaMetadataDescriptor> ordering =
+                  Ordering.explicit(ids).onResultOf(d -> d.getObjectId());
+              try (MultimediaMetadataReader r = new MultimediaMetadataReader()) {
+                List<MultimediaMetadataDescriptor> descriptors = r.lookupMultimediaMetadata(ids);
+                descriptors.sort(ordering);
+                descriptors.forEach(System.out::println);
+              }
+              break;
+            }
+            case "adduser":{
+              if (commands.size() < 3) {
+                System.err.println("You must specify username and password of the user to add");
+                break;
+              }
+              
+              String username = commands.get(1);
+              String password = commands.get(2);
+              
+              boolean admin = commands.size() >= 4 && commands.get(3).equalsIgnoreCase("admin");
+              
+              CredentialManager.createUser(username, password, admin);
+              
               break;
             }
             case "exit":

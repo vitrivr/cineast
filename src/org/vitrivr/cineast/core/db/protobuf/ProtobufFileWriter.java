@@ -1,17 +1,15 @@
-package org.vitrivr.cineast.core.db.protobuf;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.util.LogHelper;
+package org.vitrivr.cineast.core.db;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 
 public class ProtobufFileWriter extends ProtobufTupleGenerator{
@@ -67,9 +65,9 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator{
 	}
 
 	@Override
-	public boolean persist(PersistentTuple<TupleInsertMessage> tuple) {
+	public boolean persist(PersistentTuple tuple) {
 		try {
-			tuple.getPersistentRepresentation().writeDelimitedTo(out);
+			getPersistentRepresentation(tuple).writeDelimitedTo(out);
 			out.flush();
 			return true;
 		} catch (IOException e) {
@@ -78,11 +76,10 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator{
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
   @Override
 	public boolean persist(List<PersistentTuple> persistentTuples) {
 		boolean success = true;
-	  for(PersistentTuple<TupleInsertMessage> t : persistentTuples){
+	  for(PersistentTuple t : persistentTuples){
 		  success &= persist(t);
 		}
 	  return success;

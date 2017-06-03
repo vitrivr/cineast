@@ -14,151 +14,136 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 
 public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
 
-	private static File defaultBaseFolder = new File(Config.sharedConfig().getExtractor().getOutputLocation(), "json");
-	private File baseFolder;
-	private PrintWriter out;
-	private boolean first = true;
+  private static File defaultBaseFolder = new File(
+      Config.sharedConfig().getExtractor().getOutputLocation(), "json");
+  private File baseFolder;
+  private PrintWriter out;
+  private boolean first = true;
 
-	public JsonFileWriter(File baseFolder){
-	  this.baseFolder = baseFolder;
-	}
-	
-	public JsonFileWriter(){
-	  this(defaultBaseFolder);
-	}
-	
-	
-	@Override
-	public boolean open(String name) {
-	  baseFolder.mkdirs();
-		if(this.out != null && !this.out.checkError()){
-		  return false;
-		}
-		try {
-			this.out = new PrintWriter(new File(baseFolder, name + ".json"));
-			this.out.println('[');
-			return true;
-		} catch (FileNotFoundException e) {
-			return false;
-		}
-	}
+  public JsonFileWriter(File baseFolder) {
+    this.baseFolder = baseFolder;
+  }
 
-	@Override
-	public boolean close() {
-		if (out == null) {
-			return true;
-		}
-		out.println(']');
-		out.flush();
-		out.close();
-		out = null;
-		return true;
-	}
+  public JsonFileWriter() {
+    this(defaultBaseFolder);
+  }
 
-	@Override
-	public boolean persist(PersistentTuple<JsonObject> tuple) {
-		this.out.print(this.first ? "" : ",");
-		this.out.println(tuple.getPersistentRepresentation().toString());
-		this.out.flush();
-		this.first = false;
-		return true;
-
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
   @Override
-	public boolean persist(List<PersistentTuple> tuples) {
-		boolean success = true;
-		for(PersistentTuple tuple : tuples){
-			if(!persist(tuple)){
-				success = false;
-			}
-		}
-		return success;
-	}
+  public boolean open(String name) {
+    baseFolder.mkdirs();
+    if (this.out != null && !this.out.checkError()) {
+      return false;
+    }
+    try {
+      this.out = new PrintWriter(new File(baseFolder, name + ".json"));
+      this.out.println('[');
+      return true;
+    } catch (FileNotFoundException e) {
+      return false;
+    }
+  }
 
-	public static void setDefaultFolder(File outputFolder) {
-		if (outputFolder == null) {
-			throw new NullPointerException("outputfolder cannot be null");
-		}
-		defaultBaseFolder = outputFolder;
-		defaultBaseFolder.mkdirs();
-	}
+  @Override
+  public boolean close() {
+    if (out == null) {
+      return true;
+    }
+    out.println(']');
+    out.flush();
+    out.close();
+    out = null;
+    return true;
+  }
 
-	@Override
-	public boolean idExists(String id) {
-		return false;
-	}
+  @Override
+  public boolean persist(PersistentTuple tuple) {
+    this.out.print(this.first ? "" : ",");
+    this.out.println(this.getPersistentRepresentation(tuple).toString());
+    this.out.flush();
+    this.first = false;
+    return true;
 
-	@Override
-	public boolean exists(String key, String value) {
-		return false;
-	}
+  }
 
-	@Override
-	public PersistentTuple<JsonObject> generateTuple(Object... objects) {
-		JsonTuple jt = new JsonTuple();
-		for (Object o : objects) {
-			if (o != null) {
-				jt.addElement(o);
-			}
-		}
-		return jt;
-	}
+  @Override
+  public boolean persist(List<PersistentTuple> tuples) {
+    boolean success = true;
+    for (PersistentTuple tuple : tuples) {
+      if (!persist(tuple)) {
+        success = false;
+      }
+    }
+    return success;
+  }
 
-	@Override
-	protected void finalize() throws Throwable {
-		close();
-		super.finalize();
-	}
+  public static void setDefaultFolder(File outputFolder) {
+    if (outputFolder == null) {
+      throw new NullPointerException("outputfolder cannot be null");
+    }
+    defaultBaseFolder = outputFolder;
+    defaultBaseFolder.mkdirs();
+  }
 
-	class JsonTuple extends PersistentTuple<JsonObject> {
+  @Override
+  public boolean idExists(String id) {
+    return false;
+  }
 
-		@Override
-		public JsonObject getPersistentRepresentation() {
+  @Override
+  public boolean exists(String key, String value) {
+    return false;
+  }
 
-			int nameIndex = 0;
+  @Override
+  protected void finalize() throws Throwable {
+    close();
+    super.finalize();
+  }
 
-			JsonObject _return = new JsonObject();
+  @Override
+  public JsonObject getPersistentRepresentation(PersistentTuple tuple) {
 
-			for (Object o : this.elements) {
-				if (o instanceof float[]) {
-					_return.add(names[nameIndex++], toArray((float[]) o));
-				} else if (o instanceof int[]) {
-					_return.add(names[nameIndex++], toArray((int[]) o));
-				} else if (o instanceof Integer) {
-					_return.add(names[nameIndex++], (int)o);
-				} else if (o instanceof Float) {
-					_return.add(names[nameIndex++], (float)o);
-				} else if (o instanceof Long) {
-					_return.add(names[nameIndex++], (long)o);
-				} else if (o instanceof Double) {
-					_return.add(names[nameIndex++], (double)o);
-				} else if (o instanceof Boolean) {
-					_return.add(names[nameIndex++], (boolean)o);
-				} else {
-					_return.add(names[nameIndex++], o.toString());
-				}
-			}
+    int nameIndex = 0;
 
-			return _return;
-		}
-	}
+    JsonObject _return = new JsonObject();
 
-	private static JsonArray toArray(float[] arr) {
-		JsonArray jarr = new JsonArray();
-		for (int i = 0; i < arr.length; ++i) {
-			jarr.add(arr[i]);
-		}
-		return jarr;
-	}
+    for (Object o : tuple.elements) {
+      if (o instanceof float[]) {
+        _return.add(names[nameIndex++], toArray((float[]) o));
+      } else if (o instanceof int[]) {
+        _return.add(names[nameIndex++], toArray((int[]) o));
+      } else if (o instanceof Integer) {
+        _return.add(names[nameIndex++], (int) o);
+      } else if (o instanceof Float) {
+        _return.add(names[nameIndex++], (float) o);
+      } else if (o instanceof Long) {
+        _return.add(names[nameIndex++], (long) o);
+      } else if (o instanceof Double) {
+        _return.add(names[nameIndex++], (double) o);
+      } else if (o instanceof Boolean) {
+        _return.add(names[nameIndex++], (boolean) o);
+      } else {
+        _return.add(names[nameIndex++], o.toString());
+      }
+    }
 
-	private static JsonArray toArray(int[] arr) {
-		JsonArray jarr = new JsonArray();
-		for (int i = 0; i < arr.length; ++i) {
-			jarr.add(arr[i]);
-		}
-		return jarr;
-	}
+    return _return;
+  }
+
+  private static JsonArray toArray(float[] arr) {
+    JsonArray jarr = new JsonArray();
+    for (int i = 0; i < arr.length; ++i) {
+      jarr.add(arr[i]);
+    }
+    return jarr;
+  }
+
+  private static JsonArray toArray(int[] arr) {
+    JsonArray jarr = new JsonArray();
+    for (int i = 0; i < arr.length; ++i) {
+      jarr.add(arr[i]);
+    }
+    return jarr;
+  }
 
 }

@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.DoublePair;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 import java.io.IOException;
@@ -46,9 +47,16 @@ public class FeatureCategoriesDeserializer extends JsonDeserializer<List<DoubleP
             Class<Retriever> c = FeatureCategoriesDeserializer.classCache.get(feature);
             if (c == null) {
                 try {
-                    c = ReflectionHelper.getClassFromName(feature, Retriever.class, ReflectionHelper.FEATURE_MODULE_PACKAGE);
+                    if (feature.contains(".")) {
+                        @SuppressWarnings("unchecked")
+                        Class<Retriever> clazz = (Class<Retriever>) Class.forName(feature);
+                        c = clazz;
+                    } else {
+                        c = ReflectionHelper.getClassFromName(feature, Retriever.class, ReflectionHelper.FEATURE_MODULE_PACKAGE);
+                    }
                 } catch (IllegalArgumentException | ClassNotFoundException | InstantiationException | UnsupportedOperationException e) {
-                    LOGGER.log(Level.WARN, "The specified feature '" + feature + "' could not be instantiated.");
+                    LOGGER.log(Level.WARN, "The specified feature '" + feature + "' could not be instantiated: {}",
+                        LogHelper.getStackTrace(e));
                 }
             }
 

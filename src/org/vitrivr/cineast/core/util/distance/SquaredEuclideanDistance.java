@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class SquaredEuclideanDistance implements FloatArrayDistance {
 
+  private static final long serialVersionUID = -1230187939037732096L;
+
   @Override
   public double applyAsDouble(float[] t, float[] u) {
     if (t == null || u == null) {

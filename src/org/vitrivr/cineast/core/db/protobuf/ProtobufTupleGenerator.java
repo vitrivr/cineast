@@ -49,7 +49,7 @@ public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<T
 			  return insertMessageBuilder.setVectorData(generateIntVectorMessage(new IntArrayIterable((int[])o))).build();
 			}
 			if(o instanceof ReadableFloatVector){
-				return insertMessageBuilder.setVectorData(generateVectorMessage(((ReadableFloatVector)o).toList(null))).build();
+				return insertMessageBuilder.setVectorData(generateVectorMessage(ReadableFloatVector.toList((ReadableFloatVector) o))).build();
 			}
 			if(o == null){
 				return insertMessageBuilder.setStringData("null").build();
@@ -94,33 +94,19 @@ public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<T
 		super();
 	}
 
-	@Override
-	public PersistentTuple<TupleInsertMessage> generateTuple(Object... objects) {
-		return new ProtobufTuple(objects);
-	}
+	public TupleInsertMessage getPersistentRepresentation(PersistentTuple tuple) {
+    synchronized (builder) {
+      builder.clear();      
+      HashMap<String, DataMessage> tmpMap = new HashMap<>();
+      int nameIndex = 0;
+      
+      for(Object o : tuple.elements){
+        
+        tmpMap.put(names[nameIndex++], generateInsertMessage(o));
+        
+      }
+      return builder.putAllData(tmpMap).build();
+    }
+  }
 
-	class ProtobufTuple extends PersistentTuple<TupleInsertMessage>{
-
-		ProtobufTuple(Object...objects){
-			super(objects);
-		}
-		
-		@Override
-		public TupleInsertMessage getPersistentRepresentation() {
-			synchronized (builder) {
-				builder.clear();			
-				HashMap<String, DataMessage> tmpMap = new HashMap<>();
-				int nameIndex = 0;
-				
-				for(Object o : this.elements){
-					
-					tmpMap.put(names[nameIndex++], generateInsertMessage(o));
-					
-				}
-				return builder.putAllData(tmpMap).build();
-			}
-		}
-		
-	}
-	
 }

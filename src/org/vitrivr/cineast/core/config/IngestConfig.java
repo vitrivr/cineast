@@ -202,6 +202,7 @@ public class IngestConfig implements ExtractionContextProvider {
      * @return A positive number or zero
      */
     @Override
+    @Deprecated
     public int skip() {
         return this.input.getSkip();
     }
@@ -214,6 +215,7 @@ public class IngestConfig implements ExtractionContextProvider {
      * @return A number greater than zero.
      */
     @Override
+    @Deprecated
     public int limit() {
         return this.input.getLimit();
     }

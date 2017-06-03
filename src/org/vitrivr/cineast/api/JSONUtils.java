@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.util.*;
-
+@Deprecated
 public class JSONUtils {
 
 	private static Logger LOGGER = LogManager.getLogger();

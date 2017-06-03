@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -14,32 +15,34 @@ import org.vitrivr.cineast.core.segmenter.FuzzyColorHistogramCalculator;
 
 public class AverageFuzzyHist extends AbstractFeatureModule {
 
-	private static final Logger LOGGER = LogManager.getLogger();
-	
-	public AverageFuzzyHist(){
-		super("features_AverageFuzzyHist", 2f / 4f);
-	}
+  private static final Logger LOGGER = LogManager.getLogger();
 
-	@Override
-	public void processShot(SegmentContainer shot) {
-		LOGGER.traceEntry();
-		if (!phandler.idExists(shot.getId())) {
-			FuzzyColorHistogram fch = FuzzyColorHistogramCalculator.getHistogramNormalized(shot.getAvgImg().getBufferedImage());
-			persist(shot.getId(), fch);
-		}
-		LOGGER.traceExit();
-	}
+  public AverageFuzzyHist() {
+    super("features_AverageFuzzyHist", 2f / 4f);
+  }
 
-	@Override
-	public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-		FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(sc.getAvgImg().getBufferedImage());
-		return getSimilar(query.toArray(null), qc);
-	}
+  @Override
+  public void processShot(SegmentContainer shot) {
+    LOGGER.traceEntry();
+    if (!phandler.idExists(shot.getId())) {
+      FuzzyColorHistogram fch = FuzzyColorHistogramCalculator
+          .getHistogramNormalized(shot.getAvgImg().getBufferedImage());
+      persist(shot.getId(), fch);
+    }
+    LOGGER.traceExit();
+  }
+
+  @Override
+  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+    FuzzyColorHistogram query = FuzzyColorHistogramCalculator
+        .getHistogramNormalized(sc.getAvgImg().getBufferedImage());
+    return getSimilar(ReadableFloatVector.toArray(query), qc);
+  }
 
   @Override
   protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
     return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
   }
 
-	
+
 }

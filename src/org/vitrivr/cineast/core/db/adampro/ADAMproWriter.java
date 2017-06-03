@@ -108,23 +108,21 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 
   }
 
-  @SuppressWarnings("rawtypes")
   @Override
-  public boolean persist(PersistentTuple<TupleInsertMessage> tuple) {
+  public boolean persist(PersistentTuple tuple) {
     List<PersistentTuple> tuples = new ArrayList<>(1);
     tuples.add(tuple);
     return persist(tuples);
   }
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
   public boolean persist(List<PersistentTuple> tuples) {
     InsertMessage im;
     synchronized (this.imBuilder) {
       this.imBuilder.clear();
       this.imBuilder.setEntity(this.entityName);
       ArrayList<TupleInsertMessage> tmp = new ArrayList<>(tuples.size());
-      for (PersistentTuple<TupleInsertMessage> tuple : tuples) {
-        TupleInsertMessage tim = tuple.getPersistentRepresentation();
+      for (PersistentTuple tuple : tuples) {
+        TupleInsertMessage tim = getPersistentRepresentation(tuple);
         tmp.add(tim);
       }
       this.imBuilder.addAllTuples(tmp);

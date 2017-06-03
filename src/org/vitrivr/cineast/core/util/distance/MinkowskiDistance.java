@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class MinkowskiDistance implements FloatArrayDistance {
 
+  private static final long serialVersionUID = 1415943182235288096L;
   protected final double exponenet;
 
   public MinkowskiDistance(double exponent) {

@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class EuclideanDistance implements FloatArrayDistance {
 
+  private static final long serialVersionUID = -8415611991170039363L;
+
   @Override
   public double applyAsDouble(float[] t, float[] u) {
     if (t == null || u == null) {

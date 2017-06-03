@@ -1,12 +1,13 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import java.util.List;
+import java.util.Map;
+
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
+import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author rgasser
@@ -15,12 +16,12 @@ import java.util.Map;
  */
 public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage> {
   @Override
-  public Object invoke(AnyMessage type, Map<String, String> parameters) {
+  public ObjectQueryResult invoke(AnyMessage type, Map<String, String> parameters) {
 
     MultimediaObjectLookup ol = new MultimediaObjectLookup();
     List<MultimediaObjectDescriptor> multimediaobjectIds = ol.getAllObjects();
     ol.close();
-    return multimediaobjectIds.toArray(new MultimediaObjectDescriptor[multimediaobjectIds.size()]);
+    return new ObjectQueryResult("", multimediaobjectIds);
   }
 
   @Override

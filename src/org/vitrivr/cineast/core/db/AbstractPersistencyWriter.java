@@ -18,4 +18,9 @@ public abstract class AbstractPersistencyWriter<R> implements PersistencyWriter<
     }
   }
   
+  @Override
+  public PersistentTuple generateTuple(Object... objects) {
+    return new PersistentTuple(objects);
+  }
+  
 }

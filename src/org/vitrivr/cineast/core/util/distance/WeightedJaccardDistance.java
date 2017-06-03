@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class WeightedJaccardDistance extends JaccardDistance {
 
+  private static final long serialVersionUID = -3551369492561092529L;
   private final float[] weights;
 
   WeightedJaccardDistance(float[] weights) {

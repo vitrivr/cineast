@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.db;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class PersistentTuple<R> {
+public class PersistentTuple {
 
 	protected LinkedList<Object> elements = new LinkedList<>();
 	
@@ -22,7 +22,5 @@ public abstract class PersistentTuple<R> {
 	public List<Object> getElements(){
 		return this.elements;
 	}
-	
-	public abstract R getPersistentRepresentation();
 	
 }

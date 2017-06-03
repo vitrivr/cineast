@@ -33,7 +33,6 @@ import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.db.DBResultCache;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
@@ -47,6 +46,7 @@ import org.vitrivr.cineast.explorative.PlaneManager;
  * Handles connection to and from the Client As the name of the class suggests,
  * communication is done via JSON-Objects
  */
+@Deprecated
 public class JSONAPIThread extends Thread {
 
   private Socket socket = null;
@@ -196,8 +196,8 @@ public class JSONAPIThread extends Thread {
 
         }
         
-        String resultName = DBResultCache.newCachedResult(shotids);
-        JSONUtils.printResultName(printer, resultName);
+//        String resultName = DBResultCache.newCachedResult(shotids);
+//        JSONUtils.printResultName(printer, resultName);
         break;
       }
 
@@ -219,7 +219,7 @@ public class JSONAPIThread extends Thread {
         
         QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
         
-        DBResultCache.createIfNecessary(resultCacheName);
+//        DBResultCache.createIfNecessary(resultCacheName);
         
         int index = 1;
         for (Iterator<JsonValue> it = queryArray.iterator(); it.hasNext(); ++index) {
@@ -245,8 +245,8 @@ public class JSONAPIThread extends Thread {
           }
         }
 
-        String resultName = DBResultCache.newCachedResult(shotids);
-        JSONUtils.printResultName(printer, resultName);
+//        String resultName = DBResultCache.newCachedResult(shotids);
+//        JSONUtils.printResultName(printer, resultName);
 
         break;
       }
@@ -264,7 +264,7 @@ public class JSONAPIThread extends Thread {
         
         QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
         
-        DBResultCache.createIfNecessary(resultCacheName);
+//        DBResultCache.createIfNecessary(resultCacheName);
         
         HashMap<String, ArrayList<ImageQueryContainer>> categoryMap = new HashMap<>();
         
@@ -550,7 +550,7 @@ public class JSONAPIThread extends Thread {
         String id = clientJSON.get("id").asString();
         int level = clientJSON.get("level").asInt();
 
-        PlaneManager specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
+        PlaneManager<?> specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
         JsonObject jsonObject = specificPlaneManager.getElementPosition(level, id);
 
         JsonObject batch = new JsonObject();
@@ -572,7 +572,7 @@ public class JSONAPIThread extends Thread {
           int level = clientJSON.get("level").asInt();
           JsonArray requested = clientJSON.get("requested").asArray();
           JsonArray response = new JsonArray();
-          PlaneManager specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
+          PlaneManager<?> specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
           for (JsonValue jsonValue : requested.asArray()) {
             JsonObject xyObject = jsonValue.asObject();
             int x = xyObject.get("x").asInt();
@@ -610,7 +610,7 @@ public class JSONAPIThread extends Thread {
           String featureName = clientJSON.get("featureName").asString();
           int level = clientJSON.get("level").asInt();
           String id = clientJSON.get("id").asString();
-          PlaneManager specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
+          PlaneManager<?> specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
           String representativeId = specificPlaneManager.getRepresentativeOfElement(id, level);
           if (representativeId == null || representativeId.isEmpty()){
             throw new Exception("RepresentativeID is empty");
@@ -643,7 +643,7 @@ public class JSONAPIThread extends Thread {
           for(String featureName : processedFeatures){
 //            if(!el.matches("plane_manager_[A-z0-9]*.ser")) continue;
 //            String featureName = el.replace("plane_manager_", "").replace(".ser", "").toLowerCase();
-            PlaneManager specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
+            PlaneManager<?> specificPlaneManager = PlaneHandler.getSpecificPlaneManager(featureName);
             int topLevel = specificPlaneManager.getTopLevel();
             Position center = specificPlaneManager.getCenter();
             jsonConcepts.add(new JsonObject()

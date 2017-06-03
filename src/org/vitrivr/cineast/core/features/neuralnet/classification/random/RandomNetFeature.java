@@ -61,7 +61,7 @@ public class RandomNetFeature extends NeuralNetFeature {
 
     @Override
     public void processShot(SegmentContainer shot) {
-        LOGGER.entry();
+        LOGGER.traceEntry();
         TimeHelper.tic();
         if (!phandler.idExists(shot.getId())) {
             float[] probabilities = net.classify(new BufferedImage(100,100,0));
@@ -76,14 +76,17 @@ public class RandomNetFeature extends NeuralNetFeature {
             LOGGER.info("Best Match for shot {}: {} with probability {}", shot.getId(), String.join(", ", net.getLabels(net.getSynSetLabels()[maxIdx])), probabilities[maxIdx]);
 
             String id = UUID.randomUUID().toString();
-            PersistentTuple tuple = classificationWriter.generateTuple(id, shot.getId(), net.getSynSetLabels()[maxIdx], probabilities[maxIdx]);
-            classificationWriter.persist(tuple);
+            persistTuple(classificationWriter.generateTuple(id, shot.getId(), net.getSynSetLabels()[maxIdx], probabilities[maxIdx]));
 
             persist(shot.getId(), new FloatVectorImpl(probabilities));
             LOGGER.trace("NeuralNetFeature.processShot() done in {}",
                     TimeHelper.toc());
         }
-        LOGGER.exit();
+        LOGGER.traceExit();
+    }
+
+    private void persistTuple(PersistentTuple tuple) {
+        classificationWriter.persist(tuple);
     }
 
 

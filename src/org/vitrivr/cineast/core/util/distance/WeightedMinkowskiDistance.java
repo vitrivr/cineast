@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class WeightedMinkowskiDistance extends MinkowskiDistance {
 
+  private static final long serialVersionUID = 6196111620066310228L;
   private final float[] weights;
 
   WeightedMinkowskiDistance(float[] weights, double exponent) {

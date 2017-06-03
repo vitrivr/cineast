@@ -1,7 +1,9 @@
 package org.vitrivr.cineast.core.db;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -32,112 +34,50 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
 
   @Override
   public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector,
-      String column, Class<? extends T> distanceElementClass, ReadableQueryConfig config) {
-      List<Map<String, PrimitiveTypeProvider>> results = getNearestNeighbourRows(k, vector, column,
+      String column, Class<T> distanceElementClass, ReadableQueryConfig config) {
+    List<Map<String, PrimitiveTypeProvider>> results = getNearestNeighbourRows(k, vector, column,
         config);
-      return results.stream()
+    return results.stream()
         .map(m -> DistanceElement.create(
             distanceElementClass, m.get("id").getString(), m.get("distance").getDouble()))
         .limit(k)
         .collect(Collectors.toList());
   }
 
-  /**
-   *
-   * @param k The number k vectors to return per query.
-   * @param vectors The list of vectors to use.
-   * @param column The column to perform the kNN search on.
-   * @param distanceElementClass class of the {@link DistanceElement} type
-   * @param configs The query configurations, which may contain distance definitions or query-hints.
-   * @param <T>
-   * @return
-   */
-  public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<? extends T> distanceElementClass, List<ReadableQueryConfig> configs) {
-    /* Check if size of configs and vectors array corresponds. */
-    if (vectors.size() > configs.size()) throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
-
-    /* Prepare helper data-structures. */
-    final Importer<?> importer = newImporter(this.file);
-    final List<FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>>> knns = new ArrayList<>(vectors.size());
-    final List<FloatArrayDistance> distances = new ArrayList<>(vectors.size());
-
-    for (int i=0; i< vectors.size(); i++) {
-      FloatArrayDistance distance = FloatArrayDistance.fromQueryConfig(configs.get(i));
-      distances.add(distance);
-      knns.add(new FixedSizePriorityQueue<>(k, new PrimitiveTypeMapDistanceComparator(column, vectors.get(i), distance)));
-    }
-
-    Map<String, PrimitiveTypeProvider> map;
-    while ((map = importer.readNextAsMap()) != null) {
-      if (!map.containsKey(column)) continue;
-      for (int i = 0; i < vectors.size(); i++) {
-        double d = distances.get(i).applyAsDouble(vectors.get(i), map.get(column).getFloatArray());
-        map.put("distance", new FloatTypeProvider((float) d));
-        knns.get(i).add(map);
-      }
-    }
-
-    return knns.stream()
-            .flatMap(Collection::stream)
-            .map(m -> DistanceElement.create(distanceElementClass, m.get("id").getString(), m.get("distance").getDouble()))
-            .limit(k)
-            .collect(Collectors.toList());
-  }
-
-  /**
-   * Performs a combined kNN-search with multiple query vectors. That is, the storage engine is tasked to perform the kNN search for each vector and then
-   * merge the partial result sets pairwise using the desired MergeOperation.
-   *
-   * @param k                    The number k vectors to return per query.
-   * @param vectors              The list of vectors to use.
-   * @param column               The column to perform the kNN search on.
-   * @param distanceElementClass class of the {@link DistanceElement} type
-   * @param configs              The query configuration, which may contain distance definitions or query-hints.
-   * @param merge
-   * @param options
-   * @return List of results.
-   */
-  @Override
-  public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<? extends T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation merge, Map<String, String> options) {
-    /* TODO: Provide a custom implementation of the combined-nearest neighbour search with sets. */
-   throw new IllegalStateException("The ImporterSelector currently does not support combined kNN search.");
-  }
-
-
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
       String column, ReadableQueryConfig config) {
 
-      config = QueryConfig.clone(config);
+    config = QueryConfig.clone(config);
 
-      Importer<?> importer = newImporter(this.file);
+    Importer<?> importer = newImporter(this.file);
 
-      FloatArrayDistance distance = FloatArrayDistance.fromQueryConfig(config);
+    FloatArrayDistance distance = FloatArrayDistance.fromQueryConfig(config);
 
-      FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn = new FixedSizePriorityQueue<>(k,
-          new PrimitiveTypeMapDistanceComparator(column, vector, distance));
+    FixedSizePriorityQueue<Map<String, PrimitiveTypeProvider>> knn = FixedSizePriorityQueue
+        .create(k, new PrimitiveTypeMapDistanceComparator(column, vector, distance));
 
-      Map<String, PrimitiveTypeProvider> map;
-      while ((map = importer.readNextAsMap()) != null) {
-        if(!map.containsKey(column)){
-          continue;
-        }
-        double d = distance.applyAsDouble(vector, map.get(column).getFloatArray());
-        map.put("distance", new FloatTypeProvider((float) d));
-        knn.add(map);
+    Map<String, PrimitiveTypeProvider> map;
+    while ((map = importer.readNextAsMap()) != null) {
+      if(!map.containsKey(column)){
+        continue;
       }
+      double d = distance.applyAsDouble(vector, map.get(column).getFloatArray());
+      map.put("distance", new FloatTypeProvider((float) d));
+      knn.add(map);
+    }
 
-      int len = Math.min(knn.size(), k);
-      ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(len);
+    int len = Math.min(knn.size(), k);
+    ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(len);
 
-      for (Map<String, PrimitiveTypeProvider> i : knn) {
-        _return.add(i);
-        if (_return.size() >= len) {
-          break;
-        }
+    for (Map<String, PrimitiveTypeProvider> i : knn) {
+      _return.add(i);
+      if (_return.size() >= len) {
+        break;
       }
+    }
 
-      return _return;
+    return _return;
   }
 
   @Override

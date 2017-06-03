@@ -3,15 +3,21 @@ package org.vitrivr.cineast.api.rest;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import org.vitrivr.cineast.api.rest.handlers.actions.FindMetadatasByIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectAllActionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectByActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentSimilarActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectsByIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentAllByObjectIdActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentsByIdActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
 
+import spark.RouteGroup;
+import spark.Service;
 import spark.Spark;
-
-import static spark.Spark.*;
 
 /**
  * This class establishes a RESTful endpoint listening on the specified port. Incoming requests are
@@ -43,44 +49,53 @@ public class RestfulAPI {
    *          Maximum number of threads that should be used to handle messages.
    */
   public static void start(int port, int numberOfThreads) {
+    Service http = Service.ignite();
+    
     if (port > 0 && port < 65535) {
-      Spark.port(port);
+      http.port(port);
     } else {
       LOGGER.warn("The specified port {} is not valid. Fallback to default port.", port);
     }
-    threadPool(numberOfThreads, 2, 30000);
+    http.threadPool(numberOfThreads, 2, 30000);
+    //https.secure("keystore.jks", "password", null, null);
 
     /* Register routes! */
-    get(path("status"), new StatusInvokationHandler());
-    get(path("find/object/by/:attribute/:value"), new FindObjectByActionHandler());
-    get(path("find/object/all/:type"), new FindObjectAllActionHandler());
-    // post(path("find/object/similar"), new FindObjectSimilarActionHandler());
-
-    get(path("find/segment/all/object/:id"), new FindSegmentAllByObjectIdActionHandler());
+    http.get(makePath("status"), new StatusInvokationHandler());
     
-    get(path("find/segment/all/:attribute/:value"), (request, response) -> {
-      /* TODO: Implement! */
-      return null;
-    });
-    get(path("find/segment/all/:type"), (request, response) -> {
-      /* TODO: Implement! */
-      return null;
+    http.path(makePath("find"), () -> {
+      http.get("/object/by/:attribute/:value", new FindObjectByActionHandler());
+      http.get("/objects/all/:type", new FindObjectAllActionHandler());
+      
+      http.get("/segments/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
+            
+      http.post("/segments/similar/", new FindSegmentSimilarActionHandler());
+      
+      http.post("/segments/by/id", new FindSegmentsByIdActionHandler());
+      http.post("/objects/by/id", new FindObjectsByIdActionHandler());
+      http.post("/metas/by/id", new FindMetadatasByIdActionHandler());
     });
 
+    
+    http.path(makePath("session"), () -> { //TODO move to separate service
+      http.post("/start", new StartSessionHandler());
+      http.get("/end/:id", new EndSessionHandler());
+      http.get("/validate/:id", new ValidateSessionHandler());
+    });
+    
     /*
      * Configure the result after processing was completed.
      */
-    after((request, response) -> {
+    http.after((request, response) -> {
       response.type("application/json");
       response.header("Access-Control-Allow-Origin", "*");
     });
 
     /* TODO: Add fine grained exception handling. */
-    exception(Exception.class, (exception, request, response) -> {
+    http.exception(Exception.class, (exception, request, response) -> {
       LOGGER.log(Level.ERROR, exception);
     });
 
-    Spark.awaitInitialization();
+    http.awaitInitialization();
   }
 
   /**
@@ -88,7 +103,7 @@ public class RestfulAPI {
    * @param name
    * @return
    */
-  private static String path(String name) {
+  private static String makePath(String name) {
     return String.format("/%s/%s/%s", CONTEXT, VERSION, name);
   }
 }

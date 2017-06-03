@@ -49,9 +49,6 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
     this.selector.open(this.tableName);
   }
 
-  private float[] arrayCache = null; // avoiding the creation of new arrays on every call
-
-  @SuppressWarnings({ "rawtypes", "unchecked" })
   protected void persist(String shotId, ReadableFloatVector fv) {
     SimpleFeatureDescriptor descriptor = new SimpleFeatureDescriptor(shotId, fv);
     this.writer.write(descriptor);

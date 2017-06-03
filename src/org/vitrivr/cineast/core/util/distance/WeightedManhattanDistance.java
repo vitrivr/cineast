@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class WeightedManhattanDistance extends ManhattanDistance {
 
+  private static final long serialVersionUID = 6124013831276417697L;
   private final float[] weights;
 
   WeightedManhattanDistance(float[] weights) {

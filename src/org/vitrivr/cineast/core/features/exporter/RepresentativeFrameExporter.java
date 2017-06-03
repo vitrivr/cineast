@@ -48,7 +48,6 @@ public class RepresentativeFrameExporter implements Extractor {
 		persist(segment.getId(), f.getId());
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void persist(String shotId, int frameId) {
 		this.phandler.persist(this.phandler.generateTuple(shotId, frameId));
 	}

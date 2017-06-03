@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class WeightedCosineDistance extends CosineDistance {
 
+  private static final long serialVersionUID = 1908564141547874227L;
   private final float[] weights;
 
   WeightedCosineDistance(float[] weights) {

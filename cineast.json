@@ -10,7 +10,7 @@
 	},
 	"retriever": {
 		"threadPoolSize": 2,
-		"maxResults": 250,
+		"maxResults": 200,
 		"resultsPerModule": 250,
 		"features" : {
 			"globalcolor": [
@@ -46,21 +46,21 @@
 				{"feature": "CLDReduced15",							"weight": 1.0}
 			],
 			"asr": [
-				{"feature": "SubtitleFulltextSearch",			"weight": 1.0}
+				{"feature": "SubtitleFulltextSearch",				"weight": 1.0}
 			],
 			"ocr": [
-				{"feature": "OCRSearch",						"weight": 1.0}
+				{"feature": "OCRSearch",							"weight": 1.0}
 			],
 			"description": [
-				{"feature": "DescriptionTextSearch",			"weight": 1.0}
+				{"feature": "DescriptionTextSearch",				"weight": 1.0}
 			],
 			"localfeatures" : [
-				{"feature": "SURFMirflickr25K512",				"weight": 1.75},
-				{"feature": "HOGMirflickr25K512",				"weight": 1.0}
+				{"feature": "SURFMirflickr25K512",					"weight": 1.75},
+				{"feature": "HOGMirflickr25K512",					"weight": 1.0}
 			],
 			"localfeatures_fast" : [
-				{"feature": "SURFMirflickr25K256",				"weight": 1.75},
-				{"feature": "HOGMirflickr25K256",				"weight": 1.0}
+				{"feature": "SURFMirflickr25K256",					"weight": 1.75},
+				{"feature": "HOGMirflickr25K256",					"weight": 1.0}
 			],
 			"meta": [
 				{"feature": "VideoMetadata",					"weight": 1.0}
