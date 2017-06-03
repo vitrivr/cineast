@@ -1,0 +1,45 @@
+package org.vitrivr.cineast.core.data.messages.result;
+
+import org.vitrivr.cineast.core.data.messages.interfaces.Message;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+
+/**
+ * @author rgasser
+ * @version 1.0
+ * @created 03.06.17
+ */
+public class QueryError implements Message {
+    /** ID of the query. */
+    private final String queryId;
+
+    /** Error message. */
+    private final String message;
+
+    /**
+     * Default constructor for QueryError object.
+     *
+     * @param queryId ID of the query.
+     * @param message Error message.
+     */
+    public QueryError(String queryId, String message) {
+        this.queryId = queryId;
+        this.message = message;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public MessageTypes getMessagetype() {
+        return MessageTypes.QR_ERROR;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getQueryId() {
+        return queryId;
+    }
+}

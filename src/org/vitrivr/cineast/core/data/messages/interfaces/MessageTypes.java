@@ -21,7 +21,7 @@ public enum MessageTypes {
     Q_SIM(SimilarityQuery.class), Q_MLT(MoreLikeThisQuery.class), M_LOOKUP(MetadataLookup.class),
 
     /* Query results. */
-    QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_OBJECT(ObjectQueryResult.class),  QR_METADATA(MetadataQueryResult.class), QR_SEGMENT(SegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);
+    QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_ERROR(QueryError.class), QR_OBJECT(ObjectQueryResult.class),  QR_METADATA(MetadataQueryResult.class), QR_SEGMENT(SegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);
 
     private Class<? extends Message> c;
 
