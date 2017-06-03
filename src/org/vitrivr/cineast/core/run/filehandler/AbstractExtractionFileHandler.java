@@ -270,7 +270,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     /**
      * returns the next file which can be decoded by the decoder or <code>null</code> if there are no more files
      */
-    private Path nextPath(final Decoder<T> decoder){
+    protected Path nextPath(final Decoder<T> decoder){
       while(this.files != null && this.files.hasNext()){
         Path path = files.next();
         String type = this.filetypes.getContentType(path.toString());
@@ -367,10 +367,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @param endabs
      * @return
      */
-    protected SegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs){
+    private SegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs){
         String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
-        Optional<SegmentDescriptor> descriptor = this.segmentReader.lookUpSegment(segmentId);
-        return descriptor.orElse(SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, start, end, startabs, endabs));
+        return this.segmentReader.lookUpSegment(segmentId).orElse(SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, start, end, startabs, endabs));
     }
 
     /**
