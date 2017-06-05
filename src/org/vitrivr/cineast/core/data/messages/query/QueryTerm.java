@@ -89,15 +89,20 @@ public class QueryTerm {
             switch (this.type) {
                 case IMAGE:
                     BufferedImage image = ImageParser.dataURLtoBufferedImage(this.data);
-                    this.cachedQueryContainer = new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(image));
+                    if (image != null) this.cachedQueryContainer = new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(image));
                     break;
                 case AUDIO:
                     List<AudioFrame> lists = AudioParser.parseWaveAudio(this.data, 22050.0f, 1);
-                    this.cachedQueryContainer =  new AudioQueryContainer(lists);
+                    if (lists != null) this.cachedQueryContainer = new AudioQueryContainer(lists);
                     break;
                 case MODEL3D:
-                    Mesh mesh = MeshParser.parseThreeJSV4Geometry(this.data);
-                    this.cachedQueryContainer =  new ModelQueryContainer(mesh);
+                    if (MeshParser.isValidThreeJSV4Geometry(this.data)) {
+                        Mesh mesh = MeshParser.parseThreeJSV4Geometry(this.data);
+                        if (mesh != null) this.cachedQueryContainer = new ModelQueryContainer(mesh);
+                    } else if (ImageParser.isValidImage(this.data)) {
+                        BufferedImage img = ImageParser.dataURLtoBufferedImage(this.data);
+                        if (img != null) this.cachedQueryContainer =  new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
+                    }
                     break;
                 default:
                     break;
