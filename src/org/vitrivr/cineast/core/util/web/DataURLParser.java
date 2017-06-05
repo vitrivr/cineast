@@ -13,9 +13,7 @@ public class DataURLParser {
 
     protected static final Logger LOGGER = LogManager.getLogger();
 
-
-    protected DataURLParser() {
-    }
+    protected DataURLParser() {}
 
     /**
      * Converts a Base64 data URL to a byte array and returns it.
@@ -50,17 +48,8 @@ public class DataURLParser {
         if (dataUrl == null) return null;
         dataUrl = dataUrl.replace(' ', '+');
 
-        /* Check if string is actually a valid data URL. */
-        if (!dataUrl.startsWith("data:")) {
-            LOGGER.warn("This is not a valid data URL.");
-            return null;
-        }
-
-		/* Check if data URL is of supported type. */
-        if (!dataUrl.substring(5, 5 + verify.length()).equals(verify)) {
-            LOGGER.warn("Data URL has been identified as image.");
-            return null;
-        }
+        /* Check data URL. */
+        if (!isValidDataUrl(dataUrl, verify)) return null;
 
 		/* Convert and return byte array. */
         int headerLength = dataUrl.indexOf(',');
@@ -68,4 +57,28 @@ public class DataURLParser {
         return Base64.decodeBase64(base46data);
     }
 
+
+    /**
+     * Checks if the provided data URL is actually a valid data URL. Returns true, if so and false
+     * otherwise.
+     *
+     * @param dataUrl Data URL that should be checked.
+     * @param verify Substring that must be contained at position 5 in order for the data to be valid.
+     * @return True if valid and false otherwise.
+     */
+    public static boolean isValidDataUrl(String dataUrl, String verify) {
+        /* Check if string is actually a valid data URL. */
+        if (!dataUrl.startsWith("data:")) {
+            LOGGER.warn("This is not a valid data URL.");
+            return false;
+        }
+
+        /* Check if data URL is of supported type. */
+        if (!dataUrl.substring(5, 5 + verify.length()).equals(verify)) {
+            LOGGER.warn("Data URL does not have a supported type.");
+            return false;
+        }
+
+        return true;
+    }
 }
