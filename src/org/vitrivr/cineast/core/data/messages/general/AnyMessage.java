@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.data.messages.general;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 /**
  * @author rgasser
@@ -11,14 +11,14 @@ import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
  * @created 19.01.17
  */
 public class AnyMessage implements Message {
-    private MessageTypes messagetype;
+    private MessageType messageType;
 
     @Override
     @JsonProperty
-    public MessageTypes getMessagetype() {
-        return this.messagetype;
+    public MessageType getMessageType() {
+        return this.messageType;
     }
-    public void setMessagetype(MessageTypes messagetype) {
-        this.messagetype = messagetype;
+    public void setMessagetype(MessageType messageType) {
+        this.messageType = messageType;
     }
 }

@@ -68,7 +68,7 @@ public class RestfulAPI {
       
       http.get("/segments/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
             
-      http.post("/segments/similar/", new FindSegmentSimilarActionHandler());
+      http.post("/segments/similar", new FindSegmentSimilarActionHandler());
       
       http.post("/segments/by/id", new FindSegmentsByIdActionHandler());
       http.post("/objects/by/id", new FindObjectsByIdActionHandler());

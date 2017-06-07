@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.abstracts.AbstractQueryResultMessage;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class SegmentQueryResult extends AbstractQueryResultMessage<SegmentDescri
      *
      * @return
      */
-    public MessageTypes getMessagetype() {
-        return MessageTypes.QR_SEGMENT;
+    public MessageType getMessageType() {
+        return MessageType.QR_SEGMENT;
     }
 }
