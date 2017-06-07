@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.abstracts.AbstractQueryResultMessage;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 import java.util.List;
 
-import static org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes.QR_METADATA;
+import static org.vitrivr.cineast.core.data.messages.interfaces.MessageType.QR_METADATA;
 
 /**
  * @author rgasser
@@ -29,7 +29,7 @@ public class MetadataQueryResult extends AbstractQueryResultMessage<MultimediaMe
      * @return
      */
     @Override
-    public MessageTypes getMessagetype() {
+    public MessageType getMessageType() {
         return QR_METADATA;
     }
 }

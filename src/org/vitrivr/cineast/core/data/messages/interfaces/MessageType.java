@@ -13,7 +13,7 @@ import org.vitrivr.cineast.core.data.messages.session.StartSessionMessage;
  * @version 1.0
  * @created 12.01.17
  */
-public enum MessageTypes {
+public enum MessageType {
 
     /* Messages related to status updates. */
     PING(Ping.class),
@@ -29,7 +29,7 @@ public enum MessageTypes {
   
     private Class<? extends Message> c;
 
-    MessageTypes(Class<? extends Message> c) {
+    MessageType(Class<? extends Message> c) {
         this.c = c;
     }
 

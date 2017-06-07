@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +51,7 @@ public class Query implements Message {
      * @return
      */
     @Override
-    public MessageTypes getMessagetype() {
-        return MessageTypes.Q_QUERY;
+    public MessageType getMessageType() {
+        return MessageType.Q_QUERY;
     }
 }
