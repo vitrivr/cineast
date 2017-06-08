@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.benchmark.engine;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.benchmark.model.Benchmark;
@@ -32,9 +31,6 @@ public class BenchmarkWriter implements Runnable {
 
     /** Delimiter used to separate entries. */
     private static final String DELIMITER_COLUMNS = ",";
-
-    /** Delimiter used to separate split-name and value. */
-    private static final String DELIMITER_LABEL = ":";
 
     /** BenchmarkEngine that has been assigned to the current instance of BenchmarkWriter. */
     private final BenchmarkEngine engine;
@@ -74,9 +70,6 @@ public class BenchmarkWriter implements Runnable {
 
         /* Timeout between flushing the benchmark-queue. */
         int timeout = 30000;
-
-        /* Estimated of BenchmarkObjects being added. */
-        float rate = 0;
 
         /*
          * Loop: Writes the content of the BenchmarkEngine to disk at regular intervals.
@@ -119,7 +112,7 @@ public class BenchmarkWriter implements Runnable {
 
         /* Opens or creates (if necessary) the benchmark file */
         try {
-            this.writer = Files.newBufferedWriter(this.destination, StandardOpenOption.CREATE);
+            this.writer = Files.newBufferedWriter(this.destination, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
         } catch (IOException exception) {
             LOGGER.fatal("Could not open/create benchmark file.", this.destination);
             return false;
@@ -137,6 +130,7 @@ public class BenchmarkWriter implements Runnable {
     private int write() {
         List<Benchmark> benchmarks = this.engine.drain();
         int counter = 0;
+
         try {
             for (Benchmark benchmark : benchmarks) {
                 Iterator<Map.Entry<String,Object>> iterator = benchmark.data().entrySet().iterator();
