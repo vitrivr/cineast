@@ -5,6 +5,7 @@ import org.vitrivr.cineast.core.data.messages.lookup.MetadataLookup;
 import org.vitrivr.cineast.core.data.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.core.data.messages.result.*;
+import org.vitrivr.cineast.core.data.messages.session.StartSessionMessage;
 
 /**
  * Defines the different MessageTypes used by the WebSocket and JSON API.
@@ -19,6 +20,9 @@ public enum MessageTypes {
 
     /* Query  message types. */
     Q_SIM(SimilarityQuery.class), Q_MLT(MoreLikeThisQuery.class), M_LOOKUP(MetadataLookup.class),
+
+    /* Session */
+    SESSION_START(StartSessionMessage.class),
 
     /* Query results. */
     QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_ERROR(QueryError.class), QR_OBJECT(ObjectQueryResult.class),  QR_METADATA(MetadataQueryResult.class), QR_SEGMENT(SegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);

@@ -19,7 +19,7 @@ public class FindMetadatasByIdActionHandler extends ParsingActionHandler<Metadat
     
     String queryId = ""; //we don't really need this here
     
-    if(context == null || context.getObjectids().length == 0 ){
+    if(context == null || context.getObjectids().size() == 0 ){
       return new MetadataQueryResult(queryId, Collections.emptyList());
     }
     
