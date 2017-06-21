@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.data.messages.lookup;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
 
@@ -16,23 +17,20 @@ import java.util.List;
  * @created 10.02.17
  */
 public class MetadataLookup implements Message {
-    /**
-     *
-     */
+    /** List of object ID's for which metadata should be looked up. */
     private String[] objectIds;
 
-    /**
-     *
-     */
+    /** List of metadata domains that should be considered. If empty, all domains are considered! */
     private String[] domains;
 
     /**
+     * Default constructor.
      *
      * @param objectids
      * @param domains
      */
     @JsonCreator
-    public MetadataLookup(@JsonProperty("objectIds") String[] objectids, @JsonProperty("domains") String[] domains) {
+    public MetadataLookup(@JsonProperty("objectids") String[] objectids, @JsonProperty("domains") String[] domains) {
         this.objectIds = objectids;
         this.domains = domains;
     }
@@ -49,6 +47,7 @@ public class MetadataLookup implements Message {
 
         }
     }
+
 
     /**
      *
@@ -69,6 +68,6 @@ public class MetadataLookup implements Message {
      */
     @Override
     public MessageTypes getMessagetype() {
-        return null;
+        return MessageTypes.M_LOOKUP;
     }
 }
