@@ -6,6 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author rgasser
  * @version 1.0
@@ -15,7 +19,7 @@ public class MetadataLookup implements Message {
     /**
      *
      */
-    private String[] objectids;
+    private String[] objectIds;
 
     /**
      *
@@ -28,8 +32,8 @@ public class MetadataLookup implements Message {
      * @param domains
      */
     @JsonCreator
-    public MetadataLookup(@JsonProperty("objectids") String[] objectids, @JsonProperty("domains") String[] domains) {
-        this.objectids = objectids;
+    public MetadataLookup(@JsonProperty("objectIds") String[] objectids, @JsonProperty("domains") String[] domains) {
+        this.objectIds = objectids;
         this.domains = domains;
     }
 
@@ -37,16 +41,25 @@ public class MetadataLookup implements Message {
      *
      * @return
      */
-    public String[] getObjectids() {
-        return this.objectids;
+    public List<String> getObjectids() {
+        if (this.objectIds != null) {
+            return Arrays.asList(this.objectIds);
+        } else {
+            return new ArrayList<>(0);
+
+        }
     }
 
     /**
      *
      * @return
      */
-    public String[] getDomains() {
-        return this.domains;
+    public  List<String> getDomains() {
+        if (this.domains != null) {
+            return Arrays.asList(this.domains);
+        } else {
+            return new ArrayList<>(0);
+        }
     }
 
     /**

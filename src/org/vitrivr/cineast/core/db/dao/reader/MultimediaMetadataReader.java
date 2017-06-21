@@ -70,13 +70,13 @@ public class MultimediaMetadataReader extends AbstractEntityReader {
      * @param objectids ID's of the multimedia object's for which metadata should be retrieved.
      * @return List of MultimediaMetadataDescriptor object's. May be empty!
      */
-    public List<MultimediaMetadataDescriptor> lookupMultimediaMetadata(String[] objectids) {
+    public List<MultimediaMetadataDescriptor> lookupMultimediaMetadata(List<String> objectids) {
         List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MultimediaMetadataDescriptor.FIELDNAMES[0], objectids);
 
         ArrayList<MultimediaMetadataDescriptor> list = new ArrayList<>();
 
         if(results.isEmpty()){
-            LOGGER.debug("Could not find any MultimediaMetadataDescriptor for provided ID's {}.", (Object[]) objectids);
+            LOGGER.debug("Could not find any MultimediaMetadataDescriptor for provided ID's.");
             return list;
         }
 
