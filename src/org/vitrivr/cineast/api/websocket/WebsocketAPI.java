@@ -159,7 +159,7 @@ public class WebsocketAPI {
      */
     @OnWebSocketError
     public void onWebSocketException(Session session, Throwable error) {
-        LOGGER.fatal("An unhandled error occurred during message handling.", LogHelper.getStackTrace(error));
+        LOGGER.fatal("An unhandled error occurred during message handling: {}", LogHelper.getStackTrace(error));
     }
 
     /**
