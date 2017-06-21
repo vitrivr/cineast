@@ -58,4 +58,14 @@ public class ImageParser extends DataURLParser {
         return "data:image/" + format + ";base64," + base64;
     }
 
+    /**
+     * Checks, if provided data URL is a valid image. Returns true if so and  false otherwise.
+     * No structural analysis is performed! Only the raw, data URL is being checked.
+     *
+     * @param dataUrl Data URL that should be checked.
+     * @return True, if data URL is a valid Three v4 JSON geometry.
+     */
+    public static boolean isValidImage(String dataUrl) {
+        return isValidDataUrl(dataUrl, "image/");
+    }
 }
