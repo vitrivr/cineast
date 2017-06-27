@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public interface EntityCreator {
+public interface EntityCreator extends AutoCloseable {
     /**
      * Logger instance used for logging.
      */

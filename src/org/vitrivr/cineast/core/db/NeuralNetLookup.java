@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 /**
  * Created by silvan on 13.09.16.
  */
-public class NeuralNetLookup {
+public class NeuralNetLookup implements AutoCloseable {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private final DBSelector selector;
