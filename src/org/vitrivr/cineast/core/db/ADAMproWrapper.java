@@ -29,7 +29,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
-public class ADAMproWrapper {
+public class ADAMproWrapper implements AutoCloseable {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
