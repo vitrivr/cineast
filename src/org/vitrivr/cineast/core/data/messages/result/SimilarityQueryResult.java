@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.data.messages.result;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.messages.abstracts.AbstractQueryResultMessage;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoub
      *
      * @return
      */
-    public MessageTypes getMessagetype() {
-        return MessageTypes.QR_SIMILARITY;
+    public MessageType getMessageType() {
+        return MessageType.QR_SIMILARITY;
     }
 }

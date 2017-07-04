@@ -14,7 +14,7 @@ import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHan
 import org.vitrivr.cineast.core.config.APIConfig;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -56,7 +56,7 @@ public class WebsocketAPI {
     private static final String VERSION = "v1";
 
     /** List of stateless WebsocketMessageHandler classes for the API. */
-    private static final HashMap<MessageTypes, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
+    private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
 
     /** Flag that indicates whether the WebSocket API is running. */
     private static AtomicBoolean RUNNING = new AtomicBoolean(false);
@@ -117,7 +117,7 @@ public class WebsocketAPI {
      * @param type MessageType for which a new handler should be regiestered.
      * @param handler Instance of WebsocketMessageHandler.
      */
-    private static void registerHandlerForMessageType(MessageTypes type, WebsocketMessageHandler<?> handler) {
+    private static void registerHandlerForMessageType(MessageType type, WebsocketMessageHandler<?> handler) {
         if (handler.isStateless()) {
             STATELESS_HANDLERS.put(type, handler);
         }
@@ -173,7 +173,7 @@ public class WebsocketAPI {
     public void message(Session session, String message) throws IOException {
         AnyMessage testMessage = reader.toObject(message, AnyMessage.class);
         if (testMessage != null) {
-            MessageTypes type = testMessage.getMessagetype();
+            MessageType type = testMessage.getMessageType();
             WebsocketMessageHandler handler = STATELESS_HANDLERS.get(type);
             if (handler != null) {
                 handler.handle(session, reader.toObject(message, type.getMessageClass()));

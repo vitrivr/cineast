@@ -14,7 +14,6 @@ import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.run.filehandler.AudioExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.ImageExtractionFileHandler;
-import org.vitrivr.cineast.core.run.filehandler.Model3DExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.VideoExtractionFileHandler;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -42,24 +41,24 @@ public class ExtractionDispatcher {
      * @param jobFile
      */
     public boolean initialize(File jobFile) throws IOException {
+        File outputLocation = Config.sharedConfig().getExtractor().getOutputLocation();
+        if(outputLocation == null){
+          LOGGER.error("invalid output location specified in config");
+          return false;
+        }
+        outputLocation.mkdirs();
+        if(!outputLocation.canWrite()){
+          LOGGER.error("cannot write to specified output location: '{}'", outputLocation.getAbsolutePath());
+          return false;
+        }
+      
         JacksonJsonProvider reader = new JacksonJsonProvider();
         this.context = reader.toObject(jobFile, IngestConfig.class);
         
         /* Check if context could be read and an input path was specified. */
         if (context == null || this.context.inputPath() == null) return false;
-        Path path = this.context.inputPath();
-
-        /* Initializes the output-location defined in the configuration. */
-        File outputLocation = this.context.outputLocation();
-        if(outputLocation == null){
-            LOGGER.error("invalid output location specified in config");
-            return false;
-        }
-        outputLocation.mkdirs();
-        if(!outputLocation.canWrite()){
-            LOGGER.error("cannot write to specified output location: '{}'", outputLocation.getAbsolutePath());
-            return false;
-        }
+        Path jobDirectory = jobFile.toPath().getParent();
+        Path path = jobDirectory.resolve(this.context.inputPath()).normalize();
         
         /*
          * Recursively add all files under that path to the List of files that should be processed. Uses the context-provider
@@ -99,13 +98,10 @@ public class ExtractionDispatcher {
                 case AUDIO:
                     this.fileHandlerThread = new Thread(new AudioExtractionFileHandler(this.paths, this.context));
                     break;
-                case MODEL3D:
-                    this.fileHandlerThread = new Thread(new Model3DExtractionFileHandler(this.paths, this.context));
-                    break;
                 default:
                     break;
             }
-            if (this.fileHandlerThread != null) {
+            if (fileHandlerThread != null) {
                 this.fileHandlerThread.setName("extraction-file-handler-thread");
                 this.fileHandlerThread.start();
             }

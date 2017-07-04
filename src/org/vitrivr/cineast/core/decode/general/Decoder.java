@@ -18,7 +18,7 @@ import java.util.Set;
  * @version 1.0
  * @created 13.01.17
  */
-public interface Decoder<T> {
+public interface Decoder<T> extends AutoCloseable {
     /**
      * Initializes the decoder with a file. This is a necessary step before content can be retrieved from
      * the decoder by means of the getNext() method.

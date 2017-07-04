@@ -2,7 +2,7 @@ package org.vitrivr.cineast.core.data.messages.general;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 /**
  * @author rgasser
@@ -31,7 +31,7 @@ public class Ping implements Message {
      * @return
      */
     @Override
-    public MessageTypes getMessagetype() {
-        return MessageTypes.PING;
+    public MessageType getMessageType() {
+        return MessageType.PING;
     }
 }

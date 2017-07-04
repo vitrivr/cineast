@@ -13,7 +13,7 @@ import org.vitrivr.cineast.core.decode.general.Decoder;
  * @version 1.0
  * @created 16.01.17
  */
-public interface Segmenter<A> extends Runnable {
+public interface Segmenter<A> extends Runnable, AutoCloseable {
     /**
      * Method used to initialize the Segmenter. A class implementing the Decoder interface with
      * the same type must be provided.
