@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +67,7 @@ public class MetadataLookup implements Message {
      * @return
      */
     @Override
-    public MessageTypes getMessagetype() {
-        return MessageTypes.M_LOOKUP;
+    public MessageType getMessageType() {
+        return MessageType.M_LOOKUP;
     }
 }

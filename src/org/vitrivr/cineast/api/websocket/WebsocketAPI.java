@@ -63,10 +63,10 @@ public class WebsocketAPI {
 
     /* Register the MessageHandlers for the different messages. */
     static {
-        STATELESS_HANDLERS.put(MessageTypes.Q_SIM, new SimilarityQueryMessageHandler());
-        STATELESS_HANDLERS.put(MessageTypes.Q_MLT, new MoreLikeThisQueryMessageHandler());
-        STATELESS_HANDLERS.put(MessageTypes.PING, new StatusMessageHandler());
-        STATELESS_HANDLERS.put(MessageTypes.M_LOOKUP, new MetadataLookupMessageHandler());
+        STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler());
+        STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler());
+        STATELESS_HANDLERS.put(MessageType.PING, new StatusMessageHandler());
+        STATELESS_HANDLERS.put(MessageType.M_LOOKUP, new MetadataLookupMessageHandler());
     }
 
     /* */

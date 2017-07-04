@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.data.messages.result;
 
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 /**
  * @author rgasser
@@ -31,8 +31,8 @@ public class QueryError implements Message {
      * @return
      */
     @Override
-    public MessageTypes getMessagetype() {
-        return MessageTypes.QR_ERROR;
+    public MessageType getMessageType() {
+        return MessageType.QR_ERROR;
     }
 
     /**

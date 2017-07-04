@@ -52,6 +52,6 @@ public class Query implements Message {
      */
     @Override
     public MessageType getMessageType() {
-        return MessageType.Q_QUERY;
+        return MessageType.Q_SIM;
     }
 }

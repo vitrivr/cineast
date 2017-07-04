@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageTypes;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class SimilarityQuery implements Message {
      * @return
      */
     @Override
-    public MessageTypes getMessagetype() {
-        return MessageTypes.Q_SIM;
+    public MessageType getMessageType() {
+        return MessageType.Q_SIM;
     }
 }
