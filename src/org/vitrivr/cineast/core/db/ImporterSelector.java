@@ -33,8 +33,8 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector,
-      String column, Class<T> distanceElementClass, ReadableQueryConfig config) {
+  public <E extends DistanceElement> List<E> getNearestNeighbours(int k, float[] vector,
+      String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
     List<Map<String, PrimitiveTypeProvider>> results = getNearestNeighbourRows(k, vector, column,
         config);
     return results.stream()
