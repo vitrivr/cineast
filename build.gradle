@@ -69,7 +69,7 @@ configurations {
 }
 
 def osclassifier = osdetector.classifier
-if(osdetector.arch.equals('')){
+if(osdetector.arch.equals('x86_32')){
 	osclassifier = osdetector.os + '-x86'
 }
 
