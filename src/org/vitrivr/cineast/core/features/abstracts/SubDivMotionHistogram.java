@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features.abstracts;
 import java.util.List;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
@@ -15,8 +16,11 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 public abstract class SubDivMotionHistogram extends MotionHistogramCalculator implements Extractor {
   protected PersistencyWriter<?> phandler;
 
+  private CorrespondenceFunction corr;
+  
   protected SubDivMotionHistogram(String tableName, String fieldName, double maxDist) {
     super(tableName, fieldName, (float) maxDist);
+    this.corr = CorrespondenceFunction.linear(maxDist);
   }
 
   @Override
@@ -36,7 +40,7 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
     List<SegmentDistanceElement> distances = this.selector
         .getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
             "hist", SegmentDistanceElement.class, qc);
-    return DistanceElement.toScore(distances, qc.getCorrespondenceFunction().get());
+    return DistanceElement.toScore(distances, qc.getCorrespondenceFunction().isPresent() ? qc.getCorrespondenceFunction().get() : this.corr);
   }
 
   @Override
