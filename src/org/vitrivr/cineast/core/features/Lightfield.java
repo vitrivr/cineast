@@ -23,6 +23,11 @@ import org.vitrivr.cineast.core.util.LogHelper;
 import com.twelvemonkeys.image.ImageUtil;
 
 /**
+ * An abstract base class for light field based feature modules as proposed by [1].
+ *
+ * [1] Chen, D.-Y., Tian, X.-P., Shen, Y.-T., & Ouh. (2003).
+ *      On Visual Similarity Based 3D Model Retrieval. In Eurographics (Vol. 22, pp. 313–318). http://doi.org/KE.2008.4730947
+ *
  * @author rgasser
  * @version 1.0
  * @created 17.03.17

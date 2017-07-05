@@ -19,9 +19,17 @@ import java.util.*;
 import java.util.List;
 
 /**
+ * An Extraction and Retrieval module for 3D models that leverages Fourier based light field descriptors and as proposed in [1] and [2].
+ *
+ * [1] Chen, D.-Y., Tian, X.-P., Shen, Y.-T., & Ouh. (2003).
+ *      On Visual Similarity Based 3D Model Retrieval. In Eurographics (Vol. 22, pp. 313–318). http://doi.org/KE.2008.4730947
+ *
+ * [2] Zhang, D., & Lu, G. (2002).
+ *      An Integrated Approach to Shape Based Image Retrieval. In ACCV2002: The 5th Asian Conference on Computer Vision. Melbourne, Australia.
+ *
  * @author rgasser
  * @version 1.0
- * @created 14.03.17
+ * @created 16.02.17
  */
 public class LightfieldFourier extends Lightfield {
     /** Size of the feature vector. */
