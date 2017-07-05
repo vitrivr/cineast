@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.config;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
@@ -44,6 +45,30 @@ public class QueryConfig extends ReadableQueryConfig {
     if (this.correspondence == null) {
       return setCorrespondenceFunction(f);
     }
+    return this;
+  }
+
+  /**
+   * Adds the provided hint to the list of hints.
+   *
+   * @param hint Hint to be added.
+   * @return this
+   */
+  public QueryConfig addHint(Hints hint) {
+    this.hints.add(hint);
+    return this;
+  }
+
+  /**
+   * Adds the provided hints and thereby replaces all hints that may have been
+   * set previously.
+   *
+   * @param hint Collection of hints to be added.
+   * @return this
+   */
+  public QueryConfig setHints(Collection<Hints> hint) {
+    this.hints.clear();
+    this.hints.addAll(hint);
     return this;
   }
 

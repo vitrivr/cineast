@@ -36,6 +36,9 @@ import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
+import org.vitrivr.cineast.core.evaluation.EvaluationConfig;
+import org.vitrivr.cineast.core.evaluation.EvaluationException;
+import org.vitrivr.cineast.core.evaluation.EvaluationRuntime;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
@@ -89,6 +92,7 @@ public class API {
       if (Config.sharedConfig().getApi().getEnableCli() || commandline.hasOption('i')) {
         CineastCLI cli = new CineastCLI();
         cli.start();
+        return;
       }
 
       /* Handle --setup; start database setup. */
@@ -142,9 +146,7 @@ public class API {
   private static void handleWebsocketStart() {
     if (!WebsocketAPI.isRunning()) {
       System.out.println("Starting WebSocket API...");
-      int port = Config.sharedConfig().getApi().getHttpPort();
-      int threadPoolSize = Config.sharedConfig().getApi().getThreadPoolSize();
-      WebsocketAPI.start(port, threadPoolSize);
+      WebsocketAPI.start(Config.sharedConfig().getApi());
       System.out.println("WebSocket API started!");
     } else {
       System.err.println("WebSocket API is already running...");
@@ -218,7 +220,7 @@ public class API {
 
   /**
    * Starts the extraction process (CLI and program-argument). A valid configuration file (JSON)
-   * must be provided in order to configure that extraction run. Refer to ExtractionConfig class for
+   * must be provided in order to configure that extraction run. Refer to {@link IngestConfig} class for
    * structural information.
    *
    * @param file Configuration file for the extraction.
@@ -237,8 +239,29 @@ public class API {
       }
     } catch (IOException e) {
       System.err.println(String.format(
-          "Could not start handleExtraction with configuration file '%s' due to a serious IO error.",
+          "Could not start handleExtraction with configuration file '%s' due to a IO error.",
           file.toString()));
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Starts an evaluation process. A valid configuration file (JSON) must be provided in order
+   * to configure that evaluation run. Refer to {@link EvaluationConfig} class for
+   * structural information.
+   *
+   * @param path Path to the configuration file for the extraction.
+   * @see EvaluationConfig
+   */
+  private static void handleEvaluation(Path path) {
+    try {
+      EvaluationRuntime runtime = new EvaluationRuntime(path);
+      runtime.call(); /* TODO: This is a quick & dirty solution. On the long run, API should probably have a dedicated ExecutorService for the different kinds of tasks it can dispatch. */
+    } catch (IOException e) {
+      System.err.println(String.format("Could not start evaluation with configuration file '%s' due to a IO error.", path.toString()));
+      e.printStackTrace();
+    } catch (EvaluationException e) {
+      System.err.println(String.format("Something went wrong during the evaluation wiht '%s'.", path.toString()));
       e.printStackTrace();
     }
   }
@@ -264,7 +287,7 @@ public class API {
 
     System.out.println("Performing 3D test...");
 
-    Mesh mesh = new Mesh();
+    Mesh mesh = new Mesh(2,6);
     mesh.addVertex(new Vector3f(1.0f, 0.0f, 0.0f), new Vector3f(1.0f, 0.0f, 0.0f));
     mesh.addVertex(new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 1.0f, 0.0f));
     mesh.addVertex(new Vector3f(0.0f, 0.0f, 1.0f), new Vector3f(0.0f, 0.0f, 1.0f));
@@ -273,12 +296,18 @@ public class API {
     mesh.addVertex(new Vector3f(0.0f, -1.0f, 0.0f), new Vector3f(0.0f, 1.0f, 1.0f));
     mesh.addVertex(new Vector3f(0.0f, 0.0f, 1.0f), new Vector3f(1.0f, 0.0f, 1.0f));
 
-    mesh.addFace(new Vector3i(1, 2, 3), null);
-    mesh.addFace(new Vector3i(4, 5, 6), null);
+    mesh.addFace(new Vector3i(1,2,3));
+    mesh.addFace(new Vector3i(4,5,6));
 
     JOGLOffscreenRenderer renderer = new JOGLOffscreenRenderer(250, 250);
-    renderer.render(mesh, 2.0f, 0.0f, 0.0f);
+    renderer.retain();
+    renderer.positionCameraPolar(2.0f,0.0f,0.0f,0.0f,0.0f,0.0f);
+    renderer.assemble(mesh);
+    renderer.render();
     BufferedImage image = renderer.obtain();
+    renderer.clear();
+    renderer.release();
+
     try {
       ImageIO.write(image, "PNG", new File("cineast-3dtest.png"));
       System.out.println("3D test complete. Check for cineast-3dtest.png");
@@ -455,6 +484,16 @@ public class API {
               }
               System.out.println();
 
+              break;
+            }
+            case "evaluation":
+            case "evaluate": {
+              if (commands.size() < 2) {
+                System.err.println("You must specify the path to the evaluation configuration file (1 argument).");
+                break;
+              }
+              Path path = Paths.get(commands.get(1));
+              API.handleEvaluation(path);
               break;
             }
             case "exportresults": {

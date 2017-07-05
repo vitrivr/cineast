@@ -8,6 +8,7 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -51,7 +52,6 @@ public interface ExtractionContextProvider {
      */
     @Deprecated
     int skip();
-
 
     /**
      *  Limits the depth of recursion when extraction folders of files. Has no
@@ -119,4 +119,45 @@ public interface ExtractionContextProvider {
      * @return DBSelectorSupplier instance used obtain a DBSelector.
      */
     DBSelectorSupplier persistencyReader();
+
+    /**
+     * Returns the default output-location for files generated during extraction
+     * (e.g. thumbnails, PROTO files etc.). Unless explicitly stated otherwise
+     * in the configuration of one of the exporters, this path will be used.
+     *
+     * @return Output location for files generated during extraction.
+     */
+    File outputLocation();
+
+    /**
+     * Returns the number of threads to be used to power the extraction pipeline.
+     *
+     * @return Number of threads. Must be > 0.
+     */
+    int threadPoolSize();
+
+    /**
+     * Returns the size of the task queue. That queue is used to store extraction
+     * tasks right before they are being processed.
+     *
+     * @return Size of the task queue. Must be > 0.
+     */
+    Integer taskQueueSize();
+
+    /**
+     * Returns the size of the segment queue. That queue is used to store segments when they are
+     * handed to the extraction pipeline but the pipeline is currently fully occupied.
+     *
+     * @return Size of the segment queue. Must be > 0.
+     */
+    Integer segmentQueueSize();
+
+
+    /**
+     * Returns the size of a batch. A batch is used when persisting data. Entities will be kept in
+     * memory until the batchsize limit is hit at which point they will be persisted.
+     *
+     * @return Batch size.
+     */
+    Integer getBatchsize();
 }

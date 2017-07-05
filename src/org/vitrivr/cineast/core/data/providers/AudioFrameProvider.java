@@ -118,13 +118,13 @@ public interface AudioFrameProvider {
     }
 
     /**
-     * Returns the sampling rate of the frames segment. That rate usually determined by
-     * the first AudioFrame added to the segment and must be the same for all frames.
+     * Returns the samplingrate of the segment. That rate usually determined by the first AudioFrame
+     * added to the segment and must be the same for all frames.
      *
      * @return Sampling rate of the frames segment.
      */
-    default float getSampleRate() {
-        return AudioFrame.EMPTY_FRAME.getSampleRate();
+    default float getSamplingrate() {
+        return AudioFrame.EMPTY_FRAME.getSamplingrate();
     }
 
     /**

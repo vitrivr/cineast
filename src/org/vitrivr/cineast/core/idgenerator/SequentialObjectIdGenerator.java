@@ -16,10 +16,10 @@ import java.util.concurrent.atomic.AtomicLong;
 public class SequentialObjectIdGenerator implements ObjectIdGenerator {
 
     /** Property-name for a custom start value (can be set in the configuration). */
-    private static String PROPERTY_NAME_START = "start";
+    private static final String PROPERTY_NAME_START = "start";
 
     /** Property-name for a custom format (can be set  in the configuration). */
-    private static String PROPERTY_NAME_FORMAT = "format";
+    private static final String PROPERTY_NAME_FORMAT = "format";
 
     /** Internal counter used to keep track of the ID's. */
     private final AtomicLong counter = new AtomicLong(1);

@@ -76,7 +76,7 @@ public class AudioSegmentExporter implements Extractor {
             ByteBuffer buffer = ByteBuffer.allocate(44 + data.length*2).order(ByteOrder.LITTLE_ENDIAN);
 
             /* Write header of WAV file. */
-            this.writeWaveHeader(buffer, shot.getSampleRate(), data.length * 2);
+            this.writeWaveHeader(buffer, shot.getSamplingrate(), data.length * 2);
 
             /* Write actual data. */
             for (short sample : data) {
@@ -86,7 +86,7 @@ public class AudioSegmentExporter implements Extractor {
             stream.write(buffer.array());
             stream.close();
         } catch (IOException | BufferOverflowException e) {
-            LOGGER.fatal("Could not export frames segment {} due to a serious IO error.", shot.getId(), LogHelper.getStackTrace(e));
+            LOGGER.fatal("Could not export audio segment {} due to a serious IO error ({}).", shot.getId(), LogHelper.getStackTrace(e));
         }
     }
 

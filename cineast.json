@@ -4,7 +4,10 @@
 		"port": 5890,
 		"plaintext": true
 	},
-	
+	"benchmark": {
+		"mode":"STORE",
+		"path":"/home/ubuntu/benchmarks"
+	},
 	"retriever": {
 		"threadPoolSize": 2,
 		"maxResults": 200,
@@ -65,22 +68,30 @@
 			"audiofingerprint": [
 				{"feature": "AudioFingerprint",					"weight": 1.0}
 			],
-			"audiobassline" : [
-				{"feature": "CENS12BasslineShingle",			"weight": 1.5},
-				{"feature": "HPCP12BasslineShingle",			"weight": 1.0}
+			"hpcpaverage" : [
+				{"feature": "AverageHPCP20F36B",				"weight": 1.5},
+				{"feature": "AverageHPCP30F36B",				"weight": 0.75}
 			],
-			"audiomelody" : [
-				{"feature": "CENS12MelodyShingle",				"weight": 1.5},
-				{"feature": "HPCP12MelodyShingle",				"weight": 1.0}
+			"audiomatching" : [
+				{"feature": "CENS12Shingle",						"weight": 2.0},
+				{"feature": "HPCP12Shingle",						"weight": 1.0},
+				{"feature": "MFCCShingle",							"weight": 0.5}
 			],
-			"mfcc" : [
-				{"feature": "MFCCShingle",						"weight": 1.0}
+			"lightfield" : [
+				{"feature": "LightfieldFourier",				"weight": 1.0},
+				{"feature": "LightfieldZernike",				"weight": 2.5}
 			],
-			"spatial" : [
-				{"feature": "SpatialDistance",					"weight": 1.0}
+			"sphericalharmonicslow" : [
+				{"feature": "SphericalHarmonicsLow",			"weight": 1.0}
 			],
-			"temporal": [
-				{"feature": "TemporalDistance",					"weight": 1.0}
+			"sphericalharmonicsdefault" : [
+				{"feature": "SphericalHarmonicsDefault",		"weight": 1.0}
+			],
+			"sphericalharmonicshigh" : [
+				{"feature": "SphericalHarmonicsHigh",			"weight": 1.0}
+			],
+			"pitchsequence" : [
+				{"feature": "MelodyEstimate",			 		"weight": 1.0}
 			]
 		}
 	},
@@ -102,14 +113,14 @@
 		"AUDIO":{
 			"decoder": "FFMpegAudioDecoder",
 			"properties": {
-				"samplerate":22050,
+				"samplerate":44100,
 				"channels":2
 			}
 		}
 	},
 	
 	"extractor": {
-		"threadPoolSize": 1,
+		"threadPoolSize": 4,
 		"outputLocation": "out"
 	},
 	
@@ -122,6 +133,7 @@
 		"enableCLI": false,
 		"enableWebsocket": true,
 		"enableLegacy":false,
+		"maxMessageSize":40960000,
 		"httpPort": 4567,
 		"legacyPort": 12345,
 		"threadPoolSize" : 8

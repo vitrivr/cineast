@@ -10,12 +10,6 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
  * @created 25.01.17
  */
 public class MultimediaMetadataWriter extends AbstractBatchedEntityWriter<MultimediaMetadataDescriptor> {
-    /**
-     * @param writer
-     */
-    public MultimediaMetadataWriter(PersistencyWriter<?> writer) {
-        super(writer, 1, true);
-    }
 
     /**
      * @param writer

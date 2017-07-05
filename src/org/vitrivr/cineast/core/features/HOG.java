@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractCodebookFeatureModule;
@@ -56,34 +59,59 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
         LOGGER.traceExit();
     }
 
+
     /**
+     * This method represents the first step that's executed when processing query. The associated SegmentContainer is
+     * examined and feature-vectors are being generated. The generated vectors are returned by this method together with an
+     * optional weight-vector.
+     * <p>
+     * <strong>Important: </strong> The weight-vector must have the same size as the feature-vectors returned by the method.
      *
-     * @param sc
-     * @param qc
-     * @return
+     * @param sc SegmentContainer that was submitted to the feature module.
+     * @param qc A QueryConfig object that contains query-related configuration parameters. Can still be edited.
+     * @return List of feature vectors for lookup.
      */
     @Override
-    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig rqc) {
-        long start = System.currentTimeMillis();
-        LOGGER.traceEntry();
+    protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
+        /* Prepare feature pair. */
+        List<float[]> features = new ArrayList<>(1);
 
-        ReadableQueryConfig qc = setQueryConfig(rqc);
-
-        List<ScoreElement> results = null;
+        /* Extract features. */
         BufferedImage image = sc.getMostRepresentativeFrame().getImage().getBufferedImage();
-        if (image != null) {
-            DescribeImageDense<GrayU8, TupleDesc_F64> hog = HOGHelper.getHOGDescriptors(image);
-            if (hog != null && hog.getDescriptions().size() > 0) {
-                float[] histogram_f = this.histogram(true, hog.getDescriptions());
-                results = this.getSimilar(histogram_f, qc);
-            }
-        }
-        
-        if (results == null){
-          results = new ArrayList<>(0);
+        DescribeImageDense<GrayU8, TupleDesc_F64> hog = HOGHelper.getHOGDescriptors(image);
+        if (hog != null && hog.getDescriptions().size() > 0) {
+            features.add(this.histogram(true, hog.getDescriptions()));
         }
 
-        LOGGER.debug("HOG.getSimilar() (codebook: {}) done in {}ms", this.codebook(), (System.currentTimeMillis() - start));
-        return LOGGER.traceExit(results);
+        return features;
+    }
+
+    /**
+     * This method represents the last step that's executed when processing a query. A list of partial-results (DistanceElements) returned by
+     * the lookup stage is processed based on some internal method and finally converted to a list of ScoreElements. The filtered list of
+     * ScoreElements is returned by the feature module during retrieval.
+     *
+     * @param partialResults List of partial results returned by the lookup stage.
+     * @param qc A ReadableQueryConfig object that contains query-related configuration parameters.
+     * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
+     */
+    @Override
+    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+        final CorrespondenceFunction function = qc.getCorrespondenceFunction().orElse(linearCorrespondence);
+        return ScoreElement.filterMaximumScores(partialResults.stream().map(r -> r.toScore(function)));
+    }
+
+    /**
+     * Merges the provided QueryConfig with the default QueryConfig enforced by the
+     * feature module.
+     *
+     * @param qc QueryConfig provided by the caller of the feature module.
+     * @return Modified QueryConfig.
+     */
+    protected ReadableQueryConfig queryConfig(ReadableQueryConfig qc, float[] weights) {
+        return new QueryConfig(qc)
+                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setDistanceIfEmpty(QueryConfig.Distance.chisquared)
+                .setDistanceWeights(weights);
     }
 }

@@ -2,9 +2,9 @@ package org.vitrivr.cineast.core.data.messages.query;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author rgasser
@@ -18,6 +18,7 @@ public class QueryComponent {
     private final QueryTerm[] terms;
 
     /**
+     * Constructor for QueryComponent.
      *
      * @param terms
      */
@@ -27,10 +28,37 @@ public class QueryComponent {
     }
 
     /**
+     * Getter for terms.
      *
-     * @return
+     * @return List of QueryTerms
      */
     public List<QueryTerm> getTerms() {
-        return Arrays.asList(this.terms);
+        if (this.terms != null) {
+            return Arrays.asList(this.terms);
+        } else {
+            return new ArrayList<>(0);
+        }
+    }
+
+    /**
+     * Converts the provided collection of QueryComponent objects to a map that maps feature categories
+     * defined in the query-terms to @{@link QueryContainer} derived from the {@link QueryTerm}.
+     *
+     * @return Category map.
+     */
+    public static HashMap<String, ArrayList<QueryContainer>> toCategoryMap(Collection<QueryComponent> components) {
+        final HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
+        for (QueryComponent component : components) {
+            for (QueryTerm term : component.getTerms()) {
+                for (String category : term.getCategories()) {
+                    if (!categoryMap.containsKey(category)) {
+                        categoryMap.put(category, new ArrayList<>());
+                    }
+                    QueryContainer container = term.toContainer();
+                    if (container != null) categoryMap.get(category).add(container);
+                };
+            }
+        }
+        return categoryMap;
     }
 }

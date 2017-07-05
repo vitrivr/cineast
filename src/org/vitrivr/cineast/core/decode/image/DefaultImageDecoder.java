@@ -48,18 +48,21 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
     private Path input;
 
     /**
-     * Default constructor.
+     * Initializes the decoder with a file. This is a necessary step before content can be retrieved from
+     * the decoder by means of the getNext() method.
      *
-     * @param path
+     * @param path Path to the file that should be decoded.
+     * @param config DecoderConfiguration used by the decoder.
+     * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public Decoder<BufferedImage> init(Path path, DecoderConfig config) {
+    public boolean init(Path path, DecoderConfig config) {
         this.input = path;
         this.complete.set(false);
         if (config != null) {
             this.rescale_bounds = config.namedAsInt(CONFIG_BOUNDS_PROPERTY, CONFIG_BOUNDS_DEFAULT);
         }
-        return this;
+        return true;
     }
 
     /**

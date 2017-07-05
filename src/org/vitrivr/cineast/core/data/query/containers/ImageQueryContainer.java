@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
@@ -41,7 +42,7 @@ public class ImageQueryContainer implements QueryContainer {
 	public VideoFrame getMostRepresentativeFrame() {
 		if(this.videoFrame == null){
 			int id = (getStart() + getEnd()) /2; 
-			this.videoFrame = new VideoFrame(id, this.img);
+			this.videoFrame = new VideoFrame(id, 0,this.img, new VideoDescriptor(25, 40, this.img.getWidth(), this.img.getHeight()));
 		}
 		return this.videoFrame;
 	}

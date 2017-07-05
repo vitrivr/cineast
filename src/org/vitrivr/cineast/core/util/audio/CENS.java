@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.util.audio;
 
 import org.apache.commons.math3.util.MathArrays;
-import org.vitrivr.cineast.core.util.fft.SamplingUtilities;
-import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
+import org.vitrivr.cineast.core.util.dsp.SamplingUtilities;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 /**
  * This class obtains and returns CENS (Chroma Energy distribution Normalized Statistics) features according to [1]. CENS captures the temporal development of the energy distribution in the different
@@ -23,7 +23,7 @@ public class CENS {
     private CENS() {}
 
     /**
-     * Calculates and returns CENS features given a Harmonic Pitc Class Profile (HPCP).
+     * Calculates and returns CENS features given a Harmonic Pitch Class Profile (HPCP).
      *
      * @param hpcps HPCP from which to calculate the CENS feature.
      * @param w Size of the Hanning Window used in the convolution step. First parameter for the algorithm according to [1]

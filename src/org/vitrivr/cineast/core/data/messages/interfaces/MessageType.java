@@ -2,7 +2,8 @@ package org.vitrivr.cineast.core.data.messages.interfaces;
 
 import org.vitrivr.cineast.core.data.messages.general.Ping;
 import org.vitrivr.cineast.core.data.messages.lookup.MetadataLookup;
-import org.vitrivr.cineast.core.data.messages.query.Query;
+import org.vitrivr.cineast.core.data.messages.query.MoreLikeThisQuery;
+import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.core.data.messages.result.*;
 import org.vitrivr.cineast.core.data.messages.session.StartSessionMessage;
 
@@ -14,19 +15,18 @@ import org.vitrivr.cineast.core.data.messages.session.StartSessionMessage;
  * @created 12.01.17
  */
 public enum MessageType {
-
     /* Messages related to status updates. */
     PING(Ping.class),
 
     /* Query  message types. */
-    Q_QUERY(Query.class), M_LOOKUP(MetadataLookup.class),
-
-    /* Query results. */
-    QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_OBJECT(ObjectQueryResult.class),  QR_METADATA(MetadataQueryResult.class), QR_SEGMENT(SegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class),
+    Q_SIM(SimilarityQuery.class), Q_MLT(MoreLikeThisQuery.class), M_LOOKUP(MetadataLookup.class),
 
     /* Session */
-    SESSION_START(StartSessionMessage.class);
-  
+    SESSION_START(StartSessionMessage.class),
+
+    /* Query results. */
+    QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_ERROR(QueryError.class), QR_OBJECT(ObjectQueryResult.class),  QR_METADATA(MetadataQueryResult.class), QR_SEGMENT(SegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);
+
     private Class<? extends Message> c;
 
     MessageType(Class<? extends Message> c) {

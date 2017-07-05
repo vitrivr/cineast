@@ -19,6 +19,7 @@ import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.web.ImageParser;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class JSONUtils {
 	}
 	
 	public static ImageQueryContainer queryContainerFromJSON(JsonObject jobj){//TODO improve robustness against wrong data types
-		BufferedImage img = jobj.get("img") == null ? null : WebUtils.dataURLtoBufferedImage(jobj.get("img").asString());
+		BufferedImage img = jobj.get("img") == null ? null : ImageParser.dataURLtoBufferedImage(jobj.get("img").asString());
 		ImageQueryContainer qc = img == null ? new ImageQueryContainer(null) : new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
 		if(jobj.get("subelements") != null){
 			JsonArray subs = jobj.get("subelements").asArray();
@@ -105,7 +106,7 @@ public class JSONUtils {
 	
 	public static String queryContainerToJSON(ImageQueryContainer qc){
 		JsonObject jobj = new JsonObject();
-		jobj.add("img", WebUtils.BufferedImageToDataURL(qc.getMostRepresentativeFrame().getImage().getBufferedImage(), "PNG"));
+		jobj.add("img", ImageParser.BufferedImageToDataURL(qc.getMostRepresentativeFrame().getImage().getBufferedImage(), "PNG"));
 		
 		JsonArray paths = new JsonArray();
 		for(Pair<Integer, LinkedList<Point2D_F32>> pair : qc.getPaths()){

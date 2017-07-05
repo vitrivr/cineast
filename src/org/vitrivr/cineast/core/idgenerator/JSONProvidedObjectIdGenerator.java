@@ -30,10 +30,10 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
     }
 
     /** Property-name for a custom start value (can be set in the configuration). */
-    private static String PROPERTY_NAME_SOURCE = "source";
+    private static final String PROPERTY_NAME_SOURCE = "source";
 
     /** Property-name for a custom format (can be set  in the configuration). */
-    private static String PROPERTY_NAME_ASSIGNMENT = "assignment";
+    private static final String PROPERTY_NAME_ASSIGNMENT = "assignment";
 
     /** Map that maps filenames to ID's. Only used in MAP mode. */
     private HashMap<String, String> pathIdMap;

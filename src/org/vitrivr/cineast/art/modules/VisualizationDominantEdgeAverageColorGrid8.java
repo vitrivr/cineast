@@ -2,7 +2,6 @@ package org.vitrivr.cineast.art.modules;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.api.WebUtils;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
@@ -11,6 +10,7 @@ import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.util.web.ImageParser;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -94,7 +94,7 @@ public class VisualizationDominantEdgeAverageColorGrid8 extends AbstractVisualiz
     }
     graph.dispose();
 
-    return WebUtils.BufferedImageToDataURL(image, "png");
+    return ImageParser.BufferedImageToDataURL(image, "png");
   }
 
   @Override

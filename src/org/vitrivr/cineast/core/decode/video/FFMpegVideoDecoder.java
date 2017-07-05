@@ -1,66 +1,39 @@
 package org.vitrivr.cineast.core.decode.video;
 
-import static org.bytedeco.javacpp.avcodec.av_packet_unref;
-import static org.bytedeco.javacpp.avcodec.avcodec_close;
-import static org.bytedeco.javacpp.avcodec.avcodec_decode_audio4;
-import static org.bytedeco.javacpp.avcodec.avcodec_decode_video2;
-import static org.bytedeco.javacpp.avcodec.avcodec_open2;
-import static org.bytedeco.javacpp.avcodec.avpicture_fill;
-import static org.bytedeco.javacpp.avformat.av_find_best_stream;
-import static org.bytedeco.javacpp.avformat.av_read_frame;
-import static org.bytedeco.javacpp.avformat.av_register_all;
-import static org.bytedeco.javacpp.avformat.avformat_close_input;
-import static org.bytedeco.javacpp.avformat.avformat_find_stream_info;
-import static org.bytedeco.javacpp.avformat.avformat_open_input;
-import static org.bytedeco.javacpp.avutil.AVMEDIA_TYPE_AUDIO;
-import static org.bytedeco.javacpp.avutil.AVMEDIA_TYPE_VIDEO;
-import static org.bytedeco.javacpp.avutil.AV_PIX_FMT_RGB24;
-import static org.bytedeco.javacpp.avutil.AV_SAMPLE_FMT_S16;
-import static org.bytedeco.javacpp.avutil.av_frame_alloc;
-import static org.bytedeco.javacpp.avutil.av_free;
-import static org.bytedeco.javacpp.avutil.av_get_bytes_per_sample;
-import static org.bytedeco.javacpp.avutil.av_get_default_channel_layout;
-import static org.bytedeco.javacpp.avutil.av_image_get_buffer_size;
-import static org.bytedeco.javacpp.avutil.av_malloc;
-import static org.bytedeco.javacpp.avutil.av_samples_alloc;
-import static org.bytedeco.javacpp.swresample.swr_alloc_set_opts;
-import static org.bytedeco.javacpp.swresample.swr_convert;
-import static org.bytedeco.javacpp.swresample.swr_free;
-import static org.bytedeco.javacpp.swresample.swr_get_out_samples;
-import static org.bytedeco.javacpp.swresample.swr_init;
-import static org.bytedeco.javacpp.swscale.SWS_BILINEAR;
-import static org.bytedeco.javacpp.swscale.sws_getContext;
-import static org.bytedeco.javacpp.swscale.sws_scale;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bytedeco.javacpp.*;
+import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
+import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
+import org.vitrivr.cineast.core.decode.general.Decoder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.DoublePointer;
-import org.bytedeco.javacpp.IntPointer;
-import org.bytedeco.javacpp.PointerPointer;
-import org.bytedeco.javacpp.avcodec;
-import org.bytedeco.javacpp.avcodec.AVCodec;
+import static org.bytedeco.javacpp.avcodec.*;
+import static org.bytedeco.javacpp.avcodec.av_packet_unref;
+import static org.bytedeco.javacpp.avcodec.avcodec_close;
+import static org.bytedeco.javacpp.avformat.*;
+import static org.bytedeco.javacpp.avformat.avformat_close_input;
+import static org.bytedeco.javacpp.avutil.*;
+import static org.bytedeco.javacpp.avutil.av_free;
+import static org.bytedeco.javacpp.swresample.*;
+import static org.bytedeco.javacpp.swresample.swr_convert;
+import static org.bytedeco.javacpp.swresample.swr_get_out_samples;
+import static org.bytedeco.javacpp.swscale.SWS_BILINEAR;
+import static org.bytedeco.javacpp.swscale.sws_getContext;
+import static org.bytedeco.javacpp.swscale.sws_scale;
+
 import org.bytedeco.javacpp.avformat.AVFormatContext;
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacpp.avutil.AVRational;
-import org.bytedeco.javacpp.swresample;
-import org.bytedeco.javacpp.swscale;
-import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.frames.AudioFrame;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
-import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
@@ -68,10 +41,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
  * @version 1.0
  * @created 17.01.17
  */
-@SuppressWarnings("deprecation") //some of the new API replacing the deprecated one appears to be not yet available which is why the deprecated one has to be used.
 public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
-
-
     /* Configuration property-names and defaults for the DefaultImageDecoder. */
     private static final String CONFIG_MAXWIDTH_PROPERTY = "maxFrameWidth";
     private static final String CONFIG_HEIGHT_PROPERTY = "maxFrameHeight";
@@ -88,36 +58,36 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     private static final Logger LOGGER = LogManager.getLogger();
     
-    /** Lists the mimetypes supported by the FFMpegAudioDecoder. Hint: List may not be complete yet. */
+    /** Lists the mimetypes supported by the FFMpegVideoDecoder.
+     *
+     * TODO: List may not be complete yet. */
     private static final Set<String> supportedFiles;
     static {
         HashSet<String> tmp = new HashSet<>();
+        tmp.add("multimedia/mp4"); /* They share the same suffix with video (.mp4). */
         tmp.add("video/mp4");
+        tmp.add("video/avi");
         tmp.add("video/mpeg");
-        tmp.add("video/x-msvideo"); //avi
-        tmp.add("video/x-matroska");
+        tmp.add("video/quicktime");
         tmp.add("video/webm");
         supportedFiles = Collections.unmodifiableSet(tmp);
     }
 
-    private int width;
-    private int height;
-
-    private double fps;
     private byte[] bytes;
     private int[] pixels;
 
-    private ArrayDeque<Pair<Long,VideoFrame>> videoFrameQueue = new ArrayDeque<>();
-    private ArrayDeque<Pair<Long,AudioFrame>> audioFrameQueue = new ArrayDeque<>();
+    /** Internal data structure used to hold decoded VideoFrames and the associated timestamp. */
+    private ArrayDeque<VideoFrame> videoFrameQueue = new ArrayDeque<>();
+
+    /** Internal data structure used to hold decoded AudioFrames and the associated timestamp. */
+    private ArrayDeque<AudioFrame> audioFrameQueue = new ArrayDeque<>();
 
     private AVFormatContext pFormatCtx;
+
     private int             videoStream = -1;
     private int             audioStream = -1;
     private avcodec.AVCodecContext pCodecCtxVideo = null;
     private avcodec.AVCodecContext pCodecCtxAudio = null;
-
-    private avcodec.AVCodec pCodecVideo = new AVCodec();
-    private avcodec.AVCodec pCodecAudio = new AVCodec();
 
     /** Field for raw frame as returned by decoder (regardless of being audio or video). */
     private avutil.AVFrame pFrame = null;
@@ -128,71 +98,99 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** Field for re-sampled audio-sample. */
     private avutil.AVFrame resampledFrame = null;
 
-    private avcodec.AVPacket packet = new avcodec.AVPacket();
-    private int[]           frameFinished = new int[1];
+    private avcodec.AVPacket packet;
     private BytePointer buffer = null;
-
-    private avutil.AVDictionary optionsDict = null;
 
     private IntPointer out_linesize = new IntPointer();
 
     private swscale.SwsContext sws_ctx = null;
     private swresample.SwrContext swr_ctx = null;
 
-    /** Indicates that decoding of audio-data is complete. */
-    private final AtomicBoolean audioComplete = new AtomicBoolean(false);
+    private VideoDescriptor videoDescriptor = null;
+    private AudioDescriptor audioDescriptor = null;
+
 
     /** Indicates that decoding of video-data is complete. */
     private final AtomicBoolean videoComplete = new AtomicBoolean(false);
 
+    /** Indicates that decoding of video-data is complete. */
+    private final AtomicBoolean audioComplete = new AtomicBoolean(false);
+
+    /** Indicates the EOF has been reached during decoding. */
+    private final AtomicBoolean eof = new AtomicBoolean(false);
+
+    /**
+     *
+     * @param queue
+     * @return
+     */
     private boolean readFrame(boolean queue) {
         boolean readFrame = false;
-        while (!readFrame && av_read_frame(pFormatCtx, packet) >= 0) {
-            // Is this a packet from the video stream?
-            if (packet.stream_index() == this.videoStream) {
-                // Decode video frame
-                avcodec_decode_video2(this.pCodecCtxVideo, this.pFrame, this.frameFinished, this.packet);
 
-                // Did we get a video frame?
-                if (frameFinished[0] != 0) {
-                    if (queue) {
-                        queueFrame();
-                    }
-                    readFrame = true;
+        /* Outer loop: Read packet (frame) from stream. */
+        do {
+            /* Tries to read a new packet from the stream. */
+            int read_results = av_read_frame(this.pFormatCtx, this.packet);
+            if (read_results < 0 && !(read_results == AVERROR_EOF)) {
+                LOGGER.error("Error occurred while reading packet. FFMPEG av_read_frame() returned code {}.", read_results);
+                av_packet_unref(this.packet);
+                break;
+            } else if (read_results == AVERROR_EOF) {
+                if (this.eof.get()) break;
+                this.eof.set(true);
+            }
+
+            /* Set readFrame to true. */
+            readFrame = true;
+
+            /* Two cases: Audio or video stream!. */
+            if (packet.stream_index() == this.videoStream) {
+                /* Send packet to decoder. If no packet was read, send null to flush the buffer. */
+                int decode_results = avcodec_send_packet(this.pCodecCtxVideo, this.eof.get() ? null : this.packet);
+                if (decode_results < 0) {
+                    LOGGER.error("Error occurred while decoding frames from packet. FFMPEG avcodec_send_packet() returned code {}.", decode_results);
+                    av_packet_unref(this.packet);
+                    break;
                 }
-            } else if (packet.stream_index() == this.audioStream) {
-                /* Counter: Size of packet (frame). */
-                int remaining = packet.size();
 
                 /*
-                 * Because a packet can theoretically contain more than one frame; repeat decoding until
-                 * no samples are remaining in the packet.
+                 * Because a packet can theoretically contain more than one frame; repeat decoding until no samples are
+                 * remaining in the packet.
                  */
-                while (remaining > 0) {
-                    int result = avcodec_decode_audio4(this.pCodecCtxAudio, this.pFrame, this.frameFinished, this.packet);
-                    if (result < 0) {
-                        LOGGER.error("Error occurred while decoding frames. FFMPEG avcodec_decode_audio4() returned code {}.", result);
-                        break;
+                while (avcodec_receive_frame(this.pCodecCtxVideo, this.pFrame) == 0) {
+                  /* If queue is true; enqueue frame. */
+                    if (queue) {
+                        readVideo();
                     }
-                    remaining -= result;
+                }
+            } else if (packet.stream_index() == this.audioStream) {
+                /* Send packet to decoder. If no packet was read, send null to flush the buffer. */
+                int decode_results = avcodec_send_packet(this.pCodecCtxAudio, this.eof.get() ? null : this.packet);
+                if (decode_results < 0) {
+                    LOGGER.error("Error occurred while decoding frames from packet. FFMPEG avcodec_send_packet() returned code {}.", decode_results);
+                    av_packet_unref(this.packet);
+                    break;
                 }
 
-                if (frameFinished[0] > 0) {
-                    /* If queue is true; enqueue frame. */
+                /*
+                 * Because a packet can theoretically contain more than one frame; repeat decoding until no samples are
+                 * remaining in the packet.
+                 */
+                while (avcodec_receive_frame(this.pCodecCtxAudio, this.pFrame) == 0) {
+                  /* If queue is true; enqueue frame. */
                     if (queue) {
                         if (this.swr_ctx != null) {
-                            this.readResampled(this.pFrame.nb_samples());
+                            this.enqueueResampledAudio();
                         } else {
-                            this.readOriginal(this.pFrame.nb_samples());
+                            this.enqueueOriginalAudio();
                         }
                     }
-                    readFrame = true;
                 }
             }
 
             /* Free the packet that was allocated by av_read_frame. */
             av_packet_unref(packet);
-        }
+        } while(!readFrame);
         return readFrame;
     }
 
@@ -209,32 +207,28 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     }
 
     /**
-     * Reads the decoded frames copies them directly into the AudioFrame data-structure.
-     *
-     * @param samples Number of samples returned by the decoder.
+     * Reads the decoded audio frames copies them directly into the AudioFrame data-structure which is subsequently
+     * enqueued.
      */
-    private void readOriginal(int samples) {
+    private void enqueueOriginalAudio() {
         /* Allocate output buffer... */
-        int buffersize = samples * av_get_bytes_per_sample(this.pFrame.format()) * this.pFrame.channels();
+        int buffersize = this.pFrame.nb_samples() * av_get_bytes_per_sample(this.pFrame.format()) * this.pFrame.channels();
         byte[] buffer = new byte[buffersize];
         this.pFrame.data(0).position(0).get(buffer);
 
         /* Prepare frame and associated timestamp and add it to output queue. */
-        Long timestamp = this.getFrameTimestamp(this.audioStream);
-        AudioFrame frame = new AudioFrame(this.pCodecCtxAudio.frame_number(), timestamp, this.pFrame.sample_rate(), this.pFrame.channels(), buffer);
-        this.audioFrameQueue.add(new Pair<>(timestamp, frame));
+        AudioFrame frame = new AudioFrame(this.pCodecCtxAudio.frame_number(), this.getFrameTimestamp(this.audioStream), buffer, this.audioDescriptor);
+        this.audioFrameQueue.add(frame);
     }
 
 
     /**
-     * Reads the decoded frames and resamples them using the SWR-CTX. The resampled frames are then
-     * read to the AudioFrame data-structure.
-     *
-     * @param samples Number of samples returned by the decoder.
+     * Reads the decoded audio frames and re-samples them using the SWR-CTX. The re-sampled frames are then
+     * copied into the AudioFrame data-structure, which is subsequently enqueued.
      */
-    private void readResampled(int samples) {
+    private void enqueueResampledAudio() {
          /* Convert decoded frame. Break if resampling fails.*/
-        if (swr_convert(this.swr_ctx, null, 0, this.pFrame.data(), samples) < 0) {
+        if (swr_convert(this.swr_ctx, null, 0, this.pFrame.data(), this.pFrame.nb_samples()) < 0) {
             LOGGER.error("Could not convert sample (FFMPEG swr_convert() failed).", this.getClass().getName());
             return;
         }
@@ -266,22 +260,20 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         }
 
         /* Prepare frame and associated timestamp and add it to output queue. */
-        Long timestamp = this.getFrameTimestamp(this.audioStream);
-        AudioFrame frame = new AudioFrame(this.pCodecCtxAudio.frame_number(), timestamp, this.resampledFrame.sample_rate(), this.resampledFrame.channels(), stream.toByteArray());
-        this.audioFrameQueue.add(new Pair<>(timestamp, frame));
+        AudioFrame frame = new AudioFrame(this.pCodecCtxAudio.frame_number(), this.getFrameTimestamp(this.audioStream), stream.toByteArray(), this.audioDescriptor);
+        this.audioFrameQueue.add(frame);
     }
 
     /**
-     *
-     * @return
+     * Reads the decoded video frames and re-sizes them. The re-sized video frame is then copied into a VideoFrame data
+     * structure, which is subsequently enqueued.
      */
-    private void queueFrame() {
+    private void readVideo() {
         // Convert the image from its native format to RGB
-        sws_scale(sws_ctx, pFrame.data(), pFrame.linesize(), 0, this.pCodecCtxVideo.height(), this.pFrameRGB.data(),
-                pFrameRGB.linesize());
+        sws_scale(this.sws_ctx, this.pFrame.data(), this.pFrame.linesize(), 0, this.pCodecCtxVideo.height(), this.pFrameRGB.data(), this.pFrameRGB.linesize());
 
         // Write pixel data
-        BytePointer data = pFrameRGB.data(0);
+        BytePointer data = this.pFrameRGB.data(0);
 
         data.position(0).get(bytes);
 
@@ -295,24 +287,40 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         }
 
         /* Prepare frame and associated timestamp and add it to output queue. */
-        VideoFrame videoFrame = new VideoFrame(this.pCodecCtxVideo.frame_number(), MultiImageFactory.newMultiImage(this.width, this.height, pixels));
-        Long timestamp = this.getFrameTimestamp(this.videoStream);
-        this.videoFrameQueue.add(new Pair<>(timestamp, videoFrame));
+        VideoFrame videoFrame = new VideoFrame(this.pCodecCtxVideo.frame_number(), this.getFrameTimestamp(this.videoStream), MultiImageFactory.newMultiImage(this.videoDescriptor.getWidth(), this.videoDescriptor.getHeight(), pixels), this.videoDescriptor);
+        this.videoFrameQueue.add(videoFrame);
     }
 
+    /**
+     * Closes the FFMpegVideoDecoder and frees all (non-native) resources associated with it.
+     */
     @Override
     public void close() {
-        if(pFormatCtx != null) return;
+        if (this.pFormatCtx == null) return;
 
-        // Free the RGB image
-        av_free(this.buffer);
-        av_free(this.pFrameRGB);
+        /* Free the raw frame. */
+        if (this.pFrame != null) {
+            av_frame_free(this.pFrame);
+            this.pFrame = null;
+        }
 
-        // Free the raw frame
-        av_free(this.pFrame);
+        /* Free the frame holding re-sampled audio. */
+        if (this.resampledFrame != null) {
+            av_frame_free(this.resampledFrame);
+            this.resampledFrame = null;
+        }
 
-        /* Free AudioFrames. */
-        av_free(this.resampledFrame);
+         /* Free the frame holding re-sized video. */
+        if (this.pFrameRGB != null) {
+            av_frame_free(this.pFrameRGB);
+            this.pFrameRGB = null;
+        }
+
+        /* Free the packet. */
+        if (this.packet != null) {
+            av_packet_free(this.packet);
+            this.packet = null;
+        }
 
         /* Frees the SWR context. */
         if (this.swr_ctx != null) {
@@ -320,27 +328,21 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
             this.swr_ctx = null;
         }
 
-        /* Close the codecs. */
-        if (this.pCodecCtxVideo != null) {
-            avcodec_close(this.pCodecCtxVideo);
-            this.pCodecCtxVideo = null;
-        }
+        /* Closes the audio codec context. */
         if (this.pCodecCtxAudio != null) {
-            avcodec_close(this.pCodecCtxAudio);
+            avcodec_free_context(this.pCodecCtxAudio);
             this.pCodecCtxAudio = null;
         }
 
-        /* Close the video file */
+        /* Closes the audio codec context. */
+        if (this.pCodecCtxVideo != null) {
+            avcodec_free_context(this.pCodecCtxVideo);
+            this.pCodecCtxVideo = null;
+        }
+
+        /* Close the audio file context. */
         avformat_close_input(this.pFormatCtx);
         this.pFormatCtx = null;
-    }
-
-    public int getWidth() {
-        return this.width;
-    }
-
-    public int getHeight() {
-        return this.height;
     }
 
     /**
@@ -349,39 +351,52 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      *
      * @param path Path to the file that should be decoded.
      * @param config DecoderConfiguration used by the decoder.
-     * @return Current instance of the decoder.
+     * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public Decoder<VideoFrame> init(Path path, DecoderConfig config) {
-        /* Initialize the AVFormatContext. */
-        this.pFormatCtx = new AVFormatContext(null);
-
+    public boolean init(Path path, DecoderConfig config) {
         if(!Files.exists(path)){
             LOGGER.error("File does not exist {}", path.toString());
-            return null;
+            return false;
         }
 
-        // Register all formats and codecs
+        /* Initialize the AVFormatContext. */
+        this.pFormatCtx = avformat_alloc_context();
+
+        /* Register all formats and codecs. */
         av_register_all();
 
         // Open video file
         if (avformat_open_input(this.pFormatCtx, path.toString(), null, null) != 0) {
             LOGGER.error("Error while accessing file {}", path.toString());
-            return null;
+            return false;
         }
 
-        // Retrieve stream information
+        /* Retrieve stream information. */
         if (avformat_find_stream_info(pFormatCtx, (PointerPointer<?>)null) < 0) {
             LOGGER.error("Error, Couldn't find stream information");
-            return null;
+            return false;
         }
 
+        /* Initialize the packet. */
+        this.packet = av_packet_alloc();
+        if (this.packet == null) {
+            LOGGER.error("Could not allocate packet data structure for decoded data.");
+            return false;
+        }
+
+        /* Allocate frame that holds decoded frame information. */
+        this.pFrame = av_frame_alloc();
+        if (this.pFrame == null) {
+            LOGGER.error("Could not allocate frame data structure for decoded data.");
+            return false;
+        }
 
         if (this.initVideo(path, config) && this.initAudio(path, config)) {
-            LOGGER.debug("FFMpegVideoDecoder successfully initialized");
-            return this;
+            LOGGER.debug("{} was initialized successfully.", this.getClass().getName());
+            return true;
         } else {
-            return null;
+            return false;
         }
     }
 
@@ -397,63 +412,62 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         int maxHeight = config.namedAsInt(CONFIG_HEIGHT_PROPERTY, CONFIG_MAXHEIGHT_DEFAULT);
 
         /* Find the best video stream. */
-        this.videoStream = av_find_best_stream(this.pFormatCtx,AVMEDIA_TYPE_VIDEO,-1, -1, this.pCodecVideo, 0);
+        AVCodec codec = new AVCodec();
+        this.videoStream = av_find_best_stream(this.pFormatCtx,AVMEDIA_TYPE_VIDEO,-1, -1, codec, 0);
         if (this.videoStream == -1) {
             LOGGER.error("Couldn't find a video stream.");
             return false;
         }
 
-        // Get a pointer to the codec context for the video stream
-        this.pCodecCtxVideo = this.pFormatCtx.streams(videoStream).codec();
+        /* Allocate new codec-context for codec returned by av_find_best_stream(). */
+        this.pCodecCtxVideo = avcodec_alloc_context3(codec);
+        avcodec_parameters_to_context(this.pCodecCtxVideo, this.pFormatCtx.streams(this.videoStream).codecpar());
 
-
-        avutil.AVRational framerate = this.pFormatCtx.streams(videoStream).avg_frame_rate();
-        this.fps = ((double)framerate.num()) / ((double)framerate.den());
-
-        // Open codec
-        if (avcodec_open2(this.pCodecCtxVideo, this.pCodecVideo, optionsDict) < 0) {
-            LOGGER.error("Error, Could not open video codec");
+        /* Open the code context. */
+        if (avcodec_open2(this.pCodecCtxVideo, codec, (AVDictionary)null) < 0) {
+            LOGGER.error("Error, Could not open video codec.");
             return false;
         }
 
-        // Allocate video frame
-        pFrame = av_frame_alloc();
-
-        // Allocate an AVFrame structure
-        pFrameRGB = av_frame_alloc();
+        /* Allocate an AVFrame structure that will hold the resized video. */
+        this.pFrameRGB = av_frame_alloc();
         if(pFrameRGB == null) {
-            LOGGER.error("Error, Could not allocate frame");
+            LOGGER.error("Error. Could not allocate frame for resized video.");
             return false;
         }
 
         int originalWidth = pCodecCtxVideo.width();
         int originalHeight = pCodecCtxVideo.height();
+        int width = originalWidth;
+        int height = originalHeight;
 
         if (originalWidth > maxWidth || originalHeight > maxHeight) {
             float scaleDown = Math.min((float) maxWidth / (float) originalWidth, (float) maxHeight / (float) originalHeight);
-            this.width = Math.round(originalWidth * scaleDown);
-            this.height = Math.round(originalHeight * scaleDown);
-            LOGGER.debug("scaling input video down by a factor of {} from {}x{} to {}x{}", scaleDown, originalWidth, originalHeight, this.width, this.height);
-        } else{
-            this.width = originalWidth;
-            this.height = originalHeight;
+            width = Math.round(originalWidth * scaleDown);
+            height = Math.round(originalHeight * scaleDown);
+            LOGGER.debug("scaling input video down by a factor of {} from {}x{} to {}x{}", scaleDown, originalWidth, originalHeight, width, height);
         }
 
         bytes = new byte[width * height * 3];
         pixels = new int[width * height];
 
-        // Determine required buffer size and allocate buffer
+        /* Initialize data-structures used for resized image. */
         int numBytes = av_image_get_buffer_size(AV_PIX_FMT_RGB24,  pCodecCtxVideo.width(), pCodecCtxVideo.height(), 1);
-        buffer = new BytePointer(av_malloc(numBytes));
+        this.buffer = new BytePointer(av_malloc(numBytes));
+        av_image_fill_arrays(this.pFrameRGB.data(), this.pFrameRGB.linesize(), this.buffer, AV_PIX_FMT_RGB24, width, height, 1);
 
-        this.sws_ctx = sws_getContext(pCodecCtxVideo.width(), pCodecCtxVideo.height(),
-                pCodecCtxVideo.pix_fmt(), this.width, this.height,
+        /* Initialize SWS Context. */
+        this.sws_ctx = sws_getContext(this.pCodecCtxVideo.width(), this.pCodecCtxVideo.height(),
+                this.pCodecCtxVideo.pix_fmt(), width, height,
                 AV_PIX_FMT_RGB24, SWS_BILINEAR, null, null, (DoublePointer)null);
 
-        // Assign appropriate parts of buffer to image planes in pFrameRGB
-        // Note that pFrameRGB is an AVFrame, but AVFrame is a superset
-        // of AVPicture
-        avpicture_fill(new avcodec.AVPicture(pFrameRGB), buffer, AV_PIX_FMT_RGB24, this.width, this.height);
+
+        /* Initialize VideoDescriptor. */
+        AVRational timebase = this.pFormatCtx.streams(this.videoStream).time_base();
+        long duration = (1000L * timebase.num() * this.pFormatCtx.streams(this.videoStream).duration()/timebase.den());
+        AVRational framerate = this.pFormatCtx.streams(this.videoStream).avg_frame_rate();
+        float fps = ((float) framerate.num()) / ((float)framerate.den());
+        this.videoDescriptor = new VideoDescriptor(fps, duration, width, height);
         return true;
     }
 
@@ -471,17 +485,21 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         long channellayout = av_get_default_channel_layout(channels);
 
         /* Find the best frames stream. */
-        this.audioStream = av_find_best_stream(this.pFormatCtx, AVMEDIA_TYPE_AUDIO,-1, -1, this.pCodecAudio, 0);
+        AVCodec codec = new AVCodec();
+        this.audioStream = av_find_best_stream(this.pFormatCtx, AVMEDIA_TYPE_AUDIO,-1, -1, codec, 0);
         if (this.audioStream == -1) {
             LOGGER.warn("Couldn't find a supported audio stream. Continuing without audio!");
             this.audioComplete.set(true);
             return true;
         }
 
-        /* Get a pointer to the codec context for the frames stream and open it. */
-        this.pCodecCtxAudio = this.pFormatCtx.streams(this.audioStream).codec();
-        if (avcodec_open2(this.pCodecCtxAudio, this.pCodecAudio, optionsDict) < 0) {
-            LOGGER.error("Error, Could not open audio codec. Continuing without audio!");
+        /* Allocate new codec-context. */
+        this.pCodecCtxAudio = avcodec_alloc_context3(codec);
+        avcodec_parameters_to_context(this.pCodecCtxAudio, this.pFormatCtx.streams(this.audioStream).codecpar());
+
+        /* Open the code context. */
+        if (avcodec_open2(this.pCodecCtxAudio, codec, (AVDictionary)null) < 0) {
+            LOGGER.error("Could not open audio codec. Continuing without audio!");
             this.audioComplete.set(true);
             return true;
         }
@@ -490,11 +508,15 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         this.swr_ctx = swr_alloc_set_opts(null, channellayout, TARGET_FORMAT, samplerate, this.pCodecCtxAudio.channel_layout(), this.pCodecCtxAudio.sample_fmt(), this.pCodecCtxAudio.sample_rate(), 0, null);
         if(swr_init(this.swr_ctx) < 0) {
             this.swr_ctx = null;
-            LOGGER.warn("Warning! Could not open re-sample context - original format will be kept!");
+            LOGGER.warn("Could not open re-sample context - original format will be kept!");
         }
 
         /* Initialize decoded and resampled frame. */
         this.resampledFrame = av_frame_alloc();
+        if (this.resampledFrame == null) {
+            LOGGER.error("Could not allocate frame data structure for re-sampled data.");
+            return false;
+        }
 
         /* Initialize out-frame. */
         this.resampledFrame = av_frame_alloc();
@@ -503,8 +525,17 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         this.resampledFrame.channels(channels);
         this.resampledFrame.format(TARGET_FORMAT);
 
+
+         /* Initialize the AudioDescriptor. */
+        AVRational timebase = this.pFormatCtx.streams(this.audioStream).time_base();
+        long duration = (1000L * timebase.num() * this.pFormatCtx.streams(this.audioStream).duration()/timebase.den());
+        if (this.swr_ctx == null) {
+            this.audioDescriptor = new AudioDescriptor(this.pCodecCtxAudio.sample_rate(), this.pCodecCtxAudio.channels(), duration);
+        } else {
+            this.audioDescriptor = new AudioDescriptor(this.resampledFrame.sample_rate(), this.resampledFrame.channels(), duration);
+        }
+
         /* Completed initialization. */
-        LOGGER.debug("{} was initialized successfully.", this.getClass().getName());
         return true;
     }
 
@@ -518,33 +549,43 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     @Override
     public VideoFrame getNext() {
         /* Read frames until a video-frame becomes available. */
-        while (this.videoFrameQueue.isEmpty() && !this.videoComplete.get()) {
-            this.videoComplete.set(!this.readFrame(true));
+        while (this.videoFrameQueue.isEmpty() && !this.eof.get()) {
+            this.readFrame(true);
+        }
+
+        /* If frame-queue is empty and EOF has been reached, then video decoding was completed. */
+        if (this.videoFrameQueue.isEmpty()) {
+            this.videoComplete.set(true);
+            return null;
         }
 
         /* Fetch that video frame. */
-        Pair<Long, VideoFrame> frame = this.videoFrameQueue.poll();
+        VideoFrame videoFrame = this.videoFrameQueue.poll();
 
-
-        /* Now if the audio stream is set, read AudioFrames until the timestamp of the next AudioFrame in the
+        /*
+         * Now if the audio stream is set, read AudioFrames until the timestamp of the next AudioFrame in the
          * queue becomes greater than the timestamp of the VideoFrame. All these AudioFrames go to the VideoFrame.
          */
-        while (this.audioStream > -1  && !this.audioComplete.get()) {
-            if (this.audioFrameQueue.isEmpty()) {
-                this.audioComplete.set(!this.readFrame(true));
+        while (!this.audioComplete.get()) {
+            while (this.audioFrameQueue.isEmpty() && !this.eof.get()) {
+                this.readFrame(true);
             }
 
-            Pair<Long,AudioFrame> audioFrame = this.audioFrameQueue.peek();
-            if (audioFrame == null) continue;
-            if (audioFrame.first <= frame.first) {
-                frame.second.addAudioFrame(this.audioFrameQueue.poll().second);
+            if (this.audioFrameQueue.isEmpty()) {
+                this.audioComplete.set(true);
+                break;
+            }
+
+            AudioFrame audioFrame = this.audioFrameQueue.peek();
+            if (audioFrame.getTimestamp() <= videoFrame.getTimestamp()) {
+                videoFrame.addAudioFrame(this.audioFrameQueue.poll());
             } else {
                 break;
             }
         }
 
         /* Return VideoFrame. */
-        return frame.second;
+        return videoFrame;
     }
 
     /**
@@ -564,7 +605,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      */
     @Override
     public boolean complete() {
-        return this.audioComplete.get() && this.videoComplete.get();
+        return this.videoComplete.get();
     }
 
     /**

@@ -5,45 +5,51 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
+import org.joml.Vector3i;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.util.math.MathConstants;
+import org.vitrivr.cineast.core.util.mesh.MeshMathUtil;
 
 import java.util.*;
 
 /**
+ * This class can be used to to transform a 3D polygon Mesh into a 3D VoxelGrid. The class performs this
+ * transformation by applying the algorithm described in [1]. It can either use a grid of fixed size or one
+ * that dynamically fits the bounding box of the Mesh given the resolution.
+ *
+ * The resulting VoxelGrid approximates the surface of the Mesh. The volumetric interior of the grid will not
+ * be filled!
+ *
+ * <p>Important:</p> The resolution of the Voxelizer and the size of the Mesh determine the accuracy of the Voxelization
+ * process. For instance, if the resolution is chosen such that one Voxel has the size of the whole mesh, the Voxelization
+ * will not yield any meaningful result.
+ *
+ * [1] Huang, J. H. J., Yagel, R. Y. R., Filippov, V. F. V., & Kurzion, Y. K. Y. (1998).
+ *  An accurate method for voxelizing polygon meshes. IEEE Symposium on Volume Visualization (Cat. No.989EX300), 119–126,. http://doi.org/10.1109/SVV.1998.729593
+ *
  * @author rgasser
  * @version 1.0
  * @created 06.01.17
  */
 public class Voxelizer {
-    /**
-     *
-     */
+    /** */
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     * Constant: Square-root of 3.
-     */
-    private static final float sqrt3 =  (float)Math.sqrt(3);
-
-    /**
-     * Resolution, i.e. size of a single voxel.
-     */
+    /** Resolution, i.e. size of a single voxel. */
     private final float resolution;
 
-    /**
-     * Half of the resolution. Pre-calculated for convenience.
-     */
+    /** Half of the resolution. Pre-calculated for convenience. */
     private final float rc;
 
-    /**
-     * Half the resolution squared. Pre-calculated for convenience.
-     */
+    /** Half the resolution squared. Pre-calculated for convenience. */
     private final float rcsq;
-
 
     /**
      * Default constructor. Defines the resolution of the Voxelizer.
      *
-     * @param resolution
+     * @param resolution Resolution of the Voxelizer (i.e. size of a single Voxel in the grid). This is an important
+     * parameter, as it determines the quality of the Voxelization process!
      */
     public Voxelizer(float resolution) {
         this.resolution = resolution;
@@ -52,58 +58,87 @@ public class Voxelizer {
     }
 
     /**
-     * Voxelizes the provided mesh, returning a VoxelGrid with the specified resolution.
+     * Voxelizes the provided mesh returning a VoxelGrid with the specified resolution. The size of the VoxelGrid
+     * will be chose so as to fit the size of the mesh.
      *
      * @param mesh Mesh that should be voxelized.
-     * @return Voxel representation of the mesh.
+     * @return VoxelGrid representation of the mesh.
      */
-    public VoxelGrid voxelize(Mesh mesh) {
-        long start =  System.currentTimeMillis();
-
+    public VoxelGrid voxelize(ReadableMesh mesh) {
         /* Calculate bounding box of mesh. */
-        float[] boundingBox = this.bounds(mesh.getVertices());
+        float[] boundingBox = mesh.bounds();
         short sizeX = (short)(Math.abs(Math.ceil(((boundingBox[0]-boundingBox[1])/this.resolution))) + 1);
         short sizeY = (short)(Math.abs(Math.ceil(((boundingBox[2]-boundingBox[3])/this.resolution))) + 1);
         short sizeZ = (short)(Math.abs(Math.ceil(((boundingBox[4]-boundingBox[5])/this.resolution))) + 1);
 
-        /* Initializes a new voxel-grid. */
+        /* Return the voxelized mesh. */
+        return this.voxelize(mesh, sizeX, sizeY, sizeZ);
+    }
+
+    /**
+     * Voxelizes the provided mesh returning a new VoxelGrid with the specified resolution. The size of
+     * the VoxelGrid will be fixed
+     *
+     * @param mesh Mesh that should be voxelized.
+     * @param sizeX Number of Voxels in X direction.
+     * @param sizeY Number of Voxels in Y direction.
+     * @param sizeZ Number of Voxels in Z direction.
+     * @return VoxelGrid representation of the mesh.
+     */
+    public VoxelGrid voxelize(ReadableMesh mesh, int sizeX, int sizeY, int sizeZ) {
+         /* Initializes a new voxel-grid. */
         VoxelGrid grid = new VoxelGrid(sizeX, sizeY, sizeZ, this.resolution, false);
 
-        /* Prepare emtpy HashSets. */
+        /* Return the voxelized mesh. */
+        return this.voxelize(mesh, grid);
+    }
+
+    /**
+     * Voxelizes the provided mesh into the provided VoxelGrid
+     *
+     * @param mesh Mesh that should be voxelized.
+     * @param grid VoxelGrid to use for voxelization.
+     * @return VoxelGrid representation of the mesh.
+     */
+    public VoxelGrid voxelize(ReadableMesh mesh, VoxelGrid grid) {
+
+        long start =  System.currentTimeMillis();
+
+        /* Process the faces and perform all the relevant tests described in [1]. */
         for (Mesh.Face face : mesh.getFaces()) {
-            List<Vector3f> vertices = face.getVertices();
-            List<VoxelGrid.Voxel> enclosings = Voxelizer.this.enclosingGrid(vertices, boundingBox, grid);
-            for (VoxelGrid.Voxel enclosing : enclosings) {
+            List<Mesh.Vertex> vertices = face.getVertices();
+            List<Pair<Vector3i,Vector3f>> enclosings = Voxelizer.this.enclosingGrid(vertices, grid);
+            for (Pair<Vector3i,Vector3f> enclosing : enclosings) {
                 /* Perform vertex-tests. */
                 if (Voxelizer.this.vertextTest(vertices.get(0), enclosing)) {
-                    grid.toggle(true, enclosing.getX(), enclosing.getY(), enclosing.getZ());
+                    grid.toggleVoxel(true, enclosing.first.x, enclosing.first.y, enclosing.first.z);
                     continue;
                 }
                 if (Voxelizer.this.vertextTest(vertices.get(1), enclosing)) {
-                    grid.toggle(true, enclosing.getX(), enclosing.getY(), enclosing.getZ());
+                    grid.toggleVoxel(true, enclosing.first.x, enclosing.first.y, enclosing.first.z);
                     continue;
                 }
                 if (Voxelizer.this.vertextTest(vertices.get(2), enclosing)) {
-                    grid.toggle(true, enclosing.getX(), enclosing.getY(), enclosing.getZ());
+                    grid.toggleVoxel(true, enclosing.first.x, enclosing.first.y, enclosing.first.z);
                     continue;
                 }
                  /* Perform edge-tests. */
                 if (Voxelizer.this.edgeTest(vertices.get(0), vertices.get(1), enclosing)) {
-                    grid.toggle(true, enclosing.getX(), enclosing.getY(), enclosing.getZ());
+                    grid.toggleVoxel(true, enclosing.first.x, enclosing.first.y, enclosing.first.z);
                     continue;
                 }
                 if (Voxelizer.this.edgeTest(vertices.get(1), vertices.get(2), enclosing)) {
-                    grid.toggle(true, enclosing.getX(), enclosing.getY(), enclosing.getZ());
+                    grid.toggleVoxel(true, enclosing.first.x, enclosing.first.y, enclosing.first.z);
                     continue;
                 }
                 if (Voxelizer.this.edgeTest(vertices.get(2), vertices.get(0), enclosing)) {
-                    grid.toggle(true, enclosing.getX(), enclosing.getY(), enclosing.getZ());
+                    grid.toggleVoxel(true, enclosing.first.x, enclosing.first.y, enclosing.first.z);
                     continue;
                 }
 
                 /* Perform plane-tests. */
                 if (Voxelizer.this.planeTest(vertices.get(0), vertices.get(1), vertices.get(2), enclosing)) {
-                    grid.toggle(true, enclosing.getX(), enclosing.getY(), enclosing.getZ());
+                    grid.toggleVoxel(true, enclosing.first.x, enclosing.first.y, enclosing.first.z);
                 }
             }
         }
@@ -122,8 +157,8 @@ public class Voxelizer {
      * @param voxel Voxel to be tested.
      * @return true if the voxel's center is within the circle, false otherwise.
      */
-    private boolean vertextTest(Vector3f vertex, VoxelGrid.Voxel voxel) {
-       return vertex.distanceSquared(voxel.getCenter()) > this.rcsq;
+    private boolean vertextTest(Mesh.Vertex vertex, Pair<Vector3i,Vector3f> voxel) {
+       return vertex.getPosition().distanceSquared(voxel.second) > this.rcsq;
     }
 
     /**
@@ -135,12 +170,12 @@ public class Voxelizer {
      * @param voxel Voxel to be tested.
      * @return true if voxel's center is contained in cylinder, false otherwise.
      */
-    private boolean edgeTest(Vector3f a, Vector3f b, VoxelGrid.Voxel voxel) {
-        Vector3f line = (new Vector3f(b)).sub(a);
-        Vector3f pd = voxel.getCenter().sub(a);
+    private boolean edgeTest(Mesh.Vertex a, Mesh.Vertex b, Pair<Vector3i,Vector3f> voxel) {
+        Vector3f line = (new Vector3f(b.getPosition())).sub(a.getPosition());
+        Vector3f pd = voxel.second.sub(a.getPosition());
 
         /* Calculate distance between a and b (Edge). */
-        float lsq = a.distanceSquared(b);
+        float lsq = a.getPosition().distanceSquared(b.getPosition());
         float dot = line.dot(pd);
 
         if (dot < 0.0f || dot > lsq) {
@@ -160,109 +195,63 @@ public class Voxelizer {
      *
      * @param a First vertex that spans the face.
      * @param b Second vertex that spans the face.
-     * @param c Thrid vertex that spans the face.
+     * @param c Third vertex that spans the face.
      * @param voxel Voxel to be tested.
      * @return true if voxel's center is contained in the area, false otherwise.
-
      */
-    private boolean planeTest(Vector3f a, Vector3f b, Vector3f c, VoxelGrid.Voxel voxel) {
+    private boolean planeTest(Mesh.Vertex a, Mesh.Vertex b, Mesh.Vertex c, Pair<Vector3i,Vector3f> voxel) {
         /* Retrieve center and corner of voxel. */
-        Vector3f vcenter = voxel.getCenter();
+        Vector3f vcenter = voxel.second;
         Vector3f vcorner = (new Vector3f(this.rc, this.rc, this.rc)).add(vcenter);
 
         /* Calculate the vectors spanning the plane of the facepolyon and its plane-normal. */
-        Vector3f ab = (new Vector3f(b)).sub(a);
-        Vector3f ac = (new Vector3f(c)).sub(a);
+        Vector3f ab = (new Vector3f(b.getPosition())).sub(a.getPosition());
+        Vector3f ac = (new Vector3f(c.getPosition())).sub(a.getPosition());
         Vector3f planenorm = (new Vector3f(ab)).cross(ac);
 
         /* Calculate the distance t for enclosing planes. */
-        float t = this.rc*sqrt3*vcorner.angleCos(voxel.getCenter());
+        float t = (float)(this.rc* MathConstants.SQRT3*vcorner.angleCos(vcenter));
 
         /* Derive new displaced plane normals. */
         Vector3f planenorm_plus = new Vector3f(planenorm.x + t, planenorm.y + t, planenorm.z + t);
         Vector3f planenorm_minus = new Vector3f(planenorm.x - t, planenorm.y - t, planenorm.z - t);
 
         /* Check if the center is under the planenorm_plus and above the planenorm_minus. */
-        if (planenorm_plus.dot(vcenter) < 0 && planenorm_minus.dot(vcenter) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return planenorm_plus.dot(vcenter) < 0 && planenorm_minus.dot(vcenter) > 0;
     }
 
     /**
-     * Calculates and returns the enclosing grid, i.e. a list of voxels from the
-     * grid that enclose the list of provided vertices.
+     * Calculates and returns the enclosing grid, i.e. a list of Voxels from the grid that enclose the list
+     * of provided vertices.
      *
-     * @param vertices The vertices for which an enclosing grid needs to be found.
-     * @param boundingBox Bounding-box of the mesh. Used for calculations.
+     * @param vertices The Vertices for which an enclosing grid needs to be found.
      * @param grid VoxelGrid to select voxels from.
      * @return List of voxels that confine the provided vertices.
      */
-    private List<VoxelGrid.Voxel> enclosingGrid(List<Vector3f> vertices, float[] boundingBox, VoxelGrid grid) {
+    private List<Pair<Vector3i,Vector3f>> enclosingGrid(List<Mesh.Vertex> vertices, VoxelGrid grid) {
         /* Calculate bounding box for provided vertices. */
-        float bounds[] = this.bounds(vertices);
+        ArrayList<Vector3fc> positions = new ArrayList<>(vertices.size());
+        for (Mesh.Vertex vertex : vertices) {
+            positions.add(vertex.getPosition());
+        }
+
+        float bounds[] = MeshMathUtil.bounds(positions);
 
         /* Derive max and min voxel-indices from bounding-boxes. */
-        int max_x = Math.abs((int)Math.ceil(((boundingBox[1]-bounds[0])/this.resolution)));
-        int min_x = Math.abs((int)Math.ceil(((boundingBox[1]-bounds[1])/this.resolution)));
-        int max_y = Math.abs((int)Math.ceil(((boundingBox[3]-bounds[2])/this.resolution)));
-        int min_y = Math.abs((int)Math.ceil(((boundingBox[3]-bounds[3])/this.resolution)));
-        int max_z = Math.abs((int)Math.ceil(((boundingBox[5]-bounds[4])/this.resolution)));
-        int min_z = Math.abs((int)Math.ceil(((boundingBox[5]-bounds[5])/this.resolution)));
-
-        assert min_x >= 0;
-        assert max_x < grid.getSizeX();
-        assert min_x <= max_x;
-
-        assert min_y >= 0;
-        assert max_y < grid.getSizeY();
-        assert min_y <= max_y;
-
-        assert min_z >= 0;
-        assert max_z < grid.getSizeY();
-        assert min_z <= max_z;
+        Vector3i max = grid.coordinateToVoxel(new Vector3f(bounds[0], bounds[2], bounds[4]));
+        Vector3i min = grid.coordinateToVoxel(new Vector3f(bounds[1], bounds[3], bounds[5]));
 
         /* Initialize an empty ArrayList for the Voxel-Elements. */
-        List<VoxelGrid.Voxel> enclosing = new ArrayList<>((max_x-min_x) * (max_y-min_y) * (max_z-min_z));
-        for (int i = min_x; i <= max_x; i++) {
-            for (int j = min_y;j<= max_y; j++) {
-                for (int k = min_z; k <= max_z; k++) {
-                    enclosing.add(grid.get(i,j,k));
+        List<Pair<Vector3i,Vector3f>> enclosing = new ArrayList<>((max.x-min.x) * (max.y-min.y) * (max.z-min.z));
+        for (int i = min.x; i <= max.x; i++) {
+            for (int j = min.y;j<= max.y; j++) {
+                for (int k = min.z; k <= max.z; k++) {
+                    enclosing.add(new Pair<>(new Vector3i(i,j,k), grid.getVoxelCenter(i,j,k)));
                 }
             }
         }
 
         /* Return list of enclosing voxels. */
         return enclosing;
-    }
-
-    /**
-     * Calculates and reruns a bounding box, given a list of vertices. The box encloses all the
-     * vertices.
-     *
-     * @param vertices List of vertices for which the bounding-box should be calculated.
-     * @return Float-array spanning the bounding-box {max_x, min_x, max_y, min_y, max_z, min_z}
-     */
-    private float[] bounds(List<Vector3f> vertices) {
-        /* Initialize the bounding-box. */
-        float bounds[] = {
-          -Float.MAX_VALUE, Float.MAX_VALUE,
-          -Float.MAX_VALUE, Float.MAX_VALUE,
-          -Float.MAX_VALUE, Float.MAX_VALUE
-        };
-
-        /* Find max and min y-values. */
-        for(Vector3f vertex : vertices) {
-            if (vertex.x() > bounds[0]) bounds[0] = vertex.x();
-            if (vertex.x() < bounds[1]) bounds[1] = vertex.x();
-            if (vertex.y() > bounds[2]) bounds[2] = vertex.y();
-            if (vertex.y() < bounds[3]) bounds[3] = vertex.y();
-            if (vertex.z() > bounds[4]) bounds[4] = vertex.z();
-            if (vertex.z() < bounds[5]) bounds[5] = vertex.z();
-        }
-
-        /* Return bounding-box. */
-        return bounds;
     }
 }

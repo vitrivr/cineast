@@ -6,26 +6,41 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class ExtractionPipelineConfig {
-	private int shotQueueSize = 5;
-	private int threadPoolSize = 4;
-	private int taskQueueSize = 10;
+
+	/** Default value for size of thread-pool. */
+	public static final int DEFAULT_THREADPOOL_SIZE = 4;
+
+	/** Default value for size of task-queue. */
+	public static final int DEFAULT_TASKQUEUE_SIZE = 10;
+
+	/** Default value for size of segment-queue. */
+	public static final int DEFAULT_SEGMENTQUEUE_SIZE = 10;
+
+	/** */
+	private Integer shotQueueSize = DEFAULT_THREADPOOL_SIZE;
+
+	/** */
+	private Integer threadPoolSize = DEFAULT_TASKQUEUE_SIZE;
+
+	/** */
+	private Integer taskQueueSize = DEFAULT_SEGMENTQUEUE_SIZE;
+
 	private File outputLocation = new File(".");
 
 	@JsonCreator
 	public ExtractionPipelineConfig() {
-
 	}
 
 	@JsonProperty
-	public int getShotQueueSize(){
+	public Integer getShotQueueSize(){
 		return this.shotQueueSize;
 	}
-	public void setShotQueueSize(int shotQueueSize) {
+	public void setShotQueueSize(Integer shotQueueSize) {
 		this.shotQueueSize = shotQueueSize;
 	}
 
 	@JsonProperty
-	public int getThreadPoolSize(){
+	public Integer getThreadPoolSize(){
 		return this.threadPoolSize;
 	}
 	public void setThreadPoolSize(int threadPoolSize) {
@@ -33,7 +48,7 @@ public final class ExtractionPipelineConfig {
 	}
 
 	@JsonProperty
-	public int getTaskQueueSize() {
+	public Integer getTaskQueueSize() {
 		return this.taskQueueSize;
 	}
 	public void setTaskQueueSize(int taskQueueSize) {

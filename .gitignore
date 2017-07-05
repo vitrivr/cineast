@@ -4,6 +4,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# Proto Files
+*.bin
+
 # Package Files #
 *.jar
 *.war

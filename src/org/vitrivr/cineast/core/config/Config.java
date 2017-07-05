@@ -18,8 +18,8 @@ public class Config {
 
     public static final UUID UNIQUE_ID = UUID.randomUUID();
 
-    private static Config sharedConfig;
-
+    /** Global, shared instance of the Config object. Gets loading during application startup. */
+    private volatile static Config sharedConfig;
 
     private APIConfig api;
     private DatabaseConfig database;
@@ -30,6 +30,7 @@ public class Config {
     private NeuralNetConfig neuralnet;
     private QueryConfig query;
     private HashMap<MediaType, DecoderConfig> decoders;
+    private BenchmarkConfig benchmark = new BenchmarkConfig();
 
 
     /**
@@ -38,7 +39,9 @@ public class Config {
      * @return Currently shared instance of Config.
      */
     public synchronized static Config sharedConfig() {
-        if (sharedConfig == null) loadConfig("cineast.json");
+        if (sharedConfig == null) {
+            sharedConfig = loadConfig("cineast.json");
+        }
         return sharedConfig;
     }
 
@@ -47,13 +50,14 @@ public class Config {
      *
      * @param name Name of the config file.
      */
-    public static void loadConfig(String name) {
+    public static Config loadConfig(String name) {
         Config config = (new JacksonJsonProvider()).toObject(new File(name), Config.class);
         LOGGER.info("Config file loaded!");
         if (config == null) {
             LOGGER.warn("Could not read config file '{}'.", name);
+            return null;
         } else {
-            synchronized (Config.class) {sharedConfig = config;}
+            return config;
         }
     }
 
@@ -129,4 +133,11 @@ public class Config {
         this.decoders = decoders;
     }
 
+    @JsonProperty
+    public BenchmarkConfig getBenchmark() {
+        return benchmark;
+    }
+    public void setBenchmark(BenchmarkConfig benchmark) {
+        this.benchmark = benchmark;
+    }
 }

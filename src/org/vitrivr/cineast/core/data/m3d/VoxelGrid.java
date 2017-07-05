@@ -1,94 +1,57 @@
 package org.vitrivr.cineast.core.data.m3d;
 
-import com.jogamp.opengl.GL2;
 import org.joml.Vector3f;
-
-import static com.jogamp.opengl.GL2.GL_COMPILE;
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
+import org.joml.Vector3fc;
+import org.joml.Vector3i;
 
 /**
+ * This class represents a Voxel grid, i.e. a 3-dimensional grid of 3D pixels (called Voxels). Every voxel
+ * can either be visible or invisible.
+ *
  * @author rgasser
  * @version 1.0
  * @created 06.01.17
  */
-public class VoxelGrid implements Renderable {
-    /**
-     * A single Voxel.
-     */
-    public class Voxel {
-        private final short x;
-        private final short y;
-        private final short z;
-        private boolean visible;
+public class VoxelGrid {
+    /** The default, empty VoxelGrid. */
+    public static final VoxelGrid EMPTY = new VoxelGrid(5,5,5,0.1f);
 
-        public short getX() {
-            return x;
-        }
-        public short getY() {
-            return y;
-        }
-        public short getZ() {
-            return z;
-        }
-        public Vector3f getCenter() {
-            return new Vector3f((x-VoxelGrid.this.sizeX/2) * VoxelGrid.this.resolution, (y-VoxelGrid.this.sizeY/2)*VoxelGrid.this.resolution, (z-VoxelGrid.this.sizeZ/2)*VoxelGrid.this.resolution);
-        }
-        public boolean getVisible() {
-            return visible;
-        }
-
-        public Voxel(short x, short y, short z, boolean visible) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.visible = visible;
-        }
+    /** Represents a single Voxel which can either can be visible or invisible. */
+    public enum Voxel {
+        VISIBLE, INVISIBLE
     }
 
-    /**
-     * Determines the size of a single voxel.
-     */
+    /** Determines the size of a single voxel. */
     private float resolution;
 
-    /**
-     * Determines the half size of a single voxel.
-     */
-    private float halfResolution;
+    /** The size of the voxel grid in X direction. */
+    private final int sizeX;
 
-    /**
-     * The size of the voxel grid in X direction.
-     */
-    private final short sizeX;
+    /** The size of the voxel grid in X direction. */
+    private final int sizeY;
 
-    /**
-     * The size of the voxel grid in X direction.
-     */
-    private final short sizeY;
+    /** The size of the voxel grid in X direction. */
+    private final int sizeZ;
 
-    /**
-     * The size of the voxel grid in X direction.
-     */
-    private final short sizeZ;
-
-    /**
-     * The total lenght ot the voxel grid (i.e. the number of voxels in the grid).
-     */
+    /** The total length ot the voxel grid (i.e. the number of voxels in the grid). */
     private final int length;
 
-    /**
-     * Array holding the actual voxels.
-     */
+    /** Number of visible voxels in the grid. */
+    private int visible = 0;
+
+    /** Number of invisible voxels in the grid. */
+    private int invisible = 0;
+
+    /** Array holding the actual voxels. */
     private final Voxel[][][] voxelGrid;
 
-    /**
-     * Defines the center of the voxel-grid (in the world coordinate system)
+    /** Defines the center of the voxel-grid (in the world coordinate system). It corresponds to the
+     * center of the voxel at (sizeX/2, sizeY/2, sizeZ/2).
+     *
+     *
+     * <p>Important: </p> Transformation into world coordinates are based on this center!
      */
     private final Vector3f center = new Vector3f(0f,0f,0f);
-
-    /**
-     * Handle of the vertex-list.
-     */
-    private int vertexList = -1;
 
     /**
      * Default constructor: Initializes a new, fully active Voxel-Grid
@@ -98,7 +61,7 @@ public class VoxelGrid implements Renderable {
      * @param sizeZ Z-size of the new voxel grid.
      * @param resolution Resolution of the grid, i.e. size of a single voxel.
      */
-    public VoxelGrid(short sizeX, short sizeY, short sizeZ, float resolution) {
+    public VoxelGrid(int sizeX, int sizeY, int sizeZ, float resolution) {
         this(sizeX, sizeY, sizeZ, resolution, true);
     }
 
@@ -109,20 +72,25 @@ public class VoxelGrid implements Renderable {
      * @param sizeY Y-size of the new voxel grid.
      * @param sizeZ Z-size of the new voxel grid.
      * @param resolution Resolution of the grid, i.e. size of a single voxel.
-     * @param active Indicates whether the grid should be initialized with active or inactive voxels.
+     * @param active Indicates whether the grid should be initialized with active or inactive Voxels.
      */
-    public VoxelGrid(short sizeX, short sizeY, short sizeZ, float resolution, boolean active) {
+    public VoxelGrid(int sizeX, int sizeY, int sizeZ, float resolution, boolean active) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.sizeZ = sizeZ;
         this.resolution = resolution;
-        this.halfResolution = resolution/2;
         this.length = sizeX * sizeY * sizeZ;
         this.voxelGrid = new Voxel[sizeX][sizeY][sizeZ];
         for (short i = 0;i<this.sizeX;i++) {
             for (short j = 0;j<this.sizeY;j++) {
                 for (short k = 0;k<this.sizeZ;k++) {
-                    this.voxelGrid[i][j][k] = new Voxel(i,j,k, active);
+                    if (active) {
+                        this.voxelGrid[i][j][k] = Voxel.VISIBLE;
+                        this.visible += 1;
+                    } else {
+                        this.voxelGrid[i][j][k] = Voxel.INVISIBLE;
+                        this.invisible += 1;
+                    }
                 }
             }
         }
@@ -133,7 +101,7 @@ public class VoxelGrid implements Renderable {
      *
      * @return X-size of the voxel grid.
      */
-    public final short getSizeX() {
+    public final int getSizeX() {
         return sizeX;
     }
 
@@ -142,7 +110,7 @@ public class VoxelGrid implements Renderable {
      *
      * @return Y-size of the voxel grid.
      */
-    public final short getSizeY() {
+    public final int getSizeY() {
         return sizeY;
     }
 
@@ -151,7 +119,7 @@ public class VoxelGrid implements Renderable {
      *
      * @return Z-size of the voxel grid.
      */
-    public final short getSizeZ() {
+    public final int getSizeZ() {
         return sizeZ;
     }
 
@@ -159,165 +127,152 @@ public class VoxelGrid implements Renderable {
      * Getter for the length of the voxel-grid i.e. the number of voxels
      * in the grid.
      *
-     * @return Number of voxels in the grid.
+     * @return Number of Voxels in the grid.
      */
     public final int getLength() {
         return length;
     }
 
     /**
+     * Getter for the center of the voxel-grid.
+     *
+     * @return Vector pointing to the center of the grid.
+     */
+    public final Vector3fc getGridCenter() {
+        return center;
+    }
+
+    /**
+     * Getter for the number of visible Voxels in the grid.
+     *
+     * @return Number of visible Voxels in the grid.
+     */
+    public final int getVisible() {
+        return visible;
+    }
+
+    /**
+     * Getter for the number of invisible Voxels in the grid.
+     *
+     * @return Number of invisible Voxels in the grid.
+     */
+    public final int getInvisible() {
+        return invisible;
+    }
+
+    /**
+     * Returns true if VoxelGrid is visible (i.e. there is at least one
+     * visible Voxel) and false otherwise.
      *
      * @return
+     */
+    public final boolean isVisible() {
+        return this.visible > 0;
+    }
+
+    /**
+     * Returns the resolution of the Voxel grid, i.e. the size of a single
+     * Voxel.
+     *
+     * @return Size of a single voxel.
      */
     public final float getResolution() {
         return resolution;
     }
 
     /**
+     * Transforms world-coordinates (e.g. position of a vertex in space) into the corresponding voxel coordinates,
+     * i.e. the index of the voxel in the grid.
      *
-     * @return
+     * <p>Important: </p> The indices returned by this method are not necessarily within the bounds
+     * of the grid.
+     *
+     * @param coordinate Coordinates to be transformed.
+     * @return coordinate Voxel indices.
      */
-    public final float getHalfResolution() {
-        return halfResolution;
+    public final Vector3i coordinateToVoxel(Vector3fc coordinate) {
+        Vector3f gridCoordinates = (new Vector3f(coordinate)).add(this.center).div(this.resolution);
+        return new Vector3i((int)Math.ceil(gridCoordinates.x + this.sizeX/2), (int)Math.ceil(gridCoordinates.y + this.sizeY/2), (int)Math.ceil(gridCoordinates.z + this.sizeZ/2));
     }
 
     /**
+     * Returns the Voxel at the specified position.
      *
-     * @param x
-     * @param y
-     * @param z
-     * @return
+     * @param x x position of the Voxel.
+     * @param y y position of the Voxel.
+     * @param z z position of the Voxel.
+     * @throws ArrayIndexOutOfBoundsException If one of the three indices is larger than the grid.
      */
     public final Voxel get(int x, int y, int z) {
         return this.voxelGrid[x][y][z];
     }
 
     /**
+     * Returns true, if the Voxel at the specified position is visible and false otherwise.
      *
-     * @param visible
-     * @param x
-     * @param y
-     * @param z
+     * @param x x position of the Voxel.
+     * @param y y position of the Voxel.
+     * @param z z position of the Voxel.
+     * @throws ArrayIndexOutOfBoundsException If one of the three indices is larger than the grid.
      */
-    public final void toggle(boolean visible, int x, int y, int z) {
-        this.voxelGrid[x][y][z].visible = visible;
+    public final boolean isVisible(int x, int y, int z) {
+        return this.voxelGrid[x][y][z] == Voxel.VISIBLE;
     }
 
+    /**
+     * Calculates and returns the center of the Voxel in a 3D coordinate system using the grids
+     * resolution property.
+     *
+     * @param x x position of the Voxel.
+     * @param y y position of the Voxel.
+     * @param z z position of the Voxel.
+     * @return Vector3f containing the center of the voxel.
+     * @throws ArrayIndexOutOfBoundsException If one of the three indices is larger than the grid.
+     */
+    public Vector3f getVoxelCenter(int x, int y, int z) {
+        return new Vector3f((x-VoxelGrid.this.sizeX/2) * VoxelGrid.this.resolution + this.center.x, (y-VoxelGrid.this.sizeY/2)*VoxelGrid.this.resolution + this.center.y, (z-VoxelGrid.this.sizeZ/2)*VoxelGrid.this.resolution + this.center.z);
+    }
 
     /**
-     * Assembles a mesh into a new glDisplayList. The method returns a handle for this
-     * newly created glDisplayList. To actually render the list - by executing the commands it contains -
-     * the glCallList function must be called!
+     * Toggles the Voxel at the specified position.
      *
-     * IMPORTANT: The glDisplayList bust be deleted once its not used anymore by calling glDeleteLists
-
-     * @return Handle for the newly created glDisplayList.
+     * @param visible If true, the new Voxel position will become visible.
+     * @param x x position of the Voxel.
+     * @param y y position of the Voxel.
+     * @param z z position of the Voxel.
+     * @throws ArrayIndexOutOfBoundsException If one of the three indices is larger than the grid.
      */
-    public int assemble(GL2 gl) {
-        if (this.vertexList > 0) return this.vertexList;
-        this.vertexList = gl.glGenLists(1);
-        gl.glNewList(this.vertexList, GL_COMPILE);
-        {
-            boolean[] visible = {true, true, true, true, true, true};
+    public final void toggleVoxel(boolean visible, int x, int y, int z) {
+        if (visible && this.voxelGrid[x][y][z] == Voxel.INVISIBLE) {
+            this.voxelGrid[x][y][z] = Voxel.VISIBLE;
+            this.invisible -= 1;
+            this.visible += 1;
+        } else if (!visible && this.voxelGrid[x][y][z] == Voxel.VISIBLE) {
+            this.voxelGrid[x][y][z] = Voxel.INVISIBLE;
+            this.invisible += 1;
+            this.visible -= 1;
+        }
+    }
 
-            for (int i = 0; i < this.sizeX; i++) {
-                for (int j = 0; j < this.sizeY; j++) {
-                    for (int k = 0; k < this.sizeZ; k++) {
-                        /* Skip Voxel if its inactive. */
-                        if (!this.voxelGrid[i][j][k].visible) continue;
-
-                        /* Extract center of the voxel. */
-                        float x = this.center.x + this.voxelGrid[i][j][k].getCenter().x;
-                        float y = this.center.y + this.voxelGrid[i][j][k].getCenter().y;
-                        float z = this.center.z + this.voxelGrid[i][j][k].getCenter().z;
-
-                        /* Determine which faces to draw: Faced that are covered by another active voxel are switched off. */
-                        if(i > 0) visible[0] = !this.voxelGrid[i-1][j][k].visible;
-                        if(i < this.getSizeX()-1) visible[1] = !this.voxelGrid[i+1][j][k].visible;
-                        if(j > 0) visible[2] = !this.voxelGrid[i][j-1][k].visible;
-                        if(j < this.getSizeY()-1) visible[3] = !this.voxelGrid[i][j+1][k].visible;
-                        if(k > 0) visible[4] = !this.voxelGrid[i][j][k-1].visible;
-                        if(k < this.getSizeZ()-1) visible[5] = !this.voxelGrid[i][j][k+1].visible;
-
-                        /* Draw the cube. */
-                        this.drawCube(gl, x,y,z,visible);
+    /**
+     * Converts the VoxelGrid into a string that can be read by Matlab (e.g. for 3D scatter plots).
+     * The array contains the coordinates of all visible voxels.
+     *
+     * @return String
+     */
+    public String toMatlabArray() {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("[");
+        for (int x=0;x<this.sizeX;x++) {
+            for (int y=0;y<this.sizeY;y++) {
+                for (int z=0;z<this.sizeZ;z++) {
+                    if (this.voxelGrid[x][y][z] == Voxel.VISIBLE) {
+                        buffer.append(String.format("%d %d %d; ",x,y,z));
                     }
                 }
             }
         }
-
-        gl.glEndList();
-        return  this.vertexList;
-    }
-
-    /**
-     *
-     * @param gl
-     */
-    public void clear(GL2 gl) {
-        gl.glDeleteLists(this.vertexList, 1);
-        this.vertexList = -1;
-    }
-
-    /**
-     *
-     * @param gl
-     * @param x
-     * @param y
-     * @param z
-     * @param visible
-     */
-    private final void drawCube(GL2 gl, float x, float y, float z, boolean[] visible) {
-        gl.glBegin(GL_QUADS);
-        {
-            /* 1 */
-            if (visible[0]) {
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z - halfResolution);
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z - halfResolution);
-            }
-
-            /* 2 */
-            if (visible[1]) {
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z + halfResolution);
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z + halfResolution);
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z + halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z + halfResolution);
-            }
-
-            /* 3 */
-            if (visible[2]) {
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z + halfResolution);
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z - halfResolution);
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z + halfResolution);
-            }
-
-            /* 4 */
-            if (visible[3]) {
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z + halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z + halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z - halfResolution);
-            }
-
-            /* 5 */
-            if (visible[4]) {
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z - halfResolution);
-                gl.glVertex3f(x + halfResolution, y - halfResolution, z + halfResolution);
-                gl.glVertex3f(x - halfResolution, y - halfResolution, z + halfResolution);
-            }
-
-            /* 6 */
-            if (visible[5]) {
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z - halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z - halfResolution);
-                gl.glVertex3f(x - halfResolution, y + halfResolution, z + halfResolution);
-                gl.glVertex3f(x + halfResolution, y + halfResolution, z + halfResolution);
-            }
-        }
-        gl.glEnd();
+        buffer.append("]");
+        return buffer.toString();
     }
 }

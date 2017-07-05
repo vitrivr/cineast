@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.segmenter.audio;
 
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.segments.AudioSegment;
@@ -67,9 +68,10 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
      * with the same type must be provided.
      *
      * @param decoder Decoder used for frames-decoding.
+     * @param object Media object that is about to be segmented.
      */
     @Override
-    public void init(Decoder<AudioFrame> decoder) {
+    public void init(Decoder<AudioFrame> decoder, MultimediaObjectDescriptor object) {
         this.decoder = decoder;
         this.complete.set(false);
     }

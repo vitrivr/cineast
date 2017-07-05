@@ -3,15 +3,17 @@ package org.vitrivr.cineast.core.features.exporter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
-import org.vitrivr.cineast.core.util.fft.AudioSignalVisualizer;
-import org.vitrivr.cineast.core.util.fft.STFT;
-import org.vitrivr.cineast.core.util.fft.windows.HanningWindow;
+import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
+import org.vitrivr.cineast.core.util.dsp.visualization.AudioSignalVisualizer;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -79,7 +81,8 @@ public class ChromagramExporter implements Extractor {
 
         /* Prepare STFT and HPCP for the segment. */
         final Path directory = this.destination.resolve(shot.getSuperId());
-        final STFT stft = shot.getSTFT(2048, 512, new HanningWindow());
+        final Pair<Integer, Integer> parameters = FFTUtil.parametersForDuration(shot.getSamplingrate(), 0.1f);
+        final STFT stft = shot.getSTFT(parameters.first, (parameters.first-2*parameters.second)/2, parameters.second, new HanningWindow());
         final HPCP hpcp = new HPCP();
         hpcp.addContribution(stft);
 

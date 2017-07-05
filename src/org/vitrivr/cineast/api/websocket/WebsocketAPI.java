@@ -7,9 +7,12 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 
 import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.QueryMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.MoreLikeThisQueryMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
+import org.vitrivr.cineast.core.config.APIConfig;
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
@@ -46,9 +49,6 @@ public class WebsocketAPI {
     /** Store sessions if you want to, for example, broadcast a message to all users.*/
     private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 
-    /** Maximum size of a text-message. Should be large enough so as to be able to support transmission of image/audio data. */
-    private static final int MAX_TEXT_MESSAGE_SIZE = 2048 * 1000;
-
     /** Named context of the endpoint. Will be appended to the endpoint URL. */
     private static final String CONTEXT = "api";
 
@@ -63,7 +63,8 @@ public class WebsocketAPI {
 
     /* Register the MessageHandlers for the different messages. */
     static {
-        STATELESS_HANDLERS.put(MessageType.Q_QUERY, new QueryMessageHandler());
+        STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler());
+        STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.PING, new StatusMessageHandler());
         STATELESS_HANDLERS.put(MessageType.M_LOOKUP, new MetadataLookupMessageHandler());
     }
@@ -74,16 +75,19 @@ public class WebsocketAPI {
     /**
      * Starts the WebSocket API.
      *
-     * @param port Port on which the WebSocket endpoint should listen.
-     * @param numberOfThreads Maximum number of threads that should be used to handle messages.
+     * @param config APIConfig object.
      */
-    public static void start(int port, int numberOfThreads) {
-        if (port > 0 && port < 65535) {
-            Spark.port(port);
+    public static void start(APIConfig config) {
+        if (config.getHttpPort() > 0 && config.getHttpPort() < 65535) {
+            Spark.port(config.getHttpPort());
         } else {
-            LOGGER.warn("The specified port {} is not valid. Fallback to default port.", port);
+            LOGGER.warn("The specified port {} is not valid. Fallback to default port.", config.getHttpPort());
         }
-        Spark.threadPool(numberOfThreads, 2, 30000);
+        Spark.threadPool(config.getThreadPoolSize(), 2, 30000);
+        if (config.isSecure()) {
+            Spark.secure(config.getKeystore(), config.getKeystorePassword(), null, null);
+        }
+
         Spark.webSocket(String.format("/%s/%s", CONTEXT, VERSION), WebsocketAPI.class);
         Spark.init();
         Spark.awaitInitialization();
@@ -127,7 +131,8 @@ public class WebsocketAPI {
      */
     @OnWebSocketConnect
     public void connected(Session session) {
-        session.getPolicy().setMaxTextMessageSize(MAX_TEXT_MESSAGE_SIZE);
+        session.getPolicy().setMaxTextMessageSize(Config.sharedConfig().getApi().getMaxMessageSize());
+        session.getPolicy().setMaxBinaryMessageSize(Config.sharedConfig().getApi().getMaxMessageSize());
         sessions.add(session);
         LOGGER.debug("New session {} connected!");
     }
@@ -146,7 +151,6 @@ public class WebsocketAPI {
         LOGGER.debug("Connection of session closed (Code: {}, Reason: {}).", statusCode, reason);
     }
 
-
     /**
      * TODO: Handle errors properly.
      *
@@ -154,9 +158,8 @@ public class WebsocketAPI {
      * @param error
      */
     @OnWebSocketError
-    public void onWebSocketException(Session session, Throwable error)
-    {
-        LOGGER.fatal("An unhandled error occurred during message handling.", LogHelper.getStackTrace(error));
+    public void onWebSocketException(Session session, Throwable error) {
+        LOGGER.fatal("An unhandled error occurred during message handling: {}", LogHelper.getStackTrace(error));
     }
 
     /**

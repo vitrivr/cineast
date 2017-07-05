@@ -23,11 +23,14 @@ public interface Decoder<T> extends AutoCloseable {
      * Initializes the decoder with a file. This is a necessary step before content can be retrieved from
      * the decoder by means of the getNext() method.
      *
+     * <b>Important: </b> It is not safe to call getNext() of an uninitialized decoder or a Decoder that
+     * returned false upon initialization.
+     *
      * @param path Path to the file that should be decoded.
      * @param config DecoderConfiguration used by the decoder.
-     * @return Current instance of the decoder.
+     * @return True if initialization was successful, false otherwise.
      */
-    Decoder<T> init(Path path, DecoderConfig config);
+    boolean init(Path path, DecoderConfig config);
 
     /**
      * Closes the Decoder. This method should cleanup and relinquish all resources.

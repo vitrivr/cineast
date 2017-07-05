@@ -2,15 +2,15 @@ package org.vitrivr.cineast.core.config;
 
 import java.util.function.Supplier;
 
-import org.vitrivr.cineast.core.db.ADAMproSelector;
-import org.vitrivr.cineast.core.db.ADAMproWriter;
+import org.vitrivr.cineast.core.db.adampro.ADAMproSelector;
+import org.vitrivr.cineast.core.db.adampro.ADAMproWriter;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-import org.vitrivr.cineast.core.db.JsonFileWriter;
-import org.vitrivr.cineast.core.db.JsonSelector;
+import org.vitrivr.cineast.core.db.json.JsonFileWriter;
+import org.vitrivr.cineast.core.db.json.JsonSelector;
 import org.vitrivr.cineast.core.db.NoDBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-import org.vitrivr.cineast.core.db.ProtoSelector;
-import org.vitrivr.cineast.core.db.ProtobufFileWriter;
+import org.vitrivr.cineast.core.db.protobuf.ProtoSelector;
+import org.vitrivr.cineast.core.db.protobuf.ProtobufFileWriter;
 import org.vitrivr.cineast.core.setup.ADAMproEntityCreator;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.setup.NoEntityCreator;
@@ -19,11 +19,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class DatabaseConfig {
+
+
+	/** Default value for batchsize. */
+	public static final int DEFAULT_BATCH_SIZE = 1000;
+
 	private String host = "127.0.0.1";
 	private int port =  5890;
 	private boolean plaintext = false;
 	private Writer writer = Writer.ADAMPRO;
 	private Selector selector = Selector.ADAMPRO;
+
+	private Integer batchsize = DEFAULT_BATCH_SIZE;
 	
 	private static final PersistencyWriterSupplier ADAMPRO_WRITER_SUPPLY = () -> new ADAMproWriter();	
 	private static final PersistencyWriterSupplier PROTO_WRITER_SUPPLY = () -> new ProtobufFileWriter();
@@ -34,8 +41,8 @@ public final class DatabaseConfig {
 	private static final DBSelectorSupplier JSON_SELECTOR_SUPPLY = () -> new JsonSelector();
 	private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = () -> new ADAMproSelector();
 	
-  private static final Supplier<EntityCreator> ADAMPRO_CREATOR_SUPPLY = () -> new ADAMproEntityCreator();
-  private static final Supplier<EntityCreator> NO_CREATOR_SUPPLY = () -> new NoEntityCreator();
+  	private static final Supplier<EntityCreator> ADAMPRO_CREATOR_SUPPLY = () -> new ADAMproEntityCreator();
+  	private static final Supplier<EntityCreator> NO_CREATOR_SUPPLY = () -> new NoEntityCreator();
 
 	public static enum Writer{
 		PROTO,
@@ -83,6 +90,14 @@ public final class DatabaseConfig {
 	}
 	public void setPlaintext(boolean plaintext) {
 		this.plaintext = plaintext;
+	}
+
+	@JsonProperty
+	public Integer getBatchsize() {
+		return batchsize;
+	}
+	public void setBatchsize(Integer batchsize) {
+		this.batchsize = batchsize;
 	}
 
 	@JsonProperty

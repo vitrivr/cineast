@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.features;
 
 import org.vitrivr.cineast.core.util.audio.HPCP;
 
+import java.util.List;
+
 /**
  * An Extraction and Retrieval module that leverages pure HPCP shingles according to [1]. The particular module
  * focuses on melodic frequencies according to an idea found in [2].

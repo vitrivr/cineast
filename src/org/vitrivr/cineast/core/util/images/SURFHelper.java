@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
  * @version 1.0
  * @created 19.01.17
  */
-public class SURFHelper {
+public final class SURFHelper {
 
     /** Number of Octaves to consider in the interest point detection step (Fast Hessian) of SURF. Defaults to 4 for FH-9 described in [1]. */
     private final static int FH_NUMBER_OF_OCTAVES = 4;
@@ -39,7 +39,7 @@ public class SURFHelper {
     public final static int SURF_VECTOR_SIZE = 64;
 
     /**
-     *
+     * Private constructor; do not instantiate!
      */
     private SURFHelper() {
 

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.vitrivr.cineast.core.decode.general.Converter;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -55,7 +56,7 @@ public class ReflectionHelper {
 			}
 			return instanciate(c);
 		} catch (ClassNotFoundException | InstantiationException  e) {
-			LOGGER.fatal("Failed to create ObjectIdGenerator. Could not find class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create ObjectIdGenerator. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
@@ -81,7 +82,24 @@ public class ReflectionHelper {
 			}
 			return instanciate(c);
 		} catch (ClassNotFoundException | InstantiationException e) {
-			LOGGER.fatal("Failed to create CodebookGenerator. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create CodebookGenerator. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
+	/**
+	 * Tries to instantiate a new, named Covnerter object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * @param fqn The fully-qualified name of the converter.
+	 * @return Instance of Converter or null, if instantiation fails.
+	 */
+	public static Converter newConverter(String fqn) {
+		try {
+			Class<Converter> c = (Class<Converter>) Class.forName(fqn);
+			return instanciate(c);
+		} catch (ClassNotFoundException e) {
+			LOGGER.fatal("Failed to create Converter. Could not find or access class with name {} ({}).", fqn, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
@@ -107,7 +125,7 @@ public class ReflectionHelper {
 			}
 			return instanciate(c);
 		} catch (ClassNotFoundException | InstantiationException e) {
-			LOGGER.fatal("Failed to create Exporter. Could not find class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create Exporter. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
@@ -138,7 +156,7 @@ public class ReflectionHelper {
 				return instanciate(c, configuration);
 			}
 		} catch (ClassNotFoundException | InstantiationException e) {
-			LOGGER.fatal("Failed to create Exporter. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create Exporter. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
@@ -165,7 +183,7 @@ public class ReflectionHelper {
 
 			return instanciate(c);
 		} catch (ClassNotFoundException | InstantiationException e) {
-			LOGGER.fatal("Failed to create MetadataExtractor. Could not find or access class with name {}.", name, LogHelper.getStackTrace(e));
+			LOGGER.fatal("Failed to create MetadataExtractor. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}

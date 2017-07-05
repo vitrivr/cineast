@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.config;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -48,9 +49,11 @@ public class IngestConfig implements ExtractionContextProvider {
     /** Database-setting to use for import. Defaults to application settings. */
     private DatabaseConfig database = Config.sharedConfig().getDatabase();
 
+    /** Configuration for extraction-pipeline. Defaults to global configuration. */
+    private ExtractionPipelineConfig pipeline = Config.sharedConfig().getExtractor();
+
     @JsonCreator
     public IngestConfig() {
-
     }
 
     @JsonProperty(required = true)
@@ -98,7 +101,27 @@ public class IngestConfig implements ExtractionContextProvider {
         return database;
     }
     public void setDatabase(DatabaseConfig database) {
+        /* Merge with global settings if not set. */
+        DatabaseConfig global = Config.sharedConfig().getDatabase();
+        if (this.database.getSelector() == null) this.database.setSelector(global.getSelector());
+        if (this.database.getWriter() == null) this.database.setWriter(global.getWriter());
+        if (this.database.getBatchsize() == DatabaseConfig.DEFAULT_BATCH_SIZE) this.database.setBatchsize(global.getBatchsize());
+        /* Apply. */
         this.database = database;
+    }
+
+    @JsonProperty
+    public ExtractionPipelineConfig getPipeline() {
+        return pipeline;
+    }
+    public void setPipeline(ExtractionPipelineConfig pipeline) {
+        /* Merge with global settings if not set. */
+        ExtractionPipelineConfig global = Config.sharedConfig().getExtractor();
+        if (this.pipeline.getTaskQueueSize() == ExtractionPipelineConfig.DEFAULT_TASKQUEUE_SIZE) this.pipeline.setTaskQueueSize(global.getTaskQueueSize());
+        if (this.pipeline.getThreadPoolSize() == ExtractionPipelineConfig.DEFAULT_THREADPOOL_SIZE) this.pipeline.setThreadPoolSize(global.getThreadPoolSize());
+        if (this.pipeline.getShotQueueSize() == ExtractionPipelineConfig.DEFAULT_SEGMENTQUEUE_SIZE) this.pipeline.setShotQueueSize(global.getShotQueueSize());
+
+        this.pipeline = pipeline;
     }
 
     @Override
@@ -237,5 +260,50 @@ public class IngestConfig implements ExtractionContextProvider {
     @Override
     public DBSelectorSupplier persistencyReader() {
         return this.database.getSelectorSupplier();
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public File outputLocation() {
+        return this.pipeline.getOutputLocation();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int threadPoolSize() {
+        return this.pipeline.getThreadPoolSize();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Integer taskQueueSize() {
+        return this.pipeline.getTaskQueueSize();
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Integer segmentQueueSize() {
+        return this.pipeline.getShotQueueSize();
+    }
+
+    /**
+     * Returns the size of a batch. A batch is used when persisting data. Entities will be kept in
+     * memory until the batchsize limit is hit at which point they will be persisted.
+     *
+     * @return Batch size.
+     */
+    @Override
+    public Integer getBatchsize() {
+        return this.database.getBatchsize();
     }
 }

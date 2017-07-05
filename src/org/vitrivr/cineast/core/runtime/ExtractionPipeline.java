@@ -13,6 +13,7 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.ExtractionPipelineConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -34,7 +35,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     private final List<Extractor> extractors = new LinkedList<>();
 
     /** Blocking queue holding the SegmentContainers that are pending extraction. */
-    private final LinkedBlockingQueue<SegmentContainer> segmentQueue = new LinkedBlockingQueue<SegmentContainer>(Config.sharedConfig().getExtractor().getShotQueueSize());
+    private final LinkedBlockingQueue<SegmentContainer> segmentQueue;
 
     /** HashMap containing statistics about the execution of the extractors. */
     private final ConcurrentHashMap<Class<?>, SummaryStatistics> timeMap = new ConcurrentHashMap<>();
@@ -47,7 +48,6 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
 
     /** Initializer for the extractors. */
     private final ExtractorInitializer initializer;
-
     
     /** Flag indicating whether or not the ExtractionPipeline is running. */
     private volatile boolean running = false;
@@ -65,9 +65,13 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         /* Start the extraction pipeline. */
         this.startup();
 
-        /* Get value for task-queue and thread-count. */
-        int taskQueueSize =  Config.sharedConfig().getExtractor().getTaskQueueSize();
-        int threadCount = Config.sharedConfig().getExtractor().getThreadPoolSize();
+        /* Get value for size task-queue and number of threads. */
+        int taskQueueSize =  context.taskQueueSize() > 0 ? context.taskQueueSize() : ExtractionPipelineConfig.DEFAULT_TASKQUEUE_SIZE;
+        int threadCount = context.threadPoolSize() > 0 ? context.threadPoolSize() : ExtractionPipelineConfig.DEFAULT_THREADPOOL_SIZE;
+        int segmentQueueSize = context.segmentQueueSize() > 0 ? context.segmentQueueSize() : ExtractionPipelineConfig.DEFAULT_SEGMENTQUEUE_SIZE;
+
+        /* Initialize the segment queue. */
+        this.segmentQueue = new LinkedBlockingQueue<>(segmentQueueSize);
 
         /* Prepare and create a new ThreadPoolExecutor. */
         LimitedQueue<Runnable> taskQueue = new LimitedQueue<>(taskQueueSize);
@@ -75,7 +79,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
             @Override
             protected void afterExecute(Runnable r, Throwable t) {
                 if(t != null){
-                    LOGGER.fatal("Decoding Error detected, shutting down");
+                    LOGGER.fatal("Decoding Error detected!");
                     LOGGER.fatal(LogHelper.getStackTrace(t));
                     //this.shutdownNow();
                 }
@@ -105,15 +109,21 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     }
 
     /**
-     * Can be used to emit a SegmentContainer into the ExtractionPipeline. Invoking this
-     * method will add the container to the local queue. If that queue is full, this method
-     * will block until space becomes available.
+     * Can be used to emit a SegmentContainer into the ExtractionPipeline. Invoking this method will add
+     * the container to the local queue.
+     *
+     * If that queue is full, this method will block for the specified amount of time or until
+     * space to becomes available. If during that time, no space becomes available, the method
+     * returns false. This is an indication that emission of the segment should be retried later.
      *
      * @param container SegmentContainer to add to the queue.
+     * @param timeout Time to wait for space to become available in ms.
+     * @return true if SegmentContainer was emitted, false otherwise.
+     *
      * @throws InterruptedException
      */
-    public void emit(SegmentContainer container) throws InterruptedException {
-        this.segmentQueue.put(container);
+    public boolean emit(SegmentContainer container, int timeout) throws InterruptedException {
+        return this.segmentQueue.offer(container, timeout,  TimeUnit.MILLISECONDS);
     }
 
     /**

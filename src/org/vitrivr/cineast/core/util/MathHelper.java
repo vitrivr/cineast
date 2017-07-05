@@ -42,6 +42,25 @@ public class MathHelper {
 	}
 
 	/**
+	 * Normalizes a float array with respect to the L2 (Euclidian) norm. The
+	 * method will perform the normalisation in place.
+	 *
+	 * @param v Array that should be normalized.
+	 * @return Normalized array.
+	 */
+	public static float[] normalizeL2InPlace(float[] v) {
+		double norm = normL2(v);
+		if (norm > 0.0f) {
+			for (int i = 0; i < v.length; i++) {
+				v[i] = (float) (v[i] / norm);
+			}
+			return v;
+		} else {
+			return v;
+		}
+	}
+
+	/**
 	 * Normalizes a double array with respect to the L2 (euclidian) norm. The
 	 * method will return a new array and leave the original array unchanged.
 	 *
@@ -117,10 +136,50 @@ public class MathHelper {
 		return false;
 	}
 
+	/**
+	 * Checks whether the provided array is a zero array or not.
+	 *
+	 * @param array Array to check
+	 * @return true if array is not zero, false otherwise.
+	 */
+	public static boolean checkNotNaN(double[] array) {
+		for (double v : array) {
+			if (Double.isNaN(v)) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Checks whether the provided array is a zero array or not.
+	 *
+	 * @param array Array to check
+	 * @return true if array is not zero, false otherwise.
+	 */
+	public static boolean checkNotNaN(float[] array) {
+		for (float v : array) {
+			if (Float.isNaN(v)) return false;
+		}
+		return true;
+	}
+
 	public static float limit(float val, float min, float max){
 		val = val > max ? max : val;
 		val = val < min ? min : val;
 		return val;
 	}
-	
+
+	/**
+	 * Kronecker-Delta function. Returns 1 if i=j and 0 otherwise.
+	 *
+	 * @param i Value of i
+	 * @param j Value of j
+	 * @return Result of Kronecker-Delta.
+	 */
+	public static int kronecker(int i, int j) {
+		if (j == i) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 }

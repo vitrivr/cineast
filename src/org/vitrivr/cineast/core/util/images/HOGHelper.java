@@ -21,7 +21,7 @@ import java.awt.image.BufferedImage;
  * @version 1.0
  * @created 22.01.17
  */
-public class HOGHelper {
+public final class HOGHelper {
 
     /** Default configuration for HOG descriptors according to [1]
      *
@@ -39,10 +39,11 @@ public class HOGHelper {
     }
 
     /**
-     * Private constructor because this is a pure
-     * utility class.
+     * Private constructor; do not instantiate!
      */
-    private HOGHelper() {}
+    private HOGHelper() {
+
+    }
 
 
     /**

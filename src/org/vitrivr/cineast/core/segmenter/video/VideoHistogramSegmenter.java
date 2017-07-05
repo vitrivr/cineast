@@ -1,18 +1,18 @@
 package org.vitrivr.cineast.core.segmenter.video;
 
 import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.segments.VideoSegment;
+import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -50,19 +50,15 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
 
     private volatile boolean isrunning = false;
 
-    /**
-     *
-     */
-    public VideoHistogramSegmenter() {
-        this.knownShotBoundaries = new LinkedList<SegmentDescriptor>();
-    }
+    /** SegmentLookup used to lookup existing SegmentDescriptors during the extraction. */
+    private final SegmentLookup segmentReader;
 
     /**
      *
-     * @param knownShotBoundaries
      */
-    public VideoHistogramSegmenter(List<SegmentDescriptor> knownShotBoundaries){
-        this.knownShotBoundaries = ((knownShotBoundaries == null) ? new LinkedList<SegmentDescriptor>() : knownShotBoundaries);
+    public VideoHistogramSegmenter(SegmentLookup lookup) {
+        this.segmentReader = lookup;
+        this.knownShotBoundaries = new LinkedList<SegmentDescriptor>();
     }
 
     /**
@@ -87,16 +83,18 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
      * Method used to initialize the Segmenter - assigns the new Decoder instance and clears
      * all the queues.
      *
-     * @param decoder Decoder used for media-decoding.
+     * @param object Media object that is about to be segmented.
      */
     @Override
-    public synchronized void init(Decoder<VideoFrame> decoder) {
+    public synchronized void init(Decoder<VideoFrame> decoder, MultimediaObjectDescriptor object) {
         if (!this.isrunning) {
             this.decoder = decoder;
             this.complete = false;
             this.preShotList.clear();
             this.segments.clear();
             this.videoFrameList.clear();
+            this.knownShotBoundaries = this.segmentReader.lookUpSegmentsOfObject(object.getObjectId());
+            this.knownShotBoundaries.sort(Comparator.comparingInt(SegmentDescriptor::getSequenceNumber));
         }
     }
 
@@ -157,9 +155,9 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
             VideoSegment _return = null;
 
             if (!preShotList.isEmpty()) {
-                _return = new VideoSegment(this.decoder.count());
+                _return = new VideoSegment();
                 while (!preShotList.isEmpty()) {
-                    _return.addFrame(preShotList.removeFirst().first);
+                    _return.addVideoFrame(preShotList.removeFirst().first);
                 }
             }
 
@@ -169,7 +167,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
             }
 
             if (_return == null) {
-                _return = new VideoSegment(this.decoder.count());
+                _return = new VideoSegment();
             }
 
 
@@ -179,12 +177,12 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
 
             if (bounds != null && videoFrame.getId() >= bounds.getStart() && videoFrame.getId() <= bounds.getEnd()) {
 
-                _return.addFrame(videoFrame);
+                _return.addVideoFrame(videoFrame);
                 queueFrames(bounds.getEnd() - bounds.getStart());
                 do {
                     videoFrame = this.videoFrameList.poll();
                     if (videoFrame != null) {
-                        _return.addFrame(videoFrame);
+                        _return.addVideoFrame(videoFrame);
                     } else {
                         break;
                     }
@@ -197,7 +195,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
 
             } else {
                 Histogram hPrev, h = getHistogram(videoFrame);
-                _return.addFrame(videoFrame);
+                _return.addVideoFrame(videoFrame);
                 while (true) {
                     if ((videoFrame = this.videoFrameList.poll()) == null) {
                         queueFrames();
@@ -224,12 +222,12 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
                         }
                         if (max <= THRESHOLD && _return.getNumberOfFrames() < MAX_SHOT_LENGTH) { //no cut
                             for (Pair<VideoFrame, Double> pair : preShotList) {
-                                _return.addFrame(pair.first);
+                                _return.addVideoFrame(pair.first);
                             }
                             preShotList.clear();
                         } else {
                             for (i = 0; i < index; ++i) {
-                                _return.addFrame(preShotList.removeFirst().first);
+                                _return.addVideoFrame(preShotList.removeFirst().first);
                             }
                             break;
                         }

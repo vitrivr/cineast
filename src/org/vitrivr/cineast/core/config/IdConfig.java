@@ -16,7 +16,6 @@ import java.util.HashMap;
 public class IdConfig {
 
     public enum ExistenceCheck {
-        NOCHECK,
         CHECK_SKIP,
         CHECK_PROCEED
     }
@@ -33,14 +32,14 @@ public class IdConfig {
      */
     private HashMap<String, String> properties = new HashMap<>();
 
-    /** Determines the 'CheckMode' for objectId's of MediaObjectDescriptors, i.e. whether their uniqueness should be explicitly checked and
+    /**
+     * Determines the 'CheckMode' for objectId's of MediaObjectDescriptors, i.e. whether their uniqueness should be explicitly checked and
      * what the consequences of the a collision should be.
      *
-     * NOCHECK      = No check will be performed. If a ID happens to collide a DB error will be raised.
-     * CHECK_SKIP   = Checks the uniqueness of an ID. If it's not unique, that item is skipped.
-     * CHECK_SKIP   = Checks the uniqueness of an ID. If it's not unique, that item is still processed but no new MediaObjectDescriptor is created.
+     * CHECK_SKIP  = Checks the uniqueness of an ID. If it's not unique, that item is skipped.
+     * CHECK_PROCEED  = Checks the uniqueness of an ID. If it's not unique, that item is still processed but no new descriptor is created.
      */
-    private ExistenceCheck existenceCheckMode = ExistenceCheck.NOCHECK;
+    private ExistenceCheck existenceCheckMode = ExistenceCheck.CHECK_SKIP;
 
     @JsonProperty
     public String getName() {
