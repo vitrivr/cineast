@@ -22,7 +22,7 @@ public class STMP7EH extends EHD {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {
       List<VideoFrame> videoFrames = shot.getVideoFrames();

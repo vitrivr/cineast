@@ -41,7 +41,7 @@ public class EHD extends AbstractFeatureModule {
 
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {
       List<VideoFrame> videoFrames = shot.getVideoFrames();

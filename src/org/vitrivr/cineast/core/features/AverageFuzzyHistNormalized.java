@@ -19,7 +19,7 @@ public class AverageFuzzyHistNormalized extends AbstractFeatureModule {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       FuzzyColorHistogram fch = FuzzyColorHistogramCalculator.getHistogramNormalized(
           ImageHistogramEqualizer.getEqualized(shot.getAvgImg()).getBufferedImage());

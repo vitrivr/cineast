@@ -26,7 +26,7 @@ public class EdgeARP88 extends AbstractFeatureModule {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {
       persist(shot.getId(), getEdges(shot.getMostRepresentativeFrame().getImage()));

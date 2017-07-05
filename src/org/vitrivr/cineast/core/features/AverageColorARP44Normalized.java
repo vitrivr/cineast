@@ -19,7 +19,7 @@ public class AverageColorARP44Normalized extends AbstractFeatureModule {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       Pair<FloatVector, float[]> p = ARPartioner
           .partitionImage(ImageHistogramEqualizer.getEqualized(shot.getAvgImg()), 4, 4);

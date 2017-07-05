@@ -28,7 +28,7 @@ public class AverageColor extends AbstractFeatureModule {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     TimeHelper.tic();
     LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {

@@ -19,7 +19,7 @@ public class SubDivMotionHistogram4 extends SubDivMotionHistogram {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
 
       Pair<List<Double>, ArrayList<ArrayList<Float>>> pair = getSubDivHist(4, shot.getPaths());

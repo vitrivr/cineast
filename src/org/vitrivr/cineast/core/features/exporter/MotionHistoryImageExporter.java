@@ -33,7 +33,7 @@ public class MotionHistoryImageExporter implements Extractor {
 	}
 
 	@Override
-	public void processShot(SegmentContainer shot) {
+	public void processSegment(SegmentContainer shot) {
 		MotionHistoryImage mhi = MotionHistoryImage.motionHistoryImage(shot, 30, 30);
 		if(mhi == null){
 			return;

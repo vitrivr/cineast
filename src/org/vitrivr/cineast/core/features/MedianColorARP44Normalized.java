@@ -20,7 +20,7 @@ public class MedianColorARP44Normalized extends AbstractFeatureModule {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       MultiImage median = ImageHistogramEqualizer.getEqualized(shot.getMedianImg());
       FloatVector vec = ARPartioner.partitionImage(median, 4, 4).first;

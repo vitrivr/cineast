@@ -17,7 +17,7 @@ public class CLDReduced11 extends AbstractFeatureModule {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       FloatVector fv = ColorLayoutDescriptor.calculateCLD(
           ColorReductionUtil.quantize11(shot.getMostRepresentativeFrame().getImage()));

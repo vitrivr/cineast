@@ -64,7 +64,7 @@ public class AudioSegmentExporter implements Extractor {
      * @param shot SegmentContainer to process.
      */
     @Override
-    public void processShot(SegmentContainer shot) {
+    public void processSegment(SegmentContainer shot) {
         try {
             /* Prepare folder and OutputStream. */
             Path directory = this.destination.resolve(shot.getSuperId());

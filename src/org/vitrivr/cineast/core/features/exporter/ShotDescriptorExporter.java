@@ -29,7 +29,7 @@ public class ShotDescriptorExporter implements Extractor {
 	}
 
 	@Override
-	public void processShot(SegmentContainer shot) {
+	public void processSegment(SegmentContainer shot) {
 		String id = String.format("%06d",shot.getId());
 		
 		BufferedImage img = shot.getAvgImg().getBufferedImage();

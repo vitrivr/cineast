@@ -58,7 +58,7 @@ public class AudioFingerprint extends StagedFeatureModule {
      * @param segment
      */
     @Override
-    public void processShot(SegmentContainer segment) {
+    public void processSegment(SegmentContainer segment) {
         TIntArrayList filteredSpectrum = this.filterSpectrum(segment);
         int vectors = filteredSpectrum.size()/FINGERPRINT;
         List<PersistentTuple> tuples = new ArrayList<>();

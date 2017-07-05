@@ -19,7 +19,7 @@ public class MedianColorGrid8Normalized extends MedianColorGrid8 {
 
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       MultiImage medimg = ImageHistogramEqualizer.getEqualized(shot.getMedianImg());
 

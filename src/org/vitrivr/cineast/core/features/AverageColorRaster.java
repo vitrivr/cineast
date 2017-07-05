@@ -150,7 +150,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {
 

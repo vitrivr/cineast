@@ -113,7 +113,7 @@ public abstract class AverageHPCP extends StagedFeatureModule {
      *
      * @param segment SegmentContainer to process.
      */
-    public void processShot(SegmentContainer segment) {
+    public void processSegment(SegmentContainer segment) {
         List<float[]> list = this.getFeatures(segment);
         list.forEach(f -> this.persist(segment.getId(), new FloatVectorImpl(f)));
     }

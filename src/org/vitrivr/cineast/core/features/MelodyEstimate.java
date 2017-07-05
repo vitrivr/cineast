@@ -59,7 +59,7 @@ public class MelodyEstimate extends StagedFeatureModule {
      * @param sc The SegmentContainer that should be processed.
      */
     @Override
-    public void processShot(SegmentContainer sc) {
+    public void processSegment(SegmentContainer sc) {
         Melody melody = this.transcribe(sc);
         List<float[]> features = this.getFeatures(melody);
         for (float[] feature : features) {

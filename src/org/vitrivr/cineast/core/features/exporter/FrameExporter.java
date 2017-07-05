@@ -41,7 +41,7 @@ public class FrameExporter implements Extractor {
 	}
 
 	@Override
-	public void processShot(SegmentContainer shot) {
+	public void processSegment(SegmentContainer shot) {
 		for(VideoFrame f : shot.getVideoFrames()){
 			if(f.getId() % this.offset == 0){
 				try {

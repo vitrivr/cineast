@@ -60,7 +60,7 @@ public class RandomNetFeature extends NeuralNetFeature {
     }
 
     @Override
-    public void processShot(SegmentContainer shot) {
+    public void processSegment(SegmentContainer shot) {
         LOGGER.traceEntry();
         TimeHelper.tic();
         if (!phandler.idExists(shot.getId())) {

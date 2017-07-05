@@ -42,7 +42,7 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
      * @param shot
      */
     @Override
-    public void processShot(SegmentContainer shot) {
+    public void processSegment(SegmentContainer shot) {
         long start = System.currentTimeMillis();
         LOGGER.traceEntry();
 

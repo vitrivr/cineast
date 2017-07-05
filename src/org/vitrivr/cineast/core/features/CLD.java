@@ -17,7 +17,7 @@ public class CLD extends AbstractFeatureModule {
 
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       FloatVector fv = ColorLayoutDescriptor
           .calculateCLD(shot.getMostRepresentativeFrame().getImage());

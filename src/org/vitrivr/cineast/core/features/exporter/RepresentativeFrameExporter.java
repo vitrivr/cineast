@@ -35,7 +35,7 @@ public class RepresentativeFrameExporter implements Extractor {
 	}
 
 	@Override
-	public void processShot(SegmentContainer segment) {
+	public void processSegment(SegmentContainer segment) {
 		File outFolder = new File(this.folder, segment.getSuperId());
 		outFolder.mkdirs();
 		File outFile = new File(outFolder, segment.getId() + ".png");

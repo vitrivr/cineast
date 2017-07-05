@@ -26,7 +26,7 @@ class ExtractionTask implements Runnable {
 		long start = System.currentTimeMillis();		
 		try{
 		  
-			feature.processShot(shot);
+			feature.processSegment(shot);
 			
 		}catch(Exception e){
 			LOGGER.fatal("EXTRACTION ERROR in {}:\n{}", feature.getClass().getSimpleName(), LogHelper.getStackTrace(e));

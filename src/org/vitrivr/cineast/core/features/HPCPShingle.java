@@ -121,7 +121,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      *
      * @param segment SegmentContainer to process.
      */
-    public void processShot(SegmentContainer segment) {
+    public void processSegment(SegmentContainer segment) {
         final List<float[]> features = this.getFeatures(segment);
 
         /*

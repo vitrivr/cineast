@@ -30,7 +30,7 @@ public class ForegroundBoundingBox extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     TimeHelper.tic();
     LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {

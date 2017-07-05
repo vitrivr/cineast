@@ -26,7 +26,7 @@ public class DominantEdgeGrid8 extends AbstractFeatureModule {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {
       short[][][] edgeHist = new short[16][16][4];

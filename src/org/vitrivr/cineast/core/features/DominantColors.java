@@ -59,7 +59,7 @@ public class DominantColors extends AbstractFeatureModule {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       TimeHelper.tic();
       LOGGER.traceEntry();

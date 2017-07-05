@@ -83,7 +83,7 @@ public class AudioWaveformExporter implements Extractor {
      * @param shot SegmentContainer to process.
      */
     @Override
-    public void processShot(SegmentContainer shot) {
+    public void processSegment(SegmentContainer shot) {
         try {
             Path directory = this.destination.resolve(shot.getSuperId());
             Files.createDirectories(directory);

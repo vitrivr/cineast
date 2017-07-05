@@ -113,7 +113,7 @@ public class MFCCShingle extends StagedFeatureModule {
      * @param segment
      */
     @Override
-    public void processShot(SegmentContainer segment) {
+    public void processSegment(SegmentContainer segment) {
         List<float[]> features = this.getFeatures(segment);
 
         /*

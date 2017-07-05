@@ -8,7 +8,7 @@ public interface Extractor extends PersistentOperator {
 
 	void init(PersistencyWriterSupplier phandlerSupply);
 	
-	void processShot(SegmentContainer shot);
+	void processSegment(SegmentContainer shot);
 		
 	void finish();
 }

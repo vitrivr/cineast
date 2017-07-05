@@ -97,7 +97,7 @@ public class Model3DThumbnailExporter implements Extractor {
      * @param shot SegmentContainer to process.
      */
     @Override
-    public void processShot(SegmentContainer shot) {
+    public void processSegment(SegmentContainer shot) {
         Path directory = this.destination.resolve(shot.getSuperId());
         try {
             Files.createDirectories(directory);

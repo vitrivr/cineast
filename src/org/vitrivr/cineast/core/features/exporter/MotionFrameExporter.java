@@ -34,7 +34,7 @@ private static File folder = new File(Config.sharedConfig().getExtractor().getOu
 	}
 
 	@Override
-	public void processShot(SegmentContainer shot) {
+	public void processSegment(SegmentContainer shot) {
 		List<Pair<Integer,LinkedList<Point2D_F32>>> paths = shot.getPaths();
 		for(VideoFrame f : shot.getVideoFrames()){
 			File file = new File(folder, String.format("%06d",f.getId()) + ".jpg");

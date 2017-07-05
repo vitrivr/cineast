@@ -78,7 +78,7 @@ public class AudioSpectogramExporter implements Extractor {
     }
 
     @Override
-    public void processShot(SegmentContainer shot) {
+    public void processSegment(SegmentContainer shot) {
         /* IF shot has no samples, this step is skipped. */
         if (shot.getNumberOfSamples() == 0) return;
 

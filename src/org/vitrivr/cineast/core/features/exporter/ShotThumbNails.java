@@ -68,7 +68,7 @@ public class ShotThumbNails implements Extractor {
 	}
 
 	@Override
-	public void processShot(SegmentContainer shot) {
+	public void processSegment(SegmentContainer shot) {
 		
 		File imageFolder = new File(this.folder, shot.getSuperId());
 		if(!imageFolder.exists()){

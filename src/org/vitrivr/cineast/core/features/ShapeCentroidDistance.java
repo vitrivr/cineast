@@ -38,7 +38,7 @@ public class ShapeCentroidDistance extends AbstractFeatureModule {
      * @param shot
      */
     @Override
-    public void processShot(SegmentContainer shot) {
+    public void processSegment(SegmentContainer shot) {
 
         BufferedImage image = shot.getAvgImg().getBufferedImage();
 

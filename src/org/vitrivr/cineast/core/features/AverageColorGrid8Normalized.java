@@ -18,7 +18,7 @@ public class AverageColorGrid8Normalized extends AverageColorGrid8 {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       MultiImage avgimg = ImageHistogramEqualizer.getEqualized(shot.getAvgImg());
 

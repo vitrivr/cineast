@@ -96,7 +96,7 @@ public class NeuralNetVGG16Feature extends NeuralNetFeature {
      * Stores best classification hit if it's above 10%
      */
     @Override
-    public void processShot(SegmentContainer shot) {
+    public void processSegment(SegmentContainer shot) {
         LOGGER.traceEntry();
         TimeHelper.tic();
         if (!phandler.idExists(shot.getId())) {

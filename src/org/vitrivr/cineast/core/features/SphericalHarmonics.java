@@ -61,7 +61,7 @@ public abstract class SphericalHarmonics extends StagedFeatureModule {
      * @param shot
      */
     @Override
-    public void processShot(SegmentContainer shot) {
+    public void processSegment(SegmentContainer shot) {
         /* Get the normalized Mesh. */
         ReadableMesh mesh = shot.getNormalizedMesh();
         if (mesh == null || mesh.isEmpty()) return;

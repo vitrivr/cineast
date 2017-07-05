@@ -18,7 +18,7 @@ public class AverageColorGrid8Reduced11 extends AverageColorGrid8 {
   }
 
   @Override
-  public void processShot(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) {
     if (!phandler.idExists(shot.getId())) {
       MultiImage avgimg = ColorReductionUtil.quantize11(shot.getAvgImg());
 
