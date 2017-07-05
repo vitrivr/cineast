@@ -3,13 +3,12 @@ package org.vitrivr.cineast.core.data.messages.query;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
-import org.vitrivr.cineast.core.data.query.containers.AudioQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.ModelQueryContainer;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.*;
+import org.vitrivr.cineast.core.util.web.DataURLParser;
 import org.vitrivr.cineast.core.util.web.ImageParser;
 import org.vitrivr.cineast.core.util.web.MeshParser;
 import org.vitrivr.cineast.core.util.web.AudioParser;
@@ -18,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author rgasser
@@ -103,6 +103,9 @@ public class QueryTerm {
                         BufferedImage img = ImageParser.dataURLtoBufferedImage(this.data);
                         if (img != null) this.cachedQueryContainer =  new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
                     }
+                    break;
+                case MOTION:
+                    this.cachedQueryContainer = DataURLParser.dataURLtoJsonNode(this.data).map(MotionQueryContainer::fromJson).orElse(null);
                     break;
                 default:
                     break;

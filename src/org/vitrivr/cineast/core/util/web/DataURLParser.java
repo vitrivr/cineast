@@ -1,8 +1,13 @@
 package org.vitrivr.cineast.core.util.web;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @author rgasser
@@ -13,7 +18,31 @@ public class DataURLParser {
 
     protected static final Logger LOGGER = LogManager.getLogger();
 
+    /** MimeType for JSON data. */
+    private static final String JSON_MIME_TYPE = "application/json";
+
+
     protected DataURLParser() {}
+
+    /**
+     * Tries to convert a Base64 data URL to a JsonNode and returns that
+     * JsonNode.
+     *
+     * @param dataUrl String containing the data url.
+     * @return Optional JsonNode
+     */
+    public static Optional<JsonNode> dataURLtoJsonNode(String dataUrl) {
+        /* Convert Base64 string into byte array. */
+        byte[] bytes = dataURLtoByteArray(dataUrl, JSON_MIME_TYPE);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return Optional.of(mapper.readTree(bytes));
+        } catch (IOException e) {
+            LOGGER.error("Exception occurred while parsing data URL to JSON: {}", e);
+            return Optional.empty();
+        }
+    }
+
 
     /**
      * Converts a Base64 data URL to a byte array and returns it.

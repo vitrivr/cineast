@@ -95,17 +95,16 @@ public class MotionQueryContainer implements QueryContainer {
     }
     ArrayList<LinkedList<Point2D_F32>> _return = new ArrayList<>(jsonNode.size());
     for (final JsonNode list : jsonNode) {
-      if (!list.isArray()) {
+      JsonNode path = list.get("path");
+      if (path == null || !path.isArray()) {
         continue;
       }
-      int size = list.size();
+      int size = path.size();
       LinkedList<Point2D_F32> pathList = new LinkedList<Point2D_F32>();
       for (int i = 0; i < size; ++i) {
-        JsonNode point = list.get(i);
-        if (!point.isArray() || point.size() < 2) {
-          continue;
-        }
-        pathList.add(new Point2D_F32(point.get(0).floatValue(), point.get(1).floatValue()));
+        JsonNode point = path.get(i);
+        if (point == null) continue;
+        pathList.add(new Point2D_F32(point.get("x").floatValue(), point.get("y").floatValue()));
       }
       _return.add(pathList);
     }
