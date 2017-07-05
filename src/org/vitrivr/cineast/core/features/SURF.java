@@ -1,29 +1,23 @@
 package org.vitrivr.cineast.core.features;
 
-import boofcv.abst.feature.dense.DescribeImageDense;
-import boofcv.abst.feature.detdesc.DetectDescribePoint;
-import boofcv.struct.feature.BrightFeature;
-import boofcv.struct.feature.TupleDesc_F64;
-import boofcv.struct.image.GrayF32;
-
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import boofcv.struct.image.GrayU8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractCodebookFeatureModule;
-import org.vitrivr.cineast.core.util.images.HOGHelper;
 import org.vitrivr.cineast.core.util.images.SURFHelper;
+
+import boofcv.abst.feature.detdesc.DetectDescribePoint;
+import boofcv.struct.feature.BrightFeature;
+import boofcv.struct.image.GrayF32;
 
 /**
  * @author rgasser
@@ -95,7 +89,7 @@ public abstract class SURF extends AbstractCodebookFeatureModule {
     * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
     */
     @Override
-    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+    protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
         final CorrespondenceFunction function = qc.getCorrespondenceFunction().orElse(linearCorrespondence);
         return ScoreElement.filterMaximumScores(partialResults.stream().map(r -> r.toScore(function)));
     }

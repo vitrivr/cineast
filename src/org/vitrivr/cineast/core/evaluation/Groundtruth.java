@@ -1,13 +1,16 @@
 package org.vitrivr.cineast.core.evaluation;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.nashorn.internal.runtime.options.Option;
-import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
-
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Set;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Represents a ground truth data collection that assigns IDs of test objects to arbitrary classes and

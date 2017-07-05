@@ -32,7 +32,6 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     return true;
   }
 
-  @Override
   public <E extends DistanceElement> List<E> getNearestNeighbours(int k, float[] vector,
       String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
     List<Map<String, PrimitiveTypeProvider>> results = getNearestNeighbourRows(k, vector, column,
@@ -211,5 +210,21 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   protected abstract T newImporter(File f);
 
   protected abstract String getFileExtension();
+
+  @Override
+  public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k,
+      List<float[]> vectors, String column, Class<T> distanceElementClass,
+      List<ReadableQueryConfig> configs) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k,
+      List<float[]> vectors, String column, Class<T> distanceElementClass,
+      List<ReadableQueryConfig> configs, MergeOperation merge, Map<String, String> options) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }

@@ -25,7 +25,8 @@ public class NoDBSelector implements DBSelector {
   }
 
   @Override
-  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column, Class<? extends T> distanceElementClass, ReadableQueryConfig config) {
+  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
+      Class<T> distanceElementClass, ReadableQueryConfig config) {
     return new ArrayList<>(0);
   }
 
@@ -41,7 +42,7 @@ public class NoDBSelector implements DBSelector {
    * @return List of results.
    */
   @Override
-  public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<? extends T> distanceElementClass, List<ReadableQueryConfig> configs) {
+  public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs) {
     return new ArrayList<>(0);
   }
 
@@ -59,7 +60,7 @@ public class NoDBSelector implements DBSelector {
    * @return List of results.
    */
   @Override
-  public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<? extends T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation merge, Map<String, String> options) {
+  public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation merge, Map<String, String> options) {
     return new ArrayList<>(0);
   }
 

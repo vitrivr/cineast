@@ -1,14 +1,17 @@
 package org.vitrivr.cineast.core.features;
 
-import com.twelvemonkeys.image.ImageUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -17,11 +20,7 @@ import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.Renderer;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.twelvemonkeys.image.ImageUtil;
 
 /**
  * @author rgasser
@@ -120,7 +119,7 @@ public abstract class Lightfield extends StagedFeatureModule {
      * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
     @Override
-    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+    protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
         /* Perform search for each extracted feature and adjust scores.  */
         HashMap<String,DistanceElement> map = new HashMap<>();
         for (DistanceElement result : partialResults) {

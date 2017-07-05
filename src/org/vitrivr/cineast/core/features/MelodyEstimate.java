@@ -1,31 +1,27 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
-
 import org.vitrivr.cineast.core.util.MathHelper;
-
-import org.vitrivr.cineast.core.util.audio.pitch.estimation.KLF0PitchEstimator;
 import org.vitrivr.cineast.core.util.audio.pitch.Melody;
 import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
+import org.vitrivr.cineast.core.util.audio.pitch.estimation.KLF0PitchEstimator;
 import org.vitrivr.cineast.core.util.audio.pitch.tracking.PitchTracker;
-
 import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 import org.vitrivr.cineast.core.util.dsp.filter.frequency.SpectralWhiteningFilter;
 import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author rgasser
@@ -97,7 +93,7 @@ public class MelodyEstimate extends StagedFeatureModule {
      * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
     @Override
-    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+    protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
         /* TODO: Improve... */
         final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
         return ScoreElement.filterMaximumScores(partialResults.stream().map(d -> d.toScore(correspondence)));

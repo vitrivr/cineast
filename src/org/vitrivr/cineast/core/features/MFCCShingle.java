@@ -1,10 +1,16 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.map.hash.TObjectIntHashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -15,8 +21,7 @@ import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import gnu.trove.map.hash.TObjectIntHashMap;
 
 /**
  * @author rgasser
@@ -69,7 +74,7 @@ public class MFCCShingle extends StagedFeatureModule {
      * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
     @Override
-    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+    protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
          /* Prepare helper data-structures. */
         final List<ScoreElement> results = new ArrayList<>();
         final TObjectIntHashMap<String> scoreMap = new TObjectIntHashMap<>();

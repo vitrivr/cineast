@@ -1,19 +1,18 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
-import org.vitrivr.cineast.core.benchmark.model.Benchmark;
-import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
 import org.vitrivr.cineast.core.benchmark.BenchmarkManager;
+import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
+import org.vitrivr.cineast.core.benchmark.model.Benchmark;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This implementation of the AbstractFeatureModule executes every query, either based on a SegmentContainer
@@ -95,7 +94,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
 
         /* Start query lookup phase. */
         benchmark.split(BENCHMARK_SPLITNAME_SIMILARITY);
-        List<DistanceElement> partialResults = this.lookup(features, configs);
+        List<SegmentDistanceElement> partialResults = this.lookup(features, configs);
 
         /* Start query-results post-processing phase. */
         benchmark.split(BENCHMARK_SPLITNAME_POSTPROCESSING);
@@ -148,7 +147,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
 
         /* Start query lookup phase. */
         benchmark.split(BENCHMARK_SPLITNAME_SIMILARITY);
-        List<DistanceElement> partialResults = this.lookup(features, configs);
+        List<SegmentDistanceElement> partialResults = this.lookup(features, configs);
 
         /* Start query-results post-processing phase. */
         benchmark.split(BENCHMARK_SPLITNAME_POSTPROCESSING);
@@ -183,9 +182,9 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      * @param configs A ReadableQueryConfig object that contains query-related configuration parameters.
      * @return Unfiltered list of partial results. May exceed the number of results a module is supposed to return and entries may occur multiple times.
      */
-    protected List<DistanceElement> lookup(List<float[]> features, List<ReadableQueryConfig> configs) {
+    protected List<SegmentDistanceElement> lookup(List<float[]> features, List<ReadableQueryConfig> configs) {
         final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
-        List<DistanceElement> partialResults;
+        List<SegmentDistanceElement> partialResults;
         if (features.size() == 1) {
             partialResults = this.selector.getNearestNeighbours(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
         } else {
@@ -202,7 +201,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      * @param partialResults List of partial results returned by the lookup stage.
      * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
-    protected abstract List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qcc);
+    protected abstract List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qcc);
 
     /**
      * Returns a list of QueryConfigs for the given list of features. By default, this method simply returns a list of the

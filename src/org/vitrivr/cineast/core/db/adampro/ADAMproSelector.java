@@ -159,7 +159,7 @@ public class ADAMproSelector implements DBSelector {
      * @param <T> The type T of the resulting DistanceElements.
      * @return List of results.
      */
-    public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<? extends T> distanceElementClass, List<ReadableQueryConfig> configs) {
+    public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs) {
         /* Check if sizes of configs and vectors array correspond. */
         if (vectors.size() > configs.size()) throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
 
@@ -229,7 +229,7 @@ public class ADAMproSelector implements DBSelector {
      * @param <T>
      * @return
      */
-    public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<? extends T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation mergeOperation, Map<String,String> options) {
+    public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation mergeOperation, Map<String,String> options) {
         /* Check if sizes of configs and vectors array correspond. */
         if (vectors.size() > configs.size()) throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
 
@@ -295,56 +295,50 @@ public class ADAMproSelector implements DBSelector {
     }
 
     @Override
-    public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column, Class<? extends T> distanceElementClass, ReadableQueryConfig config) {
-        NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column, DataMessageConverter.convertVectorMessage(vector), k, config);
+    public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
+        Class<T> distanceElementClass, ReadableQueryConfig config) {
+      NearestNeighbourQueryMessage nnqMessage = mb.buildNearestNeighbourQueryMessage(column,
+          DataMessageConverter.convertVectorMessage(vector), k, config);
+      QueryMessage sqMessage = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
+      ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 
-    /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
-        Collection<String> hints;
-        if (!config.getHints().isEmpty()) {
-            hints = config.getHints().stream().map(Enum::name).collect(Collectors.toList());
-        } else {
-            hints = ADAMproMessageBuilder.DEFAULT_HINT;
-        }
+      QueryResultsMessage result;
+      try {
+        result = future.get();
+      } catch (InterruptedException | ExecutionException e) {
+        LOGGER.error(LogHelper.getStackTrace(e));
+        return new ArrayList<>(0);
+      }
 
-        QueryMessage sqMessage = this.mb.buildQueryMessage(hints, this.fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
-        ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
+      AckMessage ack = result.getAck();
+      if (ack.getCode() != AckMessage.Code.OK) {
+        LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
+        return new ArrayList<>(0);
+      }
 
-        QueryResultsMessage result;
-        try {
-            result = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error(LogHelper.getStackTrace(e));
-            return new ArrayList<>(0);
-        }
+      if (result.getResponsesCount() == 0) {
+        return new ArrayList<>(0);
+      }
 
-        AckMessage ack = result.getAck();
-        if (ack.getCode() != AckMessage.Code.OK) {
-            LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
-            return new ArrayList<>(0);
-        }
+      QueryResultInfoMessage response = result.getResponses(0); // only head (end-result) is important
+      return handleNearestNeighbourResponse(response, k, distanceElementClass);
+  }
 
-        if (result.getResponsesCount() == 0) {
-            return new ArrayList<>(0);
-        }
-
-        QueryResultInfoMessage response = result.getResponses(0); // only head (end-result) is important
-        return handleNearestNeighbourResponse(response, k, distanceElementClass);
-    }
-
+    
     private <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResultInfoMessage response, int k, Class<? extends T> distanceElementClass) {
-        List<T> result = new ArrayList<>(k);
-        for (QueryResultTupleMessage msg : response.getResultsList()) {
-            String id = msg.getDataMap().get("id").getStringData();
-            if (id == null) {
-                continue;
-            }
-            double distance = msg.getDataMap().get("ap_distance").getDoubleData();
-            T e = DistanceElement.create(distanceElementClass, id, distance);
-            result.add(e);
+      List<T> result = new ArrayList<>(k);
+      for (QueryResultTupleMessage msg : response.getResultsList()) {
+        String id = msg.getDataMap().get("id").getStringData();
+        if (id == null) {
+          continue;
         }
+        double distance = msg.getDataMap().get("ap_distance").getDoubleData();
+        T e = DistanceElement.create(distanceElementClass, id, distance);
+        result.add(e);
+      }
 
-        return result;
-    }
+      return result;
+  }
 
     @Override
     public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {

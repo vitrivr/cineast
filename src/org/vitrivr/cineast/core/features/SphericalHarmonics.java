@@ -1,26 +1,22 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.FastMath;
-import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.distance.DistanceElement;
+import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 import org.vitrivr.cineast.core.data.m3d.Voxelizer;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.math.functions.SphericalHarmonicsFunction;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * An Extraction and Retrieval module for 3D models that leverages Spherical Harmonics as proposed in [1].
@@ -110,7 +106,7 @@ public abstract class SphericalHarmonics extends StagedFeatureModule {
      * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
     @Override
-    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+    protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
         final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
         return ScoreElement.filterMaximumScores(partialResults.stream().map(v -> v.toScore(correspondence)));
     }

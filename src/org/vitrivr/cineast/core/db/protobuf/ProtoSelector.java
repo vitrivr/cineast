@@ -40,4 +40,5 @@ public class ProtoSelector extends ImporterSelector<TupleInsertMessageImporter> 
     protected String getFileExtension() {
         return ".bin";
     }
+
 }

@@ -133,7 +133,7 @@ public abstract class CENS extends StagedFeatureModule {
      * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
     @Override
-    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+    protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
         /* Prepare map to build a unique set of results. */
         final HashMap<String,DistanceElement> map = new HashMap<>();
         for (DistanceElement hit : partialResults) {

@@ -111,9 +111,9 @@ public class AudioFingerprint extends StagedFeatureModule {
      * @param configs A ReadableQueryConfig object that contains query-related configuration parameters.
      * @return
      */
-    protected List<DistanceElement> lookup(List<float[]> features, List<ReadableQueryConfig> configs) {
+    protected List<SegmentDistanceElement> lookup(List<float[]> features, List<ReadableQueryConfig> configs) {
         final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
-        List<DistanceElement> partialResults;
+        List<SegmentDistanceElement> partialResults;
         if (features.size() == 1) {
             partialResults = this.selector.getNearestNeighbours(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
         } else {
@@ -134,7 +134,7 @@ public class AudioFingerprint extends StagedFeatureModule {
      * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
     @Override
-    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+    protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
         /* Prepare empty list of results. */
         final ArrayList<ScoreElement> results = new ArrayList<>();
         final HashMap<String, DistanceElement> map = new HashMap<>();

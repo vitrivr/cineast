@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.db;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -27,7 +27,8 @@ public interface DBSelector {
    * @param <T> type of the {@link DistanceElement}
    * @return a list of elements with their distance
    */
-  <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column, Class<? extends T> distanceElementClass, ReadableQueryConfig config);
+  <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
+      Class<T> distanceElementClass, ReadableQueryConfig config);
 
   /**
    * Performs a batched kNN-search with multiple query vectors. That is, the storage engine is tasked to perform the kNN search for each vector
@@ -41,7 +42,7 @@ public interface DBSelector {
    * @param <T> The type T of the resulting <T> type of the {@link DistanceElement}.
    * @return List of results.
    */
-  <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<? extends T> distanceElementClass, List<ReadableQueryConfig> configs);
+  <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs);
 
   /**
    * Performs a combined kNN-search with multiple query vectors. That is, the storage engine is tasked to perform the kNN search for each vector and then
@@ -57,7 +58,7 @@ public interface DBSelector {
    * @param <T> The type T of the resulting <T> type of the {@link DistanceElement}.
    * @return List of results.
    */
-  <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<? extends T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation merge, Map<String,String> options);
+  <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation merge, Map<String,String> options);
 
   /**
    * Performs a combined kNN-search with multiple query vectors. That is, the storage engine is tasked to perform the kNN search for each vector and then

@@ -1,31 +1,26 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import org.vitrivr.cineast.core.config.Config;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
+import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
-
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * An Extraction and Retrieval module that leverages pure HPCP shingles according to [1]. These shingles can be used
@@ -106,7 +101,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      * @return List of final results. Is supposed to be de-duplicated and the number of items should not exceed the number of items per module.
      */
     @Override
-    protected List<ScoreElement> postprocessQuery(List<DistanceElement> partialResults, ReadableQueryConfig qc) {
+    protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
         /* Prepare helper data-structures. */
         final HashMap<String,DistanceElement> map = new HashMap<>();
         for (DistanceElement hit : partialResults) {
