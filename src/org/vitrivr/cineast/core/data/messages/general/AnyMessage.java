@@ -15,7 +15,7 @@ public class AnyMessage implements Message {
 
     @Override
     @JsonProperty
-    public MessageType getMessageType() {
+    public MessageType getMessagetype() {
         return this.messageType;
     }
     public void setMessagetype(MessageType messageType) {

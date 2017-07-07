@@ -173,7 +173,7 @@ public class WebsocketAPI {
     public void message(Session session, String message) throws IOException {
         AnyMessage testMessage = reader.toObject(message, AnyMessage.class);
         if (testMessage != null) {
-            MessageType type = testMessage.getMessageType();
+            MessageType type = testMessage.getMessagetype();
             WebsocketMessageHandler handler = STATELESS_HANDLERS.get(type);
             if (handler != null) {
                 handler.handle(session, reader.toObject(message, type.getMessageClass()));

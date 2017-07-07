@@ -21,7 +21,7 @@ public class StartSessionMessage implements Message {
   }
   
   @Override
-  public MessageType getMessageType() {
+  public MessageType getMessagetype() {
     return MessageType.SESSION_START;
   }
 

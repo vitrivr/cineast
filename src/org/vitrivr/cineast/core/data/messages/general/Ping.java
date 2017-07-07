@@ -31,7 +31,7 @@ public class Ping implements Message {
      * @return
      */
     @Override
-    public MessageType getMessageType() {
+    public MessageType getMessagetype() {
         return MessageType.PING;
     }
 }
