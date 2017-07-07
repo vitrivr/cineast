@@ -27,7 +27,7 @@ public class SegmentQueryResult extends AbstractQueryResultMessage<SegmentDescri
      *
      * @return
      */
-    public MessageType getMessageType() {
+    public MessageType getMessagetype() {
         return MessageType.QR_SEGMENT;
     }
 }

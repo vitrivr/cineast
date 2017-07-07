@@ -64,7 +64,7 @@ public class MoreLikeThisQuery implements Message {
      * @return
      */
     @Override
-    public MessageType getMessageType() {
+    public MessageType getMessagetype() {
         return MessageType.Q_MLT;
     }
 }

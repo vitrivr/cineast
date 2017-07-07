@@ -20,7 +20,7 @@ public class IdList implements Message {
   }
   
   @Override
-  public MessageType getMessageType() {
+  public MessageType getMessagetype() {
     return null;
   }
 

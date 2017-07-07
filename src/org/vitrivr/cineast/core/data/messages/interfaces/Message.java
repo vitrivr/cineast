@@ -14,5 +14,5 @@ public interface Message {
      *
      * @return
      */
-    public MessageType getMessageType();
+    public MessageType getMessagetype();
 }
