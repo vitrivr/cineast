@@ -57,8 +57,8 @@ public class ExtractionDispatcher {
         
         /* Check if context could be read and an input path was specified. */
         if (context == null || this.context.inputPath() == null) return false;
-        Path jobDirectory = jobFile.toPath().getParent();
-        Path path = jobDirectory.resolve(this.context.inputPath()).normalize();
+        Path jobDirectory = jobFile.getAbsoluteFile().toPath().getParent();
+        Path path = jobDirectory.resolve(this.context.inputPath()).normalize().toAbsolutePath();
         
         /*
          * Recursively add all files under that path to the List of files that should be processed. Uses the context-provider

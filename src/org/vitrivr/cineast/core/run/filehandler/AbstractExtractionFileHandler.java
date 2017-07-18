@@ -344,7 +344,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         if (Files.isRegularFile(this.context.inputPath())) {
             path = path.getFileName();
         } else {
-            path = this.context.inputPath().relativize(path);
+            path = this.context.inputPath().toAbsolutePath().relativize(path.toAbsolutePath());
         }
 
         /* Lookup multimedia-object and persist if necessary. */
