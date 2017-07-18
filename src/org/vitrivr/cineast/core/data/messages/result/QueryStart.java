@@ -3,8 +3,6 @@ package org.vitrivr.cineast.core.data.messages.result;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
-import java.util.UUID;
-
 /**
  * @author rgasser
  * @version 1.0

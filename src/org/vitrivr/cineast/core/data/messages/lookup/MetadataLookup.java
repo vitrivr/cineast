@@ -1,15 +1,14 @@
 package org.vitrivr.cineast.core.data.messages.lookup;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import com.fasterxml.jackson.annotation.JsonSetter;
-import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.vitrivr.cineast.core.data.messages.interfaces.Message;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author rgasser

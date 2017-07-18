@@ -1,8 +1,6 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
 import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.mesh.MeshTransformUtil;

@@ -1,19 +1,30 @@
 package org.vitrivr.cineast.core.run.filehandler;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Duration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import javax.activation.MimetypesFileTypeMap;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.db.dao.writer.MultimediaMetadataWriter;
 import org.vitrivr.cineast.core.db.dao.writer.MultimediaObjectWriter;
@@ -26,18 +37,6 @@ import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.runtime.ExtractionPipeline;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.util.LogHelper;
-
-import javax.activation.MimetypesFileTypeMap;
-import javax.swing.text.Segment;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import java.time.Duration;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Abstract implementation of ExtractionFileHandler. This class should fit most media-types. However,

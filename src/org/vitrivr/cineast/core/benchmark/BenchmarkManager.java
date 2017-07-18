@@ -1,12 +1,11 @@
 package org.vitrivr.cineast.core.benchmark;
 
+import java.nio.file.Path;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
 import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
 import org.vitrivr.cineast.core.config.Config;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
 
 /**
  * @author rgasser
@@ -18,8 +17,8 @@ public final class BenchmarkManager {
     /** Name of the default benchmark-engine. */
     private static String DEFAULT_ENGINE = "benchmark-default";
 
-    /** List uf currently running BenchmarkEngines. */
-    private static final HashMap<String,BenchmarkEngine> RUNNING = new HashMap<>();
+    /** List of currently running BenchmarkEngines. */
+    private static final ConcurrentHashMap<String,BenchmarkEngine> RUNNING = new ConcurrentHashMap<>();
 
     /**
      * Private constructor; no instantiation.

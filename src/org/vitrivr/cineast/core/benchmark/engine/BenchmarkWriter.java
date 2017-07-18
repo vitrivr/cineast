@@ -76,7 +76,7 @@ public class BenchmarkWriter implements Runnable {
          */
         while(true) {
             /* Writes the latest Benchmark entries to disk. */
-            int written = this.write();
+            this.write();
 
             /* Sets timeout. */
             try {

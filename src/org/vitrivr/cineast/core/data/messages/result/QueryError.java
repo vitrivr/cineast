@@ -42,4 +42,8 @@ public class QueryError implements Message {
     public String getQueryId() {
         return queryId;
     }
+    
+    public String getErrorMessage(){
+      return this.message;
+    }
 }

@@ -1,11 +1,35 @@
 package org.vitrivr.cineast.core.decode.audio;
 
-import static org.bytedeco.javacpp.avcodec.*;
-
-import static org.bytedeco.javacpp.avformat.*;
-import static org.bytedeco.javacpp.avutil.*;
-
-import static org.bytedeco.javacpp.swresample.*;
+import static org.bytedeco.javacpp.avcodec.av_packet_alloc;
+import static org.bytedeco.javacpp.avcodec.av_packet_free;
+import static org.bytedeco.javacpp.avcodec.av_packet_unref;
+import static org.bytedeco.javacpp.avcodec.avcodec_alloc_context3;
+import static org.bytedeco.javacpp.avcodec.avcodec_free_context;
+import static org.bytedeco.javacpp.avcodec.avcodec_open2;
+import static org.bytedeco.javacpp.avcodec.avcodec_parameters_to_context;
+import static org.bytedeco.javacpp.avcodec.avcodec_receive_frame;
+import static org.bytedeco.javacpp.avcodec.avcodec_send_packet;
+import static org.bytedeco.javacpp.avformat.av_find_best_stream;
+import static org.bytedeco.javacpp.avformat.av_read_frame;
+import static org.bytedeco.javacpp.avformat.av_register_all;
+import static org.bytedeco.javacpp.avformat.avformat_alloc_context;
+import static org.bytedeco.javacpp.avformat.avformat_close_input;
+import static org.bytedeco.javacpp.avformat.avformat_find_stream_info;
+import static org.bytedeco.javacpp.avformat.avformat_open_input;
+import static org.bytedeco.javacpp.avutil.AVERROR_EOF;
+import static org.bytedeco.javacpp.avutil.AVMEDIA_TYPE_AUDIO;
+import static org.bytedeco.javacpp.avutil.AV_SAMPLE_FMT_S16;
+import static org.bytedeco.javacpp.avutil.av_frame_alloc;
+import static org.bytedeco.javacpp.avutil.av_frame_free;
+import static org.bytedeco.javacpp.avutil.av_freep;
+import static org.bytedeco.javacpp.avutil.av_get_bytes_per_sample;
+import static org.bytedeco.javacpp.avutil.av_get_default_channel_layout;
+import static org.bytedeco.javacpp.avutil.av_samples_alloc;
+import static org.bytedeco.javacpp.swresample.swr_alloc_set_opts;
+import static org.bytedeco.javacpp.swresample.swr_convert;
+import static org.bytedeco.javacpp.swresample.swr_free;
+import static org.bytedeco.javacpp.swresample.swr_get_out_samples;
+import static org.bytedeco.javacpp.swresample.swr_init;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,20 +45,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.PointerPointer;
-
 import org.bytedeco.javacpp.avcodec.AVCodec;
 import org.bytedeco.javacpp.avcodec.AVCodecContext;
 import org.bytedeco.javacpp.avcodec.AVPacket;
-
 import org.bytedeco.javacpp.avformat.AVFormatContext;
-
 import org.bytedeco.javacpp.avutil.AVDictionary;
 import org.bytedeco.javacpp.avutil.AVFrame;
-
+import org.bytedeco.javacpp.avutil.AVRational;
+import org.bytedeco.javacpp.swresample.SwrContext;
 import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
-import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 public class FFMpegAudioDecoder implements AudioDecoder {

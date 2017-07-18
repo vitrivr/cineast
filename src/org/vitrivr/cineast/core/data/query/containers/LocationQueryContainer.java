@@ -1,9 +1,10 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
-import com.google.common.base.MoreObjects;
 import java.util.Optional;
-import javax.annotation.Nullable;
+
 import org.vitrivr.cineast.core.data.Location;
+
+import com.google.common.base.MoreObjects;
 
 public class LocationQueryContainer implements QueryContainer {
   private final Location location;
