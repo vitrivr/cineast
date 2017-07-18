@@ -7,4 +7,6 @@ matrix:
     - os: osx
       osx_image: xcode8
 
-script: ./gradle build
+script: 
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./gradlew check          ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew build        ; fi
