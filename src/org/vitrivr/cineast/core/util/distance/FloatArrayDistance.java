@@ -80,7 +80,7 @@ public interface FloatArrayDistance extends Distance<float[]>, DistanceMeasure {
     }
 
     if (!queryConfig.getDistance().isPresent()) {
-      return null;
+      return new ManhattanDistance();
     }
 
     ReadableQueryConfig.Distance distance = queryConfig.getDistance().get();
