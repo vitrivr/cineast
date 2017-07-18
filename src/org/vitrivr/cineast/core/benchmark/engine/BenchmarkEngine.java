@@ -151,6 +151,7 @@ public class BenchmarkEngine {
             this.writerThread = new Thread(new BenchmarkWriter(this, path));
             this.writerThread.setPriority(Thread.MIN_PRIORITY);
             this.writerThread.setName("BenchmarkWriter (" + name + ")");
+            this.writerThread.setDaemon(true);
             this.writerThread.start();
         } else {
             this.deque = null;
@@ -174,7 +175,7 @@ public class BenchmarkEngine {
      * @param c Class that is being benchmarked. Is going to serve as name.
      * @return Benchmark object.
      */
-    public final Benchmark startNew(Class c) {
+    public final Benchmark startNew(Class<?> c) {
         return this.startNew(c.getSimpleName());
     }
 
