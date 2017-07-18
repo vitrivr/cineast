@@ -9,4 +9,4 @@ matrix:
 
 script: 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./gradlew check          ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew build        ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew jar        ; fi
