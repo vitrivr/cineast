@@ -47,7 +47,7 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
           objectId = generator.next(path, type);
         }while(lookup != null && lookup.lookUpObjectById(objectId).exists());
         
-        return new MultimediaObjectDescriptor(objectId, path.getFileName().toString(), path.toString(), type, false);
+        return new MultimediaObjectDescriptor(objectId, path.getFileName().toString().replace('\\', '/'), path.toString(), type, false);
     }
     
     /**
@@ -63,7 +63,7 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
     public MultimediaObjectDescriptor(String objectId, String name, String path, MediaType mediatypeId, boolean exists) {
       this.objectId = objectId;
       this.name = name;
-      this.path = path;
+      this.path = path.replace('\\', '/');
       this.mediatypeId = mediatypeId.getId();
       this.exists = exists;
     }
