@@ -96,8 +96,14 @@ public class ReflectionHelper {
 	 */
 	public static Converter newConverter(String fqn) {
 		try {
-			Class<Converter> c = (Class<Converter>) Class.forName(fqn);
-			return instanciate(c);
+		  Class<?> c = Class.forName(fqn);
+		  if(!c.isAssignableFrom(Converter.class)){
+		    LOGGER.fatal("Failed to create Converter. Class '{}' is not a converter", fqn);
+	      return null;
+		  }
+			@SuppressWarnings("unchecked")
+      Class<Converter> cc = (Class<Converter>) c;
+			return instanciate(cc);
 		} catch (ClassNotFoundException e) {
 			LOGGER.fatal("Failed to create Converter. Could not find or access class with name {} ({}).", fqn, LogHelper.getStackTrace(e));
 			return null;

@@ -6,6 +6,8 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 
 public interface FloatArrayDistance extends Distance<float[]>, DistanceMeasure {
 
+  static final long serialVersionUID = 1L;
+  
   /**
    * returns the distance between the two provided arrays or NaN if at least one of them is
    * <code>null</code>.
