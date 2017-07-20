@@ -28,7 +28,7 @@ public class ObjectQueryResult extends AbstractQueryResultMessage<MultimediaObje
      *
      * @return
      */
-    public MessageType getMessagetype() {
+    public MessageType getMessageType() {
         return MessageType.QR_OBJECT;
     }
 }

@@ -66,7 +66,7 @@ public class MetadataLookup implements Message {
      * @return
      */
     @Override
-    public MessageType getMessagetype() {
+    public MessageType getMessageType() {
         return MessageType.M_LOOKUP;
     }
 }

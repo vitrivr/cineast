@@ -26,7 +26,7 @@ public class QueryEnd implements Message {
      * @return
      */
     @Override
-    public MessageType getMessagetype() {
+    public MessageType getMessageType() {
         return MessageType.QR_END;
     }
 

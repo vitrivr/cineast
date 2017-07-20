@@ -29,7 +29,7 @@ public class MetadataQueryResult extends AbstractQueryResultMessage<MultimediaMe
      * @return
      */
     @Override
-    public MessageType getMessagetype() {
+    public MessageType getMessageType() {
         return QR_METADATA;
     }
 }

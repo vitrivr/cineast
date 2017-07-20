@@ -44,7 +44,7 @@ public class Error implements Message {
      * @return
      */
     @Override
-    public MessageType getMessagetype() {
+    public MessageType getMessageType() {
         return null;
     }
 }

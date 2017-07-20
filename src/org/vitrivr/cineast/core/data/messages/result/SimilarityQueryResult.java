@@ -38,7 +38,7 @@ public class SimilarityQueryResult extends AbstractQueryResultMessage<StringDoub
      *
      * @return
      */
-    public MessageType getMessagetype() {
+    public MessageType getMessageType() {
         return MessageType.QR_SIMILARITY;
     }
 }

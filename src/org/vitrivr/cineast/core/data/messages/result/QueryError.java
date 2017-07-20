@@ -31,7 +31,7 @@ public class QueryError implements Message {
      * @return
      */
     @Override
-    public MessageType getMessagetype() {
+    public MessageType getMessageType() {
         return MessageType.QR_ERROR;
     }
 
