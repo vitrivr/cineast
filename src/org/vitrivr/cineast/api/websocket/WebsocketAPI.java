@@ -1,32 +1,29 @@
 package org.vitrivr.cineast.api.websocket;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.*;
-
-import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.queries.MoreLikeThisQueryMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
-import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
-import org.vitrivr.cineast.core.config.APIConfig;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
-import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
-import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
-
-import spark.Spark;
-
 import java.io.IOException;
-
 import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.MoreLikeThisQueryMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
+import org.vitrivr.cineast.core.data.messages.interfaces.Message;
+import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
+import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 
 /**
@@ -49,17 +46,17 @@ public class WebsocketAPI {
     /** Store sessions if you want to, for example, broadcast a message to all users.*/
     private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 
-    /** Named context of the endpoint. Will be appended to the endpoint URL. */
-    private static final String CONTEXT = "api";
-
-    /** Version of the protocol used by the endpoint. Will be appended to the endpoint URL. */
-    private static final String VERSION = "v1";
+//    /** Named context of the endpoint. Will be appended to the endpoint URL. */
+//    private static final String CONTEXT = "api";
+//
+//    /** Version of the protocol used by the endpoint. Will be appended to the endpoint URL. */
+//    private static final String VERSION = "v1";
 
     /** List of stateless WebsocketMessageHandler classes for the API. */
     private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
 
-    /** Flag that indicates whether the WebSocket API is running. */
-    private static AtomicBoolean RUNNING = new AtomicBoolean(false);
+//    /** Flag that indicates whether the WebSocket API is running. */
+//    private static AtomicBoolean RUNNING = new AtomicBoolean(false);
 
     /* Register the MessageHandlers for the different messages. */
     static {
@@ -72,57 +69,7 @@ public class WebsocketAPI {
     /* */
     private JacksonJsonProvider reader = new JacksonJsonProvider();
 
-    /**
-     * Starts the WebSocket API.
-     *
-     * @param config APIConfig object.
-     */
-    public static void start(APIConfig config) {
-        if (config.getHttpPort() > 0 && config.getHttpPort() < 65535) {
-            Spark.port(config.getHttpPort());
-        } else {
-            LOGGER.warn("The specified port {} is not valid. Fallback to default port.", config.getHttpPort());
-        }
-        Spark.threadPool(config.getThreadPoolSize(), 2, 30000);
-        if (config.isSecure()) {
-            Spark.secure(config.getKeystore(), config.getKeystorePassword(), null, null);
-        }
-
-        Spark.webSocket(String.format("/%s/%s", CONTEXT, VERSION), WebsocketAPI.class);
-        Spark.init();
-        Spark.awaitInitialization();
-        RUNNING.set(true);
-    }
-
-    /**
-     * Stops the WebSocket API.
-     */
-    public static void stop() {
-        Spark.stop();
-        RUNNING.set(false);
-    }
-
-    /**
-     * Indicates whether or not the WebSocket API is already running.
-     *
-     * @return true if WebSocket API is running, false otherwise.
-     */
-    public static boolean isRunning() {
-        return RUNNING.get();
-    }
-
-    /**
-     * Can be used to register new WebsocketMessageHandlers at runtime.
-     *
-     * @param type MessageType for which a new handler should be regiestered.
-     * @param handler Instance of WebsocketMessageHandler.
-     */
-    private static void registerHandlerForMessageType(MessageType type, WebsocketMessageHandler<?> handler) {
-        if (handler.isStateless()) {
-            STATELESS_HANDLERS.put(type, handler);
-        }
-    }
-
+ 
     /**
      * Invoked whenever a new connection is established. Configures the session and
      * stashes it in the SESSIONS map.
@@ -134,7 +81,7 @@ public class WebsocketAPI {
         session.getPolicy().setMaxTextMessageSize(Config.sharedConfig().getApi().getMaxMessageSize());
         session.getPolicy().setMaxBinaryMessageSize(Config.sharedConfig().getApi().getMaxMessageSize());
         sessions.add(session);
-        LOGGER.debug("New session {} connected!");
+        LOGGER.debug("New session {} connected!", session.getRemoteAddress().toString());
     }
 
     /**

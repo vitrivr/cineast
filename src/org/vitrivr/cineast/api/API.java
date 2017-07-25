@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.api;
 
-import com.google.common.collect.Ordering;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.imageio.ImageIO;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -28,7 +29,6 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.vitrivr.cineast.api.rest.RestfulAPI;
 import org.vitrivr.cineast.api.session.CredentialManager;
-import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -48,6 +48,8 @@ import org.vitrivr.cineast.core.run.ExtractionDispatcher;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
+
+import com.google.common.collect.Ordering;
 
 /**
  * Entry point.
@@ -92,7 +94,6 @@ public class API {
       if (Config.sharedConfig().getApi().getEnableCli() || commandline.hasOption('i')) {
         CineastCLI cli = new CineastCLI();
         cli.start();
-        return;
       }
 
       /* Handle --setup; start database setup. */
@@ -110,16 +111,11 @@ public class API {
         return;
       }
 
-      /* Start the WebSocket API if it was configured. */
-      if (Config.sharedConfig().getApi().getEnableWebsocket()) {
-        handleWebsocketStart();
-      }
-
       /* Start the RESTful API if it was configured. */
-      if (Config.sharedConfig().getApi().getEnableRest()) {
-        handleRestful();
+      if (Config.sharedConfig().getApi().getEnableRest() || Config.sharedConfig().getApi().getEnableRestSecure() || Config.sharedConfig().getApi().getEnableWebsocket() || Config.sharedConfig().getApi().getEnableWebsocketSecure()) {
+        handleHTTP();
       }
-
+      
       /* Start the Legacy API if it was configured. */
       if (Config.sharedConfig().getApi().getEnableLegacy()) {
         handleLegacy();
@@ -140,41 +136,15 @@ public class API {
     }
   }
 
-  /**
-   * Starts the WebSocket interface (CLI and program-argument)
-   */
-  private static void handleWebsocketStart() {
-    if (!WebsocketAPI.isRunning()) {
-      System.out.println("Starting WebSocket API...");
-      WebsocketAPI.start(Config.sharedConfig().getApi());
-      System.out.println("WebSocket API started!");
-    } else {
-      System.err.println("WebSocket API is already running...");
-    }
-  }
+
 
   /**
-   * Stops the WebSocket interface (CLI)
+   * Starts the HTTP (RESTful / WebSocket) interface (CLI and program-argument)
    */
-  private static void handleWebsocketStop() {
-    if (WebsocketAPI.isRunning()) {
-      System.out.println("Stopping WebSocket API...");
-      WebsocketAPI.stop();
-      System.out.println("WebSocket API stopped!");
-    } else {
-      System.err.println("WebSocket API has not been started yet...");
-    }
-  }
-
-  /**
-   * Starts the RESTful interface (CLI and program-argument)
-   */
-  private static void handleRestful() {
-    System.out.println("Starting RESTful API...");
-    int port = Config.sharedConfig().getApi().getHttpPort();
-    int threadPoolSize = Config.sharedConfig().getApi().getThreadPoolSize();
-    RestfulAPI.start(port, threadPoolSize);
-    System.out.println("RESTful API started!");
+  private static void handleHTTP() {
+    System.out.println("Starting HTTP API...");
+    RestfulAPI.start();
+    System.out.println("HTTP API started!");
   }
 
   /**
@@ -448,20 +418,20 @@ public class API {
               handleSetup(options);
               break;
             }
-            case "ws":
-            case "websocket": {
-              if (commands.size() < 2) {
-                System.err.println(
-                    "You must specify whether you want to start or stop the websocket (1 argument).");
-                break;
-              }
-              if (commands.get(1).toLowerCase().equals("start")) {
-                handleWebsocketStart();
-              } else {
-                handleWebsocketStop();
-              }
-              break;
-            }
+//            case "ws":
+//            case "websocket": {
+//              if (commands.size() < 2) {
+//                System.err.println(
+//                    "You must specify whether you want to start or stop the websocket (1 argument).");
+//                break;
+//              }
+//              if (commands.get(1).toLowerCase().equals("start")) {
+//                handleWebsocketStart();
+//              } else {
+//                //handleWebsocketStop();
+//              }
+//              break;
+//            }
             case "retrieve": {
               if (commands.size() < 3) {
                 System.err.println(

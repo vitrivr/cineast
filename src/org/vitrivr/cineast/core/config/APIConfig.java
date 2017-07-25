@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class APIConfig {
 
-	private boolean enableWebsocket = true;
-	private boolean enableRest = false;
-	private boolean secure = false;
+  private boolean enableWebsocket = true;
+  private boolean enableWebsocketSecure = true;
+  private boolean enableRest = false;
+  private boolean enableRestSecure = false;
 	private String keystore;
 	private String keystorePassword;
 
 	private int httpPort = 4567;
+	private int httpsPort = 4568;
 	private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
 
 	private boolean enableLegacy = false;
@@ -26,26 +28,32 @@ public final class APIConfig {
 	public APIConfig() {}
 
 	@JsonProperty
-	public boolean getEnableWebsocket(){
-		return this.enableWebsocket;
-	}
-	public void setEnableWebsocket(boolean enableWebsocket) {
-		this.enableWebsocket = enableWebsocket;
-	}
+  public boolean getEnableWebsocket(){
+    return this.enableWebsocket;
+  }
+  public void setEnableWebsocket(boolean enableWebsocket) {
+    this.enableWebsocket = enableWebsocket;
+  }
+  
+  @JsonProperty
+  public boolean getEnableWebsocketSecure(){
+    return this.enableWebsocketSecure;
+  }
+  public void setEnableWebsocketSecure(boolean enableWebsocket) {
+    this.enableWebsocketSecure = enableWebsocket;
+  }
 
-	@JsonProperty
-	public boolean getEnableRest() {return this.enableRest;}
-	public void setEnableRest(boolean enableRest) {
-		this.enableRest = enableRest;
-	}
-
-	@JsonProperty
-	public boolean isSecure() {
-		return secure;
-	}
-	public void setSecure(boolean secure) {
-		this.secure = secure;
-	}
+  @JsonProperty
+  public boolean getEnableRest() {return this.enableRest;}
+  public void setEnableRest(boolean enableRest) {
+    this.enableRest = enableRest;
+  }
+  
+  @JsonProperty
+  public boolean getEnableRestSecure() {return this.enableRestSecure;}
+  public void setEnableRestSecure(boolean enableRest) {
+    this.enableRestSecure = enableRest;
+  }
 
 	@JsonProperty
 	public String getKeystore() {
@@ -64,15 +72,26 @@ public final class APIConfig {
 	}
 
 	@JsonProperty
-	public int getHttpPort() {
-		return httpPort;
-	}
-	public void setHttpPort(int httpPort) {
-		if(httpPort < 1){
-			throw new IllegalArgumentException("httpPort must be > 0");
-		}
-		this.httpPort = httpPort;
-	}
+  public int getHttpPort() {
+    return httpPort;
+  }
+  public void setHttpPort(int httpPort) {
+    if(httpPort < 1){
+      throw new IllegalArgumentException("httpPort must be > 0");
+    }
+    this.httpPort = httpPort;
+  }
+  
+  @JsonProperty
+  public int getHttpsPort() {
+    return httpsPort;
+  }
+  public void setHttpsPort(int httpsPort) {
+    if(httpsPort < 1){
+      throw new IllegalArgumentException("httpPort must be > 0");
+    }
+    this.httpsPort = httpsPort;
+  }
 
 	@JsonProperty
 	public int getMaxMessageSize() {
