@@ -38,7 +38,7 @@ public class MetadataLookup implements Message {
      *
      * @return
      */
-    public List<String> getObjectids() {
+    public List<String> getIds() {
         if (this.ids != null) {
             return Arrays.asList(this.ids);
         } else {

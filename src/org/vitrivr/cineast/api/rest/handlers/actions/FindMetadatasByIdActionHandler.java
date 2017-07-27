@@ -19,12 +19,12 @@ public class FindMetadatasByIdActionHandler extends ParsingActionHandler<Metadat
     
     String queryId = ""; //we don't really need this here
     
-    if(context == null || context.getObjectids().size() == 0 ){
+    if(context == null || context.getIds().size() == 0 ){
       return new MetadataQueryResult(queryId, Collections.emptyList());
     }
     
     MultimediaMetadataReader reader = new MultimediaMetadataReader();
-    List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(context.getObjectids());
+    List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(context.getIds());
     reader.close();
     
     return new MetadataQueryResult(queryId, descriptors);
