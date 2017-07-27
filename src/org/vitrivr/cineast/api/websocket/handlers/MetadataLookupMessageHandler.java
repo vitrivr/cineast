@@ -29,8 +29,8 @@ public class MetadataLookupMessageHandler extends StatelessWebsocketMessageHandl
     @Override
     public void handle(Session session, MetadataLookup message) {
         MultimediaMetadataReader reader = new MultimediaMetadataReader();
-        List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(message.getObjectids());
-        this.write(session, new MetadataQueryResult("test", descriptors));
+        List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(message.getIds());
+        this.write(session, new MetadataQueryResult("", descriptors));
         reader.close();
     }
 }
