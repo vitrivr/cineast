@@ -30,6 +30,7 @@ import org.vitrivr.cineast.core.db.dao.writer.MultimediaMetadataWriter;
 import org.vitrivr.cineast.core.db.dao.writer.MultimediaObjectWriter;
 import org.vitrivr.cineast.core.db.dao.writer.SegmentWriter;
 import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
@@ -378,11 +379,21 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @param objectId ObjectId of the MediaObjectDescriptor associated with the path.
      */
     protected void extractAndPersistMetadata(Path path, String objectId) {
+      
+      for (MetadataExtractor extractor : this.metadataExtractors){
+        if(extractor instanceof MetadataFeatureModule){
+          this.pipeline.getInitializer().initialize((MetadataFeatureModule<?>)extractor); 
+        }else{
+          extractor.init();
+        }
+      }
+      
         for (MetadataExtractor extractor : this.metadataExtractors) {
             try{
+              
               List<MultimediaMetadataDescriptor> metadata = extractor.extract(objectId, path);
             
-              if (metadata.size() > 0) {
+              if (!metadata.isEmpty()) {
                   this.metadataWriter.write(metadata);
               }
             }catch(Exception e){

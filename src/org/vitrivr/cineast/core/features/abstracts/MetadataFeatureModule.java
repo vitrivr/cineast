@@ -23,6 +23,7 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
@@ -72,9 +73,9 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     supply.get().dropEntity(this.featureEntityName());
   }
 
-  @Override
-  public void init() {
-    PersistencyWriter<?> writer = Config.sharedConfig().getDatabase().getWriterSupplier().get();
+  public void init(PersistencyWriterSupplier supply) {
+    init(); //from MetadataFeatureExtractor
+    PersistencyWriter<?> writer = supply.get();
     this.featureWriter = new SimpleFeatureDescriptorWriter(writer, this.featureEntityName(),
         WRITER_BATCHSIZE);
     this.featureWriter.init();

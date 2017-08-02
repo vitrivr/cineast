@@ -23,10 +23,13 @@ public final class DatabaseConfig {
 
 	/** Default value for batchsize. */
 	public static final int DEFAULT_BATCH_SIZE = 1000;
+	public static final String DEFAULT_HOST = "127.0.0.1";
+	public static final int DEFAULT_PORT = 5890;
+	public static final boolean DEFAULT_PLAINTEXT = true;
 
-	private String host = "127.0.0.1";
-	private int port =  5890;
-	private boolean plaintext = false;
+	private String host = DEFAULT_HOST;
+	private int port =  DEFAULT_PORT;
+	private boolean plaintext = DEFAULT_PLAINTEXT;
 	private Writer writer = Writer.ADAMPRO;
 	private Selector selector = Selector.ADAMPRO;
 

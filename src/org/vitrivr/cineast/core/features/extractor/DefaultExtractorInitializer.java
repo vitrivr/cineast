@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.features.extractor;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
+import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 
 public class DefaultExtractorInitializer implements ExtractorInitializer {
 
@@ -26,6 +28,11 @@ public class DefaultExtractorInitializer implements ExtractorInitializer {
 
   @Override
   public void initialize(Extractor e) {
+    e.init(this.persistencyWriterSupplier);
+  }
+  
+  @Override
+  public void initialize(MetadataFeatureModule<?> e) {
     e.init(this.persistencyWriterSupplier);
   }
 

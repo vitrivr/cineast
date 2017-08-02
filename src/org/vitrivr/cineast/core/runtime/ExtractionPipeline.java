@@ -16,8 +16,11 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ExtractionPipelineConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
+import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
+import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -189,7 +192,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
             this.initializer.initialize(exporter);
             this.extractors.add(exporter);
         }
-
+        
         LOGGER.info("Extraction pipeline is ready with {} extractors.", this.extractors.size());
     }
 
@@ -238,5 +241,9 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
             return (long) this.timeMap.get(c).getMean();
         }
         return 0;
+    }
+
+    public ExtractorInitializer getInitializer() {
+      return this.initializer;
     }
 }

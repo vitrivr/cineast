@@ -106,6 +106,10 @@ public class IngestConfig implements ExtractionContextProvider {
         if (this.database.getSelector() == null) this.database.setSelector(global.getSelector());
         if (this.database.getWriter() == null) this.database.setWriter(global.getWriter());
         if (this.database.getBatchsize() == DatabaseConfig.DEFAULT_BATCH_SIZE) this.database.setBatchsize(global.getBatchsize());
+        if (this.database.getHost() == DatabaseConfig.DEFAULT_HOST) this.database.setHost(global.getHost());
+        if (this.database.getPort() == DatabaseConfig.DEFAULT_PORT) this.database.setPort(global.getPort());
+        if (this.database.getPlaintext() == DatabaseConfig.DEFAULT_PLAINTEXT) this.database.setPlaintext(global.getPlaintext());
+        
         /* Apply. */
         this.database = database;
     }
