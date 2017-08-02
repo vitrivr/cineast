@@ -156,6 +156,15 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         /* Instantiates some of the helper classes required by this class. */
         final ObjectIdGenerator generator = this.context.objectIdGenerator();
         Path path = null;
+        
+        /* Initialise metadata extractors */
+        for (MetadataExtractor extractor : this.metadataExtractors){
+          if(extractor instanceof MetadataFeatureModule){
+            this.pipeline.getInitializer().initialize((MetadataFeatureModule<?>)extractor); 
+          }else{
+            extractor.init();
+          }
+        }
 
         /* Process every file in the list. */
         while ((path = this.nextPath(decoder)) != null) {
@@ -261,6 +270,11 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         } finally {
             this.segmentWriter.close();
             this.objectWriter.close();
+            
+            for (MetadataExtractor extractor : this.metadataExtractors){
+              extractor.finish();
+            }
+            
             Duration duration = Duration.ofMillis(System.currentTimeMillis()-this.start_timestamp);
             LOGGER.info("File extraction complete! It took {} to extract {} out files.", duration.toString(), this.count_processed);
         }
@@ -379,14 +393,6 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @param objectId ObjectId of the MediaObjectDescriptor associated with the path.
      */
     protected void extractAndPersistMetadata(Path path, String objectId) {
-      
-      for (MetadataExtractor extractor : this.metadataExtractors){
-        if(extractor instanceof MetadataFeatureModule){
-          this.pipeline.getInitializer().initialize((MetadataFeatureModule<?>)extractor); 
-        }else{
-          extractor.init();
-        }
-      }
       
         for (MetadataExtractor extractor : this.metadataExtractors) {
             try{

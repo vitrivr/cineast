@@ -12,15 +12,11 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ExtractionPipelineConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
-import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
-import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -36,7 +32,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
 
     /** The list of Extractor's that should be executed. */
     private final List<Extractor> extractors = new LinkedList<>();
-
+    
     /** Blocking queue holding the SegmentContainers that are pending extraction. */
     private final LinkedBlockingQueue<SegmentContainer> segmentQueue;
 
