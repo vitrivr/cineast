@@ -170,9 +170,9 @@ public class ADAMproSelector implements DBSelector {
             ReadableQueryConfig config = configs.get(i);
 
             /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
-            Collection<String> hints;
+            Collection<ReadableQueryConfig.Hints> hints;
             if (!config.getHints().isEmpty()) {
-                hints = config.getHints().stream().map(Enum::name).collect(Collectors.toList());
+                hints = config.getHints();
             } else {
                 hints = ADAMproMessageBuilder.DEFAULT_HINT;
             }
@@ -240,9 +240,9 @@ public class ADAMproSelector implements DBSelector {
             ReadableQueryConfig config = configs.get(i);
 
             /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
-            Collection<String> hints;
+            Collection<ReadableQueryConfig.Hints> hints;
             if (!config.getHints().isEmpty()) {
-                hints = config.getHints().stream().map(Enum::name).collect(Collectors.toList());
+                hints = config.getHints();
             } else {
                 hints = ADAMproMessageBuilder.DEFAULT_HINT;
             }
@@ -503,9 +503,9 @@ public class ADAMproSelector implements DBSelector {
                 DataMessageConverter.convertVectorMessage(vector), k, config);
 
     /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
-        Collection<String> hints;
+        Collection<ReadableQueryConfig.Hints> hints;
         if (!config.getHints().isEmpty()) {
-            hints = config.getHints().stream().map(Enum::name).collect(Collectors.toList());
+            hints = config.getHints();
         } else {
             hints = ADAMproMessageBuilder.DEFAULT_HINT;
         }

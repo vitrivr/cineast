@@ -1,7 +1,15 @@
 package org.vitrivr.cineast.core.db.adampro;
 
-import org.vitrivr.adampro.grpc.AdamGrpc;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
@@ -15,14 +23,9 @@ import org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ProjectionMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
-
 import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
-
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
-
-import javax.management.Query;
-import java.util.*;
 
 /**
  * @author rgasser
@@ -35,7 +38,7 @@ public class ADAMproMessageBuilder {
     public static final ProjectionMessage DEFAULT_PROJECTION_MESSAGE;
 
     /** Default query hint used in absence of any explicit hint. */
-    public static final Collection<String> DEFAULT_HINT = new ArrayList<String>(1);
+    public static final Collection<ReadableQueryConfig.Hints> DEFAULT_HINT = new ArrayList<ReadableQueryConfig.Hints>(1);
 
     /** Supported distance messages. */
     private static final DistanceMessage chisquared, correlation, cosine, hamming, jaccard,
@@ -43,7 +46,7 @@ public class ADAMproMessageBuilder {
 
     static {
         DEFAULT_PROJECTION_MESSAGE = AdamGrpc.ProjectionMessage.newBuilder().setAttributes(AdamGrpc.ProjectionMessage.AttributeNameMessage.newBuilder().addAttribute("ap_distance").addAttribute("id")).build();
-        DEFAULT_HINT.add(ReadableQueryConfig.Hints.exact.name());
+        DEFAULT_HINT.add(ReadableQueryConfig.Hints.exact);
 
         DistanceMessage.Builder dmBuilder = DistanceMessage.newBuilder();
 
@@ -96,14 +99,14 @@ public class ADAMproMessageBuilder {
      * @param nnqMessage
      * @return
      */
-    public QueryMessage buildQueryMessage(Collection<String> hints, FromMessage.Builder fb,
+    public QueryMessage buildQueryMessage(Collection<ReadableQueryConfig.Hints> hints, FromMessage.Builder fb,
                                            BooleanQueryMessage bqMessage, ProjectionMessage pMessage,
                                            NearestNeighbourQueryMessage nnqMessage) {
         synchronized (qmBuilder) {
             qmBuilder.clear();
             qmBuilder.setFrom(fb);
             if (hints != null && !hints.isEmpty()) {
-                qmBuilder.addAllHints(hints);
+                qmBuilder.addAllHints(hints.stream().map(Enum::name).collect(Collectors.toList()));
             }
             if (bqMessage != null) {
                 qmBuilder.setBq(bqMessage);
@@ -126,12 +129,12 @@ public class ADAMproMessageBuilder {
      * @param nnqMessage
      * @return
      */
-    public QueryMessage buildQueryMessage(Collection<String> hints, FromMessage fromMessage, BooleanQueryMessage bqMessage, ProjectionMessage pMessage, NearestNeighbourQueryMessage nnqMessage) {
+    public QueryMessage buildQueryMessage(Collection<ReadableQueryConfig.Hints> hints, FromMessage fromMessage, BooleanQueryMessage bqMessage, ProjectionMessage pMessage, NearestNeighbourQueryMessage nnqMessage) {
         synchronized (this.qmBuilder) {
             this.qmBuilder.clear();
             this.qmBuilder.setFrom(fromMessage);
             if (hints != null && !hints.isEmpty()) {
-                qmBuilder.addAllHints(hints);
+                qmBuilder.addAllHints(hints.stream().map(Enum::name).collect(Collectors.toList()));
             }
             if (bqMessage != null) {
                 this.qmBuilder.setBq(bqMessage);
