@@ -1,31 +1,48 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.util.MathHelper;
 
-/**
- * @author rgasser
- * @version 1.0
- * @created 09.02.17
- */
-public interface QueryContainer extends SegmentContainer {
+public abstract class QueryContainer implements SegmentContainer {
 
-    /**
-     *
-     * @return
-     */
-    default boolean hasId() {
-        return this.getId() != null;
+  private float weight = 1f;
+  private String id = null, superId = null;
+
+  /**
+   * Weight used for relevance feedback
+   */
+  public float getWeight() {
+    return this.weight;
+  }
+
+  public void setWeight(float weight) {
+    if (Float.isNaN(weight)) {
+      this.weight = 0f;
+      return;
     }
+    this.weight = MathHelper.limit(weight, -1f, 1f);
+  }
 
-    /**
-     *
-     * @return
-     */
-    float getWeight();
+  @Override
+  public String getId() {
+    return this.id == null ? "" : this.id;
+  }
 
-    /**
-     *
-     * @param weight
-     */
-    void setWeight(float weight);
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public boolean hasId() {
+    return this.id != null;
+  }
+
+  @Override
+  public void setSuperId(String id) {
+    this.superId = id;
+  }
+
+  @Override
+  public String getSuperId() {
+    return this.superId;
+  }
 }

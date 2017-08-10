@@ -4,25 +4,23 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
-import org.vitrivr.cineast.core.util.MathHelper;
 
 import georegression.struct.point.Point2D_F32;
 
-public class ImageQueryContainer implements QueryContainer {
+public class ImageQueryContainer extends QueryContainer {
 
 	private MultiImage img;
 	private VideoFrame videoFrame;
 	private ArrayList<SubtitleItem> subitem = new ArrayList<SubtitleItem>(1);
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
-	private ArrayList<String> tags = new ArrayList<>();
-	private float relativeStart = 0, relativeEnd = 0, weight = 1f;
-	private String id = null;
+	private float relativeStart = 0, relativeEnd = 0;
+	
 	
 	public ImageQueryContainer(MultiImage img){
 		this.img = img;
@@ -96,31 +94,6 @@ public class ImageQueryContainer implements QueryContainer {
 		return _return;
 	}
 
-	@Override
-	public String getId() {
-		return this.id == null ? "" : this.id;
-	}
-
-	public void setId(String id){
-		this.id = id;
-	}
-
-	/**
-	 * @param id
-	 */
-	@Override
-	public void setSuperId(String id) {
-
-	}
-
-	public boolean hasId(){
-		return this.id != null;
-	}
-	
-	@Override
-	public String getSuperId() {
-		return "";
-	}
 	
 	public void addPath(LinkedList<Point2D_F32> path){
 		this.paths.add(new Pair<Integer, LinkedList<Point2D_F32>>(0, path));
@@ -128,30 +101,6 @@ public class ImageQueryContainer implements QueryContainer {
 	
 	public void addBgPath(LinkedList<Point2D_F32> path){
 		this.bgPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(0, path));
-	}
-
-	@Override
-	public List<String> getTags() {
-		return this.tags;
-	}
-	
-	public void addTag(String tag){
-		this.tags.add(tag);
-	}
-	
-	/**
-	 * weight used for relevance feedback
-	 */
-	public float getWeight(){
-		return this.weight;
-	}
-	
-	public void setWeight(float weight){
-		if(Float.isNaN(weight)){
-			this.weight = 0f;
-			return;
-		}
-		this.weight = MathHelper.limit(weight, -1f, 1f);
 	}
 
 }

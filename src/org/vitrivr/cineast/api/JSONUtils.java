@@ -81,13 +81,13 @@ public class JSONUtils {
 			}
 		}
 		
-		if(jobj.get("tags") != null){
-			JsonObject tags = jobj.get("tags").asObject();
-			JsonArray concepts = tags.get("concepts").asArray();
-			for(JsonValue concept : concepts){
-				qc.addTag(concept.asString());
-			}
-		}
+//		if(jobj.get("tags") != null){
+//			JsonObject tags = jobj.get("tags").asObject();
+//			JsonArray concepts = tags.get("concepts").asArray();
+//			for(JsonValue concept : concepts){
+//				qc.addTag(concept.asString());
+//			}
+//		}
 		
 		
 		qc.setRelativeStart(jobj.get("start") == null ? 0 : jobj.get("start").asFloat());

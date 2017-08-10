@@ -1,19 +1,18 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
+import java.util.List;
+
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
-import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
-
-import java.util.List;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 08.02.17
  */
-public class AudioQueryContainer implements QueryContainer {
+public class AudioQueryContainer extends QueryContainer {
 
     /** List of {@link AudioFrame}s. */
     private final List<AudioFrame> frames;
@@ -23,9 +22,6 @@ public class AudioQueryContainer implements QueryContainer {
 
     /** Total duration of the AudioSegment in seconds. */
     private float totalDuration;
-
-    /** */
-    private float weight = 1.0f;
 
     /** {@link AudioDescriptor} describing the properties of the underlying audio stream. */
     private AudioDescriptor descriptor;
@@ -52,56 +48,6 @@ public class AudioQueryContainer implements QueryContainer {
      */
     public List<AudioFrame> getAudioFrames() {
         return this.frames;
-    }
-
-    /**
-     * @return a unique id of this
-     */
-    @Override
-    public String getId() {
-        return null;
-    }
-
-    @Override
-    public String getSuperId() {
-        return null;
-    }
-
-    /**
-     * @param id
-     * @return a unique id of this
-     */
-    @Override
-    public void setId(String id) {
-
-    }
-
-    /**
-     * @param id
-     */
-    @Override
-    public void setSuperId(String id) {
-
-    }
-
-    /**
-     *
-     * @return
-     */
-    public float getWeight(){
-        return this.weight;
-    }
-
-    /**
-     *
-     * @param weight
-     */
-    public void setWeight(float weight){
-        if(Float.isNaN(weight)){
-            this.weight = 0f;
-            return;
-        }
-        this.weight = MathHelper.limit(weight, -1f, 1f);
     }
 
     /**

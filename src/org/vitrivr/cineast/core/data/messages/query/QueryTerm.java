@@ -17,6 +17,7 @@ import org.vitrivr.cineast.core.data.query.containers.LocationQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.ModelQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.MotionQueryContainer;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.TextQueryContainer;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.core.util.web.AudioParser;
 import org.vitrivr.cineast.core.util.web.DataURLParser;
@@ -129,6 +130,8 @@ public class QueryTerm {
             .flatMap(GpsData::parseLocationFromJson).map(LocationQueryContainer::of).orElse(null);
       case TIME:
         return GpsData.parseInstant(this.data).map(InstantQueryContainer::of).orElse(null);
+      case TEXT:
+        return new TextQueryContainer(data);
       default:
         break;
       }

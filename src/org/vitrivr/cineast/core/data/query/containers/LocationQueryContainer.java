@@ -6,9 +6,8 @@ import org.vitrivr.cineast.core.data.Location;
 
 import com.google.common.base.MoreObjects;
 
-public class LocationQueryContainer implements QueryContainer {
+public class LocationQueryContainer extends QueryContainer {
   private final Location location;
-  private float weight = 1f;
 
   private LocationQueryContainer(Location location) {
     this.location = location;
@@ -20,9 +19,7 @@ public class LocationQueryContainer implements QueryContainer {
 
   @Override
   public String toString() {
-    return MoreObjects.toStringHelper(this)
-        .add("location", getLocation())
-        .toString();
+    return MoreObjects.toStringHelper(this).add("location", getLocation()).toString();
   }
 
   @Override
@@ -30,33 +27,4 @@ public class LocationQueryContainer implements QueryContainer {
     return Optional.of(location);
   }
 
-  @Override
-  public float getWeight() {
-    return this.weight;
-  }
-
-  @Override
-  public void setWeight(float weight) {
-    this.weight = weight;
-  }
-
-  @Override
-  public String getId() {
-    return null;
-  }
-
-  @Override
-  public String getSuperId() {
-    return null;
-  }
-
-  @Override
-  public void setId(String id) {
-    // Ignore
-  }
-
-  @Override
-  public void setSuperId(String id) {
-    // Ignore
-  }
 }
