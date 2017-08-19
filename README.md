@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/vitrivr/cineast.svg?branch=dev)](https://travis-ci.org/ppanopticon/vitrivr)
+[![Build Status](https://travis-ci.org/vitrivr/cineast.svg?branch=dev)](https://travis-ci.org/vitrivr/cineast)
 
 # Cineast
 Cineast is a multi-feature sketch-based content video retrieval engine. It is capable of retrieving video sequences based on edge or color sketches and sketch-based motion queries.
