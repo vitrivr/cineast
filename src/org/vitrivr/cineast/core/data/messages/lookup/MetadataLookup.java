@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class MetadataLookup implements Message {
     /** List of object ID's for which metadata should be looked up. */
-    private String[] ids;
+    private String[] objectIds;
 
     /** List of metadata domains that should be considered. If empty, all domains are considered! */
     private String[] domains;
@@ -29,8 +29,8 @@ public class MetadataLookup implements Message {
      * @param domains
      */
     @JsonCreator
-    public MetadataLookup(@JsonProperty("ids") String[] ids, @JsonProperty("domains") String[] domains) {
-        this.ids = ids;
+    public MetadataLookup(@JsonProperty("objectids") String[] ids, @JsonProperty("domains") String[] domains) {
+        this.objectIds = ids;
         this.domains = domains;
     }
 
@@ -39,11 +39,10 @@ public class MetadataLookup implements Message {
      * @return
      */
     public List<String> getIds() {
-        if (this.ids != null) {
-            return Arrays.asList(this.ids);
+        if (this.objectIds != null) {
+            return Arrays.asList(this.objectIds);
         } else {
             return new ArrayList<>(0);
-
         }
     }
 
