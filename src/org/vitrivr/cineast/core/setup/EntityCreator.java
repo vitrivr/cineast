@@ -5,9 +5,13 @@ import org.apache.logging.log4j.Logger;
 
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.NeuralNetConfig;
+import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,6 +47,7 @@ public interface EntityCreator extends AutoCloseable {
         this.createMultiMediaObjectsEntity();
         this.createMetadataEntity();
         this.createSegmentEntity();
+        this.createTagEntity();
 
         LOGGER.info("...done");
 
@@ -97,6 +102,7 @@ public interface EntityCreator extends AutoCloseable {
         this.dropMultiMediaObjectsEntity();
         this.dropMetadataEntity();
         this.dropSegmentEntity();
+        this.dropTagEntity();
 
         LOGGER.info("...done");
 
@@ -117,9 +123,17 @@ public interface EntityCreator extends AutoCloseable {
     boolean createMultiMediaObjectsEntity();
 
     /**
-     * Initializes the entity responsible for holding metadata information about multimedia objects.
+     * Initialises the entity responsible for holding metadata information about multimedia objects.
      */
     boolean createMetadataEntity();
+    
+    /**
+     * Initialises the entity responsible for holding the mapping between human readable tags and their descriptions to the internally used ids
+     */
+    default boolean createTagEntity(){
+      return this.createIdEntity("cineast_tags", new AttributeDefinition("name", AttributeType.STRING), new AttributeDefinition("description", AttributeType.STRING));
+    }
+    
 
     /**
      * Initializes the entity responsible for holding information about segments of a multimedia object
@@ -129,17 +143,54 @@ public interface EntityCreator extends AutoCloseable {
     /**
      * Drops the main entity holding information about multimedia objects
      */
-    boolean dropMultiMediaObjectsEntity();
-
+    default boolean dropMultiMediaObjectsEntity(){
+      if (this.dropEntity(MultimediaObjectDescriptor.ENTITY)) {
+        LOGGER.info("Successfully dropped multimedia object entity.");
+        return true;
+      } else {
+        LOGGER.error("Error occurred while dropping multimedia object entity");
+        return false;
+      }
+    }
+    
     /**
      * Drops the entity responsible for holding information about segments of a multimedia object
      */
-    boolean dropSegmentEntity();
+    default boolean dropSegmentEntity(){
+      if (this.dropEntity(SegmentDescriptor.ENTITY)) {
+        LOGGER.info("Successfully dropped segment entity.");
+        return true;
+      } else {
+        LOGGER.error("Error occurred while dropping segment entity");
+        return false;
+      }
+    }
 
     /**
      * Drops the entity responsible for holding metadata information about multimedia objects.
      */
-    boolean dropMetadataEntity();
+    default boolean dropMetadataEntity() {
+      if (this.dropEntity(MultimediaMetadataDescriptor.ENTITY)) {
+        LOGGER.info("Successfully dropped metadata entity.");
+        return true;
+      } else {
+        LOGGER.error("Error occurred while dropping metadata entity");
+        return false;
+      }
+    }
+    
+    /**
+     * Drops the entity responsible for holding metadata information about multimedia objects.
+     */
+    default boolean dropTagEntity() {
+      if (this.dropEntity("cineast_tags")) {
+        LOGGER.info("Successfully dropped tag entity.");
+        return true;
+      } else {
+        LOGGER.error("Error occurred while dropping tag entity");
+        return false;
+      }
+    }
 
     /**
      * Initializes an entity for a feature module with default parameters
@@ -147,7 +198,9 @@ public interface EntityCreator extends AutoCloseable {
      * @param featurename the name of the feature module
      * @param unique      true if the feature module produces at most one vector per segment
      */
-    boolean createFeatureEntity(String featurename, boolean unique);
+    default boolean createFeatureEntity(String featurename, boolean unique){
+      return createFeatureEntity(featurename, unique, "feature");
+    }
 
     boolean createFeatureEntity(String featurename, boolean unique, String... featureNames);
 
