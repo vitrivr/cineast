@@ -16,6 +16,7 @@ import java.util.Map;
  * <p>
  * Created by silvan on 26.08.16.
  */
+@Deprecated
 public class ConceptReader {
 
     private HashMap<String, String[]> conceptMap = new HashMap<>();

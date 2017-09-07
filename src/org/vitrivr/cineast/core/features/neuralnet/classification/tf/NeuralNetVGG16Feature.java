@@ -36,6 +36,7 @@ import org.vitrivr.cineast.core.util.TimeHelper;
  * <p>
  * Created by silvan on 09.09.16.
  */
+@Deprecated
 public class NeuralNetVGG16Feature extends NeuralNetFeature {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String fullVectorTableName = "features_neuralnet_vgg16_fullvector";

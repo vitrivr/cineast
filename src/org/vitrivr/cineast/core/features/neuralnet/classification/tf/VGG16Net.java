@@ -25,6 +25,7 @@ import java.util.List;
  * <p>
  * Created by silvan on 23.08.16.
  */
+@Deprecated
 public class VGG16Net implements TensorFlowNet {
 
     //we satisfy the label-providing part of the NeuralNet-interface with our own label provider

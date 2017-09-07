@@ -10,6 +10,7 @@ import java.util.*;
  * Provides Labels for .txt files with format n... $LABELS (formatted as .csv)
  * Example: n01518878 ostrich, Struthio camelus
  */
+@Deprecated
 public class SynLabelProvider implements LabelProvider {
 
     private List<List<String>> labels;

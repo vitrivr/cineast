@@ -7,5 +7,6 @@ import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
  * <p>
  * Created by silvan on 23.08.16.
  */
+@Deprecated
 interface TensorFlowNet extends NeuralNet {
 }
