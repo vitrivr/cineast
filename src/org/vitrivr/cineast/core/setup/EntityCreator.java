@@ -8,6 +8,7 @@ import org.vitrivr.cineast.core.config.NeuralNetConfig;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.db.dao.TagHandler;
 import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
@@ -131,7 +132,7 @@ public interface EntityCreator extends AutoCloseable {
      * Initialises the entity responsible for holding the mapping between human readable tags and their descriptions to the internally used ids
      */
     default boolean createTagEntity(){
-      return this.createIdEntity("cineast_tags", new AttributeDefinition("name", AttributeType.STRING), new AttributeDefinition("description", AttributeType.STRING));
+      return this.createIdEntity(TagHandler.ENTITY, new AttributeDefinition("name", AttributeType.STRING), new AttributeDefinition("description", AttributeType.STRING));
     }
     
 
@@ -183,7 +184,7 @@ public interface EntityCreator extends AutoCloseable {
      * Drops the entity responsible for holding metadata information about multimedia objects.
      */
     default boolean dropTagEntity() {
-      if (this.dropEntity("cineast_tags")) {
+      if (this.dropEntity(TagHandler.ENTITY)) {
         LOGGER.info("Successfully dropped tag entity.");
         return true;
       } else {
