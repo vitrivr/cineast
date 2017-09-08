@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.db.dao;
 
 import java.io.Closeable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,6 +20,8 @@ public class TagHandler implements Closeable {
   private final DBSelector selector;
 
   public static final String ENTITY = "cineast_tags";
+  
+  private HashMap<String, Tag> tagCache = new HashMap<>();
 
   public TagHandler(DBSelector selector, PersistencyWriter<?> writer) {
     this.selector = selector;
@@ -79,6 +82,31 @@ public class TagHandler implements Closeable {
         .collect(Collectors.toList());
   }
 
+  public void initCache(){
+    List<Tag> all = getAll();
+    for(Tag tag : all){
+      this.tagCache.put(tag.getId(), tag);
+    }
+  }
+  
+  public void flushCache(){
+    this.tagCache.clear();
+  }
+  
+  public Tag getCachedById(String id){
+    return this.tagCache.get(id);
+  }
+  
+  public List<Tag> getCachedByName(String name) {
+    ArrayList<Tag> _return = new ArrayList<>();
+    for(Tag t : this.tagCache.values()){
+      if(t.getName().equals(name)){
+        _return.add(t);
+      }
+    }
+    return _return;
+  }
+  
   private static Tag fromMap(Map<String, PrimitiveTypeProvider> map) {
     if (map == null || map.isEmpty()) {
       return null;
