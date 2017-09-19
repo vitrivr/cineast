@@ -76,6 +76,25 @@ public class TagHandler implements Closeable {
     return fromMap(rows.get(0));
 
   }
+  
+  public List<Tag> getTagsById(String... ids) {
+    if (ids == null) {
+      return null;
+    }
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("id", ids);
+    if (rows.isEmpty()) {
+      return null;
+    }
+    ArrayList<Tag> _return = new ArrayList<>(rows.size());
+    for (Map<String, PrimitiveTypeProvider> row : rows) {
+      Tag t = fromMap(row);
+      if (t != null) {
+        _return.add(t);
+      }
+    }
+    return _return;
+
+  }
 
   public List<Tag> getAll() {
     return this.selector.getAll().stream().map(TagHandler::fromMap).filter(Objects::nonNull)
