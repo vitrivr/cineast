@@ -1,10 +1,10 @@
-package org.vitrivr.cineast.core.data.entities;
+package org.vitrivr.cineast.core.data.tag;
 
-public class Tag {
+public class CompleteTag implements Tag{
 
-  private final String id, name, description;
+ private final String id, name, description;
   
-  public Tag(String id, String name, String description){
+  public CompleteTag(String id, String name, String description){
     this.id = id;
     this.name = name;
     this.description = (description == null) ? "" : description;
@@ -12,13 +12,17 @@ public class Tag {
       throw new NullPointerException("id cannot be null");
     }
     
+    if(this.id.isEmpty()){
+      throw new IllegalArgumentException("id cannot be empty");
+    }
+    
     if(this.name == null){
       throw new NullPointerException("name cannot be null");
     }
-  }
-  
-  public Tag(String id, String name){
-    this(id, name, "");
+    
+    if(this.name.isEmpty()){
+      throw new IllegalArgumentException("name cannot be empty");
+    }
   }
 
   public String getId() {
@@ -51,7 +55,7 @@ public class Tag {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Tag other = (Tag) obj;
+    CompleteTag other = (CompleteTag) obj;
     if (description == null) {
       if (other.description != null)
         return false;
@@ -72,9 +76,22 @@ public class Tag {
 
   @Override
   public String toString() {
-    return String.format("Tag [id=%s, name=%s, description=%s]", id, name, description);
+    return String.format("CompleteTag [id=%s, name=%s, description=%s]", id, name, description);
   }
-  
-  
+
+  @Override
+  public boolean hasId() {
+    return true;
+  }
+
+  @Override
+  public boolean hasName() {
+    return true;
+  }
+
+  @Override
+  public boolean hasDescription() {
+    return !this.description.isEmpty();
+  }
   
 }

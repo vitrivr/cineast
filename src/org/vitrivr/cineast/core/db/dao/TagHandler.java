@@ -9,8 +9,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.entities.Tag;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.tag.CompleteTag;
+import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 
@@ -136,9 +137,9 @@ public class TagHandler implements Closeable {
     }
 
     if (!map.containsKey("description")) {
-      return new Tag(map.get("id").getString(), map.get("name").getString());
+      return new CompleteTag(map.get("id").getString(), map.get("name").getString(), "");
     } else {
-      return new Tag(map.get("id").getString(), map.get("name").getString(),
+      return new CompleteTag(map.get("id").getString(), map.get("name").getString(),
           map.get("description").getString());
     }
 

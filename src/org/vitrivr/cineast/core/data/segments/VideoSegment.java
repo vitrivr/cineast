@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
@@ -36,7 +37,7 @@ public class VideoSegment implements SegmentContainer {
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = null;
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = null;
 	private LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths = null;
-	private ArrayList<String> tags = new ArrayList<>(1);
+	private ArrayList<Tag> tags = new ArrayList<>(1);
 	private String movieId;
 	private String shotId;
 
@@ -381,7 +382,7 @@ public class VideoSegment implements SegmentContainer {
 	}
 	
 	@Override
-	public List<String> getTags() {
+	public List<Tag> getTags() {
 		return this.tags;
 	}
 
