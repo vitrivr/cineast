@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.tag.Tag;
+import org.vitrivr.cineast.core.data.tag.WeightedTag;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
@@ -155,12 +156,16 @@ public class Tags implements Extractor, Retriever{
         }
         
       }else{
-        writeTag(segment.getId(), tag.getId());
+        if(tag instanceof WeightedTag){
+          writeTag(segment.getId(), tag.getId(), ((WeightedTag)tag).getWeight());
+        }else{
+          writeTag(segment.getId(), tag.getId());
+        }
       }
       
     }
   }
-
+  
   protected void writeTag(String segmentId, String tagId){
     writeTag(segmentId, tagId, 1f);
   }
@@ -181,6 +186,4 @@ public class Tags implements Extractor, Retriever{
       this.selector = null;
     }
   }
-  
-
 }
