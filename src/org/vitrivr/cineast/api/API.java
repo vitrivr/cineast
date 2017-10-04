@@ -510,6 +510,25 @@ public class API {
               System.exit(0);
               break;
             }
+            case "help":{
+                  System.out.println("3d\t\t\ttests the 3d rendering capabilities");
+                  System.out.println("codebook\t\tgenerates a visual codebook from a folder containing images");
+                  System.out.println("\t\t\t\t<generator> <source> <destination> <number of words>");
+                  System.out.println("exit\t\t\texit cineast");
+                  System.out.println("exportresults\t\tenables RetrievalResultCSVExporter for retrieval results");
+                  System.out.println("help\t\t\tprints this message");
+                  System.out.println("import\t\t\timports data from specified path into currently configured database");
+                  System.out.println("\t\t\t\t<path>");
+                  System.out.println("metadata\t\tshows all avalilable metadata for specified segment");
+                  System.out.println("\t\t\t\t<segment id>");
+                  System.out.println("quit\t\t\tsee 'exit'");
+                  System.out.println("retrieve\t\tshows segments simiar to specified segment given the specified category");
+                  System.out.println("\t\t\t\t<segment id> <category>");
+                  System.out.println("setup\t\t\tinitializes database");
+                  System.out.println("test3d\t\t\tsee '3d'");
+                  System.out.println();
+              break;
+            }
             default:
               System.err.println("unrecognized command: " + line);
           }
