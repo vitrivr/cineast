@@ -38,7 +38,9 @@ public class FFTUtil {
      * @param samplingrate Rate at which the original data has been sampled.
      */
     public static float binCenterFrequency(int index, int size, float samplingrate) {
-        if (index > size) throw new IllegalArgumentException("The index cannot be greater than the window-size of the FFT.");
+        if (index > size) {
+          throw new IllegalArgumentException("The index cannot be greater than the window-size of the FFT.");
+        }
         double bin_width = (samplingrate / size);
         double offset = bin_width/2.0;
         return (float)((index * bin_width) + offset);
@@ -54,7 +56,9 @@ public class FFTUtil {
      * @return
      */
     public static int binIndex(float frequency, int size, float samplingrate) {
-        if (frequency > samplingrate/2) throw new IllegalArgumentException("The frequency cannot be greater than half the samplingrate.");
+        if (frequency > samplingrate/2) {
+          throw new IllegalArgumentException("The frequency cannot be greater than half the samplingrate.");
+        }
         double bin_width = (samplingrate / size);
         return (int)Math.floor(frequency/bin_width);
     }

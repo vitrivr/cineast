@@ -1,14 +1,16 @@
 package org.vitrivr.cineast.api.rest.handlers.abstracts;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
-import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
-import spark.Request;
-import spark.Response;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import spark.Request;
+import spark.Response;
 
 /**
  * @author rgasser
@@ -44,7 +46,9 @@ public abstract class ParsingActionHandler<A> implements ActionHandler<A> {
     @Override
     public Object handle(Request request, Response response) throws Exception {
         Map<String, String> params = request.params();
-        if (params == null) params = new HashMap<>();
+        if (params == null) {
+          params = new HashMap<>();
+        }
         Object result = null;
         switch (request.requestMethod()) {
             case "GET":

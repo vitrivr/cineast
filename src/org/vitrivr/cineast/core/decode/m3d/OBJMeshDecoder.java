@@ -1,27 +1,25 @@
 package org.vitrivr.cineast.core.decode.m3d;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
-import org.joml.Vector4i;
-
-import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.data.m3d.Mesh;
-import org.vitrivr.cineast.core.decode.general.Decoder;
-import org.vitrivr.cineast.core.util.LogHelper;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
+import org.joml.Vector4i;
+import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * Decodes Wavefront OBJ (.obj) files and returns a Mesh representation. Requires

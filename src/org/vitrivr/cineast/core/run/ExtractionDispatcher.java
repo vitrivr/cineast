@@ -58,8 +58,9 @@ public class ExtractionDispatcher {
     this.context = reader.toObject(jobFile, IngestConfig.class);
 
     /* Check if context could be read and an input path was specified. */
-    if (context == null || this.context.inputPath() == null)
+    if (context == null || this.context.inputPath() == null) {
       return false;
+    }
     Path jobDirectory = jobFile.getAbsoluteFile().toPath().getParent();
     Path path = jobDirectory.resolve(this.context.inputPath()).normalize().toAbsolutePath();
 

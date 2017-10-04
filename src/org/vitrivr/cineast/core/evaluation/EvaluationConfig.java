@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.evaluation;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.vitrivr.cineast.core.decode.general.Converter;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author rgasser

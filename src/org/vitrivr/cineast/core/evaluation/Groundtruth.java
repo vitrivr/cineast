@@ -40,7 +40,9 @@ public class Groundtruth {
         this.inverseMap = new HashMap<>();
         try {
             JsonNode node = MAPPER.readTree(path.toFile());
-            if (node == null) throw new EvaluationException("Could not read the ground truth file from the specified path '%s'. File seems to be empty.");
+            if (node == null) {
+              throw new EvaluationException("Could not read the ground truth file from the specified path '%s'. File seems to be empty.");
+            }
             this.readFromJsonNode(node);
         } catch (IOException e) {
             throw new EvaluationException(String.format("Could not read the ground truth file from the specified path '%s' due to an IOException.", path.toString()));
@@ -114,10 +116,14 @@ public class Groundtruth {
             String cl = classes.next();
             JsonNode ids = node.get(cl);
 
-            if (ids == null) continue;
+            if (ids == null) {
+              continue;
+            }
 
             /* Add class label to map if it's not already there. */
-            if (!this.map.containsKey(cl)) this.map.put(cl, new HashSet<>());
+            if (!this.map.containsKey(cl)) {
+              this.map.put(cl, new HashSet<>());
+            }
 
             if (ids.isArray()) {
                 for (JsonNode item : ids) {

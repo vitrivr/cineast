@@ -95,30 +95,35 @@ public class QueryTerm {
    */
   public QueryContainer toContainer() {
     if (this.cachedQueryContainer == null) {
-      if (this.data == null)
+      if (this.data == null) {
         return null;
+      }
       switch (this.type) {
       case IMAGE:
         BufferedImage image = ImageParser.dataURLtoBufferedImage(this.data);
-        if (image != null)
+        if (image != null) {
           this.cachedQueryContainer = new ImageQueryContainer(
               MultiImageFactory.newInMemoryMultiImage(image));
+        }
         break;
       case AUDIO:
         List<AudioFrame> lists = AudioParser.parseWaveAudio(this.data, 22050.0f, 1);
-        if (lists != null)
+        if (lists != null) {
           this.cachedQueryContainer = new AudioQueryContainer(lists);
+        }
         break;
       case MODEL3D:
         if (MeshParser.isValidThreeJSV4Geometry(this.data)) {
           Mesh mesh = MeshParser.parseThreeJSV4Geometry(this.data);
-          if (mesh != null)
+          if (mesh != null) {
             this.cachedQueryContainer = new ModelQueryContainer(mesh);
+          }
         } else if (ImageParser.isValidImage(this.data)) {
           BufferedImage img = ImageParser.dataURLtoBufferedImage(this.data);
-          if (img != null)
+          if (img != null) {
             this.cachedQueryContainer = new ImageQueryContainer(
                 MultiImageFactory.newInMemoryMultiImage(img));
+          }
         }
         break;
       case MOTION:

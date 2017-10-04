@@ -29,6 +29,7 @@ public abstract class AbstractEntityReader implements Closeable {
     /**
      * Closes the selector, relinquishing associated resources.
      */
+    @Override
     public void close(){
         this.selector.close();
     }

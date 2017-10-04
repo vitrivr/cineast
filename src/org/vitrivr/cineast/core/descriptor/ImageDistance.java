@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.descriptor;
 
-import org.vitrivr.cineast.core.color.RGBContainer;
+import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.data.MultiImage;
 
 public class ImageDistance {
@@ -8,9 +8,9 @@ public class ImageDistance {
 	private ImageDistance(){}
 	
 	public static double colorDistance(int col1, int col2){
-		int r1 = RGBContainer.getRed(col1), r2 = RGBContainer.getRed(col2),
-				g1 = RGBContainer.getGreen(col1), g2 = RGBContainer.getGreen(col2),
-				b1 = RGBContainer.getBlue(col1), b2 = RGBContainer.getBlue(col2);
+		int r1 = ReadableRGBContainer.getRed(col1), r2 = ReadableRGBContainer.getRed(col2),
+				g1 = ReadableRGBContainer.getGreen(col1), g2 = ReadableRGBContainer.getGreen(col2),
+				b1 = ReadableRGBContainer.getBlue(col1), b2 = ReadableRGBContainer.getBlue(col2);
 		
 		return Math.sqrt((r1 - r2) * (r1 - r2) + (g1 - g2) * (g1 - g2) + (b1 - b2) * (b1 - b2));
 	}

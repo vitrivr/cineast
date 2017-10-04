@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.art.modules.abstracts;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.visualization.Visualization;
@@ -7,10 +11,6 @@ import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sein on 26.08.16.
@@ -29,6 +29,7 @@ public abstract class AbstractVisualizationModule implements Visualization {
     this.segmentTable = "cineast_segment";
   }
 
+  @Override
   public void init(DBSelectorSupplier supplier) {
     selectors = new HashMap<>();
 
@@ -48,20 +49,25 @@ public abstract class AbstractVisualizationModule implements Visualization {
     selectors.put(segmentTable, selector);
   }
 
+  @Override
   public String visualizeSegment(String segmentId) {
     return null;
   }
 
+  @Override
   public String visualizeMultipleSegments(List<String> segmentIds){ return null; }
 
   protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){ return null; }
 
+  @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
     return null;
   }
 
+  @Override
   public abstract List<VisualizationType> getVisualizations();
 
+  @Override
   public void finish() {
     if (selectors != null) {
       for (Map.Entry<String, DBSelector> entry : selectors.entrySet()) {

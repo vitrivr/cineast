@@ -84,8 +84,9 @@ public class BasicPlaneManager<T extends Printable>
       for (Plane<T> p : actSubPlanes) {
         for (int x = 0; x < p.getPlane().length; x++) {
           for (int y = 0; y < p.getPlane()[0].length; y++) {
-            if (p.getPlane()[x][y] != null)
+            if (p.getPlane()[x][y] != null) {
               counter++;
+            }
           }
         }
       }
@@ -132,8 +133,9 @@ public class BasicPlaneManager<T extends Printable>
     VisualizationElement<T>[][] flatPlane = new VisualizationElement[i * maxX][j * maxY];
     for (int x = 0; x < plane.getPlane().length; x++) {
       for (int y = 0; y < plane.getPlane()[x].length; y++) {
-        if (plane.getPlane()[x][y] == null || plane.getPlane()[x][y].getVector() == null)
+        if (plane.getPlane()[x][y] == null || plane.getPlane()[x][y].getVector() == null) {
           continue;
+        }
         for (int tempX = 0; tempX < plane.getPlane()[x][y].getVector().getWidth(); tempX++) {
           for (int tempY = 0; tempY < plane.getPlane()[x][y].getVector().getHeight(); tempY++) {
             VisualizationElement<T> element = plane.getPlane()[x][y].getVector()
@@ -166,8 +168,9 @@ public class BasicPlaneManager<T extends Printable>
 
   private File writeNonOptimizedFile(VisualizationElement<T>[][] flatPlane) {
     File path = new File("results/html/" + timestamp);
-    if (!path.exists())
+    if (!path.exists()) {
       path.mkdirs();
+    }
     File fileNotOptimized = new File(path.getPath(),
         "level_notOpt_" + (subPlanes.size() - 1) + ".html");
     printFile(flatPlane, fileNotOptimized);
@@ -186,8 +189,9 @@ public class BasicPlaneManager<T extends Printable>
   void serialize() throws IOException {
     logger.info("start serialize plane manager.");
     File path = new File(PATH);
-    if (!path.exists())
+    if (!path.exists()) {
       path.mkdirs();
+    }
 
     ObjectOutputStream outputStream = new ObjectOutputStream(
         new FileOutputStream(new File(path, FILE_NAME)));
@@ -277,8 +281,9 @@ public class BasicPlaneManager<T extends Printable>
               directions.add(Direction.LEFT);
             }
 
-            if (!preferShiftUpDown)
+            if (!preferShiftUpDown) {
               Collections.reverse(directions);
+            }
 
             boolean itemHasBeenMoved = moveItem(flatPlane, directions, x + X / 2 - 1, Y / 2 - y);
             if (itemHasBeenMoved) {
@@ -318,17 +323,22 @@ public class BasicPlaneManager<T extends Printable>
     for (Direction d : directions) {
       int newX = x;
       int newY = y;
-      if (d == Direction.RIGHT)
+      if (d == Direction.RIGHT) {
         newX = x + 1;
-      if (d == Direction.LEFT)
+      }
+      if (d == Direction.LEFT) {
         newX = x - 1;
-      if (d == Direction.DOWN)
+      }
+      if (d == Direction.DOWN) {
         newY = y + 1;
-      if (d == Direction.UP)
+      }
+      if (d == Direction.UP) {
         newY = y - 1;
+      }
 
-      if (newX < 0 || newX > flatPlane.length - 1 || newY < 0 || newY > flatPlane[0].length - 1)
+      if (newX < 0 || newX > flatPlane.length - 1 || newY < 0 || newY > flatPlane[0].length - 1) {
         continue;
+      }
 
       if (flatPlane[newX][newY] == null) {
         logger.debug("Moved item " + d);
@@ -439,8 +449,9 @@ public class BasicPlaneManager<T extends Printable>
    */
   @Override
   public String getRepresentativeOfElement(String id, int currentLevel) {
-    if (!representativeOfElements.get(currentLevel).containsKey(id))
+    if (!representativeOfElements.get(currentLevel).containsKey(id)) {
       throw new RuntimeException("no representative found for " + id);
+    }
     return representativeOfElements.get(currentLevel).get(id);
   }
 
@@ -478,11 +489,13 @@ public class BasicPlaneManager<T extends Printable>
           ypos.addValue(y);
           // elementsAndPositions.put(flatPlane[x][y].getId(), new Position(x, y));
           if (flatPlane[x][y].getRepresentative() == null
-              || flatPlane[x][y].getRepresentative().length() == 0)
+              || flatPlane[x][y].getRepresentative().length() == 0) {
             throw new RuntimeException(
                 "Representative is null or empty!" + flatPlane[x][y].getId());
-          if (representativeOfElement.containsKey(flatPlane[x][y].getId()))
+          }
+          if (representativeOfElement.containsKey(flatPlane[x][y].getId())) {
             throw new RuntimeException("This key is already in the collection");
+          }
           representativeOfElement.put(flatPlane[x][y].getId(), flatPlane[x][y].getRepresentative());
         }
       }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -32,6 +33,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     return true;
   }
 
+  @Override
   public <E extends DistanceElement> List<E> getNearestNeighbours(int k, float[] vector,
       String column, Class<E> distanceElementClass, ReadableQueryConfig config) {
     List<Map<String, PrimitiveTypeProvider>> results = getNearestNeighbourRows(k, vector, column,

@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.metadata;
 
 import java.nio.file.Path;
 import java.util.List;
+
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 
 /**

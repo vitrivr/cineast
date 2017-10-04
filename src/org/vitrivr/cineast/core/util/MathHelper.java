@@ -118,7 +118,9 @@ public class MathHelper {
 	 */
 	public static boolean checkNotZero(double[] array) {
 		for (double v : array) {
-			if (v > 0.0 || v < 0.0) return true;
+			if (v > 0.0 || v < 0.0) {
+        return true;
+      }
 		}
 		return false;
 	}
@@ -131,7 +133,9 @@ public class MathHelper {
      */
 	public static boolean checkNotZero(float[] array) {
 		for (float v : array) {
-			if (v > 0.0 || v < 0.0) return true;
+			if (v > 0.0 || v < 0.0) {
+        return true;
+      }
 		}
 		return false;
 	}
@@ -144,7 +148,9 @@ public class MathHelper {
 	 */
 	public static boolean checkNotNaN(double[] array) {
 		for (double v : array) {
-			if (Double.isNaN(v)) return false;
+			if (Double.isNaN(v)) {
+        return false;
+      }
 		}
 		return true;
 	}
@@ -157,7 +163,9 @@ public class MathHelper {
 	 */
 	public static boolean checkNotNaN(float[] array) {
 		for (float v : array) {
-			if (Float.isNaN(v)) return false;
+			if (Float.isNaN(v)) {
+        return false;
+      }
 		}
 		return true;
 	}

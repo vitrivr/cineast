@@ -5,10 +5,10 @@ import java.util.HashMap;
 import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage.Builder;
 import org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.IntArrayIterable;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
@@ -94,7 +94,8 @@ public abstract class ProtobufTupleGenerator extends AbstractPersistencyWriter<T
 		super();
 	}
 
-	public TupleInsertMessage getPersistentRepresentation(PersistentTuple tuple) {
+	@Override
+  public TupleInsertMessage getPersistentRepresentation(PersistentTuple tuple) {
     synchronized (builder) {
       builder.clear();      
       HashMap<String, DataMessage> tmpMap = new HashMap<>();

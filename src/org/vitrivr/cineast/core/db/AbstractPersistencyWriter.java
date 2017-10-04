@@ -12,6 +12,7 @@ public abstract class AbstractPersistencyWriter<R> implements PersistencyWriter<
     this("id", "feature");
   }
   
+  @Override
   public void setFieldNames(String...names){
     if(names != null && names.length > 0){
       this.names = names;

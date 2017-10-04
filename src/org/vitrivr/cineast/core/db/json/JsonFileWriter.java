@@ -6,11 +6,11 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistentTuple;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
-import org.vitrivr.cineast.core.db.PersistentTuple;
 
 public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
 

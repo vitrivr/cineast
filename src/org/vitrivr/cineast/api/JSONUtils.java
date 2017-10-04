@@ -1,31 +1,37 @@
 package org.vitrivr.cineast.api;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-import georegression.struct.point.Point2D_F32;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.vitrivr.cineast.core.data.MultiImageFactory;
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
-import org.vitrivr.cineast.core.data.QuerySubTitleItem;
-import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
-import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.web.ImageParser;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.QuerySubTitleItem;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
+import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.web.ImageParser;
+
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+
+import georegression.struct.point.Point2D_F32;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 @Deprecated
 public class JSONUtils {
 

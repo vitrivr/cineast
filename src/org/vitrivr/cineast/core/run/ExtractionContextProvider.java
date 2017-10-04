@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.run;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.List;
+
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -7,10 +11,6 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.util.List;
 
 /**
  * Provides a configuration context for an extraction run.

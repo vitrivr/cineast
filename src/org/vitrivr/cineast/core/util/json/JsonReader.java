@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.util.json;
 
 import java.io.File;
+
 import javax.annotation.Nullable;
 
 /**

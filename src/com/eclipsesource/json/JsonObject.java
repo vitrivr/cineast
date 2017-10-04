@@ -564,21 +564,25 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *
    * @return an iterator over the members of this object
    */
+  @Override
   public Iterator<Member> iterator() {
     final Iterator<String> namesIterator = names.iterator();
     final Iterator<JsonValue> valuesIterator = values.iterator();
     return new Iterator<JsonObject.Member>() {
 
+      @Override
       public boolean hasNext() {
         return namesIterator.hasNext();
       }
 
+      @Override
       public Member next() {
         String name = namesIterator.next();
         JsonValue value = valuesIterator.next();
         return new Member( name, value );
       }
 
+      @Override
       public void remove() {
         throw new UnsupportedOperationException();
       }

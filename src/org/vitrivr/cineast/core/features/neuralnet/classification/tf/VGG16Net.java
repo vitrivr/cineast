@@ -1,13 +1,6 @@
 package org.vitrivr.cineast.core.features.neuralnet.classification.tf;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.tensorflow;
-import org.vitrivr.cineast.core.features.neuralnet.ImageCropper;
-import org.vitrivr.cineast.core.features.neuralnet.label.SynLabelProvider;
-import org.vitrivr.cineast.core.util.TimeHelper;
-
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +8,13 @@ import java.nio.FloatBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bytedeco.javacpp.tensorflow;
+import org.vitrivr.cineast.core.features.neuralnet.ImageCropper;
+import org.vitrivr.cineast.core.features.neuralnet.label.SynLabelProvider;
+import org.vitrivr.cineast.core.util.TimeHelper;
 
 /**
  * VGG-16 model as provided by https://github.com/ry/tensorflow-vgg16
@@ -89,9 +89,9 @@ public class VGG16Net implements TensorFlowNet {
         for (int y = 0; y < 224; y++) {
             for (int x = 0; x < 224; x++) {
                 Color c = new Color(cropped.getRGB(x, y));
-                data[y * (224 * 3) + x * 3] = (float) c.getRed() / 255f;
-                data[y * (224 * 3) + x * 3 + 1] = (float) c.getGreen() / 255f;
-                data[y * (224 * 3) + x * 3 + 2] = (float) c.getBlue() / 255f;
+                data[y * (224 * 3) + x * 3] = c.getRed() / 255f;
+                data[y * (224 * 3) + x * 3 + 1] = c.getGreen() / 255f;
+                data[y * (224 * 3) + x * 3 + 2] = c.getBlue() / 255f;
             }
         }
         fb.put(data);

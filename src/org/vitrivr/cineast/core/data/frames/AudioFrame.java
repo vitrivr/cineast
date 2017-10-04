@@ -1,9 +1,10 @@
 package org.vitrivr.cineast.core.data.frames;
 
 
-import javax.sound.sampled.AudioFormat;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+
+import javax.sound.sampled.AudioFormat;
 
 /**
  * Represents a single audio-frame containing a specific number of samples (the number depends on the decoder that
@@ -229,9 +230,13 @@ public class AudioFrame {
      * @return true if appending was successful, false otherwise.
      */
     public boolean append(AudioFrame that, int numberOfSamples) {
-        if (!this.descriptor.equals(that.descriptor)) return false;
+        if (!this.descriptor.equals(that.descriptor)) {
+          return false;
+        }
         int bytes = that.descriptor.getChannels() * numberOfSamples * (BITS_PER_SAMPLE/8);
-        if (bytes > that.data.capacity()) return false;
+        if (bytes > that.data.capacity()) {
+          return false;
+        }
 
         /* Copy data. */
         byte[] data = new byte[this.data.capacity() + bytes];

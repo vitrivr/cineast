@@ -1,18 +1,17 @@
 package org.vitrivr.cineast.core.benchmark.engine;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.benchmark.model.Benchmark;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.benchmark.model.Benchmark;
 
 /**
  * A class that can be used to write the Benchmarks captured in a Benchmark-Engine to disk. Currently,
@@ -66,7 +65,9 @@ public class BenchmarkWriter implements Runnable {
     @Override
     public void run() {
         /* Initializes the necessary files and writers. */
-        if (!this.initialize()) return;
+        if (!this.initialize()) {
+          return;
+        }
 
         /* Timeout between flushing the benchmark-queue. */
         int timeout = 30000;
@@ -137,7 +138,9 @@ public class BenchmarkWriter implements Runnable {
                 while(iterator.hasNext()) {
                     Map.Entry<String,Object> data = iterator.next();
                     this.writer.append(data.getValue().toString());
-                    if (iterator.hasNext()) this.writer.append(DELIMITER_COLUMNS);
+                    if (iterator.hasNext()) {
+                      this.writer.append(DELIMITER_COLUMNS);
+                    }
                 }
                 this.writer.newLine();
                 counter += 1;
@@ -168,6 +171,7 @@ public class BenchmarkWriter implements Runnable {
      * Just to be safe; close writer again upon finalization in case
      * it failed in the teardown method.
      */
+    @Override
     public void finalize() {
         try {
             if (this.writer != null) {

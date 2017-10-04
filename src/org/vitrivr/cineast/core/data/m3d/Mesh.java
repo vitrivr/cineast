@@ -1,13 +1,18 @@
 package org.vitrivr.cineast.core.data.m3d;
 
-import org.apache.commons.math3.util.FastMath;
-import org.joml.*;
-
-import org.vitrivr.cineast.core.util.mesh.MeshMathUtil;
-
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.math3.util.FastMath;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+import org.joml.Vector3i;
+import org.joml.Vector4i;
+import org.vitrivr.cineast.core.util.mesh.MeshMathUtil;
 
 /**
  * @author rgasser
@@ -181,19 +186,25 @@ public class Mesh implements WritableMesh {
             this.vertexIndices[0] = indices.x;
             this.vertexIndices[1] = indices.y;
             this.vertexIndices[2] = indices.z;
-            if (this.getType() == FaceType.QUAD) this.vertexIndices[3] = indices.w;
+            if (this.getType() == FaceType.QUAD) {
+              this.vertexIndices[3] = indices.w;
+            }
 
             /* Add vertices to face. */
             this.vertices[0] = Mesh.this.vertices.get(this.vertexIndices[0]);
             this.vertices[1] = Mesh.this.vertices.get(this.vertexIndices[1]);
             this.vertices[2] = Mesh.this.vertices.get(this.vertexIndices[2]);
-            if (this.getType() == FaceType.QUAD) this.vertices[3] = Mesh.this.vertices.get(this.vertexIndices[3]);
+            if (this.getType() == FaceType.QUAD) {
+              this.vertices[3] = Mesh.this.vertices.get(this.vertexIndices[3]);
+            }
 
             /* Attach face to vertices. */
             this.vertices[0].attachToFace(this);
             this.vertices[1].attachToFace(this);
             this.vertices[2].attachToFace(this);
-            if (this.getType() == FaceType.QUAD)this.vertices[3].attachToFace(this);
+            if (this.getType() == FaceType.QUAD) {
+              this.vertices[3].attachToFace(this);
+            }
         }
 
         /**
@@ -381,6 +392,7 @@ public class Mesh implements WritableMesh {
      *
      * @param vertices Vector3i containing the indices of the vertices.
      */
+    @Override
     public synchronized boolean addFace(Vector3i vertices) {
         int limit = this.vertices.size();
         if (vertices.x < limit && vertices.y < limit && vertices.z < limit) {
@@ -398,6 +410,7 @@ public class Mesh implements WritableMesh {
      *
      * @param vertices Vector4i containing the indices of the vertices.
      */
+    @Override
     public synchronized boolean addFace(Vector4i vertices) {
         int limit = this.vertices.size();
         if (vertices.x < limit && vertices.y < limit && vertices.z < limit && vertices.w < limit) {
@@ -415,6 +428,7 @@ public class Mesh implements WritableMesh {
      * @param vertexIndex Index of the vertex that should be returned.
      * @return Vertex.
      */
+    @Override
     public synchronized Vertex getVertex(int vertexIndex) {
         return this.vertices.get(vertexIndex);
     }
@@ -424,6 +438,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Unmodifiable list of vertices.
      */
+    @Override
     public List<Vertex> getVertices() {
         return Collections.unmodifiableList(this.vertices);
     }
@@ -433,6 +448,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Unmodifiable list of faces.
      */
+    @Override
     public List<Face> getFaces() {
         return Collections.unmodifiableList(faces);
     }
@@ -442,6 +458,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Number of vertices.
      */
+    @Override
     public synchronized final int numberOfVertices() {
         return this.vertices.size();
     }
@@ -451,6 +468,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Number of faces.
      */
+    @Override
     public synchronized final int numberOfFaces() {
         return this.faces.size();
     }
@@ -460,6 +478,7 @@ public class Mesh implements WritableMesh {
      *
      * @return True if mesh is empty, false otherwise.
      */
+    @Override
     public synchronized final boolean isEmpty() {
         return this.faces.isEmpty();
     }
@@ -469,6 +488,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Surface area of the mesh.
      */
+    @Override
     public synchronized final double surfaceArea() {
         if (this.surfaceArea == null) {
             this.surfaceArea = 0.0;
@@ -484,6 +504,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Bounding-box of the mesh.
      */
+    @Override
     public synchronized float[] bounds() {
         if (this.boundingbox == null) {
             this.boundingbox = MeshMathUtil.bounds(this);
@@ -496,6 +517,7 @@ public class Mesh implements WritableMesh {
      *
      * @return Barycenter of the Mesh.
      */
+    @Override
     public synchronized Vector3fc barycenter() {
         if (this.barycenter == null) {
             this.barycenter = MeshMathUtil.barycenter(this);
@@ -508,6 +530,7 @@ public class Mesh implements WritableMesh {
      *
      * @param translation Vector describing the translation in the three directions.
      */
+    @Override
     public synchronized final void move(Vector3f translation) {
         Matrix4f translationMatrix = new Matrix4f().translation(translation);
         for (Mesh.Vertex v : this.vertices) {
@@ -523,6 +546,7 @@ public class Mesh implements WritableMesh {
      *
      * @param factor Factor by which the Mesh should be scaled. Values < 1.0 will cause the Mesh to shrink.
      */
+    @Override
     public synchronized final void scale(float factor) {
         Matrix4f scaling = new Matrix4f().scale(factor);
         for (Mesh.Vertex v : this.vertices) {
@@ -542,6 +566,7 @@ public class Mesh implements WritableMesh {
      *
      * @param transformation Transformation matrix that should be applied.
      */
+    @Override
     public synchronized final void transform(Matrix4f transformation) {
         for (Mesh.Vertex v : this.vertices) {
             v.position.mulPosition(transformation);

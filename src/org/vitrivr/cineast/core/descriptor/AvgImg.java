@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.color.RGBContainer;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.util.DecodingError;
 import org.vitrivr.cineast.core.util.TimeHelper;
 
@@ -32,9 +32,9 @@ public class AvgImg {
 				}
 				for(int i = 0; i < colors.length; ++i){
 					int col = colors[i];
-					buffer[3*i]     += RGBContainer.getRed(col);
-					buffer[3*i + 1] += RGBContainer.getGreen(col);
-					buffer[3*i + 2] += RGBContainer.getBlue(col);
+					buffer[3*i]     += ReadableRGBContainer.getRed(col);
+					buffer[3*i + 1] += ReadableRGBContainer.getGreen(col);
+					buffer[3*i + 2] += ReadableRGBContainer.getBlue(col);
 				}
 			}
 		}catch(Exception e){
@@ -49,7 +49,7 @@ public class AvgImg {
 		colors = new int[width * height];
 		
 		for(int i = 0; i < colors.length; ++i){
-			colors[i] = RGBContainer.toIntColor(
+			colors[i] = ReadableRGBContainer.toIntColor(
 					(int)Math.round(buffer[3*i] / size),
 					(int)Math.round(buffer[3*i + 1] / size),
 					(int)Math.round(buffer[3*i + 2] / size));

@@ -174,7 +174,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
             if (decoder.init(path, Config.sharedConfig().getDecoders().get(this.context.sourceType()))) {
                 /* Create / lookup MultimediaObjectDescriptor for new file. */
                 final MultimediaObjectDescriptor descriptor = this.fetchOrCreateMultimediaObjectDescriptor(generator, path, context.sourceType());
-                if (!this.checkAndPersistMultimediaObject(descriptor)) continue;
+                if (!this.checkAndPersistMultimediaObject(descriptor)) {
+                  continue;
+                }
 
                 /* Store objectId for further reference and initialize a new segment number. */
                 final String objectId = descriptor.getObjectId();
@@ -199,7 +201,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                         if (container != null) {
                             /* Create segment-descriptor and try to persist it. */
                             final SegmentDescriptor segmentDescriptor = this.fetchOrCreateSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd());
-                            if (!this.checkAndPersistSegment(segmentDescriptor)) continue;
+                            if (!this.checkAndPersistSegment(segmentDescriptor)) {
+                              continue;
+                            }
 
                             /* Update container ID's. */
                             container.setId(segmentDescriptor.getSegmentId());

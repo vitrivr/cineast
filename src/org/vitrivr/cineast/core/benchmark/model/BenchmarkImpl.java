@@ -1,8 +1,12 @@
 package org.vitrivr.cineast.core.benchmark.model;
 
-import org.vitrivr.cineast.core.data.Pair;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
+import org.vitrivr.cineast.core.data.Pair;
 
 /**
  * @author rgasser
@@ -56,6 +60,7 @@ public class BenchmarkImpl implements Benchmark {
     /**
      * Completes the Benchmark and sets the end-timestamp.
      */
+    @Override
     public void end() {
         this.end = System.currentTimeMillis();
     }
@@ -63,6 +68,7 @@ public class BenchmarkImpl implements Benchmark {
     /**
      * Aborts the Benchmark.
      */
+    @Override
     public void abort() {
         this.end = System.currentTimeMillis();
         this.aborted = true;
@@ -73,6 +79,7 @@ public class BenchmarkImpl implements Benchmark {
      *
      * @param name Name of the split.
      */
+    @Override
     public void split(String name) {
         this.splits.add(new Pair<>(name, System.currentTimeMillis()));
     }
@@ -130,6 +137,7 @@ public class BenchmarkImpl implements Benchmark {
      *
      * @return Map of splits and associated durations.
      */
+    @Override
     public Map<String,Float> splitDurations() {
         LinkedHashMap<String,Float> map = new LinkedHashMap<>();
         for (int i=0; i<splits.size(); i++) {
@@ -160,6 +168,7 @@ public class BenchmarkImpl implements Benchmark {
      *
      * @return Map with the Benchmark-data
      */
+    @Override
     public Map<String,Object> data() {
         /* Prepare TreeMap and add the default fields. */
         final LinkedHashMap<String,Object> data = new LinkedHashMap<>();
@@ -188,7 +197,9 @@ public class BenchmarkImpl implements Benchmark {
      * @return Duration in seconds.
      */
     protected final float duration(long start, long end) {
-        if (start > end) throw new IllegalArgumentException("Start timestamp must not be later than the end timestamp.");
+        if (start > end) {
+          throw new IllegalArgumentException("Start timestamp must not be later than the end timestamp.");
+        }
         return (end-start) / 1000.0f;
     }
 }

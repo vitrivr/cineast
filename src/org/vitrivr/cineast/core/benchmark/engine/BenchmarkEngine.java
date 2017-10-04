@@ -1,6 +1,12 @@
 package org.vitrivr.cineast.core.benchmark.engine;
 
-import gnu.trove.map.hash.TObjectIntHashMap;
+import java.nio.file.Path;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,8 +14,7 @@ import org.vitrivr.cineast.core.benchmark.model.Benchmark;
 import org.vitrivr.cineast.core.benchmark.model.BenchmarkImpl;
 import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
 
-import java.nio.file.Path;
-import java.util.*;
+import gnu.trove.map.hash.TObjectIntHashMap;
 
 /**
  * @author rgasser
@@ -44,6 +49,7 @@ public class BenchmarkEngine {
          * Completes the Benchmark and sets the end-timestamp. This marks the regular
          * end of the Benchmark.
          */
+        @Override
         public void end() {
             super.end();
             BenchmarkEngine.LOGGER.debug("Ended Benchmark for {} (Elapsed: {}s).", this.name, this.elapsed());
@@ -55,6 +61,7 @@ public class BenchmarkEngine {
          *
          * An aborted Benchmark will not be stored!
          */
+        @Override
         public void abort() {
             super.abort();
             BenchmarkEngine.this.deque.remove(this);
@@ -66,6 +73,7 @@ public class BenchmarkEngine {
          *
          * @param name Name of the split.
          */
+        @Override
         public void split(String name) {
             super.split(name);
             BenchmarkEngine.LOGGER.debug("Added split '{}' for benchmark '{}' (Elapsed: {}s).", name, this.name, this.elapsed());
@@ -188,10 +196,14 @@ public class BenchmarkEngine {
      */
     public final Benchmark startNew(String name) {
         /* If BenchmarkMode is OFF then return the BENCHMARK_STUB immediately. */
-        if (this.mode == BenchmarkMode.OFF) return BENCHMARK_STUB;
+        if (this.mode == BenchmarkMode.OFF) {
+          return BENCHMARK_STUB;
+        }
 
         /* If BenchmarkEngine was stopped, return null. */
-        if (this.stopped) return null;
+        if (this.stopped) {
+          return null;
+        }
 
         /* Create new Benchmark object and return it */
         int run = this.counters.adjustOrPutValue(name, 1,1);
@@ -226,7 +238,9 @@ public class BenchmarkEngine {
      * Clears the benchmark's dequeue.
      */
     public synchronized void clear() {
-        if (this.deque != null) this.deque.clear();
+        if (this.deque != null) {
+          this.deque.clear();
+        }
         this.counters.clear();
     }
 
@@ -240,7 +254,9 @@ public class BenchmarkEngine {
      */
     public synchronized List<Benchmark> drain() {
         /* If the deque is null, return empty string. */
-        if (this.deque == null || this.deque.size() == 0) return new ArrayList<>(1);
+        if (this.deque == null || this.deque.size() == 0) {
+          return new ArrayList<>(1);
+        }
 
         /* Remove elements from Dequeue, until it's empty or the returned element is still running. */
         List<Benchmark> benchmarks = new ArrayList<>(this.deque.size());

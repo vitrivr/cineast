@@ -9,8 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.descriptor.PathList;
 
 import boofcv.alg.misc.PixelMath;
@@ -67,8 +67,9 @@ public class VisualizationUtil {
 			g2.drawImage(track, null, 0, 0);
 			while (fgPathItor.hasNext()) {
 				Pair<Integer, LinkedList<Point2D_F32>> pair = fgPathItor.next();
-				if (pair.first > frameIdx)
-					break;
+				if (pair.first > frameIdx) {
+          break;
+        }
 				Point2D_F32 p1 = pair.second.getFirst();
 				Point2D_F32 p2 = pair.second.getLast();
 				VisualizeFeatures.drawPoint(g2, (int) (p1.x * width), (int) (p1.y * height), 2, Color.red);
@@ -76,8 +77,9 @@ public class VisualizationUtil {
 			}
 			while (bgPathItor.hasNext()) {
 				Pair<Integer, LinkedList<Point2D_F32>> pair = bgPathItor.next();
-				if (pair.first > frameIdx)
-					break;
+				if (pair.first > frameIdx) {
+          break;
+        }
 				Point2D_F32 p1 = pair.second.getFirst();
 				Point2D_F32 p2 = pair.second.getLast();
 				VisualizeFeatures.drawPoint(g2, (int) (p1.x * width), (int) (p1.y * height), 2, Color.green);

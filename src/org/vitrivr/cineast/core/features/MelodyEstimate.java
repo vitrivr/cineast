@@ -106,6 +106,7 @@ public class MelodyEstimate extends StagedFeatureModule {
      * @param qc QueryConfig provided by the caller of the feature module.
      * @return Modified QueryConfig.
      */
+    @Override
     protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
                 .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)

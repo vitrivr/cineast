@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.runtime;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -85,33 +86,44 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     RetrievalTask other = (RetrievalTask) obj;
     if (config == null) {
-      if (other.config != null)
+      if (other.config != null) {
         return false;
-    } else if (!config.equals(other.config))
+      }
+    } else if (!config.equals(other.config)) {
       return false;
+    }
     if (query == null) {
-      if (other.query != null)
+      if (other.query != null) {
         return false;
-    } else if (!query.equals(other.query))
+      }
+    } else if (!query.equals(other.query)) {
       return false;
+    }
     if (retriever == null) {
-      if (other.retriever != null)
+      if (other.retriever != null) {
         return false;
-    } else if (!retriever.equals(other.retriever))
+      }
+    } else if (!retriever.equals(other.retriever)) {
       return false;
+    }
     if (shotId == null) {
-      if (other.shotId != null)
+      if (other.shotId != null) {
         return false;
-    } else if (!shotId.equals(other.shotId))
+      }
+    } else if (!shotId.equals(other.shotId)) {
       return false;
+    }
     return true;
   }
 

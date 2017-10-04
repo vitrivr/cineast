@@ -7,23 +7,23 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.tag.Tag;
-import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.descriptor.AvgImg;
 import org.vitrivr.cineast.core.descriptor.MedianImg;
 import org.vitrivr.cineast.core.descriptor.MostRepresentative;
 import org.vitrivr.cineast.core.descriptor.PathList;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 
 import boofcv.struct.geo.AssociatedPair;
 import georegression.struct.point.Point2D_F32;
-import org.vitrivr.cineast.core.util.dsp.fft.STFT;
-import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 
 public class VideoSegment implements SegmentContainer {
 
@@ -81,7 +81,8 @@ public class VideoSegment implements SegmentContainer {
      *
      * @return
      */
-	public List<VideoFrame> getVideoFrames() {
+	@Override
+  public List<VideoFrame> getVideoFrames() {
 	    return Collections.unmodifiableList(this.videoFrames);
 	}
 
@@ -89,7 +90,8 @@ public class VideoSegment implements SegmentContainer {
      *
      * @return
      */
-	public List<AudioFrame> getAudioFrames() {
+	@Override
+  public List<AudioFrame> getAudioFrames() {
 	    return Collections.unmodifiableList(this.audioFrames);
     }
 
@@ -100,12 +102,20 @@ public class VideoSegment implements SegmentContainer {
      * @param frame VideoFrame to add to the container.
      */
 	public boolean addVideoFrame(VideoFrame frame){
-		if (frame == null) return false;
-		if (this.videoDescriptor == null) this.videoDescriptor = frame.getDescriptor();
-		if (!this.videoDescriptor.equals(frame.getDescriptor())) return false;
+		if (frame == null) {
+      return false;
+    }
+		if (this.videoDescriptor == null) {
+      this.videoDescriptor = frame.getDescriptor();
+    }
+		if (!this.videoDescriptor.equals(frame.getDescriptor())) {
+      return false;
+    }
 
         this.videoFrames.add(frame);
-        if (frame.hasAudio()) this.addAudioFrame(frame.getAudio());
+        if (frame.hasAudio()) {
+          this.addAudioFrame(frame.getAudio());
+        }
         return true;
 	}
 
@@ -117,9 +127,15 @@ public class VideoSegment implements SegmentContainer {
      * @return boolean True if frame was added, false otherwise.
      */
     public boolean addAudioFrame(AudioFrame frame) {
-        if (frame == null) return false;
-        if (this.audioDescriptor == null) this.audioDescriptor = frame.getDescriptor();
-        if (!this.audioDescriptor.equals(frame.getDescriptor())) return false;
+        if (frame == null) {
+          return false;
+        }
+        if (this.audioDescriptor == null) {
+          this.audioDescriptor = frame.getDescriptor();
+        }
+        if (!this.audioDescriptor.equals(frame.getDescriptor())) {
+          return false;
+        }
 
         this.totalSamples += frame.numberOfSamples();
         this.totalAudioDuration += frame.getDuration();
@@ -133,6 +149,7 @@ public class VideoSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public int getNumberOfSamples() {
         return this.totalSamples;
     }
@@ -142,6 +159,7 @@ public class VideoSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public float getAudioDuration() {
         return totalAudioDuration;
     }
@@ -151,6 +169,7 @@ public class VideoSegment implements SegmentContainer {
 	 *
      * @return
      */
+    @Override
     public float getSamplingrate() {
         return this.audioDescriptor.getSamplingrate();
     }
@@ -159,6 +178,7 @@ public class VideoSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public int getChannels() {
         return this.audioDescriptor.getChannels();
     }
@@ -176,7 +196,9 @@ public class VideoSegment implements SegmentContainer {
      */
     @Override
     public STFT getSTFT(int windowsize, int overlap, int padding, WindowFunction function) {
-		if (2*padding >= windowsize) throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
+		if (2*padding >= windowsize) {
+      throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
+    }
 		STFT stft = new STFT(windowsize, overlap, padding, function, this.audioDescriptor.getSamplingrate());
 		stft.forward(this.getMeanSamplesAsDouble());
 		return stft;
@@ -187,7 +209,8 @@ public class VideoSegment implements SegmentContainer {
 	}
 	
 	private Object getAvgLock = new Object();
-	public MultiImage getAvgImg(){
+	@Override
+  public MultiImage getAvgImg(){
 		synchronized (getAvgLock) {
 			if(avgImg == null){
 				avgImg = AvgImg.getAvg(videoFrames);
@@ -197,7 +220,8 @@ public class VideoSegment implements SegmentContainer {
 	}
 	
 	private Object getMedianLock = new Object();
-	public MultiImage getMedianImg(){
+	@Override
+  public MultiImage getMedianImg(){
 		synchronized (getMedianLock) {
 			if(this.medianImg == null){
 				this.medianImg = MedianImg.getMedian(videoFrames);
@@ -207,7 +231,8 @@ public class VideoSegment implements SegmentContainer {
 	}
 	
 	private Object getPathsLock = new Object();
-	public List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths() {
+	@Override
+  public List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths() {
 		synchronized (getPathsLock) {
 			if(this.paths == null){
 				this.allPaths = PathList.getDensePaths(videoFrames);
@@ -219,7 +244,8 @@ public class VideoSegment implements SegmentContainer {
 		return this.paths;
 	}
 	
-	public List<Pair<Integer, LinkedList<Point2D_F32>>> getBgPaths() {
+	@Override
+  public List<Pair<Integer, LinkedList<Point2D_F32>>> getBgPaths() {
 		synchronized (getPathsLock) {
 			if(this.bgPaths == null){
 				this.allPaths = PathList.getDensePaths(videoFrames);
@@ -260,7 +286,8 @@ public class VideoSegment implements SegmentContainer {
 	}
 
 	private Object getMostRepresentativeLock = new Object();
-	public VideoFrame getMostRepresentativeFrame(){
+	@Override
+  public VideoFrame getMostRepresentativeFrame(){
 		synchronized (getMostRepresentativeLock) {
 			if(this.mostRepresentative == null){
 				this.mostRepresentative = MostRepresentative.getMostRepresentative(this);
@@ -269,11 +296,13 @@ public class VideoSegment implements SegmentContainer {
 		}
 	}
 	
-	public String getId(){
+	@Override
+  public String getId(){
 		return this.shotId;
 	}
 	
-	public String getSuperId(){
+	@Override
+  public String getSuperId(){
 		return this.movieId;
 	}
 

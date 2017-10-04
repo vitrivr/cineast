@@ -1,22 +1,20 @@
 package org.vitrivr.cineast.core.util.images;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.util.List;
+
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
 import boofcv.alg.filter.binary.GThresholdImageOps;
 import boofcv.alg.filter.binary.ThresholdImageOps;
-
 import boofcv.io.image.ConvertBufferedImage;
-
 import boofcv.struct.ConnectRule;
 import boofcv.struct.image.GrayF32;
 import boofcv.struct.image.GrayS32;
 import boofcv.struct.image.GrayU8;
-
 import georegression.struct.point.Point2D_I32;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
 
 /**
  * @author rgasser
@@ -136,10 +134,18 @@ public final class ContourHelper {
 
         /* Find max and min y-values. */
         for(Point2D_I32 vertex : vertices) {
-            if (vertex.x < bounds[0]) bounds[0] = vertex.x;
-            if (vertex.x > bounds[1]) bounds[1] = vertex.x;
-            if (vertex.y < bounds[2]) bounds[2] = vertex.y;
-            if (vertex.y > bounds[3]) bounds[3] = vertex.y;
+            if (vertex.x < bounds[0]) {
+              bounds[0] = vertex.x;
+            }
+            if (vertex.x > bounds[1]) {
+              bounds[1] = vertex.x;
+            }
+            if (vertex.y < bounds[2]) {
+              bounds[2] = vertex.y;
+            }
+            if (vertex.y > bounds[3]) {
+              bounds[3] = vertex.y;
+            }
         }
 
         /* Return bounding-box. */

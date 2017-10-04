@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.features.codebook;
 
-import boofcv.abst.feature.detdesc.DetectDescribePoint;
-import boofcv.struct.feature.BrightFeature;
-import boofcv.struct.image.GrayF32;
+import java.awt.image.BufferedImage;
 
 import org.ddogleg.clustering.FactoryClustering;
 import org.vitrivr.cineast.core.util.images.SURFHelper;
 
-import java.awt.image.BufferedImage;
+import boofcv.abst.feature.detdesc.DetectDescribePoint;
+import boofcv.struct.feature.BrightFeature;
+import boofcv.struct.image.GrayF32;
 
 /**
  * @author rgasser
@@ -25,6 +25,7 @@ public class SURFCodebookGenerator extends ImageCodebookGenerator {
     /**
      * Initializes the codebook generator (i.e. setup the clusterer etc.)
      */
+    @Override
     protected void init() {
         this.clusterer = FactoryClustering.kMeans_F64(null, 200, 20, 1e-7);
     }

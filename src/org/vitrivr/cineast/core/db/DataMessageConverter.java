@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.IntVectorMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.SparseVectorMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.IntArrayIterable;
 import org.vitrivr.cineast.core.data.providers.primitive.BooleanTypeProvider;

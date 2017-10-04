@@ -1,11 +1,12 @@
 package org.vitrivr.cineast.core.config;
 
-import com.eclipsesource.json.JsonObject;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
 import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNetFactory;
 import org.vitrivr.cineast.core.features.neuralnet.classification.tf.VGG16Net;
+
+import com.eclipsesource.json.JsonObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Config for neural nets

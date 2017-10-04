@@ -1,11 +1,13 @@
 package org.vitrivr.cineast.core.data.segments;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
-
-import java.util.*;
 
 /**
  * This AudioSegment is part of the Cineast data model and can hold an arbitrary number of AudioFrames that somehow
@@ -82,6 +84,7 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return Returns an unmodifiable list of audio-frames.
      */
+    @Override
     public List<AudioFrame> getAudioFrames() {
         return Collections.unmodifiableList(this.frames);
     }
@@ -94,9 +97,15 @@ public class AudioSegment implements SegmentContainer {
      * @return boolean True if frame was added, false otherwise.
      */
     public boolean addFrame(AudioFrame frame) {
-        if (frame == null) return false;
-        if (this.descriptor == null) this.descriptor = frame.getDescriptor();
-        if (!this.descriptor.equals(frame.getDescriptor())) return false;
+        if (frame == null) {
+          return false;
+        }
+        if (this.descriptor == null) {
+          this.descriptor = frame.getDescriptor();
+        }
+        if (!this.descriptor.equals(frame.getDescriptor())) {
+          return false;
+        }
 
         this.totalSamples += frame.numberOfSamples();
         this.totalDuration += frame.getDuration();
@@ -110,6 +119,7 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public int getNumberOfSamples() {
         return this.totalSamples;
     }
@@ -119,6 +129,7 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public float getAudioDuration() {
         return totalDuration;
     }
@@ -127,6 +138,7 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public float getSamplingrate() {
         return this.descriptor.getSamplingrate();
     }
@@ -135,6 +147,7 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public int getChannels() {
         return this.descriptor.getChannels();
     }
@@ -144,6 +157,7 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public int getStart(){
         if (!this.frames.isEmpty()) {
             return (int)this.frames.get(0).getIdx();
@@ -157,6 +171,7 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public int getEnd(){
         if (!this.frames.isEmpty()) {
             return (int)this.frames.get(this.frames.size()-1).getIdx();
@@ -170,6 +185,7 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public float getAbsoluteStart(){
         if (!this.frames.isEmpty()) {
             return this.frames.get(0).getStart();
@@ -183,6 +199,7 @@ public class AudioSegment implements SegmentContainer {
      *
      * @return
      */
+    @Override
     public float getAbsoluteEnd(){
         if (!this.frames.isEmpty()) {
             return this.frames.get(this.frames.size()-1).getEnd();
@@ -204,7 +221,9 @@ public class AudioSegment implements SegmentContainer {
      */
     @Override
     public STFT getSTFT(int windowsize, int overlap, int padding, WindowFunction function) {
-        if (2*padding >= windowsize) throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
+        if (2*padding >= windowsize) {
+          throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
+        }
         STFT stft = new STFT(windowsize, overlap, padding, function, this.descriptor.getSamplingrate());
         stft.forward(this.getMeanSamplesAsDouble());
         return stft;

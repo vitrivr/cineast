@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;

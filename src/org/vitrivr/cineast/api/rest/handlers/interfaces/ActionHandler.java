@@ -1,9 +1,10 @@
 package org.vitrivr.cineast.api.rest.handlers.interfaces;
 
-import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
-import spark.Route;
-
 import java.util.Map;
+
+import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
+
+import spark.Route;
 
 /**
  * @author rgasser

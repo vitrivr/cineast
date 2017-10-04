@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.api.websocket.handlers.abstracts;
 
 
+import java.io.IOException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -9,8 +11,6 @@ import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.core.util.json.JsonWriter;
-
-import java.io.IOException;
 
 /**
  * This abstract class implements the WebsocketMessageHandler interface and provides basic functionality like a convenience

@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.explorative;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,15 +15,21 @@ public class PlaneHandler {
 
     public static PlaneManager<?> getSpecificPlaneManager(String featureName) throws IOException, ClassNotFoundException {
 
-        if(planeManagers.isEmpty()) readSerializedPlanManagers();
-        if(!planeManagers.containsKey(featureName.toLowerCase())) throw new RuntimeException("Feature has not been processed");
+        if(planeManagers.isEmpty()) {
+          readSerializedPlanManagers();
+        }
+        if(!planeManagers.containsKey(featureName.toLowerCase())) {
+          throw new RuntimeException("Feature has not been processed");
+        }
 
         return planeManagers.get(featureName.toLowerCase());
     }
 
     private static void readSerializedPlanManagers() throws IOException, ClassNotFoundException {
         File path = new File(PATH);
-        if(!path.exists()) throw new RuntimeException("Folder for serialized PlaneManager does not exist!");
+        if(!path.exists())
+         {
+          throw new RuntimeException("Folder for serialized PlaneManager does not exist!");
 //
 //        for(String fileName : path.list()){
 //            if(!fileName.matches("plane_manager_[A-z0-9]*.ser")) continue;
@@ -33,6 +41,7 @@ public class PlaneHandler {
 //            planeManagers.put(featureName, p);
 //            objectInputStream.close();
 //        }
+        }
         
         File[] dirs = path.listFiles(new FileFilter() {
           

@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.features;
 
 import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.LabContainer;
-import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.MultiImage;
@@ -36,9 +36,9 @@ public class MedianColor extends AbstractFeatureModule {
       if (ReadableRGBContainer.getAlpha(color) < 127) {
         continue;
       }
-      r[RGBContainer.getRed(color)]++;
-      g[RGBContainer.getGreen(color)]++;
-      b[RGBContainer.getBlue(color)]++;
+      r[ReadableRGBContainer.getRed(color)]++;
+      g[ReadableRGBContainer.getGreen(color)]++;
+      b[ReadableRGBContainer.getBlue(color)]++;
     }
 
     return ColorConverter

@@ -1,6 +1,18 @@
 package org.vitrivr.cineast.core.decode.m3d;
 
-import gnu.trove.map.hash.TObjectIntHashMap;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
@@ -10,15 +22,7 @@ import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
+import gnu.trove.map.hash.TObjectIntHashMap;
 
 /**
  * Decodes STereoLithography (.stl) files and returns a Mesh representation. Requires
@@ -119,7 +123,9 @@ public class STLMeshDecoder implements Decoder<Mesh> {
             line = line.trim();
 
             /* Detect end of STL file. */
-            if (line.startsWith("endsolid")) break;
+            if (line.startsWith("endsolid")) {
+              break;
+            }
 
             /* Detect begin of facet. */
             if (line.startsWith("facet normal ")) {
@@ -130,7 +136,9 @@ public class STLMeshDecoder implements Decoder<Mesh> {
                     line = line.trim(); /* Trim line. */
 
                     /* Detect end of facet. */
-                    if (line.equals("endfacet")) break;
+                    if (line.equals("endfacet")) {
+                      break;
+                    }
 
                     /* Detect vertex. */
                     if (line.startsWith("vertex")) {

@@ -1,13 +1,14 @@
 package org.vitrivr.cineast.core.util.web;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.Optional;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.util.Optional;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author rgasser
@@ -74,11 +75,15 @@ public class DataURLParser {
      * @return Byte array of the data.
      */
     public static byte[] dataURLtoByteArray(String dataUrl, String verify) {
-        if (dataUrl == null) return null;
+        if (dataUrl == null) {
+          return null;
+        }
         dataUrl = dataUrl.replace(' ', '+');
 
         /* Check data URL. */
-        if (!isValidDataUrl(dataUrl, verify)) return null;
+        if (!isValidDataUrl(dataUrl, verify)) {
+          return null;
+        }
 
 		/* Convert and return byte array. */
         int headerLength = dataUrl.indexOf(',');

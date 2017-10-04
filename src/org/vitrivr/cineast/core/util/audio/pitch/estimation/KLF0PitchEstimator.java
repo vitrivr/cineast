@@ -1,15 +1,15 @@
 package org.vitrivr.cineast.core.util.audio.pitch.estimation;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
 import org.vitrivr.cineast.core.util.dsp.fft.FFT;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
 import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * This class can be used to estimate the most salient pitch(es) from a provided FFT or STFT by applying the method
@@ -80,7 +80,9 @@ public class KLF0PitchEstimator {
     public List<List<Pitch>> estimatePitch(STFT stft) {
         List<List<Pitch>> results = new ArrayList<>(stft.getStft().size());
         for (FFT fft : stft.getStft()) {
-            if (fft.isZero()) continue;
+            if (fft.isZero()) {
+              continue;
+            }
             results.add(this.estimatePitch(fft));
         }
         return results;
@@ -119,12 +121,16 @@ public class KLF0PitchEstimator {
                 }
             }
 
-            if (!exists) candidates.add(candidate);
+            if (!exists) {
+              candidates.add(candidate);
+            }
 
             /* Conduct test and break if it fails. */
             lasttest = test;
             test = (float)((test + candidate.getSalience()) / Math.pow(loopcount, .7f));
-            if (test <= lasttest) break;
+            if (test <= lasttest) {
+              break;
+            }
             loopcount++;
 
             /* Add candidate to list. */

@@ -27,14 +27,16 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
     this.distanceCalculation = distanceCalculation;
   }
 
+  @Override
   public void insert(T nextItem) throws Exception {
     isReRun = false;
     sanityCheck();
     insert(nextItem, 0);
     size++;
-    if (size % 1000 == 0)
+    if (size % 1000 == 0) {
       logger.info(System.currentTimeMillis() + "     #Items in tree: " + size + " #cells in tree "
           + getNbrOfCellsInTree() + " #levels in tree: " + (levels.size()));
+    }
     logger.debug("#Items in tree: " + size + " #cells in tree " + getNbrOfCellsInTree()
         + " #levels in tree: " + (levels.size()));
   }
@@ -96,15 +98,17 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
       arrayCS.add(cellt);
       cellO = preemptiveCellSearch(arrayCS, nextItem, topLevelNo, levelNo);
     }
-    if (cellO == null)
+    if (cellO == null) {
       throw new Exception("###ERROR No cell found!");
+    }
     return cellO;
   }
 
   private void nucleusChanged(int levelNo, IHCTCell<T> cellO, T oldNucleusValue) throws Exception {
     // nucleus change in the root does not have any influence -> ignore! this is important
-    if (levelNo == levels.size() - 1)
+    if (levelNo == levels.size() - 1) {
       return;
+    }
     remove(cellO, oldNucleusValue, levelNo + 1);
     cellO.getParent().removeChild(cellO);
     IHCTCell<T> newParent = insert(cellO.getNucleus().getValue(), levelNo + 1);
@@ -134,8 +138,9 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
       newCell.getParent().removeChild(newCell);
       parentCell.addChild(newCell);
       newCell.setParent(parentCell);
-      if (newCell.getValues().size() == 1 || !isReRun || levelNo == 0)
+      if (newCell.getValues().size() == 1 || !isReRun || levelNo == 0) {
         oneValueCells.add(newCell);
+      }
     }
     for (HCTCell<T> oneValueCell : oneValueCells) {
       if (levelNo == 0 && !isReRun && oneValueCell.getValues().size() == 1) {
@@ -151,8 +156,9 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
 
   private void removeOldCell(int levelNo, IHCTCell<T> cellO, T oldNucleusValue) throws Exception {
     IHCTCell<T> parentCell = cellO.getParent();
-    if (parentCell != null)
+    if (parentCell != null) {
       parentCell.removeChild(cellO);
+    }
     levels.get(levelNo).removeCell(cellO);
     remove(cellO, oldNucleusValue, levelNo + 1);
   }
@@ -183,6 +189,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
     cell.addValue(nextItem);
   }
 
+  @Override
   public IHCTCell<T> preemptiveCellSearch(List<IHCTCell<T>> ArrayCS, T nextItem, int curLevelNo,
       int levelNo) throws Exception {
     double dmin = dmin(nextItem, ArrayCS); // dmin of parent level
@@ -199,8 +206,9 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
 
     for (IHCTCell<T> parent : ArrayCS) {
       for (IHCTCell<T> cell : parent.getChildren()) {
-        if (cell.isCellDead())
+        if (cell.isCellDead()) {
           continue;
+        }
         if (cell.getDistanceToNucleus(nextItem) < dist) {
           dist = cell.getDistanceToNucleus(nextItem);
           mSCell = cell;
@@ -217,9 +225,12 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
 
     IHCTCell<T> parentCell = cellO.getParent();
     if (cells.size() == 0 || levelNo > topLevelNo)
+     {
       return; // experimental
-    if (!parentCell.containsValue(value))
+    }
+    if (!parentCell.containsValue(value)) {
       throw new Exception("Parent cell does not contain expected nucleus! Child cell: " + cellO);
+    }
 
     T oldNucleusValue = parentCell.getNucleus().getValue();
     parentCell.removeValue(value);
@@ -238,6 +249,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
     }
   }
 
+  @Override
   public String toString() {
     return String.format("HCT | #levels: %s", levels.size());
   }
@@ -281,8 +293,9 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
 
   private void sanityCheck() throws Exception {
     for (HCTLevel<T> level : levels) {
-      if (levels.indexOf(level) == levels.size() - 1)
+      if (levels.indexOf(level) == levels.size() - 1) {
         return;
+      }
       int sumOfChildren = 0;
       for (HCTCell<T> cell : levels.get(levels.indexOf(level) + 1).getCells()) {
         sumOfChildren += cell.getChildren().size();
@@ -296,9 +309,10 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
   }
 
   public HCTCell<T> getRoot() throws Exception {
-    if (levels.get(levels.size() - 1).getCells().size() != 1)
+    if (levels.get(levels.size() - 1).getCells().size() != 1) {
       throw new Exception("Root is ambiguous! # of cells on top level is "
           + levels.get(levels.size() - 1).getCells().size());
+    }
     return levels.get(levels.size() - 1).getCells().get(0);
   }
 
@@ -347,8 +361,9 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
         valuesInLevel += cell.getValues().size();
         if (logger.getLevel() == Level.INFO) {
           for (T v : cell.getValues()) {
-            if (v != null)
+            if (v != null) {
               valuesNotNullInLevel++;
+            }
           }
         }
       }

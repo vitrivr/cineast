@@ -66,21 +66,28 @@ public class RGBContainer extends ReadableRGBContainer implements FloatVector{
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) {
+      return true;
+    }
+		if (obj == null) {
+      return false;
+    }
+		if (getClass() != obj.getClass()) {
+      return false;
+    }
 		RGBContainer other = (RGBContainer) obj;
-		if (a != other.a)
-			return false;
-		if (b != other.b)
-			return false;
-		if (g != other.g)
-			return false;
-		if (r != other.r)
-			return false;
+		if (a != other.a) {
+      return false;
+    }
+		if (b != other.b) {
+      return false;
+    }
+		if (g != other.g) {
+      return false;
+    }
+		if (r != other.r) {
+      return false;
+    }
 		return true;
 	}
 

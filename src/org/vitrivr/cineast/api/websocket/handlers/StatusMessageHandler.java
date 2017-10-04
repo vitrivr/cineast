@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.websocket.handlers;
 
 import org.eclipse.jetty.websocket.api.Session;
-
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.data.messages.general.Ping;
 

@@ -1,10 +1,5 @@
 package org.vitrivr.cineast.core.features.neuralnet.classification.random;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
-import org.vitrivr.cineast.core.features.neuralnet.label.SynLabelProvider;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +7,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.features.neuralnet.classification.NeuralNet;
+import org.vitrivr.cineast.core.features.neuralnet.label.SynLabelProvider;
 
 /**
  * Randomized NeuralNet

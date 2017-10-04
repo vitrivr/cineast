@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.decode.general;
 
-import org.vitrivr.cineast.core.config.DecoderConfig;
-
 import java.nio.file.Path;
 import java.util.Set;
+
+import org.vitrivr.cineast.core.config.DecoderConfig;
 
 /**
  * General interface for Decoder classes. These classes take a file as input and return one to many
@@ -37,6 +37,7 @@ public interface Decoder<T> extends AutoCloseable {
      *
      * Note: It is unsafe to re-use a Decoder after it has been closed.
      */
+    @Override
     void close();
 
     /**

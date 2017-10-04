@@ -35,9 +35,15 @@ public final class AssociatedLegendrePolynomial implements UnivariateFunction {
     public AssociatedLegendrePolynomial(int l, int m) {
 
         /* Make some basic, arithmetic checks. */
-        if (m > l) throw new IllegalArgumentException("Associated Legendre Polynomials are defined for 0 <= m <= l. You provided m > l!");
-        if (m < 0) throw new IllegalArgumentException("Associated Legendre Polynomials are defined for 0 <= m <= l. You provided m < 0!");
-        if (l < 0) throw new IllegalArgumentException("Associated Legendre Polynomials are defined for 0 <= m <= l. You provided m < 0!");
+        if (m > l) {
+          throw new IllegalArgumentException("Associated Legendre Polynomials are defined for 0 <= m <= l. You provided m > l!");
+        }
+        if (m < 0) {
+          throw new IllegalArgumentException("Associated Legendre Polynomials are defined for 0 <= m <= l. You provided m < 0!");
+        }
+        if (l < 0) {
+          throw new IllegalArgumentException("Associated Legendre Polynomials are defined for 0 <= m <= l. You provided m < 0!");
+        }
 
         /* Find m-th derivative of Legendre Polynomial of degree l. */
         PolynomialFunction fkt = PolynomialsUtils.createLegendrePolynomial(l);

@@ -12,6 +12,7 @@ public interface FloatArrayDistance extends Distance<float[]>, DistanceMeasure {
    * returns the distance between the two provided arrays or NaN if at least one of them is
    * <code>null</code>.
    */
+  @Override
   double applyAsDouble(float[] t, float[] u);
 
   

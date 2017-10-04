@@ -40,7 +40,7 @@ public class FloatVectorImpl implements FloatVector {
   public FloatVectorImpl(short[] array) {
     this();
     for (short s : array) {
-      this.list.add((float) s);
+      this.list.add(s);
     }
   }
 

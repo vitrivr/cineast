@@ -171,7 +171,9 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
                 av_packet_unref(this.packet);
                 break;
             } else if (read_results == AVERROR_EOF) {
-                if (this.eof.get()) break;
+                if (this.eof.get()) {
+                  break;
+                }
                 this.eof.set(true);
             }
 
@@ -238,7 +240,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      */
     private Long getFrameTimestamp(int stream) {
         AVRational timebase = this.pFormatCtx.streams(stream).time_base();
-        return (long)Math.floor((this.pFrame.best_effort_timestamp() * (float)timebase.num() * 1000)/(float)timebase.den());
+        return (long)Math.floor((this.pFrame.best_effort_timestamp() * (float)timebase.num() * 1000)/timebase.den());
     }
 
     /**
@@ -275,12 +277,16 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         while(true) {
             /* Estimate number of samples that were converted. */
             int out_samples = swr_get_out_samples(this.swr_ctx, 0);
-            if (out_samples < BYTES_PER_SAMPLE * this.resampledFrame.channels()) break;
+            if (out_samples < BYTES_PER_SAMPLE * this.resampledFrame.channels()) {
+              break;
+            }
 
             /* Allocate output frame and read converted samples. If no sample was read -> break (draining completed). */
             av_samples_alloc(this.resampledFrame.data(), out_linesize, this.resampledFrame.channels(), out_samples, TARGET_FORMAT, 0);
             out_samples = swr_convert(this.swr_ctx, this.resampledFrame.data(), out_samples, null, 0);
-            if (out_samples == 0) break;
+            if (out_samples == 0) {
+              break;
+            }
 
              /* Allocate output buffer... */
             int buffersize = out_samples * BYTES_PER_SAMPLE * this.resampledFrame.channels();
@@ -331,7 +337,9 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      */
     @Override
     public void close() {
-        if (this.pFormatCtx == null) return;
+        if (this.pFormatCtx == null) {
+          return;
+        }
 
         /* Free the raw frame. */
         if (this.pFrame != null) {

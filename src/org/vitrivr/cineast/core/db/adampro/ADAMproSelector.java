@@ -1,14 +1,17 @@
 package org.vitrivr.cineast.core.db.adampro;
 
-import com.google.common.collect.Iterables;
-import com.google.common.util.concurrent.ListenableFuture;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
@@ -31,7 +34,6 @@ import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultTupleMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
-
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.DefaultValueHashMap;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -41,6 +43,9 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.util.LogHelper;
+
+import com.google.common.collect.Iterables;
+import com.google.common.util.concurrent.ListenableFuture;
 
 public class ADAMproSelector implements DBSelector {
 
@@ -81,6 +86,7 @@ public class ADAMproSelector implements DBSelector {
         return true;
     }
 
+    @Override
     public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
         QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage, this.mb.buildBooleanQueryMessage(this.mb.buildWhereMessage(fieldName, value)), null, null);
 
@@ -159,9 +165,12 @@ public class ADAMproSelector implements DBSelector {
      * @param <T> The type T of the resulting DistanceElements.
      * @return List of results.
      */
+    @Override
     public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs) {
         /* Check if sizes of configs and vectors array correspond. */
-        if (vectors.size() > configs.size()) throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
+        if (vectors.size() > configs.size()) {
+          throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
+        }
 
         /* Prepare list of QueryMessages. */
         List<QueryMessage> queryMessages = new ArrayList<>(vectors.size());
@@ -208,7 +217,9 @@ public class ADAMproSelector implements DBSelector {
                 continue;
             }
 
-            if (partial.getResponsesCount() == 0) continue;
+            if (partial.getResponsesCount() == 0) {
+              continue;
+            }
 
             QueryResultInfoMessage response = partial.getResponses(0); // only head (end-result) is important
             results.addAll(handleNearestNeighbourResponse(response, k, distanceElementClass));
@@ -229,9 +240,12 @@ public class ADAMproSelector implements DBSelector {
      * @param <T>
      * @return
      */
+    @Override
     public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation mergeOperation, Map<String,String> options) {
         /* Check if sizes of configs and vectors array correspond. */
-        if (vectors.size() > configs.size()) throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
+        if (vectors.size() > configs.size()) {
+          throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
+        }
 
         /* Prepare list of QueryMessages. */
         List<SubExpressionQueryMessage> queryMessages = new ArrayList<>(vectors.size());

@@ -26,46 +26,56 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
     this.parent = parent;
   }
 
+  @Override
   public void addValue(T value) throws Exception {
     mst.add(value);
   }
 
+  @Override
   public void removeValue(T value) throws Exception {
     mst.remove(value);
   }
 
+  @Override
   public double getDistanceToNucleus(T other) throws Exception {
     return mst.getNucleus().distance(other);
   }
 
+  @Override
   public double getCoveringRadius() throws Exception {
     return mst.getCoveringRadius();
   }
 
+  @Override
   public IHCTCell<T> getParent() {
     return parent;
   }
 
+  @Override
   public void setParent(IHCTCell<T> parent) {
     this.parent = parent;
   }
 
+  @Override
   public List<IHCTCell<T>> getChildren() {
     return children;
   }
 
+  @Override
   public boolean isReadyForMitosis() {
     return mst.isReadyForMitosis();
   }
 
+  @Override
   public List<HCTCell<T>> mitosis() throws Exception {
     List<IMST<T>> msts = mst.mitosis();
     List<HCTCell<T>> newCells = new ArrayList<>();
     for (IMST<T> mst : msts) {
       HCTCell<T> newCell = new HCTCell<T>(mst, parent, hct);
       newCells.add(newCell);
-      if (parent != null)
+      if (parent != null) {
         parent.addChild(newCell);
+      }
 
     }
     for (IHCTCell<T> child : children) {
@@ -81,6 +91,7 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
 
   }
 
+  @Override
   public IMSTNode<T> getNucleus() throws Exception {
     return mst.getNucleus();
   }
@@ -107,6 +118,7 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
     children.remove(child);
   }
 
+  @Override
   public String toString() {
     try {
       return String.format("HCTCell | isCellDead: %s | isReadyMitosis: %s | Nucleus: <%s>",
@@ -119,6 +131,7 @@ public class HCTCell<T extends Comparable<T>> implements IHCTCell<T>, Serializab
 
   }
 
+  @Override
   public List<T> getValues() {
     return mst.getValues();
   }

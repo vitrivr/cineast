@@ -1,16 +1,16 @@
 package org.vitrivr.cineast.core.segmenter.audio;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.data.frames.AudioFrame;
-import org.vitrivr.cineast.core.data.segments.AudioSegment;
-import org.vitrivr.cineast.core.decode.general.Decoder;
-import org.vitrivr.cineast.core.segmenter.general.Segmenter;
-
 import java.util.ArrayDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
+import org.vitrivr.cineast.core.data.segments.AudioSegment;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 /**
  * Merges multiple AudioFrames into a single AudioSegment using a constant number of frames per AudioSegment. The length
@@ -58,7 +58,9 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
      * @param overlap Overlap between to subsequent AudioSegments
      */
     public ConstantLengthAudioSegmenter(float length, float overlap) {
-        if (overlap >= 0.9f * length) throw new IllegalArgumentException("Overlap must be smaller than total segment length.");
+        if (overlap >= 0.9f * length) {
+          throw new IllegalArgumentException("Overlap must be smaller than total segment length.");
+        }
         this.length = length;
         this.overlap = overlap;
     }

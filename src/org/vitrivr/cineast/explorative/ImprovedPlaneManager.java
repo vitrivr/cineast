@@ -52,7 +52,9 @@ public class ImprovedPlaneManager<T extends Printable> extends BasicPlaneManager
     public void processValues(List<T> values, T representativeValue, T parentRepresentativeValue) {
         valuesPerCell.add(values);
         representativePerCell.add(representativeValue);
-        for(T val : values) elementToRepresentative.get(level).put(val, representativeValue);
+        for(T val : values) {
+          elementToRepresentative.get(level).put(val, representativeValue);
+        }
         if(parentRepresentativeValue != null) {
             representativeToParentRepresentativePerLevel.get(level).put(representativeValue, parentRepresentativeValue);
         }
@@ -84,7 +86,9 @@ public class ImprovedPlaneManager<T extends Printable> extends BasicPlaneManager
     @Override
     public void finished() {
         File path = new File(ExplorativeConfig.getResultFolder());
-        if (!path.exists()) path.mkdirs();
+        if (!path.exists()) {
+          path.mkdirs();
+        }
 
         for(int i = 0; i < level; i++){
             VisualizationElement<T>[][] flatPlane = createParentFlatPlane(nonOptimizedPlanes.get(i), i);
@@ -108,7 +112,9 @@ public class ImprovedPlaneManager<T extends Printable> extends BasicPlaneManager
         VisualizationElement<T>[][] parentFlatPlane = new VisualizationElement[childFlatPlane.length][childFlatPlane[0].length];
         for(int x = 0; x < childFlatPlane.length; x++){
             for(int y = 0; y < childFlatPlane[0].length; y++){
-                if (childFlatPlane[x][y] == null) continue;
+                if (childFlatPlane[x][y] == null) {
+                  continue;
+                }
                 T key = childFlatPlane[x][y].getVector();
                 if(elementToRepresentative.get(level).containsKey(key)){
                     T representative = elementToRepresentative.get(level).get(key);

@@ -1,8 +1,10 @@
 package org.vitrivr.cineast.core.setup;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.NeuralNetConfig;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
@@ -13,9 +15,6 @@ import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType;
-
-import java.util.HashMap;
-import java.util.HashSet;
 
 public interface EntityCreator extends AutoCloseable {
     /**
@@ -218,5 +217,6 @@ public interface EntityCreator extends AutoCloseable {
      */
     boolean dropEntity(String entityName);
 
+    @Override
     void close();
 }

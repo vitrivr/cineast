@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.util.dsp.visualization;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.util.List;
+
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
 
 /**
  * @author rgasser
@@ -50,7 +50,9 @@ public class AudioSignalVisualizer {
      */
     public static BufferedImage visualizeSpectogram(List<Spectrum> spectra, int width, int height) {
 
-        if (spectra.size() == 0) return null;
+        if (spectra.size() == 0) {
+          return null;
+        }
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
@@ -91,7 +93,9 @@ public class AudioSignalVisualizer {
      * @return BufferedImage containing the chromagram.
      */
     public static BufferedImage visualizeChromagram(HPCP hpcp, int width, int height) {
-        if (hpcp.size() == 0) return null;
+        if (hpcp.size() == 0) {
+          return null;
+        }
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
@@ -121,7 +125,9 @@ public class AudioSignalVisualizer {
      * @return BufferedImage containing the chromagram.
      */
     public static BufferedImage visualizeCens(double[][] cens, int width, int height) {
-        if (cens.length == 0) return null;
+        if (cens.length == 0) {
+          return null;
+        }
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
@@ -148,13 +154,21 @@ public class AudioSignalVisualizer {
      * @return
      */
     public static Color color (double min, double max, double value) {
-        if (min > max) throw new IllegalArgumentException("Minimum must be smaller than maximum.");
-        if (Double.isNaN(value) || value == 0.0f) return YlOrRd[YlOrRd.length-1];
+        if (min > max) {
+          throw new IllegalArgumentException("Minimum must be smaller than maximum.");
+        }
+        if (Double.isNaN(value) || value == 0.0f) {
+          return YlOrRd[YlOrRd.length-1];
+        }
         double ratio = (YlOrRd.length-1)/(max-min);
         int idx = (YlOrRd.length-1) - (int)((value-min) * ratio);
 
-        if (idx > YlOrRd.length-1) return YlOrRd[YlOrRd.length-1];
-        if (idx < 0) return YlOrRd[0];
+        if (idx > YlOrRd.length-1) {
+          return YlOrRd[YlOrRd.length-1];
+        }
+        if (idx < 0) {
+          return YlOrRd[0];
+        }
         return YlOrRd[idx];
     }
 

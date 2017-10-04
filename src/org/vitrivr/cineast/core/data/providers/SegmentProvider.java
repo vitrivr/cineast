@@ -10,6 +10,7 @@ public interface SegmentProvider extends AutoCloseable {
    */
 	public SegmentContainer getNextSegment();
 
-	public void close();
+	@Override
+  public void close();
 	
 }

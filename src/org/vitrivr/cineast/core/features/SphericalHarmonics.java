@@ -64,7 +64,9 @@ public abstract class SphericalHarmonics extends StagedFeatureModule {
     public void processSegment(SegmentContainer shot) {
         /* Get the normalized Mesh. */
         ReadableMesh mesh = shot.getNormalizedMesh();
-        if (mesh == null || mesh.isEmpty()) return;
+        if (mesh == null || mesh.isEmpty()) {
+          return;
+        }
 
         /* Extract feature and persist it. */
         float[] feature = this.featureVectorFromMesh(mesh);
@@ -89,7 +91,9 @@ public abstract class SphericalHarmonics extends StagedFeatureModule {
 
         /* Get the normalized Mesh. */
         ReadableMesh mesh = sc.getNormalizedMesh();
-        if (mesh == null || mesh.isEmpty()) return features;
+        if (mesh == null || mesh.isEmpty()) {
+          return features;
+        }
 
         /* Extract feature and persist it. */
         features.add(this.featureVectorFromMesh(mesh));
@@ -144,7 +148,9 @@ public abstract class SphericalHarmonics extends StagedFeatureModule {
 
         /* Voxelizes the grid from the mesh. If the resulting grid is invisible, the method returns immediately. */
         VoxelGrid grid = this.voxelizer.voxelize(mesh, this.grid_size + 1, this.grid_size + 1, this.grid_size + 1);
-        if (!grid.isVisible()) return feature;
+        if (!grid.isVisible()) {
+          return feature;
+        }
 
         List<List<Complex>> descriptors = new ArrayList<>();
 
@@ -162,7 +168,9 @@ public abstract class SphericalHarmonics extends StagedFeatureModule {
                  */
                 for (int r=0;r<R-cap;r++) {
                     /* Allocate array list for radius. */
-                    if (descriptors.size() <= r) descriptors.add(new ArrayList<>());
+                    if (descriptors.size() <= r) {
+                      descriptors.add(new ArrayList<>());
+                    }
                     List<Complex> list = descriptors.get(r);
 
                     Complex result = new Complex(0.0);

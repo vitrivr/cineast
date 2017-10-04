@@ -6,16 +6,15 @@ import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.vitrivr.cineast.core.decode.general.Converter;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
-
-import com.eclipsesource.json.JsonObject;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+
+import com.eclipsesource.json.JsonObject;
 
 public class ReflectionHelper {
 

@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.data.hct;
 
-import com.google.common.collect.Iterables;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.jgrapht.alg.interfaces.SpanningTreeAlgorithm.SpanningTree;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
@@ -14,6 +14,8 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.GraphIterator;
+
+import com.google.common.collect.Iterables;
 
 class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
 
@@ -70,8 +72,9 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
   }
 
   private MSTNode<T> updateNucleus() throws java.lang.Exception {
-    if (graph.vertexSet().size() == 0)
+    if (graph.vertexSet().size() == 0) {
       throw new Exception("This graph contains no nodes!");
+    }
     if (graph.vertexSet().size() == 1) {
       return Iterables.getOnlyElement(graph.vertexSet());
     }
@@ -90,15 +93,18 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
     return nucleus;
   }
 
+  @Override
   public double getCompactness() {
     return hct.getCompactnessCalculation().getCompactness(graph);
   }
 
+  @Override
   public boolean isReadyForMitosis() {
 
     return getCompactness() > 0.5; // // TODO: 14.09.16 needs real implemenation
   }
 
+  @Override
   public List<IMST<T>> mitosis() throws Exception {
     double largestWeight = 0;
     DefaultWeightedEdge largestEdge = null;
@@ -127,8 +133,9 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
   @Override
   public boolean containsValue(T value) {
     for (MSTNode<T> mstNode : graph.vertexSet()) {
-      if (mstNode.getValue() == value)
+      if (mstNode.getValue() == value) {
         return true;
+      }
     }
     return false;
   }
@@ -142,6 +149,7 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
     return values;
   }
 
+  @Override
   public double getCoveringRadius() throws Exception {
     return coveringRadius;
   }
@@ -151,8 +159,9 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
     double coveringRadius = 0;
     for (MSTNode<T> node : mst.vertexSet()) {
       double pathLength = DijkstraShortestPath.findPathBetween(mst, nucleus, node).getWeight();
-      if (pathLength > coveringRadius)
+      if (pathLength > coveringRadius) {
         coveringRadius = pathLength;
+      }
     }
     return coveringRadius;
   }
@@ -175,7 +184,9 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
 
   private SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> getMST() {
     if (graph.vertexSet().size() == 1)
+     {
       return graph; // PrimMinimum
+    }
 
     SpanningTree<DefaultWeightedEdge> internMst = new KruskalMinimumSpanningTree<>(graph)
         .getSpanningTree();
@@ -183,8 +194,9 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
     Set<MSTNode<T>> nodes = graph.vertexSet();
     SimpleWeightedGraph<MSTNode<T>, DefaultWeightedEdge> internSWG = new SimpleWeightedGraph<>(
         DefaultWeightedEdge.class);
-    for (MSTNode<T> node : nodes)
+    for (MSTNode<T> node : nodes) {
       internSWG.addVertex(node);
+    }
     for (DefaultWeightedEdge dwe : edges) {
       DefaultWeightedEdge newEdge = internSWG.addEdge(graph.getEdgeSource(dwe),
           graph.getEdgeTarget(dwe));
@@ -193,6 +205,7 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
     return internSWG;
   }
 
+  @Override
   public String toString() {
     try {
       return String.format("MST | #nodes: %s | #edges: %s | nucleus: %s ", graph.vertexSet().size(),

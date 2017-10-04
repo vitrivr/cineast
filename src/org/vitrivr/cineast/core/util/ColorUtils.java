@@ -3,7 +3,6 @@ package org.vitrivr.cineast.core.util;
 import java.util.List;
 
 import org.vitrivr.cineast.core.color.LabContainer;
-import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.data.FloatVector;
@@ -38,10 +37,10 @@ public class ColorUtils {
 		
 		float r = 0, g = 0, b = 0, a = 0, len = 0;
 		for(int color : colors){
-			a = RGBContainer.getAlpha(color) / 255f;
-			r += RGBContainer.getRed(color) * a;
-			g += RGBContainer.getGreen(color) * a;
-			b += RGBContainer.getBlue(color) * a;
+			a = ReadableRGBContainer.getAlpha(color) / 255f;
+			r += ReadableRGBContainer.getRed(color) * a;
+			g += ReadableRGBContainer.getGreen(color) * a;
+			b += ReadableRGBContainer.getBlue(color) * a;
 			len += a;
 		}
 		
@@ -49,20 +48,20 @@ public class ColorUtils {
 			return ReadableRGBContainer.WHITE_INT;
 		}
 		
-		return RGBContainer.toIntColor(Math.round(r / len), Math.round(g / len), Math.round(b / len));
+		return ReadableRGBContainer.toIntColor(Math.round(r / len), Math.round(g / len), Math.round(b / len));
 	}
 	
 	public static final int median(Iterable<Integer> colors){
 		int[] histR = new int[256], histG = new int[256], histB = new int[256];
 		for(int c : colors){
-			if(RGBContainer.getAlpha(c) < 127){
+			if(ReadableRGBContainer.getAlpha(c) < 127){
 				continue;
 			}
-			histR[RGBContainer.getRed(c)]++;
-			histG[RGBContainer.getGreen(c)]++;
-			histB[RGBContainer.getBlue(c)]++;
+			histR[ReadableRGBContainer.getRed(c)]++;
+			histG[ReadableRGBContainer.getGreen(c)]++;
+			histB[ReadableRGBContainer.getBlue(c)]++;
 		}
-		return RGBContainer.toIntColor(medianFromHistogram(histR), medianFromHistogram(histG), medianFromHistogram(histB));
+		return ReadableRGBContainer.toIntColor(medianFromHistogram(histR), medianFromHistogram(histG), medianFromHistogram(histB));
 	}
 	
 	private static int medianFromHistogram(int[] hist){
@@ -83,10 +82,10 @@ public class ColorUtils {
 				
 		float r = 0, g = 0, b = 0, a = 0, len = 0;
 		for(int color : colors){
-			a = RGBContainer.getAlpha(color) / 255f;
-			r += RGBContainer.getRed(color) * a;
-			g += RGBContainer.getGreen(color) * a;
-			b += RGBContainer.getBlue(color) * a;
+			a = ReadableRGBContainer.getAlpha(color) / 255f;
+			r += ReadableRGBContainer.getRed(color) * a;
+			g += ReadableRGBContainer.getGreen(color) * a;
+			b += ReadableRGBContainer.getBlue(color) * a;
 			len += a;
 		}
 		
@@ -94,7 +93,7 @@ public class ColorUtils {
 			return ReadableRGBContainer.WHITE_INT;
 		}
 		
-		return RGBContainer.toIntColor(Math.round(r / len), Math.round(g / len), Math.round(b / len));
+		return ReadableRGBContainer.toIntColor(Math.round(r / len), Math.round(g / len), Math.round(b / len));
 	}
 	
 	/**
@@ -106,7 +105,7 @@ public class ColorUtils {
 		float a = 0f;
 		int count = 0;
 		for(int color : colors){
-			a += RGBContainer.getAlpha(color) / 255f;
+			a += ReadableRGBContainer.getAlpha(color) / 255f;
 			++count;
 		}
 		return a / count;

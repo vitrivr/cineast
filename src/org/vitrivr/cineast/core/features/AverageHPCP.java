@@ -1,31 +1,24 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
-
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
-
 import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author rgasser
@@ -113,6 +106,7 @@ public abstract class AverageHPCP extends StagedFeatureModule {
      *
      * @param segment SegmentContainer to process.
      */
+    @Override
     public void processSegment(SegmentContainer segment) {
         List<float[]> list = this.getFeatures(segment);
         list.forEach(f -> this.persist(segment.getId(), new FloatVectorImpl(f)));
@@ -128,7 +122,9 @@ public abstract class AverageHPCP extends StagedFeatureModule {
         /* Create STFT. IF this fails, return empty list. */
         Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
         STFT stft = segment.getSTFT(parameters.first, (parameters.first-2*parameters.second)/2,parameters.second, new HanningWindow());
-        if (stft == null) return new ArrayList<>();
+        if (stft == null) {
+          return new ArrayList<>();
+        }
 
         HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);
         hpcps.addContribution(stft);
@@ -142,7 +138,9 @@ public abstract class AverageHPCP extends StagedFeatureModule {
             SummaryStatistics[] statistics = new SummaryStatistics[this.resolution.bins];
             for (int j = 0; j<this.average; j++) {
                 for (int k=0; k<this.resolution.bins;k++) {
-                    if (statistics[k] == null) statistics[k] = new SummaryStatistics();
+                    if (statistics[k] == null) {
+                      statistics[k] = new SummaryStatistics();
+                    }
                     statistics[k].addValue(hpcps.getHpcp(i*this.average + j)[k]);
                 }
             }

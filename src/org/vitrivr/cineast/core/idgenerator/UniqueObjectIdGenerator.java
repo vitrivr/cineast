@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.idgenerator;
 
-import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.util.RandomStringGenerator;
-
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
+
+import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.util.RandomStringGenerator;
 
 /**
  * Generates an objectId from a random string.
@@ -35,7 +35,9 @@ public class UniqueObjectIdGenerator implements ObjectIdGenerator {
     @Override
     public void init(HashMap<String, String> properties) {
         String length = properties.get(PROPERTY_NAME_LENGTH);
-        if (length != null) this.length = Integer.parseInt(length);
+        if (length != null) {
+          this.length = Integer.parseInt(length);
+        }
     }
 
     /**

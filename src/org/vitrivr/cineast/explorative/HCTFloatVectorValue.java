@@ -18,6 +18,7 @@ public class HCTFloatVectorValue
     return vector;
   }
 
+  @Override
   public String getId() {
     return id;
   }
@@ -39,13 +40,15 @@ public class HCTFloatVectorValue
         + id + ".jpg\" />";
   }
 
+  @Override
   public String toString() {
     StringBuilder stringBuilder = new StringBuilder();
     for (float v : vector) {
       stringBuilder.append(v + ", ");
     }
-    if (stringBuilder.length() >= 2)
+    if (stringBuilder.length() >= 2) {
       stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
+    }
     return stringBuilder.toString();
   }
 }

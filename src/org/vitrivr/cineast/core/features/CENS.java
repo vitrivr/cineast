@@ -1,7 +1,10 @@
 package org.vitrivr.cineast.core.features;
 
 
-import org.vitrivr.cineast.core.config.Config;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
@@ -11,20 +14,13 @@ import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-
-import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
-
 import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * An Extraction and Retrieval module that leverages pure HPCP based CENS shingles according to [1]. These shingles can be used
@@ -103,7 +99,9 @@ public abstract class CENS extends StagedFeatureModule {
         /* Create STFT. If this fails, return empty list. */
         Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(sc.getSamplingrate(), WINDOW_SIZE);
         STFT stft = sc.getSTFT(parameters.first, (parameters.first-2*parameters.second)/3 ,parameters.second, new BlackmanHarrisWindow());
-        if (stft == null) return features;
+        if (stft == null) {
+          return features;
+        }
 
         /* Prepare HPCPs... */
         HPCP hpcps = new HPCP(HPCP.Resolution.FULLSEMITONE, minFrequency, maxFrequency);
@@ -116,7 +114,9 @@ public abstract class CENS extends StagedFeatureModule {
         for (int[] QUERY_SETTING : QUERY_SETTINGS) {
             List<float[]> cens = this.getFeatures(hpcps, QUERY_SETTING[0], QUERY_SETTING[1]);
             for (int i=0; i<cens.size(); i++) {
-                if (i % SHINGLE_SIZE == 0) features.add(cens.get(i));
+                if (i % SHINGLE_SIZE == 0) {
+                  features.add(cens.get(i));
+                }
             }
         }
 
@@ -155,7 +155,9 @@ public abstract class CENS extends StagedFeatureModule {
         /* Create STFT. If this fails, return empty list. */
         Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(sc.getSamplingrate(), WINDOW_SIZE);
         STFT stft = sc.getSTFT(parameters.first, (parameters.first-2*parameters.second)/3, parameters.second, new HanningWindow());
-        if (stft == null) return;
+        if (stft == null) {
+          return;
+        }
 
         /* Prepare HPCPs... */
         HPCP hpcps = new HPCP(HPCP.Resolution.FULLSEMITONE, minFrequency, maxFrequency);
@@ -172,6 +174,7 @@ public abstract class CENS extends StagedFeatureModule {
      * @param qc QueryConfig provided by the caller of the feature module.
      * @return Modified QueryConfig.
      */
+    @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
                 .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)

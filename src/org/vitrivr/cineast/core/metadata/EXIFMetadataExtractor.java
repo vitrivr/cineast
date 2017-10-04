@@ -1,14 +1,17 @@
 package org.vitrivr.cineast.core.metadata;
 
-import com.drew.metadata.exif.ExifSubIFDDirectory;
-import com.google.common.collect.Maps;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.util.MetadataUtil;
+
+import com.drew.metadata.exif.ExifDirectoryBase;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
+import com.google.common.collect.Maps;
 
 /**
  * @author rgasser
@@ -20,16 +23,16 @@ public class EXIFMetadataExtractor implements MetadataExtractor {
   private static final HashMap<String, Integer> FIELDS = new HashMap<>();
 
   static {
-    FIELDS.put("Copyright", ExifSubIFDDirectory.TAG_COPYRIGHT);
-    FIELDS.put("Datetime original", ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-    FIELDS.put("Datetime digitized", ExifSubIFDDirectory.TAG_DATETIME_DIGITIZED);
-    FIELDS.put("Height", ExifSubIFDDirectory.TAG_IMAGE_HEIGHT);
-    FIELDS.put("Width", ExifSubIFDDirectory.TAG_IMAGE_WIDTH);
-    FIELDS.put("Author", ExifSubIFDDirectory.TAG_WIN_AUTHOR);
-    FIELDS.put("Keywords", ExifSubIFDDirectory.TAG_WIN_KEYWORDS);
-    FIELDS.put("Subject", ExifSubIFDDirectory.TAG_WIN_SUBJECT);
-    FIELDS.put("Title", ExifSubIFDDirectory.TAG_WIN_TITLE);
-    FIELDS.put("Comment", ExifSubIFDDirectory.TAG_USER_COMMENT);
+    FIELDS.put("Copyright", ExifDirectoryBase.TAG_COPYRIGHT);
+    FIELDS.put("Datetime original", ExifDirectoryBase.TAG_DATETIME_ORIGINAL);
+    FIELDS.put("Datetime digitized", ExifDirectoryBase.TAG_DATETIME_DIGITIZED);
+    FIELDS.put("Height", ExifDirectoryBase.TAG_IMAGE_HEIGHT);
+    FIELDS.put("Width", ExifDirectoryBase.TAG_IMAGE_WIDTH);
+    FIELDS.put("Author", ExifDirectoryBase.TAG_WIN_AUTHOR);
+    FIELDS.put("Keywords", ExifDirectoryBase.TAG_WIN_KEYWORDS);
+    FIELDS.put("Subject", ExifDirectoryBase.TAG_WIN_SUBJECT);
+    FIELDS.put("Title", ExifDirectoryBase.TAG_WIN_TITLE);
+    FIELDS.put("Comment", ExifDirectoryBase.TAG_USER_COMMENT);
   }
 
   /**

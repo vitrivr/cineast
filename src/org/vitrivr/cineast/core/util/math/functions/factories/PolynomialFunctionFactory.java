@@ -1,11 +1,10 @@
 package org.vitrivr.cineast.core.util.math.functions.factories;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
-import org.apache.commons.math3.analysis.polynomials.PolynomialsUtils;
 import org.apache.commons.math3.util.CombinatoricsUtils;
 import org.apache.commons.math3.util.FastMath;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class can be used to generate different types of polynomials. It leverages the PolynomialFunction
@@ -43,7 +42,9 @@ public final class PolynomialFunctionFactory {
         double[] coefficients = new double[n + 1];
 
         /* Now check if Polynomial 0 (for n-|m| = odd) .*/
-        if ((n - m) % 2 != 0) return new PolynomialFunction(coefficients); /* If (n-m) != even, return 0 function. */
+        if ((n - m) % 2 != 0) {
+          return new PolynomialFunction(coefficients); /* If (n-m) != even, return 0 function. */
+        }
         int s_max = (n - m) / 2;
 
         double sign = -1.0;

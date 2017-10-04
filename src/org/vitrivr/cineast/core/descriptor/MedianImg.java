@@ -6,9 +6,10 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.RGBContainer;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.util.DecodingError;
 /**
  * WARNING: EXTREMELY SLOW
@@ -72,7 +73,7 @@ public class MedianImg {
 			System.arraycopy(buffer, i * 128, hist, 0, 128);
 			int r = result[i];
 			int g = medianFromHistogram(hist) * 2;
-			result[i] = RGBContainer.toIntColor(r, g, 0);
+			result[i] = ReadableRGBContainer.toIntColor(r, g, 0);
 		}
 		
 		//blue pass
@@ -91,10 +92,10 @@ public class MedianImg {
 		
 		for(int i = 0; i < result.length; ++i){
 			System.arraycopy(buffer, i * 128, hist, 0, 128);
-			int r = RGBContainer.getRed(result[i]);
-			int g = RGBContainer.getGreen(result[i]);
+			int r = ReadableRGBContainer.getRed(result[i]);
+			int g = ReadableRGBContainer.getGreen(result[i]);
 			int b = medianFromHistogram(hist) * 2;
-			result[i] = RGBContainer.toIntColor(r, g, b);
+			result[i] = ReadableRGBContainer.toIntColor(r, g, b);
 		}
 		
 		buffer = null;

@@ -15,6 +15,7 @@ public abstract class StatelessWebsocketMessageHandler<A> extends AbstractWebsoc
      *
      * @return True if WebsocketMessageHandler is stateless, false otherwise.
      */
+    @Override
     public final boolean isStateless() {
         return true;
     }

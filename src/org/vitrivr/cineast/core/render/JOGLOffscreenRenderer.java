@@ -1,8 +1,24 @@
 package org.vitrivr.cineast.core.render;
 
-import com.jogamp.opengl.*;
-import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
+import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
+import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
+import static com.jogamp.opengl.GL.GL_DEPTH_TEST;
+import static com.jogamp.opengl.GL.GL_FRONT_AND_BACK;
+import static com.jogamp.opengl.GL.GL_LESS;
+import static com.jogamp.opengl.GL.GL_TRIANGLES;
+import static com.jogamp.opengl.GL2.GL_COMPILE;
+import static com.jogamp.opengl.GL2ES3.GL_QUADS;
+import static com.jogamp.opengl.GL2GL3.GL_FILL;
+import static com.jogamp.opengl.GL2GL3.GL_LINE;
+import static com.jogamp.opengl.GL2GL3.GL_POINT;
+import static com.jogamp.opengl.GLContext.CONTEXT_CURRENT;
+import static com.jogamp.opengl.GLContext.CONTEXT_CURRENT_NEW;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,20 +27,14 @@ import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
-
-import static com.jogamp.opengl.GL.*;
-import static com.jogamp.opengl.GL2.GL_COMPILE;
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
-import static com.jogamp.opengl.GL2GL3.GL_FILL;
-import static com.jogamp.opengl.GL2GL3.GL_LINE;
-import static com.jogamp.opengl.GL2GL3.GL_POINT;
-import static com.jogamp.opengl.GLContext.CONTEXT_CURRENT;
-import static com.jogamp.opengl.GLContext.CONTEXT_CURRENT_NEW;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLDrawableFactory;
+import com.jogamp.opengl.GLOffscreenAutoDrawable;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
 
 /**
  * This class can be used to render 3D models (Meshes or Voxel-models) using the JOGL rendering environment. It
@@ -165,12 +175,13 @@ public class JOGLOffscreenRenderer implements Renderer {
     /**
      *
      */
+    @Override
     public void render() {
         /* Clear context. */
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         /* Switch matrix mode to modelview. */
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         gl.glEnable(GL_DEPTH_TEST);
         gl.glDepthFunc(GL_LESS);
         gl.glLoadIdentity();
@@ -187,6 +198,7 @@ public class JOGLOffscreenRenderer implements Renderer {
      *
      * @param mesh Mesh that should be rendered
      */
+    @Override
     public void assemble(ReadableMesh mesh) {
         int meshList = gl.glGenLists(1);
         this.objects.add(meshList);
@@ -198,7 +210,9 @@ public class JOGLOffscreenRenderer implements Renderer {
 
                 /* Determine gl_draw_type. */
                 int gl_draw_type = GL_TRIANGLES;
-                if (face.getType() == Mesh.FaceType.QUAD) gl_draw_type = GL_QUADS;
+                if (face.getType() == Mesh.FaceType.QUAD) {
+                  gl_draw_type = GL_QUADS;
+                }
 
                 /* Drawing is handled differently depending on whether its a TRI or QUAD mesh. */
                 gl.glBegin(gl_draw_type);
@@ -221,6 +235,7 @@ public class JOGLOffscreenRenderer implements Renderer {
      *
      * @param grid VoxelGrid that should be rendered.
      */
+    @Override
     public void assemble(VoxelGrid grid) {
         int meshList = gl.glGenLists(1);
         this.objects.add(meshList);
@@ -232,7 +247,9 @@ public class JOGLOffscreenRenderer implements Renderer {
                 for (int j = 0; j < grid.getSizeY(); j++) {
                     for (int k = 0; k < grid.getSizeZ(); k++) {
                         /* Skip Voxel if its inactive. */
-                        if (grid.get(i,j,k) == VoxelGrid.Voxel.INVISIBLE) continue;
+                        if (grid.get(i,j,k) == VoxelGrid.Voxel.INVISIBLE) {
+                          continue;
+                        }
 
                         Vector3f voxelCenter = grid.getVoxelCenter(i,j,k);
 
@@ -242,12 +259,24 @@ public class JOGLOffscreenRenderer implements Renderer {
                         float z = voxelCenter.z;
 
                         /* Determine which faces to draw: Faced that are covered by another active voxel are switched off. */
-                        if(i > 0) visible[0] = !grid.isVisible(i-1,j,k);
-                        if(i < grid.getSizeX()-1) visible[1] = !grid.isVisible(i+1,j,k);
-                        if(j > 0) visible[2] = !grid.isVisible(i,j-1,k);
-                        if(j < grid.getSizeY()-1) visible[3] = !grid.isVisible(i,j+1,k);
-                        if(k > 0) visible[4] = !grid.isVisible(i,j,k-1);
-                        if(k < grid.getSizeZ()-1) visible[5] = !grid.isVisible(i,j,k+1);
+                        if(i > 0) {
+                          visible[0] = !grid.isVisible(i-1,j,k);
+                        }
+                        if(i < grid.getSizeX()-1) {
+                          visible[1] = !grid.isVisible(i+1,j,k);
+                        }
+                        if(j > 0) {
+                          visible[2] = !grid.isVisible(i,j-1,k);
+                        }
+                        if(j < grid.getSizeY()-1) {
+                          visible[3] = !grid.isVisible(i,j+1,k);
+                        }
+                        if(k > 0) {
+                          visible[4] = !grid.isVisible(i,j,k-1);
+                        }
+                        if(k < grid.getSizeZ()-1) {
+                          visible[5] = !grid.isVisible(i,j,k+1);
+                        }
 
                         /* Draw the cube. */
                         gl.glBegin(GL_QUADS);
@@ -323,12 +352,15 @@ public class JOGLOffscreenRenderer implements Renderer {
      * @param upy y-direction of the camera's UP position.
      * @param upz z-direction of the camera's UP position.
      */
+    @Override
     public final void positionCamera(double ex, double ey, double ez, double cx, double cy, double cz, double upx, double upy, double upz) {
         /* Check context. */
-        if (!this.checkContext()) return;
+        if (!this.checkContext()) {
+          return;
+        }
 
         /* Switch matrix mode to projection. */
-        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glLoadIdentity();
 
         /* Set default perspective. */
@@ -341,6 +373,7 @@ public class JOGLOffscreenRenderer implements Renderer {
     /**
      * Clears buffers to preset-values.
      */
+    @Override
     public final void clear() {
         this.clear(Color.BLACK);
     }
@@ -350,8 +383,11 @@ public class JOGLOffscreenRenderer implements Renderer {
      *
      * @param color The background colour to be used.
      */
+    @Override
     public void clear(Color color) {
-        if (!this.checkContext()) return;
+        if (!this.checkContext()) {
+          return;
+        }
         for (Integer handle : this.objects) {
             gl.glDeleteLists(handle, 1);
         }
@@ -365,9 +401,12 @@ public class JOGLOffscreenRenderer implements Renderer {
      *
      * @return BufferedImage containing a snapshot of the current render-buffer.
      */
+    @Override
     public final BufferedImage obtain() {
         /* Create and return a BufferedImage from buffer. */
-        if (!this.checkContext()) return null;
+        if (!this.checkContext()) {
+          return null;
+        }
         AWTGLReadBufferUtil glReadBufferUtil = new AWTGLReadBufferUtil(gl.getGL2().getGLProfile(), false);
         return glReadBufferUtil.readPixelsToBufferedImage(gl.getGL2(), true);
     }
@@ -381,6 +420,7 @@ public class JOGLOffscreenRenderer implements Renderer {
      *
      * @return True if GLContext was retained and false otherwise.
      */
+    @Override
     public final boolean retain() {
         this.lock.lock();
         int result = this.gl.getContext().makeCurrent();
@@ -397,6 +437,7 @@ public class JOGLOffscreenRenderer implements Renderer {
     /**
      * Makes the current thread release its ownership of the current JOGLOffscreenRenderer's GLContext.
      */
+    @Override
     public final void release() {
         if (this.checkContext()) {
             this.gl.getContext().release();
@@ -408,6 +449,7 @@ public class JOGLOffscreenRenderer implements Renderer {
      * Invoked upon garbage collection; destroy the GLDrawable in order to free
      * bound resources.
      */
+    @Override
     protected void finalize() throws Throwable {
         super.finalize();
         if (this.drawable != null) {

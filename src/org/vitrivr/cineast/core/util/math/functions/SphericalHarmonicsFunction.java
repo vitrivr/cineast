@@ -32,8 +32,12 @@ public class SphericalHarmonicsFunction {
      */
     public SphericalHarmonicsFunction(int l, int m) {
 
-        if (l < 0) throw new IllegalArgumentException("Spherical harmonics functions are not defined for l < 0.");
-        if (Math.abs(m) > l) throw new IllegalArgumentException("Spherical harmonics functions are not defined for |m| > l.");
+        if (l < 0) {
+          throw new IllegalArgumentException("Spherical harmonics functions are not defined for l < 0.");
+        }
+        if (Math.abs(m) > l) {
+          throw new IllegalArgumentException("Spherical harmonics functions are not defined for |m| > l.");
+        }
 
         this.l = l;
         this.m = m;

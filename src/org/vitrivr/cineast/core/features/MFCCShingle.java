@@ -101,6 +101,7 @@ public class MFCCShingle extends StagedFeatureModule {
      * @param qc QueryConfig provided by the caller of the feature module.
      * @return Modified QueryConfig.
      */
+    @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
                 .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)

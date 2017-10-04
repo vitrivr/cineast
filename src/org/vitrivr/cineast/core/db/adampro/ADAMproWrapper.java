@@ -151,6 +151,7 @@ public class ADAMproWrapper implements AutoCloseable {
     }
   }
 
+  @Override
   public void close() {
     this.channel.shutdown();
   }

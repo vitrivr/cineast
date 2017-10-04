@@ -1,10 +1,15 @@
 package org.vitrivr.cineast.core.data.messages.query;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author rgasser
@@ -55,7 +60,9 @@ public class QueryComponent {
                         categoryMap.put(category, new ArrayList<>());
                     }
                     QueryContainer container = term.toContainer();
-                    if (container != null) categoryMap.get(category).add(container);
+                    if (container != null) {
+                      categoryMap.get(category).add(container);
+                    }
                 };
             }
         }
