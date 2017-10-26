@@ -1,5 +1,15 @@
 package org.vitrivr.cineast.core.features.exporter;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.function.Supplier;
+
+import javax.imageio.ImageIO;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
@@ -11,18 +21,9 @@ import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.audio.HPCP;
 import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
-import org.vitrivr.cineast.core.util.dsp.visualization.AudioSignalVisualizer;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.function.Supplier;
+import org.vitrivr.cineast.core.util.dsp.visualization.AudioSignalVisualizer;
 
 /**
  * @author rgasser
@@ -77,7 +78,9 @@ public class ChromagramExporter implements Extractor {
     @Override
     public void processSegment(SegmentContainer shot) {
         /* IF shot has no samples, this step is skipped. */
-        if (shot.getNumberOfSamples() == 0) return;
+        if (shot.getNumberOfSamples() == 0) {
+          return;
+        }
 
         /* Prepare STFT and HPCP for the segment. */
         final Path directory = this.destination.resolve(shot.getSuperId());

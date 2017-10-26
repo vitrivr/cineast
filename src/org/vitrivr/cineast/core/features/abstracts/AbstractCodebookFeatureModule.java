@@ -51,6 +51,7 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
      *
      * @param phandlerSupply
      */
+    @Override
     public final void init(PersistencyWriterSupplier phandlerSupply) {
         super.init(phandlerSupply);
 
@@ -63,6 +64,7 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
      *
      * @param selectorSupply
      */
+    @Override
     public final void init(DBSelectorSupplier selectorSupply) {
         super.init(selectorSupply);
 

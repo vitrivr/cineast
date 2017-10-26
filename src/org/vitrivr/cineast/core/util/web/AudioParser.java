@@ -1,17 +1,18 @@
 package org.vitrivr.cineast.core.util.web;
 
-import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
-import org.vitrivr.cineast.core.data.frames.AudioFrame;
-import org.vitrivr.cineast.core.util.LogHelper;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * @author rgasser
@@ -34,7 +35,9 @@ public class AudioParser extends DataURLParser {
 
 	    /* Convert Base64 string into byte array. */
         byte[] bytes = dataURLtoByteArray(dataUrl, MIME_TYPE);
-        if (bytes == null) return list;
+        if (bytes == null) {
+          return list;
+        }
 
 
         try {

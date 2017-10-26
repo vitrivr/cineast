@@ -1,19 +1,26 @@
 package org.vitrivr.cineast.core.util;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
+import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 
-import java.util.*;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 
 /**
  * Created by sein on 30.08.16.
@@ -43,9 +50,9 @@ public class ArtUtil {
         for(int y=0;y<sizeY;y++) {
           RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(arr[count], arr[count + 1], arr[count + 2]));
           int color = rgbContainer.toIntColor();
-          pixels[y][x][0] = RGBContainer.getRed(color);
-          pixels[y][x][1] = RGBContainer.getGreen(color);
-          pixels[y][x][2] = RGBContainer.getBlue(color);
+          pixels[y][x][0] = ReadableRGBContainer.getRed(color);
+          pixels[y][x][1] = ReadableRGBContainer.getGreen(color);
+          pixels[y][x][2] = ReadableRGBContainer.getBlue(color);
           count+=3;
         }
       }
@@ -61,9 +68,9 @@ public class ArtUtil {
       for(int y=0;y<sizeY;y++) {
         RGBContainer rgbContainer = ColorConverter.LabtoRGB(new ReadableLabContainer(featureData[count], featureData[count + 1], featureData[count + 2]));
         int color = rgbContainer.toIntColor();
-        pixels[y][x][0] = RGBContainer.getRed(color);
-        pixels[y][x][1] = RGBContainer.getGreen(color);
-        pixels[y][x][2] = RGBContainer.getBlue(color);
+        pixels[y][x][0] = ReadableRGBContainer.getRed(color);
+        pixels[y][x][1] = ReadableRGBContainer.getGreen(color);
+        pixels[y][x][2] = ReadableRGBContainer.getBlue(color);
         count+=3;
       }
     }

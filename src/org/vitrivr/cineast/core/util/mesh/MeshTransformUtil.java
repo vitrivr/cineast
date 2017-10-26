@@ -1,20 +1,19 @@
 package org.vitrivr.cineast.core.util.mesh;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
 import org.ejml.interfaces.decomposition.EigenDecomposition;
-
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-
 import org.joml.Vector3fc;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.WritableMesh;
-
-import java.util.*;
 
 /**
  * A collection of utilities surrounding transformation of Meshes. Includes methods to scale, move, center or apply the
@@ -76,7 +75,9 @@ public final class MeshTransformUtil {
      */
     public static void khlTransformInPlace(WritableMesh mesh, float size) {
         /* Check if Mesh is empty. */
-        if (mesh.isEmpty()) return;
+        if (mesh.isEmpty()) {
+          return;
+        }
 
          /* 1) Scale the mesh. */
         MeshTransformUtil.scaleInPlace(mesh, size);
@@ -155,7 +156,9 @@ public final class MeshTransformUtil {
      * @param size Length of the longest edge of the mesh's bounding box.
      */
     public static void scaleInPlace(WritableMesh mesh, float size) {
-        if (mesh.isEmpty()) return;
+        if (mesh.isEmpty()) {
+          return;
+        }
         float[] bounds = MeshMathUtil.bounds(mesh);
         float max = Math.max(bounds[0]-bounds[1], Math.max(bounds[2]-bounds[3], bounds[4]-bounds[5]));
         mesh.scale(size/max);
@@ -183,7 +186,9 @@ public final class MeshTransformUtil {
      * @param mesh Centered Mesh.
      */
     public static void centerInPlace(WritableMesh mesh) {
-        if (mesh.isEmpty()) return;
+        if (mesh.isEmpty()) {
+          return;
+        }
         Vector3f center = new Vector3f(mesh.barycenter());
         mesh.move(center.negate());
     }

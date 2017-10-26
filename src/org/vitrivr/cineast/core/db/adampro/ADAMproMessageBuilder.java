@@ -239,7 +239,9 @@ public class ADAMproMessageBuilder {
      */
     public SubExpressionQueryMessage mergeSubexpressions(List<SubExpressionQueryMessage> expressions, Operation operation, Map<String,String> options) {
         /* If list only contains one SubExpressionQueryMessage then return it. */
-        if (expressions.size() == 1) return expressions.get(0);
+        if (expressions.size() == 1) {
+          return expressions.get(0);
+        }
 
         /* Take first and second message and remove them from the list. */
         SubExpressionQueryMessage m1 = expressions.get(0);

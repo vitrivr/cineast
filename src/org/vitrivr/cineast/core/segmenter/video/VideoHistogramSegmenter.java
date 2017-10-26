@@ -1,6 +1,14 @@
 package org.vitrivr.cineast.core.segmenter.video;
 
-import org.vitrivr.cineast.core.data.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+import org.vitrivr.cineast.core.data.Histogram;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
@@ -11,10 +19,6 @@ import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
-
-import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author rgasser
@@ -102,6 +106,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
      *
      * @return
      */
+    @Override
     public SegmentContainer getNext() throws InterruptedException {
         SegmentContainer nextContainer = this.segments.poll(SEGMENT_POLLING_TIMEOUT, TimeUnit.MILLISECONDS);
         if (nextContainer == null) {
@@ -150,7 +155,9 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
         }
 
         while (!this.decoder.complete()) {
-            if (this.videoFrameList.isEmpty()) queueFrames();
+            if (this.videoFrameList.isEmpty()) {
+              queueFrames();
+            }
 
             VideoSegment _return = null;
 

@@ -35,8 +35,12 @@ public class AudioQueryContainer extends QueryContainer {
     public AudioQueryContainer(List<AudioFrame> frames) {
         this.frames = frames;
         for (AudioFrame frame : this.frames) {
-            if (this.descriptor == null) this.descriptor = frame.getDescriptor();
-            if (!this.descriptor.equals(frame.getDescriptor())) throw new IllegalArgumentException("All the provided AudioFrames must share the same AudioDescriptor!");
+            if (this.descriptor == null) {
+              this.descriptor = frame.getDescriptor();
+            }
+            if (!this.descriptor.equals(frame.getDescriptor())) {
+              throw new IllegalArgumentException("All the provided AudioFrames must share the same AudioDescriptor!");
+            }
             this.totalSamples += frame.numberOfSamples();
             this.totalDuration += frame.getDuration();
         }
@@ -46,6 +50,7 @@ public class AudioQueryContainer extends QueryContainer {
      *
      * @return
      */
+    @Override
     public List<AudioFrame> getAudioFrames() {
         return this.frames;
     }
@@ -55,6 +60,7 @@ public class AudioQueryContainer extends QueryContainer {
      *
      * @return
      */
+    @Override
     public int getNumberOfSamples() {
         return this.totalSamples;
     }
@@ -64,6 +70,7 @@ public class AudioQueryContainer extends QueryContainer {
      *
      * @return
      */
+    @Override
     public float getAudioDuration() {
         return totalDuration;
     }
@@ -81,7 +88,9 @@ public class AudioQueryContainer extends QueryContainer {
      */
     @Override
     public STFT getSTFT(int windowsize, int overlap, int padding, WindowFunction function) {
-        if (2*padding >= windowsize) throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
+        if (2*padding >= windowsize) {
+          throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
+        }
         STFT stft = new STFT(windowsize, overlap, padding, function, this.descriptor.getSamplingrate());
         stft.forward(this.getMeanSamplesAsDouble());
         return stft;

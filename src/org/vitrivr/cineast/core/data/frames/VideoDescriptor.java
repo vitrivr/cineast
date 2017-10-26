@@ -74,14 +74,24 @@ public class VideoDescriptor {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+          return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+          return false;
+        }
 
         VideoDescriptor that = (VideoDescriptor) o;
 
-        if (Float.compare(that.fps, fps) != 0) return false;
-        if (duration != that.duration) return false;
-        if (width != that.width) return false;
+        if (Float.compare(that.fps, fps) != 0) {
+          return false;
+        }
+        if (duration != that.duration) {
+          return false;
+        }
+        if (width != that.width) {
+          return false;
+        }
         return height == that.height;
     }
 

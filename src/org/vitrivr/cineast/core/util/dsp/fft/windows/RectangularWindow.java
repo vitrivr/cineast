@@ -30,6 +30,7 @@ public class RectangularWindow implements WindowFunction {
      * @param length Length for which the normalization factor should be obtained.
      * @return Normalization factor.
      */
+    @Override
     public final double normalization(int length) {
         return 1.0;
     }

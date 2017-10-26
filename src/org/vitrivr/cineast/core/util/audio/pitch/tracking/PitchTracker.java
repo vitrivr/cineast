@@ -1,12 +1,15 @@
 package org.vitrivr.cineast.core.util.audio.pitch.tracking;
 
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.util.audio.pitch.Melody;
 import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
 import org.vitrivr.cineast.core.util.dsp.FrequencyUtils;
-
-import java.util.*;
 
 /**
  * This class implements the pitch-tracking algorithm described in [1]. It can be used to extract a melody from a
@@ -107,15 +110,21 @@ public class PitchTracker {
      */
     public void trackPitches() {
         /* Apply the two filter stages described in [1], section II-B. */
-        if (this.t1 > 0) this.applyPerFrameFilter();
-        if (this.t2 > 0) this.applyGlobalFilter();
+        if (this.t1 > 0) {
+          this.applyPerFrameFilter();
+        }
+        if (this.t2 > 0) {
+          this.applyGlobalFilter();
+        }
 
         int[] currentPointer = null;
         Pitch currentPitch = null;
         while (true) {
             /* Find the pitch with the maximum salience in S1 and add it to the melody. */
             currentPointer = this.seekMostSalientInS1();
-            if (currentPointer[0] == -1 || currentPointer[1] == -1) break;
+            if (currentPointer[0] == -1 || currentPointer[1] == -1) {
+              break;
+            }
 
             /* Select that pitch from S1 and create new PitchContour. */
             currentPitch = this.selectFromS1(currentPointer[0], currentPointer[1]);
@@ -142,7 +151,9 @@ public class PitchTracker {
      */
     public Melody extractMelody(int iterations) {
         /* Return if no pitch-contours are available. */
-        if (this.pitchContours.size() == 0) return null;
+        if (this.pitchContours.size() == 0) {
+          return null;
+        }
 
         /* Copies the pitch-contours from the tracking step. */
         List<PitchContour> workingList = new ArrayList<>(this.pitchContours);
@@ -225,7 +236,9 @@ public class PitchTracker {
             int start = Math.max(0, i-size/2);
             int end  = Math.min(framesum.length, i+size/2);
             for (int k=start; k<end; k++) {
-                if (weights[k] > 0) pitchmean[i] += framesum[k]/weights[k];
+                if (weights[k] > 0) {
+                  pitchmean[i] += framesum[k]/weights[k];
+                }
             }
             pitchmean[i] /= (end-start+1);
         }
@@ -294,7 +307,9 @@ public class PitchTracker {
         int[] max = {-1, -1};
         for (int t = 0; t<this.s1.length; t++) {
             int max_i = this.seekMostSalientInFrameS1(t);
-            if (max_i == -1) continue;
+            if (max_i == -1) {
+              continue;
+            }
             if (max[0] == -1 || max[1] == -1 || this.s1[t][max_i].getSalience() > this.s1[max[0]][max[1]].getSalience()) {
                 max[0] = t;
                 max[1] = max_i;
@@ -314,7 +329,9 @@ public class PitchTracker {
         Pitch[] pitches = this.s1[t];
         int max = -1;
         for (int i=0;i<pitches.length;i++) {
-            if (pitches[i] == null) continue;
+            if (pitches[i] == null) {
+              continue;
+            }
             if (max == -1 || pitches[i].getSalience() > pitches[max].getSalience()) {
                 max = i;
             }
@@ -339,10 +356,14 @@ public class PitchTracker {
     private void applyPerFrameFilter() {
         for (int t = 0; t<this.s1.length; t++) {
             int max_idx = this.seekMostSalientInFrameS1(t);
-            if (max_idx == -1) continue;
+            if (max_idx == -1) {
+              continue;
+            }
             int size = this.s1[t].length;
             for (int i=0; i<size; i++) {
-                if (this.s1[t][i] == null) continue;
+                if (this.s1[t][i] == null) {
+                  continue;
+                }
                 if (this.s1[t][i].getSalience() < this.t1 * this.s1[t][max_idx].getSalience()) {
                     this.moveToS0(t,i);
                 }
@@ -360,7 +381,9 @@ public class PitchTracker {
         /* Iteration #1: Gather data to obtain salience statistics. */
         for (int t=0; t<this.s1.length; t++) {
             for (int i=0; i<this.s1[t].length; i++) {
-                if (this.s1[t][i] == null) continue;
+                if (this.s1[t][i] == null) {
+                  continue;
+                }
                 statistics.addValue(this.s1[t][i].getSalience());
             }
         }
@@ -369,7 +392,9 @@ public class PitchTracker {
         final double threshold = statistics.getMean() - this.t2 * statistics.getStandardDeviation();
         for (int t=0; t<this.s1.length; t++) {
             for (int i=0; i<this.s1[t].length; i++) {
-                if (this.s1[t][i] == null) continue;
+                if (this.s1[t][i] == null) {
+                  continue;
+                }
                 if (this.s1[t][i].getSalience() < threshold) {
                     this.moveToS0(t,i);
                 }
@@ -385,7 +410,9 @@ public class PitchTracker {
      */
     private void track(final PitchContour contour, final int start) {
         /* If start is the last entry, then no forward-tracking is required. */
-        if (start == this.s1.length - 1) return;
+        if (start == this.s1.length - 1) {
+          return;
+        }
 
         /* Initialize helper variables; number of pitches and last-pitch. */
         int misses = 0;
@@ -398,7 +425,9 @@ public class PitchTracker {
 
             /* Search for a matching pitch candidate in S1 in the next frame. */
             for (int j=0;j<this.s1[frameindex].length; j++) {
-                if (this.s1[frameindex][j] == null) continue;
+                if (this.s1[frameindex][j] == null) {
+                  continue;
+                }
                 if (found = (Math.abs(this.s1[frameindex][j].distanceCents(lastPitch)) <= this.d_max)) {
                     lastPitch = this.selectFromS1(frameindex,j);
                     contour.append(lastPitch);
@@ -408,7 +437,9 @@ public class PitchTracker {
             }
 
             /* If a pitch candidate was found in S1, continue to next iteration. */
-            if (found) continue;
+            if (found) {
+              continue;
+            }
 
             /* This code only gets executed if no matching pitch could be found in S1:
              *
@@ -416,9 +447,13 @@ public class PitchTracker {
              * Search for pitch candidates in S0 afterwards.
              */
             misses += 1;
-            if (misses * this.t_stepsize >= this.m_max) break;
+            if (misses * this.t_stepsize >= this.m_max) {
+              break;
+            }
             for (int j=0;j<this.s0[frameindex].length; j++) {
-                if (this.s0[frameindex][j] == null) continue;
+                if (this.s0[frameindex][j] == null) {
+                  continue;
+                }
                 if (found = (Math.abs(this.s0[frameindex][j].distanceCents(lastPitch)) <= this.d_max)) {
                     lastPitch = this.selectFromS0(frameindex,j);
                     contour.append(lastPitch);
@@ -426,11 +461,15 @@ public class PitchTracker {
                 }
             }
 
-            if (!found) break;
+            if (!found) {
+              break;
+            }
         }
 
         /* If start is at index 0 then no backwards-tracking is required. */
-        if (start == 0) return;
+        if (start == 0) {
+          return;
+        }
 
         /* Re-Initialize helper variables; number of pitches and last-pitch. */
         misses = 0;
@@ -442,7 +481,9 @@ public class PitchTracker {
 
             /* Search for a matching pitch candidate in S1 in the next frame. */
             for (int j=0;j<this.s1[frameindex].length; j++) {
-                if (this.s1[frameindex][j] == null) continue;
+                if (this.s1[frameindex][j] == null) {
+                  continue;
+                }
                 if (found = (Math.abs(this.s1[frameindex][j].distanceCents(lastPitch)) <= this.d_max)) {
                     lastPitch = this.selectFromS1(frameindex,j);
                     contour.prepend(lastPitch);
@@ -452,7 +493,9 @@ public class PitchTracker {
             }
 
             /* If a pitch candidate was found in S1, continue to next iteration. */
-            if (found) continue;
+            if (found) {
+              continue;
+            }
 
             /* This code only gets executed if no matching pitch could be found in S1:
              *
@@ -460,9 +503,13 @@ public class PitchTracker {
              * Search for pitch candidates in S0 afterwards.
              */
             misses += 1;
-            if (misses >= this.m_max) break;
+            if (misses >= this.m_max) {
+              break;
+            }
             for (int j=0;j<this.s0[frameindex].length; j++) {
-                if (this.s0[frameindex][j] == null) continue;
+                if (this.s0[frameindex][j] == null) {
+                  continue;
+                }
                 if (found = (Math.abs(this.s0[frameindex][j].distanceCents(lastPitch)) < this.d_max)) {
                     lastPitch = this.selectFromS0(frameindex,j);
                     contour.prepend(lastPitch);
@@ -471,7 +518,9 @@ public class PitchTracker {
             }
 
             /* If no matching pitch was found even in S0, stop tracking. */
-            if (!found) break;
+            if (!found) {
+              break;
+            }
         }
     }
 
@@ -498,7 +547,9 @@ public class PitchTracker {
             PitchContour ct = iterator.next();
             for (PitchContour ci : contours) {
                 /* Take contour at i; if c == ci then skip. */
-                if (ct == ci || ci.overlaps(ct)) continue;
+                if (ct == ci || ci.overlaps(ct)) {
+                  continue;
+                }
 
                 /* Calculate mean distance from ct to ci. */
                 double distance = 0.0;

@@ -24,7 +24,8 @@ public class TupleInsertMessageImporter implements Importer<TupleInsertMessage>{
 		this.inStream = new FileInputStream(inputFile);
 	}
 	
-	public TupleInsertMessage readNext(){
+	@Override
+  public TupleInsertMessage readNext(){
 	  while(true){
   		try {
   			return TupleInsertMessage.parseDelimitedFrom(this.inStream);

@@ -28,15 +28,19 @@ public class FloatProviderImpl implements FloatProvider, DoubleProvider {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) {
+      return true;
+    }
+		if (obj == null) {
+      return false;
+    }
+		if (getClass() != obj.getClass()) {
+      return false;
+    }
 		FloatProviderImpl other = (FloatProviderImpl) obj;
-		if (Float.floatToIntBits(value) != Float.floatToIntBits(other.value))
-			return false;
+		if (Float.floatToIntBits(value) != Float.floatToIntBits(other.value)) {
+      return false;
+    }
 		return true;
 	}
 

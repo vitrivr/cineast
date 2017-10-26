@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.util;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.vitrivr.cineast.api.API;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -11,6 +11,8 @@ import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultListener;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.runtime.ContinuousQueryDispatcher;
+
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 public class ContinuousRetrievalLogic {
 

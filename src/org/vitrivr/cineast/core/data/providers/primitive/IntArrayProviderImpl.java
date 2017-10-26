@@ -28,15 +28,19 @@ public class IntArrayProviderImpl implements IntArrayProvider {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) {
+      return true;
+    }
+		if (obj == null) {
+      return false;
+    }
+		if (getClass() != obj.getClass()) {
+      return false;
+    }
 		IntArrayProviderImpl other = (IntArrayProviderImpl) obj;
-		if (!Arrays.equals(value, other.value))
-			return false;
+		if (!Arrays.equals(value, other.value)) {
+      return false;
+    }
 		return true;
 	}
 

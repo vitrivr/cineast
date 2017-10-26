@@ -61,9 +61,13 @@ public abstract class Lightfield extends StagedFeatureModule {
      */
     protected Lightfield(String tableName, float maxDist, double[][] camerapositions) {
         super(tableName, maxDist);
-        if (camerapositions.length == 0) throw new IllegalArgumentException("You must specify at least one camera position!");
+        if (camerapositions.length == 0) {
+          throw new IllegalArgumentException("You must specify at least one camera position!");
+        }
         for (double[] position : camerapositions) {
-            if (position.length < 3) throw new IllegalArgumentException("Each position must have at least three coordinates.");
+            if (position.length < 3) {
+              throw new IllegalArgumentException("Each position must have at least three coordinates.");
+            }
         }
         this.camerapositions = camerapositions;
 
@@ -149,6 +153,7 @@ public abstract class Lightfield extends StagedFeatureModule {
      * @param qc QueryConfig provided by the caller of the feature module.
      * @return Modified QueryConfig.
      */
+    @Override
     protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
                 .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
@@ -195,7 +200,9 @@ public abstract class Lightfield extends StagedFeatureModule {
         List<float[]> features = new ArrayList<>(20);
 
         /* Retains the renderer and returns if retention fails. */
-        if (!this.renderer.retain()) return features;
+        if (!this.renderer.retain()) {
+          return features;
+        }
 
         /* Everything happens in the try-catch block so as to make sure, that if any exception occurs,
          * the renderer is released again.

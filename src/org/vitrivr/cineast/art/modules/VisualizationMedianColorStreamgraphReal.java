@@ -1,15 +1,16 @@
 package org.vitrivr.cineast.art.modules;
 
-import com.eclipsesource.json.JsonObject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.eclipsesource.json.JsonObject;
 
 /**
  * Created by sein on 26.08.16.

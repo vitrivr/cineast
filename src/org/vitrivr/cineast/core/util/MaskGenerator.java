@@ -10,8 +10,8 @@ import org.ddogleg.nn.FactoryNearestNeighbor;
 import org.ddogleg.nn.NearestNeighbor;
 import org.ddogleg.nn.NnData;
 import org.ddogleg.struct.FastQueue;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.descriptor.PathList;
 
 import boofcv.abst.distort.FDistort;
@@ -108,10 +108,18 @@ public class MaskGenerator {
 		for(Contour contour : contours){
 			ImageRectangle rect = new ImageRectangle(mask.width,mask.height,0,0);
 			for (Point2D_I32 p : contour.external){
-				if (p.x < rect.x0) rect.x0 = p.x;
-				if (p.y < rect.y0) rect.y0 = p.y;
-				if (p.x > rect.x1) rect.x1 = p.x;
-				if (p.y > rect.y1) rect.y1 = p.y;
+				if (p.x < rect.x0) {
+          rect.x0 = p.x;
+        }
+				if (p.y < rect.y0) {
+          rect.y0 = p.y;
+        }
+				if (p.x > rect.x1) {
+          rect.x1 = p.x;
+        }
+				if (p.y > rect.y1) {
+          rect.y1 = p.y;
+        }
 			}
 			rects.add(rect);
 		}
@@ -196,8 +204,9 @@ public class MaskGenerator {
 			
 			while (fgPathItor.hasNext()) {
 				Pair<Integer, LinkedList<Point2D_F32>> pair = fgPathItor.next();
-				if (pair.first > frameIdx)
-					break;
+				if (pair.first > frameIdx) {
+          break;
+        }
 				Point2D_F32 p = pair.second.getFirst();
 				double[] point = {p.x * width, p.y * height};
 				nnPoints.add(point);
@@ -206,8 +215,9 @@ public class MaskGenerator {
 			
 			while (bgPathItor.hasNext()) {
 				Pair<Integer, LinkedList<Point2D_F32>> pair = bgPathItor.next();
-				if (pair.first > frameIdx)
-					break;
+				if (pair.first > frameIdx) {
+          break;
+        }
 				Point2D_F32 p = pair.second.getFirst();
 				double[] point = {p.x * width, p.y * height};
 				nnPoints.add(point);
@@ -266,8 +276,9 @@ public class MaskGenerator {
 			
 			while (fgPathItor.hasNext()) {
 				Pair<Integer, LinkedList<Point2D_F32>> pair = fgPathItor.next();
-				if (pair.first > frameIdx)
-					break;
+				if (pair.first > frameIdx) {
+          break;
+        }
 				Point2D_F32 p1 = pair.second.getFirst();
 				int x = (int) (p1.x * width / PathList.samplingInterval);
 				int y = (int) (p1.y * height / PathList.samplingInterval);

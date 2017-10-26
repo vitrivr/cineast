@@ -34,6 +34,7 @@ public class HCTLevel<T extends Comparable<T>> implements Serializable {
         cells.add(cell);
     }
 
+    @Override
     public String toString() {
         return String.format("HCTLevel | #cells: %s", cells.size());
     }

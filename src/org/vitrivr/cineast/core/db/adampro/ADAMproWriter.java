@@ -115,6 +115,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
     return persist(tuples);
   }
 
+  @Override
   public boolean persist(List<PersistentTuple> tuples) {
     InsertMessage im;
     synchronized (this.imBuilder) {

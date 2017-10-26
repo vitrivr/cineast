@@ -131,25 +131,33 @@ public class CredentialManager {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
+      if (this == obj) {
         return true;
-      if (obj == null)
+      }
+      if (obj == null) {
         return false;
-      if (getClass() != obj.getClass())
+      }
+      if (getClass() != obj.getClass()) {
         return false;
+      }
       User other = (User) obj;
-      if (isAdmin != other.isAdmin)
+      if (isAdmin != other.isAdmin) {
         return false;
+      }
       if (passwordHash == null) {
-        if (other.passwordHash != null)
+        if (other.passwordHash != null) {
           return false;
-      } else if (!passwordHash.equals(other.passwordHash))
+        }
+      } else if (!passwordHash.equals(other.passwordHash)) {
         return false;
+      }
       if (username == null) {
-        if (other.username != null)
+        if (other.username != null) {
           return false;
-      } else if (!username.equals(other.username))
+        }
+      } else if (!username.equals(other.username)) {
         return false;
+      }
       return true;
     }
     

@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.util.audio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
 import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class can be used to calculate the Harmonic Pitch Class Profile (HPCP) of a Short-Term Fourier Transform or a single
@@ -154,8 +154,12 @@ public class HPCP {
     public float[] getSumNormalizedHpcp(int idx) {
         float[] normHpcp = hpcp.get(idx);
         float sum = 0.0f;
-        for (float aNormHpcp : normHpcp) sum += aNormHpcp;
-        for (int i = 0; i< normHpcp.length; i++) normHpcp[i] /= sum;
+        for (float aNormHpcp : normHpcp) {
+          sum += aNormHpcp;
+        }
+        for (int i = 0; i< normHpcp.length; i++) {
+          normHpcp[i] /= sum;
+        }
         return normHpcp;
     }
 
@@ -169,8 +173,12 @@ public class HPCP {
     public float[] getMaxNormalizedHpcp(int idx) {
         float[] normHpcp = hpcp.get(idx);
         float max = 0.0f;
-        for (float aNormHpcp : normHpcp) max = Math.max(max,aNormHpcp);
-        for (int i = 0; i< normHpcp.length; i++) normHpcp[i] /= max;
+        for (float aNormHpcp : normHpcp) {
+          max = Math.max(max,aNormHpcp);
+        }
+        for (int i = 0; i< normHpcp.length; i++) {
+          normHpcp[i] /= max;
+        }
         return normHpcp;
     }
 

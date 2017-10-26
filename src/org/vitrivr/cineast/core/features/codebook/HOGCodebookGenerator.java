@@ -1,14 +1,13 @@
 package org.vitrivr.cineast.core.features.codebook;
 
-import boofcv.abst.feature.dense.DescribeImageDense;
-
-import boofcv.struct.feature.TupleDesc_F64;
-import boofcv.struct.image.GrayU8;
+import java.awt.image.BufferedImage;
 
 import org.ddogleg.clustering.FactoryClustering;
 import org.vitrivr.cineast.core.util.images.HOGHelper;
 
-import java.awt.image.BufferedImage;
+import boofcv.abst.feature.dense.DescribeImageDense;
+import boofcv.struct.feature.TupleDesc_F64;
+import boofcv.struct.image.GrayU8;
 
 /**
  * @author rgasser
@@ -26,6 +25,7 @@ public class HOGCodebookGenerator extends ImageCodebookGenerator {
     /**
      * Initializes the codebook generator (i.e. setup the clusterer etc.)
      */
+    @Override
     protected void init() {
         this.clusterer = FactoryClustering.kMeans_F64(null, 200, 20, 1e-7);
     }

@@ -1,10 +1,9 @@
 package org.vitrivr.cineast.core.data.hct;
 
+import java.io.Serializable;
+
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.vitrivr.cineast.core.data.hct.CompactnessCalculation;
-
-import java.io.Serializable;
 
 public class DefaultCompactnessCalculation implements CompactnessCalculation, Serializable{
 

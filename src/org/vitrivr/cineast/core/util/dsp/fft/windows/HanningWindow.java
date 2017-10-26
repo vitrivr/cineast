@@ -34,6 +34,7 @@ public class HanningWindow implements WindowFunction {
      * @param length Length for which the normalization factor should be obtained.
      * @return Normalization factor.
      */
+    @Override
     public final double normalization(int length) {
         double normal = 0.0f;
         for (int i=0; i<=length; i++) {

@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.features;
 
-import com.google.common.collect.ImmutableList;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.GpsData;
@@ -11,6 +11,8 @@ import org.vitrivr.cineast.core.data.Location;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * A feature that calculates similarity based on an approximation of the great-circle distance

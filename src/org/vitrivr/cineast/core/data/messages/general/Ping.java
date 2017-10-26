@@ -1,8 +1,9 @@
 package org.vitrivr.cineast.core.data.messages.general;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author rgasser

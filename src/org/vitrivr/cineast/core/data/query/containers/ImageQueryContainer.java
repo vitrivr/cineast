@@ -88,7 +88,8 @@ public class ImageQueryContainer extends QueryContainer {
 		return this.bgPaths;
 	}
 
-	public List<VideoFrame> getVideoFrames() {
+	@Override
+  public List<VideoFrame> getVideoFrames() {
 		ArrayList<VideoFrame> _return = new ArrayList<VideoFrame>(1);
 		_return.add(this.videoFrame);
 		return _return;

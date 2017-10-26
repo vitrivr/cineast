@@ -1,8 +1,9 @@
 package org.vitrivr.cineast.core.data;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
 import java.util.EnumSet;
 import java.util.HashMap;
+
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 public enum MediaType {
 

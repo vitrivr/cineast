@@ -1,35 +1,27 @@
 package org.vitrivr.cineast.core.features;
 
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.*;
+import org.vitrivr.cineast.core.data.CorrespondenceFunction;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.*;
-
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
-import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.setup.AttributeDefinition;
-import org.vitrivr.cineast.core.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 
-import javax.swing.text.Segment;
-import java.util.*;
-import java.util.function.Supplier;
+import gnu.trove.list.array.TIntArrayList;
 
 /**
  * @author rgasser
@@ -111,6 +103,7 @@ public class AudioFingerprint extends StagedFeatureModule {
      * @param configs A ReadableQueryConfig object that contains query-related configuration parameters.
      * @return
      */
+    @Override
     protected List<SegmentDistanceElement> lookup(List<float[]> features, List<ReadableQueryConfig> configs) {
         final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
         List<SegmentDistanceElement> partialResults;
@@ -151,7 +144,9 @@ public class AudioFingerprint extends StagedFeatureModule {
         }
 
         /* Return immediately if no partial results are available.  */
-        if (map.isEmpty()) return results;
+        if (map.isEmpty()) {
+          return results;
+        }
 
         /* Prepare final results. */
         final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
@@ -167,6 +162,7 @@ public class AudioFingerprint extends StagedFeatureModule {
      * @param features List of features for which a QueryConfig is required.
      * @return New query config (may be identical to the original one).
      */
+    @Override
     protected List<ReadableQueryConfig> generateQueryConfigsForFeatures(ReadableQueryConfig qc, List<float[]> features) {
         ArrayList<ReadableQueryConfig> configs = new ArrayList<>(features.size());
         for (float[] feature : features) {
@@ -195,7 +191,9 @@ public class AudioFingerprint extends StagedFeatureModule {
         /* Perform STFT and extract the Spectra. If this fails, return empty list. */
         Pair<Integer,Integer> properties = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
         STFT stft = segment.getSTFT(properties.first, (properties.first-2*properties.second)/2, properties.second, new HanningWindow());
-        if (stft == null) return candidates;
+        if (stft == null) {
+          return candidates;
+        }
         List<Spectrum> spectra = stft.getPowerSpectrum();
 
         /* Foreach spectrum; find peak-values in the defined ranges. */
@@ -227,6 +225,7 @@ public class AudioFingerprint extends StagedFeatureModule {
      * @param qc QueryConfig provided by the caller of the feature module.
      * @return Modified QueryConfig.
      */
+    @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
                 .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)

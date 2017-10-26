@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.geometry.Position;
-import net.coobird.thumbnailator.geometry.Positions;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
@@ -31,11 +29,16 @@ import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.NeuralNetUtil;
 import org.vitrivr.cineast.core.util.TimeHelper;
 
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Position;
+import net.coobird.thumbnailator.geometry.Positions;
+
 /**
  * VGG16-Feature module
  * <p>
  * Created by silvan on 09.09.16.
  */
+@Deprecated
 public class NeuralNetVGG16Feature extends NeuralNetFeature {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String fullVectorTableName = "features_neuralnet_vgg16_fullvector";

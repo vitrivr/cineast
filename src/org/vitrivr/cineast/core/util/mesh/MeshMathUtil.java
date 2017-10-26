@@ -1,13 +1,12 @@
 package org.vitrivr.cineast.core.util.mesh;
 
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
-
-import org.vitrivr.cineast.core.data.m3d.Mesh;
-import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 
 /**
  * A collection of utilities surrounding Mesh mathematics. Includes methods to calculate the barycenter or the
@@ -131,12 +130,24 @@ public final class MeshMathUtil {
 
         /* Find max and min y-values. */
         for(Vector3fc vertex : vertices) {
-            if (vertex.x() > bounds[0]) bounds[0] = vertex.x();
-            if (vertex.x() < bounds[1]) bounds[1] = vertex.x();
-            if (vertex.y() > bounds[2]) bounds[2] = vertex.y();
-            if (vertex.y() < bounds[3]) bounds[3] = vertex.y();
-            if (vertex.z() > bounds[4]) bounds[4] = vertex.z();
-            if (vertex.z() < bounds[5]) bounds[5] = vertex.z();
+            if (vertex.x() > bounds[0]) {
+              bounds[0] = vertex.x();
+            }
+            if (vertex.x() < bounds[1]) {
+              bounds[1] = vertex.x();
+            }
+            if (vertex.y() > bounds[2]) {
+              bounds[2] = vertex.y();
+            }
+            if (vertex.y() < bounds[3]) {
+              bounds[3] = vertex.y();
+            }
+            if (vertex.z() > bounds[4]) {
+              bounds[4] = vertex.z();
+            }
+            if (vertex.z() < bounds[5]) {
+              bounds[5] = vertex.z();
+            }
         }
 
         /* Return bounding-box. */

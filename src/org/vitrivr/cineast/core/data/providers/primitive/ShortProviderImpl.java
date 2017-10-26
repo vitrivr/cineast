@@ -33,15 +33,19 @@ public class ShortProviderImpl implements ShortProvider, IntProvider, LongProvid
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) {
+      return true;
+    }
+		if (obj == null) {
+      return false;
+    }
+		if (getClass() != obj.getClass()) {
+      return false;
+    }
 		ShortProviderImpl other = (ShortProviderImpl) obj;
-		if (value != other.value)
-			return false;
+		if (value != other.value) {
+      return false;
+    }
 		return true;
 	}
 

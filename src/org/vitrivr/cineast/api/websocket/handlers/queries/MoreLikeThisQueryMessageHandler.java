@@ -1,17 +1,20 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
-import org.eclipse.jetty.websocket.api.Session;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.messages.query.MoreLikeThisQuery;
-import org.vitrivr.cineast.core.data.messages.result.*;
+import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.QueryEnd;
+import org.vitrivr.cineast.core.data.messages.result.QueryStart;
+import org.vitrivr.cineast.core.data.messages.result.SegmentQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.SimilarityQueryResult;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author rgasser

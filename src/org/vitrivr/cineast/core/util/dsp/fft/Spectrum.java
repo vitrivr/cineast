@@ -1,15 +1,15 @@
 package org.vitrivr.cineast.core.util.dsp.fft;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.util.MathArrays;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author rgasser
@@ -94,7 +94,9 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
      */
     public Spectrum(Type type, double[] spectrum, float[] frequencies) {
         /* Check if the length of both array is the same. */
-        if (spectrum.length != frequencies.length) throw new IllegalArgumentException("The length of the spectrum and the frequency-label array must be the same!");
+        if (spectrum.length != frequencies.length) {
+          throw new IllegalArgumentException("The length of the spectrum and the frequency-label array must be the same!");
+        }
 
         /* Store values for further reference. */
         this.length = spectrum.length;
@@ -186,7 +188,9 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
         if (this.maximumIndex == null) {
             this.maximumIndex = 0;
             for (int i=0;i<this.spectrum.length;i++) {
-                if (this.spectrum[i] > this.spectrum[this.maximumIndex]) this.maximumIndex = i;
+                if (this.spectrum[i] > this.spectrum[this.maximumIndex]) {
+                  this.maximumIndex = i;
+                }
             }
         }
         return this.get(this.maximumIndex);
@@ -201,7 +205,9 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
         if (this.minimumIndex == null) {
             this.minimumIndex = 0;
             for (int i=0;i<this.spectrum.length;i++) {
-                if (this.spectrum[i] < this.spectrum[this.minimumIndex]) this.minimumIndex = i;
+                if (this.spectrum[i] < this.spectrum[this.minimumIndex]) {
+                  this.minimumIndex = i;
+                }
             }
         }
         return this.get(this.minimumIndex);
@@ -231,7 +237,9 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
      * @return Reduced spectrum.
      */
     public Spectrum reduced(float minFreq, float maxFreq) {
-        if (minFreq >= maxFreq) throw new IllegalArgumentException("Minimum frequency must be smaller than maximum frequency!");
+        if (minFreq >= maxFreq) {
+          throw new IllegalArgumentException("Minimum frequency must be smaller than maximum frequency!");
+        }
 
         int[] range = new int[2];
 
@@ -243,7 +251,9 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
                 range[1] = i;
             }
 
-            if (this.frequencies[i] > maxFreq) break;
+            if (this.frequencies[i] > maxFreq) {
+              break;
+            }
         }
 
         return new Spectrum(this.type, Arrays.copyOfRange(this.spectrum, range[0], range[1]),  Arrays.copyOfRange(this.frequencies, range[0], range[1]));
@@ -259,8 +269,12 @@ public class Spectrum implements Iterable<Pair<Float,Double>>{
     public List<Pair<Float, Double>> findLocalMaxima(double threshold, boolean significant) {
         List<Pair<Float,Double>> peaks = new ArrayList<>();
         for (int i=1;i<this.spectrum.length-1;i++) {
-            if (this.spectrum[i] < threshold) continue;
-            if (spectrum[i] > Math.max(spectrum[i+1], spectrum[i-1]))peaks.add(this.get(i));
+            if (this.spectrum[i] < threshold) {
+              continue;
+            }
+            if (spectrum[i] > Math.max(spectrum[i+1], spectrum[i-1])) {
+              peaks.add(this.get(i));
+            }
         }
 
         if (significant) {

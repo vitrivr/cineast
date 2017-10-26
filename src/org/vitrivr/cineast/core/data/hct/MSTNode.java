@@ -21,6 +21,7 @@ public class MSTNode<T extends Comparable<T>> implements IMSTNode<T>, Serializab
     return hct.getDistanceCalculation().distance(value, other.getValue());
   };
 
+  @Override
   public double distance(T otherValue) {
     return hct.getDistanceCalculation().distance(value, otherValue);
   };

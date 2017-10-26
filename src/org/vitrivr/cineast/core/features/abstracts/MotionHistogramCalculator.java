@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
-import georegression.struct.point.Point2D_F32;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
+
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -19,6 +19,8 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.EntityCreator;
+
+import georegression.struct.point.Point2D_F32;
 
 public abstract class MotionHistogramCalculator implements Retriever {
 
@@ -137,6 +139,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
     supply.get().createFeatureEntity(this.tableName, true, "hist", "sums");
   }
 
+  @Override
   public void dropPersistentLayer(Supplier<EntityCreator> supply) {
     supply.get().dropEntity(this.tableName);
   }

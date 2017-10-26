@@ -28,6 +28,7 @@ public abstract class QueryContainer implements SegmentContainer {
     return this.id == null ? "" : this.id;
   }
 
+  @Override
   public void setId(String id) {
     this.id = id;
   }

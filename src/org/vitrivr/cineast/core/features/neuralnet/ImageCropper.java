@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.features.neuralnet;
 
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.geometry.Positions;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 
 /**
  * Hides the current implementation of resizing & cropping an image

@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.util.dsp.fft;
 
-import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
-import org.vitrivr.cineast.core.util.dsp.filter.frequency.FrequencyDomainFilterInterface;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
+import org.vitrivr.cineast.core.util.dsp.filter.frequency.FrequencyDomainFilterInterface;
 
 /**
  * @author rgasser
@@ -56,7 +56,9 @@ public class STFT {
      */
     public STFT(int windowsize, int overlap, int padding, WindowFunction function, float samplingrate) {
         /* Make sure that the windowsize is a power of two. */
-        if (!FFTUtil.isPowerOf2(windowsize)) throw new IllegalArgumentException("The provided window size of " + windowsize + " is not a power of two!");
+        if (!FFTUtil.isPowerOf2(windowsize)) {
+          throw new IllegalArgumentException("The provided window size of " + windowsize + " is not a power of two!");
+        }
 
         /* Store the local variables. */
         this.samplingrate = samplingrate;

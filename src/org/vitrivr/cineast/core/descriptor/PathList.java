@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.ddogleg.fitting.modelset.ModelMatcher;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 
 import boofcv.abst.filter.derivative.ImageGradient;
 import boofcv.alg.misc.PixelMath;
@@ -74,13 +74,13 @@ public class PathList {
 			int frameIdx = pair.first;
 			ArrayList<AssociatedPair> matches = pair.second;
 			
-			if((double)matches.size() < (double)maxTracksNumber * successTrackingRatioThreshold){
+			if(matches.size() < maxTracksNumber * successTrackingRatioThreshold){
 				failedFrameCount += 1;
 				continue;
 			}
 			
 			Homography2D_F64 curToPrev = new Homography2D_F64(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
-			if(robustF.process(matches) && (double)robustF.getMatchSet().size() > (double)matches.size() * ransacInlierRatioThreshold ){
+			if(robustF.process(matches) && robustF.getMatchSet().size() > matches.size() * ransacInlierRatioThreshold ){
 				curToPrev = robustF.getModelParameters().invert(null);
 				inliers.addAll(robustF.getMatchSet());
 				for (int i = 0,j = 0; i < matches.size(); ++i){
@@ -101,22 +101,22 @@ public class PathList {
 			
 			for (AssociatedPair p : inliers){
 				LinkedList<Point2D_F32> path = new LinkedList<Point2D_F32>();
-				path.add(new Point2D_F32((float)p.p1.x/(float)width,(float)p.p1.y/(float)height));
-				path.add(new Point2D_F32((float)p.p2.x/(float)width,(float)p.p2.y/(float)height));
+				path.add(new Point2D_F32((float)p.p1.x/width,(float)p.p1.y/height));
+				path.add(new Point2D_F32((float)p.p2.x/width,(float)p.p2.y/height));
 				backgroundPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(frameIdx,path));
 			}
 			
 			for (AssociatedPair p : outliers){
 				p.p2 = HomographyPointOps_F64.transform(curToPrev, p.p2, p.p2);
 				LinkedList<Point2D_F32> path = new LinkedList<Point2D_F32>();
-				path.add(new Point2D_F32((float)p.p1.x/(float)width,(float)p.p1.y/(float)height));
-				path.add(new Point2D_F32((float)p.p2.x/(float)width,(float)p.p2.y/(float)height));
+				path.add(new Point2D_F32((float)p.p1.x/width,(float)p.p1.y/height));
+				path.add(new Point2D_F32((float)p.p2.x/width,(float)p.p2.y/height));
 				foregroundPaths.add(new Pair<Integer, LinkedList<Point2D_F32>>(frameIdx,path));
 			}
 		}
 		
 		int frameNum = allPaths.size();
-		if((double)(frameNum - failedFrameCount) < (double)frameNum * successFrameSRatioThreshold){
+		if(frameNum - failedFrameCount < frameNum * successFrameSRatioThreshold){
 			foregroundPaths.clear();
 			backgroundPaths.clear();
 		}

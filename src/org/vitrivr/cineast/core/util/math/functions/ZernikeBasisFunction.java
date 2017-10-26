@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.util.math.functions;
 
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.complex.Complex;
-
 import org.apache.commons.math3.util.FastMath;
 import org.vitrivr.cineast.core.util.math.functions.factories.PolynomialFunctionFactory;
 import org.vitrivr.cineast.core.util.math.functions.interfaces.UnivariateComplexFunction;
@@ -36,9 +35,15 @@ public class ZernikeBasisFunction implements UnivariateComplexFunction {
      * @throws IllegalArgumentException If |m| > n, m <'0 or (n-|m| % 2) = 1
      */
     public ZernikeBasisFunction(int n, int m) {
-        if (n < 0) throw new IllegalArgumentException("Zernike Basis Functions are only defined for n > 0");
-        if ((n-Math.abs(m)) < 0) throw new IllegalArgumentException("Zernike Basis Functions are only defined for |m|<=n");
-        if ((n-Math.abs(m)) % 2 != 0) throw new IllegalArgumentException("Zernike Basis Functions are only defined for (n-|m| % 2) = 0.");
+        if (n < 0) {
+          throw new IllegalArgumentException("Zernike Basis Functions are only defined for n > 0");
+        }
+        if ((n-Math.abs(m)) < 0) {
+          throw new IllegalArgumentException("Zernike Basis Functions are only defined for |m|<=n");
+        }
+        if ((n-Math.abs(m)) % 2 != 0) {
+          throw new IllegalArgumentException("Zernike Basis Functions are only defined for (n-|m| % 2) = 0.");
+        }
 
         this.radialPolynomial = PolynomialFunctionFactory.createRadialPolynomial(n,m);
         this.n = n;
@@ -54,7 +59,9 @@ public class ZernikeBasisFunction implements UnivariateComplexFunction {
     @Override
     public Complex value(Complex value) {
         /* Check that length of r is smaller or equal 1. */
-        if (value.abs() > 1.0) return new Complex(0.0, 0.0);
+        if (value.abs() > 1.0) {
+          return new Complex(0.0, 0.0);
+        }
 
         /* Calculate value of Zernike Basis Function at point. */
         double r = this.radialPolynomial.value(value.abs());
@@ -81,12 +88,18 @@ public class ZernikeBasisFunction implements UnivariateComplexFunction {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+          return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+          return false;
+        }
 
         ZernikeBasisFunction that = (ZernikeBasisFunction) o;
 
-        if (n != that.n) return false;
+        if (n != that.n) {
+          return false;
+        }
         return m == that.m;
     }
 

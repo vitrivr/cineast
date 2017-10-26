@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.websocket.handlers.interfaces;
 
 import org.eclipse.jetty.websocket.api.Session;
-
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 
 /**

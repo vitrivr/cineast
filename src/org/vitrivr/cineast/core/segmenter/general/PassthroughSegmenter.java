@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.segmenter.general;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.decode.general.Decoder;
-
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.decode.general.Decoder;
 
 /**
  * A simple segmenter that passes the output from the decoder straight back to the orchestrator.
@@ -49,6 +49,7 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
      *
      * @return
      */
+    @Override
     public SegmentContainer getNext() throws InterruptedException {
         T content = this.queue.poll(5, TimeUnit.SECONDS);
         this.complete.set(this.decoder.complete());
@@ -94,7 +95,9 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
         while (!this.decoder.complete()) {
             try {
                 T t = this.decoder.getNext();
-                if (t != null) this.queue.put(t);
+                if (t != null) {
+                  this.queue.put(t);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

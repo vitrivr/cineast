@@ -49,7 +49,9 @@ public final class BenchmarkManager {
      */
     public static BenchmarkEngine getEngine(String name, BenchmarkMode mode, Path path) {
         synchronized (RUNNING) {
-            if (!RUNNING.containsKey(name)) RUNNING.put(name, new BenchmarkEngine(name, mode, path));
+            if (!RUNNING.containsKey(name)) {
+              RUNNING.put(name, new BenchmarkEngine(name, mode, path));
+            }
         }
         return RUNNING.get(name);
     }
@@ -60,7 +62,9 @@ public final class BenchmarkManager {
      * @param name Name of the BenchmarkEngine to stop
      */
     public static void stopEngine(String name) {
-        if (name.equals(DEFAULT_ENGINE)) throw new IllegalArgumentException("You cannot stop the default benchmark engine.");
+        if (name.equals(DEFAULT_ENGINE)) {
+          throw new IllegalArgumentException("You cannot stop the default benchmark engine.");
+        }
         synchronized(RUNNING){
             if (RUNNING.containsKey(name)) {
                 RUNNING.get(name).stop();

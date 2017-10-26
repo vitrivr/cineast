@@ -152,7 +152,9 @@ public class FFT {
      */
     public final boolean isZero() {
         for (Complex coefficient : this.data) {
-            if (coefficient.abs() > 0) return false;
+            if (coefficient.abs() > 0) {
+              return false;
+            }
         }
         return true;
     }

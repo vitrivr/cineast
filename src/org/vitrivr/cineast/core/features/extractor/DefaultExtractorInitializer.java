@@ -3,7 +3,6 @@ package org.vitrivr.cineast.core.features.extractor;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
-import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 
 public class DefaultExtractorInitializer implements ExtractorInitializer {
 

@@ -1,11 +1,10 @@
 package org.vitrivr.cineast.core.config.deserializers;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,10 +13,12 @@ import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 /**
  * @author rgasser
@@ -39,7 +40,9 @@ public class FeatureCategoriesDeserializer extends JsonDeserializer<List<DoubleP
             /* Extract feature and weight node. */
             JsonNode featureNode = node.get("feature");
             JsonNode weightNode = node.get("weight");
-            if (featureNode == null || weightNode == null) continue;
+            if (featureNode == null || weightNode == null) {
+              continue;
+            }
             String feature = featureNode.asText();
             Double weight = weightNode.asDouble();
 
@@ -61,7 +64,9 @@ public class FeatureCategoriesDeserializer extends JsonDeserializer<List<DoubleP
             }
 
             /* If class could be fetched, add to list. */
-            if (c == null) continue;
+            if (c == null) {
+              continue;
+            }
             list.add(new DoublePair<Class<? extends Retriever>>(c, weight));
         }
 

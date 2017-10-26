@@ -168,7 +168,8 @@ public class CachedMultiImage implements MultiImage {
 		return this.height;
 	}
 	
-	public synchronized void clear(){
+	@Override
+  public synchronized void clear(){
 		this.thumb = null;
 		this.file.delete();
 	}

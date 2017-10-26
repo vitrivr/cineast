@@ -1,23 +1,22 @@
 package org.vitrivr.cineast.core.features.codebook;
 
-import boofcv.alg.bow.ClusterVisualWords;
-
-import boofcv.io.UtilIO;
-import org.ddogleg.clustering.ComputeClusters;
-
-import org.vitrivr.cineast.core.decode.general.Decoder;
-import org.vitrivr.cineast.core.decode.image.DefaultImageDecoder;
-
-import javax.activation.MimetypesFileTypeMap;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import javax.activation.MimetypesFileTypeMap;
+
+import org.ddogleg.clustering.ComputeClusters;
+import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.decode.image.DefaultImageDecoder;
+
+import boofcv.alg.bow.ClusterVisualWords;
+import boofcv.io.UtilIO;
 
 /**
  * Default implementation of a Codebook generator for images. Extend and add the details like
@@ -98,7 +97,9 @@ public abstract class ImageCodebookGenerator implements CodebookGenerator {
             } else {
                 skipped++;
             }
-            if (counter % update == 0) this.updateProgressBar(progressBar, max, counter);
+            if (counter % update == 0) {
+              this.updateProgressBar(progressBar, max, counter);
+            }
             System.out.print(String.format("\rAdding vectors to codebook: %d/%d files processed (%d skipped) |%s| (Memory left: %.2f/%.2f GB)", counter,max,skipped, String.valueOf(progressBar), Runtime.getRuntime().freeMemory()/1000000.0f, Runtime.getRuntime().totalMemory()/1000000.0f));
             counter++;
         }

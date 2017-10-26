@@ -23,7 +23,7 @@ public final class ARPartioner {
 			_return.add(new LinkedList<T>());
 		}
 		
-		float centerX = width / 2f, centerY = height / 2f, w = (float) width, h = (float) height;
+		float centerX = width / 2f, centerY = height / 2f, w = width, h = height;
 		
 		for(int i = 0; i < input.size(); ++i){
 			float   x = ((i % width) - centerX) / w,

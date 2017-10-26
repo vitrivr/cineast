@@ -7,6 +7,7 @@ import java.util.List;
  * <p>
  * Created by silvan on 23.08.16.
  */
+@Deprecated
 public interface LabelProvider {
 
     /**

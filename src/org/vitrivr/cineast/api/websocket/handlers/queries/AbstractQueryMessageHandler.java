@@ -1,5 +1,11 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.StringDoublePair;
@@ -7,8 +13,6 @@ import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
-
-import java.util.*;
 
 /**
  * @author rgasser

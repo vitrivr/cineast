@@ -121,6 +121,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      *
      * @param segment SegmentContainer to process.
      */
+    @Override
     public void processSegment(SegmentContainer segment) {
         final List<float[]> features = this.getFeatures(segment);
 
@@ -157,6 +158,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      * @param qc QueryConfig provided by the caller of the feature module.
      * @return Modified QueryConfig.
      */
+    @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
                 .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
@@ -174,7 +176,9 @@ public abstract class HPCPShingle extends StagedFeatureModule {
         /* Create STFT; If this fails, return empty list. */
         Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
         STFT stft = segment.getSTFT(parameters.first,(parameters.first - 2*parameters.second)/2, parameters.second, new HanningWindow());
-        if (stft == null) return new ArrayList<>();
+        if (stft == null) {
+          return new ArrayList<>();
+        }
 
         HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);
         hpcps.addContribution(stft);

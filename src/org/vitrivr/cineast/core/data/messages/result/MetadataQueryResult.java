@@ -1,14 +1,14 @@
 package org.vitrivr.cineast.core.data.messages.result;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import static org.vitrivr.cineast.core.data.messages.interfaces.MessageType.QR_METADATA;
+
+import java.util.List;
 
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.abstracts.AbstractQueryResultMessage;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
-import java.util.List;
-
-import static org.vitrivr.cineast.core.data.messages.interfaces.MessageType.QR_METADATA;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * @author rgasser

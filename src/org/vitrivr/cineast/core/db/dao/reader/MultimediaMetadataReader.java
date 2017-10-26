@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Data access object that facilitates lookups in Cineast's metadata entity (cineast_metadata). Methods in this class

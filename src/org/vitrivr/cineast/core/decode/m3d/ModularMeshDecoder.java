@@ -1,5 +1,15 @@
 package org.vitrivr.cineast.core.decode.m3d;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.activation.MimetypesFileTypeMap;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DecoderConfig;
@@ -9,15 +19,6 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.decode.general.Converter;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
-
-import javax.activation.MimetypesFileTypeMap;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
@@ -93,7 +94,9 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
             Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
 
             /* If decoder is null, create a new one. */
-            if (decoder == null) decoder = decoderForContenttype(contenttype);
+            if (decoder == null) {
+              decoder = decoderForContenttype(contenttype);
+            }
 
             /* If decoder is still null, return an emtpy Mesh. */
             if (decoder == null) {
@@ -131,7 +134,9 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
             Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
 
             /* If decoder is null, create a new one. */
-            if (decoder == null) decoder = decoderForContenttype(contenttype);
+            if (decoder == null) {
+              decoder = decoderForContenttype(contenttype);
+            }
 
             /* If decoder is still null, return an emtpy Mesh. */
             if (decoder == null) {

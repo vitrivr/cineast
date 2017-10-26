@@ -60,13 +60,21 @@ public class AudioDescriptor {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+          return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+          return false;
+        }
 
         AudioDescriptor that = (AudioDescriptor) o;
 
-        if (Float.compare(that.samplingrate, samplingrate) != 0) return false;
-        if (channels != that.channels) return false;
+        if (Float.compare(that.samplingrate, samplingrate) != 0) {
+          return false;
+        }
+        if (channels != that.channels) {
+          return false;
+        }
         return duration == that.duration;
     }
 

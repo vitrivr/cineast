@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,13 +8,20 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
-import org.vitrivr.cineast.core.data.messages.result.*;
+import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
+import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.QueryEnd;
+import org.vitrivr.cineast.core.data.messages.result.QueryError;
+import org.vitrivr.cineast.core.data.messages.result.QueryStart;
+import org.vitrivr.cineast.core.data.messages.result.SegmentQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.SimilarityQueryResult;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
+
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 /**
  * @author rgasser
@@ -58,7 +64,9 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
                     /* Convert partial-results to list of StringDoublePairs. */
                     final List<StringDoublePair> list = new ArrayList<>(map.size());
                     map.forEachEntry((key, value) -> {
-                        if (value > 0) list.add(new StringDoublePair(key, value));
+                        if (value > 0) {
+                          list.add(new StringDoublePair(key, value));
+                        }
                         return true;
                     });
 

@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -32,6 +33,7 @@ import org.vitrivr.cineast.core.util.TimeHelper;
  * NeuralNet Feature modules should extend this class
  * It provides a table where neuralnets can access wordNet-labels and human labels
  */
+@Deprecated
 public abstract class NeuralNetFeature extends AbstractFeatureModule {
 
     private static final Logger LOGGER = LogManager.getLogger();

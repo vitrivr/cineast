@@ -1,17 +1,5 @@
 package org.vitrivr.cineast.core.decode.m3d;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.joml.Vector3f;
-import org.joml.Vector3i;
-import org.joml.Vector4i;
-
-import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.data.m3d.Mesh;
-import org.vitrivr.cineast.core.decode.general.Decoder;
-import org.vitrivr.cineast.core.util.LogHelper;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +10,16 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
+import org.joml.Vector4i;
+import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * Decodes OFF (.off) files as defined by [1] and returns a Mesh representation. Requires
@@ -92,11 +90,15 @@ public class OFFMeshDecoder implements Decoder<Mesh> {
                 /* First line must start with OFF. */
                 String line = br.readLine();
                 String[] tokens = null;
-                if (line == null || !line.startsWith(TOKEN_BOF)) return null;
+                if (line == null || !line.startsWith(TOKEN_BOF)) {
+                  return null;
+                }
 
                 /* Now read second line which should contain the number of vertices and faces. */
                 line = br.readLine();
-                if (line == null) return null;
+                if (line == null) {
+                  return null;
+                }
                 tokens = line.split(DELIMITER);
 
                 int vertices = Integer.parseInt(tokens[0]);

@@ -1,17 +1,9 @@
 package org.vitrivr.cineast.core.decode.image;
 
-import com.twelvemonkeys.image.ResampleOp;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.decode.general.Decoder;
-import org.vitrivr.cineast.core.util.LogHelper;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-
 import java.awt.image.BufferedImageOp;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -20,6 +12,16 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.imageio.ImageIO;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.util.LogHelper;
+
+import com.twelvemonkeys.image.ResampleOp;
 
 /**
  * @author rgasser
@@ -104,7 +106,9 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
             LOGGER.fatal("A severe error occurred while trying to decode the image file under '{}'. Image will be skipped...", this.input.toString(), LogHelper.getStackTrace(e));
         } finally {
             try {
-                if (is != null) is.close();
+                if (is != null) {
+                  is.close();
+                }
             } catch (IOException e) {
                 LOGGER.warn("Could not close the input stream of the image file under {}.", this.input.toString(), LogHelper.getStackTrace(e));
             }

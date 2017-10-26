@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.util.audio.pitch.tracking;
 
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
-import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
 
 /**
  * This is a helper class for pitch tracking. It represents a pitch contour, that is, a candidate for a melody fragment. The contour
@@ -127,7 +127,9 @@ public class PitchContour {
      * @return Pitch mean
      */
     public final double pitchMean() {
-        if (this.dirty) this.calculate();
+        if (this.dirty) {
+          this.calculate();
+        }
         return this.frequencyStatistics.getMean();
     }
 
@@ -137,7 +139,9 @@ public class PitchContour {
      * @return Pitch standard deviation
      */
     public final double pitchDeviation() {
-        if (this.dirty) this.calculate();
+        if (this.dirty) {
+          this.calculate();
+        }
         return this.frequencyStatistics.getStandardDeviation();
     }
 
@@ -147,7 +151,9 @@ public class PitchContour {
      * @return Salience mean
      */
     public final double salienceMean() {
-        if (this.dirty) this.calculate();
+        if (this.dirty) {
+          this.calculate();
+        }
         return this.salienceStatistics.getMean();
     }
 
@@ -157,7 +163,9 @@ public class PitchContour {
      * @return Salience standard deviation.
      */
     public final double salienceDeviation() {
-        if (this.dirty) this.calculate();
+        if (this.dirty) {
+          this.calculate();
+        }
         return this.salienceStatistics.getStandardDeviation();
     }
 
@@ -167,7 +175,9 @@ public class PitchContour {
      * @return
      */
     public final double salienceSum() {
-        if (this.dirty) this.calculate();
+        if (this.dirty) {
+          this.calculate();
+        }
         return this.salienceStatistics.getSum();
     }
 

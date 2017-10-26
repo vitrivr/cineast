@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.art.modules.visualization;
 
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-
 import java.util.List;
+
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 
 /**
  * Created by sein on 30.08.16.

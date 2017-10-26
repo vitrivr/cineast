@@ -1,35 +1,34 @@
 package org.vitrivr.cineast.core.evaluation;
 
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
-import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
-import org.vitrivr.cineast.core.decode.general.Converter;
-
-import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
-import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
-import org.vitrivr.cineast.core.util.json.JsonReader;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.Callable;
+
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
+import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.decode.general.Converter;
+import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
+import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+import org.vitrivr.cineast.core.util.json.JsonReader;
 
 /**
  * @author rgasser
@@ -224,7 +223,9 @@ EvaluationRuntime implements Callable {
      * @return MultimediaObjectDescriptor
      */
     private MultimediaObjectDescriptor objectDescriptorForId(String docID) {
-        if (this.cache.containsKey(docID)) return this.cache.get(docID);
+        if (this.cache.containsKey(docID)) {
+          return this.cache.get(docID);
+        }
         Optional<SegmentDescriptor> descriptor = this.segmentLookup.lookUpSegment(docID);
         if (descriptor.isPresent()) {
             MultimediaObjectDescriptor object = this.multimediaObjectLookup.lookUpObjectById(descriptor.get().getObjectId());

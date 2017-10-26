@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.art.modules.visualization;
 
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
-
 import java.util.Comparator;
+
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 
 /**
  * Created by sein on 07.09.16.

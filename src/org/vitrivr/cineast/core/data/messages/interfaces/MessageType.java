@@ -4,7 +4,13 @@ import org.vitrivr.cineast.core.data.messages.general.Ping;
 import org.vitrivr.cineast.core.data.messages.lookup.MetadataLookup;
 import org.vitrivr.cineast.core.data.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
-import org.vitrivr.cineast.core.data.messages.result.*;
+import org.vitrivr.cineast.core.data.messages.result.MetadataQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.QueryEnd;
+import org.vitrivr.cineast.core.data.messages.result.QueryError;
+import org.vitrivr.cineast.core.data.messages.result.QueryStart;
+import org.vitrivr.cineast.core.data.messages.result.SegmentQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.SimilarityQueryResult;
 import org.vitrivr.cineast.core.data.messages.session.StartSessionMessage;
 
 /**

@@ -103,12 +103,24 @@ public class IngestConfig implements ExtractionContextProvider {
     public void setDatabase(DatabaseConfig database) {
         /* Merge with global settings if not set. */
         DatabaseConfig global = Config.sharedConfig().getDatabase();
-        if (this.database.getSelector() == null) this.database.setSelector(global.getSelector());
-        if (this.database.getWriter() == null) this.database.setWriter(global.getWriter());
-        if (this.database.getBatchsize() == DatabaseConfig.DEFAULT_BATCH_SIZE) this.database.setBatchsize(global.getBatchsize());
-        if (this.database.getHost() == DatabaseConfig.DEFAULT_HOST) this.database.setHost(global.getHost());
-        if (this.database.getPort() == DatabaseConfig.DEFAULT_PORT) this.database.setPort(global.getPort());
-        if (this.database.getPlaintext() == DatabaseConfig.DEFAULT_PLAINTEXT) this.database.setPlaintext(global.getPlaintext());
+        if (this.database.getSelector() == null) {
+          this.database.setSelector(global.getSelector());
+        }
+        if (this.database.getWriter() == null) {
+          this.database.setWriter(global.getWriter());
+        }
+        if (this.database.getBatchsize() == DatabaseConfig.DEFAULT_BATCH_SIZE) {
+          this.database.setBatchsize(global.getBatchsize());
+        }
+        if (this.database.getHost() == DatabaseConfig.DEFAULT_HOST) {
+          this.database.setHost(global.getHost());
+        }
+        if (this.database.getPort() == DatabaseConfig.DEFAULT_PORT) {
+          this.database.setPort(global.getPort());
+        }
+        if (this.database.getPlaintext() == DatabaseConfig.DEFAULT_PLAINTEXT) {
+          this.database.setPlaintext(global.getPlaintext());
+        }
         
         /* Apply. */
         this.database = database;
@@ -121,9 +133,15 @@ public class IngestConfig implements ExtractionContextProvider {
     public void setPipeline(ExtractionPipelineConfig pipeline) {
         /* Merge with global settings if not set. */
         ExtractionPipelineConfig global = Config.sharedConfig().getExtractor();
-        if (this.pipeline.getTaskQueueSize() == ExtractionPipelineConfig.DEFAULT_TASKQUEUE_SIZE) this.pipeline.setTaskQueueSize(global.getTaskQueueSize());
-        if (this.pipeline.getThreadPoolSize() == ExtractionPipelineConfig.DEFAULT_THREADPOOL_SIZE) this.pipeline.setThreadPoolSize(global.getThreadPoolSize());
-        if (this.pipeline.getShotQueueSize() == ExtractionPipelineConfig.DEFAULT_SEGMENTQUEUE_SIZE) this.pipeline.setShotQueueSize(global.getShotQueueSize());
+        if (this.pipeline.getTaskQueueSize() == ExtractionPipelineConfig.DEFAULT_TASKQUEUE_SIZE) {
+          this.pipeline.setTaskQueueSize(global.getTaskQueueSize());
+        }
+        if (this.pipeline.getThreadPoolSize() == ExtractionPipelineConfig.DEFAULT_THREADPOOL_SIZE) {
+          this.pipeline.setThreadPoolSize(global.getThreadPoolSize());
+        }
+        if (this.pipeline.getShotQueueSize() == ExtractionPipelineConfig.DEFAULT_SEGMENTQUEUE_SIZE) {
+          this.pipeline.setShotQueueSize(global.getShotQueueSize());
+        }
 
         this.pipeline = pipeline;
     }
@@ -279,6 +297,7 @@ public class IngestConfig implements ExtractionContextProvider {
      *
      * @return
      */
+    @Override
     public int threadPoolSize() {
         return this.pipeline.getThreadPoolSize();
     }
@@ -287,6 +306,7 @@ public class IngestConfig implements ExtractionContextProvider {
      *
      * @return
      */
+    @Override
     public Integer taskQueueSize() {
         return this.pipeline.getTaskQueueSize();
     }

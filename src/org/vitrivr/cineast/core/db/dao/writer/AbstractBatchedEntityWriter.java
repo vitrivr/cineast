@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
@@ -111,6 +112,7 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
   /**
    * Flushes the buffer and closes the writer.
    */
+  @Override
   public final void close() {
     if (this.buffer.size() > 0) {
       this.flush();
@@ -125,6 +127,7 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
   /**
    *
    */
+  @Override
   public void finalize() {
     this.close();
   }

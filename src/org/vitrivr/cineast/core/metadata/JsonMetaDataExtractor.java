@@ -21,7 +21,7 @@ public class JsonMetaDataExtractor implements MetadataExtractor {
     File jsonFile = new File(parent, file.getName() + ".json");
     
     if(!jsonFile.exists()){
-        jsonFile = new File(parent, com.google.common.io.Files.getNameWithoutExtension(file.getName()) + "json");
+        jsonFile = new File(parent, com.google.common.io.Files.getNameWithoutExtension(file.getName()) + ".json");
     }
     
     if(!jsonFile.exists()){

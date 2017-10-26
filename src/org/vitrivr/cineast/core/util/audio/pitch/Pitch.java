@@ -30,7 +30,9 @@ public class Pitch {
      * @param index MIDI index of the pitch.
      */
     public Pitch(int index) {
-        if (index < 0) throw new IllegalArgumentException("");
+        if (index < 0) {
+          throw new IllegalArgumentException("");
+        }
         this.index = index;
         this.frequency = MidiUtil.midiToFrequency(this.index);
     }

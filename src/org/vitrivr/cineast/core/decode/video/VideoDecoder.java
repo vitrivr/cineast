@@ -15,7 +15,8 @@ public interface VideoDecoder extends AutoCloseable {
 	
 	double getFPS();
 
-	void close();
+	@Override
+  void close();
 	
 	/**
 	 * width of the input video

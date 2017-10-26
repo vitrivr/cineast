@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.evaluation;
 
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 
 /**
  * Helper class that can be used to track evaluation results. It tracks the total number of relevant documents
@@ -55,9 +55,15 @@ public class EvaluationResult {
      * @param relevant Boolean that indicates whether the document was relevant (true) or not (false).
      */
     public final void documentAvailable(String docID, int k, boolean relevant) {
-        if (k < 1) throw new IllegalArgumentException(String.format("The value k must be greater than 0 (is: %d).", k));
-        if (k < this.pk.size()) throw new IllegalArgumentException(String.format("The provided rank %d has already been evaluated.", k));
-        if (relevant) this.intersection += 1;
+        if (k < 1) {
+          throw new IllegalArgumentException(String.format("The value k must be greater than 0 (is: %d).", k));
+        }
+        if (k < this.pk.size()) {
+          throw new IllegalArgumentException(String.format("The provided rank %d has already been evaluated.", k));
+        }
+        if (relevant) {
+          this.intersection += 1;
+        }
         this.retrieved += 1;
         Triple<String,Float,Float> triple = new ImmutableTriple<>(docID, (float)this.intersection/(float)k,  (float)this.intersection/(float)this.relevant);
         this.pk.add(triple);

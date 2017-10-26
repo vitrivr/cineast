@@ -1,8 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
-import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.GrayU8;
 import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -17,6 +16,9 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
+
+import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.image.GrayU8;
 
 /**
  * see Efficient Use of MPEG-7 Edge Histogram Descriptor by Won '02

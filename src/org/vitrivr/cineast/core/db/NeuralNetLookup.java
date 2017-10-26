@@ -28,6 +28,7 @@ public class NeuralNetLookup implements AutoCloseable {
         this.feature = feature;
     }
 
+    @Override
     public void close() {
         this.selector.close();
         this.classificationSelector.close();

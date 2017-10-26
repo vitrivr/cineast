@@ -4,12 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Provides Labels for .txt files with format n... $LABELS (formatted as .csv)
  * Example: n01518878 ostrich, Struthio camelus
  */
+@Deprecated
 public class SynLabelProvider implements LabelProvider {
 
     private List<List<String>> labels;

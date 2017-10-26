@@ -1,13 +1,16 @@
 package org.vitrivr.cineast.explorative;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.Position;
 import org.vitrivr.cineast.core.data.hct.DistanceCalculation;
-
-import java.io.Serializable;
-import java.util.*;
 
 public class Plane<T extends Printable> implements Printable, Serializable {
 
@@ -30,7 +33,9 @@ public class Plane<T extends Printable> implements Printable, Serializable {
         this.vectors = vectors;
         this.remainingVectors.addAll(vectors);
         this.representative = representative;
-        if(vectors.contains(representative)) vectors.remove(representative);
+        if(vectors.contains(representative)) {
+          vectors.remove(representative);
+        }
         this.distanceCalculator = distanceCalculator;
         plane = new VisualizationElement[width][height];
         insertedItemsWithFreeNeighbors = new ArrayList<>();
@@ -67,10 +72,14 @@ public class Plane<T extends Printable> implements Printable, Serializable {
             }
 
             for(Position p : elementWithFreeNeighbors.getPosition().getNeighborPositions()){
-                if(p.getX() < 0 || p.getY() < 0 || p.getX() >= width || p.getY() >= height) continue;
+                if(p.getX() < 0 || p.getY() < 0 || p.getX() >= width || p.getY() >= height) {
+                  continue;
+                }
                 double actDist = 0;
                 int nbrOfNeighbors = 0;
-                if(getVisElementAtPos(p) != null) continue;
+                if(getVisElementAtPos(p) != null) {
+                  continue;
+                }
                 for(Position pos : p.getNeighborPositions()){
                     VisualizationElement<T> element = getVisElementAtPos(pos);
                     if(element != null){
@@ -94,7 +103,9 @@ public class Plane<T extends Printable> implements Printable, Serializable {
         double minDist = Double.MAX_VALUE;
         int i = 0;
         for (T vector : remainingVectors) {
-            if(i > 20) break;
+            if(i > 20) {
+              break;
+            }
             i++;
             Pair<Position, Double> optimumPerVector = getOptimalPosition(vector);
             if(minDist > optimumPerVector.second){
@@ -123,7 +134,9 @@ public class Plane<T extends Printable> implements Printable, Serializable {
     }
 
     private void insert(VisualizationElement<T> newElement, Position position){
-        if(plane[position.getX()][position.getY()] != null) logger.info("The position (" + position.getX() + ", " + position.getY() + ") is already in use!");
+        if(plane[position.getX()][position.getY()] != null) {
+          logger.info("The position (" + position.getX() + ", " + position.getY() + ") is already in use!");
+        }
         plane[position.getX()][position.getY()] = newElement;
         insertedItemsWithFreeNeighbors.add(newElement);
         addedVectors.add(newElement.getVector());
@@ -131,7 +144,9 @@ public class Plane<T extends Printable> implements Printable, Serializable {
     }
 
     boolean isFreePosition(Position pos){
-        if(pos.getX() < 0 || pos.getY() < 0) return false;
+        if(pos.getX() < 0 || pos.getY() < 0) {
+          return false;
+        }
 
         if(pos.getX() < width && pos.getY() < height){
             if(plane[pos.getX()][pos.getY()] == null){

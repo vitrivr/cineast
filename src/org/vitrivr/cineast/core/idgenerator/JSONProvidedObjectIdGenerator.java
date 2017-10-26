@@ -1,14 +1,13 @@
 package org.vitrivr.cineast.core.idgenerator;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.LinkedList;
+
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.core.util.json.JsonReader;
-
-import java.io.File;
-import java.nio.file.Path;
-
-import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * Generates objectIds from a provided list of objectId's. Those ID's are either assigned in sequence OR mapped
@@ -59,7 +58,9 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
     @Override
     public void init(HashMap<String, String> properties) {
         String assignment = properties.get(PROPERTY_NAME_ASSIGNMENT);
-        if (assignment != null) this.mode = AssignmentMode.valueOf(assignment.toUpperCase());
+        if (assignment != null) {
+          this.mode = AssignmentMode.valueOf(assignment.toUpperCase());
+        }
 
         String source = properties.get(PROPERTY_NAME_SOURCE);
         if (mode == AssignmentMode.MAP) {

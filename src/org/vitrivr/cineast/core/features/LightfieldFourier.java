@@ -1,22 +1,21 @@
 package org.vitrivr.cineast.core.features;
 
-import boofcv.alg.filter.binary.Contour;
-import georegression.struct.point.Point2D_I32;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
-
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.images.ContourHelper;
 import org.vitrivr.cineast.core.util.math.MathConstants;
 
-import java.awt.image.BufferedImage;
-import java.util.*;
-import java.util.List;
+import boofcv.alg.filter.binary.Contour;
+import georegression.struct.point.Point2D_I32;
 
 /**
  * An Extraction and Retrieval module for 3D models that leverages Fourier based light field descriptors and as proposed in [1] and [2].
@@ -72,6 +71,7 @@ public class LightfieldFourier extends Lightfield {
      * @param poseidx Poseidx of the extracted image.
      * @return List of descriptors for image.
      */
+    @Override
     protected List<float[]> featureVectorsFromImage(BufferedImage image, int poseidx) {
         final List<Contour> contours = ContourHelper.getContours(image);
         final List<float[]> features = new ArrayList<>();
@@ -80,7 +80,9 @@ public class LightfieldFourier extends Lightfield {
         for (Contour contour : contours) {
             for (List<Point2D_I32> inner : contour.internal) {
                 /* Check size of selected contour. */
-                if (inner.size() < SIZE * 2) continue;
+                if (inner.size() < SIZE * 2) {
+                  continue;
+                }
 
                 /* Calculate the descriptor for the selected contour. */
                 double[] cds = ContourHelper.centroidDistance(inner, true);
@@ -107,6 +109,7 @@ public class LightfieldFourier extends Lightfield {
      * @param features List of features for which a QueryConfig is required.
      * @return New query config (may be identical to the original one).
      */
+    @Override
     protected List<ReadableQueryConfig> generateQueryConfigsForFeatures(ReadableQueryConfig qc, List<float[]> features) {
         List<ReadableQueryConfig> configs = new ArrayList<>(features.size());
         for (float[] feature : features) {

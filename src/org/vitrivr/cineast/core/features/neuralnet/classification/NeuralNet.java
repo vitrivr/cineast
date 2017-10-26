@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.features.neuralnet.classification;
 
-import org.vitrivr.cineast.core.features.neuralnet.label.LabelProvider;
-
 import java.awt.image.BufferedImage;
+
+import org.vitrivr.cineast.core.features.neuralnet.label.LabelProvider;
 
 /**
  * Interface for abstracting Neural Nets

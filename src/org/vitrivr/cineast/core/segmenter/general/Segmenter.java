@@ -48,5 +48,6 @@ public interface Segmenter<A> extends Runnable, AutoCloseable {
      *
      * <strong>Note:</strong> It is unsafe to re-use a Segmenter after it has been closed.
      */
+    @Override
     void close();
 }

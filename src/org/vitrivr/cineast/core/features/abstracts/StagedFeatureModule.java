@@ -70,6 +70,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      * @param qc QueryConfiguration
      * @return List of results
      */
+    @Override
     public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
         /* Initialize new Benchmark object. */
         Benchmark benchmark = benchmark_engine.startNew(this.getClass().getSimpleName() + " (" + qc.getQueryId().toString() + ")");
@@ -124,6 +125,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      * @param qc QueryConfiguration
      * @return List of results
      */
+    @Override
     public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
         /* Initialize new Benchmark object. */
         Benchmark benchmark = benchmark_engine.startNew(this.getClass().getSimpleName() + " (" + qc.getQueryId().toString() + ")");

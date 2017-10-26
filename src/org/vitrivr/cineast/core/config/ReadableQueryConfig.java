@@ -1,6 +1,9 @@
 package org.vitrivr.cineast.core.config;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 
