@@ -13,7 +13,6 @@ import org.vitrivr.cineast.core.data.MultiImage;
 public class VideoFrame {
     public static final VideoFrame EMPTY_VIDEO_FRAME = new VideoFrame(0, 0, MultiImage.EMPTY_MULTIIMAGE, new VideoDescriptor(25, 40, 1, 1));
 
-
 	/** ID of the VideoFrame. */
   	private final int id;
 
@@ -61,32 +60,22 @@ public class VideoFrame {
 	}
 
 	/**
-	 * Returns the presentation timestamp of the first sample.
+	 * Returns the presentation timestamp of the {@link VideoFrame} in milliseconds.
 	 *
-	 * @return Presentation timestamp pf the first sample.
+	 * @return Presentation timestamp of the {@link VideoFrame}.
 	 */
 	public long getTimestamp() {
 		return this.timestamp;
 	}
 
 	/**
-	 * Returns the relative start of the VideoFrame in seconds.
+	 * Returns the presentation timestamp of the {@link VideoFrame} in seconds.
 	 *
-	 * @return
+	 * @return Presentation timestamp of the {@link VideoFrame} in seconds.
 	 */
-	public final float getStart() {
-		return this.timestamp /1000.0f;
+	public float getTimestampSeconds() {
+		return this.timestamp/1000.0f;
 	}
-
-	/**
-	 * Returns the relative end of the VideoFrame in seconds.
-	 *
-	 * @return
-	 */
-	public final float getEnd() {
-		return this.getStart() + 1.0f/this.descriptor.getFps();
-	}
-
 
 	/**
 	 * Getter for frame image.

@@ -390,7 +390,7 @@ public class VideoSegment implements SegmentContainer {
 	@Override
 	public float getAbsoluteStart() {
 		if (!this.videoFrames.isEmpty()) {
-			return this.videoFrames.get(0).getStart();
+			return this.videoFrames.get(0).getTimestampSeconds();
 		} else {
 			return 0;
 		}
@@ -404,7 +404,7 @@ public class VideoSegment implements SegmentContainer {
 	@Override
 	public float getAbsoluteEnd() {
 		if (!this.videoFrames.isEmpty()) {
-			return this.videoFrames.get(this.videoFrames.size()-1).getEnd();
+			return this.videoFrames.get(this.videoFrames.size()-1).getTimestampSeconds();
 		} else {
 			return 0;
 		}
