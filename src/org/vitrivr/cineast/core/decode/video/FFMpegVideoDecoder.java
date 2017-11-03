@@ -160,75 +160,64 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      * @return
      */
     private boolean readFrame(boolean queue) {
-        boolean readFrame = false;
+        /* Tries to read a new packet from the stream. */
+        int read_results = av_read_frame(this.pFormatCtx, this.packet);
+        if (read_results < 0 && !(read_results == AVERROR_EOF)) {
+            LOGGER.error("Error occurred while reading packet. FFMPEG av_read_frame() returned code {}.", read_results);
+            av_packet_unref(this.packet);
+            return false;
+        } else if (read_results == AVERROR_EOF && this.eof.getAndSet(true)) {
+            return false;
+        }
 
-        /* Outer loop: Read packet (frame) from stream. */
-        do {
-            /* Tries to read a new packet from the stream. */
-            int read_results = av_read_frame(this.pFormatCtx, this.packet);
-            if (read_results < 0 && !(read_results == AVERROR_EOF)) {
-                LOGGER.error("Error occurred while reading packet. FFMPEG av_read_frame() returned code {}.", read_results);
+        /* Two cases: Audio or video stream!. */
+        if (packet.stream_index() == this.videoStream) {
+            /* Send packet to decoder. If no packet was read, send null to flush the buffer. */
+            int decode_results = avcodec_send_packet(this.pCodecCtxVideo, this.eof.get() ? null : this.packet);
+            if (decode_results < 0) {
+                LOGGER.error("Error occurred while decoding frames from packet. FFMPEG avcodec_send_packet() returned code {}.", decode_results);
                 av_packet_unref(this.packet);
-                break;
-            } else if (read_results == AVERROR_EOF) {
-                if (this.eof.get()) {
-                  break;
-                }
-                this.eof.set(true);
+                return true;
             }
 
-            /* Set readFrame to true. */
-            readFrame = true;
-
-            /* Two cases: Audio or video stream!. */
-            if (packet.stream_index() == this.videoStream) {
-                /* Send packet to decoder. If no packet was read, send null to flush the buffer. */
-                int decode_results = avcodec_send_packet(this.pCodecCtxVideo, this.eof.get() ? null : this.packet);
-                if (decode_results < 0) {
-                    LOGGER.error("Error occurred while decoding frames from packet. FFMPEG avcodec_send_packet() returned code {}.", decode_results);
-                    av_packet_unref(this.packet);
-                    break;
+            /*
+             * Because a packet can theoretically contain more than one frame; repeat decoding until no samples are
+             * remaining in the packet.
+             */
+            while (avcodec_receive_frame(this.pCodecCtxVideo, this.pFrame) == 0) {
+              /* If queue is true; enqueue frame. */
+                if (queue) {
+                    readVideo();
                 }
+            }
+        } else if (packet.stream_index() == this.audioStream) {
+            /* Send packet to decoder. If no packet was read, send null to flush the buffer. */
+            int decode_results = avcodec_send_packet(this.pCodecCtxAudio, this.eof.get() ? null : this.packet);
+            if (decode_results < 0) {
+                LOGGER.error("Error occurred while decoding frames from packet. FFMPEG avcodec_send_packet() returned code {}.", decode_results);
+                av_packet_unref(this.packet);
+                return true;
+            }
 
-                /*
-                 * Because a packet can theoretically contain more than one frame; repeat decoding until no samples are
-                 * remaining in the packet.
-                 */
-                while (avcodec_receive_frame(this.pCodecCtxVideo, this.pFrame) == 0) {
-                  /* If queue is true; enqueue frame. */
-                    if (queue) {
-                        readVideo();
-                    }
-                }
-            } else if (packet.stream_index() == this.audioStream) {
-                /* Send packet to decoder. If no packet was read, send null to flush the buffer. */
-                int decode_results = avcodec_send_packet(this.pCodecCtxAudio, this.eof.get() ? null : this.packet);
-                if (decode_results < 0) {
-                    LOGGER.error("Error occurred while decoding frames from packet. FFMPEG avcodec_send_packet() returned code {}.", decode_results);
-                    av_packet_unref(this.packet);
-                    break;
-                }
-
-                /*
-                 * Because a packet can theoretically contain more than one frame; repeat decoding until no samples are
-                 * remaining in the packet.
-                 */
-                while (avcodec_receive_frame(this.pCodecCtxAudio, this.pFrame) == 0) {
-                  /* If queue is true; enqueue frame. */
-                    if (queue) {
-                        if (this.swr_ctx != null) {
-                            this.enqueueResampledAudio();
-                        } else {
-                            this.enqueueOriginalAudio();
-                        }
+            /*
+             * Because a packet can theoretically contain more than one frame; repeat decoding until no samples are remaining in the packet.
+             */
+            while (avcodec_receive_frame(this.pCodecCtxAudio, this.pFrame) == 0) {
+              /* If queue is true; enqueue frame. */
+                if (queue) {
+                    if (this.swr_ctx != null) {
+                        this.enqueueResampledAudio();
+                    } else {
+                        this.enqueueOriginalAudio();
                     }
                 }
             }
+        }
 
-            /* Free the packet that was allocated by av_read_frame. */
-            av_packet_unref(packet);
-        } while(!readFrame);
-        return readFrame;
+        /* Free the packet that was allocated by av_read_frame. */
+        av_packet_unref(packet);
+
+        return true;
     }
 
     /**
@@ -240,7 +229,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      */
     private Long getFrameTimestamp(int stream) {
         AVRational timebase = this.pFormatCtx.streams(stream).time_base();
-        return (long)Math.floor((this.pFrame.best_effort_timestamp() * (float)timebase.num() * 1000)/timebase.den());
+        return Math.floorDiv((this.pFrame.best_effort_timestamp() * timebase.num() * 1000), timebase.den());
     }
 
     /**
