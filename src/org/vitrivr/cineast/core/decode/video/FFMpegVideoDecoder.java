@@ -34,9 +34,7 @@ import static org.bytedeco.javacpp.swresample.swr_convert;
 import static org.bytedeco.javacpp.swresample.swr_free;
 import static org.bytedeco.javacpp.swresample.swr_get_out_samples;
 import static org.bytedeco.javacpp.swresample.swr_init;
-import static org.bytedeco.javacpp.swscale.SWS_BILINEAR;
-import static org.bytedeco.javacpp.swscale.sws_getContext;
-import static org.bytedeco.javacpp.swscale.sws_scale;
+import static org.bytedeco.javacpp.swscale.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -327,7 +325,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     @Override
     public void close() {
         if (this.pFormatCtx == null) {
-          return;
+            return;
         }
 
         /* Free the raw frame. */
@@ -358,6 +356,12 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         if (this.swr_ctx != null) {
             swr_free(this.swr_ctx);
             this.swr_ctx = null;
+        }
+
+        /* Frees the SWS context. */
+        if (this.sws_ctx != null) {
+            sws_freeContext(this.sws_ctx);
+            this.sws_ctx = null;
         }
 
         /* Closes the audio codec context. */
@@ -424,7 +428,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
             return false;
         }
 
-        if (this.initVideo(path, config) && this.initAudio(path, config)) {
+        if (this.initVideo(config) && this.initAudio(config)) {
             LOGGER.debug("{} was initialized successfully.", this.getClass().getName());
             return true;
         } else {
@@ -434,11 +438,10 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     /**
      *
-     * @param path
      * @param config
      * @return
      */
-    private boolean initVideo(Path path, DecoderConfig config) {
+    private boolean initVideo(DecoderConfig config) {
         /* Read decoder config (VIDEO). */
         int maxWidth = config.namedAsInt(CONFIG_MAXWIDTH_PROPERTY, CONFIG_MAXWIDTH_DEFAULT);
         int maxHeight = config.namedAsInt(CONFIG_HEIGHT_PROPERTY, CONFIG_MAXHEIGHT_DEFAULT);
@@ -454,7 +457,6 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         /* Allocate new codec-context for codec returned by av_find_best_stream(). */
         this.pCodecCtxVideo = avcodec_alloc_context3(codec);
         avcodec_parameters_to_context(this.pCodecCtxVideo, this.pFormatCtx.streams(this.videoStream).codecpar());
-
         /* Open the code context. */
         if (avcodec_open2(this.pCodecCtxVideo, codec, (AVDictionary)null) < 0) {
             LOGGER.error("Error, Could not open video codec.");
@@ -489,10 +491,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         av_image_fill_arrays(this.pFrameRGB.data(), this.pFrameRGB.linesize(), this.buffer, AV_PIX_FMT_RGB24, width, height, 1);
 
         /* Initialize SWS Context. */
-        this.sws_ctx = sws_getContext(this.pCodecCtxVideo.width(), this.pCodecCtxVideo.height(),
-                this.pCodecCtxVideo.pix_fmt(), width, height,
-                AV_PIX_FMT_RGB24, SWS_BILINEAR, null, null, (DoublePointer)null);
-
+        this.sws_ctx = sws_getContext(this.pCodecCtxVideo.width(), this.pCodecCtxVideo.height(), this.pCodecCtxVideo.pix_fmt(), width, height, AV_PIX_FMT_RGB24, SWS_BILINEAR, null, null, (DoublePointer)null);
 
         /* Initialize VideoDescriptor. */
         AVRational timebase = this.pFormatCtx.streams(this.videoStream).time_base();
@@ -506,11 +505,10 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     /**
      *
-     * @param path
      * @param config
      * @return
      */
-    private boolean initAudio(Path path, DecoderConfig config) {
+    private boolean initAudio(DecoderConfig config) {
         /* Read decoder configuration. */
         int samplerate = config.namedAsInt(CONFIG_SAMPLERATE_PROPERTY, CONFIG_SAMPLERATE_DEFAULT);
         int channels = config.namedAsInt(CONFIG_CHANNELS_PROPERTY, CONFIG_CHANNELS_DEFAULT);
