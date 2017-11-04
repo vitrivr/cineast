@@ -169,7 +169,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
      */
     private Long getFrameTimestamp() {
         AVRational timebase = this.pFormatCtx.streams(this.audioStream).time_base();
-        return (long)Math.floor((this.decodedFrame.best_effort_timestamp() * (float)timebase.num() * 1000)/timebase.den());
+        return Math.floorDiv((this.decodedFrame.best_effort_timestamp() * timebase.num() * 1000), timebase.den());
     }
 
     /**
@@ -360,7 +360,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
 
         /* Initialize the AudioDescriptor. */
         AVRational timebase = this.pFormatCtx.streams(this.audioStream).time_base();
-        long duration = (1000L * timebase.num() * this.pFormatCtx.streams(this.audioStream).duration()/timebase.den());
+        long duration = Math.floorDiv(1000L * timebase.num() * this.pFormatCtx.streams(this.audioStream).duration(), timebase.den());
 
         if (this.swr_ctx == null) {
             this.descriptor = new AudioDescriptor(this.pCodecCtx.sample_rate(), this.pCodecCtx.channels(), duration);
