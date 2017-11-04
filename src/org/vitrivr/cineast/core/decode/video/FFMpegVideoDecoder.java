@@ -16,19 +16,7 @@ import static org.bytedeco.javacpp.avformat.avformat_alloc_context;
 import static org.bytedeco.javacpp.avformat.avformat_close_input;
 import static org.bytedeco.javacpp.avformat.avformat_find_stream_info;
 import static org.bytedeco.javacpp.avformat.avformat_open_input;
-import static org.bytedeco.javacpp.avutil.AVERROR_EOF;
-import static org.bytedeco.javacpp.avutil.AVMEDIA_TYPE_AUDIO;
-import static org.bytedeco.javacpp.avutil.AVMEDIA_TYPE_VIDEO;
-import static org.bytedeco.javacpp.avutil.AV_PIX_FMT_RGB24;
-import static org.bytedeco.javacpp.avutil.AV_SAMPLE_FMT_S16;
-import static org.bytedeco.javacpp.avutil.av_frame_alloc;
-import static org.bytedeco.javacpp.avutil.av_frame_free;
-import static org.bytedeco.javacpp.avutil.av_get_bytes_per_sample;
-import static org.bytedeco.javacpp.avutil.av_get_default_channel_layout;
-import static org.bytedeco.javacpp.avutil.av_image_fill_arrays;
-import static org.bytedeco.javacpp.avutil.av_image_get_buffer_size;
-import static org.bytedeco.javacpp.avutil.av_malloc;
-import static org.bytedeco.javacpp.avutil.av_samples_alloc;
+import static org.bytedeco.javacpp.avutil.*;
 import static org.bytedeco.javacpp.swresample.swr_alloc_set_opts;
 import static org.bytedeco.javacpp.swresample.swr_convert;
 import static org.bytedeco.javacpp.swresample.swr_free;
@@ -141,7 +129,6 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     private VideoDescriptor videoDescriptor = null;
     private AudioDescriptor audioDescriptor = null;
-
 
     /** Indicates that decoding of video-data is complete. */
     private final AtomicBoolean videoComplete = new AtomicBoolean(false);
@@ -374,6 +361,12 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         if (this.pCodecCtxVideo != null) {
             avcodec_free_context(this.pCodecCtxVideo);
             this.pCodecCtxVideo = null;
+        }
+
+        /* Frees the ByteBuffer used to resize images. */
+        if (this.buffer  != null) {
+            av_free(this.buffer);
+            this.buffer = null;
         }
 
         /* Close the audio file context. */
