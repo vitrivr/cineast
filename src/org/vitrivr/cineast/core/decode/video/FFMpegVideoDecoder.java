@@ -200,7 +200,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         }
 
         /* Free the packet that was allocated by av_read_frame. */
-        av_packet_unref(packet);
+        av_packet_unref(this.packet);
 
         return true;
     }
@@ -318,54 +318,63 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         /* Free the raw frame. */
         if (this.pFrame != null) {
             av_frame_free(this.pFrame);
+            this.pFrame.close();
             this.pFrame = null;
         }
 
         /* Free the frame holding re-sampled audio. */
         if (this.resampledFrame != null) {
             av_frame_free(this.resampledFrame);
+            this.resampledFrame.close();
             this.resampledFrame = null;
         }
 
          /* Free the frame holding re-sized video. */
         if (this.pFrameRGB != null) {
             av_frame_free(this.pFrameRGB);
+            this.pFrameRGB.close();
             this.pFrameRGB = null;
         }
 
         /* Free the packet. */
         if (this.packet != null) {
             av_packet_free(this.packet);
+            this.packet.close();
             this.packet = null;
         }
 
         /* Frees the SWR context. */
         if (this.swr_ctx != null) {
             swr_free(this.swr_ctx);
+            this.sws_ctx.close();
             this.swr_ctx = null;
         }
 
         /* Frees the SWS context. */
         if (this.sws_ctx != null) {
             sws_freeContext(this.sws_ctx);
+            this.sws_ctx.close();
             this.sws_ctx = null;
         }
 
         /* Closes the audio codec context. */
         if (this.pCodecCtxAudio != null) {
             avcodec_free_context(this.pCodecCtxAudio);
+            this.pCodecCtxAudio.close();
             this.pCodecCtxAudio = null;
         }
 
         /* Closes the audio codec context. */
         if (this.pCodecCtxVideo != null) {
             avcodec_free_context(this.pCodecCtxVideo);
+            this.pCodecCtxVideo.close();
             this.pCodecCtxVideo = null;
         }
 
         /* Frees the ByteBuffer used to resize images. */
-        if (this.buffer  != null) {
+        if (this.buffer != null) {
             av_free(this.buffer);
+            this.buffer.close();
             this.buffer = null;
         }
 
@@ -440,7 +449,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         int maxHeight = config.namedAsInt(CONFIG_HEIGHT_PROPERTY, CONFIG_MAXHEIGHT_DEFAULT);
 
         /* Find the best video stream. */
-        AVCodec codec = new AVCodec();
+        final AVCodec codec = new AVCodec();
         this.videoStream = av_find_best_stream(this.pFormatCtx,AVMEDIA_TYPE_VIDEO,-1, -1, codec, 0);
         if (this.videoStream == -1) {
             LOGGER.error("Couldn't find a video stream.");
@@ -492,6 +501,12 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         AVRational framerate = this.pFormatCtx.streams(this.videoStream).avg_frame_rate();
         float fps = ((float) framerate.num()) / ((float)framerate.den());
         this.videoDescriptor = new VideoDescriptor(fps, duration, width, height);
+
+
+        /* Closes the AVCodec */
+        codec.close();
+
+        /* Return true (sucess). */
         return true;
     }
 
@@ -508,7 +523,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         long channellayout = av_get_default_channel_layout(channels);
 
         /* Find the best frames stream. */
-        AVCodec codec = new AVCodec();
+        final AVCodec codec = new AVCodec();
         this.audioStream = av_find_best_stream(this.pFormatCtx, AVMEDIA_TYPE_AUDIO,-1, -1, codec, 0);
         if (this.audioStream == -1) {
             LOGGER.warn("Couldn't find a supported audio stream. Continuing without audio!");
@@ -548,15 +563,17 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         this.resampledFrame.channels(channels);
         this.resampledFrame.format(TARGET_FORMAT);
 
-
-         /* Initialize the AudioDescriptor. */
-        AVRational timebase = this.pFormatCtx.streams(this.audioStream).time_base();
-        long duration = (1000L * timebase.num() * this.pFormatCtx.streams(this.audioStream).duration()/timebase.den());
+        /* Initialize the AudioDescriptor. */
+        final AVRational timebase = this.pFormatCtx.streams(this.audioStream).time_base();
+        final long duration = (1000L * timebase.num() * this.pFormatCtx.streams(this.audioStream).duration()/timebase.den());
         if (this.swr_ctx == null) {
             this.audioDescriptor = new AudioDescriptor(this.pCodecCtxAudio.sample_rate(), this.pCodecCtxAudio.channels(), duration);
         } else {
             this.audioDescriptor = new AudioDescriptor(this.resampledFrame.sample_rate(), this.resampledFrame.channels(), duration);
         }
+
+        /* Closes the codec */
+        codec.close();
 
         /* Completed initialization. */
         return true;

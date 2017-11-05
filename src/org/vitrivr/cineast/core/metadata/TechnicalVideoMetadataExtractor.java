@@ -68,7 +68,7 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
             return metadata;
         }
 
-        avcodec.AVCodec codec = new avcodec.AVCodec();
+        final avcodec.AVCodec codec = new avcodec.AVCodec();
         final int videoStreamIdx = av_find_best_stream(pFormatContext, AVMEDIA_TYPE_VIDEO,-1, -1, codec, 0);
         final AVStream videoStream = pFormatContext.streams(videoStreamIdx);
         final avutil.AVRational timebase = videoStream.time_base();
@@ -92,6 +92,9 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
         /* Closes all the resources. */
         avcodec_free_context(videoCodecContext);
         avformat_close_input(pFormatContext);
+
+        /* Close the codec. */
+        codec.close();
 
         /* Return list of results. */
         return metadata;
