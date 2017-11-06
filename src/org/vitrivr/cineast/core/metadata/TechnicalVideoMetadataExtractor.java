@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.metadata;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.avcodec;
 
@@ -18,6 +19,8 @@ import java.util.List;
 import static org.bytedeco.javacpp.avcodec.*;
 import static org.bytedeco.javacpp.avformat.*;
 import static org.bytedeco.javacpp.avutil.AVMEDIA_TYPE_VIDEO;
+import static org.bytedeco.javacpp.avutil.av_free;
+import static org.bytedeco.javacpp.avutil.av_malloc;
 
 public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -68,7 +71,7 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
             return metadata;
         }
 
-        final avcodec.AVCodec codec = new avcodec.AVCodec();
+        final AVCodec codec = av_codec_next((AVCodec)null);
         final int videoStreamIdx = av_find_best_stream(pFormatContext, AVMEDIA_TYPE_VIDEO,-1, -1, codec, 0);
         final AVStream videoStream = pFormatContext.streams(videoStreamIdx);
         final avutil.AVRational timebase = videoStream.time_base();
@@ -92,9 +95,6 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
         /* Closes all the resources. */
         avcodec_free_context(videoCodecContext);
         avformat_close_input(pFormatContext);
-
-        /* Close the codec. */
-        codec.close();
 
         /* Return list of results. */
         return metadata;

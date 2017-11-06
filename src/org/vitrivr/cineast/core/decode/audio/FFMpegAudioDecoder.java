@@ -1,14 +1,6 @@
 package org.vitrivr.cineast.core.decode.audio;
 
-import static org.bytedeco.javacpp.avcodec.av_packet_alloc;
-import static org.bytedeco.javacpp.avcodec.av_packet_free;
-import static org.bytedeco.javacpp.avcodec.av_packet_unref;
-import static org.bytedeco.javacpp.avcodec.avcodec_alloc_context3;
-import static org.bytedeco.javacpp.avcodec.avcodec_free_context;
-import static org.bytedeco.javacpp.avcodec.avcodec_open2;
-import static org.bytedeco.javacpp.avcodec.avcodec_parameters_to_context;
-import static org.bytedeco.javacpp.avcodec.avcodec_receive_frame;
-import static org.bytedeco.javacpp.avcodec.avcodec_send_packet;
+import static org.bytedeco.javacpp.avcodec.*;
 import static org.bytedeco.javacpp.avformat.av_find_best_stream;
 import static org.bytedeco.javacpp.avformat.av_read_frame;
 import static org.bytedeco.javacpp.avformat.av_register_all;
@@ -302,7 +294,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         }
 
         /* Find the best stream. */
-        AVCodec codec = new AVCodec();
+        AVCodec codec = av_codec_next((AVCodec)null);
         this.audioStream = av_find_best_stream(this.pFormatCtx, AVMEDIA_TYPE_AUDIO,-1, -1, codec, 0);
         if (this.audioStream == -1) {
             LOGGER.error("Couldn't find a supported audio stream.");
