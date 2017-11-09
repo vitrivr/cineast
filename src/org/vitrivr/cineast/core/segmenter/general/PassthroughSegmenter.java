@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 
@@ -110,4 +111,9 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
      * @return
      */
     protected abstract SegmentContainer getSegmentFromContent(T content);
+
+    @Override
+    public void addKnownSegments(Iterable<SegmentDescriptor> segments) {
+      // ignore
+    }
 }

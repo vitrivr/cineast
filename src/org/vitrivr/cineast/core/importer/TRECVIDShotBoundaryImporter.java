@@ -10,7 +10,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.IntTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.decode.shotboundary.TrecvidMasterShotReferenceDecoder;
-
+@Deprecated
 public class TRECVIDShotBoundaryImporter implements Importer<SegmentDescriptor> {
 
   private Iterator<SegmentDescriptor> iter;

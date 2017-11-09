@@ -187,6 +187,10 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
                 /* Initialize segmenter and pass to executor service. */
                 segmenter.init(decoder, descriptor);
+                
+                //TODO add known segments from external source here 
+                //segmenter.addKnownSegments(segments);
+                
                 this.executorService.execute(segmenter);
 
                 /* Poll for output from the segmenter until that segmenter reports that no more output
