@@ -46,4 +46,10 @@ public class VideoExtractionFileHandler extends AbstractExtractionFileHandler<Vi
     public Segmenter<VideoFrame> newSegmenter() {
         return new VideoHistogramSegmenter(this.segmentReader);
     }
+
+    @Override
+    protected void configureSegmenter(Segmenter<VideoFrame> segmenter) {
+      // TODO add subtitles
+      // TODO add known shot boundaries
+    }
 }

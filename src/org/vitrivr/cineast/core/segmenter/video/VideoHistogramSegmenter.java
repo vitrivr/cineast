@@ -195,6 +195,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
                     }
                 } while (videoFrame.getId() < bounds.getEnd());
 
+                //TODO add subtitle items back
                 //addSubtitleItems(_return);
 
                 this.segments.offer(_return);
