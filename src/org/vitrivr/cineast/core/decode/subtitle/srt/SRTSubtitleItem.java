@@ -8,8 +8,8 @@ public class SRTSubtitleItem extends AbstractSubtitleItem {
 	long start, end;
 	String text;
 	
-	public SRTSubtitleItem(int id, long start, long end, String text, SRTSubTitle st){
-		super(id, start, end, text, st);
+	public SRTSubtitleItem(int id, long start, long end, String text){
+		super(id, start, end, text);
 	}
 
 	/* (non-Javadoc)
@@ -20,6 +20,5 @@ public class SRTSubtitleItem extends AbstractSubtitleItem {
 		return this.text.replaceAll("<[^>]*>", "");
 	}
 
-	
 	
 }
