@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.segments.VideoSegment;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.decode.general.Decoder;
-import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
+import org.vitrivr.cineast.core.decode.subtitle.SubTitleDecoder;
 import org.vitrivr.cineast.core.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
@@ -46,8 +46,6 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
 
     private LinkedBlockingQueue<SegmentContainer> segments = new LinkedBlockingQueue<>(SEGMENT_QUEUE_LENGTH);
 
-    private ArrayList<SubTitle> subtitles = new ArrayList<SubTitle>();
-
     private List<SegmentDescriptor> knownShotBoundaries;
 
     private volatile boolean complete = false;
@@ -62,17 +60,8 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
      */
     public VideoHistogramSegmenter(SegmentLookup lookup) {
         this.segmentReader = lookup;
-        this.knownShotBoundaries = new LinkedList<SegmentDescriptor>();
+        this.knownShotBoundaries = new LinkedList<>();
     }
-
-    /**
-     *
-     * @param st
-     */
-    public void addSubTitle(SubTitle st) {
-        this.subtitles.add(st);
-    }
-
 
     /**
      *
@@ -194,8 +183,6 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
                         break;
                     }
                 } while (videoFrame.getId() < bounds.getEnd());
-
-                //addSubtitleItems(_return);
 
                 this.segments.offer(_return);
                 continue;
