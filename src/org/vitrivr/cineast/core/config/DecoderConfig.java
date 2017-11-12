@@ -11,9 +11,7 @@ public final class DecoderConfig {
 	private HashMap<String, String> properties = new HashMap<>();
 
 	@JsonCreator
-	public DecoderConfig() {
-
-	}
+	public DecoderConfig() {}
 
 	@JsonProperty
 	public String getDecoder() {
@@ -64,6 +62,22 @@ public final class DecoderConfig {
 	}
 
 	/**
+	 * Returns a name decoder-property as Boolean. If the property is not set, the
+	 * default value passed to the method is returned instead.
+	 *
+	 * @param name Name of the property.
+	 * @param preference Preference value.
+	 * @return Integer value of the named property or its preference.
+	 */
+	public Boolean namedAsBoolean(String name, Boolean preference) {
+		if (this.properties.containsKey(name)) {
+			return Boolean.parseBoolean(this.properties.get(name));
+		} else {
+			return preference;
+		}
+	}
+
+	/**
 	 * Returns a name decoder-property as String. If the property is not set, the
 	 * default value passed to the method is returned instead.
 	 *
@@ -72,11 +86,7 @@ public final class DecoderConfig {
 	 * @return String value of the named property or its preference.
 	 */
 	public String namedAsString(String name, String preference) {
-		if (this.properties.containsKey(name)) {
-			return this.properties.get(name);
-		} else {
-			return preference;
-		}
+		return this.properties.getOrDefault(name, preference);
 	}
 
 }
