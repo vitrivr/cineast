@@ -27,72 +27,76 @@ import georegression.struct.point.Point2D_F32;
 
 public class VideoSegment implements SegmentContainer {
 
-	private static final Logger LOGGER = LogManager.getLogger();
-	
-	private LinkedList<VideoFrame> videoFrames = new LinkedList<>();
-	private LinkedList<AudioFrame> audioFrames = new LinkedList<>();
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    private LinkedList<VideoFrame> videoFrames = new LinkedList<>();
+    private LinkedList<AudioFrame> audioFrames = new LinkedList<>();
     private final LinkedList<SubtitleItem> subItems = new LinkedList<>();
     private MultiImage avgImg = null, medianImg = null;
-	private VideoFrame mostRepresentative = null;
-	private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = null;
-	private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = null;
-	private LinkedList<Pair<Integer,ArrayList<AssociatedPair>>> allPaths = null;
-	private ArrayList<Tag> tags = new ArrayList<>(1);
-	private String movieId;
-	private String shotId;
+    private VideoFrame mostRepresentative = null;
+    private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = null;
+    private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = null;
+    private LinkedList<Pair<Integer, ArrayList<AssociatedPair>>> allPaths = null;
+    private ArrayList<Tag> tags = new ArrayList<>(1);
+    private String movieId;
+    private String shotId;
 
-    /** Total number of samples in the AudioSegment. */
+    /**
+     * Total number of samples in the AudioSegment.
+     */
     private int totalSamples;
 
-    /** Total duration of the AudioSegment in seconds. */
+    /**
+     * Total duration of the AudioSegment in seconds.
+     */
     private float totalAudioDuration;
 
-	/** AudioDescriptor for the audio stream in this VideoSegment. */
-	private AudioDescriptor audioDescriptor = null;
+    /**
+     * AudioDescriptor for the audio stream in this VideoSegment.
+     */
+    private AudioDescriptor audioDescriptor = null;
 
-	/** VideoDescriptor for the video stream in this VideoSegment. */
-	private VideoDescriptor videoDescriptor = null;
-
-	/**
-	 *
-	 */
-	public VideoSegment() {
-
-	}
-
-	/**
-	 *
-	 * @param movieId
-	 */
-	public VideoSegment(String movieId){
-		this.movieId = movieId;
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public int getNumberOfFrames(){
-		return this.videoFrames.size();
-	}
-
+    /**
+     * VideoDescriptor for the video stream in this VideoSegment.
+     */
+    private VideoDescriptor videoDescriptor = null;
 
     /**
      *
-     * @return
      */
-	@Override
-  public List<VideoFrame> getVideoFrames() {
-	    return Collections.unmodifiableList(this.videoFrames);
-	}
+    public VideoSegment() {
+
+    }
 
     /**
-     *
+     * @param movieId
+     */
+    public VideoSegment(String movieId) {
+        this.movieId = movieId;
+    }
+
+    /**
      * @return
      */
-	@Override
-  public List<AudioFrame> getAudioFrames() {
-	    return Collections.unmodifiableList(this.audioFrames);
+    public int getNumberOfFrames() {
+        return this.videoFrames.size();
+    }
+
+
+    /**
+     * @return
+     */
+    @Override
+    public List<VideoFrame> getVideoFrames() {
+        return Collections.unmodifiableList(this.videoFrames);
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public List<AudioFrame> getAudioFrames() {
+        return Collections.unmodifiableList(this.audioFrames);
     }
 
     /**
@@ -101,45 +105,20 @@ public class VideoSegment implements SegmentContainer {
      *
      * @param frame VideoFrame to add to the container.
      */
-	public boolean addVideoFrame(VideoFrame frame){
-		if (frame == null) {
-      return false;
-    }
-		if (this.videoDescriptor == null) {
-      this.videoDescriptor = frame.getDescriptor();
-    }
-		if (!this.videoDescriptor.equals(frame.getDescriptor())) {
-      return false;
-    }
+    public boolean addVideoFrame(VideoFrame frame) {
+        if (frame == null) {
+            return false;
+        }
+        if (this.videoDescriptor == null) {
+            this.videoDescriptor = frame.getDescriptor();
+        }
+        if (!this.videoDescriptor.equals(frame.getDescriptor())) {
+            return false;
+        }
 
         this.videoFrames.add(frame);
-        if (frame.hasAudio()) {
-          this.addAudioFrame(frame.getAudio());
-        }
-        return true;
-	}
-
-    /**
-     * Adds an AudioFrame to the collection of frames and thereby increases both
-     * the number of frames and the duration of the segment.
-     *
-     * @param frame AudioFrame to add.
-     * @return boolean True if frame was added, false otherwise.
-     */
-    public boolean addAudioFrame(AudioFrame frame) {
-        if (frame == null) {
-          return false;
-        }
-        if (this.audioDescriptor == null) {
-          this.audioDescriptor = frame.getDescriptor();
-        }
-        if (!this.audioDescriptor.equals(frame.getDescriptor())) {
-          return false;
-        }
-
-        this.totalSamples += frame.numberOfSamples();
-        this.totalAudioDuration += frame.getDuration();
-        this.audioFrames.add(frame);
+        frame.getAudio().ifPresent(this::addAudioFrame);
+        frame.getSubtitleItem().ifPresent(this::addSubtitle);
 
         return true;
     }
@@ -166,7 +145,7 @@ public class VideoSegment implements SegmentContainer {
 
     /**
      * Getter for samplingrate of the AudioSegment.
-	 *
+     *
      * @return
      */
     @Override
@@ -175,7 +154,6 @@ public class VideoSegment implements SegmentContainer {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -188,236 +166,266 @@ public class VideoSegment implements SegmentContainer {
      * current VideoSegment.
      *
      * @param windowsize Size of the window used during STFT. Must be a power of two.
-     * @param overlap Overlap in samples between two subsequent windows.
-	 * @param padding Zero-padding before and after the actual sample data. Causes the window to contain (windowsize-2*padding) data-points..
-	 * @param function WindowFunction to apply before calculating the STFT.
-     *
+     * @param overlap    Overlap in samples between two subsequent windows.
+     * @param padding    Zero-padding before and after the actual sample data. Causes the window to contain (windowsize-2*padding) data-points..
+     * @param function   WindowFunction to apply before calculating the STFT.
      * @return STFT of the audio in the current VideoSegment or null if the segment has no audio.
      */
     @Override
     public STFT getSTFT(int windowsize, int overlap, int padding, WindowFunction function) {
-		if (2*padding >= windowsize) {
-      throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
-    }
-		STFT stft = new STFT(windowsize, overlap, padding, function, this.audioDescriptor.getSamplingrate());
-		stft.forward(this.getMeanSamplesAsDouble());
-		return stft;
+        if (2 * padding >= windowsize) {
+            throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
+        }
+        STFT stft = new STFT(windowsize, overlap, padding, function, this.audioDescriptor.getSamplingrate());
+        stft.forward(this.getMeanSamplesAsDouble());
+        return stft;
     }
 
-	public void addSubtitleItem(SubtitleItem si){
-		this.subItems.add(si);
-	}
-	
-	private Object getAvgLock = new Object();
-	@Override
-  public MultiImage getAvgImg(){
-		synchronized (getAvgLock) {
-			if(avgImg == null){
-				avgImg = AvgImg.getAvg(videoFrames);
-			}
-			return avgImg;
-		}
-	}
-	
-	private Object getMedianLock = new Object();
-	@Override
-  public MultiImage getMedianImg(){
-		synchronized (getMedianLock) {
-			if(this.medianImg == null){
-				this.medianImg = MedianImg.getMedian(videoFrames);
-		}
-		return this.medianImg;
-		}
-	}
-	
-	private Object getPathsLock = new Object();
-	@Override
-  public List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths() {
-		synchronized (getPathsLock) {
-			if(this.paths == null){
-				this.allPaths = PathList.getDensePaths(videoFrames);
-				this.paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
-				this.bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
-				PathList.separateFgBgPaths(videoFrames, this.allPaths, this.paths, this.bgPaths);
-			}
-		}
-		return this.paths;
-	}
-	
-	@Override
-  public List<Pair<Integer, LinkedList<Point2D_F32>>> getBgPaths() {
-		synchronized (getPathsLock) {
-			if(this.bgPaths == null){
-				this.allPaths = PathList.getDensePaths(videoFrames);
-				this.paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
-				this.bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
-				PathList.separateFgBgPaths(videoFrames, this.allPaths, this.paths, this.bgPaths);
-			}
-		}
-		return this.bgPaths;
-	}
+    private Object getAvgLock = new Object();
+
+    @Override
+    public MultiImage getAvgImg() {
+        synchronized (getAvgLock) {
+            if (avgImg == null) {
+                avgImg = AvgImg.getAvg(videoFrames);
+            }
+            return avgImg;
+        }
+    }
+
+    private Object getMedianLock = new Object();
+
+    @Override
+    public MultiImage getMedianImg() {
+        synchronized (getMedianLock) {
+            if (this.medianImg == null) {
+                this.medianImg = MedianImg.getMedian(videoFrames);
+            }
+            return this.medianImg;
+        }
+    }
+
+    private Object getPathsLock = new Object();
+
+    @Override
+    public List<Pair<Integer, LinkedList<Point2D_F32>>> getPaths() {
+        synchronized (getPathsLock) {
+            if (this.paths == null) {
+                this.allPaths = PathList.getDensePaths(videoFrames);
+                this.paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
+                this.bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
+                PathList.separateFgBgPaths(videoFrames, this.allPaths, this.paths, this.bgPaths);
+            }
+        }
+        return this.paths;
+    }
+
+    @Override
+    public List<Pair<Integer, LinkedList<Point2D_F32>>> getBgPaths() {
+        synchronized (getPathsLock) {
+            if (this.bgPaths == null) {
+                this.allPaths = PathList.getDensePaths(videoFrames);
+                this.paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
+                this.bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
+                PathList.separateFgBgPaths(videoFrames, this.allPaths, this.paths, this.bgPaths);
+            }
+        }
+        return this.bgPaths;
+    }
 
     /**
      *
      */
-	public void clear(){
-		LOGGER.trace("clear shot {}", shotId);
-		for(VideoFrame f : videoFrames){
-			f.clear();
-		}
-		videoFrames.clear();
-		subItems.clear();
-		this.videoFrames = null;
-		this.audioFrames = null;
-		if(avgImg != null){
-			this.avgImg.clear();
-			this.avgImg = null;
-		}
-		if(medianImg != null){
-			this.medianImg.clear();
-			this.medianImg = null;
-		}
-		if(this.paths != null){
-			this.paths.clear();
-			this.paths = null;
-		}
-		
-		this.mostRepresentative = null;
-	}
+    public void clear() {
+        LOGGER.trace("clear shot {}", shotId);
+        for (VideoFrame f : videoFrames) {
+            f.clear();
+        }
+        videoFrames.clear();
+        subItems.clear();
+        this.videoFrames = null;
+        this.audioFrames = null;
+        if (avgImg != null) {
+            this.avgImg.clear();
+            this.avgImg = null;
+        }
+        if (medianImg != null) {
+            this.medianImg.clear();
+            this.medianImg = null;
+        }
+        if (this.paths != null) {
+            this.paths.clear();
+            this.paths = null;
+        }
 
-	private Object getMostRepresentativeLock = new Object();
-	@Override
-  public VideoFrame getMostRepresentativeFrame(){
-		synchronized (getMostRepresentativeLock) {
-			if(this.mostRepresentative == null){
-				this.mostRepresentative = MostRepresentative.getMostRepresentative(this);
-			}
-			return this.mostRepresentative;
-		}
-	}
-	
-	@Override
-  public String getId(){
-		return this.shotId;
-	}
-	
-	@Override
-  public String getSuperId(){
-		return this.movieId;
-	}
+        this.mostRepresentative = null;
+    }
 
-	/**
-	 * @param id
-	 * @return a unique id of this
-	 */
-	@Override
-	public void setId(String id) {
-		this.shotId = id;
-	}
+    private Object getMostRepresentativeLock = new Object();
 
-	/**
-	 * @param id
-	 */
-	@Override
-	public void setSuperId(String id) {
-		this.movieId = id;
-	}
+    @Override
+    public VideoFrame getMostRepresentativeFrame() {
+        synchronized (getMostRepresentativeLock) {
+            if (this.mostRepresentative == null) {
+                this.mostRepresentative = MostRepresentative.getMostRepresentative(this);
+            }
+            return this.mostRepresentative;
+        }
+    }
 
-	@Override
-	protected void finalize() throws Throwable {
-		clear();
-		super.finalize();
-	}
+    @Override
+    public String getId() {
+        return this.shotId;
+    }
 
-	@Override
-	public List<SubtitleItem> getSubtitleItems() {
-		return this.subItems;
-	}
+    @Override
+    public String getSuperId() {
+        return this.movieId;
+    }
 
-	/**
-	 * Returns the frame-number of the first frame in the segment (relative to the entire stream).
-	 *
-	 * @return
-	 */
-	@Override
-	public int getStart(){
-		if (!this.videoFrames.isEmpty()) {
-			return this.videoFrames.get(0).getId();
-		} else {
-			return 0;
-		}
-	}
+    /**
+     * @param id
+     * @return a unique id of this
+     */
+    @Override
+    public void setId(String id) {
+        this.shotId = id;
+    }
 
-	/**
-	 * Returns the frame-number of the last frame in the segment (relative to the entire stream).
-	 *
-	 * @return
-	 */
-	@Override
-	public int getEnd(){
-		if (!this.videoFrames.isEmpty()) {
-			return this.videoFrames.get(this.videoFrames.size()-1).getId();
-		} else {
-			return 0;
-		}
-	}
+    /**
+     * @param id
+     */
+    @Override
+    public void setSuperId(String id) {
+        this.movieId = id;
+    }
 
-	/**
-	 * Returns the relative start of the VideoSegment in percent (relative to the entire stream).
-	 *
-	 * @return
-	 */
-	@Override
-	public float getRelativeStart() {
-		return (1000.0f * this.getStart()) / this.videoDescriptor.getDuration();
-	}
+    @Override
+    protected void finalize() throws Throwable {
+        clear();
+        super.finalize();
+    }
 
-	/**
-	 * Returns the relative end of the VideoSegment in percent (relative to the entire stream).
-	 *
-	 * @return
-	 */
-	@Override
-	public float getRelativeEnd() {
-		return (1000.0f * this.getEnd()) / this.videoDescriptor.getDuration();
-	}
+    @Override
+    public List<SubtitleItem> getSubtitleItems() {
+        return this.subItems;
+    }
 
-	/**
-	 * Returns the absolute start of the VideoSegment in seconds (relative to the entire stream).
-	 *
-	 * @return
-	 */
-	@Override
-	public float getAbsoluteStart() {
-		if (!this.videoFrames.isEmpty()) {
-			return this.videoFrames.get(0).getTimestampSeconds();
-		} else {
-			return 0;
-		}
-	}
+    /**
+     * Returns the frame-number of the first frame in the segment (relative to the entire stream).
+     *
+     * @return
+     */
+    @Override
+    public int getStart() {
+        if (!this.videoFrames.isEmpty()) {
+            return this.videoFrames.get(0).getId();
+        } else {
+            return 0;
+        }
+    }
 
-	/**
-	 * Returns the absolute end of the VideoSegment in seconds (relative to the entire stream).
-	 *
-	 * @return
-	 */
-	@Override
-	public float getAbsoluteEnd() {
-		if (!this.videoFrames.isEmpty()) {
-			return this.videoFrames.get(this.videoFrames.size()-1).getTimestampSeconds();
-		} else {
-			return 0;
-		}
-	}
-	
-	@Override
-	public List<Tag> getTags() {
-		return this.tags;
-	}
+    /**
+     * Returns the frame-number of the last frame in the segment (relative to the entire stream).
+     *
+     * @return
+     */
+    @Override
+    public int getEnd() {
+        if (!this.videoFrames.isEmpty()) {
+            return this.videoFrames.get(this.videoFrames.size() - 1).getId();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns the relative start of the VideoSegment in percent (relative to the entire stream).
+     *
+     * @return
+     */
+    @Override
+    public float getRelativeStart() {
+        return (1000.0f * this.getStart()) / this.videoDescriptor.getDuration();
+    }
+
+    /**
+     * Returns the relative end of the VideoSegment in percent (relative to the entire stream).
+     *
+     * @return
+     */
+    @Override
+    public float getRelativeEnd() {
+        return (1000.0f * this.getEnd()) / this.videoDescriptor.getDuration();
+    }
+
+    /**
+     * Returns the absolute start of the VideoSegment in seconds (relative to the entire stream).
+     *
+     * @return
+     */
+    @Override
+    public float getAbsoluteStart() {
+        if (!this.videoFrames.isEmpty()) {
+            return this.videoFrames.get(0).getTimestampSeconds();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns the absolute end of the VideoSegment in seconds (relative to the entire stream).
+     *
+     * @return
+     */
+    @Override
+    public float getAbsoluteEnd() {
+        if (!this.videoFrames.isEmpty()) {
+            return this.videoFrames.get(this.videoFrames.size() - 1).getTimestampSeconds();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public List<Tag> getTags() {
+        return this.tags;
+    }
 
     @Override
     public String toString() {
         return "Shot id: " + this.shotId;
     }
-	
+
+    /**
+     * Adds an {@link AudioFrame} to the collection of {@link AudioFrame}s.
+     *
+     * @param frame {@link AudioFrame} to add.
+     */
+    private void addAudioFrame(AudioFrame frame) {
+        if (frame == null) {
+            return;
+        }
+        if (this.audioDescriptor == null) {
+            this.audioDescriptor = frame.getDescriptor();
+        }
+        if (!this.audioDescriptor.equals(frame.getDescriptor())) {
+            return;
+        }
+
+        this.totalSamples += frame.numberOfSamples();
+        this.totalAudioDuration += frame.getDuration();
+        this.audioFrames.add(frame);
+    }
+
+    /**
+     * Adds a {@link SubtitleItem} to the collection of {@link SubtitleItem}s.
+     *
+     * @param item {@link SubtitleItem} to add.
+     */
+    private void addSubtitle(SubtitleItem item) {
+        if (!this.getSubtitleItems().contains(item)) {
+            this.getSubtitleItems().add(item);
+        }
+    }
 }

@@ -2,6 +2,9 @@ package org.vitrivr.cineast.core.data.frames;
 
 
 import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
+
+import java.util.Optional;
 
 
 /**
@@ -22,8 +25,11 @@ public class VideoFrame {
 	/** MultiImage representing the current VideoFrame. */
 	private MultiImage img;
 
-	/** AudioFrame that is associated with the current frame. May be null! */
+	/** {@link AudioFrame} that is associated with the current frame. May be null! */
 	private AudioFrame audioFrame = null;
+
+	/** {@link SubtitleItem} that is associated with the current video frame. May be null! */
+	private SubtitleItem subtitleItem = null;
 
 	/** VideoDescriptor that describes the video this frame belongs to. */
 	private final VideoDescriptor descriptor;
@@ -51,9 +57,9 @@ public class VideoFrame {
 	}
 
 	/**
-	 * Getter for VideoDescriptor
+	 * Getter for {@link VideoDescriptor}.
 	 *
-	 * @return
+	 * @return {@link VideoDescriptor}
 	 */
 	public VideoDescriptor getDescriptor() {
 		return descriptor;
@@ -91,9 +97,18 @@ public class VideoFrame {
      *
      * @return AudioFrame containing the sound of the current frame.
      */
-    public final AudioFrame getAudio() {
-        return this.audioFrame;
+    public final Optional<AudioFrame> getAudio() {
+        return Optional.ofNullable(this.audioFrame);
     }
+
+	/**
+	 * Getter for subtitle item.
+	 *
+	 * @return {@link SubtitleItem} associated with current video frame.
+	 */
+	public final Optional<SubtitleItem> getSubtitleItem() {
+    	return Optional.ofNullable(this.subtitleItem);
+	}
 
     /**
      * Adds an AudioFrame to the current VideoFrame. The existing frame (if any)
@@ -109,15 +124,14 @@ public class VideoFrame {
         }
     }
 
-    /**
-     * Returns true if the current VideoFrame has an AudioFrame associated with
-     * it and false otherwise.
-     *
-     * @return True if the current VideoFrame has an AudioFrame associated with it and false otherwise
-     */
-    public final boolean hasAudio() {
-        return this.audioFrame != null;
-    }
+	/**
+	 * Sets the {@link SubtitleItem} for the current frame.
+	 *
+	 * @param item New {@link SubtitleItem}. Must not be null.
+	 */
+	public void setSubtitleItem(SubtitleItem item) {
+    	this.subtitleItem = item;
+	}
 
     /**
 	 * Clears the VideoFrame.
