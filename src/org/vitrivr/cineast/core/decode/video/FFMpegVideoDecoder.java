@@ -20,10 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.logging.log4j.LogManager;
@@ -40,6 +37,9 @@ import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.decode.subtitle.SubTitleDecoder;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleDecoderFactory;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
@@ -61,6 +61,9 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     private static final int TARGET_FORMAT = AV_SAMPLE_FMT_S16;
     private static final int BYTES_PER_SAMPLE = av_get_bytes_per_sample(TARGET_FORMAT);
+
+    /** Named configuration that indicates whether subtitles should be decoded as well. */
+    private static final String DECODE_SUBTITLE_CONFIG = "subtitles";
 
     private static final Logger LOGGER = LogManager.getLogger();
     
@@ -114,6 +117,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     private VideoDescriptor videoDescriptor = null;
     private AudioDescriptor audioDescriptor = null;
+    private Optional<SubTitleDecoder> subtitles = null;
 
     /** Indicates that decoding of video-data is complete. */
     private final AtomicBoolean videoComplete = new AtomicBoolean(false);
@@ -381,7 +385,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         /* Register all formats and codecs. */
         av_register_all();
 
-        // Open video file
+        /* Open video file. */
         if (avformat_open_input(this.pFormatCtx, path.toString(), null, null) != 0) {
             LOGGER.error("Error while accessing file {}", path.toString());
             return false;
@@ -405,6 +409,11 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         if (this.pFrame == null) {
             LOGGER.error("Could not allocate frame data structure for decoded data.");
             return false;
+        }
+
+        /* Open subtitles file (if configured). */
+        if (config.namedAsBoolean(DECODE_SUBTITLE_CONFIG, false)) {
+            this.subtitles = SubtitleDecoderFactory.subtitleForVideo(path);
         }
 
         if (this.initVideo(config) && this.initAudio(config)) {
@@ -479,10 +488,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         float fps = ((float) framerate.num()) / ((float)framerate.den());
         this.videoDescriptor = new VideoDescriptor(fps, duration, width, height);
 
-        /* Frees the pointer. */
-        //av_free(pointer);
-
-        /* Return true (sucess). */
+        /* Return true (success). */
         return true;
     }
 
@@ -573,7 +579,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         }
 
         /* Fetch that video frame. */
-        VideoFrame videoFrame = this.videoFrameQueue.poll();
+        final VideoFrame videoFrame = this.videoFrameQueue.poll();
 
         /*
          * Now if the audio stream is set, read AudioFrames until the timestamp of the next AudioFrame in the
@@ -596,6 +602,24 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
                 break;
             }
         }
+
+        /*
+         * Now, if there is a subtitle stream, try to append the corresponding subtitle.
+         */
+        this.subtitles.ifPresent(s -> {
+            while (true) {
+                final SubtitleItem item = s.getLast();
+                if (videoFrame.getTimestamp() >= item.getStartTimestamp() && videoFrame.getTimestamp() <= item.getEndTimestamp()) {
+                    videoFrame.setSubtitleItem(item);
+                    break;
+                } else if (videoFrame.getTimestamp() > item.getEndTimestamp()) {
+                    if (!s.increment()) break;
+                } else {
+                    break;
+                }
+            }
+        });
+
 
         /* Return VideoFrame. */
         return videoFrame;
