@@ -3,6 +3,7 @@ package org.vitrivr.cineast.api;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -23,8 +24,11 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bytedeco.javacpp.FlyCapture2.TIFFOption;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.vitrivr.cineast.api.rest.RestfulAPI;
@@ -35,6 +39,9 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
+import org.vitrivr.cineast.core.data.tag.IncompleteTag;
+import org.vitrivr.cineast.core.data.tag.Tag;
+import org.vitrivr.cineast.core.db.dao.TagHandler;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
 import org.vitrivr.cineast.core.evaluation.EvaluationConfig;
 import org.vitrivr.cineast.core.evaluation.EvaluationException;
@@ -527,6 +534,62 @@ public class API {
                   System.out.println("setup\t\t\tinitializes database");
                   System.out.println("test3d\t\t\tsee '3d'");
                   System.out.println();
+              break;
+            }
+            case "load_tags": {
+              
+              if (commands.size() < 2) {
+                System.err.println("You must specify the path of the csv file to load");
+                break;
+              }
+              
+              File inputFile = new File(commands.get(1));
+              if(!inputFile.exists() || !inputFile.isFile() || !inputFile.canRead()){
+                System.err.println("cannot read '" + inputFile.getAbsolutePath() + "'");
+                break;
+              }
+              
+              TagHandler tagHandler = new TagHandler();
+              
+              try{
+                FileReader in = new FileReader(inputFile);
+                Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
+                
+                for (CSVRecord record : records) {
+                  if(record.size() < 2){
+                    continue;
+                  }
+                  Tag toInsert;
+                  if(record.size() >= 3){
+                    toInsert = new IncompleteTag(record.get(0), record.get(1), record.get(2));
+                  }else{
+                    toInsert = new IncompleteTag(record.get(0), record.get(1), "");
+                  }
+                  
+                  if(!toInsert.hasId() || !toInsert.hasName()){
+                    continue;
+                  }
+                  
+                  Tag previous = tagHandler.getTagById(toInsert.getId());
+                  if(previous != null){
+                    System.out.println("Tag with id '" + previous.getId() + "' already exists: " + previous);
+                    continue;
+                  }
+                  
+                  
+                  if(tagHandler.addTag(toInsert)){
+                    System.out.println("added tag " + toInsert);
+                  }else{
+                    System.out.println("could not add tag " + toInsert);
+                  }
+                  
+                }
+              }catch(IOException e){
+                System.err.println("Error while reading '" + inputFile.getAbsolutePath() + "'");
+                e.printStackTrace();
+              }
+              
+              tagHandler.close();
               break;
             }
             default:
