@@ -385,29 +385,10 @@ public class ADAMproSelector implements DBSelector {
         return resultList.stream().map(row -> row.get(label)).collect(Collectors.toList());
     }
 
-    /**
-     * TODO This is currently an ugly hack where we abuse the preview-function with LIMIT = COUNT()
-     * using the getProperties ADAMpro-method. Once ADAMpro supports SELECT * FROM $ENTITY, this
-     * method should be rewritten
-     */
+
     @Override
     public List<Map<String, PrimitiveTypeProvider>> getAll() {
-        ListenableFuture<PropertiesMessage> future = this.adampro.getProperties(
-                EntityPropertiesMessage.newBuilder().setEntity(this.entityName).build());
-        int count = 1_000;
-        PropertiesMessage propertiesMessage;
-        try {
-            propertiesMessage = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("error in getAll, entitiy {}: {}", this.entityName, LogHelper.getStackTrace(e));
-            return new ArrayList<>(0);
-        }
-        try {
-            count = Integer.parseInt(propertiesMessage.getPropertiesMap().get("count"));
-        } catch (Exception e) {
-            LOGGER.error("error in getAll, entitiy {}: {}", this.entityName, LogHelper.getStackTrace(e));
-        }
-        return preview(count);
+        return preview(Integer.MAX_VALUE);
     }
 
     @Override
