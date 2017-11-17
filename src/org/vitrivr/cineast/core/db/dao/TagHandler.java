@@ -53,6 +53,13 @@ public class TagHandler implements Closeable {
   public boolean addTag(String id, String name) {
     return addTag(id, name, "");
   }
+  
+  public boolean addTag(Tag tag) {
+    if(tag == null){
+      return false;
+    }
+    return addTag(tag.getId(), tag.getName(), tag.getDescription());
+  }
 
   public List<Tag> getTagsByName(String name) {
     List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("name", name);
@@ -100,6 +107,10 @@ public class TagHandler implements Closeable {
   public List<Tag> getAll() {
     return this.selector.getAll().stream().map(TagHandler::fromMap).filter(Objects::nonNull)
         .collect(Collectors.toList());
+  }
+  
+  public List<Tag> getAllCached() {
+    return this.tagCache.values().stream().collect(Collectors.toList());
   }
 
   public void initCache(){
