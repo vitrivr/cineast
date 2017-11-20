@@ -1,11 +1,12 @@
 package org.vitrivr.cineast.core.idgenerator;
 
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.util.RandomStringGenerator;
+import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 /**
  * Generates an objectId from a random string.
@@ -15,9 +16,11 @@ import org.vitrivr.cineast.core.util.RandomStringGenerator;
  * @created 23.01.17
  */
 public class UniqueObjectIdGenerator implements ObjectIdGenerator {
+    /** Property-name for a custom start value (can be set in the configuration). */
+    private static final String PROPERTY_LENGTH_KEY = "length";
 
     /** Property-name for a custom start value (can be set in the configuration). */
-    private static final String PROPERTY_NAME_LENGTH = "length";
+    private static final Integer PROPERTY_LENGTH_DEFAULT = 16;
 
     /** Length of the generated ID. */
     private int length = 16;
@@ -25,19 +28,19 @@ public class UniqueObjectIdGenerator implements ObjectIdGenerator {
     private HashSet<String> usedIds = new HashSet<>();
 
     /**
-     * Can be used to initialize a particular ObjectIdGenerator instance by passing
-     * a HashMap of named parameters.
-     *
-     * 'length' is supported parameter.
-     *
-     * @param properties HashMap of named paramters.
+     * Constructor for {@link UniqueObjectIdGenerator}. This constructor is used by {@link ReflectionHelper}
      */
-    @Override
-    public void init(HashMap<String, String> properties) {
-        String length = properties.get(PROPERTY_NAME_LENGTH);
-        if (length != null) {
-          this.length = Integer.parseInt(length);
-        }
+    public UniqueObjectIdGenerator() {
+        this.length = PROPERTY_LENGTH_DEFAULT;
+    }
+
+    /**
+     * Constructor for {@link UniqueObjectIdGenerator}. This constructor is used by {@link ReflectionHelper}
+     *
+     * @param properties HashMap of named parameters. The values 'start' and 'format' are supported parameter keys.
+     */
+    public UniqueObjectIdGenerator(Map<String,String> properties) {
+        this.length = Integer.parseInt(properties.getOrDefault(PROPERTY_LENGTH_KEY, PROPERTY_LENGTH_DEFAULT.toString()));
     }
 
     /**
@@ -50,10 +53,10 @@ public class UniqueObjectIdGenerator implements ObjectIdGenerator {
     @Override
     public String next(Path path, MediaType type) {
         String rawId;
-        do{
-          rawId = RandomStringGenerator.generateRandomString(this.length);
-        }while(usedIds.contains(rawId));
-        usedIds.add(rawId);
+        do {
+            rawId = RandomStringGenerator.generateRandomString(this.length);
+        } while(this.usedIds.contains(rawId));
+        this.usedIds.add(rawId);
         return MediaType.generateId(type, rawId);
     }
 }
