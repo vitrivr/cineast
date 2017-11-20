@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -80,14 +81,14 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     protected final SegmentLookup segmentReader;
 
     /**
+     * ExtractionContextProvider that is used to configure the extraction.
+     */
+    protected final ExtractionContextProvider context;
+
+    /**
      * Iterator off all paths that are due for extraction.
      */
     private final Iterator<Path> files;
-
-    /**
-     * ExtractionContextProvider that is used to configure the extraction.
-     */
-    private final ExtractionContextProvider context;
 
     /**
      * ExecutorService used to run the ExtractionPipeline and the Segmenter.
@@ -128,13 +129,13 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         this.files = files;
 
         /* Setup the required persistence-writer classes. */
-        PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
+        final PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
         this.objectWriter = new MultimediaObjectWriter(writerSupplier.get(), context.getBatchsize());
         this.segmentWriter = new SegmentWriter(writerSupplier.get(), context.getBatchsize());
         this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get(), context.getBatchsize());
 
         /* Setup the required persistence-reader classes. */
-        DBSelectorSupplier readerSupplier = context.persistencyReader();
+        final DBSelectorSupplier readerSupplier = context.persistencyReader();
         this.objectReader = new MultimediaObjectLookup(readerSupplier.get());
         this.segmentReader = new SegmentLookup(readerSupplier.get());
 
