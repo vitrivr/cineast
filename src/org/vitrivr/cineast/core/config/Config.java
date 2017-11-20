@@ -50,16 +50,18 @@ public class Config {
      *
      * @param name Name of the config file.
      */
-    public static Config loadConfig(String name) {
-        Config config = (new JacksonJsonProvider()).toObject(new File(name), Config.class);
-        LOGGER.info("Config file loaded!");
-        if (config == null) {
-            LOGGER.warn("Could not read config file '{}'.", name);
-            return null;
-        } else {
-            return config;
-        }
+  public static Config loadConfig(String name) {
+    Config config = (new JacksonJsonProvider()).toObject(new File(name), Config.class);
+
+    if (config == null) {
+      LOGGER.warn("Could not read config file '{}'.", name);
+      return null;
+    } else {
+      LOGGER.info("Config file loaded!");
+      sharedConfig = config;
+      return config;
     }
+  }
 
     @JsonProperty
     public APIConfig getApi() {
