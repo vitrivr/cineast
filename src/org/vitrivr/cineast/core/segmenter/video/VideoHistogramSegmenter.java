@@ -1,9 +1,6 @@
 package org.vitrivr.cineast.core.segmenter.video;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +14,7 @@ import org.vitrivr.cineast.core.data.segments.VideoSegment;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.subtitle.SubTitleDecoder;
+import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
@@ -40,13 +38,13 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
 
     private Decoder<VideoFrame> decoder;
 
-    private LinkedList<VideoFrame> videoFrameList = new LinkedList<>();
+    private final LinkedList<VideoFrame> videoFrameList = new LinkedList<>();
 
-    private LinkedList<Pair<VideoFrame,Double>> preShotList = new LinkedList<>();
+    private final LinkedList<Pair<VideoFrame,Double>> preShotList = new LinkedList<>();
 
-    private LinkedBlockingQueue<SegmentContainer> segments = new LinkedBlockingQueue<>(SEGMENT_QUEUE_LENGTH);
+    private final LinkedBlockingQueue<SegmentContainer> segments = new LinkedBlockingQueue<>(SEGMENT_QUEUE_LENGTH);
 
-    private List<SegmentDescriptor> knownShotBoundaries;
+    private final List<SegmentDescriptor> knownShotBoundaries = new LinkedList<>();
 
     private volatile boolean complete = false;
 
@@ -56,11 +54,10 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
     private final SegmentLookup segmentReader;
 
     /**
-     *
+     * Constructor required for instantiates through {@link org.vitrivr.cineast.core.util.ReflectionHelper}.
      */
-    public VideoHistogramSegmenter(SegmentLookup lookup) {
-        this.segmentReader = lookup;
-        this.knownShotBoundaries = new LinkedList<>();
+    public VideoHistogramSegmenter(ExtractionContextProvider context) {
+        this.segmentReader = new SegmentLookup(context.persistencyReader().get());
     }
 
     /**
@@ -86,7 +83,8 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
             this.preShotList.clear();
             this.segments.clear();
             this.videoFrameList.clear();
-            this.knownShotBoundaries = this.segmentReader.lookUpSegmentsOfObject(object.getObjectId());
+            this.knownShotBoundaries.clear();
+            this.knownShotBoundaries.addAll(this.segmentReader.lookUpSegmentsOfObject(object.getObjectId()));
             this.knownShotBoundaries.sort(Comparator.comparingInt(SegmentDescriptor::getSequenceNumber));
         }
     }

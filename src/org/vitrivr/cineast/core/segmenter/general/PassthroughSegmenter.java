@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.segmenter.general;
 
+import java.util.Map;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
