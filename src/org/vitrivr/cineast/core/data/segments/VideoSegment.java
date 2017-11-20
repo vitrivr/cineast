@@ -108,7 +108,13 @@ public class VideoSegment implements SegmentContainer {
 
         this.videoFrames.add(frame);
         frame.getAudio().ifPresent(this::addAudioFrame);
-        frame.getSubtitleItem().ifPresent(this::addSubtitle);
+
+        /* Add SubtitleItems. */
+        frame.getSubtitleItems().forEach(i -> {
+            if (!this.getSubtitleItems().contains(i)) {
+                this.getSubtitleItems().add(i);
+            }
+        });
 
         return true;
     }
@@ -406,16 +412,5 @@ public class VideoSegment implements SegmentContainer {
         this.totalSamples += frame.numberOfSamples();
         this.totalAudioDuration += frame.getDuration();
         this.audioFrames.add(frame);
-    }
-
-    /**
-     * Adds a {@link SubtitleItem} to the collection of {@link SubtitleItem}s.
-     *
-     * @param item {@link SubtitleItem} to add.
-     */
-    private void addSubtitle(SubtitleItem item) {
-        if (!this.getSubtitleItems().contains(item)) {
-            this.getSubtitleItems().add(item);
-        }
     }
 }

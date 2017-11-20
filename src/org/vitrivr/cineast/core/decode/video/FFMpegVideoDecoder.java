@@ -607,10 +607,11 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
          * Now, if there is a subtitle stream, try to append the corresponding subtitle.
          */
         this.subtitles.ifPresent(s -> {
+            /* TODO: Adjust logic in order to get all subtitle items (if multiple are defiend). */
             while (true) {
                 final SubtitleItem item = s.getLast();
                 if (videoFrame.getTimestamp() >= item.getStartTimestamp() && videoFrame.getTimestamp() <= item.getEndTimestamp()) {
-                    videoFrame.setSubtitleItem(item);
+                    videoFrame.addSubtitleItem(item);
                     break;
                 } else if (videoFrame.getTimestamp() > item.getEndTimestamp()) {
                     if (!s.increment()) break;

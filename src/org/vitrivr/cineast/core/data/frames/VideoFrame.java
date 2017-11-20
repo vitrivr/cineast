@@ -4,12 +4,15 @@ package org.vitrivr.cineast.core.data.frames;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 
 /**
- * Represents a single video-frame containing. Such a frame consist of a single image and, optionally, an AudioFrame
- * of arbitrary length.
+ * Represents a single video-frame. Such a frame consist of a single image and, optionally, an {@link AudioFrame} of arbitrary length and,
+ * again optionally, a list of {@link SubtitleItem}s.
  *
  * @see AudioFrame
  */
@@ -29,7 +32,7 @@ public class VideoFrame {
 	private AudioFrame audioFrame = null;
 
 	/** {@link SubtitleItem} that is associated with the current video frame. May be null! */
-	private SubtitleItem subtitleItem = null;
+	private List<SubtitleItem> subtitleItems = null;
 
 	/** VideoDescriptor that describes the video this frame belongs to. */
 	private final VideoDescriptor descriptor;
@@ -45,6 +48,7 @@ public class VideoFrame {
 		this.timestamp = timestamp;
 		this.img = image;
 		this.descriptor = descriptor;
+		this.subtitleItems = new LinkedList<>();
 	}
 
 	/**
@@ -106,8 +110,8 @@ public class VideoFrame {
 	 *
 	 * @return {@link SubtitleItem} associated with current video frame.
 	 */
-	public final Optional<SubtitleItem> getSubtitleItem() {
-    	return Optional.ofNullable(this.subtitleItem);
+	public final List<SubtitleItem> getSubtitleItems() {
+    	return Collections.unmodifiableList(this.subtitleItems);
 	}
 
     /**
@@ -125,12 +129,14 @@ public class VideoFrame {
     }
 
 	/**
-	 * Sets the {@link SubtitleItem} for the current frame.
+	 * Add a {@link SubtitleItem} to the current {@link VideoFrame}.
 	 *
 	 * @param item New {@link SubtitleItem}. Must not be null.
 	 */
-	public void setSubtitleItem(SubtitleItem item) {
-    	this.subtitleItem = item;
+	public void addSubtitleItem(SubtitleItem item) {
+    	if (!this.subtitleItems.contains(item)) {
+    		this.subtitleItems.add(item);
+		}
 	}
 
     /**
