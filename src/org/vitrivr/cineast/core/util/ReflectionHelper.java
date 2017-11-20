@@ -3,7 +3,10 @@ package org.vitrivr.cineast.core.util;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
+import jogamp.opengl.glu.mipmap.Extract;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.decode.general.Converter;
@@ -15,6 +18,8 @@ import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 
 import com.eclipsesource.json.JsonObject;
+import org.vitrivr.cineast.core.run.ExtractionContextProvider;
+import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 public class ReflectionHelper {
 
@@ -41,11 +46,12 @@ public class ReflectionHelper {
 	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the IDGENERATOR_PACKAGE
 	 * is assumed and the name is treated as simple name.
 	 *
-	 * @param name Name of the ObjectIdGenerator.
+	 * @param name Name of the {@link ObjectIdGenerator}.
+	 * @param properties Properties that should be used to configure new {@link ObjectIdGenerator}
 	 * @return Instance of ObjectIdGenerator or null, if instantiation fails.
 	 */
 	@SuppressWarnings("unchecked")
-	public static ObjectIdGenerator newIdGenerator(String name) {
+	public static ObjectIdGenerator newIdGenerator(String name, Map<String,String> properties) {
 		Class<ObjectIdGenerator> c = null;
 		try {
 			if (name.contains(".")) {
@@ -53,7 +59,12 @@ public class ReflectionHelper {
 			} else {
 				c = getClassFromName(name, ObjectIdGenerator.class, IDGENERATOR_PACKAGE);
 			}
-			return instanciate(c);
+
+			if (properties == null || properties.isEmpty()) {
+				return instanciate(c);
+			} else {
+				return instanciate(c, properties);
+			}
 		} catch (ClassNotFoundException | InstantiationException  e) {
 			LOGGER.fatal("Failed to create ObjectIdGenerator. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
@@ -146,7 +157,7 @@ public class ReflectionHelper {
 	 * @return Instance of Exporter or null, if instantiation fails.
 	 */
 	@SuppressWarnings("unchecked")
-	public static Extractor newExporter(String name, HashMap<String, String> configuration) {
+	public static Extractor newExporter(String name, Map<String, String> configuration) {
 		Class<Extractor> c = null;
 		try {
 			if (name.contains(".")) {
@@ -187,8 +198,35 @@ public class ReflectionHelper {
 			}
 
 			return instanciate(c);
-		} catch (ClassNotFoundException | InstantiationException e) {
+		} catch (ClassNotFoundException | InstantiationException | ClassCastException e) {
 			LOGGER.fatal("Failed to create MetadataExtractor. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
+
+	/**
+	 * Tries to instantiate a new, named MetadataExtractor object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the METADATA_PACKAGE
+	 * is assumed and the name is treated as simple name.
+	 *
+	 * @param name Name of the MetadataExtractor.
+	 * @return Instance of MetadataExtractor or null, if instantiation fails.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Segmenter<T> newSegmenter(String name, Map<String, String> configuration, ExtractionContextProvider provider) {
+		Class<Segmenter<T>> c = null;
+		try {
+			 c = (Class<Segmenter<T>>) Class.forName(name);
+			if (configuration == null) {
+				return instanciate(c, provider);
+			} else {
+				return instanciate(c, provider, configuration);
+			}
+		} catch (ClassNotFoundException | ClassCastException e) {
+			LOGGER.fatal("Failed to create Segmenter. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
