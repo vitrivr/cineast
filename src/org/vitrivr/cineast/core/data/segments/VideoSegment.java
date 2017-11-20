@@ -41,32 +41,22 @@ public class VideoSegment implements SegmentContainer {
     private String movieId;
     private String shotId;
 
-    /**
-     * Total number of samples in the AudioSegment.
-     */
+    /** Total number of samples in the AudioSegment. */
     private int totalSamples;
 
-    /**
-     * Total duration of the AudioSegment in seconds.
-     */
+    /** Total duration of the AudioSegment in seconds. */
     private float totalAudioDuration;
 
-    /**
-     * AudioDescriptor for the audio stream in this VideoSegment.
-     */
+    /** AudioDescriptor for the audio stream in this VideoSegment. */
     private AudioDescriptor audioDescriptor = null;
 
-    /**
-     * VideoDescriptor for the video stream in this VideoSegment.
-     */
+    /** VideoDescriptor for the video stream in this VideoSegment. */
     private VideoDescriptor videoDescriptor = null;
 
     /**
      *
      */
-    public VideoSegment() {
-
-    }
+    public VideoSegment() {}
 
     /**
      * @param movieId
