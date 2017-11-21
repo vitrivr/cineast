@@ -61,11 +61,13 @@ public class SegmentTags implements Extractor, Retriever {
   }
 
   private List<ScoreElement> getSimilar(Iterable<String> tagIds) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagids", tagIds);
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagIds);
   
     TObjectFloatHashMap<String> segmentScores = new TObjectFloatHashMap<>();
   
-    for (Map<String, PrimitiveTypeProvider> row : rows) { // max pooling
+    /* TODO: better aggregation strategy than max-pooling? */
+    
+    for (Map<String, PrimitiveTypeProvider> row : rows) {
       String segment = row.get("id").getString();
       float score = row.get("score").getFloat();
   
@@ -117,7 +119,7 @@ public class SegmentTags implements Extractor, Retriever {
     ArrayList<String> tagIds = new ArrayList<>(rows.size());
     
     for (Map<String, PrimitiveTypeProvider> row : rows) {
-      tagIds.add(row.get("id").getString());
+      tagIds.add(row.get("tagid").getString());
     }
     
     return getSimilar(tagIds);
