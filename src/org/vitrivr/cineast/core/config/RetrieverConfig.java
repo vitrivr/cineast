@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.config;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.vitrivr.cineast.core.config.deserializers.FeatureCategoriesDeserializer;
@@ -193,4 +194,19 @@ public final class RetrieverConfig {
 
 		return _return;
 	}
+
+  public Optional<Retriever> getRetrieverByName(String retrieverName) {
+    for (List<DoublePair<Class<? extends Retriever>>> pair : this.retrieverCategories
+        .values()) {
+      for (DoublePair<Class<? extends Retriever>> retrieverPair : pair) {
+        if (retrieverPair.key.getSimpleName().equals(retrieverName)) {
+          Retriever retriever = ReflectionHelper.instanciate(retrieverPair.key);
+          if (retriever != null) {
+            return Optional.of(retriever);
+          }
+        }
+      }
+    }
+    return Optional.empty();
+  }
 }
