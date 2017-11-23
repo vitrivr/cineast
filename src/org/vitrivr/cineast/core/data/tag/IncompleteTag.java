@@ -16,6 +16,15 @@ public class IncompleteTag implements WeightedTag {
     this.weight = weight;
   }
   
+  public IncompleteTag(Tag t){
+    this(
+        (t != null && t.hasId()) ? t.getId() : null,
+        (t != null && t.hasName()) ? t.getName() : null,
+        (t != null && t.hasDescription()) ? t.getDescription() : null,
+        (t != null && t instanceof WeightedTag) ? ((WeightedTag)t).getWeight() : 1f
+        );
+  }
+  
   @Override
   public String getId() {
     return this.id;

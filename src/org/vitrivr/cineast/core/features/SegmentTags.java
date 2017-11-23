@@ -12,7 +12,9 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.tag.IncompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
+import org.vitrivr.cineast.core.data.tag.WeightedTag;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
@@ -60,33 +62,50 @@ public class SegmentTags implements Extractor, Retriever {
     this.selector.open(this.tableName);
   }
 
-  private List<ScoreElement> getSimilar(Iterable<String> tagIds) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagIds);
   
+  private List<ScoreElement> getSimilar(Iterable<WeightedTag> tags) {
+
+    ArrayList<String> tagids = new ArrayList<>();
+    TObjectFloatHashMap<String> tagWeights = new TObjectFloatHashMap<>();
+    float weightSum = 0f;
+
+    for (WeightedTag wt : tags) {
+      tagids.add(wt.getId());
+      tagWeights.put(wt.getId(), wt.getWeight());
+      weightSum += wt.getWeight();
+    }
+
+    if (tagids.isEmpty() || weightSum <= 0f) {
+      return Collections.emptyList();
+    }
+
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows("tagid", tagids);
+
     TObjectFloatHashMap<String> segmentScores = new TObjectFloatHashMap<>();
-  
-    /* TODO: better aggregation strategy than max-pooling? */
-    
+
     for (Map<String, PrimitiveTypeProvider> row : rows) {
       String segment = row.get("id").getString();
-      float score = row.get("score").getFloat();
-  
-      if (!segmentScores.containsKey(segment) || segmentScores.get(segment) < score) {
-        segmentScores.put(segment, score);
-      }
-  
+      String tagid = row.get("tagid").getString();
+      float score = row.get("score").getFloat()
+          * (tagWeights.containsKey(tagid) ? tagWeights.get(tagid) : 0f);
+
+      segmentScores.adjustOrPutValue(segment, score, score);
+
     }
-  
+
     ArrayList<ScoreElement> _return = new ArrayList<>(segmentScores.size());
-  
+
     TObjectFloatIterator<String> iter = segmentScores.iterator();
-  
+
     while (iter.hasNext()) {
       iter.advance();
-      _return.add(new SegmentScoreElement(iter.key(), iter.value()));
+      if(iter.value() > 0f){
+        _return.add(new SegmentScoreElement(iter.key(), iter.value() / weightSum));
+      }
     }
-  
+    
     return _return;
+
   }
 
   @Override
@@ -97,13 +116,18 @@ public class SegmentTags implements Extractor, Retriever {
       return Collections.emptyList();
     }
 
-    ArrayList<String> tagIds = new ArrayList<>(tags.size());
+    ArrayList<WeightedTag> wtags = new ArrayList<>(tags.size());
 
     for (Tag t : tags) {
-      tagIds.add(t.getId());
+      if(t instanceof WeightedTag){
+        wtags.add((WeightedTag)t);
+      }else{
+        wtags.add(new IncompleteTag(t));
+      }
+      
     }
 
-    return getSimilar(tagIds);
+    return getSimilar(wtags);
     
   }
 
@@ -116,13 +140,13 @@ public class SegmentTags implements Extractor, Retriever {
       return Collections.emptyList();
     }
     
-    ArrayList<String> tagIds = new ArrayList<>(rows.size());
+    ArrayList<WeightedTag> wtags = new ArrayList<>(rows.size());
     
     for (Map<String, PrimitiveTypeProvider> row : rows) {
-      tagIds.add(row.get("tagid").getString());
+      wtags.add(new IncompleteTag(row.get("tagid").getString(), "", "", row.get("score").getFloat()));
     }
     
-    return getSimilar(tagIds);
+    return getSimilar(wtags);
   }
 
   @Override
