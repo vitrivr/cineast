@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.DecompositionFactory;
-import org.ejml.interfaces.decomposition.EigenDecomposition;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
+import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -86,7 +86,7 @@ public final class MeshTransformUtil {
         Vector3fc barycenter = mesh.barycenter();
 
         /* Prepare an empty covariance matrix. */
-        DenseMatrix64F covariance = new DenseMatrix64F(3,3);
+        DMatrixRMaj covariance = new DMatrixRMaj(3,3);
 
         List<Mesh.Face> faces = mesh.getFaces();
         long vertices = 0;
@@ -200,15 +200,15 @@ public final class MeshTransformUtil {
      * @return List of pairs containing both the eigenvalues and the eigenvectors. The entries are
      * sorted in ascending order of the eigenvalue.
      */
-    private static List<Pair<Float,Vector3f>> getEigenvectors(DenseMatrix64F matrix) {
+    private static List<Pair<Float,Vector3f>> getEigenvectors(DMatrixRMaj matrix) {
         List<Pair<Float,Vector3f>> eigenvectors = new ArrayList<>();
 
-        EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig(3, true);
+        EigenDecomposition_F64<DMatrixRMaj> eig = DecompositionFactory_DDRM.eig(3, true);
         eig.decompose(matrix);
 
         int eigValNum = eig.getNumberOfEigenvalues();
         for(int i = 0; i < eigValNum; i++){
-            DenseMatrix64F eigMat = eig.getEigenVector(i);
+            DMatrixRMaj eigMat = eig.getEigenVector(i);
             if(eigMat != null){
                 eigenvectors.add(new Pair<>((float)eig.getEigenvalue(i).getReal(), new Vector3f((float)eigMat.get(0,0), (float)eigMat.get(1,0), (float)eigMat.get(2,0))));
             }
