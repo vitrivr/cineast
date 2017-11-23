@@ -46,9 +46,33 @@ public class ContinuousRetrievalLogic {
     if (!retriever.isPresent()) {
       return new ArrayList<>(0);
     }
+    return retrieveByRetriever(id, retriever.get(), config);
+  }
+
+  public static List<SegmentScoreElement> retrieveByRetriever(String id, Retriever retriever,
+      ReadableQueryConfig config) {
     TObjectDoubleHashMap<Retriever> map = new TObjectDoubleHashMap<>();
-    map.put(retriever.get(), 1d);
+    map.put(retriever, 1d);
     return ContinuousQueryDispatcher.retrieve(id, map, API.getInitializer(), config);
+  }
+
+  public static List<SegmentScoreElement> retrieveByRetriever(QueryContainer qc,
+      Retriever retriever,
+      ReadableQueryConfig config) {
+    TObjectDoubleHashMap<Retriever> map = new TObjectDoubleHashMap<>();
+    map.put(retriever, 1d);
+    return ContinuousQueryDispatcher.retrieve(qc, map, API.getInitializer(), config);
+  }
+
+  public static List<SegmentScoreElement> retrieveByRetrieverName(QueryContainer qc,
+      String retrieverName,
+      ReadableQueryConfig config) {
+    Optional<Retriever> retriever = Config.sharedConfig().getRetriever()
+        .getRetrieverByName(retrieverName);
+    if (!retriever.isPresent()) {
+      return new ArrayList<>(0);
+    }
+    return retrieveByRetriever(qc, retriever.get(), config);
   }
 
   public static void addRetrievalResultListener(RetrievalResultListener listener) {
