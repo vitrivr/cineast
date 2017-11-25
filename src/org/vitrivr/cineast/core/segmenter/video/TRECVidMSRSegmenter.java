@@ -4,7 +4,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jetty.util.ArrayQueue;
 
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
@@ -19,13 +18,11 @@ import org.vitrivr.cineast.core.segmenter.image.ImageSegmenter;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -34,17 +31,17 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
     /** */
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /** */
+    /** Maximum length of the output queue. */
     private static final int SEGMENT_QUEUE_LENGTH = 10;
 
-    /** */
-    private static final int SEGMENT_POLLING_TIMEOUT = 1000;
+    /** The timeout when polling the output queue. Defaults to 5s. */
+    private static final int SEGMENT_POLLING_TIMEOUT = 5000;
 
     /** Key in the configuration map used to configure the MSR folder setting. */
     private static final String PROPERTY_FOLDER_KEY = "folder";
 
     /** Queue of shot boundaries (pair of start and end frame). The entries are supposed to be sorted in ascending order. */
-    private final Queue<Pair<Long,Long>> boundaries = new ArrayQueue<>();
+    private final Queue<Pair<Long,Long>> boundaries = new ArrayDeque<>();
 
     /** Queue for resulting {@link SegmentContainer}s waiting pick up by some consumer. */
     private final LinkedBlockingQueue<SegmentContainer> outputQueue = new LinkedBlockingQueue<>(SEGMENT_QUEUE_LENGTH);
@@ -106,7 +103,7 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
 
             /* Loads the MSR file relative to the video. */
             final String suffix = object.getPath().substring(object.getPath().lastIndexOf("."), object.getPath().length());
-            final String msrFilename = object.getPath().replace(suffix, "msr");
+            final String msrFilename = object.getPath().replace(suffix, ".msb");
             final Path path = this.msrFolderPath.resolve(msrFilename);
             this.boundaries.addAll(decode(path));
         } else {
@@ -163,13 +160,12 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
         synchronized (this) {
             this.running = true;
         }
-
+        VideoFrame currentFrame = null;
         while (!this.boundaries.isEmpty()) {
             final Pair<Long,Long> boundary = this.boundaries.poll();
             if (boundary == null) break;
 
             final VideoSegment segment = new VideoSegment();
-            VideoFrame currentFrame = null;
 
             /* Append frames to the segment until the VideoFrame's (sequential) is beyond the boundaries. */
             while (!this.decoder.complete()) {
@@ -177,6 +173,8 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
                 if (currentFrame.getId() >= boundary.getLeft() && currentFrame.getId() <= boundary.getRight()) {
                     segment.addVideoFrame(currentFrame);
                     currentFrame = null;
+                } else {
+                    break;
                 }
             }
 
@@ -204,7 +202,7 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
      */
     public static List<Pair<Long,Long>> decode(Path msr) {
         final List<Pair<Long,Long>> _return = new ArrayList<>();
-        try (final BufferedReader reader = Files.newBufferedReader(msr)) {
+        try (final BufferedReader reader = Files.newBufferedReader(msr, StandardCharsets.ISO_8859_1)) {
             String line = null;
             int shotCounter = 0;
             while((line = reader.readLine()) != null){
