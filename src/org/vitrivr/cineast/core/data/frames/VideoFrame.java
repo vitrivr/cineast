@@ -4,10 +4,7 @@ package org.vitrivr.cineast.core.data.frames;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 /**
@@ -48,7 +45,6 @@ public class VideoFrame {
 		this.timestamp = timestamp;
 		this.img = image;
 		this.descriptor = descriptor;
-		this.subtitleItems = new LinkedList<>();
 	}
 
 	/**
@@ -111,7 +107,11 @@ public class VideoFrame {
 	 * @return {@link SubtitleItem} associated with current video frame.
 	 */
 	public final List<SubtitleItem> getSubtitleItems() {
-    	return Collections.unmodifiableList(this.subtitleItems);
+		if (this.subtitleItems != null) {
+			return Collections.unmodifiableList(this.subtitleItems);
+		} else {
+			return Collections.unmodifiableList(new ArrayList<>(0));
+		}
 	}
 
     /**
@@ -134,6 +134,7 @@ public class VideoFrame {
 	 * @param item New {@link SubtitleItem}. Must not be null.
 	 */
 	public void addSubtitleItem(SubtitleItem item) {
+		if (this.subtitleItems == null) this.subtitleItems = new LinkedList<>();
     	if (!this.subtitleItems.contains(item)) {
     		this.subtitleItems.add(item);
 		}
