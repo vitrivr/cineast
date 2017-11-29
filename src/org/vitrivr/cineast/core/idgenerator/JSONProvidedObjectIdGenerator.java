@@ -37,7 +37,7 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
     private static final String PROPERTY_NAME_ASSIGNMENT = "assignment";
 
     /** Map that maps filenames to ID's. Only used in MAP mode. */
-    private final HashMap<String, String> pathIdMap;
+    private final HashMap<String, Object> pathIdMap;
 
     /** List of ID's. Only used in CONTINUOUS mode. */
     private final LinkedList<String> idList;
