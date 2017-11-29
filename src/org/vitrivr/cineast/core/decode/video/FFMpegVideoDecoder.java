@@ -508,7 +508,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         /* Find the best frames stream. */
         final AVCodec codec = av_codec_next((AVCodec)null);
         this.audioStream = av_find_best_stream(this.pFormatCtx, AVMEDIA_TYPE_AUDIO,-1, -1, codec, 0);
-        if (this.audioStream == -1) {
+        if (this.audioStream < 0) {
             LOGGER.warn("Couldn't find a supported audio stream. Continuing without audio!");
             this.audioComplete.set(true);
             return true;
