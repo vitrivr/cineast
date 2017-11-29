@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -201,9 +200,6 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                 final String objectId = descriptor.getObjectId();
                 int segmentNumber = 1;
 
-                /* Timeout in ms used when emitting segments into the ExtractionPipeline. */
-                int emissionTimout = 1000;
-
                 /* Initialize segmenter and pass to executor service. */
                 segmenter.init(decoder, descriptor);
                 this.executorService.execute(segmenter);
@@ -228,13 +224,17 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                             container.setId(segmentDescriptor.getSegmentId());
                             container.setSuperId(segmentDescriptor.getObjectId());
 
+                            /* Timeout in ms used when emitting segments into the ExtractionPipeline. */
+                            int emissionTimout = 1000;
+
                             /* Emit container to extraction pipeline. */
                             while (!this.pipeline.emit(container, emissionTimout)) {
                                 LOGGER.warn("ExtractionPipeline is full - deferring emission of segment. Consider increasing the thread-pool count for the extraction pipeline.");
                                 Thread.sleep(emissionTimout);
+                                emissionTimout += 500;
                             }
 
-                             /* Increase the segment number. */
+                            /* Increase the segment number. */
                             segmentNumber += 1;
                         }
                     } catch (InterruptedException e) {
@@ -265,8 +265,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
             }
 
             /*
-             * Trigger garbage collection once in a while. This is specially relevant when many small files are processed, since
-             * unused allocated memory could accumulate and trigger swapping. 
+             * Trigger garbage collection once in a while. This is specially relevant when many small files are processed, since unused allocated memory could accumulate and trigger swapping.
              */
             if (this.count_processed % 50 == 0) {
                 System.gc();
