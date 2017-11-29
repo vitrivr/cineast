@@ -63,7 +63,7 @@ public class ReflectionHelper {
 			if (properties == null || properties.isEmpty()) {
 				return instanciate(c);
 			} else {
-				return instanciate(c, properties);
+				return instanciate(c, new Class[]{Map.class}, properties);
 			}
 		} catch (ClassNotFoundException | InstantiationException  e) {
 			LOGGER.fatal("Failed to create ObjectIdGenerator. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
