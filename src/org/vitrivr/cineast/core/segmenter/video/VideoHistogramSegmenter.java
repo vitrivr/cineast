@@ -4,6 +4,9 @@ import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Histogram;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
@@ -24,6 +27,8 @@ import org.vitrivr.cineast.core.segmenter.general.Segmenter;
  * @created 17.01.17
  */
 public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
+    /** */
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private static final double THRESHOLD = 0.05;
 
@@ -141,92 +146,96 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
             this.isrunning = true;
         }
 
-        while (!this.decoder.complete()) {
-            if (this.videoFrameList.isEmpty()) {
-              queueFrames();
-            }
-
-            VideoSegment _return = null;
-
-            if (!preShotList.isEmpty()) {
-                _return = new VideoSegment();
-                while (!preShotList.isEmpty()) {
-                    _return.addVideoFrame(preShotList.removeFirst().first);
+        try {
+            while (!this.decoder.complete()) {
+                if (this.videoFrameList.isEmpty()) {
+                  queueFrames();
                 }
-            }
 
-            if (this.videoFrameList.isEmpty()) {
-                this.segments.offer(_return);
-                continue; //no more shots to segment
-            }
+                VideoSegment _return = null;
 
-            if (_return == null) {
-                _return = new VideoSegment();
-            }
-
-
-            VideoFrame videoFrame = this.videoFrameList.poll();
-
-            SegmentDescriptor bounds = this.knownShotBoundaries.size() > 0 ? this.knownShotBoundaries.remove(0) : null;
-
-            if (bounds != null && videoFrame.getId() >= bounds.getStart() && videoFrame.getId() <= bounds.getEnd()) {
-
-                _return.addVideoFrame(videoFrame);
-                queueFrames(bounds.getEnd() - bounds.getStart());
-                do {
-                    videoFrame = this.videoFrameList.poll();
-                    if (videoFrame != null) {
-                        _return.addVideoFrame(videoFrame);
-                    } else {
-                        break;
+                if (!preShotList.isEmpty()) {
+                    _return = new VideoSegment();
+                    while (!preShotList.isEmpty()) {
+                        _return.addVideoFrame(preShotList.removeFirst().first);
                     }
-                } while (videoFrame.getId() < bounds.getEnd());
+                }
 
-                this.segments.offer(_return);
-                continue;
+                if (this.videoFrameList.isEmpty()) {
+                    this.segments.offer(_return);
+                    continue; //no more shots to segment
+                }
 
-            } else {
-                Histogram hPrev, h = getHistogram(videoFrame);
-                _return.addVideoFrame(videoFrame);
-                while (true) {
-                    if ((videoFrame = this.videoFrameList.poll()) == null) {
-                        queueFrames();
-                        if ((videoFrame = this.videoFrameList.poll()) == null) {
-                            this.segments.offer(_return);
-                            break;
-                        }
-                    }
-                    hPrev = h;
-                    h = getHistogram(videoFrame);
-                    double distance = hPrev.getDistance(h);
+                if (_return == null) {
+                    _return = new VideoSegment();
+                }
 
-                    preShotList.offer(new Pair<VideoFrame,Double>(videoFrame, distance));
 
-                    if (preShotList.size() > PRESHOT_QUEUE_LENGTH) {
-                        double max = 0;
-                        int index = -1, i = 0;
-                        for (Pair<VideoFrame, Double> pair : preShotList) {
-                            if (pair.second > max) {
-                                index = i;
-                                max = pair.second;
-                            }
-                            i++;
-                        }
-                        if (max <= THRESHOLD && _return.getNumberOfFrames() < MAX_SHOT_LENGTH) { //no cut
-                            for (Pair<VideoFrame, Double> pair : preShotList) {
-                                _return.addVideoFrame(pair.first);
-                            }
-                            preShotList.clear();
+                VideoFrame videoFrame = this.videoFrameList.poll();
+
+                SegmentDescriptor bounds = this.knownShotBoundaries.size() > 0 ? this.knownShotBoundaries.remove(0) : null;
+
+                if (bounds != null && videoFrame.getId() >= bounds.getStart() && videoFrame.getId() <= bounds.getEnd()) {
+
+                    _return.addVideoFrame(videoFrame);
+                    queueFrames(bounds.getEnd() - bounds.getStart());
+                    do {
+                        videoFrame = this.videoFrameList.poll();
+                        if (videoFrame != null) {
+                            _return.addVideoFrame(videoFrame);
                         } else {
-                            for (i = 0; i < index; ++i) {
-                                _return.addVideoFrame(preShotList.removeFirst().first);
-                            }
                             break;
                         }
+                    } while (videoFrame.getId() < bounds.getEnd());
+
+                    this.segments.offer(_return);
+                    continue;
+
+                } else {
+                    Histogram hPrev, h = getHistogram(videoFrame);
+                    _return.addVideoFrame(videoFrame);
+                    while (true) {
+                        if ((videoFrame = this.videoFrameList.poll()) == null) {
+                            queueFrames();
+                            if ((videoFrame = this.videoFrameList.poll()) == null) {
+                                this.segments.offer(_return);
+                                break;
+                            }
+                        }
+                        hPrev = h;
+                        h = getHistogram(videoFrame);
+                        double distance = hPrev.getDistance(h);
+
+                        preShotList.offer(new Pair<>(videoFrame, distance));
+
+                        if (preShotList.size() > PRESHOT_QUEUE_LENGTH) {
+                            double max = 0;
+                            int index = -1, i = 0;
+                            for (Pair<VideoFrame, Double> pair : preShotList) {
+                                if (pair.second > max) {
+                                    index = i;
+                                    max = pair.second;
+                                }
+                                i++;
+                            }
+                            if (max <= THRESHOLD && _return.getNumberOfFrames() < MAX_SHOT_LENGTH) { //no cut
+                                for (Pair<VideoFrame, Double> pair : preShotList) {
+                                    _return.addVideoFrame(pair.first);
+                                }
+                                preShotList.clear();
+                            } else {
+                                for (i = 0; i < index; ++i) {
+                                    _return.addVideoFrame(preShotList.removeFirst().first);
+                                }
+                                break;
+                            }
+                        }
                     }
+                    this.segments.put(_return);
                 }
-                this.segments.offer(_return);
             }
+        } catch (InterruptedException e) {
+            LOGGER.log(Level.ERROR, "The thread that runs the VideoHistogramSegmenter was interrupted: {}", e);
         }
 
         /* End: Reset running to false. */

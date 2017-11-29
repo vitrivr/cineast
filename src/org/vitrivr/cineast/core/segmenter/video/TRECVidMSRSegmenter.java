@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.segmenter.video;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -160,34 +161,39 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
         synchronized (this) {
             this.running = true;
         }
-        VideoFrame currentFrame = null;
-        while (!this.boundaries.isEmpty()) {
-            final Pair<Long,Long> boundary = this.boundaries.poll();
-            if (boundary == null) break;
 
-            final VideoSegment segment = new VideoSegment();
+        try {
+            VideoFrame currentFrame = null;
+            while (!this.boundaries.isEmpty()) {
+                final Pair<Long, Long> boundary = this.boundaries.poll();
+                if (boundary == null) break;
 
-            /* Append frames to the segment until the VideoFrame's (sequential) is beyond the boundaries. */
-            while (!this.decoder.complete()) {
-                if (currentFrame == null) currentFrame = this.decoder.getNext();
-                if (currentFrame.getId() >= boundary.getLeft() && currentFrame.getId() <= boundary.getRight()) {
-                    segment.addVideoFrame(currentFrame);
-                    currentFrame = null;
-                } else {
-                    break;
+                final VideoSegment segment = new VideoSegment();
+
+                /* Append frames to the segment until the VideoFrame's (sequential) is beyond the boundaries. */
+                while (!this.decoder.complete()) {
+                    if (currentFrame == null) currentFrame = this.decoder.getNext();
+                    if (currentFrame.getId() >= boundary.getLeft() && currentFrame.getId() <= boundary.getRight()) {
+                        segment.addVideoFrame(currentFrame);
+                        currentFrame = null;
+                    } else {
+                        break;
+                    }
                 }
+
+                /* Add video segment to the segments queue. */
+                this.outputQueue.put(segment);
             }
 
-            /* Add video segment to the segments queue. */
-            this.outputQueue.offer(segment);
+            /* Create final segment. */
+            final VideoSegment finalSegment = new VideoSegment();
+            while (!this.decoder.complete()) {
+                finalSegment.addVideoFrame(this.decoder.getNext());
+            }
+            if (finalSegment.getNumberOfFrames() > 0) this.outputQueue.put(finalSegment);
+        } catch (InterruptedException e) {
+            LOGGER.log(Level.ERROR, "The thread that runs the TRECVidMSRSegmenter was interrupted: {}", e);
         }
-
-        /* Create final segment. */
-        final VideoSegment finalSegment = new VideoSegment();
-        while(!this.decoder.complete()) {
-            finalSegment.addVideoFrame(this.decoder.getNext());
-        }
-        if (finalSegment.getNumberOfFrames() > 0) this.outputQueue.offer(finalSegment);
 
         /* Sets the running flag to false. */
         synchronized (this) {
