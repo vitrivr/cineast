@@ -117,7 +117,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     private VideoDescriptor videoDescriptor = null;
     private AudioDescriptor audioDescriptor = null;
-    private Optional<SubTitleDecoder> subtitles = null;
+    private SubTitleDecoder subtitles = null;
 
     /** Indicates that decoding of video-data is complete. */
     private final AtomicBoolean videoComplete = new AtomicBoolean(false);
@@ -413,7 +413,8 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
         /* Open subtitles file (if configured). */
         if (config.namedAsBoolean(DECODE_SUBTITLE_CONFIG, false)) {
-            this.subtitles = SubtitleDecoderFactory.subtitleForVideo(path);
+            Optional<SubTitleDecoder> subtitles = SubtitleDecoderFactory.subtitleForVideo(path);
+            subtitles.ifPresent(subTitleDecoder -> this.subtitles = subTitleDecoder);
         }
 
         if (this.initVideo(config) && this.initAudio(config)) {
@@ -606,20 +607,19 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         /*
          * Now, if there is a subtitle stream, try to append the corresponding subtitle.
          */
-        this.subtitles.ifPresent(s -> {
-            /* TODO: Adjust logic in order to get all subtitle items (if multiple are defiend). */
+        if (this.subtitles != null) {
             while (true) {
-                final SubtitleItem item = s.getLast();
+                final SubtitleItem item = this.subtitles.getLast();
                 if (videoFrame.getTimestamp() >= item.getStartTimestamp() && videoFrame.getTimestamp() <= item.getEndTimestamp()) {
                     videoFrame.addSubtitleItem(item);
                     break;
                 } else if (videoFrame.getTimestamp() > item.getEndTimestamp()) {
-                    if (!s.increment()) break;
+                    if (!this.subtitles.increment()) break;
                 } else {
                     break;
                 }
             }
-        });
+        }
 
 
         /* Return VideoFrame. */
