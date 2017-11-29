@@ -81,7 +81,7 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
     @Override
     public String next(Path path, MediaType type) {
         if (mode == AssignmentMode.MAP) {
-            return this.pathIdMap.get(path.getFileName().toString());
+            return this.pathIdMap.get(path.getFileName().toString()).toString();
         } else {
             return this.idList.poll();
         }
