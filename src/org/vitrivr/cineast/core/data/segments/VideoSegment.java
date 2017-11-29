@@ -29,8 +29,8 @@ public class VideoSegment implements SegmentContainer {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private LinkedList<VideoFrame> videoFrames = new LinkedList<>();
-    private LinkedList<AudioFrame> audioFrames = new LinkedList<>();
+    private final LinkedList<VideoFrame> videoFrames = new LinkedList<>();
+    private final LinkedList<AudioFrame> audioFrames = new LinkedList<>();
     private final LinkedList<SubtitleItem> subItems = new LinkedList<>();
     private MultiImage avgImg = null, medianImg = null;
     private VideoFrame mostRepresentative = null;
@@ -42,15 +42,15 @@ public class VideoSegment implements SegmentContainer {
     private String shotId;
 
     /** Total number of samples in the AudioSegment. */
-    private int totalSamples;
+    private int totalSamples = 0;
 
     /** Total duration of the AudioSegment in seconds. */
-    private float totalAudioDuration;
+    private float totalAudioDuration = 0.0f;
 
-    /** AudioDescriptor for the audio stream in this VideoSegment. */
+    /** {@link AudioDescriptor} for the audio stream in this {@link VideoSegment}. Can be null! */
     private AudioDescriptor audioDescriptor = null;
 
-    /** VideoDescriptor for the video stream in this VideoSegment. */
+    /** {@link VideoDescriptor} for the video stream in this {@link VideoSegment}. Can be null! */
     private VideoDescriptor videoDescriptor = null;
 
     /**
@@ -66,7 +66,9 @@ public class VideoSegment implements SegmentContainer {
     }
 
     /**
-     * @return
+     * Returns the number of {@link VideoFrame}s for this {@link VideoSegment}.
+     *
+     * @return Number of {@link VideoFrame}s
      */
     public int getNumberOfFrames() {
         return this.videoFrames.size();
@@ -74,7 +76,9 @@ public class VideoSegment implements SegmentContainer {
 
 
     /**
-     * @return
+     * Getter for the list of {@link VideoFrame}s associated with this {@link VideoSegment}.
+     *
+     * @return Unmodifiable list of {@link VideoFrame}s
      */
     @Override
     public List<VideoFrame> getVideoFrames() {
@@ -82,7 +86,9 @@ public class VideoSegment implements SegmentContainer {
     }
 
     /**
-     * @return
+     * Getter for the list of {@link AudioFrame}s associated with this {@link VideoSegment}.
+     *
+     * @return Unmodifiable list of {@link AudioFrame}s
      */
     @Override
     public List<AudioFrame> getAudioFrames() {
@@ -120,9 +126,10 @@ public class VideoSegment implements SegmentContainer {
     }
 
     /**
-     * Getter for the total number of samples in the AudioSegment.
+     * Getter for the total number of audio samples per channel in this {@link VideoSegment}. If the {@link VideoSegment} does
+     * not contain any audio, this method returns 0.
      *
-     * @return
+     * @return Number of audio samples
      */
     @Override
     public int getNumberOfSamples() {
@@ -130,36 +137,49 @@ public class VideoSegment implements SegmentContainer {
     }
 
     /**
-     * Getter for the total duration of the AudioSegment.
+     * Getter for the total audio duration of the {@link VideoSegment}. If the {@link VideoSegment} does not
+     * contain any audio, this method returns 0.0f.
      *
-     * @return
+     * @return Duration of audio.
      */
     @Override
     public float getAudioDuration() {
-        return totalAudioDuration;
+        return this.totalAudioDuration;
     }
 
     /**
-     * Getter for samplingrate of the AudioSegment.
+     * Getter for samplingrate of the audio in this {@link VideoSegment}. If the {@link VideoSegment} does not
+     * contain any audio, this method returns 0.
      *
      * @return
      */
     @Override
     public float getSamplingrate() {
-        return this.audioDescriptor.getSamplingrate();
+        if (this.audioDescriptor != null) {
+            return this.audioDescriptor.getSamplingrate();
+        } else {
+            return 0;
+        }
     }
 
     /**
+     * Getter for number of audio channels for the {@link VideoSegment}. If the {@link VideoSegment} does not
+     * contain any audio, this method returns 0.
+     *
      * @return
      */
     @Override
     public int getChannels() {
-        return this.audioDescriptor.getChannels();
+        if (this.audioDescriptor != null) {
+            return this.audioDescriptor.getChannels();
+        } else {
+            return 0;
+        }
     }
 
     /**
-     * Calculates and returns the Short-term Fourier Transform of the audio in the
-     * current VideoSegment.
+     * Calculates and returns the Short-term Fourier Transform of the audio in the current {@link VideoFrame}. If the
+     * {@link VideoSegment} does not contain any audio, this method returns null.
      *
      * @param windowsize Size of the window used during STFT. Must be a power of two.
      * @param overlap    Overlap in samples between two subsequent windows.
@@ -169,6 +189,7 @@ public class VideoSegment implements SegmentContainer {
      */
     @Override
     public STFT getSTFT(int windowsize, int overlap, int padding, WindowFunction function) {
+        if (this.audioDescriptor == null) return null;
         if (2 * padding >= windowsize) {
             throw new IllegalArgumentException("The combined padding must be smaller than the sample window.");
         }
@@ -237,10 +258,9 @@ public class VideoSegment implements SegmentContainer {
         for (VideoFrame f : videoFrames) {
             f.clear();
         }
-        videoFrames.clear();
-        subItems.clear();
-        this.videoFrames = null;
-        this.audioFrames = null;
+        this.videoFrames.clear();
+        this.audioFrames.clear();
+        this.subItems.clear();
         if (avgImg != null) {
             this.avgImg.clear();
             this.avgImg = null;
@@ -253,7 +273,6 @@ public class VideoSegment implements SegmentContainer {
             this.paths.clear();
             this.paths = null;
         }
-
         this.mostRepresentative = null;
     }
 
