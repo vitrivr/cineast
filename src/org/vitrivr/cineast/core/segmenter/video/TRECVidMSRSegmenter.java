@@ -201,6 +201,11 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
         }
     }
 
+    @Override
+    public void addKnownSegments(Iterable<SegmentDescriptor> segments) {
+        /* TODO: Add implementation (check with Luca). */
+    }
+
     /**
      * Decodes shot boundaries in the format used for TRECVID and creates {@link SegmentDescriptor}s accordingly.
      *

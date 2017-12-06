@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.segments.VideoSegment;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.decode.general.Decoder;
-import org.vitrivr.cineast.core.decode.subtitle.SubTitleDecoder;
+
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
@@ -241,6 +241,13 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
         /* End: Reset running to false. */
         synchronized(this) {
             this.isrunning = false;
+        }
+    }
+
+    @Override
+    public void addKnownSegments(Iterable<SegmentDescriptor> segments) {
+        for(SegmentDescriptor segment : segments){
+            this.knownShotBoundaries.add(segment);
         }
     }
 
