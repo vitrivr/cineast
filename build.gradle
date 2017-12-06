@@ -2,7 +2,7 @@ apply plugin: 'com.google.osdetector'
 apply plugin: 'de.undercouch.download'
 import de.undercouch.gradle.tasks.download.Download
 
-project.ext.jomlVersion = "1.9.2"
+project.ext.jomlVersion = "1.9.6"
 project.ext.joglVersion = "2.3.2"
 
 buildscript {
