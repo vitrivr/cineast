@@ -13,10 +13,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.QuerySubTitleItem;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.*;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
@@ -57,7 +54,7 @@ public class JSONUtils {
 	
 	public static ImageQueryContainer queryContainerFromJSON(JsonObject jobj){//TODO improve robustness against wrong data types
 		BufferedImage img = jobj.get("img") == null ? null : ImageParser.dataURLtoBufferedImage(jobj.get("img").asString());
-		ImageQueryContainer qc = img == null ? new ImageQueryContainer(null) : new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
+		ImageQueryContainer qc = img == null ? new ImageQueryContainer((MultiImage)null) : new ImageQueryContainer(MultiImageFactory.newInMemoryMultiImage(img));
 		if(jobj.get("subelements") != null){
 			JsonArray subs = jobj.get("subelements").asArray();
 			for(JsonValue jv : subs){
