@@ -59,11 +59,11 @@ public class QueryComponent {
                     if (!categoryMap.containsKey(category)) {
                         categoryMap.put(category, new ArrayList<>());
                     }
-                    QueryContainer container = term.toContainer();
+                    final QueryContainer container = term.toContainer();
                     if (container != null) {
                       categoryMap.get(category).add(container);
                     }
-                };
+                }
             }
         }
         return categoryMap;

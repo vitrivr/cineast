@@ -1,16 +1,21 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.vitrivr.cineast.core.data.InMemoryMultiImage;
 import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 
 import georegression.struct.point.Point2D_F32;
+import org.vitrivr.cineast.core.util.web.AudioParser;
+import org.vitrivr.cineast.core.util.web.ImageParser;
 
 public class ImageQueryContainer extends QueryContainer {
 
@@ -20,8 +25,17 @@ public class ImageQueryContainer extends QueryContainer {
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 	private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 	private float relativeStart = 0, relativeEnd = 0;
-	
-	
+
+	/**
+	 * Constructs an {@link ImageQueryContainer} from base 64 encoded image data.
+	 *
+	 * @param data The image data that should be converted.
+	 */
+	public ImageQueryContainer(String data) {
+		final BufferedImage image = ImageParser.dataURLtoBufferedImage(data);
+		this.img = MultiImageFactory.newInMemoryMultiImage(image);
+	}
+
 	public ImageQueryContainer(MultiImage img){
 		this.img = img;
 	}
