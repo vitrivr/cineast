@@ -1,147 +1,147 @@
 {
 	"database": {
-		"host" : "127.0.0.1",
+		"host": "127.0.0.1",
 		"port": 5890,
 		"plaintext": true
 	},
 	"benchmark": {
-		"mode":"OFF",
-		"path":"benchmarks"
+		"mode": "OFF",
+		"path": "benchmarks"
 	},
 	"retriever": {
 		"threadPoolSize": 2,
 		"maxResults": 200,
 		"resultsPerModule": 250,
-		"features" : {
+		"features": {
 			"globalcolor": [
-				{"feature": "AverageColor",							"weight": 2.3},
-				{"feature": "MedianColor",							"weight": 1.2},
-				{"feature": "AverageFuzzyHist",						"weight": 0.7},
-				{"feature": "AverageFuzzyHistNormalized",			"weight": 0.7},
-				{"feature": "MedianFuzzyHist",						"weight": 1.3}
+				{"feature": "AverageColor",	"weight": 2.3},
+				{"feature": "MedianColor", "weight": 1.2},
+				{"feature": "AverageFuzzyHist", "weight": 0.7},
+				{"feature": "AverageFuzzyHistNormalized", "weight": 0.7},
+				{"feature": "MedianFuzzyHist", "weight": 1.3},
+				{"feature": "QueryImageExporter", "weight": 0.00001}
 			],
 			"localcolor": [
-				{"feature": "AverageColorRaster",					"weight": 1.0}
+				{"feature": "AverageColorARP44", "weight": 0.5},
+				{"feature": "AverageColorARP44Normalized", "weight": 0.5},
+				{"feature": "SubDivAverageFuzzyColor", "weight": 0.5},
+				{"feature": "SubDivMedianFuzzyColor", "weight": 0.85},
+				{"feature": "AverageColorGrid8", "weight": 1.8},
+				{"feature": "AverageColorGrid8Normalized", "weight": 1.8},
+				{"feature": "AverageColorCLD", "weight": 1.4},
+				{"feature": "AverageColorCLDNormalized", "weight": 1.4},
+				{"feature": "CLD", "weight": 1.3},
+				{"feature": "CLDNormalized", "weight": 1.3},
+				{"feature": "MedianColorGrid8", "weight": 1.7},
+				{"feature": "AverageColorRaster", "weight": 1.0}
 			],
 			"edge": [
-				{"feature": "EdgeARP88",							"weight": 0.85},
-				{"feature": "EdgeGrid16",							"weight": 1.15},
-				{"feature": "EHD",									"weight": 0.7},
-				{"feature": "DominantEdgeGrid16",					"weight": 1.4},
-				{"feature": "DominantEdgeGrid8",					"weight": 1.4}
+				{"feature": "EdgeARP88", "weight": 0.85},
+				{"feature": "EdgeGrid16", "weight": 1.15},
+				{"feature": "EHD", "weight": 0.7},
+				{"feature": "DominantEdgeGrid16", "weight": 1.4},
+				{"feature": "DominantEdgeGrid8", "weight": 1.4}
 			],
 			"motion": [
-				{"feature": "SubDivMotionHistogram3",				"weight": 0.5},
-				{"feature": "SubDivMotionHistogram5",				"weight": 0.5},
-				{"feature": "SubDivMotionHistogramBackground3",		"weight": 0.5},
-				{"feature": "SubDivMotionHistogramBackground5",		"weight": 0.5}
+				{"feature": "SubDivMotionHistogram3", "weight": 0.5},
+				{"feature": "SubDivMotionHistogram5", "weight": 0.5},
+				{"feature": "SubDivMotionHistogramBackground3", "weight": 0.5},
+				{"feature": "SubDivMotionHistogramBackground5", "weight": 0.5}
 			],
 			"quantized": [
-				{"feature": "AverageColorGrid8Reduced11",			"weight": 1.0},
-				{"feature": "AverageColorGrid8Reduced15",			"weight": 1.0},
-				{"feature": "AverageColorRasterReduced11",			"weight": 1.0},
-				{"feature": "AverageColorRasterReduced15",			"weight": 1.0},
-				{"feature": "CLDReduced11",							"weight": 1.0},
-				{"feature": "CLDReduced15",							"weight": 1.0}
+				{"feature": "AverageColorGrid8Reduced11", "weight": 1.0},
+				{"feature": "AverageColorGrid8Reduced15", "weight": 1.0},
+				{"feature": "AverageColorRasterReduced11", "weight": 1.0},
+				{"feature": "AverageColorRasterReduced15", "weight": 1.0},
+				{"feature": "CLDReduced11", "weight": 1.0},
+				{"feature": "CLDReduced15", "weight": 1.0}
 			],
-			"asr": [
-				{"feature": "SubtitleFulltextSearch",				"weight": 1.0}
+			"localfeatures": [
+				{"feature": "SURFMirflickr25K512", "weight": 1.75},
+				{"feature": "HOGMirflickr25K512", "weight": 1.0}
 			],
-			"ocr": [
-				{"feature": "OCRSearch",							"weight": 1.0}
-			],
-			"description": [
-				{"feature": "DescriptionTextSearch",				"weight": 1.0}
-			],
-			"localfeatures" : [
-				{"feature": "SURFMirflickr25K512",					"weight": 1.75},
-				{"feature": "HOGMirflickr25K512",					"weight": 1.0}
-			],
-			"localfeatures_fast" : [
-				{"feature": "SURFMirflickr25K256",					"weight": 1.75},
-				{"feature": "HOGMirflickr25K256",					"weight": 1.0}
-			],
-			"meta": [
-				{"feature": "VideoMetadata",					"weight": 1.0}
+			"localfeatures_fast": [
+				{"feature": "SURFMirflickr25K256", "weight": 1.75},
+				{"feature": "HOGMirflickr25K256", "weight": 1.0}
 			],
 			"audiofingerprint": [
-				{"feature": "AudioFingerprint",					"weight": 1.0}
+				{"feature": "AudioFingerprint", "weight": 1.0}
 			],
-			"hpcpaverage" : [
-				{"feature": "AverageHPCP20F36B",				"weight": 1.5},
-				{"feature": "AverageHPCP30F36B",				"weight": 0.75}
+			"hpcpaverage": [
+			{ "feature": "AverageHPCP20F36B", "weight": 1.5},
+				{"feature": "AverageHPCP30F36B", "weight": 0.75}
 			],
-			"audiomatching" : [
-				{"feature": "CENS12Shingle",						"weight": 2.0},
-				{"feature": "HPCP12Shingle",						"weight": 1.0},
-				{"feature": "MFCCShingle",							"weight": 0.5}
+			"audiomatching": [
+				{"feature": "CENS12Shingle", "weight": 2.0},
+				{"feature": "HPCP12Shingle", "weight": 1.0},
+				{"feature": "MFCCShingle", "weight": 0.5}
 			],
-			"lightfield" : [
-				{"feature": "LightfieldFourier",				"weight": 1.0},
-				{"feature": "LightfieldZernike",				"weight": 2.5}
+			"lightfield": [
+				{"feature": "LightfieldFourier", "weight": 1.0},
+				{"feature": "LightfieldZernike", "weight": 2.5}
 			],
-			"sphericalharmonicslow" : [
-				{"feature": "SphericalHarmonicsLow",			"weight": 1.0}
+			"sphericalharmonicslow": [
+				{"feature": "SphericalHarmonicsLow", "weight": 1.0}
 			],
-			"sphericalharmonicsdefault" : [
-				{"feature": "SphericalHarmonicsDefault",		"weight": 1.0}
+			"sphericalharmonicsdefault": [
+				{"feature": "SphericalHarmonicsDefault", "weight": 1.0}
 			],
-			"sphericalharmonicshigh" : [
-				{"feature": "SphericalHarmonicsHigh",			"weight": 1.0}
+			"sphericalharmonicshigh": [
+				{"feature": "SphericalHarmonicsHigh", "weight": 1.0}
 			],
-			"pitchsequence" : [
-				{"feature": "MelodyEstimate",			 		"weight": 1.0}
+			"pitchsequence": [
+				{"feature": "MelodyEstimate", "weight": 1.0}
 			]
 		}
 	},
-	
+
 	"decoders": {
-		"VIDEO":{
+		"VIDEO": {
 			"decoder": "FFMPEG",
 			"properties": {
 				"maxFrameWidth": 640,
 				"maxFrameHeight": 480
 			}
 		},
-		"IMAGE":{
+		"IMAGE": {
 			"decoder": "DefaultImageDecoder",
 			"properties": {
-				"bounds":1024
+				"bounds": 1024
 			}
 		},
-		"AUDIO":{
+		"AUDIO": {
 			"decoder": "FFMpegAudioDecoder",
 			"properties": {
-				"samplerate":44100,
-				"channels":2
+				"samplerate": 44100,
+				"channels": 2
 			}
 		}
 	},
-	
+
 	"extractor": {
 		"threadPoolSize": 4,
 		"outputLocation": "out"
 	},
-	
+
 	"imagecache": {
 		"softMemoryLimit": 2048,
 		"hardMemoryLimit": 1024
 	},
-	
+
 	"api": {
 		"enableCLI": true,
 		"enableWebsocket": true,
 		"enableWebsocketSecure": false,
 		"enableRest": true,
 		"enableRestSecure": false,
-		"enableLegacy":false,
-		"maxMessageSize":40960000,
+		"enableLegacy": false,
+		"maxMessageSize": 40960000,
 		"httpPort": 4567,
 		"httpsPort": 4568,
 		"legacyPort": 12345,
-		"threadPoolSize" : 8
+		"threadPoolSize": 8
 	},
-	
+
 	"visualization": {
 		"cacheEnabled": false,
 		"cachePath": "cache/art/"

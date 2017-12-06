@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/vitrivr/cineast.svg?branch=dev)](https://travis-ci.org/vitrivr/cineast)
+[![Build Status](https://travis-ci.org/vitrivr/cineast.svg?branch=master)](https://travis-ci.org/vitrivr/cineast)
 
 # Cineast
 Cineast is a multi-feature content-based mulitmedia retrieval engine. It is capable of retrieving images, audio- and video sequences as well as 3d models based on edge or color sketches, sketch-based motion queries and example objects.

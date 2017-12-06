@@ -25,7 +25,7 @@ import boofcv.gui.image.ShowImages;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.ConnectRule;
 import boofcv.struct.ImageRectangle;
-import boofcv.struct.convolve.Kernel1D_I32;
+import boofcv.struct.convolve.Kernel1D_F32;
 import boofcv.struct.image.GrayU8;
 import georegression.struct.point.Point2D_F32;
 import georegression.struct.point.Point2D_I32;
@@ -337,8 +337,8 @@ public class MaskGenerator {
 		int height = input.get(0).getHeight();
 		int len = input.size();
 		
-		Kernel1D_I32 kernel = FactoryKernelGaussian.gaussian(Kernel1D_I32.class,-1,spatialRadius);
-		int divisor = kernel.computeSum();
+		Kernel1D_F32 kernel = FactoryKernelGaussian.gaussian(Kernel1D_F32.class,-1,spatialRadius);
+		float divisor = kernel.computeSum();
 		int data1D[] = new int[len + 2*kernel.offset];
 		for (int x = 0; x < width; ++x){
 			for (int y = 0; y < height; ++y){
@@ -350,7 +350,7 @@ public class MaskGenerator {
 					for (int k = 0; k < kernel.width; ++k){
 						total += (data1D[i+k] & 0xFF) * kernel.data[k];
 					}
-					output.get(i).set(x, y, total/divisor);
+					output.get(i).set(x, y, Math.round(total/divisor));
 				}
 			} 
 		}

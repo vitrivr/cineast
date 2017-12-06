@@ -202,6 +202,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
                 /* Initialize segmenter and pass to executor service. */
                 segmenter.init(decoder, descriptor);
+                this.configureSegmenter(segmenter);
                 this.executorService.execute(segmenter);
 
                 /* Poll for output from the segmenter until that segmenter reports that no more output
@@ -444,5 +445,13 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      */
     protected List<SegmentDescriptor> retrieveExistingSegments(MultimediaObjectDescriptor object) {
         return this.segmentReader.lookUpSegmentsOfObject(object.getObjectId());
+    }
+    
+    /**
+     * Enables type-specific implementations to add additional configuration to the segmenter
+     * @param segmenter
+     */
+    protected void configureSegmenter(Segmenter<T> segmenter){
+      
     }
 }

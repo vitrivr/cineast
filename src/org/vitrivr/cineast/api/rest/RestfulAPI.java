@@ -10,6 +10,7 @@ import org.vitrivr.cineast.api.rest.handlers.actions.FindObjectsByIdActionHandle
 import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentAllByObjectIdActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentSimilarActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindSegmentsByIdActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.FindTagsActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.FindTagsByActionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
@@ -107,12 +108,16 @@ public class RestfulAPI {
         http.get("/objects/all/:type", new FindObjectAllActionHandler());
         
         http.get("/segments/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
+        
+        http.get("/tags/by/:attribute/:value", new FindTagsByActionHandler(false));
+        http.get("/tags/all", new FindTagsActionHandler());
               
         http.post("/segments/similar", new FindSegmentSimilarActionHandler());
         
         http.post("/segments/by/id", new FindSegmentsByIdActionHandler());
         http.post("/objects/by/id", new FindObjectsByIdActionHandler());
         http.post("/metas/by/id", new FindMetadatasByIdActionHandler());
+        http.post("/tags/by/id", new FindTagsByActionHandler(true));
       });
       
     }
@@ -156,6 +161,7 @@ public class RestfulAPI {
         http.get("/segments/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
         
         http.get("/tags/by/:attribute/:value", new FindTagsByActionHandler(false));
+        http.get("/tags/all", new FindTagsActionHandler());
               
         http.post("/segments/similar", new FindSegmentSimilarActionHandler());
         

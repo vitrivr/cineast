@@ -106,7 +106,7 @@ public class VisualizationUtil {
 				g2.drawRect(rect.getX0() + width, rect.getY0(), rect.getWidth(), rect.getHeight());
 			}
 			
-			gui.setBufferedImage(bufferedImage);
+			gui.setImage(bufferedImage);
 			gui.repaint();
 
 			try {

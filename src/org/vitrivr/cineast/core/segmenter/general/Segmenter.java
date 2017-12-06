@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.segmenter.general;
 
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 
@@ -26,6 +27,12 @@ public interface Segmenter<A> extends Runnable, AutoCloseable {
      * @param object Media object that is about to be segmented.
      */
     void init(Decoder<A> decoder, MultimediaObjectDescriptor object);
+    
+    /**
+     * Adds known segments from external source
+     * @param segments 
+     */
+    void addKnownSegments(Iterable<SegmentDescriptor> segments);
 
     /**
      * Returns the next SegmentContainer from the source OR null if there are no more segments in the queue. As

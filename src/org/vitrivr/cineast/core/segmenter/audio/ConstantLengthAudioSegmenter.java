@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.segments.AudioSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -207,5 +208,11 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void addKnownSegments(Iterable<SegmentDescriptor> segments) {
+      // TODO decide whether to take those into account or not
+      
     }
 }
