@@ -94,7 +94,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
         } catch (Exception exception) {
             /* On exception: Send QueryError message to client. */
             this.write(session, new QueryError(qconf.getQueryId().toString(), exception.getMessage()));
-            LOGGER.error("An exception occurred during execution of similarity message {}.", LogHelper.getStackTrace(exception));
+            LOGGER.error("An exception occurred during execution of similarity query message {}.", LogHelper.getStackTrace(exception));
         }
     }
 }
