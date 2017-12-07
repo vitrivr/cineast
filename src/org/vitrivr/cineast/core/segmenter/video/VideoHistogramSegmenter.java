@@ -244,13 +244,6 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
         }
     }
 
-    @Override
-    public void addKnownSegments(Iterable<SegmentDescriptor> segments) {
-        for(SegmentDescriptor segment : segments){
-            this.knownShotBoundaries.add(segment);
-        }
-    }
-
     /**
      *
      * @return

@@ -137,9 +137,4 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
      * @return
      */
     protected abstract SegmentContainer getSegmentFromContent(T content);
-
-    @Override
-    public void addKnownSegments(Iterable<SegmentDescriptor> segments) {
-      // ignore
-    }
 }
