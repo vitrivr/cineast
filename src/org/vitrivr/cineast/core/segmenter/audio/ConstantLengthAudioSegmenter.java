@@ -209,10 +209,4 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public void addKnownSegments(Iterable<SegmentDescriptor> segments) {
-      // TODO decide whether to take those into account or not
-      
-    }
 }
