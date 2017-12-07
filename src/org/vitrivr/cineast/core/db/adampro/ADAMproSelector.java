@@ -42,6 +42,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.db.MergeOperation;
+import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import com.google.common.collect.Iterables;
@@ -365,14 +366,24 @@ public class ADAMproSelector implements DBSelector {
     }
 
     @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
-                                                            Iterable<String> values) {
+    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values) {
+        return getRows(fieldName, null,  values);
+    }
+
+    @Override
+    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, String value) {
+        return getRows(fieldName, operator, Collections.singleton(value));
+    }
+
+    @Override
+    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<String> values) {
         if (values == null || Iterables.isEmpty(values)) {
             return new ArrayList<>(0);
         }
 
-        WhereMessage where = this.mb.buildWhereMessage(fieldName, values);
-        BooleanQueryMessage bqMessage = this.mb.buildBooleanQueryMessage(where);
+        /* TODO: Escape quotes. */
+        final WhereMessage where = this.mb.buildWhereMessage(fieldName, values, operator);
+        final BooleanQueryMessage bqMessage = this.mb.buildBooleanQueryMessage(where);
         return executeBooleanQuery(bqMessage);
     }
 

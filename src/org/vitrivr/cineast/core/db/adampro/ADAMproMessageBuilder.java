@@ -26,6 +26,9 @@ import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
+import org.vitrivr.cineast.core.db.RelationalOperator;
+
+import javax.management.relation.Relation;
 
 /**
  * @author rgasser
@@ -279,33 +282,76 @@ public class ADAMproMessageBuilder {
     }
 
     /**
+     * Builds a {@link WhereMessage} using the specified settings and the equals operator.
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key The name of the field (key).
+     * @param value The values that should be compared against the field.
+     * @return {@link WhereMessage}
      */
     public WhereMessage buildWhereMessage(String key, String value) {
         return buildWhereMessage(key, Collections.singleton(value));
     }
 
     /**
+     * Builds a {@link WhereMessage} using the specified settings and the equals operator.
      *
-     * @param key
-     * @param values
-     * @return
+     * @param key The name of the field (key).
+     * @param values The list of values that should be compared against the field.
+     * @return {@link WhereMessage}
      */
     public WhereMessage buildWhereMessage(String key, Iterable<String> values) {
-        synchronized (wmBuilder) {
-            wmBuilder.clear();
-            DataMessage.Builder damBuilder = DataMessage.newBuilder();
+        return this.buildWhereMessage(key, values, RelationalOperator.EQ);
+    }
 
-            wmBuilder.setAttribute(key);
-
+    /**
+     * Builds a {@link WhereMessage} using the specified settings.
+     *
+     * @param key The name of the field (key).
+     * @param values The list of values that should be compared against the field.
+     * @param operator The {@link RelationalOperator} used to compare the field (key) and the values.
+     * @return {@link WhereMessage}
+     */
+    public WhereMessage buildWhereMessage(String key, Iterable<String> values, RelationalOperator operator) {
+        synchronized (this.wmBuilder) {
+            this.wmBuilder.clear();
+            final DataMessage.Builder damBuilder = DataMessage.newBuilder();
+            this.wmBuilder.setAttribute(key);
             for (String value : values) {
-                wmBuilder.addValues(damBuilder.setStringData(value).build());
+                this.wmBuilder.addValues(damBuilder.setStringData(value).build());
             }
-
-            return wmBuilder.build();
+            switch (operator) {
+                case EQ:
+                    wmBuilder.setOp("==");
+                    break;
+                case NEQ:
+                    wmBuilder.setOp("!=");
+                    break;
+                case GEQ:
+                    wmBuilder.setOp(">=");
+                    break;
+                case LEQ:
+                    wmBuilder.setOp("<=");
+                    break;
+                case GREATER:
+                    wmBuilder.setOp("<");
+                    break;
+                case LESS:
+                    wmBuilder.setOp(">");
+                    break;
+                case LIKE:
+                    wmBuilder.setOp("LIKE");
+                    break;
+                case NLIKE:
+                    wmBuilder.setOp("NOT LIKE");
+                    break;
+                case RLIKE:
+                    wmBuilder.setOp("RLIKE");
+                    break;
+                default:
+                    wmBuilder.setOp("==");
+                    break;
+            }
+            return this.wmBuilder.build();
         }
     }
 

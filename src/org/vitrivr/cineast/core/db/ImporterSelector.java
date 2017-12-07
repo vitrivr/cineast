@@ -229,4 +229,13 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     return null;
   }
 
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, String value) {
+    throw new IllegalStateException("Not implemented.");
+  }
+
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<String> values) {
+    throw new IllegalStateException("Not implemented.");
+  }
 }

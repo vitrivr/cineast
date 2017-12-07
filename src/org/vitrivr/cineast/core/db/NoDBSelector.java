@@ -113,4 +113,13 @@ public class NoDBSelector implements DBSelector {
     return new ArrayList<>(0);
   }
 
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, String value) {
+    return new ArrayList<>(0);
+  }
+
+  @Override
+  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<String> values) {
+    return new ArrayList<>(0);
+  }
 }
