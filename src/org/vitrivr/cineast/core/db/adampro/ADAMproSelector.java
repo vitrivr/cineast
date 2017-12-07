@@ -367,7 +367,7 @@ public class ADAMproSelector implements DBSelector {
 
     @Override
     public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values) {
-        return getRows(fieldName, null,  values);
+        return getRows(fieldName, RelationalOperator.EQ,  values);
     }
 
     @Override
@@ -508,7 +508,7 @@ public class ADAMproSelector implements DBSelector {
         NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column,
                 DataMessageConverter.convertVectorMessage(vector), k, config);
 
-    /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
+        /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
         Collection<ReadableQueryConfig.Hints> hints;
         if (!config.getHints().isEmpty()) {
             hints = config.getHints();

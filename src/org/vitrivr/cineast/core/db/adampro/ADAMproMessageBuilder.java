@@ -321,7 +321,7 @@ public class ADAMproMessageBuilder {
             }
             switch (operator) {
                 case EQ:
-                    wmBuilder.setOp("==");
+                    wmBuilder.setOp("=");
                     break;
                 case NEQ:
                     wmBuilder.setOp("!=");
@@ -348,7 +348,7 @@ public class ADAMproMessageBuilder {
                     wmBuilder.setOp("RLIKE");
                     break;
                 default:
-                    wmBuilder.setOp("==");
+                    wmBuilder.setOp("=");
                     break;
             }
             return this.wmBuilder.build();
