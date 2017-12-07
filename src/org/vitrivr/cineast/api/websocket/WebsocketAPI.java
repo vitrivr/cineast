@@ -40,23 +40,13 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
  */
 @WebSocket
 public class WebsocketAPI {
-
     private static Logger LOGGER = LogManager.getLogger();
 
     /** Store sessions if you want to, for example, broadcast a message to all users.*/
     private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 
-//    /** Named context of the endpoint. Will be appended to the endpoint URL. */
-//    private static final String CONTEXT = "api";
-//
-//    /** Version of the protocol used by the endpoint. Will be appended to the endpoint URL. */
-//    private static final String VERSION = "v1";
-
     /** List of stateless WebsocketMessageHandler classes for the API. */
     private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
-
-//    /** Flag that indicates whether the WebSocket API is running. */
-//    private static AtomicBoolean RUNNING = new AtomicBoolean(false);
 
     /* Register the MessageHandlers for the different messages. */
     static {

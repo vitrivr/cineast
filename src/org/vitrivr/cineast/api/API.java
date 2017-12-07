@@ -28,10 +28,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.FlyCapture2.TIFFOption;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
-import org.vitrivr.cineast.api.rest.RestfulAPI;
 import org.vitrivr.cineast.api.session.CredentialManager;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
@@ -150,7 +148,7 @@ public class API {
    */
   private static void handleHTTP() {
     System.out.println("Starting HTTP API...");
-    RestfulAPI.start();
+    APIEndpoint.start();
     System.out.println("HTTP API started!");
   }
 
