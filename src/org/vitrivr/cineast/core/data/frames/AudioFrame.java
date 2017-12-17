@@ -31,14 +31,14 @@ public class AudioFrame {
     /** Timestamp in milliseconds of the first sample in the AudioFrame, relative to the whole file. */
     private final long timestamp;
 
+    /** AudioDescriptor that describes the audio in this frame. */
+    private final AudioDescriptor descriptor;
+
     /** Number of samples per channel in this AudioFrame. */
     private int numberOfSamples;
 
     /** ByteBuffer holding the raw 16bit int data. */
     private ByteBuffer data;
-
-    /** AudioDescriptor that describes the audio in this frame. */
-    private final AudioDescriptor descriptor;
 
     /**
      * Default constructor.

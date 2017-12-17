@@ -48,14 +48,28 @@ import org.vitrivr.cineast.core.util.LogHelper;
  * @created 17.01.17
  */
 public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
-    /* Configuration property-names and defaults for the DefaultImageDecoder. */
+    /** Configuration property name for the {@link FFMpegVideoDecoder}: max width of the converted video. */
     private static final String CONFIG_MAXWIDTH_PROPERTY = "maxFrameWidth";
+
+    /** Configuration property name for the {@link FFMpegVideoDecoder}: max height of the converted video. */
     private static final String CONFIG_HEIGHT_PROPERTY = "maxFrameHeight";
-    private final static int CONFIG_MAXWIDTH_DEFAULT = 640;
-    private final static int CONFIG_MAXHEIGHT_DEFAULT = 480;
+
+    /** Configuration property name for the {@link FFMpegVideoDecoder}: number of channels of the converted audio. If <= 0, then no audio will be decoded. */
     private static final String CONFIG_CHANNELS_PROPERTY = "channels";
-    private static final int CONFIG_CHANNELS_DEFAULT = 1;
+
+    /** Configuration property name for the {@link FFMpegVideoDecoder}: samplerate of the converted audio. */
     private static final String CONFIG_SAMPLERATE_PROPERTY = "samplerate";
+
+    /** Configuration property default for the FFMpegVideoDecoder: max width of the converted video. */
+    private final static int CONFIG_MAXWIDTH_DEFAULT = 640;
+
+    /** Configuration property default for the FFMpegVideoDecoder: max height of the converted video. */
+    private final static int CONFIG_MAXHEIGHT_DEFAULT = 480;
+
+    /** Configuration property default for the FFMpegVideoDecoder: number of channels of the converted audio. */
+    private static final int CONFIG_CHANNELS_DEFAULT = 1;
+
+    /** Configuration property default for the FFMpegVideoDecoder: samplerate of the converted audio */
     private static final int CONFIG_SAMPLERATE_DEFAULT = 44100;
 
 
@@ -426,9 +440,10 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     }
 
     /**
+     * Initializes the video decoding part of FFMPEG.
      *
-     * @param config
-     * @return
+     * @param config The {@link DecoderConfig} used for configuring the {@link FFMpegVideoDecoder}.
+     * @return True if vide decoder was initialized, false otherwise.
      */
     private boolean initVideo(DecoderConfig config) {
         /* Read decoder config (VIDEO). */
@@ -493,17 +508,24 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         return true;
     }
 
-
     /**
+     * Initializes the audio decoding part of FFMPEG.
      *
-     * @param config
-     * @return
+     * @param config The {@link DecoderConfig} used for configuring the {@link FFMpegVideoDecoder}.
+     * @return True if a) audio decoder was initialized, b) number of channels is smaller than zero (no audio) or c) audio is unavailable or unsupported, false if initialization failed due to technical reasons.
      */
     private boolean initAudio(DecoderConfig config) {
         /* Read decoder configuration. */
         int samplerate = config.namedAsInt(CONFIG_SAMPLERATE_PROPERTY, CONFIG_SAMPLERATE_DEFAULT);
         int channels = config.namedAsInt(CONFIG_CHANNELS_PROPERTY, CONFIG_CHANNELS_DEFAULT);
         long channellayout = av_get_default_channel_layout(channels);
+
+        /* If number of channels is smaller or equal than zero; return true (no audio decoded). */
+        if (channels <= 0) {
+            LOGGER.info("Channel setting is smaller than zero. Continuing without audio!");
+            this.audioComplete.set(true);
+            return true;
+        }
 
         /* Find the best frames stream. */
         final AVCodec codec = av_codec_next((AVCodec)null);
