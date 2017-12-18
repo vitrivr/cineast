@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
-<Appenders>
-<Console name="Console" target="SYSTEM_OUT">
-<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-</Console>
-<!--<File name="MyFile" fileName="cineast.log" bufferedIO="false">
-<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-</File>-->
-</Appenders>
-<Loggers>
-    <logger name="io" level="ERROR">
-        <AppenderRef ref="Console"/>
-    </logger>
-    <logger name="org" level="INFO">
-        <AppenderRef ref="Console"/>
-    </logger>
-    <logger name="org.vitrivr.cineast" level="DEBUG">
-    </logger>
-<Root level="info">
-<!--<AppenderRef ref="MyFile"/>-->
-</Root>
-</Loggers>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %p %c{1.} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <logger name="io" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </logger>
+        <logger name="org" level="INFO">
+            <AppenderRef ref="Console"/>
+        </logger>
+        <logger name="org.vitrivr.cineast" level="DEBUG">
+        </logger>
+        <Root level="info">
+        </Root>
+    </Loggers>
 </Configuration>
