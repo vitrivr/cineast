@@ -1,17 +1,5 @@
 package org.vitrivr.cineast.core.run.filehandler;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.Duration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import javax.activation.MimetypesFileTypeMap;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,48 +22,78 @@ import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.runtime.ExtractionPipeline;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.util.LogHelper;
 
+import javax.activation.MimetypesFileTypeMap;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Abstract implementation of ExtractionFileHandler. This class should fit most media-types. However,
  * a concrete implementation must provide the correct decoder and segmenter classes.
- **
- * @see ExtractionFileHandler
- * @see org.vitrivr.cineast.core.run.ExtractionDispatcher
+ * *
  *
  * @author rgasser
  * @version 1.0
  * @created 14.01.17
+ * @see ExtractionFileHandler
+ * @see org.vitrivr.cineast.core.run.ExtractionDispatcher
  */
 public abstract class AbstractExtractionFileHandler<T> implements ExtractionFileHandler<T> {
 
+
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /** MultimediaObjectWriter used to persist MultimediaObjectDescriptors created during the extraction. */
+    /**
+     * MultimediaObjectWriter used to persist MultimediaObjectDescriptors created during the extraction.
+     */
     private final MultimediaObjectWriter objectWriter;
 
-    /** SegmentWriter used to persist SegmentDescriptors created during the extraction. */
+    /**
+     * SegmentWriter used to persist SegmentDescriptors created during the extraction.
+     */
     private final SegmentWriter segmentWriter;
 
-    /** SegmentWriter used to persist SegmentDescriptors created during the extraction. */
+    /**
+     * SegmentWriter used to persist SegmentDescriptors created during the extraction.
+     */
     private final MultimediaMetadataWriter metadataWriter;
 
-    /** Iterator off all paths that are due for extraction. */
+    /**
+     * Iterator off all paths that are due for extraction.
+     */
     private final Iterator<Path> files;
 
-    /** ExtractionContextProvider that is used to configure the extraction. */
+    /**
+     * ExtractionContextProvider that is used to configure the extraction.
+     */
     private final ExtractionContextProvider context;
 
-    /** MultimediaObjectLookup used to lookup existing MultimediaObjectDescriptors during the extraction. */
+    /**
+     * MultimediaObjectLookup used to lookup existing MultimediaObjectDescriptors during the extraction.
+     */
     protected final MultimediaObjectLookup objectReader;
 
-    /** SegmentLookup used to lookup existing SegmentDescriptors during the extraction. */
+    /**
+     * SegmentLookup used to lookup existing SegmentDescriptors during the extraction.
+     */
     protected final SegmentLookup segmentReader;
 
-    /** ExecutorService used to run the ExtractionPipeline and the Segmenter. */
+    /**
+     * ExecutorService used to run the ExtractionPipeline and the Segmenter.
+     */
     private final ExecutorService executorService = Executors.newFixedThreadPool(2, r -> {
         Thread thread = new Thread(r);
         if (r instanceof ExtractionPipeline) {
@@ -86,34 +104,44 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         return thread;
     });
 
-    /** List of MetadataExtractors that should be executed as part of the Extraction. */
+    /**
+     * List of MetadataExtractors that should be executed as part of the Extraction.
+     */
     private final List<MetadataExtractor> metadataExtractors;
 
-    /** ExtractionPipeline that extracts features from the segments. */
+    /**
+     * ExtractionPipeline that extracts features from the segments.
+     */
     private final ExtractionPipeline pipeline;
 
-    /** Used to measure the duration of an extraction run. */
+    /**
+     * Used to measure the duration of an extraction run.
+     */
     private long start_timestamp;
 
-    /** Total number of files that were effectively processed. */
+    /**
+     * Total number of files that were effectively processed.
+     */
     private long count_processed = 0;
-    
+
     private final MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
+
+    private final ArrayList<ExtractionCompleteListener> completeListeners = new ArrayList<>();
 
     /**
      * Default constructor used to initialize the class.
      *
-     * @param files List of files that should be extracted.
+     * @param files   List of files that should be extracted.
      * @param context ExtractionContextProvider that holds extraction specific configurations.
      */
     public AbstractExtractionFileHandler(Iterator<Path> files, ExtractionContextProvider context) throws IOException {
-         this.files = files;
+        this.files = files;
 
         /* Setup the required persistence-writer classes. */
         PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
-        this.objectWriter = new MultimediaObjectWriter(writerSupplier.get(),context.getBatchsize());
-        this.segmentWriter = new SegmentWriter(writerSupplier.get(),context.getBatchsize());
-        this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get(),context.getBatchsize());
+        this.objectWriter = new MultimediaObjectWriter(writerSupplier.get(), context.getBatchsize());
+        this.segmentWriter = new SegmentWriter(writerSupplier.get(), context.getBatchsize());
+        this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get(), context.getBatchsize());
 
         /* Setup the required persistence-reader classes. */
         DBSelectorSupplier readerSupplier = context.persistencyReader();
@@ -156,14 +184,14 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         /* Instantiates some of the helper classes required by this class. */
         final ObjectIdGenerator generator = this.context.objectIdGenerator();
         Path path = null;
-        
+
         /* Initialise metadata extractors */
-        for (MetadataExtractor extractor : this.metadataExtractors){
-          if(extractor instanceof MetadataFeatureModule){
-            this.pipeline.getInitializer().initialize((MetadataFeatureModule<?>)extractor); 
-          }else{
-            extractor.init();
-          }
+        for (MetadataExtractor extractor : this.metadataExtractors) {
+            if (extractor instanceof MetadataFeatureModule) {
+                this.pipeline.getInitializer().initialize((MetadataFeatureModule<?>) extractor);
+            } else {
+                extractor.init();
+            }
         }
 
         /* Process every file in the list. */
@@ -175,7 +203,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                 /* Create / lookup MultimediaObjectDescriptor for new file. */
                 final MultimediaObjectDescriptor descriptor = this.fetchOrCreateMultimediaObjectDescriptor(generator, path, context.sourceType());
                 if (!this.checkAndPersistMultimediaObject(descriptor)) {
-                  continue;
+                    continue;
                 }
 
                 /* Store objectId for further reference and initialize a new segment number. */
@@ -203,7 +231,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                             /* Create segment-descriptor and try to persist it. */
                             final SegmentDescriptor segmentDescriptor = this.fetchOrCreateSegmentDescriptor(objectId, segmentNumber, container.getStart(), container.getEnd(), container.getAbsoluteStart(), container.getAbsoluteEnd());
                             if (!this.checkAndPersistSegment(segmentDescriptor)) {
-                              continue;
+                                continue;
                             }
 
                             /* Update container ID's. */
@@ -211,17 +239,17 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                             container.setSuperId(segmentDescriptor.getObjectId());
 
                             /* Emit container to extraction pipeline. */
-                            while(!this.pipeline.emit(container, emissionTimout)) {
+                            while (!this.pipeline.emit(container, emissionTimout)) {
                                 LOGGER.warn("ExtractionPipeline is full - deferring emission of segment. Consider increasing the thread-pool count for the extraction pipeline.");
                                 Thread.sleep(emissionTimout);
                             }
 
-                             /* Increase the segment number. */
+                            /* Increase the segment number. */
                             segmentNumber += 1;
                         }
                     } catch (InterruptedException e) {
-                       LOGGER.log(Level.ERROR, "Thread was interrupted while the extraction process was running. Aborting...");
-                       break;
+                        LOGGER.log(Level.ERROR, "Thread was interrupted while the extraction process was running. Aborting...");
+                        break;
                     }
                 }
 
@@ -241,11 +269,16 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                 decoder = this.newDecoder();
             }
 
+            /* notify all listeners about the completed extraction */
+            for (int i = 0; i < this.completeListeners.size(); ++i) {
+                this.completeListeners.get(i).onCompleted(path);
+            }
+
             /*
              * Trigger garbage collection once in a while. This is specially relevant when many small files are processed, since
-             * unused allocated memory could accumulate and trigger swapping. 
+             * unused allocated memory could accumulate and trigger swapping.
              */
-            if (this.count_processed % 50 == 0){
+            if (this.count_processed % 50 == 0) {
                 System.gc();
             }
         }
@@ -275,29 +308,29 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
         } finally {
             this.segmentWriter.close();
             this.objectWriter.close();
-            
-            for (MetadataExtractor extractor : this.metadataExtractors){
-              extractor.finish();
+
+            for (MetadataExtractor extractor : this.metadataExtractors) {
+                extractor.finish();
             }
-            
-            Duration duration = Duration.ofMillis(System.currentTimeMillis()-this.start_timestamp);
+
+            Duration duration = Duration.ofMillis(System.currentTimeMillis() - this.start_timestamp);
             LOGGER.info("File extraction complete! It took {} to extract {} out files.", duration.toString(), this.count_processed);
         }
     }
-   
-    
+
+
     /**
      * returns the next file which can be decoded by the decoder or <code>null</code> if there are no more files
      */
-    protected Path nextPath(final Decoder<T> decoder){
-      while(this.files != null && this.files.hasNext()){
-        Path path = files.next();
-        String type = this.filetypes.getContentType(path.toString());
-        if(decoder.supportedFiles().contains(type)){
-          return path;
+    protected Path nextPath(final Decoder<T> decoder) {
+        while (this.files != null && this.files.hasNext()) {
+            Path path = files.next();
+            String type = this.filetypes.getContentType(path.toString());
+            if (decoder.supportedFiles().contains(type)) {
+                return path;
+            }
         }
-      }
-      return null;
+        return null;
     }
 
     /**
@@ -333,7 +366,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @return true if segment should be processed further or false if it should be skipped.
      */
     protected boolean checkAndPersistSegment(SegmentDescriptor descriptor) {
-        if (descriptor.exists()  && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP){
+        if (descriptor.exists() && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {
             LOGGER.info("Segment {} already exists. This segment will be skipped.", descriptor.getSegmentId());
             return false;
         } else if (descriptor.exists() && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_PROCEED) {
@@ -350,11 +383,11 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * If a new descriptor is required, newMultimediaObjectDescriptor is used.
      *
      * @param generator ObjectIdGenerator used for ID generation.
-     * @param path The Path that points to the file for which a new MultimediaObjectDescriptor should be created.
-     * @param type MediaType of the new MultimediaObjectDescriptor
+     * @param path      The Path that points to the file for which a new MultimediaObjectDescriptor should be created.
+     * @param type      MediaType of the new MultimediaObjectDescriptor
      * @return the existing or a new MultimediaObjectDescriptor
      */
-    protected MultimediaObjectDescriptor fetchOrCreateMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type){
+    protected MultimediaObjectDescriptor fetchOrCreateMultimediaObjectDescriptor(ObjectIdGenerator generator, Path path, MediaType type) {
         /*
          * Two cases:
          * - For single-file extraction, the file-name is stored as file-path.
@@ -368,7 +401,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
         /* Lookup multimedia-object and persist if necessary. */
         MultimediaObjectDescriptor descriptor = this.objectReader.lookUpObjectByPath(path.toString());
-        if (descriptor.exists() && descriptor.getMediatype() == this.context.sourceType()){
+        if (descriptor.exists() && descriptor.getMediatype() == this.context.sourceType()) {
             return descriptor;
         }
         return MultimediaObjectDescriptor.newMultimediaObjectDescriptor(generator, path, type, this.objectReader);
@@ -386,7 +419,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      * @param endabs
      * @return
      */
-    private SegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs){
+    private SegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs) {
         String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
         return this.segmentReader.lookUpSegment(segmentId).orElse(SegmentDescriptor.newSegmentDescriptor(objectId, segmentNumber, start, end, startabs, endabs));
     }
@@ -394,39 +427,46 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     /**
      * Extracts metadata from a file by handing it down the list of MetadataExtractor objects.
      *
-     * @param path Path to the file for which metadata must be extracted.
+     * @param path     Path to the file for which metadata must be extracted.
      * @param objectId ObjectId of the MediaObjectDescriptor associated with the path.
      */
     protected void extractAndPersistMetadata(Path path, String objectId) {
-      
+
         for (MetadataExtractor extractor : this.metadataExtractors) {
-            try{
-              
-              List<MultimediaMetadataDescriptor> metadata = extractor.extract(objectId, path);
-            
-              if (!metadata.isEmpty()) {
-                  this.metadataWriter.write(metadata);
-              }
-            }catch(Exception e){
-              LOGGER.error("exception during metadata extraction: {}", LogHelper.getStackTrace(e));
+            try {
+
+                List<MultimediaMetadataDescriptor> metadata = extractor.extract(objectId, path);
+
+                if (!metadata.isEmpty()) {
+                    this.metadataWriter.write(metadata);
+                }
+            } catch (Exception e) {
+                LOGGER.error("exception during metadata extraction: {}", LogHelper.getStackTrace(e));
             }
         }
     }
 
     /**
-     *
      * @param object
      * @return
      */
     protected List<SegmentDescriptor> retrieveExistingSegments(MultimediaObjectDescriptor object) {
         return this.segmentReader.lookUpSegmentsOfObject(object.getObjectId());
     }
-    
+
     /**
      * Enables type-specific implementations to add additional configuration to the segmenter
+     *
      * @param segmenter
      */
-    protected void configureSegmenter(Segmenter<T> segmenter){
-      
+    protected void configureSegmenter(Segmenter<T> segmenter) {
+
+    }
+
+    @Override
+    public void addExtractionCompleteListener(ExtractionCompleteListener listener) {
+        if(listener != null && !completeListeners.contains(listener)){
+            completeListeners.add(listener);
+        }
     }
 }

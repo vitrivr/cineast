@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.run.filehandler;
 
 import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 /**
@@ -34,4 +35,10 @@ public interface ExtractionFileHandler<T> extends Runnable {
      * @return Segmenter<T>
      */
     Segmenter<T> newSegmenter();
+
+    /**
+     * Adds a listener to be notified about every object for which the extraction completes.
+     * @param listener
+     */
+    void addExtractionCompleteListener(ExtractionCompleteListener listener);
 }

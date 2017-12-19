@@ -1,11 +1,13 @@
 package org.vitrivr.cineast.core.run.path;
 
+import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
+
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
-public class URIToPathIteratorProvider implements PathIteratorProvider{
+public class URIToPathIteratorProvider implements PathIteratorProvider, ExtractionCompleteListener{
 
     private final Iterator<URI> uris;
 
@@ -16,6 +18,11 @@ public class URIToPathIteratorProvider implements PathIteratorProvider{
     @Override
     public Iterator<Path> getPaths() {
         return new URIToPathIterator();
+    }
+
+    @Override
+    public void onCompleted(Path path) {
+
     }
 
     private class URIToPathIterator implements Iterator<Path>{
