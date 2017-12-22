@@ -67,6 +67,14 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
     return 0.2126f * r + 0.7152f * g + 0.0722f * b;
   }
 
+  /**
+   * http://www.itu.int/rec/R-REC-BT.601
+   */
+  public static float getLuminanceBT601(int color) {
+    return RGBContainer.getRed(color) * 0.299f + RGBContainer.getGreen(color) * 0.587f
+        + RGBContainer.getBlue(color) * 0.114f;
+  }
+
   public static int getRed(int color) {
     return (color >> 16 & 0xFF);
   }
@@ -102,11 +110,16 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
   @Override
   public float getElement(int num) {
     switch (num) {
-      case 0: return r / 255f;
-      case 1: return g / 255f;
-      case 2: return b / 255f;
-      case 3: return a / 255f;
-      default: throw new IndexOutOfBoundsException(num + ">= 4");
+      case 0:
+        return r / 255f;
+      case 1:
+        return g / 255f;
+      case 2:
+        return b / 255f;
+      case 3:
+        return a / 255f;
+      default:
+        throw new IndexOutOfBoundsException(num + ">= 4");
     }
   }
 
