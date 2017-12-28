@@ -4,10 +4,9 @@ import org.vitrivr.cineast.core.decode.subtitle.AbstractSubtitleItem;
 
 public class SRTSubtitleItem extends AbstractSubtitleItem {
 
-	int id;
-	long start, end;
-	String text;
-	
+	/**
+	 *
+	 */
 	public SRTSubtitleItem(int id, long start, long end, String text){
 		super(id, start, end, text);
 	}

@@ -4,9 +4,9 @@ package org.vitrivr.cineast.core.decode.subtitle;
 
 public abstract class AbstractSubtitleItem implements SubtitleItem {
 
-	int id;
-	long start, end;
-	protected String text;
+	protected final int id;
+	protected final long start, end;
+	protected final String text;
 	
 	protected AbstractSubtitleItem(int id, long start, long end, String text){
 		this.id = id;
