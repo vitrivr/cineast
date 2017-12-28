@@ -10,8 +10,7 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
  * @version 1.0
  * @created 28.01.17
  */
-public class SimpleFeatureDescriptorWriter extends
-        AbstractBatchedEntityWriter<SimpleFeatureDescriptor> {
+public class SimpleFeatureDescriptorWriter extends AbstractBatchedEntityWriter<SimpleFeatureDescriptor> {
 
     private final String entityname;
 
@@ -27,8 +26,7 @@ public class SimpleFeatureDescriptorWriter extends
      * @param writer
      * @param batchsize
      */
-    public SimpleFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname,
-                                         int batchsize) {
+    public SimpleFeatureDescriptorWriter(PersistencyWriter<?> writer, String entityname, int batchsize) {
         super(writer, batchsize, false);
         this.entityname = entityname;
         this.init();
