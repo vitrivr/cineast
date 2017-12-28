@@ -47,7 +47,7 @@ import org.vitrivr.cineast.core.evaluation.EvaluationRuntime;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
-import org.vitrivr.cineast.core.importer.DataImportHandler;
+import org.vitrivr.cineast.core.importer.handlers.*;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
 import org.vitrivr.cineast.core.setup.EntityCreator;
@@ -247,10 +247,20 @@ public class API {
    * @param path Path to the file or folder that should be imported.
    * @param batchsize Batch size to use with the DataImportHandler
    */
-  private static void handleImport(Path path, int batchsize) {
-    DataImportHandler handler = new DataImportHandler(2, batchsize);
-    handler.importProto(path);
-    handler.importJson(path);
+  private static void handleImport(Path path, String option, int batchsize) {
+    if (option.equals("proto")) {
+        final DataImportHandler handler = new ProtoDataImportHandler(2, batchsize);
+        handler.doImport(path);
+    } else if (option.equals("json")) {
+        final DataImportHandler handler = new JsonDataImportHandler(2, batchsize);
+        handler.doImport(path);
+    } else if (option.equals("asr")) {
+        final DataImportHandler handler = new AsrDataImportHandler(1, batchsize);
+        handler.doImport(path);
+    } else if (option.equals("ocr")) {
+        final DataImportHandler handler = new OcrDataImportHandler(1, batchsize);
+        handler.doImport(path);
+    }
   }
 
   /**
@@ -392,16 +402,16 @@ public class API {
             }
             case "import": {
               if (commands.size() < 2) {
-                System.err.println("You must specify the path to data file/folder.");
+                System.err.println("You must specify the mode and the path to data file/folder.");
                 break;
               }
-              Path path = Paths.get(commands.get(1));
+              final String mode = commands.get(1);
+              Path path = Paths.get(commands.get(2));
               int batchsize = 100;
-              if (commands.size() == 3) {
-                batchsize = Integer.parseInt(commands.get(2));
+              if (commands.size() == 4) {
+                batchsize = Integer.parseInt(commands.get(3));
               }
-
-              handleImport(path, batchsize);
+              handleImport(path, mode, batchsize);
               break;
             }
             case "3d":
