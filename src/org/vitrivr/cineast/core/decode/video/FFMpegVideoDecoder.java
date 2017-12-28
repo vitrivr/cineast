@@ -60,6 +60,9 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** Configuration property name for the {@link FFMpegVideoDecoder}: samplerate of the converted audio. */
     private static final String CONFIG_SAMPLERATE_PROPERTY = "samplerate";
 
+    /** Configuration property name for the {@link FFMpegVideoDecoder}: Indicates whether subtitles should be decoded as well. */
+    private static final String CONFIG_SUBTITLE_PROPERTY= "subtitles";
+
     /** Configuration property default for the FFMpegVideoDecoder: max width of the converted video. */
     private final static int CONFIG_MAXWIDTH_DEFAULT = 640;
 
@@ -75,9 +78,6 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     private static final int TARGET_FORMAT = AV_SAMPLE_FMT_S16;
     private static final int BYTES_PER_SAMPLE = av_get_bytes_per_sample(TARGET_FORMAT);
-
-    /** Named configuration that indicates whether subtitles should be decoded as well. */
-    private static final String DECODE_SUBTITLE_CONFIG = "subtitles";
 
     private static final Logger LOGGER = LogManager.getLogger();
     
@@ -426,8 +426,8 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         }
 
         /* Open subtitles file (if configured). */
-        if (config.namedAsBoolean(DECODE_SUBTITLE_CONFIG, false)) {
-            Optional<SubTitleDecoder> subtitles = SubtitleDecoderFactory.subtitleForVideo(path);
+        if (config.namedAsBoolean(CONFIG_SUBTITLE_PROPERTY, false)) {
+            final Optional<SubTitleDecoder> subtitles = SubtitleDecoderFactory.subtitleForVideo(path);
             subtitles.ifPresent(subTitleDecoder -> this.subtitles = subTitleDecoder);
         }
 
