@@ -88,6 +88,19 @@ public interface DBSelector {
     List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values);
 
     /**
+     * Performs a fulltext search with multiple query terms. That is, the storage engine is tasked to lookup for entries in the provided fields that match
+     * the provided query terms.
+     *
+     * TODO: This is a quick & dirty solution so far. Should be re-engineered to fit different use-cases.
+     *
+     * @param rows The number of rows that should be returned.
+     * @param fieldname The field that should be used for lookup.
+     * @param terms The query terms. Individual terms will be connected by a logical OR.
+     * @return List of rows that math the fulltext search.
+     */
+    List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, String... terms);
+
+    /**
      * Performs a boolean lookup on a specified field and retrieves the rows that match the specified condition.
 
      * i.e. SELECT * from WHERE A <Operator> B
