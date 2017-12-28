@@ -91,7 +91,7 @@ public class TagHandler implements Closeable {
      */
     public List<Tag> getTagsByMatchingName(final String name) {
         final String lname = name.toLowerCase();
-        return this.selector.getRows("lower(name)", RelationalOperator.LIKE, "%" + lname + "%").stream()
+        return this.selector.getRows("name", RelationalOperator.ILIKE, lname).stream()
                 .map(TagHandler::fromMap)
                 .sorted((o1, o2) -> {
                     boolean o1l = o1.getName().toLowerCase().startsWith(lname);

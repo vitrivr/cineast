@@ -1,13 +1,9 @@
 package org.vitrivr.cineast.core.db.adampro;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage;
@@ -315,40 +311,60 @@ public class ADAMproMessageBuilder {
         synchronized (this.wmBuilder) {
             this.wmBuilder.clear();
             final DataMessage.Builder damBuilder = DataMessage.newBuilder();
-            this.wmBuilder.setAttribute(key);
-            for (String value : values) {
-                this.wmBuilder.addValues(damBuilder.setStringData(value).build());
-            }
+            final Stream<String> valueStream = StreamSupport.stream(values.spliterator(), false);
             switch (operator) {
                 case EQ:
-                    wmBuilder.setOp("=");
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("=");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
                     break;
                 case NEQ:
-                    wmBuilder.setOp("!=");
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("!=");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
                     break;
                 case GEQ:
-                    wmBuilder.setOp(">=");
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp(">=");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
                     break;
                 case LEQ:
-                    wmBuilder.setOp("<=");
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("<=");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
                     break;
                 case GREATER:
-                    wmBuilder.setOp("<");
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("<");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
                     break;
                 case LESS:
-                    wmBuilder.setOp(">");
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp(">");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
+                    break;
+                case ILIKE:
+                    this.wmBuilder.setAttribute("lower(" + key + ")");
+                    this.wmBuilder.setOp("LIKE");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData("%" + v + "%").build()).collect(Collectors.toList()));
                     break;
                 case LIKE:
-                    wmBuilder.setOp("LIKE");
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("LIKE");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData("%" + v + "%").build()).collect(Collectors.toList()));
                     break;
                 case NLIKE:
-                    wmBuilder.setOp("NOT LIKE");
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("NOT LIKE");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData("%" + v + "%").build()).collect(Collectors.toList()));
                     break;
                 case RLIKE:
-                    wmBuilder.setOp("RLIKE");
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("RLIKE");
                     break;
                 default:
-                    wmBuilder.setOp("=");
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("=");
                     break;
             }
             return this.wmBuilder.build();

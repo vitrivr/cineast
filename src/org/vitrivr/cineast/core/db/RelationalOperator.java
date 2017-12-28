@@ -25,6 +25,9 @@ public enum RelationalOperator {
     /** TRUE if string A matches string B. */
     LIKE,
 
+    /** TRUE if string A matches string B (case-insensitive). */
+    ILIKE,
+
     /** TRUE if string A does not match string B. */
     NLIKE,
 
