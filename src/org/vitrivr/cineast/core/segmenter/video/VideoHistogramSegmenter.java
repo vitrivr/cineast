@@ -58,10 +58,18 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
     /** SegmentLookup used to lookup existing SegmentDescriptors during the extraction. */
     private final SegmentLookup segmentReader;
 
+
     /**
      * Constructor required for instantiates through {@link org.vitrivr.cineast.core.util.ReflectionHelper}.
      */
     public VideoHistogramSegmenter(ExtractionContextProvider context) {
+        this(context, new HashMap<>(0));
+    }
+
+    /**
+     * Constructor required for instantiates through {@link org.vitrivr.cineast.core.util.ReflectionHelper}.
+     */
+    public VideoHistogramSegmenter(ExtractionContextProvider context, Map<String,String> parameters) {
         this.segmentReader = new SegmentLookup(context.persistencyReader().get());
     }
 
