@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.setup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
@@ -18,231 +20,240 @@ public class ADAMproEntityCreator implements EntityCreator {
     /**
      * Wrapper used to send messages to ADAM pro.
      */
-	private ADAMproWrapper adampro = new ADAMproWrapper();
+    private ADAMproWrapper adampro = new ADAMproWrapper();
 
     /**
-    * Initialises the main entity holding information about multimedia objects in the ADAMpro
-    * storage engine.
-    */
+     * Initialises the main entity holding information about multimedia objects in the ADAMpro
+     * storage engine.
+     */
     @Override
-    public boolean createMultiMediaObjectsEntity(){
+    public boolean createMultiMediaObjectsEntity() {
         ArrayList<AttributeDefinitionMessage> attributes = new ArrayList<>(8);
 
         AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-        attributes.add(builder.setName("objectid").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        attributes.add(builder.setName("mediatype").setAttributetype(AttributeType.INT).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        attributes.add(builder.setName("name").setAttributetype(AttributeType.STRING).build());
-        attributes.add(builder.setName("path").setAttributetype(AttributeType.STRING).build());
+        attributes.add(builder.setName(MultimediaObjectDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        attributes.add(builder.setName(MultimediaObjectDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.INT).putAllParams(ImmutableMap.of("indexed", "true")).build());
+
+        builder.clear(); /* Clear builder to erase the indexed flag. */
+
+        attributes.add(builder.setName(MultimediaObjectDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.STRING).build());
+        attributes.add(builder.setName(MultimediaObjectDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
 
         CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaObjectDescriptor.ENTITY).addAllAttributes(attributes).build();
 
         AckMessage ack = adampro.createEntityBlocking(message);
 
-        if(ack.getCode() == AckMessage.Code.OK){
+        if (ack.getCode() == AckMessage.Code.OK) {
             LOGGER.info("Successfully created multimedia object entity.");
-        }else{
+        } else {
             LOGGER.error("Error occurred during creation of multimedia object entity: {}", ack.getMessage());
         }
 
         return ack.getCode() == Code.OK;
     }
 
-	/**
-	 * Initialises the entity responsible for holding metadata information about multimedia objects in a ADAMpro
-	 * storage.
-	 *
-	 * @see EntityCreator
-	 */
-	@Override
-	public boolean createMetadataEntity() {
-        ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
+    /**
+     * Initialises the entity responsible for holding metadata information about multimedia objects in a ADAMpro
+     * storage.
+     *
+     * @see EntityCreator
+     */
+    @Override
+    public boolean createMetadataEntity() {
+        final ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
 
-        AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
-        fields.add(builder.setName("objectid").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        fields.add(builder.setName("domain").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        fields.add(builder.setName("key").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        fields.add(builder.setName("value").setAttributetype(AttributeType.STRING).build());
+        final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
+        fields.add(builder.setName(MultimediaMetadataDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MultimediaMetadataDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MultimediaMetadataDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 
-        CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaMetadataDescriptor.ENTITY).addAllAttributes(fields).build();
+        builder.clear(); /* Clear builder to erase the indexed flag. */
 
-        AckMessage ack = adampro.createEntityBlocking(message);
+        fields.add(builder.setName(MultimediaMetadataDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
 
-        if(ack.getCode() == AckMessage.Code.OK){
+        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaMetadataDescriptor.ENTITY).addAllAttributes(fields).build();
+        final AckMessage ack = adampro.createEntityBlocking(message);
+
+        if (ack.getCode() == AckMessage.Code.OK) {
             LOGGER.info("Successfully created metadata entity.");
-        }else{
+        } else {
             LOGGER.error("Error occurred during creation of metadata entity: {}", ack.getMessage());
         }
 
         return ack.getCode() == Code.OK;
-	}
+    }
 
-	/**
-	 * Initialises the entity responsible for holding information about segments of a multimedia object in the
-	 * ADAMpro storage engine.
-	 *
-	 * @see EntityCreator
-	 */
-	@Override
-  public boolean createSegmentEntity(){
-		ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
-		
-		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
+    /**
+     * Initialises the entity responsible for holding information about segments of a multimedia object in the
+     * ADAMpro storage engine.
+     *
+     * @see EntityCreator
+     */
+    @Override
+    public boolean createSegmentEntity() {
+        final ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
 
-		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.INT).build());
-		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.INT).build());
-		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[4]).setAttributetype(AttributeType.INT).build());
-		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[5]).setAttributetype(AttributeType.FLOAT).build());
-		fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[6]).setAttributetype(AttributeType.FLOAT).build());
+        final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(SegmentDescriptor.ENTITY).addAllAttributes(fields).build();
-		
-		AckMessage ack = adampro.createEntityBlocking(message);
-		
-		if(ack.getCode() == AckMessage.Code.OK){
-			LOGGER.info("Successfully created segment entity.");
-		}else{
-			LOGGER.error("Error occurred during creation of segment entity: {}", ack.getMessage());
-		}
-		
-		return ack.getCode() == Code.OK;
-	}
+        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 
-	
-	/* (non-Javadoc)
-   * @see org.vitrivr.cineast.core.setup.IEntityCreator#createFeatureEntity(java.lang.String, boolean, java.lang.String)
-   */
-	@Override
-  public boolean createFeatureEntity(String featurename, boolean unique, String...featrueNames){
-		ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>();
-		
-		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
-		
-		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		for(String feature : featrueNames){
-			fields.add(builder.setName(feature).setAttributetype(AttributeType.VECTOR).build());
-		}
-		
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllAttributes(fields).build();
-		
-		AckMessage ack = adampro.createEntityBlocking(message);
-		
-		if(ack.getCode() == AckMessage.Code.OK){
-			LOGGER.info("successfully created feature entity {}", featurename);
-		}else{
-			LOGGER.error("error creating feature entity {}: {}", featurename, ack.getMessage());
-		}
-		
-		return ack.getCode() == Code.OK;
- 
-	}
-	
-	/* (non-Javadoc)
-   * @see org.vitrivr.cineast.core.setup.IEntityCreator#createFeatureEntity(java.lang.String, boolean, org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition)
-   */
-	@Override
-  public boolean createFeatureEntity(String featurename, boolean unique, AttributeDefinition... attributes) {
-		ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>();
+        builder.clear(); /* Clear builder to erase the indexed flag. */
 
-		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
+        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.INT).build());
+        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.INT).build());
+        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[4]).setAttributetype(AttributeType.INT).build());
+        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[5]).setAttributetype(AttributeType.FLOAT).build());
+        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[6]).setAttributetype(AttributeType.FLOAT).build());
 
-		fields.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		
-		for(AttributeDefinition attribute : attributes){
-			fields.add(builder.setName(attribute.name).setAttributetype(mapAttributeType(attribute.type)).build());
-		}
-		
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(featurename.toLowerCase()).addAllAttributes(fields).build();
-		
-		AckMessage ack = adampro.createEntityBlocking(message);
-		
-		if(ack.getCode() == AckMessage.Code.OK){
-			LOGGER.info("successfully created feature entity {}", featurename);
-		}else{
-			LOGGER.error("error creating feature entity {}: {}", featurename, ack.getMessage());
-		}
-		
-		return ack.getCode() == Code.OK;
-		
-	}
-	
-	/* (non-Javadoc)
-   * @see org.vitrivr.cineast.core.setup.IEntityCreator#createIdEntity(java.lang.String, org.vitrivr.cineast.core.setup.EntityCreator.AttributeDefinition)
-   */
-	@Override
-  public boolean createIdEntity(String entityName, AttributeDefinition...attributes){
-		ArrayList<AttributeDefinitionMessage> fieldList = new ArrayList<>();
+        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(SegmentDescriptor.ENTITY).addAllAttributes(fields).build();
 
-		AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
+        final AckMessage ack = adampro.createEntityBlocking(message);
 
-		fieldList.add(builder.setName("id").setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-		for(AttributeDefinition attribute : attributes){
-			fieldList.add(builder.setName(attribute.name).setAttributetype(mapAttributeType(attribute.type)).build());
-		}
+        if (ack.getCode() == AckMessage.Code.OK) {
+            LOGGER.info("Successfully created segment entity.");
+        } else {
+            LOGGER.error("Error occurred during creation of segment entity: {}", ack.getMessage());
+        }
 
-		CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(entityName.toLowerCase()).addAllAttributes(fieldList).build();
+        return ack.getCode() == Code.OK;
+    }
 
-		AckMessage ack = adampro.createEntityBlocking(message);
 
-		if(ack.getCode() == AckMessage.Code.OK){
-			LOGGER.info("successfully created feature entity {}", entityName);
-		}else{
-			LOGGER.error("error creating feature entity {}: {}", entityName, ack.getMessage());
-		}
+    /**
+     * Creates and initializes a new feature entity with the provided name and the provided attributes. The new entity will have a field
+     * called "id", which is of type "string" and has an index. Also, for each of the provided feature attribute a field of the type "vector"
+     * will be created.
+     *
+     * @param featurename ame of the new entity.
+     * @param unique Whether or not the provided feature should be unique per id.
+     * @param featureAttributes List of the feature names.
+     * @return True on success, false otherwise.
+     */
+    @Override
+    public boolean createFeatureEntity(String featurename, boolean unique, String... featureAttributes) {
+        final AttributeDefinition[] attributes = Arrays.stream(featureAttributes).map(s -> new AttributeDefinition(s, AttributeDefinition.AttributeType.VECTOR)).toArray(AttributeDefinition[]::new);
+        return this.createFeatureEntity(featurename, unique, attributes);
+    }
 
-		return ack.getCode() == Code.OK;
-	}
+    /**
+     * Creates and initializes a new feature entity with the provided name and the provided attributes. The new entity will have a field
+     * called "id", which is of type "string" and has an index.
+     *
+     * @param featurename Name of the new entity.
+     * @param unique Whether or not the provided feature should be unique per id.
+     * @param attributes List of {@link AttributeDefinition} objects specifying the new entities attributes.
+     * @return True on success, false otherwise.
+     */
+    @Override
+    public boolean createFeatureEntity(String featurename, boolean unique, AttributeDefinition... attributes) {
+        final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
+        final HashMap<String,String> hints = new HashMap<>(1);
+        hints.put("indexed", "true");
+        extended[0] = new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING, hints);
+        System.arraycopy(attributes, 0, extended, 1, attributes.length);
+        return this.createEntity(featurename, extended);
+    }
 
-	/* (non-Javadoc)
-   * @see org.vitrivr.cineast.core.setup.IEntityCreator#existsEntity(java.lang.String)
-   */
-	@Override
-  public boolean existsEntity(String entityName){
-		return this.adampro.existsEntityBlocking(entityName);
-	}
+    /**
+     * Creates and initializes an entity with the provided name and the provided attributes. The new entity will have an additional field
+     * prepended called "id", which is of type "string" and has an index.
+     *
+     * @param entityName Name of the new entity.
+     * @param attributes List of {@link AttributeDefinition} objects specifying the new entities attributes.
+     * @return True on success, false otherwise.
+     */
+    @Override
+    public boolean createIdEntity(String entityName, AttributeDefinition... attributes) {
+        final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
+        final HashMap<String,String> hints = new HashMap<>(1);
+        hints.put("indexed", "true");
+        extended[0] = new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING, hints);
+        System.arraycopy(attributes, 0, extended, 1, attributes.length);
+        return this.createEntity(entityName, extended);
+    }
 
-	@Override
-  public boolean dropEntity(String entityName) {
-    return this.adampro.dropEntityBlocking(entityName);
-  }
+    /**
+     * Creates and initializes an entity with the provided name and the provided attributes.
+     *
+     * @param entityName Name of the new entity.
+     * @param attributes List of {@link AttributeDefinition} objects specifying the new entities attributes.
+     * @return True on success, false otherwise.
+     */
+    @Override
+    public boolean createEntity(String entityName, AttributeDefinition... attributes) {
+        final ArrayList<AttributeDefinitionMessage> fieldList = new ArrayList<>();
+        final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-  /* (non-Javadoc)
-   * @see org.vitrivr.cineast.core.setup.IEntityCreator#close()
-   */
-	@Override
-  public void close(){
-		this.adampro.close();
-	}
-	
-	public static final AttributeType mapAttributeType(org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType type){
-	  switch(type){
-    case AUTO:
-      return AttributeType.AUTO;
-    case BOOLEAN:
-      return AttributeType.BOOLEAN;
-    case DOUBLE:
-      return AttributeType.DOUBLE;
-    case VECTOR:
-      return AttributeType.VECTOR;
-    case FLOAT:
-      return AttributeType.FLOAT;
-    case GEOGRAPHY:
-      return AttributeType.GEOGRAPHY;
-    case GEOMETRY:
-      return AttributeType.GEOMETRY;
-    case INT:
-      return AttributeType.INT;
-    case LONG:
-      return AttributeType.LONG;
-    case STRING:
-      return AttributeType.STRING;
-    case TEXT:
-      return AttributeType.TEXT;
-    default:
-      return AttributeType.UNKOWNAT;
-	  }
-	}
-	
+        for (AttributeDefinition attribute : attributes) {
+            builder.setName(attribute.getName()).setAttributetype(mapAttributeType(attribute.getType()));
+            attribute.ifHintPresent("handler", builder::setHandler);
+            attribute.ifHintPresent("indexed", h -> builder.putAllParams(ImmutableMap.of("indexed", h)));
+            fieldList.add(builder.build());
+            builder.clear();
+        }
+
+        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(entityName.toLowerCase()).addAllAttributes(fieldList).build();
+        final  AckMessage ack = adampro.createEntityBlocking(message);
+
+        if (ack.getCode() == AckMessage.Code.OK) {
+            LOGGER.info("Successfully created entity '{}'", entityName);
+        } else {
+            LOGGER.error("Error while creating entity {}: '{}'", entityName, ack.getMessage());
+        }
+
+        return ack.getCode() == Code.OK;
+    }
+
+    /* (non-Javadoc)
+     * @see org.vitrivr.cineast.core.setup.IEntityCreator#existsEntity(java.lang.String)
+     */
+    @Override
+    public boolean existsEntity(String entityName) {
+        return this.adampro.existsEntityBlocking(entityName);
+    }
+
+    @Override
+    public boolean dropEntity(String entityName) {
+        return this.adampro.dropEntityBlocking(entityName);
+    }
+
+    /* (non-Javadoc)
+     * @see org.vitrivr.cineast.core.setup.IEntityCreator#close()
+     */
+    @Override
+    public void close() {
+        this.adampro.close();
+    }
+
+    public static final AttributeType mapAttributeType(org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType type) {
+        switch (type) {
+            case AUTO:
+                return AttributeType.AUTO;
+            case BOOLEAN:
+                return AttributeType.BOOLEAN;
+            case DOUBLE:
+                return AttributeType.DOUBLE;
+            case VECTOR:
+                return AttributeType.VECTOR;
+            case FLOAT:
+                return AttributeType.FLOAT;
+            case GEOGRAPHY:
+                return AttributeType.GEOGRAPHY;
+            case GEOMETRY:
+                return AttributeType.GEOMETRY;
+            case INT:
+                return AttributeType.INT;
+            case LONG:
+                return AttributeType.LONG;
+            case STRING:
+                return AttributeType.STRING;
+            case TEXT:
+                return AttributeType.TEXT;
+            default:
+                return AttributeType.UNKOWNAT;
+        }
+    }
+
 }

@@ -64,6 +64,11 @@ public class NoEntityCreator implements EntityCreator {
   }
 
   @Override
+  public boolean createEntity(String entityName, AttributeDefinition... attributes) {
+    return false;
+  }
+
+  @Override
   public boolean existsEntity(String entityName) {
     return false;
   }

@@ -22,15 +22,17 @@ public interface EntityCreator extends AutoCloseable {
      */
     Logger LOGGER = LogManager.getLogger();
 
-    /** Name of the 'clean' flag. */
+    /**
+     * Name of the 'clean' flag.
+     */
     public static final String SETUP_FLAG_CLEAN = "clean";
 
     /**
      * Performs the setup of the persistent layer by executing all the necessary entity
      * creation steps in a sequence.
-     *
+     * <p>
      * The options map supports the following flags:
-     *
+     * <p>
      * - clean: Drops all entities before creating new ones.
      *
      * @param options Options that can be provided for setup.
@@ -126,14 +128,14 @@ public interface EntityCreator extends AutoCloseable {
      * Initialises the entity responsible for holding metadata information about multimedia objects.
      */
     boolean createMetadataEntity();
-    
+
     /**
      * Initialises the entity responsible for holding the mapping between human readable tags and their descriptions to the internally used ids
      */
-    default boolean createTagEntity(){
-      return this.createIdEntity(TagHandler.ENTITY, new AttributeDefinition("name", AttributeType.STRING), new AttributeDefinition("description", AttributeType.STRING));
+    default boolean createTagEntity() {
+        return this.createIdEntity(TagHandler.ENTITY, new AttributeDefinition("name", AttributeType.STRING), new AttributeDefinition("description", AttributeType.STRING));
     }
-    
+
 
     /**
      * Initializes the entity responsible for holding information about segments of a multimedia object
@@ -143,76 +145,97 @@ public interface EntityCreator extends AutoCloseable {
     /**
      * Drops the main entity holding information about multimedia objects
      */
-    default boolean dropMultiMediaObjectsEntity(){
-      if (this.dropEntity(MultimediaObjectDescriptor.ENTITY)) {
-        LOGGER.info("Successfully dropped multimedia object entity.");
-        return true;
-      } else {
-        LOGGER.error("Error occurred while dropping multimedia object entity");
-        return false;
-      }
+    default boolean dropMultiMediaObjectsEntity() {
+        if (this.dropEntity(MultimediaObjectDescriptor.ENTITY)) {
+            LOGGER.info("Successfully dropped multimedia object entity.");
+            return true;
+        } else {
+            LOGGER.error("Error occurred while dropping multimedia object entity");
+            return false;
+        }
     }
-    
+
     /**
      * Drops the entity responsible for holding information about segments of a multimedia object
      */
-    default boolean dropSegmentEntity(){
-      if (this.dropEntity(SegmentDescriptor.ENTITY)) {
-        LOGGER.info("Successfully dropped segment entity.");
-        return true;
-      } else {
-        LOGGER.error("Error occurred while dropping segment entity");
-        return false;
-      }
+    default boolean dropSegmentEntity() {
+        if (this.dropEntity(SegmentDescriptor.ENTITY)) {
+            LOGGER.info("Successfully dropped segment entity.");
+            return true;
+        } else {
+            LOGGER.error("Error occurred while dropping segment entity");
+            return false;
+        }
     }
 
     /**
      * Drops the entity responsible for holding metadata information about multimedia objects.
      */
     default boolean dropMetadataEntity() {
-      if (this.dropEntity(MultimediaMetadataDescriptor.ENTITY)) {
-        LOGGER.info("Successfully dropped metadata entity.");
-        return true;
-      } else {
-        LOGGER.error("Error occurred while dropping metadata entity");
-        return false;
-      }
+        if (this.dropEntity(MultimediaMetadataDescriptor.ENTITY)) {
+            LOGGER.info("Successfully dropped metadata entity.");
+            return true;
+        } else {
+            LOGGER.error("Error occurred while dropping metadata entity");
+            return false;
+        }
     }
-    
+
     /**
      * Drops the entity responsible for holding metadata information about multimedia objects.
      */
     default boolean dropTagEntity() {
-      if (this.dropEntity(TagHandler.ENTITY)) {
-        LOGGER.info("Successfully dropped tag entity.");
-        return true;
-      } else {
-        LOGGER.error("Error occurred while dropping tag entity");
-        return false;
-      }
+        if (this.dropEntity(TagHandler.ENTITY)) {
+            LOGGER.info("Successfully dropped tag entity.");
+            return true;
+        } else {
+            LOGGER.error("Error occurred while dropping tag entity");
+            return false;
+        }
     }
 
     /**
-     * Initializes an entity for a feature module with default parameters
+     * Creates and initializes an entity for a feature module with default parameters
      *
      * @param featurename the name of the feature module
      * @param unique      true if the feature module produces at most one vector per segment
      */
-    default boolean createFeatureEntity(String featurename, boolean unique){
-      return createFeatureEntity(featurename, unique, "feature");
+    default boolean createFeatureEntity(String featurename, boolean unique) {
+        return createFeatureEntity(featurename, unique, "feature");
     }
 
     boolean createFeatureEntity(String featurename, boolean unique, String... featureNames);
 
-    boolean createFeatureEntity(String featurename, boolean unique,
-                                AttributeDefinition... attributes);
+    boolean createFeatureEntity(String featurename, boolean unique, AttributeDefinition... attributes);
 
+    /**
+     * Creates and initializes an entity with the provided name and the provided attributes. The new entity will have an additional
+     * field prepended, called "id", which is of type "string" and has an index.
+     *
+     * @param entityName Name of the new entity.
+     * @param attributes List of {@link AttributeDefinition} objects specifying the new entities attributes.
+     * @return True on success, false otherwise.
+     */
     boolean createIdEntity(String entityName, AttributeDefinition... attributes);
 
+    /**
+     * Creates and initializes an entity with the provided name and the provided attributes.
+     *
+     * @param entityName Name of the new entity.
+     * @param attributes List of {@link AttributeDefinition} objects specifying the new entities attributes.
+     * @return True on success, false otherwise.
+     */
+    boolean createEntity(String entityName, AttributeDefinition... attributes);
+
+    /**
+     * @param entityName
+     * @return
+     */
     boolean existsEntity(String entityName);
 
     /**
      * drops an entity, returns <code>true</code> if the entity was successfully dropped, <code>false</code> otherwise
+     *
      * @param entityName the entity to drop
      */
     boolean dropEntity(String entityName);
