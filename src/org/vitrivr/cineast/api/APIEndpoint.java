@@ -126,15 +126,15 @@ public class APIEndpoint {
         service.path(makePath("find"), () -> {
             service.get("/object/by/:attribute/:value", new FindObjectByActionHandler());
             service.get("/metadata/by/id/:id", new FindMetadataByObjectIdActionHandler());
-            service.get("/tags/by/:attribute/:value", new FindTagsByActionHandler(false));
+            service.get("/tags/by/:attribute/:value", new FindTagsByActionHandler());
             service.get("/objects/all/:type", new FindObjectAllActionHandler());
-            service.get("/segments/all/object/:id", new FindSegmentAllByObjectIdActionHandler());
+            service.get("/segments/all/object/:id", new FindSegmentsByObjectIdActionHandler());
             service.get("/tags/all", new FindTagsActionHandler());
             service.post("/segments/similar", new FindSegmentSimilarActionHandler());
             service.post("/segments/by/id", new FindSegmentsByIdActionHandler());
-            service.post("/objects/by/id", new FindObjectsByIdActionHandler());
-            service.post("/metas/by/id", new FindMetadatasByIdActionHandler());
-            service.post("/tags/by/id", new FindTagsByActionHandler(true));
+            service.post("/objects/by/id", new FindObjectByActionHandler());
+            service.post("/metadata/by/id", new FindMetadataByObjectIdActionHandler());
+            service.post("/tags/by/id", new FindTagsByActionHandler());
         });
         service.path(makePath("session"), () -> {
             service.post("/start", new StartSessionHandler());

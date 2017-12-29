@@ -12,30 +12,25 @@ import org.vitrivr.cineast.core.data.messages.session.SessionState;
 
 public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage> {
 
-  @Override
-  public Object invoke(AnyMessage context, Map<String, String> parameters)
-      throws ActionHandlerException {
+    @Override
+    public Object doGet(Map<String, String> parameters) {
+        final String sessionId = parameters.get(":id");
+        if (sessionId == null) {
+            return new SessionState("", -1, SessionType.UNAUTHENTICATED);
+        }
+        final Session s = SessionManager.get(sessionId);
 
-    String sessionId = parameters.get(":id");
-    if(sessionId == null){
-      return new SessionState("", -1, SessionType.UNAUTHENTICATED);
+        if (s == null || !s.isValid()) {
+            return new SessionState(sessionId, -1, SessionType.UNAUTHENTICATED);
+        }
+        //if session is valid: extend life time
+        s.setLifeTime(60 * 60 * 24); //TODO move life time to config
+        return new SessionState(s);
     }
-    
-    Session s = SessionManager.get(sessionId);
-    
-    if(s == null || !s.isValid()){
-      return new SessionState(sessionId, -1, SessionType.UNAUTHENTICATED);
-    }
-    
-    //if session is valid: extend life time
-    s.setLifeTime(60 * 60 * 24); //TODO move life time to config
-    
-    return new SessionState(s);
-  }
 
-  @Override
-  public Class<AnyMessage> inClass() {
-    return AnyMessage.class;
-  }
+    @Override
+    public Class<AnyMessage> inClass() {
+        return AnyMessage.class;
+    }
 
 }

@@ -31,53 +31,47 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList> {
     private static final String FIELD_NAME = "name";
     private static final String FIELD_MATCHING = "matchingname";
 
-    /** Indicates whether the HTTP request is a POST request. If false, GET is assumed. */
-    private final boolean post;
-
-    /**
-     * Constructor for {@link FindTagsByActionHandler}.
-     *
-     * @param post True if request is POST request. Otherwise false.
-     */
-    public FindTagsByActionHandler(boolean post) {
-        this.post = post;
-    }
-
     /**
      * Performs the lookup of {@link Tag}s in the system.
      *
      * TODO: Check if IdList etc. is still required.
      *
-     * @param context Object that is handed to the invocation, usually parsed from the request body. May be NULL!
      * @param parameters Map containing named parameters in the URL.
      * @return
      * @throws ActionHandlerException
      */
     @Override
-    public List<Tag> invoke(IdList context, Map<String, String> parameters) throws ActionHandlerException {
-        if (post) {
-            if (context == null || context.getIds().length == 0) {
-                return Collections.emptyList();
-            }
-            return TAG_HANDLER.getTagsById(context.getIds());
-        } else {
-            final String attribute = parameters.get(GET_PARAMETER_ATTRIBUTE);
-            final String value = parameters.get(GET_PARAMETER_VALUE);
-            switch (attribute.toLowerCase()) {
-                case FIELD_ID:
-                    final List<Tag> list = new ArrayList<>(1);
-                    list.add(TAG_HANDLER.getTagById(value));
-                    return list;
-                case FIELD_NAME:
-                    return TAG_HANDLER.getTagsByName(value);
-                case FIELD_MATCHING:
-                    return TAG_HANDLER.getTagsByMatchingName(value);
-                default:
-                    LOGGER.error("Unknown attribute '{}' in FindTagsByActionHandler", attribute);
-                    return new ArrayList<>(0);
-            }
+    public List<Tag> doGet(Map<String, String> parameters) {
+        final String attribute = parameters.get(GET_PARAMETER_ATTRIBUTE);
+        final String value = parameters.get(GET_PARAMETER_VALUE);
+        switch (attribute.toLowerCase()) {
+            case FIELD_ID:
+                final List<Tag> list = new ArrayList<>(1);
+                list.add(TAG_HANDLER.getTagById(value));
+                return list;
+            case FIELD_NAME:
+                return TAG_HANDLER.getTagsByName(value);
+            case FIELD_MATCHING:
+                return TAG_HANDLER.getTagsByMatchingName(value);
+            default:
+                LOGGER.error("Unknown attribute '{}' in FindTagsByActionHandler", attribute);
+                return new ArrayList<>(0);
         }
     }
+
+    /**
+     *
+     * @param context Object that is handed to the invocation, usually parsed from the request body. May be NULL!
+     * @param parameters Map containing named parameters in the URL.
+     * @return
+     */
+    public List<Tag> doPost(IdList context, Map<String, String> parameters) {
+        if (context == null || context.getIds().length == 0) {
+            return Collections.emptyList();
+        }
+        return TAG_HANDLER.getTagsById(context.getIds());
+    }
+
 
     @Override
     public Class<IdList> inClass() {
