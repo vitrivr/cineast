@@ -346,7 +346,7 @@ public class ADAMproMessageBuilder {
                 case ILIKE:
                     this.wmBuilder.setAttribute("lower(" + key + ")");
                     this.wmBuilder.setOp("LIKE");
-                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData("%" + v + "%").build()).collect(Collectors.toList()));
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData("%" + v.toLowerCase() + "%").build()).collect(Collectors.toList()));
                     break;
                 case LIKE:
                     this.wmBuilder.setAttribute(key);
