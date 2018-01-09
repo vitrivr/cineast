@@ -29,7 +29,7 @@ public class VbsMetaImporter implements Importer<Pair<String,String>> {
     }
 
     /**
-     * Returns the ID and the content of the next text file.
+     * Returns the ID and the content of the next XML file.
      *
      * @return Pair mapping an ID (from the filename) to the content of the file (text).
      */
@@ -38,12 +38,12 @@ public class VbsMetaImporter implements Importer<Pair<String,String>> {
         try {
             if (this.files.hasNext()) {
                 final Path path = this.files.next();
-                final String segmentId = path.getFileName().toString().replace(".xml", "");
+                final String objectId = path.getFileName().toString().replace(".xml", "");
                 final String text = new String(Files.readAllBytes(path))
                         .replaceAll("<[^>]+>", "\n")
                         .replaceAll("\\s+"," ")
                         .trim();
-                return new Pair<>(segmentId, text);
+                return new Pair<>(objectId, text);
             } else {
                 return null;
             }
