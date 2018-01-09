@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.importer.handlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.features.VideoMetadata;
 import org.vitrivr.cineast.core.importer.VbsMetaImporter;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -28,7 +29,7 @@ public class VbsMetaDataImportHandler extends DataImportHandler {
     @Override
     public void doImport(Path path) {
         try {
-            this.futures.add(this.service.submit(new DataImportHandler.DataImportRunner(new VbsMetaImporter(path), "features_meta")));
+            this.futures.add(this.service.submit(new DataImportHandler.DataImportRunner(new VbsMetaImporter(path), VideoMetadata.ENTITY_NAME)));
         } catch (IOException e) {
             LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", path.toString(), LogHelper.getStackTrace(e));
         }

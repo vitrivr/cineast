@@ -38,7 +38,7 @@ public class VbsMetaImporter implements Importer<Pair<String,String>> {
         try {
             if (this.files.hasNext()) {
                 final Path path = this.files.next();
-                final String segmentId = path.getFileName().toString().replace(".txt", "");
+                final String segmentId = path.getFileName().toString().replace(".xml", "");
                 final String text = new String(Files.readAllBytes(path))
                         .replaceAll("<[^>]+>", "\n")
                         .replaceAll("\\s+"," ")
