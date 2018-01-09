@@ -268,6 +268,10 @@ public class API {
                 handler = new VbsMetaDataImportHandler(1, batchsize);
                 handler.doImport(path);
                 break;
+            case "tagsft":
+                handler = new TagsFulltextDataImportHandler(1, batchsize);
+                handler.doImport(path);
+                break;
         }
     }
 
