@@ -44,24 +44,22 @@ public class MultimediaMetadataReader extends AbstractEntityReader {
      * @param objectid ID of the multimedia object for which metadata should be retrieved.
      * @return List of MultimediaMetadataDescriptor object's. May be empty!
      */
-    public  List<MultimediaMetadataDescriptor> lookupMultimediaMetadata(String objectid) {
-        List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MultimediaMetadataDescriptor.FIELDNAMES[0], objectid);
-        ArrayList<MultimediaMetadataDescriptor> list = new ArrayList<>();
-
+    public List<MultimediaMetadataDescriptor> lookupMultimediaMetadata(String objectid) {
+        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MultimediaMetadataDescriptor.FIELDNAMES[0], objectid);
         if(results.isEmpty()){
             LOGGER.debug("Could not find MultimediaMetadataDescriptor with ID {}", objectid);
-            return null;
+            return new ArrayList<>(0);
         }
 
-        try {
-            for (Map<String, PrimitiveTypeProvider> result : results) {
-                list.add(new MultimediaMetadataDescriptor(result));
+        final ArrayList<MultimediaMetadataDescriptor> list = new ArrayList<>(results.size());
+        results.forEach(r -> {
+            try {
+                list.add(new MultimediaMetadataDescriptor(r));
+            } catch (DatabaseLookupException exception) {
+                LOGGER.fatal("Could not map data returned for row {}. This is a programmer's error!", objectid);
             }
-            return list;
-        } catch (DatabaseLookupException exception) {
-            LOGGER.fatal("Could not map data returned for row {}. This is a programmer's error!", objectid);
-            return null;
-        }
+        });
+        return list;
     }
 
     /**
@@ -71,24 +69,20 @@ public class MultimediaMetadataReader extends AbstractEntityReader {
      * @return List of MultimediaMetadataDescriptor object's. May be empty!
      */
     public List<MultimediaMetadataDescriptor> lookupMultimediaMetadata(List<String> objectids) {
-        List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MultimediaMetadataDescriptor.FIELDNAMES[0], objectids);
-
-        ArrayList<MultimediaMetadataDescriptor> list = new ArrayList<>();
-
+        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MultimediaMetadataDescriptor.FIELDNAMES[0], objectids);
         if(results.isEmpty()){
             LOGGER.debug("Could not find any MultimediaMetadataDescriptor for provided ID's.");
-            return list;
+            return new ArrayList<>(0);
         }
 
-        try {
-            for (Map<String, PrimitiveTypeProvider> result : results) {
-                list.add(new MultimediaMetadataDescriptor(result));
+        final ArrayList<MultimediaMetadataDescriptor> list = new ArrayList<>(results.size());
+        results.forEach(r -> {
+            try {
+                list.add(new MultimediaMetadataDescriptor(r));
+            } catch (DatabaseLookupException exception) {
+                LOGGER.fatal("Could not map data. This is a programmer's error!");
             }
-            return list;
-        } catch (DatabaseLookupException exception) {
-            LOGGER.fatal("Could not map data returned for row. This is a programmer's error!");
-            list.clear();
-            return list;
-        }
+        });
+        return list;
     }
 }

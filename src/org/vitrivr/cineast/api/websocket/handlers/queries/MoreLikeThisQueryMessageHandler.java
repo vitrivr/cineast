@@ -3,11 +3,14 @@ package org.vitrivr.cineast.api.websocket.handlers.queries;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
 import org.vitrivr.cineast.core.data.messages.result.QueryEnd;
@@ -32,11 +35,11 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
     @Override
     public void handle(Session session, MoreLikeThisQuery message) {
         /* Prepare QueryConfig (so as to obtain a QueryId). */
-        final QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
+        final QueryConfig qconf = (message.getQueryConfig() == null) ? QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()) : message.getQueryConfig();
+        final String uuid = qconf.getQueryId().toString();
 
         /* Begin of Query: Send QueryStart Message to Client. */
-        final QueryStart startMarker = new QueryStart(qconf.getQueryId().toString());
-        this.write(session, startMarker);
+        this.write(session, new QueryStart(uuid));
 
         /* Extract categories from MoreLikeThisQuery. */
         final HashSet<String> categoryMap = new HashSet<>();
@@ -48,18 +51,24 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
 
         /* Retrieve per-category results and return them. */
         for (String category : categoryMap) {
-            List<StringDoublePair> results = ContinuousRetrievalLogic.retrieve(message.getSegmentId(), category, qconf).stream()
+            final List<StringDoublePair> results = ContinuousRetrievalLogic.retrieve(message.getSegmentId(), category, qconf).stream()
                     .map(score -> new StringDoublePair(score.getSegmentId(), score.getScore()))
                     .sorted(StringDoublePair.COMPARATOR)
                     .limit(MAX_RESULTS)
                     .collect(Collectors.toList());
 
-            this.write(session, new SegmentQueryResult(startMarker.getQueryId(), this.loadSegments(results)));
-            this.write(session, new ObjectQueryResult(startMarker.getQueryId(), this.loadObjects(results)));
-            this.write(session, new SimilarityQueryResult(startMarker.getQueryId(), category, results));
+
+            /* Fetch the List of SegmentDescriptors and MultimediaObjectDescriptors. */
+            final List<SegmentDescriptor> descriptors = this.loadSegments(results.stream().map(s -> s.key).collect(Collectors.toList()));
+            final List<MultimediaObjectDescriptor> objects = this.loadObjects(descriptors.stream().map(SegmentDescriptor::getObjectId).collect(Collectors.toList()));
+
+            /* Write partial results to stream. */
+            this.write(session, new SegmentQueryResult(uuid, descriptors));
+            this.write(session, new ObjectQueryResult(uuid, objects));
+            this.write(session, new SimilarityQueryResult(uuid, category, results));
         }
 
         /* End of Query: Send QueryEnd Message to Client. */
-        this.write(session, new QueryEnd(startMarker.getQueryId()));
+        this.write(session, new QueryEnd(uuid));
     }
 }

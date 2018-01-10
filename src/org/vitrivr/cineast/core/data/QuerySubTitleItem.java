@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.data;
 
-import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 
 public class QuerySubTitleItem implements SubtitleItem {
@@ -17,28 +16,17 @@ public class QuerySubTitleItem implements SubtitleItem {
 	}
 
 	@Override
-	public String getRawText() {
-		return text;
-	}
-
-	@Override
 	public String getText() {
 		return text;
 	}
 
 	@Override
-	public int getStartFrame() {
+	public long getStartTimestamp() {
 		return 0;
 	}
 
 	@Override
-	public int getEndFrame() {
+	public long getEndTimestamp() {
 		return 0;
 	}
-
-	@Override
-	public SubTitle getSubTitle() {
-		return null;
-	}
-
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -13,6 +14,7 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.QueryTerm;
 import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
+import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
 import org.vitrivr.cineast.core.data.messages.result.SimilarityQueryResultBatch;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
@@ -26,15 +28,33 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
  * @created 11.01.17
  */
 public class FindSegmentSimilarActionHandler extends ParsingActionHandler<SimilarityQuery> {
+
+    /**
+     * Processes a HTTP GET request. Always throws a {@link MethodNotSupportedException}
+     *
+     * @param parameters Map containing named parameters in the URL.
+     * @throws MethodNotSupportedException Always
+     */
+    public Object doGet(Map<String, String> parameters) throws MethodNotSupportedException {
+        throw new MethodNotSupportedException("HTTP GET is not supported for FindSegmentSimilarActionHandler.");
+    }
+
+    /**
+     * Processes a HTTP GET request. Performs a similarity search given the {@link SimilarityQuery}.
+     *
+     * @param query The {@link SimilarityQuery} objects used to perform the search.
+     * @param parameters Map containing named parameters in the URL.
+     * @return
+     */
     @Override
-    public SimilarityQueryResultBatch invoke(SimilarityQuery query, Map<String, String> parameters) { //FIXME duplicate fusion logic
+    public SimilarityQueryResultBatch doPost(SimilarityQuery query, Map<String, String> parameters) { //FIXME duplicate fusion logic
 
         HashMap<String, List<StringDoublePair>> returnMap = new HashMap<>();
 
         // TODO: Remove code duplication shared with FindObjectSimilarActionHandler
-    /*
-     * Prepare map that maps categories to QueryTerm components.
-     */
+        /*
+         * Prepare map that maps categories to QueryTerm components.
+         */
         HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
         for (QueryComponent component : query.getComponents()) {
             for (QueryTerm term : component.getTerms()) {
@@ -55,7 +75,7 @@ public class FindSegmentSimilarActionHandler extends ParsingActionHandler<Simila
             TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
             for (QueryContainer qc : categoryMap.get(category)) {
 
-                if(qc == null){
+                if (qc == null) {
                     continue;
                 }
 

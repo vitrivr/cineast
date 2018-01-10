@@ -36,7 +36,6 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
     protected final void write(Session session, Message message) {
         try {
             session.getRemote().sendString(this.writer.toJson(message));
-            session.getRemote().flush();
         } catch (IOException e) {
             LOGGER.fatal("Failed to write message to WebSocket stream!", LogHelper.getStackTrace(e));
         }

@@ -4,17 +4,15 @@ package org.vitrivr.cineast.core.decode.subtitle;
 
 public abstract class AbstractSubtitleItem implements SubtitleItem {
 
-	int id;
-	long start, end;
-	protected String text;
-	protected SubTitle st;
+	protected final int id;
+	protected final long start, end;
+	protected final String text;
 	
-	protected AbstractSubtitleItem(int id, long start, long end, String text, SubTitle st){
+	protected AbstractSubtitleItem(int id, long start, long end, String text){
 		this.id = id;
 		this.start = start;
 		this.end = end;
 		this.text = text;
-		this.st = st;
 	}
 	
 	/* (non-Javadoc)
@@ -25,27 +23,15 @@ public abstract class AbstractSubtitleItem implements SubtitleItem {
 		return (int) (end - start);
 	}
 
-	/* (non-Javadoc)
-	 * @see subsync.SubItem#getRawText()
-	 */
+
 	@Override
-	public String getRawText(){
-		return this.text;
+	public long getStartTimestamp() {
+		return this.start;
 	}
 
 	@Override
-	public int getStartFrame() {
-		return Math.round(this.start * this.st.getFrameRate() / 1000);
-	}
-
-	@Override
-	public int getEndFrame() {
-		return Math.round(this.end * this.st.getFrameRate() / 1000);
-	}
-
-	@Override
-	public SubTitle getSubTitle() {
-		return this.st;
+	public long getEndTimestamp() {
+		return this.end;
 	}
 	
 	@Override

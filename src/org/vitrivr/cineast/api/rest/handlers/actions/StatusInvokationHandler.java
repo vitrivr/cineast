@@ -13,8 +13,14 @@ import org.vitrivr.cineast.core.data.messages.general.Ping;
  * @created 09.01.17
  */
 public class StatusInvokationHandler extends ParsingActionHandler<AnyMessage> {
+    /**
+     * Processes a HTTP GET request. Returns a {@link Ping} object
+     *
+     * @param parameters Map containing named parameters in the URL.
+     * @return {@link Ping}
+     */
     @Override
-    public Ping invoke(AnyMessage type, Map<String, String> parameters) {
+    public Ping doGet(Map<String, String> parameters) {
         return new Ping();
     }
 

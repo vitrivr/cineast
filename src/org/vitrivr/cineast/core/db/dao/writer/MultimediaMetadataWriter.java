@@ -34,7 +34,6 @@ public class MultimediaMetadataWriter extends AbstractBatchedEntityWriter<Multim
      */
     @Override
     protected PersistentTuple generateTuple(MultimediaMetadataDescriptor entity) {
-        return this.writer.generateTuple(entity.getObjectId(), entity.getDomain(), entity.getKey(), entity.getValue());
-
+        return this.writer.generateTuple(entity.getObjectId(), entity.getDomain(), entity.getKey(), entity.getValue().toString());
     }
 }

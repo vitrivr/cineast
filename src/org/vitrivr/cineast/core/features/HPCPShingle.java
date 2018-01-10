@@ -177,7 +177,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
         Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
         STFT stft = segment.getSTFT(parameters.first,(parameters.first - 2*parameters.second)/2, parameters.second, new HanningWindow());
         if (stft == null) {
-          return new ArrayList<>();
+            return new ArrayList<>(0);
         }
 
         HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);

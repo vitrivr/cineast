@@ -19,17 +19,6 @@ import org.vitrivr.cineast.core.data.MediaType;
  */
 public interface ObjectIdGenerator {
     /**
-     * Can be used to initialize a particular ObjectIdGenerator instance by passing
-     * a HashMap of named parameters.
-     *
-     * It remains up to the implementing class to use these parameters. If no initialization
-     * is required, an empty HashMap should be provided!
-     *
-     * @param properties HashMap of named parameters.
-     */
-    void init(HashMap<String, String> properties);
-
-    /**
      * Generates the next objectId and returns it as a string. That objectId should
      * already contain the MediaType prefix, if the ID type supports media-type prefixing.
      *

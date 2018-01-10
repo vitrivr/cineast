@@ -134,6 +134,9 @@ public class MFCCShingle extends StagedFeatureModule {
     private List<float[]> getFeatures(SegmentContainer segment) {
         final Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
         final STFT stft = segment.getSTFT(parameters.first, (parameters.first-2*parameters.second)/2, parameters.second, new HanningWindow());
+        if (stft == null) {
+            return new ArrayList<>(0);
+        }
         final List<MFCC> mfccs = MFCC.calculate(stft);
         int vectors = mfccs.size() - SHINGLE_SIZE;
 

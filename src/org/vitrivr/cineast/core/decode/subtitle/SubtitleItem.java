@@ -1,20 +1,36 @@
 package org.vitrivr.cineast.core.decode.subtitle;
 
+/**
+ * Represents a single subtitle item as found in videos. Typically, a subtitle item has a text, and a specified
+ * presentation time within the video.
+ */
 public interface SubtitleItem {
 
 	/**
-	 * @return length in ms
+	 * Returns the presentation length of the {@link SubtitleItem} in ms.
+	 *
+	 * @return presentation length of the {@link SubtitleItem} in ms
 	 */
 	int getLength();
 
-	String getRawText();
-
+	/**
+	 * Returns the text of the {@link SubtitleItem}.
+	 *
+	 * @return Text of the {@link SubtitleItem}.
+	 */
 	String getText();
-	
-	int getStartFrame();
-	
-	int getEndFrame();
-	
-	SubTitle getSubTitle();
 
+	/**
+	 * Returns the start presentation timestamp in ms.
+	 *
+	 * @return Start presentation timestamp in m
+	 */
+	long getStartTimestamp();
+
+	/**
+	 * Returns the start presentation timestamp in ms.
+	 *
+	 * @return Start presentation timestamp in m
+	 */
+	long getEndTimestamp();
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
@@ -17,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @version 1.0
  * @created 27.04.17
  */
-public class MoreLikeThisQuery implements Message {
+public class MoreLikeThisQuery extends Query {
     /** ID of the segment that serves as example for the MLT query. */
     private String segmentId;
 
@@ -31,7 +33,10 @@ public class MoreLikeThisQuery implements Message {
      * @param categories List of named feature categories.
      */
     @JsonCreator
-    public MoreLikeThisQuery(@JsonProperty("segmentId") String segmentId, @JsonProperty("categories") String[] categories) {
+    public MoreLikeThisQuery(@JsonProperty(value = "segmentId", required = true) String segmentId,
+                             @JsonProperty(value = "categories", required = true) String[] categories,
+                             @JsonProperty(value = "config", required = false) QueryConfig config) {
+        super(config);
         this.segmentId = segmentId;
         this.categories = categories;
     }
