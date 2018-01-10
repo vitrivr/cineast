@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.rest;
 
+import java.io.File;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +17,8 @@ import org.vitrivr.cineast.api.rest.handlers.actions.StatusInvokationHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
+import org.vitrivr.cineast.api.rest.resolvers.FileSystemThumbnailResolver;
+import org.vitrivr.cineast.api.rest.routes.ThumbnailRoute;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 import org.vitrivr.cineast.core.config.APIConfig;
 import org.vitrivr.cineast.core.config.Config;
@@ -82,14 +85,7 @@ public class RestfulAPI {
     return https;
   }
 
-  /**
-   * Starts the RESTful / WebSocket API.
-   *
-   * @param port
-   *          Port on which the WebSocket endpoint should listen.
-   * @param numberOfThreads
-   *          Maximum number of threads that should be used to handle messages.
-   */
+
   public static void start() { //TODO check if already running
     
     if(Config.sharedConfig().getApi().getEnableWebsocket()){
@@ -119,6 +115,8 @@ public class RestfulAPI {
         http.post("/metas/by/id", new FindMetadatasByIdActionHandler());
         http.post("/tags/by/id", new FindTagsByActionHandler(true));
       });
+
+      http.get(makePath("/get/thumbnails/:id"), new ThumbnailRoute(new FileSystemThumbnailResolver(new File("thumbnails"))));
       
     }
     
@@ -129,7 +127,7 @@ public class RestfulAPI {
        * Configure the result after processing was completed.
        */
       http.after((request, response) -> {
-        response.type("application/json");
+        //response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
       });
 
