@@ -1,7 +1,12 @@
 package org.vitrivr.cineast.core.db.adampro;
 
+import com.google.common.util.concurrent.Futures;
 import java.util.concurrent.ExecutionException;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamDefinitionGrpc;
@@ -41,11 +46,14 @@ public class ADAMproWrapper implements AutoCloseable {
   private static final PropertiesMessage INTERRUPTED_PROPERTIES_MESSAGE = PropertiesMessage
       .newBuilder().setAck(INTERRUPTED_ACK_MESSAGE).build();
 
+  private static final ScheduledExecutorService timeoutService = Executors.newSingleThreadScheduledExecutor();
+
   private ManagedChannel channel;
   private final AdamDefinitionFutureStub definitionStub;
   private final AdamSearchFutureStub searchStub;
 
   private static final int maxMessageSize = 10_000_000;
+  private static final long maxCallTimeOutMs = 300_000; //TODO expose to config
   
   public ADAMproWrapper() {
     DatabaseConfig config = Config.sharedConfig().getDatabase();
@@ -109,18 +117,18 @@ public class ADAMproWrapper implements AutoCloseable {
   }
 
   public ListenableFuture<QueryResultsMessage> booleanQuery(QueryMessage message) {
-    return standardQuery(message);
+    return Futures.withTimeout(standardQuery(message), maxCallTimeOutMs, TimeUnit.MILLISECONDS, timeoutService);
   }
 
    public ListenableFuture<QueryResultsMessage> standardQuery(QueryMessage message) {
     synchronized (this.searchStub) {
-      return this.searchStub.doQuery(message);
+      return Futures.withTimeout(this.searchStub.doQuery(message), maxCallTimeOutMs, TimeUnit.MILLISECONDS, timeoutService);
     }
   }
 
   public ListenableFuture<AdamGrpc.BatchedQueryResultsMessage> batchedQuery(BatchedQueryMessage message) {
     synchronized (this.searchStub) {
-      return this.searchStub.doBatchQuery(message);
+      return Futures.withTimeout(this.searchStub.doBatchQuery(message), maxCallTimeOutMs, TimeUnit.MILLISECONDS, timeoutService);
     }
   }
 
@@ -128,7 +136,7 @@ public class ADAMproWrapper implements AutoCloseable {
   public ListenableFuture<QueryResultsMessage> previewEntity(PreviewMessage message) {
     ListenableFuture<QueryResultsMessage> future;
     synchronized (this.searchStub) {
-      future = this.searchStub.preview(message);
+      future = Futures.withTimeout(this.searchStub.preview(message), maxCallTimeOutMs, TimeUnit.MILLISECONDS, timeoutService);
     }
     return future;
   }
@@ -136,7 +144,7 @@ public class ADAMproWrapper implements AutoCloseable {
   public ListenableFuture<PropertiesMessage> getProperties(EntityPropertiesMessage message) {
     ListenableFuture<PropertiesMessage> future;
     synchronized (this.searchStub) {
-      future = this.definitionStub.getEntityProperties(message);
+      future = Futures.withTimeout(this.definitionStub.getEntityProperties(message), maxCallTimeOutMs, TimeUnit.MILLISECONDS, timeoutService);
     }
     return future;
   }
@@ -160,47 +168,6 @@ public class ADAMproWrapper implements AutoCloseable {
   protected void finalize() throws Throwable {
     this.close();
     super.finalize();
-  }
-
-  class LastObserver<T> implements StreamObserver<T> {
-
-    private final SettableFuture<T> future;
-    private T last = null;
-
-    LastObserver(final SettableFuture<T> future) {
-      this.future = future;
-    }
-
-    @Override
-    public void onCompleted() {
-      future.set(this.last);
-    }
-
-    @Override
-    public void onError(Throwable e) {
-      LOGGER.error(LogHelper.getStackTrace(e));
-      future.setException(e);
-    }
-
-    @Override
-    public void onNext(T t) {
-      this.last = t;
-    }
-
-  }
-
-  class LastAckStreamObserver extends LastObserver<AckMessage> {
-
-    LastAckStreamObserver(SettableFuture<AckMessage> future) {
-      super(future);
-    }
-  }
-
-  class LastQueryResponseStreamObserver extends LastObserver<QueryResultsMessage> {
-
-    LastQueryResponseStreamObserver(SettableFuture<QueryResultsMessage> future) {
-      super(future);
-    }
   }
 
   public ListenableFuture<AckMessage> dropEntity(String entityName){

@@ -38,4 +38,12 @@ abstract class AbstractDistanceElement implements DistanceElement {
   public int hashCode() {
     return Objects.hash(id, distance);
   }
+
+  @Override
+  public String toString() {
+    return "AbstractDistanceElement{" +
+        "id='" + id + '\'' +
+        ", distance=" + distance +
+        '}';
+  }
 }

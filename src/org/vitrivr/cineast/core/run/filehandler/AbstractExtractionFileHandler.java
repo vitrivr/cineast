@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -34,6 +35,7 @@ import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.runtime.ExtractionPipeline;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
@@ -104,6 +106,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
     /** List of {@link MetadataExtractor}s that should be executed as part of the extraction. */
     private final List<MetadataExtractor> metadataExtractors;
+
+    /** List of {@link ExtractionCompleteListener}s that should be notified when extraction is complete. */
+    private final List<ExtractionCompleteListener> completeListeners = new ArrayList<>();
 
     /** Reference to {@link ExtractionPipeline{ that extracts features from the segments. */
     private final ExtractionPipeline pipeline;
@@ -202,7 +207,6 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
                 /* Initialize segmenter and pass to executor service. */
                 segmenter.init(decoder, descriptor);
-                this.configureSegmenter(segmenter);
                 this.executorService.execute(segmenter);
 
                 /* Poll for output from the segmenter until that segmenter reports that no more output
@@ -263,6 +267,11 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
             if (!decoder.canBeReused()) {
                 decoder.close();
                 decoder = this.newDecoder();
+            }
+
+            /* notify all listeners about the completed extraction */
+            for (int i = 0; i < this.completeListeners.size(); ++i) {
+                this.completeListeners.get(i).onCompleted(path);
             }
 
             /*
@@ -446,12 +455,16 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     protected List<SegmentDescriptor> retrieveExistingSegments(MultimediaObjectDescriptor object) {
         return this.segmentReader.lookUpSegmentsOfObject(object.getObjectId());
     }
-    
+
     /**
-     * Enables type-specific implementations to add additional configuration to the segmenter
-     * @param segmenter
+     * Adds a {@link ExtractionCompleteListener} to be notified about every object for which the extraction completes.
+     *
+     * @param listener {@link ExtractionCompleteListener}
      */
-    protected void configureSegmenter(Segmenter<T> segmenter){
-      
+    @Override
+    public void addExtractionCompleteListener(ExtractionCompleteListener listener) {
+        if(listener != null && !this.completeListeners.contains(listener)){
+            completeListeners.add(listener);
+        }
     }
 }

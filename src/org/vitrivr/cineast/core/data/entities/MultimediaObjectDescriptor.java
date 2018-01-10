@@ -98,9 +98,15 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
     public boolean exists() {
         return this.exists;
     }
-
+    
     @Override
     public String toString() {
-      return "MultimediaObjectDescriptor(" + objectId + ")";
+        return "MultimediaObjectDescriptor{" +
+            "objectId='" + objectId + '\'' +
+            ", name='" + name + '\'' +
+            ", path='" + path + '\'' +
+            ", exists=" + exists +
+            ", mediatypeId=" + mediatypeId +
+            '}';
     }
 }
