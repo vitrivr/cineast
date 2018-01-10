@@ -50,6 +50,7 @@ public abstract class ParsingActionHandler<A> implements ActionHandler<A> {
           params = new HashMap<>();
         }
         Object result = null;
+        response.type("application/json");
         switch (request.requestMethod()) {
             case "GET":
             case "DELETE":

@@ -127,7 +127,6 @@ public class RestfulAPI {
        * Configure the result after processing was completed.
        */
       http.after((request, response) -> {
-        //response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
       });
 
@@ -184,7 +183,6 @@ public class RestfulAPI {
        * Configure the result after processing was completed.
        */
       https.after((request, response) -> {
-        response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
       });
 
