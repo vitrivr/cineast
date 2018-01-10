@@ -8,6 +8,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.Map;
+import org.vitrivr.cineast.api.rest.resolvers.ResolutionResult;
 import org.vitrivr.cineast.api.rest.resolvers.ThumbnailResolver;
 import spark.Request;
 import spark.Response;
@@ -37,11 +38,15 @@ public class ThumbnailRoute implements Route {
       return 404;
     }
 
-    InputStream inStream = this.resolver.resolve(id);
+    ResolutionResult rresult = this.resolver.resolve(id);
 
-    if(inStream == null){
+    if(rresult == null){
       return 404;
     }
+
+
+    response.type(rresult.mimeType);
+    InputStream inStream = rresult.stream;
 
     OutputStream out = response.raw().getOutputStream();
 

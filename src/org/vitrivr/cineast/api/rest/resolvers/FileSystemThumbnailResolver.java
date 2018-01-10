@@ -15,7 +15,7 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
   }
 
   @Override
-  public InputStream resolve(String segmentId) {
+  public ResolutionResult resolve(String segmentId) {
 
     if(segmentId == null){
       return null;
@@ -46,7 +46,10 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
     //TODO prioritize file endings
 
     try {
-      return new FileInputStream(candidates[0]);
+      return new ResolutionResult(
+          "image/jpg", //TODO look up mime type
+          new FileInputStream(candidates[0])
+      );
     } catch (FileNotFoundException e) {
       e.printStackTrace();
       return null;
