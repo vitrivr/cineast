@@ -3,7 +3,10 @@ package org.vitrivr.cineast.core.util;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
+import jogamp.opengl.glu.mipmap.Extract;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.decode.general.Converter;
@@ -15,6 +18,8 @@ import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 
 import com.eclipsesource.json.JsonObject;
+import org.vitrivr.cineast.core.run.ExtractionContextProvider;
+import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 public class ReflectionHelper {
 
@@ -41,11 +46,12 @@ public class ReflectionHelper {
 	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the IDGENERATOR_PACKAGE
 	 * is assumed and the name is treated as simple name.
 	 *
-	 * @param name Name of the ObjectIdGenerator.
+	 * @param name Name of the {@link ObjectIdGenerator}.
+	 * @param properties Properties that should be used to configure new {@link ObjectIdGenerator}
 	 * @return Instance of ObjectIdGenerator or null, if instantiation fails.
 	 */
 	@SuppressWarnings("unchecked")
-	public static ObjectIdGenerator newIdGenerator(String name) {
+	public static ObjectIdGenerator newIdGenerator(String name, Map<String,String> properties) {
 		Class<ObjectIdGenerator> c = null;
 		try {
 			if (name.contains(".")) {
@@ -53,7 +59,12 @@ public class ReflectionHelper {
 			} else {
 				c = getClassFromName(name, ObjectIdGenerator.class, IDGENERATOR_PACKAGE);
 			}
-			return instanciate(c);
+
+			if (properties == null || properties.isEmpty()) {
+				return instanciate(c);
+			} else {
+				return instanciate(c, new Class[]{Map.class}, properties);
+			}
 		} catch (ClassNotFoundException | InstantiationException  e) {
 			LOGGER.fatal("Failed to create ObjectIdGenerator. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
@@ -146,7 +157,7 @@ public class ReflectionHelper {
 	 * @return Instance of Exporter or null, if instantiation fails.
 	 */
 	@SuppressWarnings("unchecked")
-	public static Extractor newExporter(String name, HashMap<String, String> configuration) {
+	public static Extractor newExporter(String name, Map<String, String> configuration) {
 		Class<Extractor> c = null;
 		try {
 			if (name.contains(".")) {
@@ -187,8 +198,35 @@ public class ReflectionHelper {
 			}
 
 			return instanciate(c);
-		} catch (ClassNotFoundException | InstantiationException e) {
+		} catch (ClassNotFoundException | InstantiationException | ClassCastException e) {
 			LOGGER.fatal("Failed to create MetadataExtractor. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
+
+	/**
+	 * Tries to instantiate a new, named MetadataExtractor object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the METADATA_PACKAGE
+	 * is assumed and the name is treated as simple name.
+	 *
+	 * @param name Name of the MetadataExtractor.
+	 * @return Instance of MetadataExtractor or null, if instantiation fails.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Segmenter<T> newSegmenter(String name, Map<String, String> configuration, ExtractionContextProvider provider) {
+		Class<Segmenter<T>> c = null;
+		try {
+			 c = (Class<Segmenter<T>>) Class.forName(name);
+			if (configuration == null) {
+				return instanciate(c, new Class[]{ExtractionContextProvider.class}, provider);
+			} else {
+				return instanciate(c, new Class[]{ExtractionContextProvider.class, Map.class}, provider, configuration);
+			}
+		} catch (ClassNotFoundException | ClassCastException e) {
+			LOGGER.fatal("Failed to create Segmenter. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}
@@ -257,21 +295,40 @@ public class ReflectionHelper {
 		}
 		return cls;
 	}
-	
+
+	/**
+	 * Convenience method to instantiate an object of a given class using a specific constructor.
+	 *
+	 * @param cl The class that should be instantiated.
+	 * @param args The arguments that should be passed to the constructor. The constructor signature will be inferred from this list.
+	 * @param <T>
+	 * @return Instance of the class or null, if instantiation failed.
+	 */
 	public static <T> T instanciate(Class<? extends T> cl, Object... args) {
+		return instanciate(cl, getClassArray(args), args);
+	}
+
+	/**
+	 * Convenience method to instantiate an object of a given class using a defined constructor.
+	 *
+	 * @param cl The class that should be instantiated.
+	 * @param types An array of types that defines the expected signature of the class's constructor.
+	 * @param args The arguments that should be passed to the constructor.
+	 * @param <T>
+	 * @return Instance of the class or null, if instantiation failed.
+	 */
+	public static <T> T instanciate(Class<? extends T> cl, Class[] types, Object... args) {
 		try {
-			Constructor<? extends T> con = cl.getConstructor(getClassArray(args));
+			Constructor<? extends T> con = cl.getConstructor(types);
 			return con.newInstance(args);
+		} catch (InvocationTargetException e) {
+			LOGGER.error("InvocationTargetException: {}", LogHelper.getStackTrace(e.getCause()));
 		} catch (Exception e) {
-			if (e instanceof InvocationTargetException) {
-				LOGGER.error("InvocationTargetException: {}", LogHelper.getStackTrace(((InvocationTargetException) e).getCause()));
-			} else {
-				LOGGER.error(LogHelper.getStackTrace(e));
-			}
+			LOGGER.error(LogHelper.getStackTrace(e));
 		}
 		return null;
 	}
-	
+
 	
 	/**
 	 * Instantiates an object from a provided JSON with the following structure:
@@ -354,22 +411,18 @@ public class ReflectionHelper {
 	}
 	
 	@SuppressWarnings("unchecked")
-  public static <T> Class<T> getClassFromName(String className, Class<T> expectedSuperClass, String expectedPackage) throws IllegalArgumentException, ClassNotFoundException, InstantiationException{
-	  Class<T> targetClass = null;
-    String classPath = null;
-	  try{
-      classPath = expectedPackage + "." + className;
-      Class<?> c =  Class.forName(classPath);
-      if(!expectedSuperClass.isAssignableFrom(c)){
-        throw new InstantiationException(classPath + " is not a sub-class of " + expectedSuperClass.getName());
-      }
-      targetClass = (Class<T>) c;
-    }catch(ClassNotFoundException e){
-      //can be ignored at this point
-    }catch(UnsupportedOperationException notAString){
-      LOGGER.warn("'name' was not a string during class instanciation in instanciateFromJson");
-    }
-	  return targetClass;
+	public static <T> Class<T> getClassFromName(String className, Class<T> expectedSuperClass, String expectedPackage) throws IllegalArgumentException, ClassNotFoundException, InstantiationException {
+	  	Class<T> targetClass = null;
+	  	try {
+			String classPath = expectedPackage + "." + className;
+	  		Class<?> c =  Class.forName(classPath);
+	  		if(!expectedSuperClass.isAssignableFrom(c)){
+				throw new InstantiationException(classPath + " is not a sub-class of " + expectedSuperClass.getName());
+	  		}
+	  		targetClass = (Class<T>) c;
+		} catch(UnsupportedOperationException e){
+		 	LOGGER.warn("'name' was not a string during class instantiation in instantiateFromJson");
+		}
+		  return targetClass;
 	}
-	
 }

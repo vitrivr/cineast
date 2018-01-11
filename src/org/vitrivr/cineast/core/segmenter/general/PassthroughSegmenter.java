@@ -2,17 +2,21 @@ package org.vitrivr.cineast.core.segmenter.general;
 
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.segmenter.video.TRECVidMSRSegmenter;
 
 /**
  * A simple segmenter that passes the output from the decoder straight back to the orchestrator.
- * No aggregation or post-processing will take place besides wrapping of the content in a
- * SegmentContainer.
+ *
+ * No aggregation or post-processing will take place besides wrapping of the content in a SegmentContainer.
  *
  * @author rgasser
  * @version 1.0
@@ -20,17 +24,24 @@ import org.vitrivr.cineast.core.decode.general.Decoder;
  */
 public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
 
+    /** */
+    private static final Logger LOGGER = LogManager.getLogger();
+
     /** Decoder<T> used for file decoding. */
     private Decoder<T> decoder;
 
     /** A SynchronousQueue used to pass the element to the orchestrating thread. */
     private final SynchronousQueue<T> queue = new SynchronousQueue<T>();
 
-    /** A flag indicating whether or not the decoder has completed its work. */
-    private AtomicBoolean complete = new AtomicBoolean(false);
+    /** Internal flag that indicates whether the {@link PassthroughSegmenter} is still running (= true). */
+    private volatile boolean running = false;
+
+    /** A flag indicating whether more {@link SegmentContainer}s are to be expected from this {@link TRECVidMSRSegmenter}. */
+    private volatile boolean complete = false;
+
 
     /**
-     * Method used to initialize the Segmenter. A class implementing the Decoder interface with
+     * Method used to initialize the {@link PassthroughSegmenter}. A class implementing the {@link Decoder} interface with
      * the same type must be provided.
      *
      * @param decoder Decoder used for media-decoding.
@@ -39,7 +50,7 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
     @Override
     public void init(Decoder<T> decoder, MultimediaObjectDescriptor object) {
         this.decoder = decoder;
-        this.complete.set(false);
+        this.complete = false;
     }
 
     /**
@@ -52,13 +63,14 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
      */
     @Override
     public SegmentContainer getNext() throws InterruptedException {
-        T content = this.queue.poll(5, TimeUnit.SECONDS);
-        this.complete.set(this.decoder.complete());
-        if (content != null) {
-            return this.getSegmentFromContent(content);
-        } else {
-            return null;
+        final T content = this.queue.poll(5, TimeUnit.SECONDS);
+        synchronized (this) {
+            if (content == null && !this.running) {
+                this.complete = true;
+                return null;
+            }
         }
+        return this.getSegmentFromContent(content);
     }
 
     /**
@@ -68,16 +80,20 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
      * @return true if work is complete, false otherwise.
      */
     @Override
-    public boolean complete() {
-        return this.complete.get();
+    public synchronized boolean complete() {
+        return this.complete;
     }
 
     /**
      * Closes the decoder.
      */
     @Override
-    public void close() {
-       this.decoder.close();
+    public synchronized void close() {
+        if (!this.running) {
+            this.decoder.close();
+        } else {
+            throw new IllegalStateException("You cannot close the PassthroughSegmenter while it is running.");
+        }
     }
 
     /**
@@ -93,15 +109,25 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
      */
     @Override
     public void run() {
-        while (!this.decoder.complete()) {
-            try {
-                T t = this.decoder.getNext();
+         /* Sets the running flag to true. */
+        synchronized (this) {
+            this.running = true;
+        }
+
+        try {
+            while (!this.decoder.complete()) {
+                final T t = this.decoder.getNext();
                 if (t != null) {
-                  this.queue.put(t);
+                    this.queue.put(t);
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException e) {
+            LOGGER.log(Level.ERROR, "The thread that runs the PassthroughSegmenter was interrupted: {}", e);
+        }
+
+         /* Sets the running flag to false. */
+        synchronized (this) {
+            this.running = false;
         }
     }
 
@@ -111,9 +137,4 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
      * @return
      */
     protected abstract SegmentContainer getSegmentFromContent(T content);
-
-    @Override
-    public void addKnownSegments(Iterable<SegmentDescriptor> segments) {
-      // ignore
-    }
 }

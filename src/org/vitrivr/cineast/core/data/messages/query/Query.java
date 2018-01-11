@@ -1,57 +1,34 @@
 package org.vitrivr.cineast.core.data.messages.query;
 
-import java.util.Arrays;
-import java.util.List;
 
-import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 11.01.17
  */
-public class Query implements Message {
-    /**
-     *
-     */
-    private QueryComponent[] containers;
+public abstract class Query implements Message {
+    /** The {@link ReadableQueryConfig} that should be used to configure the query. May be null! */
+    protected final QueryConfig config;
 
     /**
+     * Constructor for {@link Query} message.
      *
+     * @param config The {@link ReadableQueryConfig}
      */
-    private MediaType[] types;
-
-    /**
-     *
-     * @param containers
-     */
-    @JsonCreator
-    public Query(@JsonProperty("containers") QueryComponent[] containers, @JsonProperty("types") MediaType[] types) {
-        this.containers = containers;
-        this.types = types;
+    public Query(QueryConfig config) {
+        this.config = config;
     }
 
     /**
-     * Getter for containers.
+     * Getter for {@link Query#config}.
      *
      * @return
      */
-    public List<QueryComponent> getContainers() {
-        return Arrays.asList(this.containers);
-    }
-
-    /**
-     * Returns the type of particular message. Expressed as MessageTypes enum.
-     *
-     * @return
-     */
-    @Override
-    public MessageType getMessageType() {
-        return MessageType.Q_SIM;
+    public final QueryConfig getQueryConfig() {
+        return this.config;
     }
 }

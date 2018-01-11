@@ -7,7 +7,7 @@ import org.vitrivr.cineast.core.data.frames.AudioFrame;
 
 /**
  *
- * This interface should be implemented by segments that provides access to frames-data in the form of AudioFrames.
+ * This interface should be implemented by segments that provides access to frames-data in the form of {@link AudioFrame}.
  *
  * Currently, one AudioFrame holds an arbitrary number of samples and channels (as returned by the respective decoder). An
  * audio-segment groups multiple such frames and the methods defined in this interface facilitate easy access to the
@@ -18,7 +18,6 @@ import org.vitrivr.cineast.core.data.frames.AudioFrame;
  * @created 31.01.17
  */
 public interface AudioFrameProvider {
-
     /**
      * Returns a list of audio-frames contained in the AudioSegment. The
      * default implementation returns a list containing one, empty frame.
@@ -26,7 +25,7 @@ public interface AudioFrameProvider {
      * @return List auf audio-frames in the audio-segment.
      */
     default List<AudioFrame> getAudioFrames() {
-        ArrayList<AudioFrame> list = new ArrayList<>();
+        final ArrayList<AudioFrame> list = new ArrayList<>();
         list.add(AudioFrame.EMPTY_FRAME);
         return list;
     }
@@ -98,13 +97,12 @@ public interface AudioFrameProvider {
     }
 
     /**
-     * Returns the total number of samples in the frames segment (i.e. across
-     * all frames).
+     * Returns the total number of samples in the frames segment (i.e. across all frames).
      *
      * @return Total number of samples in the segments
      */
     default int getNumberOfSamples() {
-        return 1;
+        return AudioFrame.EMPTY_FRAME.numberOfSamples();
     }
 
     /**

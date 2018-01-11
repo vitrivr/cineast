@@ -13,8 +13,6 @@ import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 /**
  *
- * TODO: Make length and overlap configurable!
- *
  * @author rgasser
  * @version 1.0
  * @created 31.01.17
@@ -50,6 +48,8 @@ public class AudioExtractionFileHandler extends AbstractExtractionFileHandler<Au
      */
     @Override
     public Segmenter<AudioFrame> newSegmenter() {
-        return new ConstantLengthAudioSegmenter(10.0f, 1.0f);
+        Segmenter<AudioFrame> segmenter = this.context.newSegmenter();
+        if (segmenter == null) segmenter = new ConstantLengthAudioSegmenter(this.context);
+        return segmenter;
     }
 }

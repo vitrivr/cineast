@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
+import org.vitrivr.cineast.core.util.web.AudioParser;
 
 /**
  * @author rgasser
@@ -27,8 +28,18 @@ public class AudioQueryContainer extends QueryContainer {
     private AudioDescriptor descriptor;
 
     /**
-     * Returns a list of audio-frames contained in the AudioSegment. The
-     * default implementation returns a list containing one, empty frame.
+     * Constructs an {@link AudioQueryContainer} from base 64 encoded wave audio data. The constructor assumes
+     * the following audio settings: 22050Hz, 1 Channel, 16bit PCM
+     *
+     * @param data The audio data that should be converted.
+     */
+    public AudioQueryContainer(String data) {
+        this(AudioParser.parseWaveAudio(data, 22050.0f, 1));
+    }
+
+    /**
+     * Returns a list of audio-frames contained in the AudioSegment. The default implementation returns
+     * a list containing one, empty frame.
      *
      * @return List auf audio-frames in the audio-segment.
      */

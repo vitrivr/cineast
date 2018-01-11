@@ -2,17 +2,19 @@ package org.vitrivr.cineast.core.data.frames;
 
 
 import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
+
+import java.util.*;
 
 
 /**
- * Represents a single video-frame containing. Such a frame consist of a single image and, optionally, an AudioFrame
- * of arbitrary length.
+ * Represents a single video-frame. Such a frame consist of a single image and, optionally, an {@link AudioFrame} of arbitrary length and,
+ * again optionally, a list of {@link SubtitleItem}s.
  *
  * @see AudioFrame
  */
 public class VideoFrame {
     public static final VideoFrame EMPTY_VIDEO_FRAME = new VideoFrame(0, 0, MultiImage.EMPTY_MULTIIMAGE, new VideoDescriptor(25, 40, 1, 1));
-
 
 	/** ID of the VideoFrame. */
   	private final int id;
@@ -23,8 +25,11 @@ public class VideoFrame {
 	/** MultiImage representing the current VideoFrame. */
 	private MultiImage img;
 
-	/** AudioFrame that is associated with the current frame. May be null! */
+	/** {@link AudioFrame} that is associated with the current frame. May be null! */
 	private AudioFrame audioFrame = null;
+
+	/** {@link SubtitleItem} that is associated with the current video frame. May be null! */
+	private List<SubtitleItem> subtitleItems = null;
 
 	/** VideoDescriptor that describes the video this frame belongs to. */
 	private final VideoDescriptor descriptor;
@@ -52,41 +57,31 @@ public class VideoFrame {
 	}
 
 	/**
-	 * Getter for VideoDescriptor
+	 * Getter for {@link VideoDescriptor}.
 	 *
-	 * @return
+	 * @return {@link VideoDescriptor}
 	 */
 	public VideoDescriptor getDescriptor() {
 		return descriptor;
 	}
 
 	/**
-	 * Returns the presentation timestamp of the first sample.
+	 * Returns the presentation timestamp of the {@link VideoFrame} in milliseconds.
 	 *
-	 * @return Presentation timestamp pf the first sample.
+	 * @return Presentation timestamp of the {@link VideoFrame}.
 	 */
 	public long getTimestamp() {
 		return this.timestamp;
 	}
 
 	/**
-	 * Returns the relative start of the VideoFrame in seconds.
+	 * Returns the presentation timestamp of the {@link VideoFrame} in seconds.
 	 *
-	 * @return
+	 * @return Presentation timestamp of the {@link VideoFrame} in seconds.
 	 */
-	public final float getStart() {
-		return this.timestamp /1000.0f;
+	public float getTimestampSeconds() {
+		return this.timestamp/1000.0f;
 	}
-
-	/**
-	 * Returns the relative end of the VideoFrame in seconds.
-	 *
-	 * @return
-	 */
-	public final float getEnd() {
-		return this.getStart() + 1.0f/this.descriptor.getFps();
-	}
-
 
 	/**
 	 * Getter for frame image.
@@ -102,9 +97,22 @@ public class VideoFrame {
      *
      * @return AudioFrame containing the sound of the current frame.
      */
-    public final AudioFrame getAudio() {
-        return this.audioFrame;
+    public final Optional<AudioFrame> getAudio() {
+        return Optional.ofNullable(this.audioFrame);
     }
+
+	/**
+	 * Getter for subtitle item.
+	 *
+	 * @return {@link SubtitleItem} associated with current video frame.
+	 */
+	public final List<SubtitleItem> getSubtitleItems() {
+		if (this.subtitleItems != null) {
+			return Collections.unmodifiableList(this.subtitleItems);
+		} else {
+			return Collections.unmodifiableList(new ArrayList<>(0));
+		}
+	}
 
     /**
      * Adds an AudioFrame to the current VideoFrame. The existing frame (if any)
@@ -120,15 +128,17 @@ public class VideoFrame {
         }
     }
 
-    /**
-     * Returns true if the current VideoFrame has an AudioFrame associated with
-     * it and false otherwise.
-     *
-     * @return True if the current VideoFrame has an AudioFrame associated with it and false otherwise
-     */
-    public final boolean hasAudio() {
-        return this.audioFrame != null;
-    }
+	/**
+	 * Add a {@link SubtitleItem} to the current {@link VideoFrame}.
+	 *
+	 * @param item New {@link SubtitleItem}. Must not be null.
+	 */
+	public void addSubtitleItem(SubtitleItem item) {
+		if (this.subtitleItems == null) this.subtitleItems = new LinkedList<>();
+    	if (!this.subtitleItems.contains(item)) {
+    		this.subtitleItems.add(item);
+		}
+	}
 
     /**
 	 * Clears the VideoFrame.

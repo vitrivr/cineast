@@ -15,17 +15,23 @@ import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
  * @created 10.01.17
  */
 public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage> {
-  @Override
-  public ObjectQueryResult invoke(AnyMessage type, Map<String, String> parameters) {
 
-    MultimediaObjectLookup ol = new MultimediaObjectLookup();
-    List<MultimediaObjectDescriptor> multimediaobjectIds = ol.getAllObjects();
-    ol.close();
-    return new ObjectQueryResult("", multimediaobjectIds);
-  }
+    /**
+     * Processes a HTTP GET request.
+     *
+     * @param parameters Map containing named parameters in the URL.
+     * @return {@link ObjectQueryResult}
+     */
+    @Override
+    public List<MultimediaObjectDescriptor> doGet(Map<String, String> parameters) {
+        final MultimediaObjectLookup ol = new MultimediaObjectLookup();
+        final List<MultimediaObjectDescriptor> multimediaobjectIds = ol.getAllObjects();
+        ol.close();
+        return multimediaobjectIds;
+    }
 
-  @Override
-  public Class<AnyMessage> inClass() {
-    return AnyMessage.class;
-  }
+    @Override
+    public Class<AnyMessage> inClass() {
+        return AnyMessage.class;
+    }
 }

@@ -18,6 +18,7 @@ import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 /**
  * Configures a data-ingest or extraction run, acts as an ExtractionContextProvider.
@@ -29,121 +30,150 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @version 1.0
  * @created 13.01.17
  */
-public class IngestConfig implements ExtractionContextProvider {
+public final class IngestConfig implements ExtractionContextProvider {
 
     /** MediaType for the Extraction run. */
-    private MediaType type;
+    private final MediaType type;
 
     /** Input configuration for the Extraction run*/
-    private InputConfig input;
+    private final InputConfig input;
 
-    /** List of ExtractorConfigs, one for every extractor that should be used during the Extraction run. */
-    private List<ExtractorConfig> extractors = new ArrayList<>();
+    /** List of {@link ExtractorConfig}s, one for every {@link Extractor} that should be used during the extraction run. */
+    private final List<ExtractorConfig> extractors;
 
-    /** List of ExtractorConfigs, one for every exporter that should be used during the Extraction run. */
-    private List<ExtractorConfig> exporters = new ArrayList<>();
+    /** List of {@link ExtractorConfig}s, one for every exporter that should be used during the extraction run. */
+    private final List<ExtractorConfig> exporters;
 
-    /** List of MetadataConfig entries, one for each MetadataExtractor that should be used during an Extraction run. */
-    private List<MetadataConfig> metadata = new ArrayList<>();
+    /** List of {@link MetadataConfig} entries, one for each {@link MetadataExtractor} that should be used during an extraction run. */
+    private final List<MetadataConfig> metadata;
 
     /** Database-setting to use for import. Defaults to application settings. */
-    private DatabaseConfig database = Config.sharedConfig().getDatabase();
+    private final DatabaseConfig database;
 
     /** Configuration for extraction-pipeline. Defaults to global configuration. */
-    private ExtractionPipelineConfig pipeline = Config.sharedConfig().getExtractor();
+    private final ExtractionPipelineConfig pipeline;
 
+    /** Configuration for extraction-pipeline. Defaults to global configuration. */
+    private final SegmenterConfig segmenter;
+
+    /**
+     * Constructor for {@link IngestConfig}. Used by Jackson for JSON deserialization.
+     *
+     * @param type
+     * @param input
+     * @param extractors
+     * @param exporters
+     * @param metadata
+     * @param database
+     * @param pipeline
+     * @param segmenter
+     */
     @JsonCreator
-    public IngestConfig() {
+    public IngestConfig(@JsonProperty(value = "type", required = true) MediaType type,
+                        @JsonProperty(value = "input", required = true) InputConfig input,
+                        @JsonProperty(value = "extractors") List<ExtractorConfig> extractors,
+                        @JsonProperty(value = "exporters") List<ExtractorConfig> exporters,
+                        @JsonProperty(value = "metadata") List<MetadataConfig> metadata,
+                        @JsonProperty(value = "database") DatabaseConfig database,
+                        @JsonProperty(value = "pipeline") ExtractionPipelineConfig pipeline,
+                        @JsonProperty(value = "segmenter") SegmenterConfig segmenter) {
+
+        if (type == null || input == null) throw new IllegalArgumentException("You have not defined an 'type' or 'input' object in your ingest configuration file.");
+        this.type = type;
+        this.input = input;
+
+        /* Initialize list of ExtractorConfig. */
+        if (extractors == null) extractors = new ArrayList<>(0);
+        this.extractors = extractors;
+
+        /* Initialize list of ExtractorConfigs. */
+        if (exporters == null) exporters = new ArrayList<>(0);
+        this.exporters = exporters;
+
+        /* Initialize list of MetadataExtractors. */
+        if (metadata == null) metadata = new ArrayList<>(0);
+        this.metadata = metadata;
+
+        /* Initialize DatabaseConfig. */
+        final DatabaseConfig globalDb = Config.sharedConfig().getDatabase();
+        if (database == null) database = globalDb;
+        this.database = database;
+        if (this.database.getSelector() == null) {
+            this.database.setSelector(globalDb.getSelector());
+        }
+        if (this.database.getWriter() == null) {
+            this.database.setWriter(globalDb.getWriter());
+        }
+        if (this.database.getBatchsize() == DatabaseConfig.DEFAULT_BATCH_SIZE) {
+            this.database.setBatchsize(globalDb.getBatchsize());
+        }
+        if (this.database.getHost().equals(DatabaseConfig.DEFAULT_HOST)) {
+            this.database.setHost(globalDb.getHost());
+        }
+        if (this.database.getPort() == DatabaseConfig.DEFAULT_PORT) {
+            this.database.setPort(globalDb.getPort());
+        }
+        if (this.database.getPlaintext() == DatabaseConfig.DEFAULT_PLAINTEXT) {
+            this.database.setPlaintext(globalDb.getPlaintext());
+        }
+
+        /* Merge with global settings if not set. */
+        final ExtractionPipelineConfig globalExt = Config.sharedConfig().getExtractor();
+        if (pipeline == null) pipeline = globalExt;
+        this.pipeline = pipeline;
+        if (this.pipeline.getTaskQueueSize() == ExtractionPipelineConfig.DEFAULT_TASKQUEUE_SIZE) {
+            this.pipeline.setTaskQueueSize(globalExt.getTaskQueueSize());
+        }
+        if (this.pipeline.getThreadPoolSize() == ExtractionPipelineConfig.DEFAULT_THREADPOOL_SIZE) {
+            this.pipeline.setThreadPoolSize(globalExt.getThreadPoolSize());
+        }
+        if (this.pipeline.getShotQueueSize() == ExtractionPipelineConfig.DEFAULT_SEGMENTQUEUE_SIZE) {
+            this.pipeline.setShotQueueSize(globalExt.getShotQueueSize());
+        }
+
+        /* Set SegmenterConfig. */
+        if (segmenter == null) segmenter = new SegmenterConfig(this.type);
+        this.segmenter = segmenter;
     }
 
     @JsonProperty(required = true)
     public MediaType getType() {
         return type;
     }
-    public void setType(MediaType type) {
-        this.type = type;
-    }
 
     @JsonProperty(required = true)
     public InputConfig getInput() {
         return input;
-    }
-    public void setInput(InputConfig input) {
-        this.input = input;
     }
 
     @JsonProperty
     public List<ExtractorConfig> getExtractors() {
         return extractors;
     }
-    public void setExtractors(ArrayList<ExtractorConfig> extractors) {
-        this.extractors = extractors;
-    }
 
     @JsonProperty
     public List<ExtractorConfig> getExporters() {
         return exporters;
-    }
-    public void setExporters(ArrayList<ExtractorConfig> exporters) {
-        this.exporters = exporters;
     }
 
     @JsonProperty
     public List<MetadataConfig> getMetadata() {
         return metadata;
     }
-    public void setMetadata(List<MetadataConfig> metadata) {
-        this.metadata = metadata;
-    }
 
     @JsonProperty
     public DatabaseConfig getDatabase() {
         return database;
-    }
-    public void setDatabase(DatabaseConfig database) {
-        /* Merge with global settings if not set. */
-        DatabaseConfig global = Config.sharedConfig().getDatabase();
-        if (this.database.getSelector() == null) {
-          this.database.setSelector(global.getSelector());
-        }
-        if (this.database.getWriter() == null) {
-          this.database.setWriter(global.getWriter());
-        }
-        if (this.database.getBatchsize() == DatabaseConfig.DEFAULT_BATCH_SIZE) {
-          this.database.setBatchsize(global.getBatchsize());
-        }
-        if (this.database.getHost() == DatabaseConfig.DEFAULT_HOST) {
-          this.database.setHost(global.getHost());
-        }
-        if (this.database.getPort() == DatabaseConfig.DEFAULT_PORT) {
-          this.database.setPort(global.getPort());
-        }
-        if (this.database.getPlaintext() == DatabaseConfig.DEFAULT_PLAINTEXT) {
-          this.database.setPlaintext(global.getPlaintext());
-        }
-        
-        /* Apply. */
-        this.database = database;
     }
 
     @JsonProperty
     public ExtractionPipelineConfig getPipeline() {
         return pipeline;
     }
-    public void setPipeline(ExtractionPipelineConfig pipeline) {
-        /* Merge with global settings if not set. */
-        ExtractionPipelineConfig global = Config.sharedConfig().getExtractor();
-        if (this.pipeline.getTaskQueueSize() == ExtractionPipelineConfig.DEFAULT_TASKQUEUE_SIZE) {
-          this.pipeline.setTaskQueueSize(global.getTaskQueueSize());
-        }
-        if (this.pipeline.getThreadPoolSize() == ExtractionPipelineConfig.DEFAULT_THREADPOOL_SIZE) {
-          this.pipeline.setThreadPoolSize(global.getThreadPoolSize());
-        }
-        if (this.pipeline.getShotQueueSize() == ExtractionPipelineConfig.DEFAULT_SEGMENTQUEUE_SIZE) {
-          this.pipeline.setShotQueueSize(global.getShotQueueSize());
-        }
 
-        this.pipeline = pipeline;
+    @JsonProperty
+    public SegmenterConfig getSegmenter() {
+        return this.segmenter;
     }
 
     @Override
@@ -206,6 +236,17 @@ public class IngestConfig implements ExtractionContextProvider {
                 .map(MetadataConfig::getMetadataExtractor)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Selects, configures and returns a new instance of the {@link Segmenter} that was configured in the
+     * current instance of {@link ExtractionContextProvider}.
+     *
+     * @return {@link Segmenter} that was configured in the current instance of {@link ExtractionContextProvider}
+     */
+    @Override
+    public <T> Segmenter<T> newSegmenter() {
+        return this.segmenter.newSegmenter(this);
     }
 
     /**

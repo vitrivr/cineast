@@ -1,45 +1,37 @@
 package org.vitrivr.cineast.core.decode.subtitle.cc;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.decode.subtitle.SubTitle;
+import org.vitrivr.cineast.core.decode.subtitle.SubTitleDecoder;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-
-public class CCSubTitle implements SubTitle {
+public class CCSubTitleDecoder implements SubTitleDecoder {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 	
 	private int maxId = -1;
 	private long startTime = -1, endTime = -1;
-	private final float framerate;
-	private TIntObjectHashMap<CCSubTitleItem> items = new TIntObjectHashMap<>();
+	private int pointer = 0;
+	private ArrayList<CCSubTitleItem> items = new ArrayList<>();
 	
-	public CCSubTitle(File file, float frameRate){
+	public CCSubTitleDecoder(Path file){
+
+		LOGGER.info("Loading CC subtitle from {}", file);
 		
-		this.framerate = frameRate;
-		
-		LOGGER.info("Loading CC subtitle from {}", file.getAbsolutePath());
-		
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			
+		try (final BufferedReader reader = Files.newBufferedReader(file)) {
 			String line;
-			
 			while((line = reader.readLine()) != null){
-				
 				String command = line.substring(0, 3);
 				switch (command) {
 				case "TOP":{
@@ -84,7 +76,7 @@ public class CCSubTitle implements SubTitle {
 					
 					int id = ++maxId;
 					
-					this.items.put(id, new CCSubTitleItem(id, start, end, split[3], this));
+					this.items.add(new CCSubTitleItem(id, start, end, split[3]));
 					
 					break;
 				}
@@ -93,15 +85,10 @@ public class CCSubTitle implements SubTitle {
 			}
 			reader.close();
 			
-		} catch (FileNotFoundException e) {
-			LOGGER.warn("Error while loading subtitle");
-			LOGGER.warn(LogHelper.getStackTrace(e));
 		} catch (IOException e) {
 			LOGGER.warn("Error while loading subtitle");
 			LOGGER.warn(LogHelper.getStackTrace(e));
 		}
-		
-		
 	}
 	
 	private static long parseTime(String str){
@@ -109,7 +96,7 @@ public class CCSubTitle implements SubTitle {
 			String s = str.substring(0,14);
 			return dateFormat.parse(s).getTime();
 		}catch(ParseException e){
-			LOGGER.error("error while parsing time {} in CCSubTitle", str);
+			LOGGER.error("error while parsing time {} in CCSubTitleDecoder", str);
 			return -1;
 		}
 		 
@@ -132,20 +119,44 @@ public class CCSubTitle implements SubTitle {
 		return this.items.size();
 	}
 
-	@Override
-	public SubtitleItem getItem(int id) {
-		if(this.items.containsKey(id)){
-			return this.items.get(id);
-		}
-		LOGGER.warn("Subtitle does not contain item " + id);
-		return null;
+	/**
+	 *
+	 * @param index
+	 * @return
+	 */
+	public SubtitleItem get(int index) {
+		return this.items.get(index);
 	}
 
-	@Override
-	public float getFrameRate() {
-		return this.framerate;
+	/**
+	 *
+	 * @return
+	 */
+	public SubtitleItem getLast() {
+		return this.items.get(pointer);
 	}
-	
+
+	/**
+	 * Increments the internal pointer by one. Returns true, if increment was successful and false otherwise.
+	 *
+	 * @return True if increment was successful and false otherwise.
+	 */
+	public boolean increment() {
+		if (this.pointer + 1 < this.items.size()) {
+			this.pointer += 1;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Rewinds the {@link SubTitleDecoder} stream and sets the internal pointer to 0.
+	 */
+	public void rewind() {
+		this.pointer = 0;
+	}
+
 	@Override
 	public String toString() {
 		return "CC Subtitle, " + getNumerOfItems() + " elements, maxId: " + this.maxId + ", startTime:  " + this.startTime + ", endTime:  " + this.endTime;

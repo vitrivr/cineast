@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 /**
  * Provides a configuration context for an extraction run.
@@ -67,7 +68,7 @@ public interface ExtractionContextProvider {
      *
      * @return List of named extractors.
      */
-    public List<Extractor> extractors();
+    List<Extractor> extractors();
 
     /**
      * Returns a list of exporter classes that should be invoked during extraction. Exporters
@@ -75,7 +76,7 @@ public interface ExtractionContextProvider {
      *
      * @return List of named exporters.
      */
-    public List<Extractor> exporters();
+    List<Extractor> exporters();
 
     /**
      * Returns a list of metadata extractor classes that should be invoked during extraction. MetadataExtractor's
@@ -83,7 +84,15 @@ public interface ExtractionContextProvider {
      *
      * @return List of named exporters.
      */
-    public List<MetadataExtractor> metadataExtractors();
+    List<MetadataExtractor> metadataExtractors();
+
+    /**
+     * Selects, configures and returns a new instance of the {@link Segmenter} that was configured in the
+     * current instance of {@link ExtractionContextProvider}.
+     *
+     * @return {@link Segmenter} that was configured in the current instance of {@link ExtractionContextProvider}
+     */
+    <T> Segmenter<T> newSegmenter();
 
     /**
      * Returns an instance of ObjectIdGenerator that should be used to generated MultimediaObject ID's

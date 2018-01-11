@@ -6,9 +6,14 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Iterator;
 
+import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.segments.ImageSegment;
+import org.vitrivr.cineast.core.data.segments.Model3DSegment;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.image.DefaultImageDecoder;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
+import org.vitrivr.cineast.core.segmenter.general.PassthroughSegmenter;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.segmenter.image.ImageSegmenter;
 
@@ -44,6 +49,13 @@ public class ImageExtractionFileHandler extends AbstractExtractionFileHandler<Bu
      */
     @Override
     public Segmenter<BufferedImage> newSegmenter() {
-        return new ImageSegmenter();
+        Segmenter<BufferedImage> segmenter = this.context.newSegmenter();
+        if (segmenter == null) segmenter = new PassthroughSegmenter<BufferedImage>() {
+            @Override
+            protected SegmentContainer getSegmentFromContent(BufferedImage content) {
+                return new ImageSegment(content);
+            }
+        };
+        return segmenter;
     }
 }

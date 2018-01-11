@@ -55,6 +55,11 @@ public class Copier {
 				objects[i] = PrimitiveTypeProvider.getObject(map.get(names[i]));
 			}
 			persistTuple(this.writer.generateTuple(objects));
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}while((map = this.importer.readNextAsMap()) != null);
 		
 		this.writer.close();
