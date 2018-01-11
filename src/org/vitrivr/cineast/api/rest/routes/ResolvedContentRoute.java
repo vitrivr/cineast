@@ -9,17 +9,17 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.Map;
 import org.vitrivr.cineast.api.rest.resolvers.ResolutionResult;
-import org.vitrivr.cineast.api.rest.resolvers.ThumbnailResolver;
+import org.vitrivr.cineast.api.rest.resolvers.Resolver;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 
-public class ThumbnailRoute implements Route {
+public class ResolvedContentRoute implements Route {
 
-  private ThumbnailResolver resolver;
+  private Resolver resolver;
 
-  public ThumbnailRoute(ThumbnailResolver resolver){
+  public ResolvedContentRoute(Resolver resolver){
     this.resolver = resolver;
   }
 
@@ -35,12 +35,14 @@ public class ThumbnailRoute implements Route {
     if (params != null && params.containsKey(":id")){
       id = params.get(":id");
     }else{
+      response.status(404);
       return 404;
     }
 
     ResolutionResult rresult = this.resolver.resolve(id);
 
     if(rresult == null){
+      response.status(404);
       return 404;
     }
 
@@ -55,7 +57,7 @@ public class ThumbnailRoute implements Route {
 
     fastCopy(inputChannel, outputChannel);
 
-    return 200;
+    return null;
   }
 
   public static void fastCopy(final ReadableByteChannel src, final WritableByteChannel dest) throws IOException {

@@ -9,8 +9,9 @@ import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
+import org.vitrivr.cineast.api.rest.resolvers.FileSystemObjectResolver;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemThumbnailResolver;
-import org.vitrivr.cineast.api.rest.routes.ThumbnailRoute;
+import org.vitrivr.cineast.api.rest.routes.ResolvedContentRoute;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 import org.vitrivr.cineast.core.config.APIConfig;
 import org.vitrivr.cineast.core.config.Config;
@@ -143,7 +144,9 @@ public class APIEndpoint {
             service.get("/end/:id", new EndSessionHandler());
             service.get("/validate/:id", new ValidateSessionHandler());
         });
-        service.get(makePath("/get/thumbnails/:id"), new ThumbnailRoute(new FileSystemThumbnailResolver(new File("thumbnails"))));
+
+        service.get(makePath("/get/thumbnails/:id"), new ResolvedContentRoute(new FileSystemThumbnailResolver(new File("thumbnails"))));
+        service.get(makePath("/get/objects/:id"), new ResolvedContentRoute(new FileSystemObjectResolver(new File("videos"))));
 
     }
 
