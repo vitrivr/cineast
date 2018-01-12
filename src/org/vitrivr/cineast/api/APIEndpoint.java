@@ -61,11 +61,13 @@ public class APIEndpoint {
            System.exit(100);
         });
 
+        int port = secure ? config.getHttpsPort() : config.getHttpPort();
+
         /* Make basic setup (port and thread pool). */
-        if (config.getHttpPort() > 0 && config.getHttpPort() < 65535) {
-            service.port(config.getHttpPort());
+        if (port > 0 && port < 65535) {
+            service.port(port);
         } else {
-            LOGGER.warn("The specified port {} is not valid. Fallback to default port.", config.getHttpPort());
+            LOGGER.warn("The specified port {} is not valid. Fallback to default port.", port);
         }
         service.threadPool(config.getThreadPoolSize(), 2, 30000);
 
