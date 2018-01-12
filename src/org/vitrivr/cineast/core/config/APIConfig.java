@@ -24,6 +24,10 @@ public final class APIConfig {
 
 	private int threadPoolSize = 8;
 
+	private boolean serveContent = false;
+	private String thumbnailLocation = "";
+	private String objectLocation = "";
+
 	@JsonCreator
 	public APIConfig() {}
 
@@ -137,7 +141,32 @@ public final class APIConfig {
 	public int getThreadPoolSize() {
 		return threadPoolSize;
 	}
-	public void setThreadPoolSize(int threadPoolSize) {
+
+  @JsonProperty
+  public String getThumbnailLocation() {
+    return thumbnailLocation;
+  }
+  public void setThumbnailLocation(String thumbnailLocation) {
+    this.thumbnailLocation = thumbnailLocation;
+  }
+
+  @JsonProperty
+  public String getObjectLocation() {
+    return objectLocation;
+  }
+  public void setObjectLocation(String objectLocation) {
+    this.objectLocation = objectLocation;
+  }
+
+  public void setThreadPoolSize(int threadPoolSize) {
 		this.threadPoolSize = threadPoolSize;
+	}
+
+	@JsonProperty
+	public boolean getServeContent(){
+		return this.serveContent;
+	}
+	public void setServeContent(boolean serveContent) {
+		this.serveContent = serveContent;
 	}
 }

@@ -144,9 +144,16 @@ public class APIEndpoint {
             service.get("/end/:id", new EndSessionHandler());
             service.get("/validate/:id", new ValidateSessionHandler());
         });
-
-        service.get(makePath("/get/thumbnails/:id"), new ResolvedContentRoute(new FileSystemThumbnailResolver(new File("thumbnails"))));
-        service.get(makePath("/get/objects/:id"), new ResolvedContentRoute(new FileSystemObjectResolver(new File("videos"))));
+        if (Config.sharedConfig().getApi().getServeContent()) {
+          service.path(makePath("get"), () -> {
+            service.get("/thumbnails/:id", new ResolvedContentRoute(
+                new FileSystemThumbnailResolver(
+                    new File(Config.sharedConfig().getApi().getThumbnailLocation()))));
+            service.get("/objects/:id", new ResolvedContentRoute(
+                new FileSystemObjectResolver(
+                    new File(Config.sharedConfig().getApi().getObjectLocation()))));
+          });
+        }
 
     }
 
