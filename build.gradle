@@ -223,10 +223,6 @@ task copyResources{
 			into "$buildDir/libs/"
 		}
 		copy {
-			from "mime.types"
-			into "$buildDir/libs/"
-		}
-		copy {
 			from "resources"
 			into "$buildDir/libs/resources/"
 		}

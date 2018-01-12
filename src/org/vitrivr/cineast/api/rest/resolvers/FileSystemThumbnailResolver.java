@@ -1,10 +1,8 @@
 package org.vitrivr.cineast.api.rest.resolvers;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
-import java.io.InputStream;
 
 public class FileSystemThumbnailResolver implements ThumbnailResolver {
 
@@ -46,10 +44,7 @@ public class FileSystemThumbnailResolver implements ThumbnailResolver {
     //TODO prioritize file endings
 
     try {
-      return new ResolutionResult(
-          "image/jpg", //TODO look up mime type
-          new FileInputStream(candidates[0])
-      );
+      return new ResolutionResult(candidates[0]);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
       return null;

@@ -11,8 +11,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import javax.activation.MimetypesFileTypeMap;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,6 +38,7 @@ import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.runtime.ExtractionPipeline;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.MimeTypeHelper;
 
 /**
  * Abstract implementation of ExtractionFileHandler. This class should fit most media-types. However,
@@ -112,9 +111,6 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
     /** Reference to {@link ExtractionPipeline{ that extracts features from the segments. */
     private final ExtractionPipeline pipeline;
-
-    /** */
-    private final MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
 
     /** Used to measure the duration of an extraction run. */
     private long start_timestamp;
@@ -330,7 +326,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     protected Path nextPath(final Decoder<T> decoder) {
         while (this.files != null && this.files.hasNext()) {
             Path path = files.next();
-            String type = this.filetypes.getContentType(path.toString());
+            String type = MimeTypeHelper.getContentType(path.toString());
             if (decoder.supportedFiles().contains(type)) {
                 return path;
             }

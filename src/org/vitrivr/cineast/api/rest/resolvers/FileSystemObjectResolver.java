@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.rest.resolvers;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
@@ -35,12 +34,7 @@ public class FileSystemObjectResolver implements ObjectResolver {
     }
 
     try{
-      return new ResolutionResult(
-          "video/mp4", //TODO determine mime type
-          new FileInputStream(
-              new File(baseDir, descriptor.getPath())
-          )
-      );
+      return new ResolutionResult(new File(baseDir, descriptor.getPath()));
     }catch (IOException e){
       e.printStackTrace();
       return null;
