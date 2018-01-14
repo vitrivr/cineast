@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.data.messages.query;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -14,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class QueryTerm {
     /** List of categories defined as part of this {@link QueryTerm}. This ultimately determines the features used for retrieval. */
-    private final String[] categories;
+    private final List<String> categories;
 
     /** Denotes the type of {@link QueryTerm}. */
     private final QueryTermType type;
@@ -31,7 +29,7 @@ public class QueryTerm {
     @JsonCreator
     public QueryTerm(@JsonProperty("type") QueryTermType type,
                      @JsonProperty("data") String data,
-                     @JsonProperty("categories") String[] categories) {
+                     @JsonProperty("categories") List<String> categories) {
         this.type = type;
         this.categories = categories;
         this.data = data;
@@ -43,11 +41,7 @@ public class QueryTerm {
      * @return Feature categories contained in this {@link QueryTerm}
      */
     public List<String> getCategories() {
-        if (this.categories != null) {
-            return Arrays.asList(this.categories);
-        } else {
-            return new ArrayList<>(0);
-        }
+        return this.categories;
     }
 
     /**

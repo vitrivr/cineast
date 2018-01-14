@@ -17,10 +17,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @created 11.01.17
  */
 public class QueryComponent {
-    /**
-     * List of QueryTerm objects for this QueryComponent. This is for convenience only.
-     */
-    private final QueryTerm[] terms;
+    /** List of {@link QueryTerm}s in this {@link QueryComponent}. */
+    private final List<QueryTerm> terms;
 
     /**
      * Constructor for QueryComponent.
@@ -28,7 +26,7 @@ public class QueryComponent {
      * @param terms
      */
     @JsonCreator
-    public QueryComponent(@JsonProperty("terms") QueryTerm[] terms) {
+    public QueryComponent(@JsonProperty("terms") List<QueryTerm> terms) {
         this.terms = terms;
     }
 
@@ -38,11 +36,7 @@ public class QueryComponent {
      * @return List of QueryTerms
      */
     public List<QueryTerm> getTerms() {
-        if (this.terms != null) {
-            return Arrays.asList(this.terms);
-        } else {
-            return new ArrayList<>(0);
-        }
+        return this.terms;
     }
 
     /**

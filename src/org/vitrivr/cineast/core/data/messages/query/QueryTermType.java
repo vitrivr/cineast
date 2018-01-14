@@ -67,9 +67,7 @@ public enum QueryTermType {
         try {
             Constructor<? extends QueryContainer> constructor = this.c.getConstructor(String.class);
             return Optional.of(constructor.newInstance(data));
-        } catch (NoSuchMethodException e) {
-            return Optional.empty();
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             return Optional.empty();
         }
     }

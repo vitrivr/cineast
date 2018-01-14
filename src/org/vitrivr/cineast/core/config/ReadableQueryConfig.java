@@ -40,10 +40,12 @@ public class ReadableQueryConfig {
     @JsonCreator
     public ReadableQueryConfig(@JsonProperty(value = "queryId", required = false) String queryId,
                                @JsonProperty(value = "hints", required = false) List<Hints> hints) {
+
+
         UUID uuid = null;
         try {
             uuid = UUID.fromString(queryId);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             uuid = UUID.randomUUID();
         }
         this.queryId = uuid;
