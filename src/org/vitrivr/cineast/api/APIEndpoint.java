@@ -85,6 +85,11 @@ public class APIEndpoint {
             service.webSocket(String.format("/%s/%s/websocket", CONTEXT, VERSION), WebsocketAPI.class);
         }
 
+
+        if(config.getServeUI()){
+          service.staticFiles.externalLocation(config.getUiLocation());
+        }
+
         /* Setup HTTP/RESTful connection (if configured). */
         if (config.getEnableRest()) {
             registerRoutes(service);

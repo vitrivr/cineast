@@ -139,7 +139,12 @@
 		"httpPort": 4567,
 		"httpsPort": 4568,
 		"legacyPort": 12345,
-		"threadPoolSize": 8
+		"threadPoolSize": 12,
+		"serveContent": true,
+		"serveUI": true,
+		"uiLocation": "ui",
+		"thumbnailLocation": "thumbnails",
+		"objectLocation": "objects"
 	},
 
 	"visualization": {
