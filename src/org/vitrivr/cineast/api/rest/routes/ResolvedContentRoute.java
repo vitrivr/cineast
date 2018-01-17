@@ -26,8 +26,6 @@ public class ResolvedContentRoute implements Route {
   @Override
   public Object handle(Request request, Response response) throws Exception {
 
-    //TODO content type
-
     Map<String, String> params = request.params();
 
     String id = null;
@@ -57,6 +55,8 @@ public class ResolvedContentRoute implements Route {
 
     fastCopy(inputChannel, outputChannel);
 
+    out.flush();
+
     return null;
   }
 
@@ -74,5 +74,6 @@ public class ResolvedContentRoute implements Route {
     while(buffer.hasRemaining()) {
       dest.write(buffer);
     }
+
   }
 }
