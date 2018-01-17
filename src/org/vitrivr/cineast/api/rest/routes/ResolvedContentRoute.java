@@ -46,6 +46,7 @@ public class ResolvedContentRoute implements Route {
 
 
     response.type(rresult.mimeType);
+    response.header("Transfer-Encoding", "identity");
     InputStream inStream = rresult.stream;
 
     OutputStream out = response.raw().getOutputStream();
