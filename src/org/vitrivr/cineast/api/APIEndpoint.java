@@ -88,6 +88,12 @@ public class APIEndpoint {
 
         if(config.getServeUI()){
           service.staticFiles.externalLocation(config.getUiLocation());
+            service.redirect.any("/gallery", "/");
+            service.redirect.any("/list", "/");
+            service.redirect.any("/mini-gallery", "/");
+            service.redirect.any("/mediaobject", "/");
+            service.redirect.any("/mediaobject/:objectId", "/");
+
         }
 
         /* Setup HTTP/RESTful connection (if configured). */
