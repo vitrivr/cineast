@@ -3,7 +3,7 @@ package org.vitrivr.cineast.api.websocket;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,6 +47,9 @@ public class WebsocketAPI {
 
     /** Store SESSIONS if you want to, for example, broadcast a message to all users.*/
     private static final Queue<Session> SESSIONS = new ConcurrentLinkedQueue<>();
+
+    /** A cached ThreadPoolExecutor used to execute tasks submitted and handled by the WebSocket API */
+    private static final ExecutorService EXECUTORS = new ThreadPoolExecutor(2,Integer.MAX_VALUE,60L,TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
 
     /** List of stateless {@link WebsocketMessageHandler} classes for the API. */
     private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
@@ -112,7 +115,7 @@ public class WebsocketAPI {
             final MessageType type = testMessage.getMessageType();
             final WebsocketMessageHandler handler = STATELESS_HANDLERS.get(type);
             if (handler != null) {
-                handler.handle(session, this.reader.toObject(message, type.getMessageClass()));
+                EXECUTORS.execute(() -> handler.handle(session, this.reader.toObject(message, type.getMessageClass())));
             }
         }
     }
