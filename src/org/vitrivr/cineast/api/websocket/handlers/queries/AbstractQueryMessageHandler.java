@@ -1,14 +1,11 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.StringDoublePair;
+
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
@@ -25,9 +22,6 @@ public abstract class AbstractQueryMessageHandler<T> extends StatelessWebsocketM
 
     /** MultimediaObjectLookup instance used to read multimedia objects from the storage layer. */
     private final MultimediaObjectLookup multimediaObjectLookup = new MultimediaObjectLookup();
-
-    /** */
-    protected final int MAX_RESULTS = Config.sharedConfig().getRetriever().getMaxResults();
 
     /**
      * Performs a lookup for the {@link SegmentDescriptor} identified by the provided ID's and returns a list of the

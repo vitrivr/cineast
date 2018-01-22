@@ -54,7 +54,7 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
             final List<StringDoublePair> results = ContinuousRetrievalLogic.retrieve(message.getSegmentId(), category, qconf).stream()
                     .map(score -> new StringDoublePair(score.getSegmentId(), score.getScore()))
                     .sorted(StringDoublePair.COMPARATOR)
-                    .limit(MAX_RESULTS)
+                    .limit(Config.sharedConfig().getRetriever().getMaxResults())
                     .collect(Collectors.toList());
 
 

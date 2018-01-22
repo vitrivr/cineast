@@ -72,7 +72,10 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
                     });
 
                     /* Sort and limit the result set. */
-                    final List<StringDoublePair> results = list.stream().sorted(StringDoublePair.COMPARATOR).limit(MAX_RESULTS).collect(Collectors.toList());
+                    final List<StringDoublePair> results = list.stream()
+                            .sorted(StringDoublePair.COMPARATOR)
+                            .limit(Config.sharedConfig().getRetriever().getMaxResults())
+                            .collect(Collectors.toList());
 
                     /* Fetch the List of SegmentDescriptors and MultimediaObjectDescriptors. */
                     final List<SegmentDescriptor> segments = this.loadSegments(results.stream().map(s -> s.key).collect(Collectors.toList()));
