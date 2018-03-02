@@ -133,7 +133,9 @@ public class ADAMproEntityCreator implements EntityCreator {
      */
     @Override
     public boolean createFeatureEntity(String featurename, boolean unique, String... featureAttributes) {
-        final AttributeDefinition[] attributes = Arrays.stream(featureAttributes).map(s -> new AttributeDefinition(s, AttributeDefinition.AttributeType.VECTOR)).toArray(AttributeDefinition[]::new);
+        final AttributeDefinition[] attributes = Arrays.stream(featureAttributes)
+            .map(s -> new AttributeDefinition(s, AttributeDefinition.AttributeType.VECTOR))
+            .toArray(AttributeDefinition[]::new);
         return this.createFeatureEntity(featurename, unique, attributes);
     }
 
@@ -151,6 +153,14 @@ public class ADAMproEntityCreator implements EntityCreator {
         final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
         final HashMap<String,String> hints = new HashMap<>(1);
         hints.put("indexed", "true");
+        String handler = "parquet";
+        for(AttributeDefinition def : attributes){
+          if(def.getType().equals(AttributeType.VECTOR) && def.hasHint("handler")){
+            handler = def.getHint("handler").get();
+            break;
+          }
+        }
+        hints.put("handler", handler);
         extended[0] = new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING, hints);
         System.arraycopy(attributes, 0, extended, 1, attributes.length);
         return this.createEntity(featurename, extended);
