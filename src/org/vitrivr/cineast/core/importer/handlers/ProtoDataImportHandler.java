@@ -37,7 +37,7 @@ public class ProtoDataImportHandler extends DataImportHandler {
             Files.walk(path, 2).filter(p -> p.toString().toLowerCase().endsWith(".bin")).forEach(p -> {
                 try {
                     final String suffix = p.getFileName().toString().substring(p.getFileName().toString().lastIndexOf("."));
-                    this.futures.add(this.service.submit(new DataImportRunner(new TupleInsertMessageImporter(p.toFile()), path.getFileName().toString().replace(suffix, ""))));
+                    this.futures.add(this.service.submit(new DataImportRunner(new TupleInsertMessageImporter(p.toFile()), p.getFileName().toString().replace(suffix, ""))));
                 } catch (FileNotFoundException e) {
                     LOGGER.error("Could not start data import for file '{}'. Skipping...?", p.toString());
                 }
