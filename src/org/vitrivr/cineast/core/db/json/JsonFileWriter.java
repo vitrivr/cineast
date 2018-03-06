@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.db.json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
@@ -109,6 +110,9 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     for (Object o : tuple.getElements()) {
       if (o instanceof float[]) {
         _return.add(names[nameIndex++], toArray((float[]) o));
+      } else if (o instanceof ReadableFloatVector) {
+        _return
+            .add(names[nameIndex++], toArray(ReadableFloatVector.toArray((ReadableFloatVector) o)));
       } else if (o instanceof int[]) {
         _return.add(names[nameIndex++], toArray((int[]) o));
       } else if (o instanceof boolean[]) {
