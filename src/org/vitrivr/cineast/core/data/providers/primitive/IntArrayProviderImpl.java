@@ -2,9 +2,10 @@ package org.vitrivr.cineast.core.data.providers.primitive;
 
 import java.util.Arrays;
 
-public class IntArrayProviderImpl implements IntArrayProvider {
+public class IntArrayProviderImpl implements IntArrayProvider, FloatArrayProvider {
 
 	private final int[] value;
+  private float[] fvalue = null;
 	
 	public IntArrayProviderImpl(int[] value){
 		if(value == null){
@@ -17,6 +18,19 @@ public class IntArrayProviderImpl implements IntArrayProvider {
 	public int[] getIntArray() {
 		return this.value;
 	}
+
+  @Override
+  public float[] getFloatArray() {
+    if (this.fvalue == null) {
+      this.fvalue = new float[this.value.length];
+      synchronized (this.fvalue) {
+        for (int i = 0; i < this.value.length; ++i) {
+          this.fvalue[i] = this.value[i];
+        }
+      }
+    }
+    return this.fvalue;
+  }
 
 	@Override
 	public int hashCode() {
