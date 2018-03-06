@@ -28,6 +28,14 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     return file.exists() && file.isFile() && file.canRead();
   }
 
+  public boolean openFile(File file) {
+    if (file == null) {
+      throw new NullPointerException("file cannot be null");
+    }
+    this.file = file;
+    return file.exists() && file.isFile() && file.canRead();
+  }
+
   @Override
   public boolean close() {
     return true;
