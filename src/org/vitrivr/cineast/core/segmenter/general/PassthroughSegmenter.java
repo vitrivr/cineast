@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.segmenter.video.TRECVidMSRSegmenter;
@@ -64,10 +63,14 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
     @Override
     public SegmentContainer getNext() throws InterruptedException {
         final T content = this.queue.poll(5, TimeUnit.SECONDS);
-        synchronized (this) {
-            if (content == null && !this.running) {
-                this.complete = true;
-                return null;
+        if (content == null) {
+            synchronized (this) {
+                if (!this.running) {
+                    this.complete = true;
+                    return null;
+                } else {
+                    return null;
+                }
             }
         }
         return this.getSegmentFromContent(content);
@@ -76,7 +79,7 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
     /**
      * Indicates whether the Segmenter is complete i.e. no new segments
      * are to be expected.
-     *
+     *extraction_images.json
      * @return true if work is complete, false otherwise.
      */
     @Override
