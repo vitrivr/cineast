@@ -2,7 +2,7 @@ package org.vitrivr.cineast.core.importer.handlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.importer.JsonObjectImporter;
+
 import org.vitrivr.cineast.core.importer.TupleInsertMessageImporter;
 
 import java.io.FileNotFoundException;
@@ -35,11 +35,12 @@ public class ProtoDataImportHandler extends DataImportHandler {
         try {
             LOGGER.info("Starting data import with PROTO files in: {}", path.toString());
             Files.walk(path, 2).filter(p -> p.toString().toLowerCase().endsWith(".bin")).forEach(p -> {
+                final String filename = p.getFileName().toString();
+                final String suffix = filename.substring(filename.lastIndexOf("."));
                 try {
-                    final String suffix = p.getFileName().toString().substring(p.getFileName().toString().lastIndexOf("."));
-                    this.futures.add(this.service.submit(new DataImportRunner(new TupleInsertMessageImporter(p.toFile()), p.getFileName().toString().replace(suffix, ""))));
+                    this.futures.add(this.service.submit(new DataImportRunner(new TupleInsertMessageImporter(p.toFile()), filename.replace(suffix, ""))));
                 } catch (FileNotFoundException e) {
-                    LOGGER.error("Could not start data import for file '{}'. Skipping...?", p.toString());
+                    LOGGER.error("Could not start data import for file '{}'. Skipping...?", filename);
                 }
             });
             this.waitForCompletion();
