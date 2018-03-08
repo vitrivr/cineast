@@ -32,9 +32,10 @@ public class JsonDataImportHandler extends DataImportHandler {
         try {
             LOGGER.info("Starting data import with JSON files in: {}", path.toString());
             Files.walk(path, 2).filter(p -> p.toString().toLowerCase().endsWith(".json")).forEach(p -> {
+                final String filename = p.getFileName().toString();
+                final String suffix = filename.substring(filename.lastIndexOf("."));
                 try {
-                    final String suffix = path.getFileName().toString().substring(path.getFileName().toString().lastIndexOf("."));
-                    this.futures.add(this.service.submit(new DataImportRunner(new JsonObjectImporter(p.toFile()), path.getFileName().toString().replace(suffix, ""))));
+                    this.futures.add(this.service.submit(new DataImportRunner(new JsonObjectImporter(p.toFile()), filename.replace(suffix, ""))));
                 } catch (IOException e) {
                     LOGGER.error("Could not start data import for file '{}'. Skipping...?", p.toString());
                 }
