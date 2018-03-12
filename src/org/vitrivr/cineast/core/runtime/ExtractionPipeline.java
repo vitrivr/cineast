@@ -204,7 +204,12 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
             LOGGER.warn("Interrupted while waiting for Executor to shut down!");
         } finally {
             for (Extractor extractor : this.extractors) {
-                extractor.finish();
+                try {
+                    extractor.finish();
+                } catch (Exception e) {
+                    LOGGER.error("Error while shutting down extractor {} : {}",
+                        extractor.getClass().getSimpleName(), LogHelper.getStackTrace(e));
+                }
             }
         }
     }
