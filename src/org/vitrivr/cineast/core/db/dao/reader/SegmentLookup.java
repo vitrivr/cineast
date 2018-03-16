@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.db.DBSelector;
 
 import com.google.common.collect.ListMultimap;
@@ -78,54 +77,29 @@ public class SegmentLookup extends AbstractEntityReader {
 
   private static Optional<SegmentDescriptor> propertiesToDescriptor(
       Map<String, PrimitiveTypeProvider> properties) {
-    Optional<String>  segmentId      = getField(properties, FIELDNAMES[0], String.class);
-    Optional<String>  objectId       = getField(properties, FIELDNAMES[1], String.class);
-    Optional<Integer> sequenceNumber = getField(properties, FIELDNAMES[2], Integer.class);
-    Optional<Integer> sequenceStart  = getField(properties, FIELDNAMES[3], Integer.class);
-    Optional<Integer> sequenceEnd    = getField(properties, FIELDNAMES[4], Integer.class);
-    Optional<Float>   absoluteStart  = getField(properties, FIELDNAMES[5], Float.class);
-    Optional<Float>   absoluteEnd    = getField(properties, FIELDNAMES[6], Float.class);
 
-    if (!segmentId.isPresent()
-        || !objectId.isPresent()
-        || !sequenceNumber.isPresent()
-        || !sequenceStart.isPresent()
-        || !sequenceEnd.isPresent()
-        || !absoluteStart.isPresent()
-        || !absoluteEnd.isPresent()) {
-      return Optional.empty();
-    } else {
+    if (properties.containsKey(FIELDNAMES[0]) &&
+        properties.containsKey(FIELDNAMES[1]) &&
+        properties.containsKey(FIELDNAMES[2]) &&
+        properties.containsKey(FIELDNAMES[3]) &&
+        properties.containsKey(FIELDNAMES[4]) &&
+        properties.containsKey(FIELDNAMES[5]) &&
+        properties.containsKey(FIELDNAMES[6])) {
+
       return Optional.of(new SegmentDescriptor(
-          objectId.get(),
-          segmentId.get(),
-          sequenceNumber.get(),
-          sequenceStart.get(),
-          sequenceEnd.get(),
-          absoluteStart.get(),
-          absoluteEnd.get())
-      );
+          properties.get(FIELDNAMES[1]).getString(),
+          properties.get(FIELDNAMES[0]).getString(),
+          properties.get(FIELDNAMES[2]).getInt(),
+          properties.get(FIELDNAMES[3]).getInt(),
+          properties.get(FIELDNAMES[4]).getInt(),
+          properties.get(FIELDNAMES[5]).getFloat(),
+          properties.get(FIELDNAMES[6]).getFloat()
+      ));
+
+    } else {
+      return Optional.empty();
     }
+
   }
 
-  private static <T> Optional<T> getField(Map<String, PrimitiveTypeProvider> properties,
-      String fieldName, Class<T> fieldClass) {
-    Optional<PrimitiveTypeProvider> provider = Optional.ofNullable(properties.get(fieldName));
-    if (!provider.isPresent()) {
-      LOGGER.error("Field {} not found in segment.", fieldName);
-    }
-
-    Optional<Object> object = provider
-        .map(PrimitiveTypeProvider::getObject)
-        .filter(fieldClass::isInstance);
-
-    if (!object.isPresent()) {
-      ProviderDataType givenType = provider
-          .map(PrimitiveTypeProvider::getType)
-          .orElse(ProviderDataType.UNKNOWN);
-      LOGGER.error("Invalid data type for field {} in segment, expected {}, got {}.",
-          fieldName, fieldClass.toString(), givenType);
-    }
-
-    return object.map(fieldClass::cast);
-  }
 }
