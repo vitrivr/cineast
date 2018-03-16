@@ -1,6 +1,7 @@
 {
 	"database": {
-		"host": "127.0.0.1",
+		"host": "out/json",
+		"selector": "JSON",
 		"port": 5890,
 		"plaintext": true
 	},
@@ -18,8 +19,10 @@
 				{"feature": "MedianColor", "weight": 1.2},
 				{"feature": "AverageFuzzyHist", "weight": 0.7},
 				{"feature": "AverageFuzzyHistNormalized", "weight": 0.7},
-				{"feature": "MedianFuzzyHist", "weight": 1.3},
-				{"feature": "QueryImageExporter", "weight": 0.00001}
+				{
+					"feature": "MedianFuzzyHist",
+					"weight": 1.3
+				}
 			],
 			"localcolor": [
 				{"feature": "AverageColorARP44", "weight": 0.5},
@@ -32,8 +35,12 @@
 				{"feature": "AverageColorCLDNormalized", "weight": 1.4},
 				{"feature": "CLD", "weight": 1.3},
 				{"feature": "CLDNormalized", "weight": 1.3},
-				{"feature": "MedianColorGrid8", "weight": 1.7},
-				{"feature": "AverageColorRaster", "weight": 1.0}
+				{
+					"feature": "MedianColorGrid8",
+					"weight": 1.7
+				}
+				/*,
+                {"feature": "AverageColorRaster", "weight": 1.0}*/
 			],
 			"edge": [
 				{"feature": "EdgeARP88", "weight": 0.85},
@@ -51,8 +58,8 @@
 			"quantized": [
 				{"feature": "AverageColorGrid8Reduced11", "weight": 1.0},
 				{"feature": "AverageColorGrid8Reduced15", "weight": 1.0},
-				{"feature": "AverageColorRasterReduced11", "weight": 1.0},
-				{"feature": "AverageColorRasterReduced15", "weight": 1.0},
+				/*{"feature": "AverageColorRasterReduced11", "weight": 1.0},
+				{"feature": "AverageColorRasterReduced15", "weight": 1.0},*/
 				{"feature": "CLDReduced11", "weight": 1.0},
 				{"feature": "CLDReduced15", "weight": 1.0}
 			],
@@ -142,7 +149,7 @@
 		"threadPoolSize": 12,
 		"serveContent": true,
 		"serveUI": true,
-		"uiLocation": "ui",
+		"uiLocation": "dist",
 		"thumbnailLocation": "thumbnails",
 		"objectLocation": "objects"
 	},

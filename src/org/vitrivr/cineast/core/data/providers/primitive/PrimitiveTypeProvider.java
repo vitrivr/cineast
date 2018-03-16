@@ -91,27 +91,27 @@ public interface PrimitiveTypeProvider
     }
 
     if (c == Byte.class) {
-      return new ByteTypeProvider((Byte) o);
+      return new ByteTypeProvider(((Number) o).byteValue());
     }
 
     if (c == Double.class) {
-      return new DoubleTypeProvider((Double) o);
+      return new DoubleTypeProvider(((Number) o).doubleValue());
     }
 
     if (c == Float.class) {
-      return new FloatTypeProvider((Float) o);
+      return new FloatTypeProvider(((Number) o).floatValue());
     }
 
     if (c == Integer.class) {
-      return new IntTypeProvider((Integer) o);
+      return new IntTypeProvider(((Number) o).intValue());
     }
 
     if (c == Long.class) {
-      return new LongTypeProvider((Long) o);
+      return new LongTypeProvider(((Number) o).longValue());
     }
 
     if (c == Short.class) {
-      return new ShortTypeProvider((Short) o);
+      return new ShortTypeProvider(((Number) o).shortValue());
     }
 
     if (c == String.class) {
