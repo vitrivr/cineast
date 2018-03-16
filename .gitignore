@@ -40,3 +40,7 @@ bin
 *.tfmodel
 /data/
 /retrieval_results/
+retrieval_results_*
+out/
+basel-historic-images/
+index*

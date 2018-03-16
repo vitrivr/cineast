@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -20,6 +22,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimaps;
 
 public class SegmentLookup extends AbstractEntityReader {
+
+  private static final Logger LOGGER = LogManager.getLogger();
   /**
    * Default constructor.
    */

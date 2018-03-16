@@ -12,7 +12,6 @@ import org.vitrivr.cineast.core.db.DBSelector;
  * @created 02.03.17
  */
 public abstract class AbstractEntityReader implements Closeable {
-    protected static final Logger LOGGER = LogManager.getLogger();
 
     /** DBSelector instance used to perform the DB lookup. */
     protected final DBSelector selector;
