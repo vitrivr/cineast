@@ -37,7 +37,13 @@ public class CorrelationDistance implements FloatArrayDistance {
       b += b_ * b_;
     }
 
-    return 1d - (dot / (Math.sqrt(a) * Math.sqrt(b)));
+    double div = (Math.sqrt(a) * Math.sqrt(b));
+
+    if (div < 1e-6 || Double.isNaN(div)) {
+      return 1d;
+    }
+
+    return 1d - (dot / div);
   }
 
 }

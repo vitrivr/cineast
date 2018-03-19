@@ -19,6 +19,9 @@ public class ChiSquaredDistance implements FloatArrayDistance {
     double dist = 0d;
 
     for (int i = 0; i < len; ++i) {
+      if (Math.abs(t[i] + u[i]) < 1e-6) {
+        continue;
+      }
       dist += ((t[i] - u[i]) * (t[i] - u[i])) / (t[i] + u[i]);
     }
 

@@ -19,7 +19,11 @@ public class KLDivergence implements FloatArrayDistance {
     double dist = 0d;
 
     for (int i = 0; i < len; ++i) {
+      if (Math.abs(u[i]) < 1e-6 || t[i] < 0 || t[i] / u[i] <= 0) {
+        continue;
+      }
       dist += t[i] * Math.log(t[i] / u[i]);
+
     }
 
     return dist;
