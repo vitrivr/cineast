@@ -44,7 +44,7 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
   }
   
   @Override
-  public boolean close() {
+  public synchronized boolean close() {
     if (out == null) {
       return true;
     }
@@ -57,10 +57,13 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
   
   @Override
   public boolean persist(PersistentTuple tuple) {
-    this.out.print(this.first ? "" : ",");
-    this.out.println(this.getPersistentRepresentation(tuple).toString());
-    this.out.flush();
-    this.first = false;
+    synchronized (out) {
+      this.out.print(this.first ? "" : ",");
+      this.out.println(this.getPersistentRepresentation(tuple).toString());
+      this.out.flush();
+      this.first = false;
+    }
+
     return true;
     
   }
