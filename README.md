@@ -7,7 +7,7 @@ Cineast is written in Java and uses [ADAMpro](https://github.com/vitrivr/ADAMpro
 ## Building Cineast
 Cineast can be built using [Gradle](http://gradle.org/). Building and running it is as easy as
 ```
- git clone https://github.com/vitrivr/cineast.git cineast
+ git clone --recursive https://github.com/vitrivr/cineast.git cineast
  cd cineast
  ./gradlew deploy
  cd build/libs
