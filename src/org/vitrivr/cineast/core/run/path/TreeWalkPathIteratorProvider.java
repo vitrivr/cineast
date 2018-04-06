@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.run.path;
 
+import io.prometheus.client.Counter;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.run.ExtractionPathProvider;
@@ -29,10 +31,16 @@ public class TreeWalkPathIteratorProvider implements ExtractionPathProvider,
   private final ExtractionContextProvider context;
   private volatile boolean open = true;
   private Iterator<Path> pathIterator = Collections.emptyIterator();
+  private Counter pathsCompleted;
 
   public TreeWalkPathIteratorProvider(Path basePath, ExtractionContextProvider context) {
     this.basePath = basePath;
     this.context = context;
+    if (Config.sharedConfig().getMonitoring().enablePrometheus) {
+      LOGGER.debug("Enabling prometheus monitoring for paths in queue");
+      pathsCompleted = Counter.build().name("cineast_path_completed_treewalk")
+          .help("Paths completed in Tree Walk for base path " + basePath).register();
+    }
     try {
       pathIterator = Files.walk(this.basePath, this.context.depth(), FileVisitOption.FOLLOW_LINKS)
           .filter(p -> {
@@ -63,7 +71,8 @@ public class TreeWalkPathIteratorProvider implements ExtractionPathProvider,
   }
 
   /**
-   * Since no elements are added to the iterator, this provider is also closed when the iterator does not have further elements.
+   * Since no elements are added to the iterator, this provider is also closed when the iterator
+   * does not have further elements.
    */
   @Override
   public boolean isOpen() {
@@ -85,6 +94,8 @@ public class TreeWalkPathIteratorProvider implements ExtractionPathProvider,
 
   @Override
   public void onCompleted(Path path) {
-    //Ignore for Files
+    if (pathsCompleted != null) {
+      pathsCompleted.inc();
+    }
   }
 }
