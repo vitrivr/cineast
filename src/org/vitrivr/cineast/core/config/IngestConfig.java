@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.vitrivr.cineast.core.data.MediaType;
@@ -18,6 +19,9 @@ import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.vitrivr.cineast.core.run.ExtractionPathProvider;
+import org.vitrivr.cineast.core.run.path.SessionPathProvider;
+import org.vitrivr.cineast.core.run.path.SingletonPathProvider;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 /**
@@ -177,11 +181,20 @@ public final class IngestConfig implements ExtractionContextProvider {
     }
 
     @Override
-    public Path inputPath() {
+    public Optional<Path> inputPath() {
         if (this.input != null) {
-            return Paths.get(this.input.getPath());
+            return Optional.of(Paths.get(this.input.getPath()));
         } else {
-            return null;
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public ExtractionPathProvider pathProvider() {
+        if (this.input != null) {
+            return new SingletonPathProvider(Paths.get(this.input.getPath()));
+        } else {
+            return new SessionPathProvider();
         }
     }
 

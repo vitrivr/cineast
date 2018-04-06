@@ -49,12 +49,17 @@ import org.vitrivr.cineast.core.features.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.importer.handlers.*;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
+import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
+import org.vitrivr.cineast.core.run.ExtractionPathProvider;
+import org.vitrivr.cineast.core.run.path.ExtractionPathProviderFactory;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 import com.google.common.collect.Ordering;
+import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+import org.vitrivr.cineast.monitoring.PrometheusServer;
 
 /**
  * Entry point.
@@ -81,11 +86,16 @@ public class API {
             if (commandline.hasOption("config")) {
                 Config.loadConfig(commandline.getOptionValue("config"));
             }
+            PrometheusServer.initialize();
 
             /* Handle --job; start handleExtraction. */
             if (commandline.hasOption("job")) {
                 handleExtraction(new File(commandline.getOptionValue("job")));
                 return;
+            }
+
+            if(commandline.hasOption("server")){
+                SessionExtractionContainer.open(new File(commandline.getOptionValue("server")));
             }
 
             /* Handle --3d; start handleExtraction. */
@@ -203,17 +213,21 @@ public class API {
     private static void handleExtraction(File file) {
         ExtractionDispatcher dispatcher = new ExtractionDispatcher();
         try {
-            if (dispatcher.initialize(file)) {
+            JacksonJsonProvider reader = new JacksonJsonProvider();
+            ExtractionContextProvider context = reader.toObject(file, IngestConfig.class);
+            ExtractionPathProvider provider = ExtractionPathProviderFactory
+                .tryCreatingTreeWalkPathProvider(file, context);
+            if (dispatcher.initialize(provider, context)) {
                 dispatcher.start();
             } else {
                 System.err.println(String.format(
-                        "Could not start handleExtraction with configuration file '%s'. Does the file exist?",
-                        file.toString()));
+                    "Could not start handleExtraction with configuration file '%s'. Does the file exist?",
+                    file.toString()));
             }
         } catch (IOException e) {
             System.err.println(String.format(
-                    "Could not start handleExtraction with configuration file '%s' due to a IO error.",
-                    file.toString()));
+                "Could not start handleExtraction with configuration file '%s' due to a IO error.",
+                file.toString()));
             e.printStackTrace();
         }
     }

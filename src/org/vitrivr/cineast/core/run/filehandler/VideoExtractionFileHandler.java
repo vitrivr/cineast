@@ -1,13 +1,11 @@
 package org.vitrivr.cineast.core.run.filehandler;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Iterator;
-
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.video.FFMpegVideoDecoder;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
+import org.vitrivr.cineast.core.run.ExtractionPathProvider;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.segmenter.video.VideoHistogramSegmenter;
 
@@ -21,7 +19,7 @@ public class VideoExtractionFileHandler extends AbstractExtractionFileHandler<Vi
      * @param files
      * @param context
      */
-    public VideoExtractionFileHandler(Iterator<Path> files, ExtractionContextProvider context) throws IOException {
+    public VideoExtractionFileHandler(ExtractionPathProvider files, ExtractionContextProvider context) throws IOException {
         super(files, context);
     }
 

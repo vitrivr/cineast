@@ -125,7 +125,16 @@ dependencies {
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.2'
     testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version:'1.0.2'
     testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.0.2'
-    
+
+
+    /**
+     * Prometheus
+     */
+    compile group: 'io.prometheus', name: 'simpleclient', version: '0.2.0'
+    compile group: 'io.prometheus', name: 'simpleclient_hotspot', version: '0.2.0'
+    compile group: 'io.prometheus', name: 'simpleclient_httpserver', version: '0.2.0'
+    compile group: 'io.prometheus', name: 'simpleclient_pushgateway', version: '0.2.0'
+    compile group: 'io.prometheus', name: 'simpleclient_servlet', version: '0.2.0'
 
     /**
      * Manual Fixes for the javacpp-devs because of naming conventions & versions. Each os is handled independently

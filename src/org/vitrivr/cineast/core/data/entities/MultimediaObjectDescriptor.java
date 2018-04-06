@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.data.entities;
 
 import java.nio.file.Path;
 
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
@@ -26,6 +27,8 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
     private final String name, path;
     private final boolean exists;
     private final int mediatypeId;
+    private final String contentURL;
+
 
     public static MultimediaObjectDescriptor makeMultimediaDescriptor(String objectId, String name, String path, MediaType type) {
         return new MultimediaObjectDescriptor(objectId, name, path, type, true);
@@ -66,6 +69,7 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
       this.path = path.replace('\\', '/');
       this.mediatypeId = mediatypeId.getId();
       this.exists = exists;
+        this.contentURL = Config.sharedConfig().getApi().getObjectLocation()+path;
     }
 
     @JsonProperty
@@ -86,6 +90,11 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
     @JsonProperty
     public final MediaType getMediatype() {
         return MediaType.fromId(this.mediatypeId);
+    }
+
+    @JsonProperty
+    public String getContentURL() {
+        return contentURL;
     }
 
     @JsonIgnore
