@@ -2,6 +2,7 @@ package org.vitrivr.cineast.monitoring;
 
 import io.prometheus.client.exporter.MetricsServlet;
 import io.prometheus.client.hotspot.DefaultExports;
+import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
@@ -18,8 +19,9 @@ public class PrometheusServer {
 
   private static boolean initalized = false;
   private static final Logger LOGGER = LogManager.getLogger();
+  private static Optional<Server> server;
 
-  public static void initialize() {
+  public static synchronized void initialize() {
     if (initalized) {
       LOGGER.info("Prometheus already initalized");
       return;
@@ -31,18 +33,32 @@ public class PrometheusServer {
     DefaultExports.initialize();
     Integer port = Config.sharedConfig().getMonitoring().prometheusPort;
     LOGGER.info("Initalizing Prometheus endpoint at port {}", port);
-    Server server = new Server(port);
+    server = Optional.of(new Server(port));
     ServletContextHandler context = new ServletContextHandler();
     context.setContextPath("/");
-    server.setHandler(context);
+    server.get().setHandler(context);
     context.addServlet(new ServletHolder(new MetricsServlet()), "/metrics");
     PrometheusExtractionTaskMonitor.init();
     try {
-      server.start();
+      server.get().start();
     } catch (Exception e) {
       e.printStackTrace();
     }
     initalized = true;
+  }
+
+  public static void stopServer() {
+    if (server.isPresent()) {
+      try {
+        server.get().stop();
+      } catch (Exception e) {
+        LOGGER.error(e);
+      }
+    }
+  }
+
+  public static Optional<Server> getServer() {
+    return server;
   }
 
   private PrometheusServer() {

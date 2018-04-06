@@ -85,9 +85,6 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
      */
     protected final ExtractionContextProvider context;
 
-    /**
-     * Iterator off all {@link java.net.URI} that are due for extraction.
-     */
     private final ExtractionPathProvider pathProvider;
 
     /**
@@ -121,7 +118,6 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
     /**
      * Default constructor used to initialize the class.
-     *  @param pathProvider   List of files that should be extracted.
      * @param context ExtractionContextProvider that holds extraction specific configurations.
      */
     public AbstractExtractionFileHandler(ExtractionPathProvider pathProvider, ExtractionContextProvider context) throws IOException {
@@ -352,8 +348,9 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
                 if (decoder.supportedFiles().contains(type)) {
                     return path;
                 }
+                //TODO here we should possibly check if we need to cache external paths (e.g. ambry, HTTP) for decoders
                 if(path.toUri().getScheme().equals("ambry")){
-                    return path;    //TODO Lululu hack. Currently, a Pathprovider does not provide the mediatype of a path and thus we just assume that ambry is playing nice
+                    return path;    //This is somewhat of a workaround. Currently, a Pathprovider does not provide the mediatype of a path and thus we just assume that ambry is playing nice
                 }
             }else{
                 try {
@@ -437,6 +434,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
             if (Files.isRegularFile(this.context.inputPath().get())) {
                 path = path.getFileName();
             } else {
+                //The inputpath is a folder
                 path = this.context.inputPath().get().toAbsolutePath().relativize(path.toAbsolutePath());
             }
         }//Else API-Based Extraction, store given path
