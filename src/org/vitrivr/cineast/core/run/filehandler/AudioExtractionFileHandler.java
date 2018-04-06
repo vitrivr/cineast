@@ -5,7 +5,7 @@ import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.decode.audio.FFMpegAudioDecoder;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
-import org.vitrivr.cineast.core.run.ExtractionPathProvider;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.segmenter.audio.ConstantLengthAudioSegmenter;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
@@ -23,7 +23,7 @@ public class AudioExtractionFileHandler extends AbstractExtractionFileHandler<Au
      * @param files   List of files that should be extracted.
      * @param context ExtractionContextProvider that holds extraction specific configurations.
      */
-    public AudioExtractionFileHandler(ExtractionPathProvider files, ExtractionContextProvider context) throws IOException {
+    public AudioExtractionFileHandler(ExtractionContainerProvider files, ExtractionContextProvider context) throws IOException {
         super(files, context);
     }
 

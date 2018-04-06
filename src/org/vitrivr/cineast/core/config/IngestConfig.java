@@ -19,9 +19,9 @@ import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.vitrivr.cineast.core.run.ExtractionPathProvider;
-import org.vitrivr.cineast.core.run.path.SessionPathProvider;
-import org.vitrivr.cineast.core.run.path.SingletonPathProvider;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
+import org.vitrivr.cineast.core.run.path.SessionContainerProvider;
+import org.vitrivr.cineast.core.run.path.SingletonContainerProvider;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 /**
@@ -190,11 +190,11 @@ public final class IngestConfig implements ExtractionContextProvider {
     }
 
     @Override
-    public ExtractionPathProvider pathProvider() {
+    public ExtractionContainerProvider pathProvider() {
         if (this.input != null) {
-            return new SingletonPathProvider(Paths.get(this.input.getPath()));
+            return new SingletonContainerProvider(Paths.get(this.input.getPath()));
         } else {
-            return new SessionPathProvider();
+            return new SessionContainerProvider();
         }
     }
 

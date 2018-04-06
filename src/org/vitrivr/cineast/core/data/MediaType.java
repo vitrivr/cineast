@@ -15,7 +15,8 @@ public enum MediaType {
     VIDEO(0, "v", "video"),
     IMAGE(1, "i", "image"),
     AUDIO(2, "a", "audio"),
-    MODEL3D(3, "m", "3dmodel");
+    MODEL3D(3, "m", "3dmodel"),
+    UNKNOWN(99, "u", "unknown");
 
     private final int id;
     private final String prefix;

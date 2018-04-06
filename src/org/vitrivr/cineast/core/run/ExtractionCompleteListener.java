@@ -8,9 +8,9 @@ import java.nio.file.Path;
 public interface ExtractionCompleteListener {
 
     /**
-     * This method is called after the decoder for the object denoted by the {@link Path} has been closed.
+     * This method is called after the decoder for the object has been closed.
      * There might still be scheduled or ongoing {@link org.vitrivr.cineast.core.runtime.ExtractionTask}s for this object.
      */
-    void onCompleted(Path path);
+    void onCompleted(ExtractionItemContainer path);
 
 }

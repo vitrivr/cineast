@@ -1,9 +1,11 @@
 package org.vitrivr.cineast.api;
 
+import com.google.common.collect.Lists;
 import io.prometheus.client.Counter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,8 +13,9 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
-import org.vitrivr.cineast.core.run.ExtractionPathProvider;
-import org.vitrivr.cineast.core.run.path.SessionPathProvider;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
+import org.vitrivr.cineast.core.run.ExtractionItemContainer;
+import org.vitrivr.cineast.core.run.path.SessionContainerProvider;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 /**
@@ -23,7 +26,7 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
  */
 public class SessionExtractionContainer {
 
-  private static ExtractionPathProvider provider;
+  private static ExtractionContainerProvider provider;
   private static final Logger LOGGER = LogManager.getLogger();
   private static boolean open = false;
   private static Counter submittedPaths;
@@ -52,7 +55,7 @@ public class SessionExtractionContainer {
     try {
       JacksonJsonProvider reader = new JacksonJsonProvider();
       ExtractionContextProvider context = reader.toObject(configFile, IngestConfig.class);
-      provider = new SessionPathProvider();
+      provider = new SessionContainerProvider();
       if (dispatcher.initialize(provider, context)) {
         dispatcher.start();
       } else {
@@ -86,7 +89,7 @@ public class SessionExtractionContainer {
     return open;
   }
 
-  public static void addPaths(List<Path> pathList) {
+  public static void addPaths(ExtractionItemContainer[] items) {
     if (provider == null) {
       LOGGER
           .fatal("Provider not initalized yet. Please use the --server option in the API. Exiting");
@@ -97,9 +100,9 @@ public class SessionExtractionContainer {
       throw new RuntimeException();
     }
     if (submittedPaths != null) {
-      submittedPaths.inc(pathList.size());
+      submittedPaths.inc(items.length);
     }
-    provider.addPaths(pathList);
+    provider.addPaths(Arrays.asList(items));
   }
 
 }

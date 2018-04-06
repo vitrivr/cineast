@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.handlers.actions.*;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.ExtractURIHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.ExtractItemHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
@@ -158,7 +158,7 @@ public class APIEndpoint {
             service.post("/start", new StartSessionHandler());
             service.get("/end/:id", new EndSessionHandler());
             service.get("/validate/:id", new ValidateSessionHandler());
-            service.post("/extract/new", new ExtractURIHandler());
+            service.post("/extract/new", new ExtractItemHandler());
             service.post("/extract/end", new EndExtractionHandler());
         });
         if (Config.sharedConfig().getApi().getServeContent()) {

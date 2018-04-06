@@ -4,17 +4,18 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
-import org.vitrivr.cineast.core.run.ExtractionPathProvider;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
+import org.vitrivr.cineast.core.run.ExtractionItemContainer;
 
 /**
  * Convenience Method when you don't want to actually provide Elements.
  *
  * @author silvan on 19.01.18.
  */
-public class NoPathProvider implements ExtractionPathProvider, ExtractionCompleteListener {
+public class NoContainerProvider implements ExtractionContainerProvider, ExtractionCompleteListener {
 
   @Override
-  public void onCompleted(Path path) {
+  public void onCompleted(ExtractionItemContainer path) {
     //Ignore
   }
 
@@ -24,7 +25,7 @@ public class NoPathProvider implements ExtractionPathProvider, ExtractionComplet
   }
 
   @Override
-  public void addPaths(List<Path> pathList) {
+  public void addPaths(List<ExtractionItemContainer> pathList) {
     //Ignore
   }
 
@@ -39,7 +40,7 @@ public class NoPathProvider implements ExtractionPathProvider, ExtractionComplet
   }
 
   @Override
-  public Optional<Path> next() {
+  public Optional<ExtractionItemContainer> next() {
     return Optional.empty();
   }
 }

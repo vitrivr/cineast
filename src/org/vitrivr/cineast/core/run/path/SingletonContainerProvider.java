@@ -4,24 +4,26 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
-import org.vitrivr.cineast.core.run.ExtractionPathProvider;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
+import org.vitrivr.cineast.core.run.ExtractionItemContainer;
 
 /**
  * Convenience Provider for the {@link org.vitrivr.cineast.core.config.IngestConfig}
  *
  * @author silvan on 19.01.18.
  */
-public class SingletonPathProvider implements ExtractionPathProvider, ExtractionCompleteListener {
+public class SingletonContainerProvider implements ExtractionContainerProvider,
+    ExtractionCompleteListener {
 
   private final Path path;
   private volatile boolean open = true;
 
-  public SingletonPathProvider(Path path) {
+  public SingletonContainerProvider(Path path) {
     this.path = path;
   }
 
   @Override
-  public void onCompleted(Path path) {
+  public void onCompleted(ExtractionItemContainer path) {
     open = false;
   }
 
@@ -31,7 +33,7 @@ public class SingletonPathProvider implements ExtractionPathProvider, Extraction
   }
 
   @Override
-  public void addPaths(List<Path> pathList) {
+  public void addPaths(List<ExtractionItemContainer> pathList) {
     //Ignore
   }
 
@@ -46,8 +48,8 @@ public class SingletonPathProvider implements ExtractionPathProvider, Extraction
   }
 
   @Override
-  public synchronized Optional<Path> next() {
+  public synchronized Optional<ExtractionItemContainer> next() {
     open = false;
-    return Optional.of(path);
+    return Optional.of(ExtractionItemContainer.of(path));
   }
 }

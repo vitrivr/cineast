@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.image.DefaultImageDecoder;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
-import org.vitrivr.cineast.core.run.ExtractionPathProvider;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.segmenter.general.PassthroughSegmenter;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
@@ -23,7 +23,7 @@ public class ImageExtractionFileHandler extends AbstractExtractionFileHandler<Bu
      *
      * @param
      */
-    public ImageExtractionFileHandler(ExtractionPathProvider provider, ExtractionContextProvider context) throws IOException {
+    public ImageExtractionFileHandler(ExtractionContainerProvider provider, ExtractionContextProvider context) throws IOException {
         super (provider,context);
     }
 

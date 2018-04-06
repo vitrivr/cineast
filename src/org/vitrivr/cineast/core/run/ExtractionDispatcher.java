@@ -29,14 +29,14 @@ public class ExtractionDispatcher {
     /**
      * List of files due for extraction.
      */
-    private ExtractionPathProvider pathProvider;
+    private ExtractionContainerProvider pathProvider;
 
     /**
      * Reference to the thread that is being used to run the ExtractionFileHandler.
      */
     private Thread fileHandlerThread;
 
-    public boolean initialize(ExtractionPathProvider pathProvider, ExtractionContextProvider context) throws IOException {
+    public boolean initialize(ExtractionContainerProvider pathProvider, ExtractionContextProvider context) throws IOException {
         File outputLocation = Config.sharedConfig().getExtractor().getOutputLocation();
         if (outputLocation == null) {
             LOGGER.error("invalid output location specified in config");

@@ -51,8 +51,8 @@ import org.vitrivr.cineast.core.importer.handlers.*;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
-import org.vitrivr.cineast.core.run.ExtractionPathProvider;
-import org.vitrivr.cineast.core.run.path.ExtractionPathProviderFactory;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
+import org.vitrivr.cineast.core.run.path.ExtractionContainerProviderFactory;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
@@ -215,7 +215,7 @@ public class API {
         try {
             JacksonJsonProvider reader = new JacksonJsonProvider();
             ExtractionContextProvider context = reader.toObject(file, IngestConfig.class);
-            ExtractionPathProvider provider = ExtractionPathProviderFactory
+            ExtractionContainerProvider provider = ExtractionContainerProviderFactory
                 .tryCreatingTreeWalkPathProvider(file, context);
             if (dispatcher.initialize(provider, context)) {
                 dispatcher.start();

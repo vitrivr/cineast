@@ -13,8 +13,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
-import org.vitrivr.cineast.core.run.ExtractionPathProvider;
+import org.vitrivr.cineast.core.run.ExtractionItemContainer;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 /*
@@ -22,7 +23,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
  * the context-provider to determine the depth of recursion, skip files and limit the number of
  * files.
  */
-public class TreeWalkPathIteratorProvider implements ExtractionPathProvider,
+public class TreeWalkContainerIteratorProvider implements ExtractionContainerProvider,
     ExtractionCompleteListener {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -33,7 +34,7 @@ public class TreeWalkPathIteratorProvider implements ExtractionPathProvider,
   private Iterator<Path> pathIterator = Collections.emptyIterator();
   private Counter pathsCompleted;
 
-  public TreeWalkPathIteratorProvider(Path basePath, ExtractionContextProvider context) {
+  public TreeWalkContainerIteratorProvider(Path basePath, ExtractionContextProvider context) {
     this.basePath = basePath;
     this.context = context;
     if (Config.sharedConfig().getMonitoring().enablePrometheus) {
@@ -66,7 +67,7 @@ public class TreeWalkPathIteratorProvider implements ExtractionPathProvider,
   }
 
   @Override
-  public void addPaths(List<Path> pathList) {
+  public void addPaths(List<ExtractionItemContainer> pathList) {
     LOGGER.error("Cannot add paths to a TreeWalkPathIterator");
   }
 
@@ -85,15 +86,15 @@ public class TreeWalkPathIteratorProvider implements ExtractionPathProvider,
   }
 
   @Override
-  public synchronized Optional<Path> next() {
+  public synchronized Optional<ExtractionItemContainer> next() {
     if (pathIterator.hasNext() && open) {
-      return Optional.of(pathIterator.next());
+      return Optional.of(ExtractionItemContainer.of(pathIterator.next()));
     }
     return Optional.empty();
   }
 
   @Override
-  public void onCompleted(Path path) {
+  public void onCompleted(ExtractionItemContainer path) {
     if (pathsCompleted != null) {
       pathsCompleted.inc();
     }

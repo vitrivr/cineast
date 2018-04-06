@@ -5,39 +5,39 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
-import org.vitrivr.cineast.core.run.ExtractionPathProvider;
 
 /**
  * @author silvan on 19.01.18.
  */
-public class ExtractionPathProviderFactory {
+public class ExtractionContainerProviderFactory {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
   /**
-   * Tries to create a {@link TreeWalkPathIteratorProvider}. Will however create a {@link
-   * NoPathProvider} if something goes wrong.
+   * Tries to create a {@link TreeWalkContainerIteratorProvider}. Will however create a {@link
+   * NoContainerProvider} if something goes wrong.
    */
-  public static ExtractionPathProvider tryCreatingTreeWalkPathProvider(File jobFile,
+  public static ExtractionContainerProvider tryCreatingTreeWalkPathProvider(File jobFile,
       ExtractionContextProvider context) {
         /* Check if context could be read and an input path was specified. */
     if (context == null || context.inputPath() == null || context.pathProvider() == null) {
-      return new NoPathProvider();
+      return new NoContainerProvider();
     }
     Path jobDirectory = jobFile.getAbsoluteFile().toPath().getParent();
-    if(!context.inputPath().isPresent()){
-      return new NoPathProvider();
+    if (!context.inputPath().isPresent()) {
+      return new NoContainerProvider();
     }
     Path path = jobDirectory.resolve(context.inputPath().get()).normalize().toAbsolutePath();
 
     if (!Files.exists(path)) {
       LOGGER.warn("The path '{}' specified in the extraction configuration does not exist!",
           path.toString());
-      return new NoPathProvider();
+      return new NoContainerProvider();
     }
 
-    return new TreeWalkPathIteratorProvider(path, context);
+    return new TreeWalkContainerIteratorProvider(path, context);
   }
 
 }

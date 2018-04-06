@@ -7,7 +7,7 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.m3d.ModularMeshDecoder;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
-import org.vitrivr.cineast.core.run.ExtractionPathProvider;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.segmenter.general.PassthroughSegmenter;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
@@ -23,7 +23,7 @@ public class Model3DExtractionFileHandler extends AbstractExtractionFileHandler<
      * @param files   List of files that should be extracted.
      * @param context ExtractionContextProvider that holds extraction specific configurations.
      */
-    public Model3DExtractionFileHandler(ExtractionPathProvider files, ExtractionContextProvider context) throws IOException {
+    public Model3DExtractionFileHandler(ExtractionContainerProvider files, ExtractionContextProvider context) throws IOException {
         super(files, context);
     }
 

@@ -40,7 +40,7 @@ public interface ExtractionContextProvider {
   /**
    * Where paths for this extraction-run are generated
    */
-  ExtractionPathProvider pathProvider();
+  ExtractionContainerProvider pathProvider();
 
   /**
    * Limits the number of files that should be extracted. This a predicate is applied before
