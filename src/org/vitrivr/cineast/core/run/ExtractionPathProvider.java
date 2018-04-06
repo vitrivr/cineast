@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.run;
 
+import com.google.common.collect.Lists;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,10 @@ public interface ExtractionPathProvider {
 
   void addPaths(List<Path> pathList);
 
+  default void addPath(Path path) {
+    this.addPaths(Lists.newArrayList(path));
+  }
+
   /**
    * Check if this instance is still active. This does NOT mean that {@link #hasNextAvailable()}
    * will return true, but simply that there might be elements yet to come.
@@ -26,9 +31,9 @@ public interface ExtractionPathProvider {
   boolean isOpen();
 
   /**
-   * Check if {@link #next()} could return an element. Since a {@link ExtractionPathProvider} might be
-   * used in a multi-threaded context, it does not guarantee that by the time you will call {@link
-   * #next()}, the element will still be available.
+   * Check if {@link #next()} could return an element. Since a {@link ExtractionPathProvider} might
+   * be used in a multi-threaded context, it does not guarantee that by the time you will call
+   * {@link #next()}, the element will still be available.
    */
   boolean hasNextAvailable();
 
