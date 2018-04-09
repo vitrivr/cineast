@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
@@ -88,7 +89,11 @@ public class TreeWalkContainerIteratorProvider implements ExtractionContainerPro
   @Override
   public synchronized Optional<ExtractionItemContainer> next() {
     if (pathIterator.hasNext() && open) {
-      return Optional.of(ExtractionItemContainer.of(pathIterator.next()));
+      Path next = pathIterator.next();
+      Path path = basePath.toFile().isDirectory() ? basePath.toAbsolutePath()
+          .relativize(next.toAbsolutePath()) : next.getFileName();
+      LOGGER.debug("Next path: {}, base {}, res {}", next, basePath, path);
+      return Optional.of(new ExtractionItemContainer(new MultimediaObjectDescriptor(path), null, next));
     }
     return Optional.empty();
   }

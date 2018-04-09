@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.run.path;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.run.ExtractionItemContainer;
@@ -50,6 +51,6 @@ public class SingletonContainerProvider implements ExtractionContainerProvider,
   @Override
   public synchronized Optional<ExtractionItemContainer> next() {
     open = false;
-    return Optional.of(ExtractionItemContainer.of(path));
+    return Optional.of(new ExtractionItemContainer(new MultimediaObjectDescriptor(path.getFileName()), null, path));
   }
 }

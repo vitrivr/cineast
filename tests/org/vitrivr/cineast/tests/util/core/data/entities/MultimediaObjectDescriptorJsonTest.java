@@ -20,7 +20,7 @@ class MultimediaObjectDescriptorJsonTest {
   @Test
   @DisplayName("Read from Json")
   void deserialize() throws IOException {
-    String json = FileUtils.readFileToString(new File("resources/mmobj.json"), Charset.defaultCharset());
+    String json = FileUtils.readFileToString(new File("resources/tests/mmobj.json"), Charset.defaultCharset());
     ObjectMapper mapper = new ObjectMapper();
     MultimediaObjectDescriptor descriptor = mapper.readValue(json, MultimediaObjectDescriptor.class);
     assertEquals("1337", descriptor.getObjectId());

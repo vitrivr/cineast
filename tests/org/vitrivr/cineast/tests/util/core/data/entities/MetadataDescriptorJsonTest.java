@@ -22,11 +22,11 @@ class MetadataDescriptorJsonTest {
   @DisplayName("Json read")
   void testJsonInput() throws IOException {
     String json = FileUtils
-        .readFileToString(new File("resources/items.json"), Charset.defaultCharset());
+        .readFileToString(new File("resources/tests/items.json"), Charset.defaultCharset());
     ObjectMapper mapper = new ObjectMapper();
     ExtractionContainerMessage message = mapper.readValue(json, ExtractionContainerMessage.class);
     assertEquals("nameOne", message.getItems()[0].getObject().getName());
-    assertEquals("/home/test/one.png", message.getItems()[0].getPath().toAbsolutePath().toString());
+    assertEquals("/home/test/one.png", message.getItems()[0].getPathForExtraction().toAbsolutePath().toString());
     assertEquals("Web", message.getItems()[0].getMetadata()[0].getDomain());
     assertEquals("key", message.getItems()[0].getMetadata()[0].getKey());
     assertEquals("testval", message.getItems()[0].getMetadata()[0].getValue());

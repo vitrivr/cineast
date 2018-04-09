@@ -25,7 +25,14 @@ public class ExtractionItemContainer {
   @JsonIgnore
   private Path path;
 
-  public Path getPath() {
+  /**
+   * If a path has been specified directly, returns the path. If no path has been specified, tries
+   * to construct a path from the path of the underlying {@link MultimediaObjectDescriptor}
+   */
+  public Path getPathForExtraction() {
+    if (path == null) {
+      return Paths.get(object.getPath());
+    }
     return path;
   }
 
@@ -46,13 +53,15 @@ public class ExtractionItemContainer {
     return metadata;
   }
 
-  public ExtractionItemContainer(MultimediaObjectDescriptor descriptor) {
-    this(descriptor, new MultimediaMetadataDescriptor[0], (Path) null);
-  }
-
+  /**
+   * Json-Creator, only takes strings or json-compatible objects.
+   *
+   * @param uri used to create a path
+   */
   @JsonCreator
   public ExtractionItemContainer(@JsonProperty("object") MultimediaObjectDescriptor object,
-      @JsonProperty("metadata") MultimediaMetadataDescriptor[] metadata, @JsonProperty("uri") String uri)
+      @JsonProperty("metadata") MultimediaMetadataDescriptor[] metadata,
+      @JsonProperty("uri") String uri)
       throws URISyntaxException {
     this(object, metadata, Paths.get(new URI(uri)));
   }
@@ -60,12 +69,8 @@ public class ExtractionItemContainer {
   public ExtractionItemContainer(
       MultimediaObjectDescriptor object,
       MultimediaMetadataDescriptor[] metadata, Path path) {
-    this.object = object;
-    this.metadata = metadata;
+    this.object = object == null ? new MultimediaObjectDescriptor() : object;
+    this.metadata = metadata == null ? new MultimediaMetadataDescriptor[0] : metadata;
     this.path = path;
-  }
-
-  public static ExtractionItemContainer of(Path path) {
-    return new ExtractionItemContainer(new MultimediaObjectDescriptor(path));
   }
 }

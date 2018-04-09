@@ -1,8 +1,6 @@
 package org.vitrivr.cineast.core.run.filehandler;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -144,7 +142,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
     while ((item = this.nextItem(decoder)) != null) {
       try {
         LOGGER.info("Processing file {}.", item);
-        if (decoder.init(item.getPath(),
+        if (decoder.init(item.getPathForExtraction(),
             Config.sharedConfig().getDecoders().get(this.context.sourceType()))) {
                 /* Create / lookup MultimediaObjectDescriptor for new file. */
           final MultimediaObjectDescriptor descriptor = this
@@ -308,12 +306,12 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
           continue;
         }
         ExtractionItemContainer item = providerResult.get();
-        String type = MimeTypeHelper.getContentType(item.getPath().toString());
+        String type = MimeTypeHelper.getContentType(item.getPathForExtraction().toString());
         if (decoder.supportedFiles().contains(type)) {
           return item;
         }
         //TODO here we should possibly check if we need to cache external paths (e.g. ambry, HTTP) for decoders
-        if (item.getPath().toUri().getScheme().equals("ambry")) {
+        if (item.getPathForExtraction().toUri().getScheme().equals("ambry")) {
           return item;    //This is somewhat of a workaround. Currently, a Pathprovider does not provide the mediatype of a path and thus we just assume that ambry is playing nice
         }
       } else {
@@ -389,31 +387,16 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
   protected MultimediaObjectDescriptor fetchOrCreateMultimediaObjectDescriptor(
       ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
-    Path path = item.getPath();
-    /*
-         * Three cases:
-         * - For single-file extraction, the file-name is stored as file-path.
-         * - For extraction of a folder, the path relative to the input folder is stored as file-path.
-         * - There is no input-path since we are in a session. The path is taken as is.
-         */
-    if (this.context.inputPath().isPresent() && !Config.sharedConfig().getApi()
-        .getEnableExtractionServer()) {   //Standard file-based extraction
-      if (Files.isRegularFile(this.context.inputPath().get())) {
-        path = path.getFileName();
-      } else {
-        //The inputpath is a folder
-        path = this.context.inputPath().get().toAbsolutePath()
-            .relativize(item.getPath().toAbsolutePath());
-      }
-    }//Else API-Based Extraction, store given path
+    LOGGER.debug("Received path {}", item.getPathForExtraction());
+    LOGGER.debug("Received path to store {}", item.getObject().getPath());
 
         /* Lookup multimedia-object and persist if necessary. */
-    MultimediaObjectDescriptor descriptor = this.objectReader.lookUpObjectByPath(path.toString());
-    if (descriptor.exists() && descriptor.getMediatype() == this.context.sourceType()) {
-      return descriptor;
+    MultimediaObjectDescriptor fetchedDescriptor = this.objectReader.lookUpObjectByPath(item.getObject().getPath());
+    if (fetchedDescriptor.exists() && fetchedDescriptor.getMediatype() == this.context.sourceType()) {
+      return fetchedDescriptor;
     }
     return MultimediaObjectDescriptor
-        .fromExisting(descriptor, generator, path, type, this.objectReader);
+        .mergeItem(fetchedDescriptor, generator, item, type);
   }
 
   /**
@@ -430,7 +413,8 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
   protected void extractAndPersistMetadata(ExtractionItemContainer item, String objectId) {
     for (MetadataExtractor extractor : this.metadataExtractors) {
       try {
-        List<MultimediaMetadataDescriptor> metadata = extractor.extract(objectId, item.getPath());
+        List<MultimediaMetadataDescriptor> metadata = extractor
+            .extract(objectId, item.getPathForExtraction());
         if (!metadata.isEmpty()) {
           this.metadataWriter.write(metadata);
         }

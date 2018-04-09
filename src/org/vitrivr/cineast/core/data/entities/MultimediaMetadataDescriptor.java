@@ -7,6 +7,8 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -21,6 +23,8 @@ import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
  * @created 10.01.17
  */
 public class MultimediaMetadataDescriptor implements ExistenceCheck {
+
+  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * Name of the entity in the persistence layer.
@@ -86,7 +90,8 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
    * Int, Long and String are supported officially.
    */
   @JsonCreator
-  public MultimediaMetadataDescriptor(@JsonProperty(value = "objectId", defaultValue = "") String objectId,
+  public MultimediaMetadataDescriptor(
+      @JsonProperty(value = "objectId", defaultValue = "") String objectId,
       @JsonProperty("domain") String domain, @JsonProperty("key") String key,
       @JsonProperty("value") @Nullable Object value,
       @JsonProperty(value = "exists", defaultValue = "false") boolean exists) {
@@ -181,8 +186,14 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
         .toString();
   }
 
-  public static MultimediaMetadataDescriptor fromExisting(MultimediaMetadataDescriptor el, String objectId) {
-    throw new RuntimeException();
+
+  public static MultimediaMetadataDescriptor fromExisting(MultimediaMetadataDescriptor el,
+      String objectId) {
+    if (objectId == null) {
+      LOGGER.error("No objectID provided for this metadatadescriptor");
+    }
+    return new MultimediaMetadataDescriptor(objectId, el.domain,
+        el.key, el.value, el.exists);
   }
 }
 

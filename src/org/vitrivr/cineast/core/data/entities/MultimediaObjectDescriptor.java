@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.apache.commons.lang3.StringUtils;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
+import org.vitrivr.cineast.core.run.ExtractionItemContainer;
 
 /**
  * @author rgasser
@@ -54,16 +57,23 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
         getFileName(path), path.toString(), type, false);
   }
 
+  public static String cleanPath(Path path) {
+    return path.toString().replace('\\', '/');
+  }
+
   private static String getFileName(Path path) {
-    return path.getFileName().toString().replace('\\', '/');
+    return cleanPath(path);
   }
 
   public MultimediaObjectDescriptor(Path path) {
-    this(null, null, getFileName(path), null, false);
+    this(null, path.getFileName().toString().replace('\\', '/'), getFileName(path), null, false);
   }
 
+  /**
+   * Completely empty Descriptor
+   */
   public MultimediaObjectDescriptor() {
-    this("", "", "", MediaType.VIDEO, false);
+    this("", "", "", MediaType.UNKNOWN, false);
   }
 
   @JsonCreator
@@ -135,11 +145,31 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
   }
 
   /**
-   * create a new descriptor based on the provided one. The given path has precedence over the one
-   * in the given descriptor.
+   * create a new descriptor based on the provided one.
+   *
+   * if an id is already given in the descriptor, it takes precedence over generating a new one. if
+   * a new path is provided as an argument, it takes precedence over one which might already be
+   * existing in the descriptor. if a new type is provided as an argument, it takes precedence over
+   * one which might already be existing in the descriptor.
+   *
+   * The exists variable is taken from the provided descriptor, since that is more current than the
+   * one provided in the item
    */
-  public static MultimediaObjectDescriptor fromExisting(MultimediaObjectDescriptor descriptor,
-      ObjectIdGenerator generator, Path path, MediaType type, MultimediaObjectLookup objectReader) {
-    throw new RuntimeException();
+  public static MultimediaObjectDescriptor mergeItem(MultimediaObjectDescriptor descriptor,
+      ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
+    Path _path = item.getPathForExtraction() == null ? Paths.get(descriptor.getPath())
+        : item.getPathForExtraction();
+    String _name = StringUtils.isEmpty(item.getObject().getName()) ? descriptor.getName()
+        : item.getObject().getName();
+    boolean exists = descriptor.exists();
+    MediaType _type = type == null ? descriptor.getMediatype() : type;
+    String _id =
+        StringUtils.isEmpty(item.getObject().getObjectId()) ?
+            StringUtils.isEmpty(descriptor.getObjectId())
+                ? generator.next(_path, _type) : descriptor.getObjectId()
+            : item.getObject().getObjectId();
+    String storagePath = StringUtils.isEmpty(item.getObject().getPath()) ? descriptor.getPath()
+        : item.getObject().getPath();
+    return new MultimediaObjectDescriptor(_id, _name, storagePath, _type, exists);
   }
 }
