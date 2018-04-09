@@ -434,6 +434,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
   @Override
   public void addExtractionCompleteListener(ExtractionCompleteListener listener) {
     if (listener != null && !this.completeListeners.contains(listener)) {
+      LOGGER.debug("Adding Listener {}", listener.getClass().getSimpleName());
       completeListeners.add(listener);
     }
   }

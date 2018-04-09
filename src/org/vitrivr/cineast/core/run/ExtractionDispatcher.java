@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.run.filehandler.AbstractExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.AudioExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.ImageExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.Model3DExtractionFileHandler;
@@ -36,6 +37,8 @@ public class ExtractionDispatcher {
      */
     private Thread fileHandlerThread;
 
+    private AbstractExtractionFileHandler handler;
+
     public boolean initialize(ExtractionContainerProvider pathProvider, ExtractionContextProvider context) throws IOException {
         File outputLocation = Config.sharedConfig().getExtractor().getOutputLocation();
         if (outputLocation == null) {
@@ -65,20 +68,20 @@ public class ExtractionDispatcher {
             MediaType sourceType = this.context.sourceType();
             switch (sourceType) {
                 case IMAGE:
-                    this.fileHandlerThread = new Thread(
-                        new ImageExtractionFileHandler(this.pathProvider, this.context));
+                    handler = new ImageExtractionFileHandler(this.pathProvider, this.context);
+                    this.fileHandlerThread = new Thread(handler);
                     break;
                 case VIDEO:
-                    this.fileHandlerThread = new Thread(
-                        new VideoExtractionFileHandler(this.pathProvider, this.context));
+                    this.handler = new VideoExtractionFileHandler(this.pathProvider, this.context);
+                    this.fileHandlerThread = new Thread(handler);
                     break;
                 case AUDIO:
-                    this.fileHandlerThread = new Thread(
-                        new AudioExtractionFileHandler(this.pathProvider, this.context));
+                    this.handler = new AudioExtractionFileHandler(this.pathProvider, this.context);
+                    this.fileHandlerThread = new Thread(handler);
                     break;
                 case MODEL3D:
-                    this.fileHandlerThread = new Thread(
-                        new Model3DExtractionFileHandler(this.pathProvider, this.context));
+                    this.handler = new Model3DExtractionFileHandler(this.pathProvider, this.context);
+                    this.fileHandlerThread = new Thread(handler);
                     break;
                 default:
                     break;
@@ -90,5 +93,14 @@ public class ExtractionDispatcher {
         } else {
             LOGGER.warn("You cannot start the current instance of ExtractionDispatcher again!");
         }
+    }
+
+    public void registerListener(ExtractionCompleteListener listener) {
+        if(this.fileHandlerThread==null){
+            LOGGER.error("Could not register listener, no thread available");
+            throw new RuntimeException();
+        }
+        LOGGER.debug("Registering Listener {}", listener.getClass().getSimpleName());
+        handler.addExtractionCompleteListener(listener);
     }
 }

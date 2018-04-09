@@ -73,10 +73,6 @@ public class ExtractionItemContainer {
       MultimediaObjectDescriptor object,
       MultimediaMetadataDescriptor[] metadata, Path path) {
     this.object = object;
-    if (object == null || object.getMediatype() == null
-        || object.getMediatype() == MediaType.UNKNOWN) {
-      throw new RuntimeException("No Mediatype specified");
-    }
     this.metadata = metadata == null ? new MultimediaMetadataDescriptor[0] : metadata;
     this.path = path;
     if (this.path == null) {

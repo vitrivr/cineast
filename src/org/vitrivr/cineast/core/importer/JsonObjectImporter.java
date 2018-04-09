@@ -54,7 +54,7 @@ public class JsonObjectImporter implements Importer<ObjectNode> {
         return mapper.readTree(parser);
       }
     } catch (IOException e) {
-      LOGGER.error("error while reading json file '{}': {}", this.inputFile.getAbsolutePath(), LogHelper.getStackTrace(e));
+      LOGGER.error("error while reading json file '{}'", this.inputFile.getAbsolutePath());
     }
     return null;
   }

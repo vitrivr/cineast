@@ -1,34 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROM-LOCALHOST",
-      "label": "prom-localhost",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "4.6.3"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -46,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "hideControls": false,
-  "id": null,
+  "id": 1,
   "links": [],
   "rows": [
     {
@@ -58,7 +28,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROM-LOCALHOST}",
+          "datasource": "prom-localhost",
           "fill": 1,
           "id": 1,
           "legend": {
@@ -83,7 +53,7 @@
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
-          "span": 9,
+          "span": 6,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -130,6 +100,84 @@
               "show": false
             }
           ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "prom-localhost",
+          "fill": 1,
+          "id": 9,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "hideEmpty": false,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": false,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "cineast_path_completed_treewalk",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Completed Items",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ]
         }
       ],
       "repeat": null,
@@ -140,7 +188,7 @@
       "titleSize": "h6"
     },
     {
-      "collapse": true,
+      "collapse": false,
       "height": 250,
       "panels": [
         {
@@ -148,7 +196,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROM-LOCALHOST}",
+          "datasource": "prom-localhost",
           "fill": 1,
           "id": 2,
           "legend": {
@@ -222,7 +270,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROM-LOCALHOST}",
+          "datasource": "prom-localhost",
           "fill": 1,
           "id": 3,
           "legend": {
@@ -258,7 +306,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Queued Paths",
+          "title": "Paths in Extraction Queue",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -308,7 +356,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROM-LOCALHOST}",
+          "datasource": "prom-localhost",
           "fill": 1,
           "id": 6,
           "legend": {
@@ -385,7 +433,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROM-LOCALHOST}",
+          "datasource": "prom-localhost",
           "fill": 1,
           "id": 7,
           "legend": {
@@ -462,7 +510,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROM-LOCALHOST}",
+          "datasource": "prom-localhost",
           "fill": 1,
           "id": 8,
           "legend": {
@@ -551,7 +599,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROM-LOCALHOST}",
+          "datasource": null,
           "fill": 1,
           "id": 4,
           "legend": {
@@ -625,7 +673,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROM-LOCALHOST}",
+          "datasource": null,
           "fill": 1,
           "id": 5,
           "legend": {
@@ -740,5 +788,5 @@
   },
   "timezone": "",
   "title": "Cineast",
-  "version": 2
+  "version": 4
 }
