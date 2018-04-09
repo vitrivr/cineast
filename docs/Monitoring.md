@@ -1,0 +1,25 @@
+# Prometheus
+## Starting a prometheus instance
+
+* Install docker
+* ```docker run --name prometheus-cineast -d -v /home/silvan/IdeaProjects/masterarbeit/cineast/docs/prometheus.yml:/etc/prometheus/prometheus.yml --network host prom/prometheus```
+
+Small note: we could also set up a bridge network with a fixed IP for the host machine, but just using the host NW for this container is easier.
+## Lifecycle
+Since the .yml-file is now linked within the docker-container, you can simply modify it and then use ```docker restart prometheus-cineast``` to load the new config.
+
+# Grafana
+## Starting an instance
+
+* Install docker
+* ```docker run -d -p 3000:3000 grafana/grafana```
+* Default login is admin/admin
+
+## Lifecycle / Setup
+* Use the saved grafana-dashboard for an overview of metrics
+
+# Netdata
+Netdata is optional - but it can be neatly integrated into prometheus/grafana.
+
+* Install Netdata from [Github](https://github.com/firehol/netdata/)
+* That's it.
