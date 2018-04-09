@@ -7,12 +7,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 
 /**
  * An {@link ExtractionItemContainer} contains all information for ONE item which is supposed to be
- * extracted. All information may be lacking.
+ * extracted. A container MUST contain a {@link #path} linking to the item to be extracted. The
+ * corresponding {@link #object} MUST contain the {@link MultimediaObjectDescriptor#getMediatype()}
+ * so an item can be handed out to different extractionhandlers.
  *
  * @author silvan on 06.04.18.
  */
@@ -69,8 +72,15 @@ public class ExtractionItemContainer {
   public ExtractionItemContainer(
       MultimediaObjectDescriptor object,
       MultimediaMetadataDescriptor[] metadata, Path path) {
-    this.object = object == null ? new MultimediaObjectDescriptor() : object;
+    this.object = object;
+    if (object == null || object.getMediatype() == null
+        || object.getMediatype() == MediaType.UNKNOWN) {
+      throw new RuntimeException("No Mediatype specified");
+    }
     this.metadata = metadata == null ? new MultimediaMetadataDescriptor[0] : metadata;
     this.path = path;
+    if (this.path == null) {
+      throw new RuntimeException("Path was null for object " + object);
+    }
   }
 }
