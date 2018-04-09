@@ -387,10 +387,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
   protected MultimediaObjectDescriptor fetchOrCreateMultimediaObjectDescriptor(
       ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
-    LOGGER.debug("Received path {}", item.getPathForExtraction());
-    LOGGER.debug("Received path to store {}", item.getObject().getPath());
 
-        /* Lookup multimedia-object and persist if necessary. */
     MultimediaObjectDescriptor fetchedDescriptor = this.objectReader.lookUpObjectByPath(item.getObject().getPath());
     if (fetchedDescriptor.exists() && fetchedDescriptor.getMediatype() == this.context.sourceType()) {
       return fetchedDescriptor;

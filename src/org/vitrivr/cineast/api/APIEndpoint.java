@@ -105,6 +105,7 @@ public class APIEndpoint {
 
         /* Register a general exception handler. TODO: Add fine grained exception handling. */
         service.exception(Exception.class, (exception, request, response) -> {
+            exception.printStackTrace();
             LOGGER.error(exception);
         });
 
