@@ -159,8 +159,10 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
       ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
     Path _path = item.getPathForExtraction() == null ? Paths.get(descriptor.getPath())
         : item.getPathForExtraction();
-    String _name = StringUtils.isEmpty(item.getObject().getName()) ? descriptor.getName()
-        : item.getObject().getName();
+    String _name =
+        StringUtils.isEmpty(item.getObject().getName()) ? StringUtils.isEmpty(descriptor.getName())
+            ? cleanPath(_path.getFileName()) : descriptor.getName()
+            : item.getObject().getName();
     boolean exists = descriptor.exists();
     MediaType _type = type == null ? descriptor.getMediatype() : type;
     String _id =
