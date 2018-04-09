@@ -342,6 +342,11 @@ public class API {
         configLocation.setArgName("CONFIG_FILE");
         options.addOption(configLocation);
 
+        Option server = new Option(null, "server", true,
+            "config file for extraction server mode");
+        server.setArgName("SERVER_FILE");
+        options.addOption(server);
+
         Option extractionJob = new Option(null, "job", true,
                 "job file containing settings for handleExtraction");
         extractionJob.setArgName("JOB_FILE");
