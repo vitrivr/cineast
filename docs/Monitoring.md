@@ -2,7 +2,7 @@
 ## Starting a prometheus instance
 
 * Install docker
-* ```docker run --name prometheus-cineast -d -v /home/silvan/IdeaProjects/masterarbeit/cineast/docs/prometheus.yml:/etc/prometheus/prometheus.yml --network host prom/prometheus```
+* ```docker run --name prometheus-cineast -d -v /abs/path/to/cineast/docs/prometheus.yml:/etc/prometheus/prometheus.yml --network host prom/prometheus```
 
 Small note: we could also set up a bridge network with a fixed IP for the host machine, but just using the host NW for this container is easier.
 ## Lifecycle
