@@ -1,10 +1,16 @@
 package org.vitrivr.cineast.core.data.distance;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 
 public class SegmentDistanceElement extends AbstractDistanceElement {
-  public SegmentDistanceElement(String id, double distance) {
+
+  @JsonCreator
+  public SegmentDistanceElement(
+      @JsonProperty(value = "segmentId", required = true) String id,
+      @JsonProperty(value = "distance", required = true) double distance) {
     super(id, distance);
   }
 
