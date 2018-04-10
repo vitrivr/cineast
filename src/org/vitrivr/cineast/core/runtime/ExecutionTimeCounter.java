@@ -4,15 +4,14 @@ public interface ExecutionTimeCounter {
 
   /**
    * used to report task execution time for a particular class
-   * @param c the class which executed a task
+   * @param name classname. is a string since we can't determine the classname of generic types at runtime
    * @param miliseconds the task duration in ms
    */
-  void reportExecutionTime(Class<?> c, long miliseconds);
-  
+  void reportExecutionTime(String name, long miliseconds);
+
   /**
-   * @param c
    * @return the average execution time for all tasks reported for this class or 0 if the class is unknown or null
    */
-  long getAverageExecutionTime(Class<?> c);
-  
+  long getAverageExecutionTime(String name);
+
 }

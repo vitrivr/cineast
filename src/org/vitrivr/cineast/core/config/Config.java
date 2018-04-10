@@ -31,6 +31,7 @@ public class Config {
     private QueryConfig query;
     private HashMap<MediaType, DecoderConfig> decoders;
     private BenchmarkConfig benchmark = new BenchmarkConfig();
+    private MonitoringConfig monitoring = new MonitoringConfig();
 
 
     /**
@@ -141,5 +142,14 @@ public class Config {
     }
     public void setBenchmark(BenchmarkConfig benchmark) {
         this.benchmark = benchmark;
+    }
+
+    @JsonProperty
+    public MonitoringConfig getMonitoring() {
+      return monitoring;
+    }
+
+    public void setMonitoring(MonitoringConfig monitoring) {
+      this.monitoring = monitoring;
     }
 }

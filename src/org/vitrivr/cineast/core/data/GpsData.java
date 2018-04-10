@@ -2,25 +2,21 @@ package org.vitrivr.cineast.core.data;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.drew.metadata.exif.GpsDirectory;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.MoreObjects;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
-
 import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MetadataUtil;
 import org.vitrivr.cineast.core.util.OptionalUtil;
-
-import com.drew.metadata.exif.GpsDirectory;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.MoreObjects;
 
 /**
  * Container for GPS data, i.e. location and datetime. The data is extracted from either the Exif
@@ -28,6 +24,7 @@ import com.google.common.base.MoreObjects;
  * information.
  */
 public class GpsData {
+
   public static final String KEY_LOCATION = "location";
   public static final String KEY_LATITUDE = "latitude";
   public static final String KEY_LONGITUDE = "longitude";
@@ -37,8 +34,10 @@ public class GpsData {
 
   private static final Logger logger = LogManager.getLogger();
 
-  private final @Nullable Location location;
-  private final @Nullable Instant time;
+  private final @Nullable
+  Location location;
+  private final @Nullable
+  Instant time;
 
   private GpsData(@Nullable Location location, @Nullable Instant time) {
     this.location = location;
@@ -47,12 +46,12 @@ public class GpsData {
 
   /**
    * Extracts the GPS data from a given file using Exif. If the Exif data is incomplete, additional
-   * data is retrieved from the complementary JSON file named after the original file, e.g.
-   * {@code image_0001.json} for {@code image_0001.jpg}.
+   * data is retrieved from the complementary JSON file named after the original file, e.g. {@code
+   * image_0001.json} for {@code image_0001.jpg}.
    *
    * @param file file to extract data from
-   * @return an object containing the extracted information, if available, otherwise an
-   *         empty object.
+   * @return an object containing the extracted information, if available, otherwise an empty
+   * object.
    * @see #ofExif(Path)
    * @see #ofJson(Path)
    */
@@ -65,14 +64,17 @@ public class GpsData {
    * latitude, longitude, date and time stamp are read from the file.
    *
    * @param file file to extract exif data from
-   * @return an object containing the extracted information, if available, otherwise an
-   *         empty object.
+   * @return an object containing the extracted information, if available, otherwise an empty
+   * object.
    */
   public static GpsData ofExif(Path file) {
-    Optional<GpsDirectory> gps = MetadataUtil.getMetadataDirectoryOfType(file, GpsDirectory.class);
-    Optional<Location> location = gps.map(GpsDirectory::getGeoLocation).map(Location::of);
-    Optional<Instant> instant = gps.map(GpsDirectory::getGpsDate).map(Date::toInstant);
-    return ofData(location.orElse(null), instant.orElse(null));
+    GpsDirectory gps = MetadataUtil.getMetadataDirectoryOfType(file, GpsDirectory.class);
+    if (gps == null) {
+      return ofData(null, null);
+    }
+    Location location = Location.of(gps.getGeoLocation());
+    Instant instant = gps.getGpsDate().toInstant();
+    return ofData(location, instant);
   }
 
   /**
@@ -90,13 +92,13 @@ public class GpsData {
    *
    * <p>Location information requires the key {@code "location"} containing an object with numbers
    * for {@code "latitude"} and {@code "longitude"}. Alternatively, the coordinates can also be
-   * represented as an two-valued array with latitude first, longitude second, such as
-   * {@code [47.559601, 7.588576]}. Time information requires an ISO 8601 string describing the
-   * instant for key {@code "datetime"}.
+   * represented as an two-valued array with latitude first, longitude second, such as {@code
+   * [47.559601, 7.588576]}. Time information requires an ISO 8601 string describing the instant for
+   * key {@code "datetime"}.
    *
    * @param file file to extract json data from
-   * @return an object containing the extracted information, if available, otherwise an
-   *         empty object.
+   * @return an object containing the extracted information, if available, otherwise an empty
+   * object.
    */
   public static GpsData ofJson(Path file) {
     Optional<JsonNode> root = MetadataUtil.getJsonMetadata(file);
@@ -120,7 +122,7 @@ public class GpsData {
    *
    * @param string string to parse
    * @return an {@link Optional} containing a {@code Instant}, if the given text contains a valid
-   *         instant, otherwise an empty {@code Optional}.
+   * instant, otherwise an empty {@code Optional}.
    */
   public static Optional<Instant> parseInstant(String string) {
     try {
@@ -132,10 +134,10 @@ public class GpsData {
   }
 
   /**
-   * Extracts location information of the given {@link JsonNode} from the {@code latitude}
-   * and {@code longitude} fields. If not available or valid, the coordinates are extracted as
-   * an two-valued array with latitude first, longitude second. For example, the JsonNode may
-   * look like the following:
+   * Extracts location information of the given {@link JsonNode} from the {@code latitude} and
+   * {@code longitude} fields. If not available or valid, the coordinates are extracted as an
+   * two-valued array with latitude first, longitude second. For example, the JsonNode may look like
+   * the following:
    *
    * <pre>{"latitude": 42.43, "longitude": 7.6}</pre>
    * or
@@ -143,7 +145,7 @@ public class GpsData {
    *
    * @param node json node to extract location information from
    * @return an {@link Optional} with a {@link Location}, if both "latitude" and "longitude"
-   *         coordinates are available and valid, otherwise an empty {@code Optional}.
+   * coordinates are available and valid, otherwise an empty {@code Optional}.
    */
   public static Optional<Location> parseLocationFromJson(JsonNode node) {
     return OptionalUtil.or(
@@ -195,7 +197,7 @@ public class GpsData {
    *
    * @param other a {@code Supplier} whose result is used to set undefined values
    * @return this if all values are present, otherwise a {@code GpsData} whose data is set by this
-   *         or alternatively by the results of {@code other.get()}
+   * or alternatively by the results of {@code other.get()}
    * @throws NullPointerException if {@code other} or the result of {@code other} is null
    */
   public GpsData orElse(Supplier<GpsData> other) {

@@ -7,7 +7,8 @@ public final class APIConfig {
 
   private boolean enableWebsocket = true;
   private boolean enableWebsocketSecure = true;
-  private boolean enableRest = false;
+	private boolean enableExtractionServer = true;
+	private boolean enableRest = false;
   private boolean enableRestSecure = false;
 	private String keystore;
 	private String keystorePassword;
@@ -40,7 +41,7 @@ public final class APIConfig {
   public void setEnableWebsocket(boolean enableWebsocket) {
     this.enableWebsocket = enableWebsocket;
   }
-  
+
   @JsonProperty
   public boolean getEnableWebsocketSecure(){
     return this.enableWebsocketSecure;
@@ -54,7 +55,7 @@ public final class APIConfig {
   public void setEnableRest(boolean enableRest) {
     this.enableRest = enableRest;
   }
-  
+
   @JsonProperty
   public boolean getEnableRestSecure() {return this.enableRestSecure;}
   public void setEnableRestSecure(boolean enableRest) {
@@ -87,7 +88,7 @@ public final class APIConfig {
     }
     this.httpPort = httpPort;
   }
-  
+
   @JsonProperty
   public int getHttpsPort() {
     return httpsPort;
@@ -187,4 +188,12 @@ public final class APIConfig {
 	public void setServeUI(boolean serveUI) {
 		this.serveUI = serveUI;
 	}
+
+	@JsonProperty
+  public boolean getEnableExtractionServer() {
+		return enableExtractionServer;
+  }
+  public void setEnableExtractionServer(boolean enableExtractionServer) {
+		this.enableExtractionServer = enableExtractionServer;
+  }
 }

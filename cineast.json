@@ -157,6 +157,11 @@
 	"visualization": {
 		"cacheEnabled": false,
 		"cachePath": "cache/art/"
+	},
+
+	"monitoring":{
+		"enablePrometheus": true,
+		"prometheusPort": 4569
 	}
 
 }

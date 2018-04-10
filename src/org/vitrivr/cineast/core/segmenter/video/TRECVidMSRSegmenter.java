@@ -77,7 +77,7 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
      * @param context The {@link ExtractionContextProvider } for the extraction context this {@link ImageSegmenter} is created in.
      */
     public TRECVidMSRSegmenter(ExtractionContextProvider context) {
-        this(context.inputPath());
+        this(context.inputPath().orElse(null));
     }
 
     /**
@@ -87,7 +87,7 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
      * @param properties A HashMap containing the configuration properties for {@link ImageSegmenter}
      */
     public TRECVidMSRSegmenter(ExtractionContextProvider context, Map<String,String> properties) {
-        this(properties.containsKey(PROPERTY_FOLDER_KEY) ? Paths.get(properties.get(PROPERTY_FOLDER_KEY)) : context.inputPath());
+        this(properties.containsKey(PROPERTY_FOLDER_KEY) ? Paths.get(properties.get(PROPERTY_FOLDER_KEY)) : context.inputPath().orElse(null));
     }
 
     /**

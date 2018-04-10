@@ -19,6 +19,7 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.extractor.ExtractorInitializer;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.monitoring.PrometheusExtractionTaskMonitor;
 
 /**
  * @author rgasser
@@ -37,7 +38,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
     private final LinkedBlockingQueue<SegmentContainer> segmentQueue;
 
     /** HashMap containing statistics about the execution of the extractors. */
-    private final ConcurrentHashMap<Class<?>, SummaryStatistics> timeMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, SummaryStatistics> timeMap = new ConcurrentHashMap<>();
 
     /** ExecutorService used do execute the ExtractionTasks. */
     private final ExecutorService executorService;
@@ -159,7 +160,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
                     }
 
                     /* Sort list of extractors by execution time. */
-                    (this.extractors).sort((o1,o2) -> Long.compare(getAverageExecutionTime(o2.getClass()), getAverageExecutionTime(o1.getClass())));
+                    (this.extractors).sort((o1,o2) -> Long.compare(getAverageExecutionTime(o2.getClass().getSimpleName()), getAverageExecutionTime(o1.getClass().getSimpleName())));
                 }
             } catch (InterruptedException e) {
                 LOGGER.warn("ShotDispatcher was interrupted: {}", LogHelper.getStackTrace(e));
@@ -214,32 +215,25 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         }
     }
 
-    /**
-     * Used to report task execution time for a particular class
-     *
-     * @param c The class which executed a task
-     * @param milliseconds The task duration in ms
-     */
     @Override
-    public void reportExecutionTime(Class<?> c, long milliseconds) {
-        if(!this.timeMap.containsKey(c)){
-            this.timeMap.put(c, new SummaryStatistics());
+    public void reportExecutionTime(String className, long milliseconds) {
+        if(!this.timeMap.containsKey(className)){
+            this.timeMap.put(className, new SummaryStatistics());
         }
-        SummaryStatistics stat = this.timeMap.get(c);
+        SummaryStatistics stat = this.timeMap.get(className);
           synchronized (stat) {
               stat.addValue(milliseconds);
           }
-        
+        PrometheusExtractionTaskMonitor.reportExecutionTime(className, milliseconds);
     }
 
     /**
-     * @param c
      * @return the average execution time for all tasks reported for this class or 0 if the class is unknown or null
      */
     @Override
-    public long getAverageExecutionTime(Class<?> c) {
-        if(this.timeMap.containsKey(c)){
-            return (long) this.timeMap.get(c).getMean();
+    public long getAverageExecutionTime(String className) {
+        if(this.timeMap.containsKey(className)){
+            return (long) this.timeMap.get(className).getMean();
         }
         return 0;
     }

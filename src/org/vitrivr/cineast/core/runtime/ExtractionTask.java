@@ -32,7 +32,7 @@ class ExtractionTask implements Runnable {
 			LOGGER.fatal("EXTRACTION ERROR in {}:\n{}", feature.getClass().getSimpleName(), LogHelper.getStackTrace(e));
 		}
 		if(this.etc != null){
-      this.etc.reportExecutionTime(this.feature.getClass(), (System.currentTimeMillis() - start));
+      this.etc.reportExecutionTime(this.feature.getClass().getSimpleName(), (System.currentTimeMillis() - start));
     }
 		LOGGER.traceExit();
 	}

@@ -4,7 +4,6 @@ import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.checkerframework.checker.guieffect.qual.UI;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 
 public class ReadableQueryConfig {

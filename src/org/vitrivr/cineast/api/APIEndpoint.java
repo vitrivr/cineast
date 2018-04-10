@@ -5,7 +5,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.handlers.actions.*;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.ExtractItemHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
@@ -103,7 +105,8 @@ public class APIEndpoint {
 
         /* Register a general exception handler. TODO: Add fine grained exception handling. */
         service.exception(Exception.class, (exception, request, response) -> {
-            LOGGER.log(Level.ERROR, exception);
+            exception.printStackTrace();
+            LOGGER.error(exception);
         });
 
         /* Configure the result after processing was completed. */
@@ -156,6 +159,8 @@ public class APIEndpoint {
             service.post("/start", new StartSessionHandler());
             service.get("/end/:id", new EndSessionHandler());
             service.get("/validate/:id", new ValidateSessionHandler());
+            service.post("/extract/new", new ExtractItemHandler());
+            service.post("/extract/end", new EndExtractionHandler());
         });
         if (Config.sharedConfig().getApi().getServeContent()) {
           service.path(makePath("get"), () -> {
