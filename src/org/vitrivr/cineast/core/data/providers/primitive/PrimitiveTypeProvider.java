@@ -1,11 +1,12 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
+import com.googlecode.javaewah.datastructure.BitSet;
 import java.util.List;
 
 public interface PrimitiveTypeProvider
     extends BooleanProvider, ByteProvider, DoubleProvider, FloatArrayProvider, FloatProvider,
     IntArrayProvider, IntProvider, LongProvider, ShortProvider, StringProvider,
-    BooleanArrayProvider {
+    BitSetProvider {
 
   ProviderDataType getType();
 
@@ -70,8 +71,8 @@ public interface PrimitiveTypeProvider
       case STRING: {
         return t.getString();
       }
-      case BOOLEAN_ARRAY: {
-        return t.getBooleanArray();
+      case BITSET: {
+        return t.getBitSet();
       }
       case UNKNOWN:
       default:
@@ -126,8 +127,8 @@ public interface PrimitiveTypeProvider
       return new FloatArrayTypeProvider((float[]) o);
     }
 
-    if (c == boolean[].class) {
-      return new BooleanArrayTypeProvider((boolean[]) o);
+    if (c == BitSet.class) {
+      return new BitSetTypeProvider((BitSet) o);
     }
 
     if (List.class.isAssignableFrom(c)) {
@@ -165,15 +166,6 @@ public interface PrimitiveTypeProvider
           arr[i++] = (float) ((Number) x).doubleValue();
         }
         return new FloatArrayTypeProvider(arr);
-      }
-
-      if (first.getClass() == Boolean.class) {
-        boolean[] arr = new boolean[list.size()];
-        int i = 0;
-        for (Object x : list) {
-          arr[i++] = (boolean) x;
-        }
-        return new BooleanArrayTypeProvider(arr);
       }
     }
 

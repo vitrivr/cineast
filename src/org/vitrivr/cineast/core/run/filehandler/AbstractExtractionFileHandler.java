@@ -409,6 +409,7 @@ public abstract class AbstractExtractionFileHandler<T> implements ExtractionFile
 
   protected void extractAndPersistMetadata(ExtractionItemContainer item, String objectId) {
     for (MetadataExtractor extractor : this.metadataExtractors) {
+      LOGGER.debug( "Extracting metadata for {}", extractor.getClass().getSimpleName() );
       try {
         List<MultimediaMetadataDescriptor> metadata = extractor
             .extract(objectId, item.getPathForExtraction());
