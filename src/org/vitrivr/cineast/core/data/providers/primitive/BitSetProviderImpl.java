@@ -15,6 +15,11 @@ public class BitSetProviderImpl implements BitSetProvider {
 	}
 
 	@Override
+	public BitSet getBitSet() {
+		return value;
+	}
+
+	@Override
 	public String toString() {
 		return "BitSetProviderImpl{" +
 				"value=" + value +
