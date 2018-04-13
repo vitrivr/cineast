@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.stat.descriptive.rank.Median;
 import org.apache.commons.math3.util.FastMath;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ejml.data.DMatrixRMaj;
@@ -23,6 +24,7 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleBitSetWriter;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.util.TimeHelper;
 
 /**
  * Simple Image Fingerprinting Feature. Re-implemented based on the following two papers:
@@ -137,8 +139,8 @@ public class DCTImageHash extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    return this
+    return TimeHelper.timeCall(() -> this
         .getSimilar(new BitSetTypeProvider(extractHash(sc.getMostRepresentativeFrame().getImage())),
-            qc);
+            qc), "getSimilar for DCTImageHash", Level.DEBUG);
   }
 }
