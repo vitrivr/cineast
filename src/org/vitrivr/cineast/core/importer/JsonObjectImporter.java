@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.providers.primitive.BitSetProviderImpl;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 
 public class JsonObjectImporter implements Importer<ObjectNode> {
@@ -68,13 +69,8 @@ public class JsonObjectImporter implements Importer<ObjectNode> {
     for (String key : result.keySet()) {
       if (key.equals("feature") && result.get(key).toString().startsWith("{") && result.get(key)
           .toString().endsWith("}") && result.get(key).getClass().equals(String.class)) {
-        LOGGER.debug("Assuming BitSet, parsing...");
-        String obj = result.get(key).toString();
-        String raw = obj.substring(1, obj.length() - 1);
-        BitSet bitSet = new BitSet(64); //TODO We assume fixed size here
-        Arrays.stream(raw.split(",")).forEach(el -> bitSet.set(Integer.parseInt(el)));
-        LOGGER.debug("Parsed Bitset {} from string {}", bitSet.toString(), obj);
-        map.put(key, PrimitiveTypeProvider.fromObject(bitSet));
+        map.put(key, PrimitiveTypeProvider.fromObject(BitSetProviderImpl.fromString(
+            (String) result.get(key))));
       } else {
         Object o = result.get(key);
         map.put(key, PrimitiveTypeProvider.fromObject(o));
