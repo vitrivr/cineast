@@ -14,6 +14,8 @@ import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -68,7 +70,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
   @Override
   public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
-    List<float[]> list = this.selector.getFeatureVectors("id", shotId, "feature");
+    List<PrimitiveTypeProvider> list = this.selector.getFeatureVectorsGeneric("id", shotId, "feature");
     if (list.isEmpty()) {
       return new ArrayList<>(0);
     }
@@ -86,9 +88,18 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
    * module.
    */
   protected List<ScoreElement> getSimilar(float[] vector, ReadableQueryConfig qc) {
+    return getSimilar(new FloatArrayTypeProvider(vector), qc);
+  }
+
+  /**
+   * Helper function to retrieve elements close to a generic primitive type
+   */
+  protected List<ScoreElement> getSimilar(PrimitiveTypeProvider queryProvider,
+      ReadableQueryConfig qc) {
     ReadableQueryConfig qcc = setQueryConfig(qc);
     List<SegmentDistanceElement> distances = this.selector
-        .getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
+        .getNearestNeighboursGeneric(Config.sharedConfig().getRetriever().getMaxResultsPerModule(),
+            queryProvider,
             "feature", SegmentDistanceElement.class, qcc);
     CorrespondenceFunction function = qcc.getCorrespondenceFunction().orElse(linearCorrespondence);
     return DistanceElement.toScore(distances, function);

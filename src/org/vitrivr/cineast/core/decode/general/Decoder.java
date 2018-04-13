@@ -20,7 +20,7 @@ import org.vitrivr.cineast.core.config.DecoderConfig;
  */
 public interface Decoder<T> extends AutoCloseable {
     /**
-     * Initializes the decoder with a path. This is a necessary step before content can be retrieved from
+     * Initializes the decoder with a {@link Path}. This is a necessary step before content can be retrieved from
      * the decoder by means of the getNext() method.
      *
      * <b>Important: </b> It is not safe to call getNext() of an uninitialized decoder or a Decoder that
