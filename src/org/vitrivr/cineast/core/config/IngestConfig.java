@@ -63,14 +63,6 @@ public final class IngestConfig implements ExtractionContextProvider {
     /**
      * Constructor for {@link IngestConfig}. Used by Jackson for JSON deserialization.
      *
-     * @param type
-     * @param input
-     * @param extractors
-     * @param exporters
-     * @param metadata
-     * @param database
-     * @param pipeline
-     * @param segmenter
      */
     @JsonCreator
     public IngestConfig(@JsonProperty(value = "type", required = true) MediaType type,
