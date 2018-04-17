@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.run.filehandler.AbstractExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.AudioExtractionFileHandler;
+import org.vitrivr.cineast.core.run.filehandler.GenericExtractionItemHandler;
 import org.vitrivr.cineast.core.run.filehandler.ImageExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.Model3DExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.VideoExtractionFileHandler;
@@ -37,7 +38,7 @@ public class ExtractionDispatcher {
      */
     private Thread fileHandlerThread;
 
-    private AbstractExtractionFileHandler handler;
+    private ExtractionItemProcessor handler;
 
     public boolean initialize(ExtractionContainerProvider pathProvider, ExtractionContextProvider context) throws IOException {
         File outputLocation = Config.sharedConfig().getExtractor().getOutputLocation();
@@ -69,19 +70,23 @@ public class ExtractionDispatcher {
             switch (sourceType) {
                 case IMAGE:
                     handler = new ImageExtractionFileHandler(this.pathProvider, this.context);
-                    this.fileHandlerThread = new Thread(handler);
+                    this.fileHandlerThread = new Thread((ImageExtractionFileHandler) handler);
                     break;
                 case VIDEO:
                     this.handler = new VideoExtractionFileHandler(this.pathProvider, this.context);
-                    this.fileHandlerThread = new Thread(handler);
+                    this.fileHandlerThread = new Thread((VideoExtractionFileHandler)handler);
                     break;
                 case AUDIO:
                     this.handler = new AudioExtractionFileHandler(this.pathProvider, this.context);
-                    this.fileHandlerThread = new Thread(handler);
+                    this.fileHandlerThread = new Thread((AudioExtractionFileHandler)handler);
                     break;
                 case MODEL3D:
                     this.handler = new Model3DExtractionFileHandler(this.pathProvider, this.context);
-                    this.fileHandlerThread = new Thread(handler);
+                    this.fileHandlerThread = new Thread((Model3DExtractionFileHandler)handler);
+                    break;
+                case ALL:
+                    this.handler = new GenericExtractionItemHandler(this.pathProvider, this.context);
+                    this.fileHandlerThread = new Thread((GenericExtractionItemHandler) handler);
                     break;
                 default:
                     break;
