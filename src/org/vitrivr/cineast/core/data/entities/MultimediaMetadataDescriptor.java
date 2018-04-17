@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.data.providers.primitive.StringProviderImpl;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.dao.reader.DatabaseLookupException;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
@@ -103,7 +104,14 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
     if (value != null & isSupportedValue(value)) {
       this.value = new StringTypeProvider(value.toString());
     } else {
-      this.value = new NothingProvider();
+      if (value != null && value.getClass() == StringTypeProvider.class
+          || value.getClass() == StringProviderImpl.class) {
+        this.value = new StringTypeProvider(((StringProviderImpl) value).getString());
+      } else {
+        LOGGER.warn("Value type {} not supported, value is {}", value.getClass().getSimpleName()
+            , value.toString());
+        this.value = new NothingProvider();
+      }
     }
   }
 
