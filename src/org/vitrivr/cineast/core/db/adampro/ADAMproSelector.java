@@ -299,7 +299,8 @@ public class ADAMproSelector implements DBSelector {
 
         AckMessage ack = result.getAck();
         if (ack.getCode() != AckMessage.Code.OK) {
-            LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
+            LOGGER.error("error in getNearestNeighbours on entity {}, (Code {}) : {}", entityName, ack.getCode(), ack.getMessage());
+            LOGGER.error("Query was {} ",sqMessage.toString());
             return new ArrayList<>(0);
         }
 
@@ -330,6 +331,7 @@ public class ADAMproSelector implements DBSelector {
         AckMessage ack = result.getAck();
         if (ack.getCode() != AckMessage.Code.OK) {
             LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
+            LOGGER.error("Query was {} ",sqMessage.toString());
             return new ArrayList<>(0);
         }
 
