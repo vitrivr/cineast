@@ -152,6 +152,7 @@ public class API {
     EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
     if (ec != null) {
       ec.setup(options);
+      ec.close();
     }
   }
 
