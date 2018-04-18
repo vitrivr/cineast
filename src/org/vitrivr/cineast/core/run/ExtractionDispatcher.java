@@ -67,29 +67,33 @@ public class ExtractionDispatcher {
     public void start() throws IOException {
         if (this.fileHandlerThread == null) {
             MediaType sourceType = this.context.sourceType();
-            switch (sourceType) {
-                case IMAGE:
-                    handler = new ImageExtractionFileHandler(this.pathProvider, this.context);
-                    this.fileHandlerThread = new Thread((ImageExtractionFileHandler) handler);
-                    break;
-                case VIDEO:
-                    this.handler = new VideoExtractionFileHandler(this.pathProvider, this.context);
-                    this.fileHandlerThread = new Thread((VideoExtractionFileHandler)handler);
-                    break;
-                case AUDIO:
-                    this.handler = new AudioExtractionFileHandler(this.pathProvider, this.context);
-                    this.fileHandlerThread = new Thread((AudioExtractionFileHandler)handler);
-                    break;
-                case MODEL3D:
-                    this.handler = new Model3DExtractionFileHandler(this.pathProvider, this.context);
-                    this.fileHandlerThread = new Thread((Model3DExtractionFileHandler)handler);
-                    break;
-                case ALL:
-                    this.handler = new GenericExtractionItemHandler(this.pathProvider, this.context);
-                    this.fileHandlerThread = new Thread((GenericExtractionItemHandler) handler);
-                    break;
-                default:
-                    break;
+            if(sourceType == null){
+                this.handler = new GenericExtractionItemHandler(this.pathProvider, this.context);
+                this.fileHandlerThread = new Thread((GenericExtractionItemHandler) handler);
+            }else {
+                switch (sourceType) {
+                    case IMAGE:
+                        handler = new ImageExtractionFileHandler(this.pathProvider, this.context);
+                        this.fileHandlerThread = new Thread((ImageExtractionFileHandler) handler);
+                        break;
+                    case VIDEO:
+                        this.handler = new VideoExtractionFileHandler(this.pathProvider,
+                            this.context);
+                        this.fileHandlerThread = new Thread((VideoExtractionFileHandler) handler);
+                        break;
+                    case AUDIO:
+                        this.handler = new AudioExtractionFileHandler(this.pathProvider,
+                            this.context);
+                        this.fileHandlerThread = new Thread((AudioExtractionFileHandler) handler);
+                        break;
+                    case MODEL3D:
+                        this.handler = new Model3DExtractionFileHandler(this.pathProvider,
+                            this.context);
+                        this.fileHandlerThread = new Thread((Model3DExtractionFileHandler) handler);
+                        break;
+                    default:
+                        break;
+                }
             }
             if (fileHandlerThread != null) {
                 this.fileHandlerThread.setName("extraction-file-handler-thread");

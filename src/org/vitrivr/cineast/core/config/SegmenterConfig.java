@@ -33,6 +33,10 @@ public final class SegmenterConfig {
      */
     public SegmenterConfig(MediaType type) {
         this.properties = new HashMap<>();
+        if(type==null){
+            this.name = null;
+            return;
+        }
         switch (type) {
             case AUDIO:
                 this.name = ConstantLengthAudioSegmenter.class.getName();

@@ -16,7 +16,6 @@ public enum MediaType {
     IMAGE(1, "i", "image"),
     AUDIO(2, "a", "audio"),
     MODEL3D(3, "m", "3dmodel"),
-    ALL(98, "l", "all"),    //Used for legacy compatibility in job-scripts
     UNKNOWN(99, "u", "unknown");
 
     private final int id;
