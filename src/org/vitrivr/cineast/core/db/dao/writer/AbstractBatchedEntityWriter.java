@@ -20,10 +20,6 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
     /** {@link PersistencyWriter} instance used to persist changes to the underlying persistence layer. */
     protected PersistencyWriter<?> writer;
 
-    /**
-     * @param writer
-     * @param batchsize
-     */
     protected AbstractBatchedEntityWriter(PersistencyWriter<?> writer, int batchsize, boolean init) {
         this.buffer = new ArrayBlockingQueue<>(batchsize);
         this.writer = writer;
@@ -57,9 +53,6 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
         this.buffer.offer(tuple);
     }
 
-    /**
-     * @param entity
-     */
     public void write(List<T> entity) {
         entity.forEach(this::write);
     }

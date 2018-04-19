@@ -3,7 +3,6 @@ package org.vitrivr.cineast.core.data.providers.primitive;
 public enum ProviderDataType {
   
   BOOLEAN,
-  BOOLEAN_ARRAY,
   BYTE,
   SHORT,
   INT,
@@ -13,6 +12,6 @@ public enum ProviderDataType {
   LONG,
   DOUBLE,
   STRING,
-  UNKNOWN;
+  UNKNOWN, BITSET;
   
 }
