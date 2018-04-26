@@ -1,0 +1,32 @@
+# Video Mime Types:
+video/avi avi
+video/mp4 m4v
+video/mpeg m1v m2v mp2 mpg mpeg mpe mpa
+video/quicktime mov moov movie
+video/ogg ogv
+video/webm webm
+
+#Image Mime Types:
+
+image/jpeg jpg jpeg jpe
+image/png png
+image/tiff tif tiff
+
+# Audio Mime Types:
+
+audio/mp4 m4a
+audio/aac aac
+audio/aiff aif aiff
+audio/mpeg mp1 mp2 mp3 mpg mpeg
+audio/ogg oga ogg
+audio/wav wav
+audio/flac flac
+
+# 3D Mime types:
+
+application/3d-stl stl STL
+application/3d-obj obj OBJ
+application/3d-off off OFF
+
+# Mixed mim types
+multimedia/mp4 mp4
