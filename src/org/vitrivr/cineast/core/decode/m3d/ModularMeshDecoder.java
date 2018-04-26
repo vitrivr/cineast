@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.activation.MimetypesFileTypeMap;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DecoderConfig;
@@ -19,6 +17,7 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.decode.general.Converter;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.MimeTypeHelper;
 
 /**
  *
@@ -87,11 +86,10 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
     @Override
     public Mesh getNext() {
         try {
-            MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
-            String contenttype = filetypes.getContentType(this.inputFile.toFile());
+            final String contenttype = MimeTypeHelper.getContentType(this.inputFile.toFile());
 
             /* Try to detach decoder from the list of cached decoders. */
-            Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
+            final Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
 
             /* If decoder is null, create a new one. */
             if (decoder == null) {
@@ -127,11 +125,10 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
     @Override
     public QueryContainer convert(Path path) {
         try {
-            MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
-            String contenttype = filetypes.getContentType(path.toFile());
+            final String contenttype = MimeTypeHelper.getContentType(path.toFile());
 
             /* Try to detach decoder from the list of cached decoders. */
-            Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
+            final Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
 
             /* If decoder is null, create a new one. */
             if (decoder == null) {
