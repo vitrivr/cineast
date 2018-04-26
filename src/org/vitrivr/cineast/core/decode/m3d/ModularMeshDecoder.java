@@ -89,7 +89,7 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
             final String contenttype = MimeTypeHelper.getContentType(this.inputFile.toFile());
 
             /* Try to detach decoder from the list of cached decoders. */
-            final Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
+            Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
 
             /* If decoder is null, create a new one. */
             if (decoder == null) {
