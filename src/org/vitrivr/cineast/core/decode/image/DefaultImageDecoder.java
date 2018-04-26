@@ -21,6 +21,8 @@ import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
+import com.twelvemonkeys.image.ResampleOp;
+
 /**
  * @author rgasser
  * @version 1.0
