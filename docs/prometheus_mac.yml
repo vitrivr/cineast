@@ -15,13 +15,13 @@ scrape_configs:
 
     # Prometheus metrics at 9090
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['host.docker.internal:9090']
 
   - job_name: 'cineast'
 
     # Cineast instance at 4569
     static_configs:
-      - targets: ['localhost:4569']
+      - targets: ['host.docker.internal:4569']
 
   - job_name: 'netdata-scrape'
 
@@ -41,4 +41,4 @@ scrape_configs:
 
 
     static_configs:
-      - targets: ['localhost:19999']
+      - targets: ['host.docker.internal:19999']
