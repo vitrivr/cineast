@@ -26,7 +26,7 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
  */
 public class SessionExtractionContainer {
 
-  private static ExtractionContainerProvider provider;
+  private static SessionContainerProvider provider;
   private static final Logger LOGGER = LogManager.getLogger();
   private static boolean open = false;
   private static Counter submittedPaths;
@@ -57,6 +57,7 @@ public class SessionExtractionContainer {
       ExtractionContextProvider context = reader.toObject(configFile, IngestConfig.class);
       provider = new SessionContainerProvider();
       if (dispatcher.initialize(provider, context)) {
+        dispatcher.registerListener(provider);
         dispatcher.start();
       } else {
         System.err.println(String.format(
