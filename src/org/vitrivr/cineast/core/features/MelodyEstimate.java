@@ -80,6 +80,10 @@ public class MelodyEstimate extends StagedFeatureModule {
     @Override
     protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
         Melody melody = this.transcribe(sc);
+        if(melody == null){
+            LOGGER.debug("No melody, skipping");
+            return null;
+        }
         return this.getFeatures(melody);
     }
 
