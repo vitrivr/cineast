@@ -25,15 +25,14 @@ class ExtractionTask implements Runnable {
 		LOGGER.debug("Starting {} on segmentId {}", feature.getClass().getSimpleName(), shot.getId());
 		long start = System.currentTimeMillis();		
 		try{
-		  
 			feature.processSegment(shot);
-			
 		}catch(Exception e){
 			LOGGER.fatal("EXTRACTION ERROR in {}:\n{}", feature.getClass().getSimpleName(), LogHelper.getStackTrace(e));
 		}
 		if(this.etc != null){
       this.etc.reportExecutionTime(this.feature.getClass().getSimpleName(), (System.currentTimeMillis() - start));
     }
+    LOGGER.debug("Finished {} on segmentID {}", feature.getClass().getSimpleName(), shot.getId());
 		LOGGER.traceExit();
 	}
 
