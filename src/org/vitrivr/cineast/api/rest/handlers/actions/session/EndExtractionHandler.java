@@ -22,7 +22,7 @@ public class EndExtractionHandler extends ParsingActionHandler<AnyMessage> {
       throws ActionHandlerException {
     SessionState state = ValidateSessionHandler.validateSession(parameters); //TODO Use State
 
-    SessionExtractionContainer.close();
+    SessionExtractionContainer.endSession();
     return state;
   }
 

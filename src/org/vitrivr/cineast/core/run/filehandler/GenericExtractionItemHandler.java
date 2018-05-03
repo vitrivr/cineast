@@ -258,7 +258,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         extractor.finish();
       }
       LOGGER.debug("Closing & flushing all writers");
-
+      if(pathProvider!=null){
+        pathProvider.close();
+      }
       this.segmentWriter.close();
       this.objectWriter.close();
       this.metadataWriter.close();
@@ -276,12 +278,17 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       LOGGER.error("Pathprovider closed, returning null");
       return null;
     }
+    int sleep = 0;
     while (this.pathProvider.isOpen()) {
       if (this.pathProvider.hasNextAvailable()) {
         Optional<ExtractionItemContainer> providerResult = pathProvider.next();
         if (!providerResult.isPresent()) {
           try {
             Thread.sleep(1);
+            sleep+=1;
+            if(sleep>60_000){
+              LOGGER.debug("Path provider is still open, but no new element has been received in the last 60 seconds");
+            }
           } catch (InterruptedException e) {
             throw new RuntimeException(e);
           }

@@ -202,7 +202,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
         try {
             LOGGER.debug("Shutting down executor service");
             this.executorService.shutdown();
-            LOGGER.debug("Waiting for shutdown");
+            LOGGER.debug("Waiting for termination of executor");
             this.executorService.awaitTermination(15, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             LOGGER.warn("Interrupted while waiting for Executor to shut down!");
@@ -215,7 +215,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
                         extractor.getClass().getSimpleName(), LogHelper.getStackTrace(e));
                 }
             }
-            LOGGER.debug("All extractors termination, executorservice terminated. Exiting shutdown.");
+            LOGGER.debug("All extractors termination, executor service terminated. Exiting shutdown.");
         }
     }
 

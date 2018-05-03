@@ -86,6 +86,14 @@ public class SessionExtractionContainer {
     open = false;
   }
 
+  public static void endSession(){
+    if(provider == null){
+      LOGGER.fatal("No Provider. Exiting");
+      return;
+    }
+    provider.endSession();
+  }
+
   public static boolean isOpen() {
     return open;
   }
