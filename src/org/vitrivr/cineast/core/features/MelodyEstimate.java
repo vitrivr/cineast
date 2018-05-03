@@ -61,6 +61,9 @@ public class MelodyEstimate extends StagedFeatureModule {
     @Override
     public void processSegment(SegmentContainer sc) {
         Melody melody = this.transcribe(sc);
+        if(melody == null){
+            return;
+        }
         List<float[]> features = this.getFeatures(melody);
         for (float[] feature : features) {
             this.persist(sc.getId(), new FloatVectorImpl(feature));
