@@ -257,6 +257,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       for (MetadataExtractor extractor : this.metadataExtractors) {
         extractor.finish();
       }
+      LOGGER.debug("Closing & flushing all writers");
 
       this.segmentWriter.close();
       this.objectWriter.close();
