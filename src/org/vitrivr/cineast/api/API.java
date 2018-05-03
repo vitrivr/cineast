@@ -107,13 +107,7 @@ public class API {
         return;
       }
 
-            /* Handle -i; start CLI. */
-      if (Config.sharedConfig().getApi().getEnableCli() || commandline.hasOption('i')) {
-        CineastCLI cli = new CineastCLI();
-        cli.start();
-      }
-
-            /* Handle --setup; start database setup. */
+      /* Handle --setup; start database setup. */
       if (commandline.hasOption("setup")) {
         HashMap<String, String> options = new HashMap<>();
         String optionValue = commandline.getOptionValue("setup");
@@ -128,7 +122,13 @@ public class API {
         return;
       }
 
-            /* Start the RESTful API if it was configured. */
+      /* Handle -i; start CLI. */
+      if (Config.sharedConfig().getApi().getEnableCli() || commandline.hasOption('i')) {
+        CineastCLI cli = new CineastCLI();
+        cli.start();
+      }
+
+      /* Start the RESTful API if it was configured. */
       if (Config.sharedConfig().getApi().getEnableRest() || Config.sharedConfig().getApi()
           .getEnableRestSecure() || Config.sharedConfig().getApi().getEnableWebsocket() || Config
           .sharedConfig().getApi().getEnableWebsocketSecure()) {
