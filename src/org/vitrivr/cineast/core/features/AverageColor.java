@@ -36,11 +36,12 @@ public class AverageColor extends AbstractFeatureModule {
       if(shot.getAvgImg()==MultiImage.EMPTY_MULTIIMAGE){
         LOGGER.debug("Empty Image, skipping");
         LOGGER.traceExit();
+        return;
       }
       ReadableLabContainer avg = getAvg(shot.getAvgImg());
       persist(shot.getId(), avg);
-      LOGGER.debug("AverageColor.processShot() done in {}",
-          TimeHelper.toc());
+      LOGGER.debug("AverageColor.processShot() for segment {} done in {}",
+          shot.getId(), TimeHelper.toc());
     }
     LOGGER.traceExit();
   }
@@ -51,7 +52,7 @@ public class AverageColor extends AbstractFeatureModule {
     long start = System.currentTimeMillis();
     ReadableLabContainer query = getAvg(sc.getAvgImg());
     List<ScoreElement> _return = getSimilar(ReadableFloatVector.toArray(query), qc);
-    LOGGER.debug("AverageColor.getSimilar() done in {}ms", (System.currentTimeMillis() - start));
+    LOGGER.debug("AverageColor.getSimilar() done in {} ms", (System.currentTimeMillis() - start));
     return LOGGER.traceExit(_return);
   }
 
