@@ -48,6 +48,7 @@ import org.vitrivr.cineast.core.segmenter.image.ImageSegmenter;
 import org.vitrivr.cineast.core.segmenter.video.VideoHistogramSegmenter;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
+import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 /**
  * This class is used to extract a continous list of {@link org.vitrivr.cineast.core.run.ExtractionItemContainer}s.
@@ -104,16 +105,18 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.pipeline = new ExtractionPipeline(context,
         new DefaultExtractorInitializer(writerSupplier));
     this.metadataExtractors = context.metadataExtractors();
-    //TODO Configurable Decoders / Segmenters?
-    /*Config.sharedConfig().getDecoders().forEach((mediaType, decoderConfig) -> {
-      handlers.put(mediaType, ReflectionHelper)
-    });*/
+    //Reasonable Defaults
     handlers.put(MediaType.IMAGE,
         new ImmutablePair<>(new DefaultImageDecoder(), new ImageSegmenter(context)));
     handlers.put(MediaType.AUDIO,
         new ImmutablePair<>(new FFMpegAudioDecoder(), new ConstantLengthAudioSegmenter(context)));
     handlers.put(MediaType.VIDEO,
         new ImmutablePair<>(new FFMpegVideoDecoder(), new VideoHistogramSegmenter(context)));
+    //Config overwrite
+    Config.sharedConfig().getDecoders().forEach((mediaType, decoderConfig) -> {
+      handlers.put(mediaType, new ImmutablePair<>(ReflectionHelper.newDecoder(decoderConfig.getDecoder(), mediaType), handlers.getOrDefault(mediaType, new ImmutablePair<>(null, null)).getRight()));
+    });
+    //TODO Config should allows for multiple segmenters
 
     this.context = context;
   }
@@ -212,25 +215,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
             /*  Create new decoder pair for a new file if the decoder reports that it cannot be reused.*/
         if (!decoder.canBeReused()) {
           decoder.close();
-          switch (pair.getRight()) {
-            case IMAGE:
-              handlers.put(MediaType.IMAGE,
-                  new ImmutablePair<>(new DefaultImageDecoder(), segmenter));
-              break;
-            case VIDEO:
-              handlers.put(MediaType.VIDEO,
-                  new ImmutablePair<>(new FFMpegVideoDecoder(), segmenter));
-              break;
-            case AUDIO:
-              handlers.put(MediaType.AUDIO,
-                  new ImmutablePair<>(new FFMpegAudioDecoder(), segmenter));
-              break;
-            case MODEL3D:
-              throw new RuntimeException();
-            default:
-              throw new RuntimeException();
-          }
+          handlers.put(pair.getRight(), new ImmutablePair<>(ReflectionHelper.newDecoder(Config.sharedConfig().getDecoders().get(pair.getRight()).getDecoder(), pair.getRight()), segmenter));
         }
+        //We assume segmenters are reusable
 
         for (int i = 0; i < this.completeListeners.size(); ++i) {
           this.completeListeners.get(i).onCompleted(pair.getLeft());

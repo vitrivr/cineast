@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import org.vitrivr.cineast.core.config.IdConfig;
+import org.vitrivr.cineast.core.config.SegmenterConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -176,4 +177,6 @@ public interface ExtractionContextProvider {
    * @return Batch size.
    */
   Integer getBatchsize();
+
+  SegmenterConfig getSegmenter();
 }
