@@ -33,6 +33,10 @@ public class AverageColor extends AbstractFeatureModule {
     TimeHelper.tic();
     LOGGER.traceEntry();
     if (!phandler.idExists(shot.getId())) {
+      if(shot.getAvgImg()==MultiImage.EMPTY_MULTIIMAGE){
+        LOGGER.debug("Empty Image, skipping");
+        LOGGER.traceExit();
+      }
       ReadableLabContainer avg = getAvg(shot.getAvgImg());
       persist(shot.getId(), avg);
       LOGGER.debug("AverageColor.processShot() done in {}",
