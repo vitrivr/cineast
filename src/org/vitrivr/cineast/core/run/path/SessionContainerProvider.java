@@ -2,11 +2,12 @@ package org.vitrivr.cineast.core.run.path;
 
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
@@ -30,6 +31,7 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
   private static final AtomicInteger queueNumber = new AtomicInteger();
   private final int instance;
   private volatile boolean closing = false;
+  private Lock stateModification = new ReentrantLock();
 
   public SessionContainerProvider() {
     if (Config.sharedConfig().getMonitoring().enablePrometheus) {
@@ -48,14 +50,19 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
    * Delayed close. After every item has been taken from the buffer, the instance will report itself as closed.
    */
   public void endSession(){
+    stateModification.lock();
+    LOGGER.debug("Ending session");
     closing = true;
+    stateModification.unlock();
   }
 
   @Override
   public void close() {
+    stateModification.lock();
     LOGGER.debug("Closing SessionPathProvider");
     open = false;
     closing = true;
+    stateModification.unlock();
   }
 
   @Override
@@ -72,12 +79,18 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
 
   @Override
   public boolean isOpen() {
-    return open && (buffer.size()!=0 || !closing);
+    stateModification.lock();
+    boolean res = open && (buffer.size()!=0 || !closing);
+    stateModification.unlock();
+    return res;
   }
 
   @Override
   public boolean hasNextAvailable() {
-    return buffer.size() != 0 && open;
+    stateModification.lock();
+    boolean res = buffer.size() != 0 && open;
+    stateModification.unlock();
+    return res;
   }
 
   @Override
@@ -96,5 +109,17 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
     if (pathsCompleted != null) {
       pathsCompleted.inc();
     }
+  }
+
+  public boolean keepAliveCheckIfClosed() {
+    stateModification.lock();
+    if(!open){
+      LOGGER.debug("Provider is closed");
+      return true;
+    }
+    LOGGER.debug("Received keepAlive, setting closing to false");
+    closing = false;
+    stateModification.unlock();
+    return false;
   }
 }

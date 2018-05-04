@@ -91,7 +91,24 @@ public class API {
       }
       PrometheusServer.initialize();
 
-            /* Handle --job; start handleExtraction. */
+      /* Handle --setup; start database setup. */
+      if (commandline.hasOption("setup")) {
+        HashMap<String, String> options = new HashMap<>();
+        String optionValue = commandline.getOptionValue("setup");
+        String[] flags = optionValue != null ? optionValue.split(";") : new String[0];
+        for (String flag : flags) {
+          String[] pair = flag.split("=");
+          if (pair.length == 2) {
+            options.put(pair[0], pair[1]);
+          }
+        }
+        handleSetup(options);
+        PrometheusServer.stopServer();
+        return;
+      }
+
+
+      /* Handle --job; start handleExtraction. */
       if (commandline.hasOption("job")) {
         handleExtraction(new File(commandline.getOptionValue("job")));
         return;
@@ -107,20 +124,6 @@ public class API {
         return;
       }
 
-      /* Handle --setup; start database setup. */
-      if (commandline.hasOption("setup")) {
-        HashMap<String, String> options = new HashMap<>();
-        String optionValue = commandline.getOptionValue("setup");
-        String[] flags = optionValue != null ? optionValue.split(";") : new String[0];
-        for (String flag : flags) {
-          String[] pair = flag.split("=");
-          if (pair.length == 2) {
-            options.put(pair[0], pair[1]);
-          }
-        }
-        handleSetup(options);
-        return;
-      }
 
       /* Handle -i; start CLI. */
       if (Config.sharedConfig().getApi().getEnableCli() || commandline.hasOption('i')) {

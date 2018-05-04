@@ -8,6 +8,7 @@ import org.vitrivr.cineast.api.rest.handlers.actions.*;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ExtractItemHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.StartExtractionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
@@ -161,6 +162,7 @@ public class APIEndpoint {
             service.get("/validate/:id", new ValidateSessionHandler());
             service.post("/extract/new", new ExtractItemHandler());
             service.post("/extract/end", new EndExtractionHandler());
+            service.post("/extract/start", new StartExtractionHandler());
         });
         if (Config.sharedConfig().getApi().getServeContent()) {
           service.path(makePath("get"), () -> {
