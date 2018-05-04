@@ -2,7 +2,8 @@
   "items": [
     {
       "object": {
-        "name": "nameOne"
+        "name": "nameOne",
+        "path": "test/one.png"
       },
       "metadata": [
         {
