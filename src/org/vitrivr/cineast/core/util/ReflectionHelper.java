@@ -9,7 +9,9 @@ import java.util.Optional;
 import jogamp.opengl.glu.mipmap.Extract;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.decode.general.Converter;
+import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
@@ -19,6 +21,7 @@ import org.vitrivr.cineast.core.metadata.MetadataExtractor;
 
 import com.eclipsesource.json.JsonObject;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
+import org.vitrivr.cineast.core.run.ExtractionItemProcessor;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 public class ReflectionHelper {
@@ -38,6 +41,8 @@ public class ReflectionHelper {
 
 	/** Name of the package where MetadataExtractor classes are located by default. */
 	private static final String METADATA_PACKAGE = "org.vitrivr.cineast.core.metadata";
+
+	private static final String DECODER_PACKAGE = "org.vitrivr.cineast.core.decode";
 
 	/**
 	 * Tries to instantiate a new, named ObjectIdGenerator object. If the methods succeeds to do so,
@@ -173,6 +178,32 @@ public class ReflectionHelper {
 			}
 		} catch (ClassNotFoundException | InstantiationException e) {
 			LOGGER.fatal("Failed to create Exporter. Could not find or access class with name {} ({}).", name, LogHelper.getStackTrace(e));
+			return null;
+		}
+	}
+
+	/**
+	 * Tries to instantiate a new, named {@link ExtractionItemProcessor} respectively decoder object. If the methods succeeds to do so,
+	 * that instance is returned by the method.
+	 *
+	 * If the name contains dots (.), that name is treated as FQN. Otherwise, the {@link #DECODER_PACKAGE}
+	 * is assumed together with the {@link MediaType#getName()}  and the name is treated as simple name.
+	 *
+	 * @param name Name of the Decoder.
+	 * @return Instance of Decoder or null, if instantiation fails.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Decoder newDecoder(String name, MediaType type){
+		Class<Decoder> c = null;
+		try {
+			if (name.contains(".")) {
+				c = (Class<Decoder>) Class.forName(name);
+			} else {
+				c = getClassFromName(name, Decoder.class, DECODER_PACKAGE+"."+type.getName());
+			}
+			return instanciate(c);
+		} catch (ClassNotFoundException | InstantiationException e) {
+			LOGGER.fatal("Failed to create Decoder. Could not find class with name {} ({}).", name, LogHelper.getStackTrace(e));
 			return null;
 		}
 	}

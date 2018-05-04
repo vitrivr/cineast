@@ -63,17 +63,9 @@ public final class IngestConfig implements ExtractionContextProvider {
     /**
      * Constructor for {@link IngestConfig}. Used by Jackson for JSON deserialization.
      *
-     * @param type
-     * @param input
-     * @param extractors
-     * @param exporters
-     * @param metadata
-     * @param database
-     * @param pipeline
-     * @param segmenter
      */
     @JsonCreator
-    public IngestConfig(@JsonProperty(value = "type", required = true) MediaType type,
+    public IngestConfig(@JsonProperty(value = "type") MediaType type,
                         @JsonProperty(value = "input", required = true) InputConfig input,
                         @JsonProperty(value = "extractors") List<ExtractorConfig> extractors,
                         @JsonProperty(value = "exporters") List<ExtractorConfig> exporters,
@@ -82,7 +74,7 @@ public final class IngestConfig implements ExtractionContextProvider {
                         @JsonProperty(value = "pipeline") ExtractionPipelineConfig pipeline,
                         @JsonProperty(value = "segmenter") SegmenterConfig segmenter) {
 
-        if (type == null || input == null) throw new IllegalArgumentException("You have not defined an 'type' or 'input' object in your ingest configuration file.");
+        if (input == null) throw new IllegalArgumentException("You have not defined an 'type' or 'input' object in your ingest configuration file.");
         this.type = type;
         this.input = input;
 

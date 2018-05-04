@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
@@ -54,6 +55,15 @@ public class ExtractionItemContainer {
 
   public MultimediaMetadataDescriptor[] getMetadata() {
     return metadata;
+  }
+
+  @Override
+  public String toString() {
+    return "ExtractionItemContainer{" +
+        "object=" + object +
+        ", metadata=" + Arrays.toString(metadata) +
+        ", path=" + path +
+        '}';
   }
 
   /**

@@ -84,7 +84,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         /* Extract features. */
         List<float[]> features = this.preprocessQuery(sc, qcc);
 
-        if (features.size() == 0) {
+        if (features == null || features.size() == 0) {
             LOGGER.warn("No features could be generated from the provided query. Aborting query execution...");
             benchmark.abort();
             return new ArrayList<>(0);

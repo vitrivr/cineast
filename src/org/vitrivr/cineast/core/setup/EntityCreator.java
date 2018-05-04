@@ -41,6 +41,7 @@ public interface EntityCreator extends AutoCloseable {
     default boolean setup(HashMap<String, String> options) {
 
         if (options.containsKey(SETUP_FLAG_CLEAN)) {
+            LOGGER.info("Dropping all entities");
             this.dropAllEntities();
         }
 

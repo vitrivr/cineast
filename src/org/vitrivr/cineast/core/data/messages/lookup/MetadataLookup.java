@@ -22,22 +22,12 @@ public class MetadataLookup implements Message {
     /** List of metadata domains that should be considered. If empty, all domains are considered! */
     private String[] domains;
 
-    /**
-     * Default constructor.
-     *
-     * @param objectids
-     * @param domains
-     */
     @JsonCreator
     public MetadataLookup(@JsonProperty("objectids") String[] ids, @JsonProperty("domains") String[] domains) {
         this.objectIds = ids;
         this.domains = domains;
     }
 
-    /**
-     *
-     * @return
-     */
     public List<String> getIds() {
         if (this.objectIds != null) {
             return Arrays.asList(this.objectIds);
@@ -47,10 +37,6 @@ public class MetadataLookup implements Message {
     }
 
 
-    /**
-     *
-     * @return
-     */
     public  List<String> getDomains() {
         if (this.domains != null) {
             return Arrays.asList(this.domains);
@@ -59,11 +45,6 @@ public class MetadataLookup implements Message {
         }
     }
 
-    /**
-     * Returns the type of particular message. Expressed as MessageTypes enum.
-     *
-     * @return
-     */
     @Override
     public MessageType getMessageType() {
         return MessageType.M_LOOKUP;

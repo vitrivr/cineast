@@ -104,7 +104,7 @@
 
 	"decoders": {
 		"VIDEO": {
-			"decoder": "FFMPEG",
+			"decoder": "FFMpegVideoDecoder",
 			"properties": {
 				"maxFrameWidth": 640,
 				"maxFrameHeight": 480

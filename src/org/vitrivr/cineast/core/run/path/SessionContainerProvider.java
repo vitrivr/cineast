@@ -29,6 +29,7 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
   private Counter pathsCompleted;
   private static final AtomicInteger queueNumber = new AtomicInteger();
   private final int instance;
+  private volatile boolean closing = false;
 
   public SessionContainerProvider() {
     if (Config.sharedConfig().getMonitoring().enablePrometheus) {
@@ -43,14 +44,26 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
     }
   }
 
+  /**
+   * Delayed close. After every item has been taken from the buffer, the instance will report itself as closed.
+   */
+  public void endSession(){
+    closing = true;
+  }
+
   @Override
   public void close() {
     LOGGER.debug("Closing SessionPathProvider");
     open = false;
+    closing = true;
   }
 
   @Override
   public void addPaths(List<ExtractionItemContainer> pathList) {
+    if(!open){
+      LOGGER.debug("Closed, discarding paths.");
+      return;
+    }
     buffer.addAll(pathList);
     if (pathsInQueue != null) {
       pathsInQueue.inc(pathList.size());
@@ -59,7 +72,7 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
 
   @Override
   public boolean isOpen() {
-    return open;
+    return open && (buffer.size()!=0 || !closing);
   }
 
   @Override

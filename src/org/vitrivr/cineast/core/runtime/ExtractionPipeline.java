@@ -144,6 +144,9 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
 
         /* Process SegmentContainers in Queue: For each Extractor in list dispatch an extraction task. */
         while (this.isRunning() || !this.segmentQueue.isEmpty()) {
+            if(!this.isRunning()){
+                LOGGER.debug("Received stop signal, still {} elements left", this.segmentQueue.size());
+            }
             try {
                 SegmentContainer s = this.segmentQueue.poll(500, TimeUnit.MILLISECONDS);
                 if (s != null) {
@@ -167,10 +170,8 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
             } 
         }
 
-        /* Shutdown the ExtractionPipeline. */
         this.shutdown();
 
-         /* Set running flag to true. */
         synchronized (this) { this.running = false; }
     }
 
@@ -199,7 +200,9 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
      */
     private void shutdown() {
         try {
+            LOGGER.debug("Shutting down executor service");
             this.executorService.shutdown();
+            LOGGER.debug("Waiting for termination of executor");
             this.executorService.awaitTermination(15, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             LOGGER.warn("Interrupted while waiting for Executor to shut down!");
@@ -212,6 +215,7 @@ public class ExtractionPipeline implements Runnable, ExecutionTimeCounter {
                         extractor.getClass().getSimpleName(), LogHelper.getStackTrace(e));
                 }
             }
+            LOGGER.debug("All extractors termination, executor service terminated. Exiting shutdown.");
         }
     }
 
