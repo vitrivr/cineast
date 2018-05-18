@@ -1,19 +1,15 @@
 package org.vitrivr.cineast.api;
 
-import com.google.common.collect.Lists;
 import io.prometheus.client.Counter;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.run.ExtractionDispatcher;
-import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.run.ExtractionItemContainer;
 import org.vitrivr.cineast.core.run.path.SessionContainerProvider;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -78,10 +74,12 @@ public class SessionExtractionContainer {
    */
   public static void restartExceptCounter() {
     provider.close();
+    LOGGER.debug("Restarting SessionPathProvider");
     initalizeExtraction();
   }
 
   public static void close() {
+    LOGGER.debug("Closing session");
     provider.close();
     open = false;
   }
@@ -92,10 +90,6 @@ public class SessionExtractionContainer {
       return;
     }
     provider.endSession();
-  }
-
-  public static boolean isOpen() {
-    return open;
   }
 
   public static void addPaths(ExtractionItemContainer[] items) {
@@ -114,4 +108,12 @@ public class SessionExtractionContainer {
     provider.addPaths(Arrays.asList(items));
   }
 
+  /**
+   * Marks as not closing anymore. Provides a best-effort to synchronize.
+   *
+   * @return if the underlying provider is closed
+   */
+  public static boolean keepAliveCheckIfClosed() {
+    return provider.keepAliveCheckIfClosed();
+  }
 }

@@ -266,6 +266,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       this.metadataWriter.close();
       this.objectReader.close();
       this.segmentReader.close();
+      LOGGER.debug("Done");
     }
   }
 
@@ -275,7 +276,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       return null;
     }
     if (!this.pathProvider.isOpen()) {
-      LOGGER.error("Pathprovider closed, returning null");
+      LOGGER.error("Pathprovider closed upon entrance, returning null");
       return null;
     }
     int sleep = 0;
@@ -284,8 +285,8 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         Optional<ExtractionItemContainer> providerResult = pathProvider.next();
         if (!providerResult.isPresent()) {
           try {
-            Thread.sleep(1);
-            sleep+=1;
+            Thread.sleep(100);
+            sleep+=100;
             if(sleep>60_000){
               LOGGER.debug("Path provider is still open, but no new element has been received in the last 60 seconds");
             }
@@ -305,7 +306,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         //TODO Add support for separate filesystems.
       } else {
         try {
-          Thread.sleep(5);
+          Thread.sleep(100);
         } catch (InterruptedException e) {
           throw new RuntimeException(e);
         }
