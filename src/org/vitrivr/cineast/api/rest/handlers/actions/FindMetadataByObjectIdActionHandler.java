@@ -4,6 +4,7 @@ import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.messages.lookup.IdList;
+import org.vitrivr.cineast.core.data.messages.result.MetadataQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
 
 import java.util.ArrayList;
@@ -21,15 +22,15 @@ public class FindMetadataByObjectIdActionHandler extends ParsingActionHandler<Id
      * Processes a HTTP GET request.
      *
      * @param parameters Map containing named parameters in the URL.
-     * @return List of {@link MultimediaObjectDescriptor}s
+     * @return {@link MetadataQueryResult}
      */
     @Override
-    public List<MultimediaMetadataDescriptor> doGet(Map<String, String> parameters) {
+    public MetadataQueryResult doGet(Map<String, String> parameters) {
         final String objectId = parameters.get(ATTRIBUTE_ID);
         final MultimediaMetadataReader reader = new MultimediaMetadataReader();
         final List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(objectId);
         reader.close();
-        return descriptors;
+        return new MetadataQueryResult("", descriptors);
     }
 
     /**
@@ -37,17 +38,17 @@ public class FindMetadataByObjectIdActionHandler extends ParsingActionHandler<Id
      *
      * @param context Object that is handed to the invocation, usually parsed from the request body. May be NULL!
      * @param parameters Map containing named parameters in the URL.
-     * @return List of {@link MultimediaObjectDescriptor}s
+     * @return {@link MetadataQueryResult}
      */
     @Override
-    public List<MultimediaMetadataDescriptor> doPost(IdList context, Map<String, String> parameters) {
+    public MetadataQueryResult doPost(IdList context, Map<String, String> parameters) {
         if(context == null || context.getIds().length == 0 ){
-            return new ArrayList<>(0);
+            return new MetadataQueryResult("", new ArrayList<>(0) );
         }
         final MultimediaMetadataReader reader = new MultimediaMetadataReader();
         final List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(context.getIdList());
         reader.close();
-        return descriptors;
+        return new MetadataQueryResult("",descriptors);
     }
 
     /**
