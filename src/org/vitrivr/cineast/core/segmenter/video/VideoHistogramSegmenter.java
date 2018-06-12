@@ -170,7 +170,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
                 }
 
                 if (this.videoFrameList.isEmpty()) {
-                    this.segments.offer(_return);
+                    this.segments.put(_return);
                     continue; //no more shots to segment
                 }
 
@@ -196,7 +196,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
                         }
                     } while (videoFrame.getId() < bounds.getEnd());
 
-                    this.segments.offer(_return);
+                    this.segments.put(_return);
                     continue;
 
                 } else {
@@ -206,7 +206,8 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
                         if ((videoFrame = this.videoFrameList.poll()) == null) {
                             queueFrames();
                             if ((videoFrame = this.videoFrameList.poll()) == null) {
-                                this.segments.offer(_return);
+                                this.segments.put(_return);
+                                _return = null;
                                 break;
                             }
                         }
@@ -239,7 +240,9 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
                             }
                         }
                     }
-                    this.segments.put(_return);
+                    if(_return != null){
+                        this.segments.put(_return);
+                    }
                 }
             }
         } catch (InterruptedException e) {
