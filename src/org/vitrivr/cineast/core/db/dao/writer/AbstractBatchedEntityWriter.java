@@ -20,8 +20,15 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
     /** {@link PersistencyWriter} instance used to persist changes to the underlying persistence layer. */
     protected PersistencyWriter<?> writer;
 
+    private final boolean batch;
+
     protected AbstractBatchedEntityWriter(PersistencyWriter<?> writer, int batchsize, boolean init) {
-        this.buffer = new ArrayBlockingQueue<>(batchsize);
+        this.batch = batchsize > 1;
+        if(this.batch){
+            this.buffer = new ArrayBlockingQueue<>(batchsize);
+        } else {
+            this.buffer = null; //not used
+        }
         this.writer = writer;
         if (init) {
             this.init();
@@ -47,10 +54,14 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
      */
     public void write(T entity) {
         final PersistentTuple tuple = this.generateTuple(entity);
-        if (this.buffer.remainingCapacity() == 0) {
-            this.flush();
+        if(this.batch) {
+            if (this.buffer.remainingCapacity() == 0) {
+                this.flush();
+            }
+            this.buffer.offer(tuple);
+        } else {
+            this.writer.persist(tuple);
         }
-        this.buffer.offer(tuple);
     }
 
     public void write(List<T> entity) {
@@ -61,6 +72,9 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
      * Drains the content of the buffer and writes it to the underlying persistence layer using the local {@link PersistencyWriter} instance.
      */
     public final void flush() {
+        if(!this.batch){
+            return;
+        }
         final List<PersistentTuple> batch = new ArrayList<>(buffer.size());
         this.buffer.drainTo(batch);
         this.writer.persist(batch);
@@ -72,7 +86,7 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
     @Override
     public final void close() {
         if (this.writer != null) {
-            if (this.buffer.size() > 0) {
+            if (this.batch && this.buffer.size() > 0) {
                 this.flush();
             }
 
