@@ -99,7 +99,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
 
         /* Setup the required persistence-writer classes. */
     final PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
-    this.objectWriter = new MultimediaObjectWriter(writerSupplier.get(), context.getBatchsize());
+    this.objectWriter = new MultimediaObjectWriter(writerSupplier.get());
     this.segmentWriter = new SegmentWriter(writerSupplier.get(), context.getBatchsize());
     this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get(),
         context.getBatchsize());

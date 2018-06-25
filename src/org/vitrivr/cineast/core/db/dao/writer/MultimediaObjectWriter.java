@@ -13,10 +13,9 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
 public class MultimediaObjectWriter extends AbstractBatchedEntityWriter<MultimediaObjectDescriptor> {
     /**
      * @param writer
-     * @param batchsize
      */
-    public MultimediaObjectWriter(PersistencyWriter<?> writer, int batchsize) {
-        super(writer, batchsize, true);
+    public MultimediaObjectWriter(PersistencyWriter<?> writer) {
+        super(writer, 1, true);
     }
 
     /**

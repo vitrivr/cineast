@@ -93,7 +93,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.pathProvider = pathProvider;
 
     final PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
-    this.objectWriter = new MultimediaObjectWriter(writerSupplier.get(), context.getBatchsize());
+    this.objectWriter = new MultimediaObjectWriter(writerSupplier.get());
     this.segmentWriter = new SegmentWriter(writerSupplier.get(), context.getBatchsize());
     this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get(),
         context.getBatchsize());
