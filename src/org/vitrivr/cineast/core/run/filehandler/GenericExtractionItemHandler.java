@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
@@ -20,6 +21,8 @@ import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.segments.Model3DSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -31,6 +34,7 @@ import org.vitrivr.cineast.core.db.dao.writer.SegmentWriter;
 import org.vitrivr.cineast.core.decode.audio.FFMpegAudioDecoder;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.image.DefaultImageDecoder;
+import org.vitrivr.cineast.core.decode.m3d.ModularMeshDecoder;
 import org.vitrivr.cineast.core.decode.video.FFMpegVideoDecoder;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
@@ -43,6 +47,7 @@ import org.vitrivr.cineast.core.run.ExtractionItemContainer;
 import org.vitrivr.cineast.core.run.ExtractionItemProcessor;
 import org.vitrivr.cineast.core.runtime.ExtractionPipeline;
 import org.vitrivr.cineast.core.segmenter.audio.ConstantLengthAudioSegmenter;
+import org.vitrivr.cineast.core.segmenter.general.PassthroughSegmenter;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.segmenter.image.ImageSegmenter;
 import org.vitrivr.cineast.core.segmenter.video.VideoHistogramSegmenter;
@@ -112,9 +117,15 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         new ImmutablePair<>(new FFMpegAudioDecoder(), new ConstantLengthAudioSegmenter(context)));
     handlers.put(MediaType.VIDEO,
         new ImmutablePair<>(new FFMpegVideoDecoder(), new VideoHistogramSegmenter(context)));
+    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(new ModularMeshDecoder(), new PassthroughSegmenter<Mesh>() {
+      @Override
+      protected SegmentContainer getSegmentFromContent(Mesh content) {
+        return new Model3DSegment(content);
+      }
+    }));
     //Config overwrite
     Config.sharedConfig().getDecoders().forEach((mediaType, decoderConfig) -> {
-      handlers.put(mediaType, new ImmutablePair<>(ReflectionHelper.newDecoder(decoderConfig.getDecoder(), mediaType), handlers.getOrDefault(mediaType, new ImmutablePair<>(null, null)).getRight()));
+      handlers.put(mediaType, new ImmutablePair<>(ReflectionHelper.newDecoder(decoderConfig.getDecoder(), mediaType), handlers.getOrDefault(mediaType, null)).getRight());
     });
     //TODO Config should allows for multiple segmenters
 
@@ -253,7 +264,6 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     } catch (InterruptedException e) {
       LOGGER.warn("Interrupted while waiting for ExtractionPipeline to shutdown!");
     } finally {
-            /* Close all the MetadataExtracto classes. */
       for (MetadataExtractor extractor : this.metadataExtractors) {
         extractor.finish();
       }
@@ -298,10 +308,13 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         ExtractionItemContainer item = providerResult.get();
         String type = MimeTypeHelper.getContentType(item.getPathForExtraction().toString());
         if (handlers.entrySet().stream()
-            .anyMatch(el -> el.getValue().getKey().supportedFiles().contains(type))) {
+            .anyMatch(el -> el != null && el.getValue() != null && el.getValue().getKey() != null && el.getValue().getKey().supportedFiles().contains(type))) {
           return new ImmutablePair<>(item, handlers.entrySet().stream()
-              .filter(el -> el.getValue().getKey().supportedFiles().contains(type)).findFirst()
+              .filter(el -> el != null && el.getValue().getKey() != null && el.getValue().getKey().supportedFiles().contains(type)).findFirst()
               .get().getKey());
+        }else{
+          LOGGER.debug("No matching handlers found for type {}", type);
+          handlers.forEach((key, value) -> LOGGER.debug(key + " | " + value));
         }
         //TODO Add support for separate filesystems.
       } else {
@@ -312,7 +325,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         }
       }
     }
-    LOGGER.error("Pathprovider closed, returning null.");
+    LOGGER.info("Pathprovider closed, returning null.");
     return null;
   }
 
