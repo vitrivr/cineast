@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.util.MetadataUtil;
 
 /**
@@ -59,6 +60,7 @@ public class EXIFMetadataExtractor implements MetadataExtractor {
     Set<Entry<String, Object>> set = Maps.transformValues(FIELDS, md::getObject).entrySet();
     return set.stream().filter(e -> e.getValue() != null).map(
         e -> MultimediaMetadataDescriptor.of(objectId, this.domain(), e.getKey(), e.getValue()))
+        .filter(e -> ! (e.getValueProvider() instanceof NothingProvider))
         .collect(Collectors.toList());
   }
 

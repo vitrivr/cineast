@@ -1,9 +1,12 @@
 package org.vitrivr.cineast.core.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
+import com.google.protobuf.StringValue;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -101,14 +104,21 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
     this.domain = domain;
     this.exists = exists;
 
+    outer:
     if (value != null & isSupportedValue(value)) {
       this.value = new StringTypeProvider(value.toString());
     } else {
       if (value instanceof StringProvider) {
         this.value = new StringTypeProvider(((StringProvider) value).getString());
-      } else {
-        LOGGER.warn("Value type {} not supported, value is {}", value.getClass().getSimpleName()
-            , value.toString());
+        break outer;
+      }
+      if(value instanceof com.drew.metadata.StringValue){
+        this.value = new StringTypeProvider(((com.drew.metadata.StringValue) value).toString(Charset
+            .defaultCharset()));
+      }
+      else {
+        LOGGER.warn("Value type {} not supported, value is {} for key {}", value.getClass().getSimpleName()
+            , value.toString(), key);
         this.value = new NothingProvider();
       }
     }
@@ -176,6 +186,11 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
   @JsonProperty
   public String getValue() {
     return this.value.getString();
+  }
+
+  @JsonIgnore
+  public PrimitiveTypeProvider getValueProvider(){
+    return this.value;
   }
 
   @Override
