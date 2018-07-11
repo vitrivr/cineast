@@ -73,39 +73,26 @@ public class SessionExtractionContainer {
    * Re-initalizes extraction. Counter for submitted paths remains
    */
   public static void restartExceptCounter() {
-    provider.close();
+    getProviderOrExit().close();
     LOGGER.debug("Restarting SessionPathProvider");
     initalizeExtraction();
   }
 
   public static void close() {
     LOGGER.debug("Closing session");
-    provider.close();
+    getProviderOrExit().close();
     open = false;
   }
 
-  public static void endSession(){
-    if(provider == null){
-      LOGGER.fatal("No Provider. Exiting");
-      return;
-    }
-    provider.endSession();
+  public static void endSession() {
+    getProviderOrExit().endSession();
   }
 
   public static void addPaths(ExtractionItemContainer[] items) {
-    if (provider == null) {
-      LOGGER
-          .fatal("Provider not initalized yet. Please use the --server option in the API. Exiting");
-      throw new RuntimeException();
-    }
-    if (!provider.isOpen()) {
-      LOGGER.error("Provider is closed. URL will not be submitted, exiting.");
-      throw new RuntimeException();
-    }
+    getOpenProviderOrExit().addPaths(Arrays.asList(items));
     if (submittedPaths != null) {
       submittedPaths.inc(items.length);
     }
-    provider.addPaths(Arrays.asList(items));
   }
 
   /**
@@ -114,6 +101,23 @@ public class SessionExtractionContainer {
    * @return if the underlying provider is closed
    */
   public static boolean keepAliveCheckIfClosed() {
-    return provider.keepAliveCheckIfClosed();
+    return getOpenProviderOrExit().keepAliveCheckIfClosed();
+  }
+
+  private static SessionContainerProvider getProviderOrExit() {
+    if (provider == null) {
+      LOGGER
+          .fatal("Provider not initalized yet. Please use the --server option in the API. Exiting");
+      throw new RuntimeException();
+    }
+    return provider;
+  }
+
+  private static SessionContainerProvider getOpenProviderOrExit() {
+    if (!getProviderOrExit().isOpen()) {
+      LOGGER.error("Provider is closed. URL will not be submitted, exiting.");
+      throw new RuntimeException();
+    }
+    return provider;
   }
 }
