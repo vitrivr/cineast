@@ -31,7 +31,7 @@ public class StartExtractionHandler extends ParsingActionHandler<AnyMessage> {
       SessionExtractionContainer.restartExceptCounter();
       return state;
     }
-    LOGGER.debug("Only sent keepAlive message");
+    LOGGER.debug("Session already open, only sent keepAlive message");
     return state;
   }
 

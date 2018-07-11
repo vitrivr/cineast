@@ -36,12 +36,10 @@ public class ExtractItemHandler extends ParsingActionHandler<ExtractionContainer
   @Override
   public Object doPost(ExtractionContainerMessage context, Map<String, String> parameters)
       throws ActionHandlerException {
-    LOGGER.debug("Received post call");
     SessionState state = ValidateSessionHandler.validateSession(parameters); //TODO Use State
 
     LOGGER.debug("Received items {}", Arrays.toString(context.getItems()));
     SessionExtractionContainer.addPaths(context.getItems());
-    LOGGER.debug("Submitted for extraction");
     return state;
   }
 
