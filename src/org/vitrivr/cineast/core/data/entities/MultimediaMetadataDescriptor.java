@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
@@ -185,6 +186,11 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
   @JsonProperty
   public String getValue() {
     return this.value.getString();
+  }
+
+  @JsonIgnore
+  public PrimitiveTypeProvider getValueProvider(){
+    return this.value;
   }
 
   @Override
