@@ -16,7 +16,10 @@ import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.run.ExtractionItemContainer;
 
 /**
- * A flexible Pathprovider with no caching. Simply stores a list of paths in memory.
+ * A flexible Pathprovider with no caching. Simply stores a list of paths in memory. Differentiates
+ * between three states - running, closing and closed(=!open). This is necessary because when a
+ * Session is ended by the user, he still expects the submitted items to be extracted. Therefore, on
+ * an {@link #endSession()} call, the instance is only {@link #closing}, but still {@link #open}.
  *
  * @author silvan on 19.01.18.
  */
@@ -47,11 +50,12 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
   }
 
   /**
-   * Delayed close. After every item has been taken from the buffer, the instance will report itself as closed.
+   * Delayed close. After every item has been taken from the buffer, the instance will report itself
+   * as closed.
    */
-  public void endSession(){
+  public void endSession() {
     stateModification.lock();
-    LOGGER.debug("Ending session");
+    LOGGER.debug("Received request to end session, closing");
     closing = true;
     stateModification.unlock();
   }
@@ -59,7 +63,7 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
   @Override
   public void close() {
     stateModification.lock();
-    LOGGER.debug("Closing SessionPathProvider");
+    LOGGER.debug("Closing SessionPathProvider completely");
     open = false;
     closing = true;
     stateModification.unlock();
@@ -67,20 +71,29 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
 
   @Override
   public void addPaths(List<ExtractionItemContainer> pathList) {
-    if(!open){
+    stateModification.lock();
+    if (!open) {
       LOGGER.debug("Closed, discarding paths.");
+      stateModification.unlock();
       return;
     }
+    LOGGER.debug("Adding {} paths", pathList.size());
     buffer.addAll(pathList);
     if (pathsInQueue != null) {
       pathsInQueue.inc(pathList.size());
     }
+    stateModification.unlock();
   }
 
   @Override
   public boolean isOpen() {
     stateModification.lock();
-    boolean res = open && (buffer.size()!=0 || !closing);
+    boolean res = open && (buffer.size() != 0 || !closing);
+    if (!res) {
+      LOGGER.debug(
+          "Provider is not open, has a buffer size of {} and is closing, informing about not being open anymore",
+          buffer.size());
+    }
     stateModification.unlock();
     return res;
   }
@@ -95,12 +108,15 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
 
   @Override
   public synchronized Optional<ExtractionItemContainer> next() {
+    stateModification.lock();
     if (buffer.size() != 0 && open) {
       if (pathsInQueue != null) {
         pathsInQueue.dec();
       }
+      stateModification.unlock();
       return Optional.of(buffer.remove(0));
     }
+    stateModification.unlock();
     return Optional.empty();
   }
 
@@ -111,13 +127,17 @@ public class SessionContainerProvider implements ExtractionContainerProvider,
     }
   }
 
+  /**
+   * Tells the container to not mark this instance as closing, no matter what the previous state
+   * was.
+   */
   public boolean keepAliveCheckIfClosed() {
     stateModification.lock();
-    if(!open){
-      LOGGER.debug("Provider is closed");
+    if (!open) {
+      LOGGER.debug("Provider is already closed, cannot keep it running");
       return true;
     }
-    LOGGER.debug("Received keepAlive, setting closing to false");
+    LOGGER.trace("Received keepAlive");
     closing = false;
     stateModification.unlock();
     return false;
