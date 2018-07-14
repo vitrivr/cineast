@@ -164,6 +164,7 @@ public class APIEndpoint {
             service.post("/extract/end", new EndExtractionHandler());
             service.post("/extract/start", new StartExtractionHandler());
         });
+        service.post(makePath("extract"), new FileExtractionHandler());
         if (Config.sharedConfig().getApi().getServeContent()) {
           service.path(makePath("get"), () -> {
             service.get("/thumbnails/:id", new ResolvedContentRoute(

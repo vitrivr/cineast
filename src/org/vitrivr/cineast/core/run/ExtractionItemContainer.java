@@ -40,6 +40,10 @@ public class ExtractionItemContainer {
     return path;
   }
 
+  public void setPath(Path path) {
+    this.path = path;
+  }
+
   public void setObject(MultimediaObjectDescriptor object) {
     this.object = object;
   }
