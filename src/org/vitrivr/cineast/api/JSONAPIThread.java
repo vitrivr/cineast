@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.api;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -14,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.art.modules.visualization.SegmentDescriptorComparator;
@@ -27,23 +30,14 @@ import org.vitrivr.cineast.core.data.Position;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
-import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.explorative.PlaneHandler;
 import org.vitrivr.cineast.explorative.PlaneManager;
-
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 /**
  * Handles connection to and from the Client As the name of the class suggests,
@@ -386,26 +380,26 @@ public class JSONAPIThread extends Thread {
         LOGGER.debug("Context API call ending");
         break;
       }
-      case "getLabels":{
-        LOGGER.debug("Label API call starting");
-        JsonArray jsonConcepts = new JsonArray();
-        DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-        selector.open(NeuralNetFeature.getClassTableName());
-
-        List<PrimitiveTypeProvider> queryRes = selector.getAll(NeuralNetFeature.getHumanLabelColName());
-        HashSet<String> labels = new HashSet<>(queryRes.size());
-        //Eliminate Duplicates
-        for(PrimitiveTypeProvider el : queryRes){
-          labels.add(el.getString());
-        }
-        for(String el : labels) {
-          jsonConcepts.add(el);
-        }
-        _return.set("concepts", jsonConcepts);
-        selector.close();
-        LOGGER.debug("Concepts API call ending");
-        break;
-      }
+//      case "getLabels":{
+//        LOGGER.debug("Label API call starting");
+//        JsonArray jsonConcepts = new JsonArray();
+//        DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+//        selector.open(NeuralNetFeature.getClassTableName());
+//
+//        List<PrimitiveTypeProvider> queryRes = selector.getAll(NeuralNetFeature.getHumanLabelColName());
+//        HashSet<String> labels = new HashSet<>(queryRes.size());
+//        //Eliminate Duplicates
+//        for(PrimitiveTypeProvider el : queryRes){
+//          labels.add(el.getString());
+//        }
+//        for(String el : labels) {
+//          jsonConcepts.add(el);
+//        }
+//        _return.set("concepts", jsonConcepts);
+//        selector.close();
+//        LOGGER.debug("Concepts API call ending");
+//        break;
+//      }
 
       case "getMultimediaobjects":{
         List<MultimediaObjectDescriptor> multimediaobjectIds = new MultimediaObjectLookup().getAllObjects();

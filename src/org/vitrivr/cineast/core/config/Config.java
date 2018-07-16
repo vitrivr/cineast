@@ -27,7 +27,6 @@ public class Config {
     private ExtractionPipelineConfig extractor;
     private ImageCacheConfig imagecache;
     private VisualizationConfig visualization;
-    private NeuralNetConfig neuralnet;
     private QueryConfig query;
     private HashMap<MediaType, DecoderConfig> decoders;
     private BenchmarkConfig benchmark = new BenchmarkConfig();
@@ -112,13 +111,6 @@ public class Config {
         this.visualization = visualization;
     }
 
-    @JsonProperty
-    public NeuralNetConfig getNeuralnet() {
-        return this.neuralnet;
-    }
-    public void setNeuralnet(NeuralNetConfig neuralnet) {
-        this.neuralnet = neuralnet;
-    }
 
     @JsonProperty
     public QueryConfig getQuery() {

@@ -2,17 +2,13 @@ package org.vitrivr.cineast.core.setup;
 
 import java.util.HashMap;
 import java.util.HashSet;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.NeuralNetConfig;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.dao.TagHandler;
-import org.vitrivr.cineast.core.features.neuralnet.NeuralNetFeature;
-import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType;
 
@@ -67,26 +63,6 @@ public interface EntityCreator extends AutoCloseable {
         for (Retriever r : retrievers) {
             LOGGER.info("Setting up " + r.getClass().getSimpleName());
             r.initalizePersistentLayer(() -> this);
-        }
-
-        NeuralNetConfig nnconfig = Config.sharedConfig().getNeuralnet();
-        if (nnconfig != null) {
-            LOGGER.info("Initializing NeuralNet persistent layer...");
-            NeuralNetFeature feature = new NeuralNetVGG16Feature(Config.sharedConfig().getNeuralnet());
-            feature.initalizePersistentLayer(() -> this);
-            LOGGER.info("...done");
-
-            LOGGER.info("Initializing writer...");
-            feature.init(Config.sharedConfig().getDatabase().getWriterSupplier());
-            feature.init(Config.sharedConfig().getDatabase().getSelectorSupplier());
-            LOGGER.info("...done");
-
-            LOGGER.info("Filling labels...");
-            feature.fillConcepts(Config.sharedConfig().getNeuralnet().getConceptsPath());
-            feature.fillLabels(new HashMap<>());
-            LOGGER.info("...done");
-        } else {
-            LOGGER.warn("No configuration for NeuralNet persistent layer found. Skipping...");
         }
 
         System.out.println("Setup complete!");
