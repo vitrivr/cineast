@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.run.ExtractionDispatcher;
 import org.vitrivr.cineast.core.run.ExtractionItemContainer;
 import org.vitrivr.cineast.core.run.path.SessionContainerProvider;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+import org.vitrivr.cineast.core.data.MediaType;
 
 /**
  * Singleton Structure. Intended to be an access points across multiple sessions. Can be closed and
@@ -60,7 +61,6 @@ public class SessionExtractionContainer {
             "Could not start session with configuration file '%s'. Does the file exist?",
             configFile.toString()));
       }
-      dispatcher.start();
     } catch (IOException e) {
       System.err.println(String.format(
           "Could not start session with configuration file '%s' due to a IO error.",
@@ -76,6 +76,24 @@ public class SessionExtractionContainer {
     getProviderOrExit().close();
     LOGGER.debug("Restarting SessionPathProvider");
     initalizeExtraction();
+  }
+
+  public static void startSessionFor(MediaType mediaType) {
+    configFile = getConfigFileForMediaType(mediaType);
+    if (provider != null) {
+      getProviderOrExit().close();
+    }
+    initalizeExtraction();
+  }
+
+  public static File getConfigFileForMediaType(MediaType mediaType) {
+    switch (mediaType) {
+      case IMAGE: return new File("image_extraction_config.json");
+      case VIDEO: return new File("video_extraction_config.json");
+      case AUDIO: return new File("audio_extraction_config.json");
+      case MODEL3D: return new File("3dmodel_extraction_config.json");
+    }
+    return null;
   }
 
   public static void close() {
@@ -101,7 +119,11 @@ public class SessionExtractionContainer {
    * @return if the underlying provider is closed
    */
   public static boolean keepAliveCheckIfClosed() {
-    return getOpenProviderOrExit().keepAliveCheckIfClosed();
+    return getProviderOrExit().keepAliveCheckIfClosed();
+  }
+
+  public static boolean isProviderNull() {
+    return provider == null;
   }
 
   private static SessionContainerProvider getProviderOrExit() {
