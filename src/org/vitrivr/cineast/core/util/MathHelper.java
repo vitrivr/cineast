@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.util;
 
+import java.util.Arrays;
+
 public class MathHelper {
 
 	private MathHelper(){}
@@ -188,6 +190,60 @@ public class MathHelper {
 			return 1;
 		} else {
 			return 0;
+		}
+	}
+
+	public static double[] softmax(double[] input){
+
+		double[] params = Arrays.copyOf(input, input.length);
+
+		double sum = 0;
+
+		for (int i=0; i<params.length; i++) {
+			params[i] = Math.exp(params[i]);
+			sum += params[i];
+		}
+
+		if (Double.isNaN(sum) || sum < 0) {
+			for (int i=0; i<params.length; i++) {
+				params[i] = 1.0 / params.length;
+			}
+		} else {
+			for (int i=0; i<params.length; i++) {
+				params[i] = params[i] / sum;
+			}
+		}
+
+		return params;
+
+	}
+
+	public static ArgMaxResult argMax(double[] params) {
+		int maxIndex = 0;
+		for (int i=0; i<params.length; i++) {
+			if (params[maxIndex] < params[i]) {
+				maxIndex = i;
+			}
+		}
+		return new ArgMaxResult(maxIndex, params[maxIndex]);
+	}
+
+
+	public static class ArgMaxResult {
+		private int index;
+		private double maxValue;
+
+		public ArgMaxResult(int index, double maxValue) {
+			this.index = index;
+			this.maxValue = maxValue;
+		}
+
+		public int getIndex() {
+			return index;
+		}
+
+		public double getMaxValue() {
+			return maxValue;
 		}
 	}
 }
