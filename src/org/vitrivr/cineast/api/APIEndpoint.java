@@ -151,6 +151,7 @@ public class APIEndpoint {
             service.post("/objects/by/id", new FindObjectByActionHandler());
             service.post("/metadata/by/id", new FindMetadataByObjectIdActionHandler());
             service.post("/metadata/in/:domain", new FindMetadataInDomainByObjectIdActionHandler());
+            service.post("/metadata/with/:key", new FindMetadataByKeyByObjectIdActionHandler());
             service.post("/tags/by/id", new FindTagsByActionHandler());
         });
         service.path(makePath("session"), () -> {
