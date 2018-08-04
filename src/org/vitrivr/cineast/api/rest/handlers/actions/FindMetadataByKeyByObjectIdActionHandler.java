@@ -1,7 +1,8 @@
-package org.vitrivr.cineast.api.rest.handlers.actions.session;
+package org.vitrivr.cineast.api.rest.handlers.actions;
 
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.messages.components.MetadataKeyFilter;
 import org.vitrivr.cineast.core.data.messages.lookup.IdList;
 import org.vitrivr.cineast.core.data.messages.result.MetadataQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
@@ -33,7 +34,8 @@ public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandl
     final MultimediaMetadataReader reader = new MultimediaMetadataReader();
     final List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(objectId);
     reader.close();
-    return new MetadataQueryResult("", filterByMetadataKey(key, descriptors));
+    final MetadataKeyFilter predicate = MetadataKeyFilter.createForKeywords(key);
+    return new MetadataQueryResult("", descriptors.stream().filter(predicate).collect(Collectors.toList()));
   }
   
   /**
@@ -52,12 +54,8 @@ public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandl
     final MultimediaMetadataReader reader = new MultimediaMetadataReader();
     final List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(context.getIdList());
     reader.close();
-    return new MetadataQueryResult("",filterByMetadataKey(key, descriptors));
-  }
-  
-  
-  private List<MultimediaMetadataDescriptor> filterByMetadataKey(String key, List<MultimediaMetadataDescriptor> list){
-    return list.stream().filter(mmmdd -> mmmdd.getKey().toLowerCase().equals(key.toLowerCase())).collect(Collectors.toList());
+    final MetadataKeyFilter prediate = MetadataKeyFilter.createForKeywords(key);
+    return new MetadataQueryResult("",descriptors.stream().filter(prediate).collect(Collectors.toList()));
   }
   
   /**

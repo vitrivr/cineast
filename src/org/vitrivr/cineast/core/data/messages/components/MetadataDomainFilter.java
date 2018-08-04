@@ -18,4 +18,10 @@ public class MetadataDomainFilter extends AbstractMetadataFilterDescriptor imple
   public boolean test(MultimediaMetadataDescriptor multimediaMetadataDescriptor) {
     return getKeywordsAsListLowercase().contains(multimediaMetadataDescriptor.getDomain().toLowerCase());
   }
+
+  public static MetadataDomainFilter createForKeywords(String...keywords){
+    MetadataDomainFilter filter = new MetadataDomainFilter();
+    filter.setKeywords(keywords);
+    return filter;
+  }
 }

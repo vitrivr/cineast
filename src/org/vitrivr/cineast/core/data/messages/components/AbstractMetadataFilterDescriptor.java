@@ -32,7 +32,7 @@ import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
     property = "type")
 @JsonSubTypes({
     @Type(value = MetadataDomainFilter.class, name = "domain"),
-    @Type(value = KeyFilterDescriptor.class, name = "key")
+    @Type(value = MetadataKeyFilter.class, name = "key")
 })
 public abstract class AbstractMetadataFilterDescriptor implements
     Predicate<MultimediaMetadataDescriptor> {
