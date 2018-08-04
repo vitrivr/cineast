@@ -142,6 +142,7 @@ public class APIEndpoint {
             service.get("/object/by/:attribute/:value", new FindObjectByActionHandler());
             service.get("/metadata/by/id/:id", new FindMetadataByObjectIdActionHandler());
             service.get("/metadata/in/:domain/by/id/:id", new FindMetadataInDomainByObjectIdActionHandler());
+            service.get("/metadata/of/:id/in/:domain/with/:key", new FindMetadataByDomainWithKeyByObjectIdActionHandler());
             service.get("/tags/by/:attribute/:value", new FindTagsByActionHandler());
             service.get("/objects/all/:type", new FindObjectAllActionHandler());
             service.get("/segments/all/object/:id", new FindSegmentsByObjectIdActionHandler());
