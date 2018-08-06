@@ -108,6 +108,7 @@ public class APIEndpoint {
         /* Configure the result after processing was completed. */
         service.after((request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
+            response.header("Access-Control-Allow-Headers", "*");
         });
 
         return service;
