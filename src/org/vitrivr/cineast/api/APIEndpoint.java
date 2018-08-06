@@ -1,16 +1,10 @@
 package org.vitrivr.cineast.api;
 
-import java.io.File;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.handlers.actions.*;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.EndExtractionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.EndSessionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.ExtractItemHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.StartExtractionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.StartSessionHandler;
-import org.vitrivr.cineast.api.rest.handlers.actions.session.ValidateSessionHandler;
+import org.vitrivr.cineast.api.rest.handlers.actions.session.*;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemObjectResolver;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemThumbnailResolver;
@@ -18,8 +12,9 @@ import org.vitrivr.cineast.api.rest.routes.ResolvedContentRoute;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 import org.vitrivr.cineast.core.config.APIConfig;
 import org.vitrivr.cineast.core.config.Config;
-
 import spark.Service;
+
+import java.io.File;
 
 /**
  * This class establishes a HTTP API endpoint listening on the specified port(s). The HTTP handling is
@@ -147,6 +142,9 @@ public class APIEndpoint {
         service.path(makePath("find"), () -> {
             service.get("/object/by/:attribute/:value", new FindObjectByActionHandler());
             service.get("/metadata/by/id/:id", new FindMetadataByObjectIdActionHandler());
+            service.get("/metadata/in/:domain/by/id/:id", new FindMetadataInDomainByObjectIdActionHandler());
+            service.get("/metadata/of/:id/in/:domain/with/:key", new FindMetadataByDomainWithKeyByObjectIdActionHandler());
+            service.get("/metadata/with/:key", new FindMetadataByKeyByObjectIdActionHandler());
             service.get("/tags/by/:attribute/:value", new FindTagsByActionHandler());
             service.get("/objects/all/:type", new FindObjectAllActionHandler());
             service.get("/segments/all/object/:id", new FindSegmentsByObjectIdActionHandler());
@@ -155,6 +153,8 @@ public class APIEndpoint {
             service.post("/segments/by/id", new FindSegmentsByIdActionHandler());
             service.post("/objects/by/id", new FindObjectByActionHandler());
             service.post("/metadata/by/id", new FindMetadataByObjectIdActionHandler());
+            service.post("/metadata/in/:domain", new FindMetadataInDomainByObjectIdActionHandler());
+            service.post("/metadata/with/:key", new FindMetadataByKeyByObjectIdActionHandler());
             service.post("/tags/by/id", new FindTagsByActionHandler());
         });
         service.path(makePath("session"), () -> {
