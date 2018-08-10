@@ -1,15 +1,19 @@
-package org.vitrivr.cineast.core.features.neuralnet.tf.models;
+package org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab;
 
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.LongBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.types.UInt8;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 public class DeepLab implements AutoCloseable{
 
@@ -94,5 +98,14 @@ public class DeepLab implements AutoCloseable{
   public void close() {
     this.session.close();
     this.graph.close();
+  }
+
+  protected static byte[] load(String path){
+    try {
+      return Files.readAllBytes((Paths.get(path)));
+    } catch (IOException e) {
+      throw new RuntimeException(
+          "could not load graph for DeepLab: " + LogHelper.getStackTrace(e));
+    }
   }
 }
