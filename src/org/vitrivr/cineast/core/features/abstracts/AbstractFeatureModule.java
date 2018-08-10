@@ -32,12 +32,12 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
   protected final float maxDist;
   protected final String tableName;
   protected PersistencyWriter<?> phandler;
-  protected CorrespondenceFunction linearCorrespondence;
+  protected CorrespondenceFunction correspondence;
 
   protected AbstractFeatureModule(String tableName, float maxDist) {
     this.tableName = tableName;
     this.maxDist = maxDist;
-    this.linearCorrespondence = CorrespondenceFunction.linear(maxDist);
+    this.correspondence = CorrespondenceFunction.linear(maxDist);
   }
 
   @Override
@@ -65,7 +65,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
   }
 
   protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
-    return new QueryConfig(qc).setCorrespondenceFunctionIfEmpty(this.linearCorrespondence);
+    return new QueryConfig(qc).setCorrespondenceFunctionIfEmpty(this.correspondence);
   }
 
   @Override
@@ -101,7 +101,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
         .getNearestNeighboursGeneric(Config.sharedConfig().getRetriever().getMaxResultsPerModule(),
             queryProvider,
             "feature", SegmentDistanceElement.class, qcc);
-    CorrespondenceFunction function = qcc.getCorrespondenceFunction().orElse(linearCorrespondence);
+    CorrespondenceFunction function = qcc.getCorrespondenceFunction().orElse(correspondence);
     return DistanceElement.toScore(distances, function);
   }
 

@@ -142,7 +142,7 @@ public abstract class Lightfield extends StagedFeatureModule {
         }
 
         /* Add results to list and return list of results. */
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.correspondence);
         return ScoreElement.filterMaximumScores(map.entrySet().stream().map((e) -> e.getValue().toScore(correspondence)));
     }
 
@@ -156,7 +156,7 @@ public abstract class Lightfield extends StagedFeatureModule {
     @Override
     protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 

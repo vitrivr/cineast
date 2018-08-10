@@ -99,7 +99,8 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
      */
     @Override
     protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
-        final CorrespondenceFunction function = qc.getCorrespondenceFunction().orElse(linearCorrespondence);
+        final CorrespondenceFunction function = qc.getCorrespondenceFunction().orElse(
+            correspondence);
         return ScoreElement.filterMaximumScores(partialResults.stream().map(r -> r.toScore(function)));
     }
 
@@ -112,7 +113,7 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
      */
     protected ReadableQueryConfig queryConfig(ReadableQueryConfig qc, float[] weights) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.chisquared)
                 .setDistanceWeights(weights);
     }

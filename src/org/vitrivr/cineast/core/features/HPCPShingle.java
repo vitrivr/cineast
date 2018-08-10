@@ -111,7 +111,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
         }
 
         /* Prepare final result-set. */
-        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.correspondence);
         return ScoreElement.filterMaximumScores(map.entrySet().stream().map(e -> e.getValue().toScore(fkt)));
     }
 
@@ -161,7 +161,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
     @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
                 .addHint(ReadableQueryConfig.Hints.inexact);
     }

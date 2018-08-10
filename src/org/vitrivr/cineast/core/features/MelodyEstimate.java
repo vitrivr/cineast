@@ -102,7 +102,7 @@ public class MelodyEstimate extends StagedFeatureModule {
     @Override
     protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
         /* TODO: Improve... */
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.correspondence);
         return ScoreElement.filterMaximumScores(partialResults.stream().map(d -> d.toScore(correspondence)));
     }
 
@@ -116,7 +116,7 @@ public class MelodyEstimate extends StagedFeatureModule {
     @Override
     protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 

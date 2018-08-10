@@ -111,7 +111,7 @@ public abstract class SphericalHarmonics extends StagedFeatureModule {
      */
     @Override
     protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.correspondence);
         return ScoreElement.filterMaximumScores(partialResults.stream().map(v -> v.toScore(correspondence)));
     }
 

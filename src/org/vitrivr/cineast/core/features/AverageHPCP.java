@@ -96,7 +96,7 @@ public abstract class AverageHPCP extends StagedFeatureModule {
         }
 
         /* Prepare final result-set. */
-        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.correspondence);
         return ScoreElement.filterMaximumScores(map.entrySet().stream().map(e -> e.getValue().toScore(fkt)));
     }
 

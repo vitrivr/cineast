@@ -149,7 +149,7 @@ public class AudioFingerprint extends StagedFeatureModule {
         }
 
         /* Prepare final results. */
-        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.correspondence);
         map.forEach((key, value) -> results.add(value.toScore(fkt)));
         return ScoreElement.filterMaximumScores(results.stream());
     }
@@ -228,7 +228,7 @@ public class AudioFingerprint extends StagedFeatureModule {
     @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.manhattan)
                 .addHint(ReadableQueryConfig.Hints.inexact);
     }

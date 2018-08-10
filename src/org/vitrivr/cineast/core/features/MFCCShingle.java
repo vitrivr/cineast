@@ -81,7 +81,7 @@ public class MFCCShingle extends StagedFeatureModule {
 
          /* Set QueryConfig and extract correspondence function. */
         qc = this.setQueryConfig(qc);
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.correspondence);
         for (DistanceElement hit : partialResults) {
             if (hit.getDistance() < this.distanceThreshold) {
                 scoreMap.adjustOrPutValue(hit.getId(), 1, scoreMap.get(hit.getId())/2);
@@ -104,7 +104,7 @@ public class MFCCShingle extends StagedFeatureModule {
     @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
                 .addHint(ReadableQueryConfig.Hints.inexact);
     }
