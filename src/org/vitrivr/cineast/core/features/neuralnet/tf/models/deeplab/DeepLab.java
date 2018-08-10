@@ -15,13 +15,13 @@ import org.tensorflow.Tensor;
 import org.tensorflow.types.UInt8;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-public class DeepLab implements AutoCloseable{
+public class DeepLab implements AutoCloseable {
 
   private final Graph graph;
   private final Session session;
   private final String[] labels;
 
-  public DeepLab(byte[] graph, String[] labels){
+  public DeepLab(byte[] graph, String[] labels) {
     this.graph = new Graph();
     this.graph.importGraphDef(graph);
     this.session = new Session(this.graph);
@@ -32,11 +32,18 @@ public class DeepLab implements AutoCloseable{
   /**
    * returns the class label index for every pixel of the rescaled image
    */
-  public synchronized int[][] processImage(BufferedImage img){
+  public synchronized int[][] processImage(BufferedImage img) {
     Tensor<UInt8> input = prepareImage(img);
+    int[][] _return = processImage(input);
+    input.close();
+    return _return;
+  }
+
+
+  public synchronized int[][] processImage(Tensor<UInt8> input) {
+
     Tensor<Long> result = session.runner().feed("ImageTensor", input)
         .fetch("SemanticPredictions").run().get(0).expect(Long.class);
-    input.close();
 
     int len = result.numElements();
     LongBuffer buf = LongBuffer.allocate(len);
@@ -51,33 +58,38 @@ public class DeepLab implements AutoCloseable{
 
     int[][] resultMatrix = new int[w][h];
 
-    for(int i = 0; i < resultArray.length; ++i){
-      resultMatrix[i % w][i / w] = (int)resultArray[i];
+    for (int i = 0; i < resultArray.length; ++i) {
+      resultMatrix[i % w][i / w] = (int) resultArray[i];
     }
 
     return resultMatrix;
   }
 
-  private static Tensor<UInt8> prepareImage(BufferedImage input) {
+  public static Tensor<UInt8> prepareImage(BufferedImage input) {
 
     float ratio = 513f / Math.max(input.getWidth(), input.getHeight());
-    int w = (int)(input.getWidth() * ratio), h = (int)(input.getHeight() * ratio);
+    int w = (int) (input.getWidth() * ratio), h = (int) (input.getHeight() * ratio);
 
-    BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TRANSLUCENT);
-    Graphics2D g2 = resizedImg.createGraphics();
-    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-    g2.drawImage(input, 0, 0, w, h, null);
-    g2.dispose();
-
+    BufferedImage resizedImg;
+    if (input.getWidth() == w && input.getHeight() == h) {
+      resizedImg = input;
+    } else {
+      resizedImg = new BufferedImage(w, h, BufferedImage.TRANSLUCENT);
+      Graphics2D g2 = resizedImg.createGraphics();
+      g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+          RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+      g2.drawImage(input, 0, 0, w, h, null);
+      g2.dispose();
+    }
 
     byte[][][][] bimg = new byte[1][h][w][3];
 
-    for(int x = 0; x < resizedImg.getWidth(); ++x){
-      for(int y = 0; y < resizedImg.getHeight(); ++y){
+    for (int x = 0; x < resizedImg.getWidth(); ++x) {
+      for (int y = 0; y < resizedImg.getHeight(); ++y) {
         Color c = new Color(resizedImg.getRGB(x, y));
-        bimg[0][y][x][0] = (byte)(c.getRed() & 0xff);
-        bimg[0][y][x][1] = (byte)(c.getGreen() & 0xff);
-        bimg[0][y][x][2] = (byte)(c.getBlue() & 0xff);
+        bimg[0][y][x][0] = (byte) (c.getRed() & 0xff);
+        bimg[0][y][x][1] = (byte) (c.getGreen() & 0xff);
+        bimg[0][y][x][2] = (byte) (c.getBlue() & 0xff);
       }
     }
 
@@ -87,11 +99,11 @@ public class DeepLab implements AutoCloseable{
 
   }
 
-  public int getColor(long cls){
-    if(cls == 0){
+  public int getColor(long cls) {
+    if (cls == 0) {
       return Color.BLACK.getRGB();
     }
-    return Color.HSBtoRGB((cls / (float)(this.labels.length - 1)), 0.8f, 0.8f);
+    return Color.HSBtoRGB((cls / (float) (this.labels.length - 1)), 0.8f, 0.8f);
   }
 
   @Override
@@ -100,7 +112,7 @@ public class DeepLab implements AutoCloseable{
     this.graph.close();
   }
 
-  protected static byte[] load(String path){
+  protected static byte[] load(String path) {
     try {
       return Files.readAllBytes((Paths.get(path)));
     } catch (IOException e) {

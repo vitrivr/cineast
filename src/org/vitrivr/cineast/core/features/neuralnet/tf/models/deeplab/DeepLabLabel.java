@@ -1,6 +1,8 @@
 package org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+import java.util.Collection;
 
 public enum DeepLabLabel {
 
@@ -198,6 +200,16 @@ public enum DeepLabLabel {
     return NOTHING;
   }
 
+  public static DeepLabLabel[][] fromAde20kId(int[][] ids) {
+    DeepLabLabel[][] _return = new DeepLabLabel[ids.length][ids[0].length];
+    for (int i = 0; i < ids.length; ++i) {
+      for (int j = 0; j < ids[0].length; ++j) {
+        _return[i][j] = fromAde20kId(ids[i][j]);
+      }
+    }
+    return _return;
+  }
+
   public static DeepLabLabel fromPascalVocId(int id) {
     if (pascalvocMap.containsKey(id)) {
       return pascalvocMap.get(id);
@@ -205,11 +217,31 @@ public enum DeepLabLabel {
     return NOTHING;
   }
 
+  public static DeepLabLabel[][] fromPascalVocId(int[][] ids) {
+    DeepLabLabel[][] _return = new DeepLabLabel[ids.length][ids[0].length];
+    for (int i = 0; i < ids.length; ++i) {
+      for (int j = 0; j < ids[0].length; ++j) {
+        _return[i][j] = fromPascalVocId(ids[i][j]);
+      }
+    }
+    return _return;
+  }
+
   public static DeepLabLabel fromCityscapesId(int id) {
     if (cityscapesMap.containsKey(id)) {
       return cityscapesMap.get(id);
     }
     return NOTHING;
+  }
+
+  public static DeepLabLabel[][] fromCityscapesId(int[][] ids) {
+    DeepLabLabel[][] _return = new DeepLabLabel[ids.length][ids[0].length];
+    for (int i = 0; i < ids.length; ++i) {
+      for (int j = 0; j < ids[0].length; ++j) {
+        _return[i][j] = fromCityscapesId(ids[i][j]);
+      }
+    }
+    return _return;
   }
 
   public static DeepLabLabel getClosest(float x, float y) {
@@ -228,6 +260,27 @@ public enum DeepLabLabel {
     return closest;
   }
 
+  public static DeepLabLabel getDominantLabel(Collection<DeepLabLabel> labels) {
+
+    TObjectIntHashMap<DeepLabLabel> hist = new TObjectIntHashMap<>();
+
+    for(DeepLabLabel label : labels){
+        hist.adjustOrPutValue(label, 1, 1);
+    }
+
+    int max = 0;
+    DeepLabLabel dominant = NOTHING;
+    for(DeepLabLabel label : hist.keySet()){
+      if(hist.get(label) > max){
+        max = hist.get(label);
+        dominant = label;
+      }
+    }
+
+    return dominant;
+
+  }
+
   public float getEmbeddX() {
     return this.embeddX;
   }
@@ -235,5 +288,6 @@ public enum DeepLabLabel {
   public float getEmbeddY() {
     return this.embeddY;
   }
+
 
 }
