@@ -1,20 +1,17 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
 import org.vitrivr.cineast.core.data.messages.lookup.IdList;
 import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * @author rgasser
@@ -35,7 +32,7 @@ public class FindObjectByActionHandler extends ParsingActionHandler<IdList> {
      * @return {@link ObjectQueryResult}
      */
     @Override
-    public List<MultimediaObjectDescriptor> doGet(Map<String, String> parameters) {
+    public ObjectQueryResult doGet(Map<String, String> parameters) {
         String attribute = parameters.get(ATTRIBUTE_NAME);
         String value = parameters.get(VALUE_NAME);
 
@@ -61,7 +58,7 @@ public class FindObjectByActionHandler extends ParsingActionHandler<IdList> {
         }
 
         ol.close();
-        return Lists.newArrayList(object);
+        return new ObjectQueryResult("",Lists.newArrayList(object));
     }
 
     /**
@@ -71,14 +68,14 @@ public class FindObjectByActionHandler extends ParsingActionHandler<IdList> {
      * @return {@link ObjectQueryResult}
      */
     @Override
-    public List<MultimediaObjectDescriptor> doPost(IdList context, Map<String, String> parameters) {
+    public ObjectQueryResult doPost(IdList context, Map<String, String> parameters) {
         if(context == null || context.getIds().length == 0){
-            return new ArrayList<>(0);
+            return new ObjectQueryResult("",new ArrayList<>(0));
         }
         final MultimediaObjectLookup ol = new MultimediaObjectLookup();
         final Map<String, MultimediaObjectDescriptor> objects = ol.lookUpObjects(Arrays.asList(context.getIds()));
         ol.close();
-        return new ArrayList<>(objects.values());
+        return new ObjectQueryResult("",new ArrayList<>(objects.values()));
     }
 
     @Override
