@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db.adampro;
 
 import com.google.common.util.concurrent.Futures;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import java.util.concurrent.ExecutorService;
@@ -25,6 +26,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.adampro.grpc.AdamSearchGrpc;
 import org.vitrivr.adampro.grpc.AdamSearchGrpc.AdamSearchFutureStub;
+import org.vitrivr.adampro.grpc.AdamSearchGrpc.AdamSearchStub;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -51,6 +53,7 @@ public class ADAMproWrapper implements AutoCloseable {
   private ManagedChannel channel;
   private final AdamDefinitionFutureStub definitionStub;
   private final AdamSearchFutureStub searchStub;
+  private final AdamSearchStub streamSearchStub;
 
   private static final int maxMessageSize = 10_000_000;
   private static final long maxCallTimeOutMs = 300_000; //TODO expose to config
@@ -61,6 +64,7 @@ public class ADAMproWrapper implements AutoCloseable {
         .maxMessageSize(maxMessageSize).usePlaintext(config.getPlaintext()).build();
     this.definitionStub = AdamDefinitionGrpc.newFutureStub(channel);
     this.searchStub = AdamSearchGrpc.newFutureStub(channel);
+    this.streamSearchStub = AdamSearchGrpc.newStub(channel);
   }
 
   public synchronized ListenableFuture<AckMessage> createEntity(CreateEntityMessage message) {
@@ -124,6 +128,37 @@ public class ADAMproWrapper implements AutoCloseable {
     synchronized (this.searchStub) {
       return Futures.withTimeout(this.searchStub.doQuery(message), maxCallTimeOutMs, TimeUnit.MILLISECONDS, timeoutService);
     }
+  }
+
+  public ArrayList<QueryResultsMessage> streamingStandardQuery(QueryMessage message) throws InterruptedException {
+
+    ArrayList<QueryResultsMessage> results = new ArrayList<>();
+
+    StreamObserver<QueryResultsMessage> resultsMessageStreamObserver = new StreamObserver<QueryResultsMessage>() {
+      @Override
+      public void onNext(QueryResultsMessage value) {
+        results.add(value);
+      }
+
+      @Override
+      public void onError(Throwable t) {
+        LOGGER.error("Error in ADAMproWrapper.streamingStandardQuery: {}", LogHelper.getStackTrace(t));
+      }
+
+      @Override
+      public void onCompleted() {
+        results.notify();
+      }
+    };
+    synchronized (this.streamSearchStub){
+      StreamObserver<QueryMessage> queryMessageStreamObserver = this.streamSearchStub
+          .doStreamingQuery(resultsMessageStreamObserver);
+      queryMessageStreamObserver.onNext(message);
+
+    }
+    results.wait();
+    return results;
+
   }
 
   public ListenableFuture<AdamGrpc.BatchedQueryResultsMessage> batchedQuery(BatchedQueryMessage message) {
