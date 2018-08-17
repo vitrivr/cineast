@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.NoDBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.adampro.ADAMproSelector;
+import org.vitrivr.cineast.core.db.adampro.ADAMproStreamingSelector;
 import org.vitrivr.cineast.core.db.adampro.ADAMproWriter;
 import org.vitrivr.cineast.core.db.json.JsonFileWriter;
 import org.vitrivr.cineast.core.db.json.JsonSelector;
@@ -43,6 +44,7 @@ public final class DatabaseConfig {
 	private static final DBSelectorSupplier PROTO_SELECTOR_SUPPLY = () -> new ProtoSelector();
 	private static final DBSelectorSupplier JSON_SELECTOR_SUPPLY = () -> new JsonSelector();
 	private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = () -> new ADAMproSelector();
+	private static final DBSelectorSupplier ADAMPRO_STREAM_SELECTOR_SUPPLY = () -> new ADAMproStreamingSelector();
 	
   	private static final Supplier<EntityCreator> ADAMPRO_CREATOR_SUPPLY = () -> new ADAMproEntityCreator();
   	private static final Supplier<EntityCreator> NO_CREATOR_SUPPLY = () -> new NoEntityCreator();
@@ -57,7 +59,8 @@ public final class DatabaseConfig {
 	  NONE,
 	  JSON,
 	  PROTO,
-		ADAMPRO
+		ADAMPRO,
+		ADAMPROSTREAM
 	}
 
 	@JsonCreator
@@ -137,6 +140,8 @@ public final class DatabaseConfig {
 		switch(this.selector){
 		case ADAMPRO:
 			return ADAMPRO_SELECTOR_SUPPLY;
+		case ADAMPROSTREAM:
+				return ADAMPRO_STREAM_SELECTOR_SUPPLY;
 		case PROTO:
 		  return PROTO_SELECTOR_SUPPLY;
 		case JSON:

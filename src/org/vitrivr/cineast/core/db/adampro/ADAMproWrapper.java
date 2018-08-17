@@ -2,11 +2,12 @@ package org.vitrivr.cineast.core.db.adampro;
 
 import com.google.common.util.concurrent.Futures;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +33,6 @@ import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.SettableFuture;
 
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
@@ -130,9 +130,10 @@ public class ADAMproWrapper implements AutoCloseable {
     }
   }
 
-  public ArrayList<QueryResultsMessage> streamingStandardQuery(QueryMessage message) throws InterruptedException {
+  public ArrayList<QueryResultsMessage> streamingStandardQuery(QueryMessage message) {
 
     ArrayList<QueryResultsMessage> results = new ArrayList<>();
+    Semaphore semaphore = new Semaphore(1);
 
     StreamObserver<QueryResultsMessage> resultsMessageStreamObserver = new StreamObserver<QueryResultsMessage>() {
       @Override
@@ -147,17 +148,75 @@ public class ADAMproWrapper implements AutoCloseable {
 
       @Override
       public void onCompleted() {
-        results.notify();
+        semaphore.release();
       }
     };
-    synchronized (this.streamSearchStub){
+    synchronized (this.streamSearchStub) {
       StreamObserver<QueryMessage> queryMessageStreamObserver = this.streamSearchStub
           .doStreamingQuery(resultsMessageStreamObserver);
+      try {
+        semaphore.acquire();
+      } catch (InterruptedException e) {
+        //ignore
+      }
       queryMessageStreamObserver.onNext(message);
+      queryMessageStreamObserver.onCompleted();
 
+      try {
+        semaphore.tryAcquire(maxCallTimeOutMs, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException e) {
+        LOGGER.warn("Waiting for response in ADAMproWrapper.streamingStandardQuery has been interrupted: {}", LogHelper.getStackTrace(e));
+      }
+      return results;
     }
-    results.wait();
-    return results;
+
+  }
+
+  public ArrayList<QueryResultsMessage> streamingStandardQuery(Collection<QueryMessage> messages) {
+
+    if(messages == null || messages.isEmpty()){
+      return new ArrayList<>(0);
+    }
+
+    ArrayList<QueryResultsMessage> results = new ArrayList<>();
+    Semaphore semaphore = new Semaphore(1);
+
+    StreamObserver<QueryResultsMessage> resultsMessageStreamObserver = new StreamObserver<QueryResultsMessage>() {
+      @Override
+      public void onNext(QueryResultsMessage value) {
+        results.add(value);
+      }
+
+      @Override
+      public void onError(Throwable t) {
+        LOGGER.error("Error in ADAMproWrapper.streamingStandardQuery: {}", LogHelper.getStackTrace(t));
+      }
+
+      @Override
+      public void onCompleted() {
+        semaphore.release();
+      }
+    };
+    synchronized (this.streamSearchStub) {
+      StreamObserver<QueryMessage> queryMessageStreamObserver = this.streamSearchStub
+          .doStreamingQuery(resultsMessageStreamObserver);
+      try {
+        semaphore.acquire();
+      } catch (InterruptedException e) {
+        //ignore
+      }
+      for(QueryMessage message : messages){
+        queryMessageStreamObserver.onNext(message);
+      }
+      queryMessageStreamObserver.onCompleted();
+
+      try {
+        semaphore.tryAcquire(maxCallTimeOutMs, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException e) {
+        LOGGER.warn("Waiting for response in ADAMproWrapper.streamingStandardQuery has been interrupted: {}", LogHelper.getStackTrace(e));
+      }
+      return results;
+    }
 
   }
 
