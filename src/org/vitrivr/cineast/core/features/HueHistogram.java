@@ -55,7 +55,7 @@ public class HueHistogram extends AbstractFeatureModule {
         float h = container.getH() * hist.length;
         int idx = (int) h;
         hist[idx] += h - idx;
-        hist[(idx + 1) & hist.length] += idx + 1 - h;
+        hist[(idx + 1) % hist.length] += idx + 1 - h;
       }
     }
     return hist;
