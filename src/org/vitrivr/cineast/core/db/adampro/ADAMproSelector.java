@@ -44,50 +44,10 @@ import org.vitrivr.cineast.core.util.LogHelper;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.ListenableFuture;
 
-public class ADAMproSelector implements DBSelector {
+public class ADAMproSelector extends AbstractADAMproSelector {
 
-    /**
-     * flag to choose if every selector should have its own connection to ADAMpro or if they should
-     * share one.
-     */
-    private static boolean useGlobalWrapper = true;
 
     private static final Logger LOGGER = LogManager.getLogger();
-
-    private static final ADAMproWrapper GLOBAL_ADAMPRO_WRAPPER = useGlobalWrapper ? new ADAMproWrapper() : null;
-
-    private ADAMproWrapper adampro = useGlobalWrapper ? GLOBAL_ADAMPRO_WRAPPER : new ADAMproWrapper();
-
-    /**
-     * MessageBuilder instance used to create the query messages.
-     */
-    private final ADAMproMessageBuilder mb = new ADAMproMessageBuilder();
-
-    /**
-     * Name of the entity the current instance of ADAMproSelector uses.
-     */
-    private String entityName;
-
-    /**
-     * FromMessaged used by the instance of ADAMproSelector.
-     */
-    private FromMessage fromMessage;
-
-    @Override
-    public boolean open(String name) {
-        this.entityName = name;
-        this.fromMessage = this.mb.buildFromMessage(name);
-        return true;
-    }
-
-    @Override
-    public boolean close() {
-        if (useGlobalWrapper) {
-            return false;
-        }
-        this.adampro.close();
-        return true;
-    }
 
     @Override
     public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
@@ -344,41 +304,6 @@ public class ADAMproSelector implements DBSelector {
     }
 
 
-    private <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResultInfoMessage response, int k, Class<? extends T> distanceElementClass) {
-        List<T> result = new ArrayList<>(k);
-        for (QueryResultTupleMessage msg : response.getResultsList()) {
-            String id = msg.getDataMap().get("id").getStringData();
-            if (id == null) {
-                continue;
-            }
-            double distance = msg.getDataMap().get("ap_distance").getDoubleData();
-            T e = DistanceElement.create(distanceElementClass, id, distance);
-            result.add(e);
-        }
-
-        return result;
-    }
-
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
-        return getRows(fieldName, Collections.singleton(value));
-    }
-
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
-        return getRows(fieldName, Arrays.asList(values));
-    }
-
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values) {
-        return getRows(fieldName, RelationalOperator.EQ, values);
-    }
-
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, String value) {
-        return getRows(fieldName, operator, Collections.singleton(value));
-    }
-
     @Override
     public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<String> values) {
         if (values == null || Iterables.isEmpty(values)) {
@@ -391,79 +316,6 @@ public class ADAMproSelector implements DBSelector {
         return executeBooleanQuery(bqMessage);
     }
 
-    /**
-     * SELECT label FROM ... Be careful with the size of the resulting List :)
-     */
-    @Override
-    public List<PrimitiveTypeProvider> getAll(String label) {
-        List<Map<String, PrimitiveTypeProvider>> resultList = getAll();
-        return resultList.stream().map(row -> row.get(label)).collect(Collectors.toList());
-    }
-
-
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> getAll() {
-        return preview(Integer.MAX_VALUE);
-    }
-
-    @Override
-    public boolean existsEntity(String eName) {
-        ListenableFuture<ExistsMessage> future = this.adampro.existsEntity(eName);
-        try {
-            return future.get().getExists();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("error in existsEntity, entitiy {}: {}", this.entityName, LogHelper.getStackTrace(e));
-            return false;
-        }
-    }
-
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> preview(int k) {
-        PreviewMessage msg = PreviewMessage.newBuilder().setEntity(this.entityName).setN(k)
-                .build();
-        ListenableFuture<QueryResultsMessage> f = this.adampro.previewEntity(msg);
-        QueryResultsMessage result;
-        try {
-            result = f.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error(LogHelper.getStackTrace(e));
-            return new ArrayList<>(0);
-        }
-
-        if (result.getResponsesCount() == 0) {
-            return new ArrayList<>(0);
-        }
-
-        QueryResultInfoMessage response = result.getResponses(0); // only head (end-result) is important
-
-        List<QueryResultTupleMessage> resultList = response.getResultsList();
-        return resultsToMap(resultList);
-    }
-
-    /**
-     * @param resultList can be empty
-     * @return an ArrayList of length one if the resultList is empty, else the transformed QueryResultTupleMessage
-     */
-    private List<Map<String, PrimitiveTypeProvider>> resultsToMap(
-            List<QueryResultTupleMessage> resultList) {
-        if (resultList.isEmpty()) {
-            return new ArrayList<>(0);
-        }
-
-        ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(resultList.size());
-
-        for (QueryResultTupleMessage resultMessage : resultList) {
-            Map<String, DataMessage> data = resultMessage.getDataMap();
-            Set<String> keys = data.keySet();
-            DefaultValueHashMap<String, PrimitiveTypeProvider> map = new DefaultValueHashMap<>(NothingProvider.INSTANCE);
-            for (String key : keys) {
-                map.put(key, DataMessageConverter.convert(data.get(key)));
-            }
-            _return.add(map);
-        }
-
-        return _return;
-    }
 
     /**
      * Executes a QueryMessage and returns the resulting tuples
