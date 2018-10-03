@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 public class HueHistogram extends AbstractFeatureModule {
 
   public HueHistogram() {
-    super("feature_huehistogram", 16f);
+    super("features_huehistogram", 16f);
   }
 
   @Override
