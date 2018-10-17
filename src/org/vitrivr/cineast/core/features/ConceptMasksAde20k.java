@@ -1,14 +1,13 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+
 import org.tensorflow.Tensor;
 import org.tensorflow.types.UInt8;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.SemanticMap;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -81,6 +80,13 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+
+
+    Optional<SemanticMap> optional = sc.getSemanticMap();
+    if (!optional.isPresent()){
+      return Collections.emptyList();
+    }
+
     //TODO
     return Collections.emptyList();
   }
