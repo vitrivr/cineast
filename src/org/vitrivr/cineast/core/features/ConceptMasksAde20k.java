@@ -21,7 +21,7 @@ import org.vitrivr.cineast.core.util.GridPartitioner;
 
 public class ConceptMasksAde20k extends AbstractFeatureModule {
 
-  private static final int GRID_PARTITIONS = 16;
+  private static final int GRID_PARTITIONS = 32;
 
   private final DeepLab ade20k;
 
