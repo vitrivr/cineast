@@ -116,7 +116,7 @@ public class MultimediaMetadataSegmentDescriptor implements ExistenceCheck {
     }
 
     @JsonProperty
-    public String getObjectId() {
+    public String getSegmentId() {
         return this.segmentId;
     }
 
