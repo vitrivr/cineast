@@ -37,7 +37,7 @@ public enum QueryTermType {
     TAG(TagQueryContainer.class),
 
     /** Denotes a {@link QueryTerm} that should be regarded as a semantic sketch query. */
-    SEMANTICMAP(SemanticMapQueryContainer.class);
+    SEMANTIC(SemanticMapQueryContainer.class);
 
     /** Instance of the {@link QueryContainer} class that represents this {@link QueryTermType}. */
     private final Class<? extends QueryContainer> c;
