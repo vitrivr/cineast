@@ -10,6 +10,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc.AttributeDefinitionMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.adampro.grpc.AdamGrpc.CreateEntityMessage;
 import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MultimediaMetadataSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
 import org.vitrivr.cineast.core.db.adampro.ADAMproWrapper;
@@ -73,6 +74,31 @@ public class ADAMproEntityCreator implements EntityCreator {
         fields.add(builder.setName(MultimediaMetadataDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
 
         final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaMetadataDescriptor.ENTITY).addAllAttributes(fields).build();
+        final AckMessage ack = adampro.createEntityBlocking(message);
+
+        if (ack.getCode() == AckMessage.Code.OK) {
+            LOGGER.info("Successfully created metadata entity.");
+        } else {
+            LOGGER.error("Error occurred during creation of metadata entity: {}", ack.getMessage());
+        }
+
+        return ack.getCode() == Code.OK;
+    }
+
+    @Override
+    public boolean createSegmentMetadataEntity() {
+        final ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
+
+        final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
+        fields.add(builder.setName(MultimediaMetadataSegmentDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MultimediaMetadataSegmentDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MultimediaMetadataSegmentDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+
+        builder.clear(); /* Clear builder to erase the indexed flag. */
+
+        fields.add(builder.setName(MultimediaMetadataSegmentDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
+
+        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaMetadataSegmentDescriptor.ENTITY).addAllAttributes(fields).build();
         final AckMessage ack = adampro.createEntityBlocking(message);
 
         if (ack.getCode() == AckMessage.Code.OK) {

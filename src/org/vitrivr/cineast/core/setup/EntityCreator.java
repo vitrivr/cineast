@@ -45,6 +45,7 @@ public interface EntityCreator extends AutoCloseable {
 
         this.createMultiMediaObjectsEntity();
         this.createMetadataEntity();
+        this.createSegmentMetadataEntity();
         this.createSegmentEntity();
         this.createTagEntity();
 
@@ -105,6 +106,11 @@ public interface EntityCreator extends AutoCloseable {
      * Initialises the entity responsible for holding metadata information about multimedia objects.
      */
     boolean createMetadataEntity();
+
+    /**
+     * Initialises the entity responsible for holding metadata information about multimedia segments.
+     */
+    boolean createSegmentMetadataEntity();
 
     /**
      * Initialises the entity responsible for holding the mapping between human readable tags and their descriptions to the internally used ids

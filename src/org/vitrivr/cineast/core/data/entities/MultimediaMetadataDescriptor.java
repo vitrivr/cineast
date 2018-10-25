@@ -124,7 +124,7 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
     }
   }
 
-  private static boolean isSupportedValue(Object value) {
+  static boolean isSupportedValue(Object value) {
     return SUPPORTED_TYPES.stream().anyMatch(clazz -> clazz.isInstance(value));
   }
 

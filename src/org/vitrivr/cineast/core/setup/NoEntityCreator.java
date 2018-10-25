@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 public class NoEntityCreator implements EntityCreator {
 
+
   /**
    * @param options
    */
@@ -21,6 +22,9 @@ public class NoEntityCreator implements EntityCreator {
   public boolean createMetadataEntity() {
     return false;
   }
+
+  @Override
+  public boolean createSegmentMetadataEntity() { return false; }
 
   @Override
   public boolean createSegmentEntity() {
