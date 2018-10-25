@@ -126,4 +126,27 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
   public String toFeatureString() {
     return "<" + r + ", " + g + ", " + b + ">";
   }
+
+  public static ReadableRGBContainer fromColorString(String colorString){
+    if (colorString == null || colorString.length() != 7){
+      return new ReadableRGBContainer(0);
+    }
+
+    int r = 0, g = 0, b = 0;
+
+    try{
+      r = Integer.parseInt(colorString.substring(1,3), 16);
+    }catch (NumberFormatException e){}
+
+    try{
+      g = Integer.parseInt(colorString.substring(3,5), 16);
+    }catch (NumberFormatException e){}
+
+    try{
+      b = Integer.parseInt(colorString.substring(5,7), 16);
+    }catch (NumberFormatException e){}
+
+    return new ReadableRGBContainer(r, g, b);
+
+  }
 }

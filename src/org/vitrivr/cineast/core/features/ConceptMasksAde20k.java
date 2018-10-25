@@ -65,7 +65,6 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
         .partition(ade20kLabels, tmp.length, tmp[0].length, GRID_PARTITIONS, GRID_PARTITIONS);
 
 
-
     float[] vector = new float[2 * GRID_PARTITIONS * GRID_PARTITIONS];
 
     for (int i = 0; i < GRID_PARTITIONS * GRID_PARTITIONS; ++i) {
@@ -87,8 +86,23 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
       return Collections.emptyList();
     }
 
-    //TODO
-    return Collections.emptyList();
+    DeepLabLabel[][] labels = optional.get().getLabels();
+
+    List<DeepLabLabel> list = linearize(labels);
+
+    ArrayList<LinkedList<DeepLabLabel>> ade20kPartitions = GridPartitioner
+        .partition(list, labels.length, labels[0].length, GRID_PARTITIONS, GRID_PARTITIONS);
+
+    float[] vector = new float[2 * GRID_PARTITIONS * GRID_PARTITIONS];
+
+    for (int i = 0; i < GRID_PARTITIONS * GRID_PARTITIONS; ++i) {
+      DeepLabLabel dominantLabel = DeepLabLabel.getDominantLabel(ade20kPartitions.get(i));
+      vector[2 * i] = dominantLabel.getEmbeddX();
+      vector[2 * i + 1] = dominantLabel.getEmbeddY();
+
+    }
+    return this.getSimilar(vector, qc);
+
   }
 
 }
