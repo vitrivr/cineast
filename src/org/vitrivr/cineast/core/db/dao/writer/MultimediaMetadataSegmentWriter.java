@@ -18,7 +18,7 @@ public class MultimediaMetadataSegmentWriter extends AbstractBatchedEntityWriter
     }
 
     @Override
-    protected PersistentTuple generateTuple(MultimediaMetadataSegmentDescriptor entity) {
+    public PersistentTuple generateTuple(MultimediaMetadataSegmentDescriptor entity) {
         return this.writer.generateTuple(entity.getSegmentId(), entity.getDomain(), entity.getKey(),
                 entity.getValue());
     }
