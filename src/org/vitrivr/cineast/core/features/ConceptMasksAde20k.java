@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.features;
 
 import java.util.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tensorflow.Tensor;
 import org.tensorflow.types.UInt8;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -18,22 +20,18 @@ import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabCity
 import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabLabel;
 import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabPascalVoc;
 import org.vitrivr.cineast.core.util.GridPartitioner;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 public class ConceptMasksAde20k extends AbstractFeatureModule {
 
   private static final int GRID_PARTITIONS = 32;
+  private static final Logger LOGGER = LogManager.getLogger();
 
   private DeepLab ade20k;
 
   public ConceptMasksAde20k() {
     super("features_conceptmasksade20k", 1);
-    this.correspondence = CorrespondenceFunction.hyperbolic(10); //TODO determine distance
-    try {
-      this.ade20k = new DeepLabAde20k();
-
-    } catch (Exception e) {
-
-    }
+    this.correspondence = CorrespondenceFunction.hyperbolic(2000);
 
   }
 
@@ -54,6 +52,15 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
         || shot.getMostRepresentativeFrame().getImage() == null
         || shot.getMostRepresentativeFrame().getImage() == VideoFrame.EMPTY_VIDEO_FRAME) {
       return;
+    }
+
+    if(this.ade20k == null){
+      try{
+        this.ade20k = new DeepLabAde20k();
+      }catch (RuntimeException e){
+        LOGGER.error(LogHelper.getStackTrace(e));
+        return;
+      }
     }
 
     Tensor<UInt8> inputTensor = DeepLab
