@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.run.ExtractionItemContainer;
 
@@ -17,7 +17,7 @@ import org.vitrivr.cineast.core.run.ExtractionItemContainer;
  * @author rgasser
  * @created 10.01.17
  */
-public class MultimediaObjectDescriptor implements ExistenceCheck {
+public class MediaObjectDescriptor implements ExistenceCheck {
 
   /**
    * Name of the entity in the persistence layer.
@@ -36,24 +36,24 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
   private final String contentURL;
 
   /**
-   * Convenience method to create a MultimediaObjectDescriptor marked as new. The method will assign
-   * a new ID to this MultimediaObjectDescriptor using the provided ObjectIdGenerator.
+   * Convenience method to create a MediaObjectDescriptor marked as new. The method will assign
+   * a new ID to this MediaObjectDescriptor using the provided ObjectIdGenerator.
    *
    * @param generator ObjectIdGenerator used for ID generation.
-   * @param path The Path that points to the file for which a new MultimediaObjectDescriptor should
+   * @param path The Path that points to the file for which a new MediaObjectDescriptor should
    * be created.
-   * @param type MediaType of the new MultimediaObjectDescriptor
-   * @param lookup MultimediaObjectLookup to prevent the assignment of already used ids
-   * @return A new MultimediaObjectDescriptor
+   * @param type MediaType of the new MediaObjectDescriptor
+   * @param lookup MediaObjectReader to prevent the assignment of already used ids
+   * @return A new MediaObjectDescriptor
    */
-  public static MultimediaObjectDescriptor newMultimediaObjectDescriptor(
-      ObjectIdGenerator generator, Path path, MediaType type, MultimediaObjectLookup lookup) {
+  public static MediaObjectDescriptor newMultimediaObjectDescriptor(
+      ObjectIdGenerator generator, Path path, MediaType type, MediaObjectReader lookup) {
     String objectId;
     do {
       objectId = generator.next(path, type);
     } while (lookup != null && lookup.lookUpObjectById(objectId).exists());
 
-    return new MultimediaObjectDescriptor(objectId,
+    return new MediaObjectDescriptor(objectId,
         getFileName(path), path.toString(), type, false);
   }
 
@@ -65,22 +65,22 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
     return cleanPath(path);
   }
 
-  public MultimediaObjectDescriptor(Path path) {
+  public MediaObjectDescriptor(Path path) {
     this(null, path.getFileName().toString().replace('\\', '/'), getFileName(path), null, false);
   }
 
   /**
    * Completely empty Descriptor
    */
-  public MultimediaObjectDescriptor() {
+  public MediaObjectDescriptor() {
     this("", "", "", MediaType.UNKNOWN, false);
   }
 
   @JsonCreator
-  public MultimediaObjectDescriptor(@JsonProperty("objectId") String objectId,
-      @JsonProperty("name") String name, @JsonProperty("path") String path,
-      @JsonProperty(value = "mediatype", defaultValue = "UNKNOWN") MediaType mediatypeId,
-      @JsonProperty(value = "exists", defaultValue = "false") boolean exists) {
+  public MediaObjectDescriptor(@JsonProperty("objectId") String objectId,
+                               @JsonProperty("name") String name, @JsonProperty("path") String path,
+                               @JsonProperty(value = "mediatype", defaultValue = "UNKNOWN") MediaType mediatypeId,
+                               @JsonProperty(value = "exists", defaultValue = "false") boolean exists) {
     this.objectId = objectId;
     this.name = name;
     if (path == null) {
@@ -135,7 +135,7 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
 
   @Override
   public String toString() {
-    return "MultimediaObjectDescriptor{" +
+    return "MediaObjectDescriptor{" +
         "objectId='" + objectId + '\'' +
         ", name='" + name + '\'' +
         ", path='" + path + '\'' +
@@ -155,8 +155,8 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
    * The exists variable is taken from the provided descriptor, since that is more current than the
    * one provided in the item
    */
-  public static MultimediaObjectDescriptor mergeItem(MultimediaObjectDescriptor descriptor,
-      ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
+  public static MediaObjectDescriptor mergeItem(MediaObjectDescriptor descriptor,
+                                                ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
     Path _path = item.getPathForExtraction() == null ? Paths.get(descriptor.getPath())
         : item.getPathForExtraction();
     String _name =
@@ -172,6 +172,6 @@ public class MultimediaObjectDescriptor implements ExistenceCheck {
             : item.getObject().getObjectId();
     String storagePath = StringUtils.isEmpty(item.getObject().getPath()) ? descriptor.getPath()
         : item.getObject().getPath();
-    return new MultimediaObjectDescriptor(_id, _name, storagePath, _type, exists);
+    return new MediaObjectDescriptor(_id, _name, storagePath, _type, exists);
   }
 }

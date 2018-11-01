@@ -1,7 +1,8 @@
 package org.vitrivr.cineast.core.data.messages.components;
 
 import java.util.function.Predicate;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
  * Filter for metadata, based on the domain.
@@ -11,12 +12,12 @@ import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
  * @author loris.sauter
  */
 public class MetadataDomainFilter extends AbstractMetadataFilterDescriptor implements
-    Predicate<MultimediaMetadataDescriptor> {
+    Predicate<MediaObjectMetadataDescriptor> {
 
 
   @Override
-  public boolean test(MultimediaMetadataDescriptor multimediaMetadataDescriptor) {
-    return getKeywordsAsListLowercase().contains(multimediaMetadataDescriptor.getDomain().toLowerCase());
+  public boolean test(MediaObjectMetadataDescriptor mediaObjectMetadataDescriptor) {
+    return getKeywordsAsListLowercase().contains(mediaObjectMetadataDescriptor.getDomain().toLowerCase());
   }
 
   public static MetadataDomainFilter createForKeywords(String...keywords){

@@ -3,11 +3,9 @@ package org.vitrivr.cineast.core.data.messages.query;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.messages.interfaces.Message;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ import java.util.List;
 
 public class NeighboringSegmentQuery extends Query {
 
-    /** ID of the {@link org.vitrivr.cineast.core.data.entities.SegmentDescriptor} for which neighbors should be retrieved. */
+    /** ID of the {@link MediaSegmentDescriptor} for which neighbors should be retrieved. */
     private final String segmentId;
 
     /** Number of neighbors that should be retrieved. */

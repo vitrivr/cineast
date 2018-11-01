@@ -5,7 +5,7 @@ public class SimpleFulltextFeatureDescriptor {
     public static final String[] FIELDNAMES = {"id", "feature"};
 
     /**
-     * ID of the {@link SegmentDescriptor} this {@link SimpleFulltextFeatureDescriptor} belongs to.
+     * ID of the {@link MediaSegmentDescriptor} this {@link SimpleFulltextFeatureDescriptor} belongs to.
      */
     public final String segmentId;
 

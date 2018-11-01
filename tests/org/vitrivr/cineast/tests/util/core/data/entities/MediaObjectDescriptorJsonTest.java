@@ -10,19 +10,19 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 
 /**
  * @author silvan on 06.04.18.
  */
-class MultimediaObjectDescriptorJsonTest {
+class MediaObjectDescriptorJsonTest {
 
   @Test
   @DisplayName("Read from Json")
   void deserialize() throws IOException {
     String json = FileUtils.readFileToString(new File("resources/tests/mmobj.json"), Charset.defaultCharset());
     ObjectMapper mapper = new ObjectMapper();
-    MultimediaObjectDescriptor descriptor = mapper.readValue(json, MultimediaObjectDescriptor.class);
+    MediaObjectDescriptor descriptor = mapper.readValue(json, MediaObjectDescriptor.class);
     assertEquals("1337", descriptor.getObjectId());
     assertEquals("testName", descriptor.getName());
     assertEquals("test/path", descriptor.getPath());

@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 
@@ -15,49 +15,49 @@ import org.vitrivr.cineast.core.db.DBSelector;
  * Data access object that facilitates lookups in Cineast's metadata entity (cineast_metadata). Methods in this class
  * usually return MultimediaMetadataDescriptors.
  *
- * @see MultimediaMetadataDescriptor
+ * @see MediaObjectMetadataDescriptor
  *
  * @author rgasser
  * @version 1.0
  * @created 10.02.17
  */
-public class MultimediaMetadataReader extends AbstractEntityReader {
+public class MediaObjectMetadataReader extends AbstractEntityReader {
 
     private static final Logger LOGGER = LogManager.getLogger();
     /**
      * Default constructor.
      */
-    public MultimediaMetadataReader(){
+    public MediaObjectMetadataReader(){
         this(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     }
 
     /**
-     * Constructor for MultimediaMetadataReader
+     * Constructor for MediaObjectMetadataReader
      *
-     * @param selector DBSelector to use for the MultimediaMetadataReader instance.
+     * @param selector DBSelector to use for the MediaObjectMetadataReader instance.
      */
-    public MultimediaMetadataReader(DBSelector selector) {
+    public MediaObjectMetadataReader(DBSelector selector) {
         super(selector);
-        this.selector.open(MultimediaMetadataDescriptor.ENTITY);
+        this.selector.open(MediaObjectMetadataDescriptor.ENTITY);
     }
 
     /**
      * Looks up the metadata for a specific multimedia object.
      *
      * @param objectid ID of the multimedia object for which metadata should be retrieved.
-     * @return List of MultimediaMetadataDescriptor object's. May be empty!
+     * @return List of MediaObjectMetadataDescriptor object's. May be empty!
      */
-    public List<MultimediaMetadataDescriptor> lookupMultimediaMetadata(String objectid) {
-        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MultimediaMetadataDescriptor.FIELDNAMES[0], objectid);
+    public List<MediaObjectMetadataDescriptor> lookupMultimediaMetadata(String objectid) {
+        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaObjectMetadataDescriptor.FIELDNAMES[0], objectid);
         if(results.isEmpty()){
-            LOGGER.debug("Could not find MultimediaMetadataDescriptor with ID {}", objectid);
+            LOGGER.debug("Could not find MediaObjectMetadataDescriptor with ID {}", objectid);
             return new ArrayList<>(0);
         }
 
-        final ArrayList<MultimediaMetadataDescriptor> list = new ArrayList<>(results.size());
+        final ArrayList<MediaObjectMetadataDescriptor> list = new ArrayList<>(results.size());
         results.forEach(r -> {
             try {
-                list.add(new MultimediaMetadataDescriptor(r));
+                list.add(new MediaObjectMetadataDescriptor(r));
             } catch (DatabaseLookupException exception) {
                 LOGGER.fatal("Could not map data returned for row {}. This is a programmer's error!", objectid);
             }
@@ -69,19 +69,19 @@ public class MultimediaMetadataReader extends AbstractEntityReader {
      * Looks up the metadata for a multiple multimedia objects.
      *
      * @param objectids ID's of the multimedia object's for which metadata should be retrieved.
-     * @return List of MultimediaMetadataDescriptor object's. May be empty!
+     * @return List of MediaObjectMetadataDescriptor object's. May be empty!
      */
-    public List<MultimediaMetadataDescriptor> lookupMultimediaMetadata(List<String> objectids) {
-        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MultimediaMetadataDescriptor.FIELDNAMES[0], objectids);
+    public List<MediaObjectMetadataDescriptor> lookupMultimediaMetadata(List<String> objectids) {
+        final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaObjectMetadataDescriptor.FIELDNAMES[0], objectids);
         if(results.isEmpty()){
-            LOGGER.debug("Could not find any MultimediaMetadataDescriptor for provided ID's.");
+            LOGGER.debug("Could not find any MediaObjectMetadataDescriptor for provided ID's.");
             return new ArrayList<>(0);
         }
 
-        final ArrayList<MultimediaMetadataDescriptor> list = new ArrayList<>(results.size());
+        final ArrayList<MediaObjectMetadataDescriptor> list = new ArrayList<>(results.size());
         results.forEach(r -> {
             try {
-                list.add(new MultimediaMetadataDescriptor(r));
+                list.add(new MediaObjectMetadataDescriptor(r));
             } catch (DatabaseLookupException exception) {
                 LOGGER.fatal("Could not map data. This is a programmer's error!");
             }

@@ -14,7 +14,6 @@ import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.QueryTerm;
 import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
-import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
 import org.vitrivr.cineast.core.data.messages.result.SimilarityQueryResultBatch;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;

@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.GpsData;
 import org.vitrivr.cineast.core.data.InstantVector;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 
@@ -78,9 +78,9 @@ public class TemporalDistance extends MetadataFeatureModule<InstantVector> {
   }
 
   @Override
-  public List<MultimediaMetadataDescriptor> createDescriptors(String objectId,
-      InstantVector feature) {
-    return ImmutableList.of(MultimediaMetadataDescriptor
+  public List<MediaObjectMetadataDescriptor> createDescriptors(String objectId,
+                                                               InstantVector feature) {
+    return ImmutableList.of(MediaObjectMetadataDescriptor
         .of(objectId, this.domain(), GpsData.KEY_DATETIME, feature.getInstant().toString()));
   }
 }

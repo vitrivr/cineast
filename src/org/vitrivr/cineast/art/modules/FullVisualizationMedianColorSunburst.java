@@ -7,9 +7,9 @@ import java.util.Map;
 import org.vitrivr.cineast.art.modules.abstracts.AbstractVisualizationModule;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationResult;
 import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.util.ArtUtil;
 
 import com.eclipsesource.json.JsonObject;
@@ -58,10 +58,10 @@ public class FullVisualizationMedianColorSunburst extends AbstractVisualizationM
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
     //don't care about given id here...
-    MultimediaObjectLookup lookup = new MultimediaObjectLookup();
-    List<MultimediaObjectDescriptor> all = lookup.getAllObjects();
+    MediaObjectReader lookup = new MediaObjectReader();
+    List<MediaObjectDescriptor> all = lookup.getAllObjects();
     List<Map<String, PrimitiveTypeProvider>> allData = new ArrayList<>();
-    for(MultimediaObjectDescriptor multimedia: all){
+    for(MediaObjectDescriptor multimedia: all){
       allData.addAll(ArtUtil.getFeatureData(selectors.get("MedianColor"), multimedia.getObjectId()));
       System.out.println(multimedia.getObjectId());
     }

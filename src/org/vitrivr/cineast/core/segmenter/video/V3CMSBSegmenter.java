@@ -18,8 +18,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.segments.VideoSegment;
@@ -122,7 +122,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
   }
 
   /**
-   * Decodes shot boundaries in the format used for TRECVID and creates {@link SegmentDescriptor}s
+   * Decodes shot boundaries in the format used for TRECVID and creates {@link MediaSegmentDescriptor}s
    * accordingly.
    *
    * @param msb The file containing the master shot references.
@@ -174,7 +174,7 @@ public class V3CMSBSegmenter implements Segmenter<VideoFrame> {
    * @param object Media object that is about to be segmented.
    */
   @Override
-  public synchronized void init(Decoder<VideoFrame> decoder, MultimediaObjectDescriptor object) {
+  public synchronized void init(Decoder<VideoFrame> decoder, MediaObjectDescriptor object) {
     if (!this.running) {
       this.decoder = decoder;
       this.complete = false;

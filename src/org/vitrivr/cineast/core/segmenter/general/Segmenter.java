@@ -1,12 +1,8 @@
 package org.vitrivr.cineast.core.segmenter.general;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * {@link Segmenter}s split a media file into chunks (segments). The nature of that chunk is specific to
@@ -26,7 +22,7 @@ public interface Segmenter<A> extends Runnable, AutoCloseable {
      * @param decoder  {@link Decoder} used for media decoding.
      * @param object Media object that is about to be segmented.
      */
-    void init(Decoder<A> decoder, MultimediaObjectDescriptor object);
+    void init(Decoder<A> decoder, MediaObjectDescriptor object);
 
     /**
      * Returns the next SegmentContainer from the source OR null if there are no more segments in the queue. As

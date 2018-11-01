@@ -15,9 +15,9 @@ import org.vitrivr.cineast.art.modules.visualization.VisualizationType;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.util.ArtUtil;
 import org.vitrivr.cineast.core.util.web.ImageParser;
 
@@ -35,14 +35,14 @@ public class VisualizationDominantColorStripeVariable extends AbstractVisualizat
     return "VisualizationDominantColorStripeVariable";
   }
 
-  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData, List<SegmentDescriptor> segments){
+  protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData, List<MediaSegmentDescriptor> segments){
     Collections.sort(segments, new SegmentDescriptorComparator());
 
     int count = 0;
     int totalWidth = 0;
     int[] colors = new int[segments.size()];
     int[] widths = new int[segments.size()];
-    for (SegmentDescriptor segment : segments) {
+    for (MediaSegmentDescriptor segment : segments) {
       widths[count] = (segment.getEnd() - segment.getStart()) / 10 + 1;
       totalWidth += widths[count];
       float[] arr = featureData.get(count).get("feature").getFloatArray();
@@ -67,16 +67,16 @@ public class VisualizationDominantColorStripeVariable extends AbstractVisualizat
 
   @Override
   protected String visualizeMulti(List<Map<String, PrimitiveTypeProvider>> featureData){
-    return visualizeMulti(featureData, new ArrayList<SegmentDescriptor>());
+    return visualizeMulti(featureData, new ArrayList<MediaSegmentDescriptor>());
   }
 
   @Override
   public String visualizeMultipleSegments(List<String> segmentIds){
-    SegmentLookup segmentLookup = new SegmentLookup();
-    Map<String, SegmentDescriptor> segmentMap = segmentLookup.lookUpSegments(segmentIds);
-    List<SegmentDescriptor> segments = new ArrayList<>();
-    segmentLookup.close();
-    for (Map.Entry<String, SegmentDescriptor> entry : segmentMap.entrySet()) {
+    MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
+    Map<String, MediaSegmentDescriptor> segmentMap = mediaSegmentReader.lookUpSegments(segmentIds);
+    List<MediaSegmentDescriptor> segments = new ArrayList<>();
+    mediaSegmentReader.close();
+    for (Map.Entry<String, MediaSegmentDescriptor> entry : segmentMap.entrySet()) {
       segments.add(entry.getValue());
     }
     return visualizeMulti(ArtUtil.getFeatureData(selectors.get("DominantColor"), segmentIds), segments);
@@ -84,9 +84,9 @@ public class VisualizationDominantColorStripeVariable extends AbstractVisualizat
 
   @Override
   public String visualizeMultimediaobject(String multimediaobjectId) {
-    SegmentLookup segmentLookup = new SegmentLookup();
-    List<SegmentDescriptor> segments = segmentLookup.lookUpSegmentsOfObject(multimediaobjectId);
-    segmentLookup.close();
+    MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
+    List<MediaSegmentDescriptor> segments = mediaSegmentReader.lookUpSegmentsOfObject(multimediaobjectId);
+    mediaSegmentReader.close();
     return visualizeMulti(ArtUtil.getFeatureData(selectors.get("DominantColor"), multimediaobjectId), segments);
   }
 

@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.lookup.IdList;
-import org.vitrivr.cineast.core.data.messages.result.SegmentQueryResult;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.data.messages.result.MediaSegmentQueryResult;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,19 +19,19 @@ public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList> 
      * Processes a HTTP GET request.
      *
      * @param parameters Map containing named parameters in the URL.
-     * @return {@link SegmentQueryResult}
+     * @return {@link MediaSegmentQueryResult}
      */
     @Override
-    public SegmentQueryResult doGet(Map<String, String> parameters) {
+    public MediaSegmentQueryResult doGet(Map<String, String> parameters) {
         final String segmentId = parameters.get(ID_NAME);
-        final SegmentLookup sl = new SegmentLookup();
-        final List<SegmentDescriptor> list = sl.lookUpSegment(segmentId).map(s -> {
-            final List<SegmentDescriptor> segments = new ArrayList<>(1);
+        final MediaSegmentReader sl = new MediaSegmentReader();
+        final List<MediaSegmentDescriptor> list = sl.lookUpSegment(segmentId).map(s -> {
+            final List<MediaSegmentDescriptor> segments = new ArrayList<>(1);
             segments.add(s);
             return segments;
         }).orElse(new ArrayList<>(0));
         sl.close();
-        return new SegmentQueryResult("",list);
+        return new MediaSegmentQueryResult("",list);
     }
 
     /**
@@ -39,17 +39,17 @@ public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList> 
      *
      * @param context Object that is handed to the invocation, usually parsed from the request body. May be NULL!
      * @param parameters Map containing named parameters in the URL.
-     * @return SegmentQueryResult
+     * @return MediaSegmentQueryResult
      */
     @Override
-    public SegmentQueryResult doPost(IdList context, Map<String, String> parameters) {
+    public MediaSegmentQueryResult doPost(IdList context, Map<String, String> parameters) {
         if (context == null || context.getIds().length == 0) {
-            return new SegmentQueryResult("",new ArrayList<>(0));
+            return new MediaSegmentQueryResult("",new ArrayList<>(0));
         }
-        final SegmentLookup sl = new SegmentLookup();
-        final Map<String, SegmentDescriptor> segments = sl.lookUpSegments(Arrays.asList(context.getIds()));
+        final MediaSegmentReader sl = new MediaSegmentReader();
+        final Map<String, MediaSegmentDescriptor> segments = sl.lookUpSegments(Arrays.asList(context.getIds()));
         sl.close();
-        return new SegmentQueryResult("", new ArrayList<>(segments.values())) ;
+        return new MediaSegmentQueryResult("", new ArrayList<>(segments.values())) ;
     }
 
     @Override

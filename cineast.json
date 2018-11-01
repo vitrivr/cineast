@@ -1,6 +1,6 @@
 {
 	"database": {
-		"host": "out/json",
+		"host": "/Users/gassra02/Downloads/json",
 		"selector": "JSON",
 		"port": 5890,
 		"plaintext": true
@@ -14,6 +14,9 @@
 		"maxResults": 200,
 		"resultsPerModule": 250,
 		"features": {
+			"semantic" : [
+				{"feature": "ConceptMasksAde20k", "weight" : 1.0}
+			],
 			"globalcolor": [
 				{"feature": "AverageColor",	"weight": 2.3},
 				{"feature": "MedianColor", "weight": 1.2},

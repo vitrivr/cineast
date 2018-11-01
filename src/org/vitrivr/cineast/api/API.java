@@ -33,13 +33,13 @@ import org.vitrivr.cineast.api.session.CredentialManager;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.tag.IncompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.TagHandler;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.evaluation.EvaluationConfig;
 import org.vitrivr.cineast.core.evaluation.EvaluationException;
 import org.vitrivr.cineast.core.evaluation.EvaluationRuntime;
@@ -547,10 +547,10 @@ public class API {
                 break;
               }
               List<String> ids = commands.subList(1, commands.size());
-              Ordering<MultimediaMetadataDescriptor> ordering =
+              Ordering<MediaObjectMetadataDescriptor> ordering =
                   Ordering.explicit(ids).onResultOf(d -> d.getObjectId());
-              try (MultimediaMetadataReader r = new MultimediaMetadataReader()) {
-                List<MultimediaMetadataDescriptor> descriptors = r.lookupMultimediaMetadata(ids);
+              try (MediaObjectMetadataReader r = new MediaObjectMetadataReader()) {
+                List<MediaObjectMetadataDescriptor> descriptors = r.lookupMultimediaMetadata(ids);
                 descriptors.sort(ordering);
                 descriptors.forEach(System.out::println);
               }

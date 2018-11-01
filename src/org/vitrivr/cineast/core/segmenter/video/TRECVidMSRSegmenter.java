@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.segments.VideoSegment;
@@ -96,7 +96,7 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
      * @param object Media object that is about to be segmented.
      */
     @Override
-    public synchronized void init(Decoder<VideoFrame> decoder, MultimediaObjectDescriptor object) {
+    public synchronized void init(Decoder<VideoFrame> decoder, MediaObjectDescriptor object) {
         if (!this.running) {
             this.decoder = decoder;
             this.complete = false;
@@ -202,7 +202,7 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
     }
 
     /**
-     * Decodes shot boundaries in the format used for TRECVID and creates {@link SegmentDescriptor}s accordingly.
+     * Decodes shot boundaries in the format used for TRECVID and creates {@link MediaSegmentDescriptor}s accordingly.
      *
      * @param msr The file containing the master shot references.
      */
@@ -237,7 +237,7 @@ public class TRECVidMSRSegmenter implements Segmenter<VideoFrame> {
 
                 ++shotCounter;
 
-				/* TODO: Derive absolute start and end position of SegmentDescriptor. */
+				/* TODO: Derive absolute start and end position of MediaSegmentDescriptor. */
                 _return.add(new ImmutablePair<>(start, end));
             }
         } catch (FileNotFoundException e) {

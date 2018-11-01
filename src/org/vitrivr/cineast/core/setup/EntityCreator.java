@@ -5,9 +5,9 @@ import java.util.HashSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.db.dao.TagHandler;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType;
@@ -129,7 +129,7 @@ public interface EntityCreator extends AutoCloseable {
      * Drops the main entity holding information about multimedia objects
      */
     default boolean dropMultiMediaObjectsEntity() {
-        if (this.dropEntity(MultimediaObjectDescriptor.ENTITY)) {
+        if (this.dropEntity(MediaObjectDescriptor.ENTITY)) {
             LOGGER.info("Successfully dropped multimedia object entity.");
             return true;
         } else {
@@ -142,7 +142,7 @@ public interface EntityCreator extends AutoCloseable {
      * Drops the entity responsible for holding information about segments of a multimedia object
      */
     default boolean dropSegmentEntity() {
-        if (this.dropEntity(SegmentDescriptor.ENTITY)) {
+        if (this.dropEntity(MediaSegmentDescriptor.ENTITY)) {
             LOGGER.info("Successfully dropped segment entity.");
             return true;
         } else {
@@ -155,7 +155,7 @@ public interface EntityCreator extends AutoCloseable {
      * Drops the entity responsible for holding metadata information about multimedia objects.
      */
     default boolean dropMetadataEntity() {
-        if (this.dropEntity(MultimediaMetadataDescriptor.ENTITY)) {
+        if (this.dropEntity(MediaObjectMetadataDescriptor.ENTITY)) {
             LOGGER.info("Successfully dropped metadata entity.");
             return true;
         } else {

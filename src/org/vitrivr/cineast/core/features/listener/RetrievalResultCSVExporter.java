@@ -12,11 +12,11 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.runtime.RetrievalTask;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -41,22 +41,22 @@ public class RetrievalResultCSVExporter implements RetrievalResultListener {
     outFolder.mkdirs();
     File out = new File(outFolder, filename);
 
-    SegmentLookup sl = new SegmentLookup();
+    MediaSegmentReader sl = new MediaSegmentReader();
     
     ArrayList<String> ids = new ArrayList<>(resultList.size());
     for(ScoreElement e : resultList){
       ids.add(e.getId());
     }
     
-    Map<String, SegmentDescriptor> segments = sl.lookUpSegments(ids);
+    Map<String, MediaSegmentDescriptor> segments = sl.lookUpSegments(ids);
     Set<String> objectIds = new HashSet<>();
     
-    for(SegmentDescriptor sd : segments.values()){
+    for(MediaSegmentDescriptor sd : segments.values()){
       objectIds.add(sd.getObjectId());
     }
     
-    MultimediaObjectLookup ol = new MultimediaObjectLookup();
-    Map<String, MultimediaObjectDescriptor> objects = ol.lookUpObjects(objectIds);
+    MediaObjectReader ol = new MediaObjectReader();
+    Map<String, MediaObjectDescriptor> objects = ol.lookUpObjects(objectIds);
     
     try (PrintWriter writer = new PrintWriter(out)) {
       

@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
-import org.vitrivr.cineast.core.data.messages.result.MetadataQueryResult;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
+import org.vitrivr.cineast.core.data.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 
 /**
  * This class handles GET requests with an object id, domain and key and returns all matching
@@ -29,8 +29,8 @@ public class FindMetadataByDomainWithKeyByObjectIdActionHandler extends
   public static final String DOMAIN_NAME = ":domain";
   public static final String KEY_NAME = ":key";
 
-  private static Predicate<MultimediaMetadataDescriptor> createDomainAndKeyFilter(String domain,
-      String key) {
+  private static Predicate<MediaObjectMetadataDescriptor> createDomainAndKeyFilter(String domain,
+                                                                                   String key) {
     return (m) -> m.getKey().toLowerCase().equals(key.toLowerCase()) && m.getDomain().toLowerCase()
         .equals(domain.toLowerCase());
   }
@@ -40,11 +40,11 @@ public class FindMetadataByDomainWithKeyByObjectIdActionHandler extends
     final String objectId = parameters.get(OBJECT_ID_NAME);
     final String domain = parameters.get(DOMAIN_NAME);
     final String key = parameters.get(KEY_NAME);
-    final MultimediaMetadataReader reader = new MultimediaMetadataReader();
-    final List<MultimediaMetadataDescriptor> descriptors = reader
+    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+    final List<MediaObjectMetadataDescriptor> descriptors = reader
         .lookupMultimediaMetadata(objectId);
     reader.close();
-    return new MetadataQueryResult("",
+    return new MediaObjectMetadataQueryResult("",
         descriptors.stream().filter(createDomainAndKeyFilter(domain, key))
             .collect(Collectors.toList()));
   }

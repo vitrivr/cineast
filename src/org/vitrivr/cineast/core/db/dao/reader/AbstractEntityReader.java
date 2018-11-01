@@ -19,7 +19,7 @@ public abstract class AbstractEntityReader implements Closeable {
     /**
      * Constructor for AbstractEntityReader
      *
-     * @param selector DBSelector to use for the MultimediaMetadataReader instance.
+     * @param selector DBSelector to use for the MediaObjectMetadataReader instance.
      */
     public AbstractEntityReader(DBSelector selector) {
         this.selector = selector;

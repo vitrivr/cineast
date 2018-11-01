@@ -6,12 +6,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.segments.AudioSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
@@ -110,7 +108,7 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
      * @param object Media object that is about to be segmented.
      */
     @Override
-    public void init(Decoder<AudioFrame> decoder, MultimediaObjectDescriptor object) {
+    public void init(Decoder<AudioFrame> decoder, MediaObjectDescriptor object) {
         this.decoder = decoder;
         this.complete.set(false);
     }

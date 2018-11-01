@@ -12,7 +12,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
@@ -93,7 +93,7 @@ public class TreeWalkContainerIteratorProvider implements ExtractionContainerPro
       Path path = basePath.toFile().isDirectory() ? basePath.toAbsolutePath()
           .relativize(next.toAbsolutePath()) : next.getFileName();
       LOGGER.debug("Next path: {}, base {}, res {}", next, basePath, path);
-      return Optional.of(new ExtractionItemContainer(new MultimediaObjectDescriptor(path), null, next));
+      return Optional.of(new ExtractionItemContainer(new MediaObjectDescriptor(path), null, next));
     }
     return Optional.empty();
   }

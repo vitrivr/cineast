@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.util.MetadataUtil;
 
@@ -43,7 +44,7 @@ public class EXIFMetadataExtractor implements MetadataExtractor {
 
   /**
    * Extracts the metadata from the specified path and returns a List of
-   * MultimediaMetadataDescriptor objects (one for each metadata entry).
+   * MediaObjectMetadataDescriptor objects (one for each metadata entry).
    *
    * @param objectId ID of the multimedia object for which metadata will be generated.
    * @param path Path to the file for which metadata should be extracted.
@@ -51,7 +52,7 @@ public class EXIFMetadataExtractor implements MetadataExtractor {
    * returned!
    */
   @Override
-  public List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
+  public List<MediaObjectMetadataDescriptor> extract(String objectId, Path path) {
     ExifSubIFDDirectory md = MetadataUtil
         .getMetadataDirectoryOfType(path, ExifSubIFDDirectory.class);
     if (md == null) {
@@ -59,7 +60,7 @@ public class EXIFMetadataExtractor implements MetadataExtractor {
     }
     Set<Entry<String, Object>> set = Maps.transformValues(FIELDS, md::getObject).entrySet();
     return set.stream().filter(e -> e.getValue() != null).map(
-        e -> MultimediaMetadataDescriptor.of(objectId, this.domain(), e.getKey(), e.getValue()))
+        e -> MediaObjectMetadataDescriptor.of(objectId, this.domain(), e.getKey(), e.getValue()))
         .filter(e -> ! (e.getValueProvider() instanceof NothingProvider))
         .collect(Collectors.toList());
   }

@@ -3,13 +3,12 @@ package org.vitrivr.cineast.core.metadata;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.avcodec;
 
 import org.bytedeco.javacpp.avutil;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,8 +18,6 @@ import java.util.List;
 import static org.bytedeco.javacpp.avcodec.*;
 import static org.bytedeco.javacpp.avformat.*;
 import static org.bytedeco.javacpp.avutil.AVMEDIA_TYPE_VIDEO;
-import static org.bytedeco.javacpp.avutil.av_free;
-import static org.bytedeco.javacpp.avutil.av_malloc;
 
 public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -38,17 +35,17 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
     private static final String KEY_VIDEO_HEIGHT = "height";
 
     /**
-     * Extracts the technical video metadata from the specified path and returns a List of {@link MultimediaMetadataDescriptor}
+     * Extracts the technical video metadata from the specified path and returns a List of {@link MediaObjectMetadataDescriptor}
      * objects (one for each metadata entry).
      *
      * @param objectId ID of the multimedia object for which metadata will be generated.
      * @param path Path to the file for which metadata should be extracted.
-     * @return List of {@link MultimediaMetadataDescriptor}s or an empty list, if extracting metadata fails.
+     * @return List of {@link MediaObjectMetadataDescriptor}s or an empty list, if extracting metadata fails.
      */
     @Override
-    public List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
+    public List<MediaObjectMetadataDescriptor> extract(String objectId, Path path) {
 
-        final ArrayList<MultimediaMetadataDescriptor> metadata = new ArrayList<>();
+        final ArrayList<MediaObjectMetadataDescriptor> metadata = new ArrayList<>();
         if(!Files.exists(path)){
             return metadata;
         }
@@ -87,10 +84,10 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
         }
 
         /* Extract and add the video metadata to the list. */
-        metadata.add(new MultimediaMetadataDescriptor(objectId, this.domain(), KEY_VIDEO_FPS, ((float)videoStream.avg_frame_rate().num()/(float)videoStream.avg_frame_rate().den()), false));
-        metadata.add(new MultimediaMetadataDescriptor(objectId, this.domain(), KEY_VIDEO_DURATION, Math.floorDiv(videoStream.duration() * timebase.num() * 1000, timebase.den()), false));
-        metadata.add(new MultimediaMetadataDescriptor(objectId, this.domain(), KEY_VIDEO_WIDTH, videoCodecContext.width(), false));
-        metadata.add(new MultimediaMetadataDescriptor(objectId, this.domain(), KEY_VIDEO_HEIGHT, videoCodecContext.height(), false));
+        metadata.add(new MediaObjectMetadataDescriptor(objectId, this.domain(), KEY_VIDEO_FPS, ((float)videoStream.avg_frame_rate().num()/(float)videoStream.avg_frame_rate().den()), false));
+        metadata.add(new MediaObjectMetadataDescriptor(objectId, this.domain(), KEY_VIDEO_DURATION, Math.floorDiv(videoStream.duration() * timebase.num() * 1000, timebase.den()), false));
+        metadata.add(new MediaObjectMetadataDescriptor(objectId, this.domain(), KEY_VIDEO_WIDTH, videoCodecContext.width(), false));
+        metadata.add(new MediaObjectMetadataDescriptor(objectId, this.domain(), KEY_VIDEO_HEIGHT, videoCodecContext.height(), false));
 
         /* Closes all the resources. */
         avcodec_free_context(videoCodecContext);

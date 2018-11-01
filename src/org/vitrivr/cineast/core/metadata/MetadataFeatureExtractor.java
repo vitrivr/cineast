@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
  * A {@link MetadataExtractor} that extracts only a specific feature.
@@ -22,7 +22,7 @@ public interface MetadataFeatureExtractor<T> extends MetadataExtractor {
    * @return list of descriptors describing the feature data, if found, otherwise an empty list.
    */
   @Override
-  default List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
+  default List<MediaObjectMetadataDescriptor> extract(String objectId, Path path) {
     return this.extractFeature(objectId, path)
         .map(floatVector -> this.createDescriptors(objectId, floatVector))
         .orElse(Collections.emptyList());
@@ -35,5 +35,5 @@ public interface MetadataFeatureExtractor<T> extends MetadataExtractor {
   Optional<T> extractFeature(String objectId, Path path);
 
   /** Returns a list of descriptors of the given feature data. */
-  List<MultimediaMetadataDescriptor> createDescriptors(String objectId, T feature);
+  List<MediaObjectMetadataDescriptor> createDescriptors(String objectId, T feature);
 }

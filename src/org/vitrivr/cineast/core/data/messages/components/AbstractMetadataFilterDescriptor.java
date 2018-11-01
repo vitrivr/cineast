@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
  * Abstract descriptor of metadata filtering.
@@ -21,7 +21,7 @@ import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
  *
  * Subclasses must implement {@link Predicate#test(Object)}, in which the filtering takes place.
  *
- * The ultimate goal is to list keywords, on which a list of {@link MultimediaMetadataDescriptor}s is filtered.
+ * The ultimate goal is to list keywords, on which a list of {@link MediaObjectMetadataDescriptor}s is filtered.
  * Subclasses define on how to apply these keywords.
  *
  * @author loris.sauter
@@ -35,7 +35,7 @@ import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
     @Type(value = MetadataKeyFilter.class, name = "key")
 })
 public abstract class AbstractMetadataFilterDescriptor implements
-    Predicate<MultimediaMetadataDescriptor> {
+    Predicate<MediaObjectMetadataDescriptor> {
 
   public static final String KEYWORDS_NAME = "keywords";
 

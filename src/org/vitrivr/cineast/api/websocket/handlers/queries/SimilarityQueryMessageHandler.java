@@ -4,23 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
-import org.vitrivr.cineast.core.data.messages.query.Query;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
-import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
-import org.vitrivr.cineast.core.data.messages.result.QueryEnd;
-import org.vitrivr.cineast.core.data.messages.result.QueryError;
-import org.vitrivr.cineast.core.data.messages.result.QueryStart;
-import org.vitrivr.cineast.core.data.messages.result.SegmentQueryResult;
-import org.vitrivr.cineast.core.data.messages.result.SimilarityQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.*;
+import org.vitrivr.cineast.core.data.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
@@ -78,12 +72,12 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
                             .collect(Collectors.toList());
 
                     /* Fetch the List of SegmentDescriptors and MultimediaObjectDescriptors. */
-                    final List<SegmentDescriptor> segments = this.loadSegments(results.stream().map(s -> s.key).collect(Collectors.toList()));
-                    final List<MultimediaObjectDescriptor> objects = this.loadObjects(segments.stream().map(SegmentDescriptor::getObjectId).collect(Collectors.toList()));
+                    final List<MediaSegmentDescriptor> segments = this.loadSegments(results.stream().map(s -> s.key).collect(Collectors.toList()));
+                    final List<MediaObjectDescriptor> objects = this.loadObjects(segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList()));
 
                     /* Write partial results to stream. */
-                    this.write(session, new SegmentQueryResult(uuid, segments));
-                    this.write(session, new ObjectQueryResult(uuid, objects));
+                    this.write(session, new MediaSegmentQueryResult(uuid, segments));
+                    this.write(session, new MediaObjectQueryResult(uuid, objects));
                     this.write(session, new SimilarityQueryResult(uuid, category, results));
                 }
             }

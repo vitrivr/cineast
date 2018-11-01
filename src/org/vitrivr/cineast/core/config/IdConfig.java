@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
@@ -38,7 +38,7 @@ public final class IdConfig {
     private final Map<String, String> properties;
 
     /**
-     * Determines the 'existence check mode' for objectId's of {@link MultimediaObjectDescriptor}s, i.e. whether their uniqueness should be explicitly
+     * Determines the 'existence check mode' for objectId's of {@link MediaObjectDescriptor}s, i.e. whether their uniqueness should be explicitly
      * checked and what the consequences of the a collision should be.
      *
      * CHECK_SKIP  = Checks the uniqueness of an ID. If it's not unique, that item is skipped.
@@ -58,7 +58,7 @@ public final class IdConfig {
      * Constructor for {@link IdConfig}. Used for deserialization of a {@link IdConfig} instance from a configuration file.
      *
      * @param name Name of the {@link ObjectIdGenerator}
-     * @param existenceCheckMode  Determines the 'existence check mode' for objectId's of {@link MultimediaObjectDescriptor}s
+     * @param existenceCheckMode  Determines the 'existence check mode' for objectId's of {@link MediaObjectDescriptor}s
      * @param properties
      */
     @JsonCreator

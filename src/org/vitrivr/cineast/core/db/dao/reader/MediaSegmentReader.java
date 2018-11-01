@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
-import static org.vitrivr.cineast.core.data.entities.SegmentDescriptor.FIELDNAMES;
+import static org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor.FIELDNAMES;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 
@@ -20,62 +20,62 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimaps;
 
-public class SegmentLookup extends AbstractEntityReader {
+public class MediaSegmentReader extends AbstractEntityReader {
 
   private static final Logger LOGGER = LogManager.getLogger();
   /**
    * Default constructor.
    */
-  public SegmentLookup() {
+  public MediaSegmentReader() {
     this(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
   }
 
   /**
-   * Constructor for SegmentLookup
+   * Constructor for MediaSegmentReader
    *
-   * @param dbSelector DBSelector to use for the MultimediaMetadataReader instance.
+   * @param dbSelector DBSelector to use for the MediaObjectMetadataReader instance.
    */
-  public SegmentLookup(DBSelector dbSelector) {
+  public MediaSegmentReader(DBSelector dbSelector) {
     super(dbSelector);
-    this.selector.open(SegmentDescriptor.ENTITY);
+    this.selector.open(MediaSegmentDescriptor.ENTITY);
   }
 
-  public Optional<SegmentDescriptor> lookUpSegment(String segmentId) {
-    Stream<SegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], segmentId);
+  public Optional<MediaSegmentDescriptor> lookUpSegment(String segmentId) {
+    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], segmentId);
     return descriptors.findFirst();
   }
 
-  public Map<String, SegmentDescriptor> lookUpSegments(Iterable<String> segmentIds) {
-    Stream<SegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], segmentIds);
-    return Maps.uniqueIndex(descriptors.iterator(), SegmentDescriptor::getSegmentId);
+  public Map<String, MediaSegmentDescriptor> lookUpSegments(Iterable<String> segmentIds) {
+    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[0], segmentIds);
+    return Maps.uniqueIndex(descriptors.iterator(), MediaSegmentDescriptor::getSegmentId);
   }
 
-  public List<SegmentDescriptor> lookUpSegmentsOfObject(String objectId) {
-    Stream<SegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[1], objectId);
+  public List<MediaSegmentDescriptor> lookUpSegmentsOfObject(String objectId) {
+    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[1], objectId);
     return descriptors.collect(Collectors.toList());
   }
 
-  public ListMultimap<String, SegmentDescriptor> lookUpSegmentsOfObjects(
+  public ListMultimap<String, MediaSegmentDescriptor> lookUpSegmentsOfObjects(
       Iterable<String> objectIds) {
-    Stream<SegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[1], objectIds);
-    return Multimaps.index(descriptors.iterator(), SegmentDescriptor::getObjectId);
+    Stream<MediaSegmentDescriptor> descriptors = this.lookUpSegmentsByField(FIELDNAMES[1], objectIds);
+    return Multimaps.index(descriptors.iterator(), MediaSegmentDescriptor::getObjectId);
   }
 
-  private Stream<SegmentDescriptor> lookUpSegmentsByField(String fieldName, String fieldValue) {
+  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(String fieldName, String fieldValue) {
     return lookUpSegmentsByField(fieldName, Collections.singletonList(fieldValue));
   }
 
-  private Stream<SegmentDescriptor> lookUpSegmentsByField(String fieldName,
-      Iterable<String> fieldValues) {
+  private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(String fieldName,
+                                                               Iterable<String> fieldValues) {
     List<Map<String, PrimitiveTypeProvider>> segmentsProperties = this.selector
         .getRows(fieldName, fieldValues);
     return segmentsProperties.stream()
-        .map(SegmentLookup::propertiesToDescriptor)
+        .map(MediaSegmentReader::propertiesToDescriptor)
         .filter(Optional::isPresent)
         .map(Optional::get);
   }
 
-  private static Optional<SegmentDescriptor> propertiesToDescriptor(
+  private static Optional<MediaSegmentDescriptor> propertiesToDescriptor(
       Map<String, PrimitiveTypeProvider> properties) {
 
     if (properties.containsKey(FIELDNAMES[0]) &&
@@ -86,7 +86,7 @@ public class SegmentLookup extends AbstractEntityReader {
         properties.containsKey(FIELDNAMES[5]) &&
         properties.containsKey(FIELDNAMES[6])) {
 
-      return Optional.of(new SegmentDescriptor(
+      return Optional.of(new MediaSegmentDescriptor(
           properties.get(FIELDNAMES[1]).getString(),
           properties.get(FIELDNAMES[0]).getString(),
           properties.get(FIELDNAMES[2]).getInt(),

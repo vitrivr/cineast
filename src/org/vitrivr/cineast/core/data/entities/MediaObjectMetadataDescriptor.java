@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
-import com.google.protobuf.StringValue;
+
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -19,14 +19,14 @@ import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.data.providers.primitive.StringProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.dao.reader.DatabaseLookupException;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 
 
 /**
  * @author rgasser
  * @created 10.01.17
  */
-public class MultimediaMetadataDescriptor implements ExistenceCheck {
+public class MediaObjectMetadataDescriptor implements ExistenceCheck {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -45,7 +45,7 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
           String.class);
 
   /**
-   * ID of the MultimediaObject this MultimediaMetadataDescriptor belongs to.
+   * ID of the MultimediaObject this MediaObjectMetadataDescriptor belongs to.
    */
   private final String objectId;
 
@@ -67,34 +67,34 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
   private final boolean exists;
 
   /**
-   * Convenience method to create a MultimediaMetadataDescriptor marked as new. The method will
-   * assign a new ID to this MultimediaObjectDescriptor.
+   * Convenience method to create a MediaObjectMetadataDescriptor marked as new. The method will
+   * assign a new ID to this MediaObjectDescriptor.
    *
-   * @param objectId ID of the MultimediaObject this MultimediaMetadataDescriptor belongs to.
+   * @param objectId ID of the MultimediaObject this MediaObjectMetadataDescriptor belongs to.
    * @param domain domain that the metadata entry belongs to
    * @param key Key (name) of the metadata entry.
    * @param value Value of the metadata entry. Can be any type of object, but only Double, Float,
    * Int, Long and String are supported officially.
-   * @return A new MultimediaMetadataDescriptor
+   * @return A new MediaObjectMetadataDescriptor
    */
-  public static MultimediaMetadataDescriptor of(String objectId, String domain, String key,
-      @Nullable Object value) {
-    return new MultimediaMetadataDescriptor(objectId, domain, key, value, false);
+  public static MediaObjectMetadataDescriptor of(String objectId, String domain, String key,
+                                                 @Nullable Object value) {
+    return new MediaObjectMetadataDescriptor(objectId, domain, key, value, false);
   }
 
   /**
-   * Constructor for MultimediaMetadataDescriptor. Tries to infer the type of the provided value by
+   * Constructor for MediaObjectMetadataDescriptor. Tries to infer the type of the provided value by
    * means of instance of. If the value is not compatible with the default primitive types, the
    * object's toString() method is used to get a String representation.
    *
-   * @param objectId ID of the MultimediaObject this MultimediaMetadataDescriptor belongs to.
+   * @param objectId ID of the MultimediaObject this MediaObjectMetadataDescriptor belongs to.
    * @param domain domain that the metadata entry belongs to
    * @param key Key (name) of the metadata entry.
    * @param value Value of the metadata entry. Can be any type of object, but only Double, Float,
    * Int, Long and String are supported officially.
    */
   @JsonCreator
-  public MultimediaMetadataDescriptor(
+  public MediaObjectMetadataDescriptor(
       @JsonProperty(value = "objectId", defaultValue = "") String objectId,
       @JsonProperty("domain") String domain, @JsonProperty("key") String key,
       @JsonProperty("value") @Nullable Object value,
@@ -129,23 +129,23 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
   }
 
   /**
-   * Constructor for MultimediaMetadataDescriptor which can be used to create a
-   * MultimediaMetadataDescriptor from a Map containing the fieldnames as keys and the
+   * Constructor for MediaObjectMetadataDescriptor which can be used to create a
+   * MediaObjectMetadataDescriptor from a Map containing the fieldnames as keys and the
    * PrimitiveTypeProviders as value. Maps like this are usually returned by DB lookup classes.
    *
    * @param data Map that maps the fieldnames to PrimitiveTypeProvider's.
    * @throws DatabaseLookupException If a required field could not be mapped.
    * @see PrimitiveTypeProvider
-   * @see MultimediaMetadataReader
+   * @see MediaObjectMetadataReader
    */
-  public MultimediaMetadataDescriptor(Map<String, PrimitiveTypeProvider> data)
+  public MediaObjectMetadataDescriptor(Map<String, PrimitiveTypeProvider> data)
       throws DatabaseLookupException {
     if (data.get(FIELDNAMES[0]) != null
         && data.get(FIELDNAMES[0]).getType() == ProviderDataType.STRING) {
       this.objectId = data.get(FIELDNAMES[0]).getString();
     } else {
       throw new DatabaseLookupException(
-          "Could not read column '" + FIELDNAMES[0] + "' for MultimediaObjectDescriptor.");
+          "Could not read column '" + FIELDNAMES[0] + "' for MediaObjectDescriptor.");
     }
 
     if (data.get(FIELDNAMES[1]) != null
@@ -153,7 +153,7 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
       this.domain = data.get(FIELDNAMES[1]).getString();
     } else {
       throw new DatabaseLookupException(
-          "Could not read column '" + FIELDNAMES[1] + "' for MultimediaObjectDescriptor.");
+          "Could not read column '" + FIELDNAMES[1] + "' for MediaObjectDescriptor.");
     }
 
     if (data.get(FIELDNAMES[2]) != null
@@ -161,7 +161,7 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
       this.key = data.get(FIELDNAMES[2]).getString();
     } else {
       throw new DatabaseLookupException(
-          "Could not read column '" + FIELDNAMES[2] + "' for MultimediaObjectDescriptor.");
+          "Could not read column '" + FIELDNAMES[2] + "' for MediaObjectDescriptor.");
     }
 
     this.value = data.get(FIELDNAMES[3]);
@@ -209,12 +209,12 @@ public class MultimediaMetadataDescriptor implements ExistenceCheck {
   }
 
 
-  public static MultimediaMetadataDescriptor fromExisting(MultimediaMetadataDescriptor el,
-      String objectId) {
+  public static MediaObjectMetadataDescriptor fromExisting(MediaObjectMetadataDescriptor el,
+                                                           String objectId) {
     if (objectId == null) {
       LOGGER.error("No objectID provided for this metadatadescriptor");
     }
-    return new MultimediaMetadataDescriptor(objectId, el.domain,
+    return new MediaObjectMetadataDescriptor(objectId, el.domain,
         el.key, el.value, el.exists);
   }
 }

@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.GpsData;
 import org.vitrivr.cineast.core.data.Location;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 
@@ -88,11 +88,11 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
   }
 
   @Override
-  public List<MultimediaMetadataDescriptor> createDescriptors(String objectId, Location location) {
+  public List<MediaObjectMetadataDescriptor> createDescriptors(String objectId, Location location) {
     return ImmutableList.of(
-        MultimediaMetadataDescriptor.of(objectId, this.domain(),
+        MediaObjectMetadataDescriptor.of(objectId, this.domain(),
             GpsData.KEY_LATITUDE, Float.toString(location.getLatitude())),
-        MultimediaMetadataDescriptor.of(objectId, this.domain(),
+        MediaObjectMetadataDescriptor.of(objectId, this.domain(),
             GpsData.KEY_LONGITUDE, Float.toString(location.getLongitude()))
     );
   }

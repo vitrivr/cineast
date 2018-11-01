@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @version 1.0
  * @created 10.01.17
  */
-public class SegmentDescriptor implements ExistenceCheck {
+public class MediaSegmentDescriptor implements ExistenceCheck {
     /** Name of the entity in the persistence layer. */
     public static final String ENTITY  = "cineast_segment";
 
@@ -33,8 +33,8 @@ public class SegmentDescriptor implements ExistenceCheck {
     private final boolean exists;
 
     /**
-     * Convenience method to create a SegmentDescriptor marked as new. The method will assign
-     * a new ID to this SegmentDescriptor.
+     * Convenience method to create a MediaSegmentDescriptor marked as new. The method will assign
+     * a new ID to this MediaSegmentDescriptor.
      *
      * @param objectId Object
      * @param segmentNumber
@@ -42,12 +42,12 @@ public class SegmentDescriptor implements ExistenceCheck {
      * @param end
      * @return
      */
-    public static SegmentDescriptor newSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs) {
+    public static MediaSegmentDescriptor newSegmentDescriptor(String objectId, int segmentNumber, int start, int end, float startabs, float endabs) {
         String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
-        return new SegmentDescriptor(objectId, segmentId, segmentNumber, start, end, startabs, endabs, false);
+        return new MediaSegmentDescriptor(objectId, segmentId, segmentNumber, start, end, startabs, endabs, false);
     }
 
-    private SegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs, boolean exists) {
+    private MediaSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs, boolean exists) {
         this.segmentId = segmentId;
         this.objectId = objectId;
         this.number = segmentNumber;
@@ -58,11 +58,11 @@ public class SegmentDescriptor implements ExistenceCheck {
         this.exists = exists;
     }
 
-    public SegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs) {
+    public MediaSegmentDescriptor(String objectId, String segmentId, int segmentNumber, int start, int end, float startabs, float endabs) {
         this(objectId, segmentId, segmentNumber, start, end, startabs, endabs, true);
     }
 
-    public SegmentDescriptor() {
+    public MediaSegmentDescriptor() {
         this("", "", 0, 0, 0, 0.0f, 0.0f, false);
     }
 
@@ -114,7 +114,7 @@ public class SegmentDescriptor implements ExistenceCheck {
 
     @Override
     public String toString() {
-        return "SegmentDescriptor(" + segmentId + ")";
+        return "MediaSegmentDescriptor(" + segmentId + ")";
     }
 
 

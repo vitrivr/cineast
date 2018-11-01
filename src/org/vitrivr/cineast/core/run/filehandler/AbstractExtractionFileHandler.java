@@ -16,17 +16,17 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
-import org.vitrivr.cineast.core.db.dao.writer.MultimediaMetadataWriter;
-import org.vitrivr.cineast.core.db.dao.writer.MultimediaObjectWriter;
-import org.vitrivr.cineast.core.db.dao.writer.SegmentWriter;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
+import org.vitrivr.cineast.core.db.dao.writer.MediaObjectMetadataWriter;
+import org.vitrivr.cineast.core.db.dao.writer.MediaObjectWriter;
+import org.vitrivr.cineast.core.db.dao.writer.MediaSegmentWriter;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
@@ -56,11 +56,11 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  private final MultimediaObjectWriter objectWriter;
-  private final SegmentWriter segmentWriter;
-  private final MultimediaMetadataWriter metadataWriter;
-  private final MultimediaObjectLookup objectReader;
-  private final SegmentLookup segmentReader;
+  private final MediaObjectWriter objectWriter;
+  private final MediaSegmentWriter mediaSegmentWriter;
+  private final MediaObjectMetadataWriter metadataWriter;
+  private final MediaObjectReader objectReader;
+  private final MediaSegmentReader segmentReader;
   protected final ExtractionContextProvider context;
   private final ExtractionContainerProvider itemProvider;
 
@@ -99,15 +99,15 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
 
         /* Setup the required persistence-writer classes. */
     final PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
-    this.objectWriter = new MultimediaObjectWriter(writerSupplier.get());
-    this.segmentWriter = new SegmentWriter(writerSupplier.get(), context.getBatchsize());
-    this.metadataWriter = new MultimediaMetadataWriter(writerSupplier.get(),
+    this.objectWriter = new MediaObjectWriter(writerSupplier.get());
+    this.mediaSegmentWriter = new MediaSegmentWriter(writerSupplier.get(), context.getBatchsize());
+    this.metadataWriter = new MediaObjectMetadataWriter(writerSupplier.get(),
         context.getBatchsize());
 
         /* Setup the required persistence-reader classes. */
     final DBSelectorSupplier readerSupplier = context.persistencyReader();
-    this.objectReader = new MultimediaObjectLookup(readerSupplier.get());
-    this.segmentReader = new SegmentLookup(readerSupplier.get());
+    this.objectReader = new MediaObjectReader(readerSupplier.get());
+    this.segmentReader = new MediaSegmentReader(readerSupplier.get());
 
         /* Setup the ExtractionPipeline and the metadata extractors. */
     this.pipeline = new ExtractionPipeline(context,
@@ -145,8 +145,8 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
         LOGGER.info("Processing file {}.", item);
         if (decoder.init(item.getPathForExtraction(),
             Config.sharedConfig().getDecoders().get(this.context.sourceType()))) {
-                /* Create / lookup MultimediaObjectDescriptor for new file. */
-          final MultimediaObjectDescriptor descriptor = this
+                /* Create / lookup MediaObjectDescriptor for new file. */
+          final MediaObjectDescriptor descriptor = this
               .fetchOrCreateMultimediaObjectDescriptor(generator, item, context.sourceType());
           if (!this.checkAndPersistMultimediaObject(descriptor)) {
             continue;
@@ -171,17 +171,17 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
               final SegmentContainer container = segmenter.getNext();
               if (container != null) {
                             /* Create segment-descriptor and try to persist it. */
-                final SegmentDescriptor segmentDescriptor = this
+                final MediaSegmentDescriptor mediaSegmentDescriptor = this
                     .fetchOrCreateSegmentDescriptor(objectId, segmentNumber,
                         container.getStart(), container.getEnd(),
                         container.getAbsoluteStart(), container.getAbsoluteEnd());
-                if (!this.checkAndPersistSegment(segmentDescriptor)) {
+                if (!this.checkAndPersistSegment(mediaSegmentDescriptor)) {
                   continue;
                 }
 
                             /* Update container ID's. */
-                container.setId(segmentDescriptor.getSegmentId());
-                container.setSuperId(segmentDescriptor.getObjectId());
+                container.setId(mediaSegmentDescriptor.getSegmentId());
+                container.setSuperId(mediaSegmentDescriptor.getObjectId());
 
                             /* Timeout in ms used when emitting segments into the ExtractionPipeline. */
                 int emissionTimout = 1000;
@@ -204,8 +204,8 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
             }
           }
 
-          List<MultimediaMetadataDescriptor> metadata = Arrays.stream(item.getMetadata())
-              .map(el -> MultimediaMetadataDescriptor.fromExisting(el, objectId))
+          List<MediaObjectMetadataDescriptor> metadata = Arrays.stream(item.getMetadata())
+              .map(el -> MediaObjectMetadataDescriptor.fromExisting(el, objectId))
               .collect(Collectors.toList());
           this.metadataWriter.write(metadata);
 
@@ -213,7 +213,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
           this.extractAndPersistMetadata(item, objectId);
 
                 /* Force flush the segment, object and metadata information. */
-          this.segmentWriter.flush();
+          this.mediaSegmentWriter.flush();
           this.objectWriter.flush();
           this.metadataWriter.flush();
         } else {
@@ -276,7 +276,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
       }
 
             /* Close all the writers and readers. */
-      this.segmentWriter.close();
+      this.mediaSegmentWriter.close();
       this.objectWriter.close();
       this.metadataWriter.close();
       this.objectReader.close();
@@ -333,14 +333,14 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
   }
 
   /**
-   * Checks if the MultimediaObjectDescriptor already exists and decides whether extraction should
+   * Checks if the MediaObjectDescriptor already exists and decides whether extraction should
    * continue for that object or not (based on the ingest settings). If it does not exist, the
-   * MultimediaObjectDescriptor is persisted.
+   * MediaObjectDescriptor is persisted.
    *
-   * @param descriptor MultimediaObjectDescriptor that should be persisted.
+   * @param descriptor MediaObjectDescriptor that should be persisted.
    * @return true if object should be processed further or false if it should be skipped.
    */
-  protected boolean checkAndPersistMultimediaObject(MultimediaObjectDescriptor descriptor) {
+  protected boolean checkAndPersistMultimediaObject(MediaObjectDescriptor descriptor) {
     if (descriptor.exists() && this.context.existenceCheck()
         == IdConfig.ExistenceCheck.CHECK_SKIP) {//this is true when a descriptor is used which has previously been retrieved from the database
       LOGGER.info("MultimediaObject {} (name: {}) already exists. This object will be skipped.",
@@ -363,14 +363,14 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
   }
 
   /**
-   * Persists a SegmentDescriptor and performs an existence check before, if so configured. Based on
+   * Persists a MediaSegmentDescriptor and performs an existence check before, if so configured. Based on
    * the outcome of that persistence check and the settings in the ExtractionContext this method
    * returns true if segment should be processed further or false otherwise.
    *
-   * @param descriptor SegmentDescriptor that should be persisted.
+   * @param descriptor MediaSegmentDescriptor that should be persisted.
    * @return true if segment should be processed further or false if it should be skipped.
    */
-  protected boolean checkAndPersistSegment(SegmentDescriptor descriptor) {
+  protected boolean checkAndPersistSegment(MediaSegmentDescriptor descriptor) {
     if (descriptor.exists()
         && this.context.existenceCheck() == IdConfig.ExistenceCheck.CHECK_SKIP) {
       LOGGER.info("Segment {} already exists. This segment will be skipped.",
@@ -381,30 +381,30 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
       LOGGER.info("Segment {} already exists. Proceeding anyway...", descriptor.getSegmentId());
       return true;
     } else {
-      this.segmentWriter.write(descriptor);
+      this.mediaSegmentWriter.write(descriptor);
       return true;
     }
   }
 
-  protected MultimediaObjectDescriptor fetchOrCreateMultimediaObjectDescriptor(
+  protected MediaObjectDescriptor fetchOrCreateMultimediaObjectDescriptor(
       ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
 
-    MultimediaObjectDescriptor fetchedDescriptor = this.objectReader.lookUpObjectByPath(item.getObject().getPath());
+    MediaObjectDescriptor fetchedDescriptor = this.objectReader.lookUpObjectByPath(item.getObject().getPath());
     if (fetchedDescriptor.exists() && fetchedDescriptor.getMediatype() == this.context.sourceType()) {
       return fetchedDescriptor;
     }
-    return MultimediaObjectDescriptor
+    return MediaObjectDescriptor
         .mergeItem(fetchedDescriptor, generator, item, type);
   }
 
   /**
-   * Convenience method to lookup a SegmentDescriptor for a given path and type or create a new one
-   * if needed. If a new descriptor is required, SegmentDescriptor.newSegmentDescriptor() is used.
+   * Convenience method to lookup a MediaSegmentDescriptor for a given path and type or create a new one
+   * if needed. If a new descriptor is required, MediaSegmentDescriptor.newSegmentDescriptor() is used.
    */
-  protected SegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber,
-      int start, int end, float startabs, float endabs) {
+  protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber,
+                                                                  int start, int end, float startabs, float endabs) {
     String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
-    return this.segmentReader.lookUpSegment(segmentId).orElse(SegmentDescriptor
+    return this.segmentReader.lookUpSegment(segmentId).orElse(MediaSegmentDescriptor
         .newSegmentDescriptor(objectId, segmentNumber, start, end, startabs, endabs));
   }
 
@@ -412,7 +412,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
     for (MetadataExtractor extractor : this.metadataExtractors) {
       LOGGER.debug( "Extracting metadata for {}", extractor.getClass().getSimpleName() );
       try {
-        List<MultimediaMetadataDescriptor> metadata = extractor
+        List<MediaObjectMetadataDescriptor> metadata = extractor
             .extract(objectId, item.getPathForExtraction());
         if (!metadata.isEmpty()) {
           this.metadataWriter.write(metadata);
@@ -423,7 +423,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
     }
   }
 
-  protected List<SegmentDescriptor> retrieveExistingSegments(MultimediaObjectDescriptor object) {
+  protected List<MediaSegmentDescriptor> retrieveExistingSegments(MediaObjectDescriptor object) {
     return this.segmentReader.lookUpSegmentsOfObject(object.getObjectId());
   }
 

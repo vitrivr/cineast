@@ -1,33 +1,25 @@
 package org.vitrivr.cineast.api.websocket.handlers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.QueryTerm;
 import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
-import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
-import org.vitrivr.cineast.core.data.messages.result.QueryEnd;
-import org.vitrivr.cineast.core.data.messages.result.QueryStart;
-import org.vitrivr.cineast.core.data.messages.result.SegmentQueryResult;
-import org.vitrivr.cineast.core.data.messages.result.SimilarityQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.*;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -46,12 +38,12 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Simila
   @Override
   public void handle(Session session, SimilarityQuery message) {
     /* Prepare QueryConfig (so as to obtain a QueryId). */
-    QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
+    final QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
 
     /*
      * Begin of Query: Send QueryStart Message to Client.
      */
-    QueryStart startMarker = new QueryStart(qconf.getQueryId().toString());
+    final QueryStart startMarker = new QueryStart(qconf.getQueryId().toString());
     this.write(session, startMarker);
 
 
@@ -76,7 +68,7 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Simila
 
     List<SegmentScoreElement> result;
     for (String category : categoryMap.keySet()) {
-      TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
+      final TObjectDoubleHashMap<String> map = new TObjectDoubleHashMap<>();
       for (QueryContainer qc : categoryMap.get(category)) {
 
         float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation
@@ -97,26 +89,17 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Simila
           map.adjustOrPutValue(segmentId, weightedScore, weightedScore);
         }
 
-        List<StringDoublePair> list = new ArrayList<>(map.size());
-        Set<String> keys = map.keySet();
-        for (String key : keys) {
-          double val = map.get(key);
-          if (val > 0) {
-            list.add(new StringDoublePair(key, val));
-          }
-        }
+        /* Transform raw results into list of StringDoublePair's (segmentId -> score). */
+        final int max = Config.sharedConfig().getRetriever().getMaxResults();
+        final List<StringDoublePair> results = map.keySet().stream()
+                .map(key -> new StringDoublePair(key, map.get(key)))
+                .filter(p -> p.value > 0.0)
+                .sorted(StringDoublePair.COMPARATOR)
+                .limit(max)
+                .collect(Collectors.toList());
 
-        Collections.sort(list, StringDoublePair.COMPARATOR);
-
-        int MAX_RESULTS = Config.sharedConfig().getRetriever().getMaxResults();
-        if (list.size() > MAX_RESULTS) {
-          list = list.subList(0, MAX_RESULTS);
-        }
-
-        this.write(session, new SegmentQueryResult(startMarker.getQueryId(), this.loadSegments(list)));
-        this.write(session, new ObjectQueryResult(startMarker.getQueryId(), this.loadObjects(list)));
-        this.write(session, new SimilarityQueryResult(startMarker.getQueryId(), category, list));
-
+        /* Finalize and submit per-category results. */
+        this.finalizeAndSubmitResults(session, startMarker.getQueryId(), category, results);
       }
     }
 
@@ -125,78 +108,66 @@ public class QueryMessageHandler extends StatelessWebsocketMessageHandler<Simila
   }
 
   /**
+   * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) associated with the
+   * raw results produced by a similarity search in a specific category.
    *
-   * @param results
-   * @return
+   * @param session The {@link Session} object used to transmit the results.
+   * @param queryId ID of the running query.
+   * @param category Name of the query category.
+   * @param raw List of raw per-category results (segmentId -> score).
    */
-  private List<SegmentDescriptor> loadSegments(List<StringDoublePair> results) {
-    ArrayList<SegmentDescriptor> sdList = new ArrayList<>(results.size());
-    SegmentLookup sl = new SegmentLookup();
+  private void finalizeAndSubmitResults(Session session, String queryId, String category, List<StringDoublePair> raw) {
+    final List<String> segmentIds = raw.stream().map(s -> s.key).collect(Collectors.toList());
 
-    String[] ids = new String[results.size()];
-    int i = 0;
-    for (StringDoublePair sdp : results) {
-      ids[i++] = sdp.key;
-    }
+    /* Load segment information. */
+    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
+    final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.loadSegmentMetadata(segmentIds);
 
-    Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
+    /* Fetch object IDs. */
+    final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
+    final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
 
-    sl.close();
-
-    for (String id : ids) {
-      SegmentDescriptor sd = map.get(id);
-      if (sd != null) {
-        sdList.add(sd);
-      }
-    }
-
-    return sdList;
+    this.write(session, new MediaObjectQueryResult(queryId, objects));
+    this.write(session, new MediaSegmentQueryResult(queryId, segments));
+    this.write(session, new SimilarityQueryResult(queryId, category, raw));
+    this.write(session, new MediaSegmentMetadataQueryResult(queryId, segmentMetadata));
   }
 
   /**
+   * Fetches a list of {@link MediaSegmentDescriptor}s using the {@link MediaSegmentReader} class.
    *
-   * @param results
-   * @return
+   * @param segmentIds List of segment ID's for which to fetch {@link MediaSegmentDescriptor}s.
+   * @return List of {@link MediaSegmentDescriptor}. Number of entries can be smaller then the number of IDs provided by the caller.
    */
-  private List<MultimediaObjectDescriptor> loadObjects(List<StringDoublePair> results) {
-    SegmentLookup sl = new SegmentLookup();
-    MultimediaObjectLookup vl = new MultimediaObjectLookup();
-
-    String[] ids = new String[results.size()];
-    int i = 0;
-    for (StringDoublePair sdp : results) {
-      ids[i++] = sdp.key;
+  private List<MediaSegmentDescriptor> loadSegments(final List<String> segmentIds) {
+    try (final MediaSegmentReader sl = new MediaSegmentReader()) {
+      final Map<String, MediaSegmentDescriptor> map = sl.lookUpSegments(segmentIds);
+      return segmentIds.stream().map(map::get).filter(Objects::nonNull).collect(Collectors.toList());
     }
+  }
 
-    Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
-
-    sl.close();
-
-    HashSet<String> videoIds = new HashSet<>();
-    for (String id : ids) {
-      SegmentDescriptor sd = map.get(id);
-      if (sd == null) {
-        continue;
-      }
-      videoIds.add(sd.getObjectId());
+  /**
+   * Fetches a list of {@link MediaSegmentMetadataDescriptor}s using the {@link MediaSegmentMetadataReader} class.
+   *
+   * @param segmentIds List of segment ID's for which to fetch {@link MediaSegmentMetadataReader}s.
+   * @return List of {@link MediaSegmentMetadataReader}. Number of entries can be smaller then the number of IDs provided by the caller.
+   */
+  private List<MediaSegmentMetadataDescriptor> loadSegmentMetadata(List<String> segmentIds) {
+    try (final MediaSegmentMetadataReader reader = new MediaSegmentMetadataReader()) {
+      return reader.lookupMultimediaMetadata(segmentIds);
     }
+  }
 
-    String[] vids = new String[videoIds.size()];
-    i = 0;
-    for (String vid : videoIds) {
-      vids[i++] = vid;
+  /**
+   * Fetches a list of {@link MediaObjectDescriptor}s using the {@link MediaObjectDescriptor} class.
+   *
+   * @param objectIds List of object ID's for which to fetch {@link MediaObjectDescriptor}s.
+   * @return List of {@link MediaObjectDescriptor}. Number of entries can be smaller then the number of IDs provided by the caller.
+   */
+  private List<MediaObjectDescriptor> loadObjects(List<String> objectIds) {
+    try (final MediaObjectReader vl = new MediaObjectReader()) {
+      final Map<String, MediaObjectDescriptor> map = vl.lookUpObjects(objectIds);
+      return objectIds.stream().map(map::get).filter(Objects::nonNull).collect(Collectors.toList());
     }
-
-    ArrayList<MultimediaObjectDescriptor> vdList = new ArrayList<>(vids.length);
-
-    Map<String, MultimediaObjectDescriptor> vmap = vl.lookUpObjects(vids);
-
-    vl.close();
-
-    for (String vid : vids) {
-      vdList.add(vmap.get(vid));
-    }
-
-    return vdList;
   }
 }

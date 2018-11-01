@@ -2,7 +2,7 @@ package org.vitrivr.cineast.core.data.messages.result;
 
 import java.util.List;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.abstracts.AbstractQueryResultMessage;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
@@ -13,15 +13,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @version 1.0
  * @created 12.01.17
  */
-public class ObjectQueryResult extends AbstractQueryResultMessage<MultimediaObjectDescriptor> {
-
+public class MediaSegmentQueryResult extends AbstractQueryResultMessage<MediaSegmentDescriptor> {
     /**
      *
-     * @param queryId
      * @param content
      */
     @JsonCreator
-    public ObjectQueryResult(String queryId, List<MultimediaObjectDescriptor> content) {
+    public MediaSegmentQueryResult(String queryId, List<MediaSegmentDescriptor> content) {
         super(queryId, content);
     }
 
@@ -31,6 +29,6 @@ public class ObjectQueryResult extends AbstractQueryResultMessage<MultimediaObje
      */
     @Override
     public MessageType getMessageType() {
-        return MessageType.QR_OBJECT;
+        return MessageType.QR_SEGMENT;
     }
 }

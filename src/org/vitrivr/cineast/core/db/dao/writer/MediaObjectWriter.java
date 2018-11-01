@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.db.dao.writer;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 
@@ -10,11 +10,11 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
  * @version 1.0
  * @created 14.01.17
  */
-public class MultimediaObjectWriter extends AbstractBatchedEntityWriter<MultimediaObjectDescriptor> {
+public class MediaObjectWriter extends AbstractBatchedEntityWriter<MediaObjectDescriptor> {
     /**
      * @param writer
      */
-    public MultimediaObjectWriter(PersistencyWriter<?> writer) {
+    public MediaObjectWriter(PersistencyWriter<?> writer) {
         super(writer, 1, true);
     }
 
@@ -23,8 +23,8 @@ public class MultimediaObjectWriter extends AbstractBatchedEntityWriter<Multimed
      */
     @Override
     protected void init() {
-        this.writer.setFieldNames(MultimediaObjectDescriptor.FIELDNAMES);
-        this.writer.open(MultimediaObjectDescriptor.ENTITY);
+        this.writer.setFieldNames(MediaObjectDescriptor.FIELDNAMES);
+        this.writer.open(MediaObjectDescriptor.ENTITY);
     }
 
     /**
@@ -32,7 +32,7 @@ public class MultimediaObjectWriter extends AbstractBatchedEntityWriter<Multimed
      * @return
      */
     @Override
-    protected PersistentTuple generateTuple(MultimediaObjectDescriptor entity) {
+    protected PersistentTuple generateTuple(MediaObjectDescriptor entity) {
         return this.writer.generateTuple(entity.getObjectId(), entity.getMediatypeId(), entity.getName(), entity.getPath());
     }
 }

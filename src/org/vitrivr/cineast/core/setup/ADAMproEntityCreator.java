@@ -9,10 +9,10 @@ import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.adampro.grpc.AdamGrpc.AttributeDefinitionMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.AttributeType;
 import org.vitrivr.adampro.grpc.AdamGrpc.CreateEntityMessage;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataSegmentDescriptor;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.db.adampro.ADAMproWrapper;
 
 import com.google.common.collect.ImmutableMap;
@@ -33,15 +33,15 @@ public class ADAMproEntityCreator implements EntityCreator {
 
         AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-        attributes.add(builder.setName(MultimediaObjectDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        attributes.add(builder.setName(MultimediaObjectDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.INT).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        attributes.add(builder.setName(MediaObjectDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        attributes.add(builder.setName(MediaObjectDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.INT).putAllParams(ImmutableMap.of("indexed", "true")).build());
 
         builder.clear(); /* Clear builder to erase the indexed flag. */
 
-        attributes.add(builder.setName(MultimediaObjectDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.STRING).build());
-        attributes.add(builder.setName(MultimediaObjectDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
+        attributes.add(builder.setName(MediaObjectDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.STRING).build());
+        attributes.add(builder.setName(MediaObjectDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
 
-        CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaObjectDescriptor.ENTITY).addAllAttributes(attributes).build();
+        CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MediaObjectDescriptor.ENTITY).addAllAttributes(attributes).build();
 
         AckMessage ack = adampro.createEntityBlocking(message);
 
@@ -65,15 +65,15 @@ public class ADAMproEntityCreator implements EntityCreator {
         final ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
 
         final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
-        fields.add(builder.setName(MultimediaMetadataDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        fields.add(builder.setName(MultimediaMetadataDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        fields.add(builder.setName(MultimediaMetadataDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MediaObjectMetadataDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MediaObjectMetadataDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MediaObjectMetadataDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 
         builder.clear(); /* Clear builder to erase the indexed flag. */
 
-        fields.add(builder.setName(MultimediaMetadataDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
+        fields.add(builder.setName(MediaObjectMetadataDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
 
-        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaMetadataDescriptor.ENTITY).addAllAttributes(fields).build();
+        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MediaObjectMetadataDescriptor.ENTITY).addAllAttributes(fields).build();
         final AckMessage ack = adampro.createEntityBlocking(message);
 
         if (ack.getCode() == AckMessage.Code.OK) {
@@ -90,15 +90,15 @@ public class ADAMproEntityCreator implements EntityCreator {
         final ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
 
         final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
-        fields.add(builder.setName(MultimediaMetadataSegmentDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        fields.add(builder.setName(MultimediaMetadataSegmentDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        fields.add(builder.setName(MultimediaMetadataSegmentDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MediaSegmentMetadataDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MediaSegmentMetadataDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MediaSegmentMetadataDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 
         builder.clear(); /* Clear builder to erase the indexed flag. */
 
-        fields.add(builder.setName(MultimediaMetadataSegmentDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
+        fields.add(builder.setName(MediaSegmentMetadataDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.STRING).build());
 
-        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MultimediaMetadataSegmentDescriptor.ENTITY).addAllAttributes(fields).build();
+        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MediaSegmentMetadataDescriptor.ENTITY).addAllAttributes(fields).build();
         final AckMessage ack = adampro.createEntityBlocking(message);
 
         if (ack.getCode() == AckMessage.Code.OK) {
@@ -122,18 +122,18 @@ public class ADAMproEntityCreator implements EntityCreator {
 
         final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 
-        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
-        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[0]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
+        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[1]).setAttributetype(AttributeType.STRING).putAllParams(ImmutableMap.of("indexed", "true")).build());
 
         builder.clear(); /* Clear builder to erase the indexed flag. */
 
-        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.INT).build());
-        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.INT).build());
-        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[4]).setAttributetype(AttributeType.INT).build());
-        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[5]).setAttributetype(AttributeType.FLOAT).build());
-        fields.add(builder.setName(SegmentDescriptor.FIELDNAMES[6]).setAttributetype(AttributeType.FLOAT).build());
+        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.INT).build());
+        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.INT).build());
+        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[4]).setAttributetype(AttributeType.INT).build());
+        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[5]).setAttributetype(AttributeType.FLOAT).build());
+        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[6]).setAttributetype(AttributeType.FLOAT).build());
 
-        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(SegmentDescriptor.ENTITY).addAllAttributes(fields).build();
+        final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MediaSegmentDescriptor.ENTITY).addAllAttributes(fields).build();
 
         final AckMessage ack = adampro.createEntityBlocking(message);
 

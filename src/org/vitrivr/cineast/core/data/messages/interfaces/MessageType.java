@@ -5,13 +5,8 @@ import org.vitrivr.cineast.core.data.messages.lookup.MetadataLookup;
 import org.vitrivr.cineast.core.data.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.core.data.messages.query.NeighboringSegmentQuery;
 import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
-import org.vitrivr.cineast.core.data.messages.result.MetadataQueryResult;
-import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
-import org.vitrivr.cineast.core.data.messages.result.QueryEnd;
-import org.vitrivr.cineast.core.data.messages.result.QueryError;
-import org.vitrivr.cineast.core.data.messages.result.QueryStart;
-import org.vitrivr.cineast.core.data.messages.result.SegmentQueryResult;
-import org.vitrivr.cineast.core.data.messages.result.SimilarityQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.*;
+import org.vitrivr.cineast.core.data.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.core.data.messages.session.StartSessionMessage;
 
 /**
@@ -32,7 +27,7 @@ public enum MessageType {
     SESSION_START(StartSessionMessage.class),
 
     /* Query results. */
-    QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_ERROR(QueryError.class), QR_OBJECT(ObjectQueryResult.class),  QR_METADATA(MetadataQueryResult.class), QR_SEGMENT(SegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);
+    QR_START(QueryStart.class), QR_END(QueryEnd.class), QR_ERROR(QueryError.class), QR_OBJECT(MediaObjectQueryResult.class),  QR_METADATA_O(MediaObjectMetadataQueryResult.class), QR_METADATA_S(MediaObjectMetadataQueryResult.class), QR_SEGMENT(MediaSegmentQueryResult.class), QR_SIMILARITY(SimilarityQueryResult.class);
 
     private Class<? extends Message> c;
 

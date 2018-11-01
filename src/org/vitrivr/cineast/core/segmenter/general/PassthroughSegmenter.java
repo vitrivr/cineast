@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.segmenter.video.TRECVidMSRSegmenter;
@@ -47,7 +47,7 @@ public abstract class PassthroughSegmenter<T> implements Segmenter<T> {
      * @param object Media object that is about to be segmented.
      */
     @Override
-    public void init(Decoder<T> decoder, MultimediaObjectDescriptor object) {
+    public void init(Decoder<T> decoder, MediaObjectDescriptor object) {
         this.decoder = decoder;
         this.complete = false;
     }

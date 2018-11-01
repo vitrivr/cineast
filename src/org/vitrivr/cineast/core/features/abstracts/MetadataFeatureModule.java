@@ -16,8 +16,8 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.ObjectDistanceElement;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -25,7 +25,7 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.metadata.MetadataFeatureExtractor;
@@ -45,7 +45,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
 
   private SimpleFeatureDescriptorWriter featureWriter;
   private DBSelector dbSelector;
-  private SegmentLookup segmentLookup;
+  private MediaSegmentReader mediaSegmentReader;
 
   protected MetadataFeatureModule() {}
 
@@ -86,7 +86,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   public void init(DBSelectorSupplier selectorSupply) {
     this.dbSelector = selectorSupply.get();
     this.dbSelector.open(this.featureEntityName());
-    this.segmentLookup = new SegmentLookup(selectorSupply.get());
+    this.mediaSegmentReader = new MediaSegmentReader(selectorSupply.get());
   }
 
   public boolean isExtractorInitialized() {
@@ -94,7 +94,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   }
 
   public boolean isRetrieverInitialized() {
-    return this.dbSelector != null && this.segmentLookup != null;
+    return this.dbSelector != null && this.mediaSegmentReader != null;
   }
 
   @Override
@@ -109,9 +109,9 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
       this.dbSelector = null;
     }
 
-    if (this.segmentLookup != null) {
-      this.segmentLookup.close();
-      this.segmentLookup = null;
+    if (this.mediaSegmentReader != null) {
+      this.mediaSegmentReader.close();
+      this.mediaSegmentReader = null;
     }
   }
 
@@ -119,7 +119,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
    * Extracts the feature data, <i>stores it</i> and returns a list of descriptors from the feature.
    */
   @Override
-  public List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
+  public List<MediaObjectMetadataDescriptor> extract(String objectId, Path path) {
     checkState(this.isExtractorInitialized(), "extract called before init");
     Optional<T> feature = this.extractFeature(objectId, path);
     feature.ifPresent(v -> this.featureWriter.write(new SimpleFeatureDescriptor(objectId, v)));
@@ -143,14 +143,14 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   /**
    * Returns similar <i>objects</i> to the object of the given segment.
    *
-   * <p>Note that this methods performs a {@link SegmentLookup} in order to retrieve the object id
+   * <p>Note that this methods performs a {@link MediaSegmentReader} in order to retrieve the object id
    * of the given segment.
    */
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig rqc) {
     this.checkIfRetrieverInitialized();
-    return this.segmentLookup.lookUpSegment(segmentId)
-        .map(SegmentDescriptor::getObjectId)
+    return this.mediaSegmentReader.lookUpSegment(segmentId)
+        .map(MediaSegmentDescriptor::getObjectId)
         .map(objId -> this.dbSelector.getFeatureVectors(ID_COLUMN_NAME, objId, FEATURE_COLUMN_NAME))
         .flatMap(features -> features.stream().findFirst()) // Feature vectors are unique per id
         .map(feature -> this.getSimilar(feature, rqc))

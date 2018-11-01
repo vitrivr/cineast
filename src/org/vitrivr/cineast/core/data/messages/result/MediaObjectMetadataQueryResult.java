@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.data.messages.result;
 
-import static org.vitrivr.cineast.core.data.messages.interfaces.MessageType.QR_METADATA;
+import static org.vitrivr.cineast.core.data.messages.interfaces.MessageType.QR_METADATA_O;
 
 import java.util.List;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.abstracts.AbstractQueryResultMessage;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
@@ -15,10 +15,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @version 1.0
  * @created 10.02.17
  */
-public class MetadataQueryResult extends AbstractQueryResultMessage<MultimediaMetadataDescriptor> {
+public class MediaObjectMetadataQueryResult extends AbstractQueryResultMessage<MediaObjectMetadataDescriptor> {
 
     @JsonCreator
-    public MetadataQueryResult(String queryId, List<MultimediaMetadataDescriptor> content) {
+    public MediaObjectMetadataQueryResult(String queryId, List<MediaObjectMetadataDescriptor> content) {
         super(queryId, content);
     }
 
@@ -30,6 +30,6 @@ public class MetadataQueryResult extends AbstractQueryResultMessage<MultimediaMe
      */
     @Override
     public MessageType getMessageType() {
-        return QR_METADATA;
+        return QR_METADATA_O;
     }
 }

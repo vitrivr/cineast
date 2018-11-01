@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
-import org.vitrivr.cineast.core.data.messages.result.ObjectQueryResult;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
+import org.vitrivr.cineast.core.data.messages.result.MediaObjectQueryResult;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 
 /**
  * @author rgasser
@@ -20,12 +20,12 @@ public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage>
      * Processes a HTTP GET request.
      *
      * @param parameters Map containing named parameters in the URL.
-     * @return {@link ObjectQueryResult}
+     * @return {@link MediaObjectQueryResult}
      */
     @Override
-    public List<MultimediaObjectDescriptor> doGet(Map<String, String> parameters) {
-        final MultimediaObjectLookup ol = new MultimediaObjectLookup();
-        final List<MultimediaObjectDescriptor> multimediaobjectIds = ol.getAllObjects();
+    public List<MediaObjectDescriptor> doGet(Map<String, String> parameters) {
+        final MediaObjectReader ol = new MediaObjectReader();
+        final List<MediaObjectDescriptor> multimediaobjectIds = ol.getAllObjects();
         ol.close();
         return multimediaobjectIds;
     }

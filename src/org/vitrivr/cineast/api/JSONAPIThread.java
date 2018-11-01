@@ -28,12 +28,12 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.Position;
 import org.vitrivr.cineast.core.data.StringDoublePair;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.explorative.PlaneHandler;
@@ -85,13 +85,13 @@ public class JSONAPIThread extends Thread {
         // String category = queryObject.get("category").asString();
         String shotId = queryObject.get("shotid").asString();
 
-        SegmentLookup sl = new SegmentLookup();
-        SegmentDescriptor shot = sl.lookUpSegment(shotId).get();
+        MediaSegmentReader sl = new MediaSegmentReader();
+        MediaSegmentDescriptor shot = sl.lookUpSegment(shotId).get();
         //List<ShotDescriptor> allShots = sl.lookUpVideo(shot.getObjectId());
 
         //Send metadata
-        MultimediaObjectLookup vl = new MultimediaObjectLookup();
-        MultimediaObjectDescriptor descriptor = vl.lookUpObjectById(shot.getObjectId());
+        MediaObjectReader vl = new MediaObjectReader();
+        MediaObjectDescriptor descriptor = vl.lookUpObjectById(shot.getObjectId());
 
         JsonObject resultobj = JSONEncoder.encodeVideo(descriptor);
 
@@ -112,8 +112,8 @@ public class JSONAPIThread extends Thread {
         case "shot": {
           String shotId = clientJSON.get("shotid").asString();
 
-          SegmentLookup sl = new SegmentLookup();
-          SegmentDescriptor shot = sl.lookUpSegment(shotId).get();
+          MediaSegmentReader sl = new MediaSegmentReader();
+          MediaSegmentDescriptor shot = sl.lookUpSegment(shotId).get();
 
           JsonObject resultobj = new JsonObject();
           resultobj.add("type", "submitShot").add("videoId", shot.getObjectId()).add("start", shot.getStart()).add("end", shot.getEnd());
@@ -341,8 +341,8 @@ public class JSONAPIThread extends Thread {
         JsonObject query = clientJSON.get("query").asObject();
         JsonArray shotidlist = query.get("shotidlist").asArray();
         int limit = query.get("limit") == null ? 5 : query.get("limit").asInt();
-        SegmentLookup sl = new SegmentLookup();
-//        SegmentLookup.SegmentDescriptor descriptor;
+        MediaSegmentReader sl = new MediaSegmentReader();
+//        MediaSegmentReader.MediaSegmentDescriptor descriptor;
         this.printer.print('[');
         
         
@@ -355,15 +355,15 @@ public class JSONAPIThread extends Thread {
           
           JsonValue val = shotidlist.get(i);
           String shotid = val.asString();
-          SegmentDescriptor descriptor = sl.lookUpSegment(shotid).get();
+          MediaSegmentDescriptor descriptor = sl.lookUpSegment(shotid).get();
           
           String video = descriptor.getObjectId();
           int startSegment = Math.max(1, descriptor.getSequenceNumber() - limit);
           int endSegment = descriptor.getSequenceNumber() + limit;
           
-          List<SegmentDescriptor> all = sl.lookUpSegmentsOfObject(video);
+          List<MediaSegmentDescriptor> all = sl.lookUpSegmentsOfObject(video);
 
-          for(SegmentDescriptor sd : all){
+          for(MediaSegmentDescriptor sd : all){
             if(sd.getSequenceNumber() >= startSegment && sd.getSequenceNumber() <= endSegment){
               array.add(JSONEncoder.encodeShot(sd));
             }
@@ -402,10 +402,10 @@ public class JSONAPIThread extends Thread {
 //      }
 
       case "getMultimediaobjects":{
-        List<MultimediaObjectDescriptor> multimediaobjectIds = new MultimediaObjectLookup().getAllObjects();
+        List<MediaObjectDescriptor> multimediaobjectIds = new MediaObjectReader().getAllObjects();
 
         JsonArray movies = new JsonArray();
-        for(MultimediaObjectDescriptor descriptor: multimediaobjectIds){
+        for(MediaObjectDescriptor descriptor: multimediaobjectIds){
           JsonObject resultobj = JSONEncoder.encodeVideo(descriptor);
           movies.add(resultobj);
         }
@@ -416,11 +416,11 @@ public class JSONAPIThread extends Thread {
 
       case "getSegments":{
         String multimediaobjectId = clientJSON.get("multimediaobjectId").asString();
-        List<SegmentDescriptor> segments = new SegmentLookup().lookUpSegmentsOfObject(multimediaobjectId);
+        List<MediaSegmentDescriptor> segments = new MediaSegmentReader().lookUpSegmentsOfObject(multimediaobjectId);
         Collections.sort(segments, new SegmentDescriptorComparator());
 
         JsonArray list = new JsonArray();
-        for (SegmentDescriptor segment: segments) {
+        for (MediaSegmentDescriptor segment: segments) {
           list.add(segment.getSegmentId());
         }
 
@@ -519,17 +519,17 @@ public class JSONAPIThread extends Thread {
         for(JsonValue v : idList){
           ids.add(v.asString());
         }
-        SegmentLookup lookup = new SegmentLookup();
-        Map<String, SegmentDescriptor> segments = lookup.lookUpSegments(ids);
+        MediaSegmentReader lookup = new MediaSegmentReader();
+        Map<String, MediaSegmentDescriptor> segments = lookup.lookUpSegments(ids);
         lookup.close();
         
         HashSet<String> mmobjectIds = new HashSet<>();
-        for(SegmentDescriptor descriptor : segments.values()){
+        for(MediaSegmentDescriptor descriptor : segments.values()){
           mmobjectIds.add(descriptor.getObjectId());
         }
         
-        MultimediaObjectLookup mmlookup = new MultimediaObjectLookup();
-        Map<String, MultimediaObjectDescriptor> mmobjects = mmlookup.lookUpObjects(mmobjectIds);
+        MediaObjectReader mmlookup = new MediaObjectReader();
+        Map<String, MediaObjectDescriptor> mmobjects = mmlookup.lookUpObjects(mmobjectIds);
         mmlookup.close();
         
         printer.print(JSONEncoder.encodeVideoBatch(mmobjects.values()));

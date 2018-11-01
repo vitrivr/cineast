@@ -9,12 +9,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Histogram;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.segments.VideoSegment;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
@@ -49,14 +49,14 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
 
     private final LinkedBlockingQueue<SegmentContainer> segments = new LinkedBlockingQueue<>(SEGMENT_QUEUE_LENGTH);
 
-    private final List<SegmentDescriptor> knownShotBoundaries = new LinkedList<>();
+    private final List<MediaSegmentDescriptor> knownShotBoundaries = new LinkedList<>();
 
     private volatile boolean complete = false;
 
     private volatile boolean isrunning = false;
 
-    /** SegmentLookup used to lookup existing SegmentDescriptors during the extraction. */
-    private final SegmentLookup segmentReader;
+    /** MediaSegmentReader used to lookup existing SegmentDescriptors during the extraction. */
+    private final MediaSegmentReader segmentReader;
 
 
     /**
@@ -70,7 +70,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
      * Constructor required for instantiates through {@link org.vitrivr.cineast.core.util.ReflectionHelper}.
      */
     public VideoHistogramSegmenter(ExtractionContextProvider context, Map<String,String> parameters) {
-        this.segmentReader = new SegmentLookup(context.persistencyReader().get());
+        this.segmentReader = new MediaSegmentReader(context.persistencyReader().get());
     }
 
     /**
@@ -89,7 +89,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
      * @param object Media object that is about to be segmented.
      */
     @Override
-    public synchronized void init(Decoder<VideoFrame> decoder, MultimediaObjectDescriptor object) {
+    public synchronized void init(Decoder<VideoFrame> decoder, MediaObjectDescriptor object) {
         if (!this.isrunning) {
             this.decoder = decoder;
             this.complete = false;
@@ -98,7 +98,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
             this.videoFrameList.clear();
             this.knownShotBoundaries.clear();
             this.knownShotBoundaries.addAll(this.segmentReader.lookUpSegmentsOfObject(object.getObjectId()));
-            this.knownShotBoundaries.sort(Comparator.comparingInt(SegmentDescriptor::getSequenceNumber));
+            this.knownShotBoundaries.sort(Comparator.comparingInt(MediaSegmentDescriptor::getSequenceNumber));
         }
     }
 
@@ -181,7 +181,7 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
 
                 VideoFrame videoFrame = this.videoFrameList.poll();
 
-                SegmentDescriptor bounds = this.knownShotBoundaries.size() > 0 ? this.knownShotBoundaries.remove(0) : null;
+                MediaSegmentDescriptor bounds = this.knownShotBoundaries.size() > 0 ? this.knownShotBoundaries.remove(0) : null;
 
                 if (bounds != null && videoFrame.getId() >= bounds.getStart() && videoFrame.getId() <= bounds.getEnd()) {
 

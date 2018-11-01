@@ -14,10 +14,10 @@ import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -111,12 +111,12 @@ public class ArtUtil {
   }
 
   public static List<Map<String, PrimitiveTypeProvider>> getFeatureData(DBSelector selector, String multimediaobjectId){
-    SegmentLookup segmentLookup = new SegmentLookup();
-    List<SegmentDescriptor> segments = segmentLookup.lookUpSegmentsOfObject(multimediaobjectId);
+    MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
+    List<MediaSegmentDescriptor> segments = mediaSegmentReader.lookUpSegmentsOfObject(multimediaobjectId);
     Collections.sort(segments, new SegmentDescriptorComparator());
     List<String> segmentIds = new ArrayList<>();
     Map<String, Integer> sequenceMapping = new HashMap<>();
-    for(SegmentDescriptor segment: segments){
+    for(MediaSegmentDescriptor segment: segments){
       segmentIds.add(segment.getSegmentId());
       sequenceMapping.put(segment.getSegmentId(), segment.getSequenceNumber());
     }
@@ -133,11 +133,11 @@ public class ArtUtil {
   }
 
   public static List<Map<String, PrimitiveTypeProvider>> getFeatureData(DBSelector selector, List<String> segmentIds){
-    SegmentLookup sl = new SegmentLookup();
-    Map<String, SegmentDescriptor> segments = sl.lookUpSegments(segmentIds);
+    MediaSegmentReader sl = new MediaSegmentReader();
+    Map<String, MediaSegmentDescriptor> segments = sl.lookUpSegments(segmentIds);
     sl.close();
     Map<String, Integer> sequenceMapping = new HashMap<>();
-    for (SegmentDescriptor segment : segments.values()) {
+    for (MediaSegmentDescriptor segment : segments.values()) {
       segmentIds.add(segment.getSegmentId());
       sequenceMapping.put(segment.getSegmentId(), segment.getSequenceNumber());
     }

@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-public class MultimediaMetadataSegmentDescriptor implements ExistenceCheck {
+public class MediaSegmentMetadataDescriptor implements ExistenceCheck {
 
     /**
      * Name of the entity in the persistence layer.
@@ -45,10 +45,10 @@ public class MultimediaMetadataSegmentDescriptor implements ExistenceCheck {
 
 
     /**
-     * analogous to {@link MultimediaMetadataDescriptor}
+     * analogous to {@link MediaObjectMetadataDescriptor}
      */
     @JsonCreator
-    public MultimediaMetadataSegmentDescriptor(
+    public MediaSegmentMetadataDescriptor(
             @JsonProperty(value = "segmentId", defaultValue = "") String segmentId,
             @JsonProperty("domain") String domain, @JsonProperty("key") String key,
             @JsonProperty("value") @Nullable Object value,
@@ -59,7 +59,7 @@ public class MultimediaMetadataSegmentDescriptor implements ExistenceCheck {
         this.exists = exists;
 
         outer:
-        if (value != null & MultimediaMetadataDescriptor.isSupportedValue(value)) {
+        if (value != null & MediaObjectMetadataDescriptor.isSupportedValue(value)) {
             this.value = new StringTypeProvider(value.toString());
         } else {
             if (value instanceof StringProvider) {
@@ -78,16 +78,16 @@ public class MultimediaMetadataSegmentDescriptor implements ExistenceCheck {
     }
 
     /**
-     * analogous to {@link MultimediaMetadataDescriptor}
+     * analogous to {@link MediaObjectMetadataDescriptor}
      */
-    public MultimediaMetadataSegmentDescriptor(Map<String, PrimitiveTypeProvider> data)
+    public MediaSegmentMetadataDescriptor(Map<String, PrimitiveTypeProvider> data)
             throws DatabaseLookupException {
         if (data.get(FIELDNAMES[0]) != null
                 && data.get(FIELDNAMES[0]).getType() == ProviderDataType.STRING) {
             this.segmentId = data.get(FIELDNAMES[0]).getString();
         } else {
             throw new DatabaseLookupException(
-                    "Could not read column '" + FIELDNAMES[0] + "' for MultimediaMetadataSegmentDescriptor.");
+                    "Could not read column '" + FIELDNAMES[0] + "' for MediaSegmentMetadataDescriptor.");
         }
 
         if (data.get(FIELDNAMES[1]) != null
@@ -95,7 +95,7 @@ public class MultimediaMetadataSegmentDescriptor implements ExistenceCheck {
             this.domain = data.get(FIELDNAMES[1]).getString();
         } else {
             throw new DatabaseLookupException(
-                    "Could not read column '" + FIELDNAMES[1] + "' for MultimediaMetadataSegmentDescriptor.");
+                    "Could not read column '" + FIELDNAMES[1] + "' for MediaSegmentMetadataDescriptor.");
         }
 
         if (data.get(FIELDNAMES[2]) != null
@@ -103,16 +103,16 @@ public class MultimediaMetadataSegmentDescriptor implements ExistenceCheck {
             this.key = data.get(FIELDNAMES[2]).getString();
         } else {
             throw new DatabaseLookupException(
-                    "Could not read column '" + FIELDNAMES[2] + "' for MultimediaMetadataSegmentDescriptor.");
+                    "Could not read column '" + FIELDNAMES[2] + "' for MediaSegmentMetadataDescriptor.");
         }
 
         this.value = data.get(FIELDNAMES[3]);
         this.exists = true;
     }
 
-    public static MultimediaMetadataSegmentDescriptor of(String segmentId, String domain, String key,
-                                                         @Nullable Object value) {
-        return new MultimediaMetadataSegmentDescriptor(segmentId, domain, key, value, false);
+    public static MediaSegmentMetadataDescriptor of(String segmentId, String domain, String key,
+                                                    @Nullable Object value) {
+        return new MediaSegmentMetadataDescriptor(segmentId, domain, key, value, false);
     }
 
     @JsonProperty

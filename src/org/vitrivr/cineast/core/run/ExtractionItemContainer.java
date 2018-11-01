@@ -8,30 +8,30 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
  * An {@link ExtractionItemContainer} contains all information for ONE item which is supposed to be
  * extracted. A container MUST contain a {@link #path} linking to the item to be extracted. The
- * corresponding {@link #object} MUST contain the {@link MultimediaObjectDescriptor#getMediatype()}
+ * corresponding {@link #object} MUST contain the {@link MediaObjectDescriptor#getMediatype()}
  * so an item can be handed out to different extractionhandlers.
  *
  * @author silvan on 06.04.18.
  */
 public class ExtractionItemContainer {
 
-  private MultimediaObjectDescriptor object;
+  private MediaObjectDescriptor object;
 
-  private MultimediaMetadataDescriptor[] metadata;
+  private MediaObjectMetadataDescriptor[] metadata;
 
   @JsonIgnore
   private Path path;
 
   /**
    * If a path has been specified directly, returns the path. If no path has been specified, tries
-   * to construct a path from the path of the underlying {@link MultimediaObjectDescriptor}
+   * to construct a path from the path of the underlying {@link MediaObjectDescriptor}
    */
   public Path getPathForExtraction() {
     if (path == null) {
@@ -40,20 +40,20 @@ public class ExtractionItemContainer {
     return path;
   }
 
-  public void setObject(MultimediaObjectDescriptor object) {
+  public void setObject(MediaObjectDescriptor object) {
     this.object = object;
   }
 
   public void setMetadata(
-      MultimediaMetadataDescriptor[] metadata) {
+      MediaObjectMetadataDescriptor[] metadata) {
     this.metadata = metadata;
   }
 
-  public MultimediaObjectDescriptor getObject() {
+  public MediaObjectDescriptor getObject() {
     return object;
   }
 
-  public MultimediaMetadataDescriptor[] getMetadata() {
+  public MediaObjectMetadataDescriptor[] getMetadata() {
     return metadata;
   }
 
@@ -72,18 +72,18 @@ public class ExtractionItemContainer {
    * @param uri used to create a path
    */
   @JsonCreator
-  public ExtractionItemContainer(@JsonProperty("object") MultimediaObjectDescriptor object,
-      @JsonProperty("metadata") MultimediaMetadataDescriptor[] metadata,
+  public ExtractionItemContainer(@JsonProperty("object") MediaObjectDescriptor object,
+      @JsonProperty("metadata") MediaObjectMetadataDescriptor[] metadata,
       @JsonProperty("uri") String uri)
       throws URISyntaxException {
     this(object, metadata, Paths.get(new URI(uri)));
   }
 
   public ExtractionItemContainer(
-      MultimediaObjectDescriptor object,
-      MultimediaMetadataDescriptor[] metadata, Path path) {
+          MediaObjectDescriptor object,
+          MediaObjectMetadataDescriptor[] metadata, Path path) {
     this.object = object;
-    this.metadata = metadata == null ? new MultimediaMetadataDescriptor[0] : metadata;
+    this.metadata = metadata == null ? new MediaObjectMetadataDescriptor[0] : metadata;
     this.path = path;
     if (this.path == null) {
       throw new RuntimeException("Path was null for object " + object);

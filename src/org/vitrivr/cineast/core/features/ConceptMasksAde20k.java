@@ -23,12 +23,17 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
 
   private static final int GRID_PARTITIONS = 32;
 
-  private final DeepLab ade20k;
+  private DeepLab ade20k;
 
   public ConceptMasksAde20k() {
     super("features_conceptmasksade20k", 1);
     this.correspondence = CorrespondenceFunction.hyperbolic(10); //TODO determine distance
-    this.ade20k = new DeepLabAde20k();
+    try {
+      this.ade20k = new DeepLabAde20k();
+
+    } catch (Exception e) {
+
+    }
 
   }
 

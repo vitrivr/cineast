@@ -14,11 +14,11 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.*;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.web.ImageParser;
@@ -180,8 +180,8 @@ public class JSONUtils {
 	}
 	
 	public static HashSet<String> printShotsBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> shotids) {
-		ArrayList<SegmentDescriptor> sdList = new ArrayList<>(resultlist.size());
-		SegmentLookup sl = new SegmentLookup();
+		ArrayList<MediaSegmentDescriptor> sdList = new ArrayList<>(resultlist.size());
+		MediaSegmentReader sl = new MediaSegmentReader();
 		
 		String[] ids = new String[resultlist.size()];
 		int i = 0;
@@ -189,10 +189,10 @@ public class JSONUtils {
 			ids[i++] = sdp.key;
 		}
 		
-		Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
+		Map<String, MediaSegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
 		
 		for(String id : ids){
-			SegmentDescriptor sd = map.get(id);
+			MediaSegmentDescriptor sd = map.get(id);
 			if(sd != null){
 				sdList.add(sd);
 			}
@@ -217,8 +217,8 @@ public class JSONUtils {
 	}
 	
 	public static HashSet<String> printVideosBatched(PrintStream printer, List<StringDoublePair> resultlist, HashSet<String> videoids) {
-		SegmentLookup sl = new SegmentLookup();
-		MultimediaObjectLookup vl = new MultimediaObjectLookup();
+		MediaSegmentReader sl = new MediaSegmentReader();
+		MediaObjectReader vl = new MediaObjectReader();
 		
 		String[] ids = new String[resultlist.size()];
 		int i = 0;
@@ -226,11 +226,11 @@ public class JSONUtils {
 			ids[i++] = sdp.key;
 		}
 		
-		Map<String, SegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
+		Map<String, MediaSegmentDescriptor> map = sl.lookUpSegments(Arrays.asList(ids));
 		
 		HashSet<String> videoIds = new HashSet<>();
 		for(String id : ids){
-		  SegmentDescriptor sd = map.get(id);
+		  MediaSegmentDescriptor sd = map.get(id);
 		  if(sd == null){
 		    continue;
 		  }
@@ -243,9 +243,9 @@ public class JSONUtils {
 			vids[i++] = vid;
 		}
 		
-		ArrayList<MultimediaObjectDescriptor> vdList = new ArrayList<>(vids.length);
+		ArrayList<MediaObjectDescriptor> vdList = new ArrayList<>(vids.length);
 		
-		Map<String, MultimediaObjectDescriptor> vmap = vl.lookUpObjects(vids);
+		Map<String, MediaObjectDescriptor> vmap = vl.lookUpObjects(vids);
 		
 		for(String vid : vids){
 			vdList.add(vmap.get(vid));

@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.messages.components.AbstractMetadataFilterDescriptor;
 import org.vitrivr.cineast.core.data.messages.lookup.OptionallyFilteredIdList;
-import org.vitrivr.cineast.core.data.messages.result.MetadataQueryResult;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
+import org.vitrivr.cineast.core.data.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 
 /**
- * Retrieves all the {@link MultimediaMetadataDescriptor}s for the given ID of a {@link
- * MultimediaObjectDescriptor}
+ * Retrieves all the {@link MediaObjectMetadataDescriptor}s for the given ID of a {@link
+ * MediaObjectDescriptor}
  */
 public class FindMetadataByObjectIdActionHandler extends
     ParsingActionHandler<OptionallyFilteredIdList> {
@@ -25,16 +25,16 @@ public class FindMetadataByObjectIdActionHandler extends
    * Processes a HTTP GET request.
    *
    * @param parameters Map containing named parameters in the URL.
-   * @return {@link MetadataQueryResult}
+   * @return {@link MediaObjectMetadataQueryResult}
    */
   @Override
-  public MetadataQueryResult doGet(Map<String, String> parameters) {
+  public MediaObjectMetadataQueryResult doGet(Map<String, String> parameters) {
     final String objectId = parameters.get(ATTRIBUTE_ID);
-    final MultimediaMetadataReader reader = new MultimediaMetadataReader();
-    final List<MultimediaMetadataDescriptor> descriptors = reader
+    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+    final List<MediaObjectMetadataDescriptor> descriptors = reader
         .lookupMultimediaMetadata(objectId);
     reader.close();
-    return new MetadataQueryResult("", descriptors);
+    return new MediaObjectMetadataQueryResult("", descriptors);
   }
 
   /**
@@ -43,17 +43,17 @@ public class FindMetadataByObjectIdActionHandler extends
    * @param context Object that is handed to the invocation, usually parsed from the request body.
    * May be NULL!
    * @param parameters Map containing named parameters in the URL.
-   * @return {@link MetadataQueryResult}
+   * @return {@link MediaObjectMetadataQueryResult}
    */
   @Override
-  public MetadataQueryResult doPost(OptionallyFilteredIdList context,
-      Map<String, String> parameters) {
+  public MediaObjectMetadataQueryResult doPost(OptionallyFilteredIdList context,
+                                               Map<String, String> parameters) {
     if (context == null || context.getIds().length == 0) {
-      return new MetadataQueryResult("", new ArrayList<>(0));
+      return new MediaObjectMetadataQueryResult("", new ArrayList<>(0));
     }
 
-    final MultimediaMetadataReader reader = new MultimediaMetadataReader();
-    List<MultimediaMetadataDescriptor> descriptors = reader
+    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+    List<MediaObjectMetadataDescriptor> descriptors = reader
         .lookupMultimediaMetadata(context.getIdList());
     reader.close();
     if (context.hasFilters()) {
@@ -62,7 +62,7 @@ public class FindMetadataByObjectIdActionHandler extends
         descriptors = descriptors.stream().filter(filter).collect(Collectors.toList());
       }
     }
-    return new MetadataQueryResult("", descriptors);
+    return new MediaObjectMetadataQueryResult("", descriptors);
   }
 
   /**
