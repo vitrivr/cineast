@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
-public class DoubleProviderImpl implements DoubleProvider {
+public class DoubleProviderImpl implements DoubleProvider, FloatProvider {
 
 	private final double value;
 	
@@ -11,6 +11,11 @@ public class DoubleProviderImpl implements DoubleProvider {
 	@Override
 	public double getDouble() {
 		return this.value;
+	}
+
+	@Override
+	public float getFloat() {
+		return (float)this.value;
 	}
 
 	@Override
