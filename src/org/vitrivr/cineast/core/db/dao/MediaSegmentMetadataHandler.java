@@ -53,7 +53,7 @@ public class MediaSegmentMetadataHandler implements Closeable {
       return false;
     }
 
-    return this.writer.persist(this.writer.generateTuple(descriptor));
+    return this.writer.persist(this.writer.generateTuple(descriptor.getSegmentId(), descriptor.getDomain(), descriptor.getKey(), descriptor.getValue()));
 
   }
 
