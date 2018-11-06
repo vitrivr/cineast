@@ -8,7 +8,10 @@ import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMe
 
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
+import org.vitrivr.cineast.core.data.messages.lookup.MetadataLookup;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 
 /**
@@ -17,17 +20,20 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
  * @created 27.04.17
  */
 public abstract class AbstractQueryMessageHandler<T> extends StatelessWebsocketMessageHandler<T> {
-    /** MediaSegmentReader instance used to read segments from the storage layer. */
+    /** {@link MediaSegmentReader} instance used to read segments from the storage layer. */
     private final MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
 
-    /** MediaObjectReader instance used to read multimedia objects from the storage layer. */
+    /** {@link MediaObjectReader} instance used to read multimedia objects from the storage layer. */
     private final MediaObjectReader mediaObjectReader = new MediaObjectReader();
 
+    /** {@link MediaSegmentMetadataReader} instance used to read {@link MediaSegmentMetadataDescriptor}s from the storage layer. */
+    private final MediaSegmentMetadataReader segmentMetadataReader = new MediaSegmentMetadataReader();
+
     /**
-     * Performs a lookup for the {@link MediaSegmentDescriptor} identified by the provided ID's and returns a list of the
+     * Performs a lookup for the {@link MediaSegmentDescriptor} identified by the provided IDs and returns a list of the
      * {@link MediaSegmentDescriptor}s that were found.
      *
-     * @param segmentIds List of segment ID's that should be looked up.
+     * @param segmentIds List of segment IDs that should be looked up.
      * @return List of found {@link MediaSegmentDescriptor}
      */
     protected List<MediaSegmentDescriptor> loadSegments(List<String> segmentIds) {
@@ -38,10 +44,10 @@ public abstract class AbstractQueryMessageHandler<T> extends StatelessWebsocketM
     }
 
     /**
-     * Performs a lookup for the {@link MediaObjectDescriptor} identified by the provided object ID's and returns
+     * Performs a lookup for the {@link MediaObjectDescriptor} identified by the provided object IDs and returns
      * a list of the {@link MediaSegmentDescriptor}s that were found.
      *
-     * @param objectIds  List of object ID's that should be looked up.
+     * @param objectIds  List of object IDs that should be looked up.
      * @return List of found {@link MediaObjectDescriptor}
      */
     protected List<MediaObjectDescriptor> loadObjects(List<String> objectIds) {
@@ -49,5 +55,15 @@ public abstract class AbstractQueryMessageHandler<T> extends StatelessWebsocketM
         final ArrayList<MediaObjectDescriptor> vdList = new ArrayList<>(map.size());
         objectIds.stream().filter(map::containsKey).forEach(s -> vdList.add(map.get(s)));
         return vdList;
+    }
+
+    /**
+     * Performs a lookup for {@link MediaSegmentMetadataDescriptor} identified by the provided segment IDs.
+     *
+     * @param segmentIds List of segment IDs for which to lookup metadata.
+     * @return List of {@link MediaSegmentMetadataDescriptor}
+     */
+    protected List<MediaSegmentMetadataDescriptor> loadSegmentMetadata(List<String> segmentIds) {
+        return this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
     }
 }

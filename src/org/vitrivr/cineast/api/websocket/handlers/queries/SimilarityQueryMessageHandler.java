@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
 import org.vitrivr.cineast.core.data.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.core.data.messages.result.*;
@@ -70,15 +71,19 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
                             .sorted(StringDoublePair.COMPARATOR)
                             .limit(Config.sharedConfig().getRetriever().getMaxResults())
                             .collect(Collectors.toList());
+                    final List<String> segmentIds = results.stream().map(s -> s.key)
+                            .collect(Collectors.toList());
 
                     /* Fetch the List of SegmentDescriptors and MultimediaObjectDescriptors. */
-                    final List<MediaSegmentDescriptor> segments = this.loadSegments(results.stream().map(s -> s.key).collect(Collectors.toList()));
+                    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
                     final List<MediaObjectDescriptor> objects = this.loadObjects(segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList()));
+                    final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.loadSegmentMetadata(segmentIds);
 
                     /* Write partial results to stream. */
                     this.write(session, new MediaSegmentQueryResult(uuid, segments));
                     this.write(session, new MediaObjectQueryResult(uuid, objects));
                     this.write(session, new SimilarityQueryResult(uuid, category, results));
+                    this.write(session, new MediaSegmentMetadataQueryResult(uuid, segmentMetadata));
                 }
             }
 
