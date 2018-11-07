@@ -66,24 +66,17 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
                         return true;
                     });
 
-                    /* Sort and limit the result set. */
-                    final List<StringDoublePair> results = list.stream()
+                    /* Transform raw results into list of StringDoublePair's (segmentId -> score). */
+                    final int max = Config.sharedConfig().getRetriever().getMaxResults();
+                    final List<StringDoublePair> results = map.keySet().stream()
+                            .map(key -> new StringDoublePair(key, map.get(key)))
+                            .filter(p -> p.value > 0.0)
                             .sorted(StringDoublePair.COMPARATOR)
-                            .limit(Config.sharedConfig().getRetriever().getMaxResults())
-                            .collect(Collectors.toList());
-                    final List<String> segmentIds = results.stream().map(s -> s.key)
+                            .limit(max)
                             .collect(Collectors.toList());
 
-                    /* Fetch the List of SegmentDescriptors and MultimediaObjectDescriptors. */
-                    final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
-                    final List<MediaObjectDescriptor> objects = this.loadObjects(segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList()));
-                    final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.loadSegmentMetadata(segmentIds);
-
-                    /* Write partial results to stream. */
-                    this.write(session, new MediaSegmentQueryResult(uuid, segments));
-                    this.write(session, new MediaObjectQueryResult(uuid, objects));
-                    this.write(session, new SimilarityQueryResult(uuid, category, results));
-                    this.write(session, new MediaSegmentMetadataQueryResult(uuid, segmentMetadata));
+                    /* Finalize and submit per-category results. */
+                    this.finalizeAndSubmitResults(session, uuid, category, results);
                 }
             }
 
@@ -93,6 +86,39 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
             /* On exception: Send QueryError message to client. */
             this.write(session, new QueryError(qconf.getQueryId().toString(), exception.getMessage()));
             LOGGER.error("An exception occurred during execution of similarity query message {}.", LogHelper.getStackTrace(exception));
+        }
+    }
+
+
+    /**
+     * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) associated with the
+     * raw results produced by a similarity search in a specific category.
+     *
+     * @param session The {@link Session} object used to transmit the results.
+     * @param queryId ID of the running query.
+     * @param category Name of the query category.
+     * @param raw List of raw per-category results (segmentId -> score).
+     */
+    private void finalizeAndSubmitResults(Session session, String queryId, String category, List<StringDoublePair> raw) {
+
+        final int stride = 1000;
+        for (int i=0; i<Math.floorDiv(raw.size(), stride)+1; i++) {
+            final List<StringDoublePair> sub = raw.subList(i*stride, Math.min((i+1)*stride, raw.size()));
+
+            final List<String> segmentIds = sub.stream().map(s -> s.key).collect(Collectors.toList());
+
+            /* Load segment information. */
+            final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
+            final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.loadSegmentMetadata(segmentIds);
+
+            /* Fetch object IDs. */
+            final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
+            final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
+
+            this.write(session, new MediaObjectQueryResult(queryId, objects));
+            this.write(session, new MediaSegmentQueryResult(queryId, segments));
+            this.write(session, new SimilarityQueryResult(queryId, category, sub));
+            this.write(session, new MediaSegmentMetadataQueryResult(queryId, segmentMetadata));
         }
     }
 }
