@@ -57,15 +57,6 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
                     float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation
                     ScoreElement.mergeWithScoreMap(ContinuousRetrievalLogic.retrieve(qc, category, qconf), map, weight);
 
-                    /* Convert partial-results to list of StringDoublePairs. */
-                    final List<StringDoublePair> list = new ArrayList<>(map.size());
-                    map.forEachEntry((key, value) -> {
-                        if (value > 0) {
-                          list.add(new StringDoublePair(key, value));
-                        }
-                        return true;
-                    });
-
                     /* Transform raw results into list of StringDoublePair's (segmentId -> score). */
                     final int max = Config.sharedConfig().getRetriever().getMaxResults();
                     final List<StringDoublePair> results = map.keySet().stream()
