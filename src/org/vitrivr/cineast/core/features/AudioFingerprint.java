@@ -12,6 +12,8 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -108,7 +110,7 @@ public class AudioFingerprint extends StagedFeatureModule {
         final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
         List<SegmentDistanceElement> partialResults;
         if (features.size() == 1) {
-            partialResults = this.selector.getNearestNeighbours(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
+            partialResults = this.selector.getNearestNeighboursGeneric(numberOfPartialResults, new FloatArrayTypeProvider(features.get(0)), "feature", SegmentDistanceElement.class, configs.get(0));
         } else {
             Map<String, String> options = new HashMap<>(1);
             options.put("fuzzydefault", String.valueOf(Float.MAX_VALUE));

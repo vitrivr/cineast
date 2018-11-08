@@ -194,11 +194,6 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
-    return this.getRows(fieldName, new String[]{value});
-  }
-
-  @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
     ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(1);
 
@@ -277,25 +272,6 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
     return file.exists() && file.isFile() && file.canRead();
   }
 
-  @Override
-  public List<Map<String, PrimitiveTypeProvider>> preview(int k) {
-    List<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(k);
-
-    if (k <= 0) {
-      return _return;
-    }
-
-    Importer<?> importer = newImporter(this.file);
-    Map<String, PrimitiveTypeProvider> map;
-    while ((map = importer.readNextAsMap()) != null) {
-      _return.add(map);
-      if (_return.size() >= k) {
-        break;
-      }
-    }
-    return _return;
-  }
-
   protected abstract T newImporter(File f);
 
   protected abstract String getFileExtension();
@@ -314,12 +290,6 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
       List<ReadableQueryConfig> configs, MergeOperation merge, Map<String, String> options) {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
-      RelationalOperator operator, String value) {
-    throw new IllegalStateException("Not implemented.");
   }
 
   @Override

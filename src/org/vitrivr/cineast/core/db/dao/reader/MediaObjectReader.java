@@ -165,22 +165,4 @@ public class MediaObjectReader extends AbstractEntityReader {
     return _return;
   }
 
-  public List<String> lookUpObjectIds() {
-    DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-    selector.open(MediaObjectDescriptor.ENTITY);
-    List<PrimitiveTypeProvider> ids = selector.getAll(MediaObjectDescriptor.FIELDNAMES[0]);
-    Set<String> uniqueIds = new HashSet<>();
-    for (PrimitiveTypeProvider l : ids) {
-      uniqueIds.add(l.getString());
-    }
-    selector.close();
-
-    List<String> multimediaobjectIds = new ArrayList<>();
-    for (String id : uniqueIds) {
-      multimediaobjectIds.add(id);
-    }
-
-    return multimediaobjectIds;
-  }
-
 }

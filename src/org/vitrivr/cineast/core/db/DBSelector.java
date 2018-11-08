@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -99,9 +101,13 @@ public interface DBSelector {
         .collect(Collectors.toList());
   }
 
-  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value){
+    return getRows(fieldName, Collections.singleton(value));
+  }
 
-  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values);
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values){
+    return getRows(fieldName, Arrays.asList(values));
+  }
 
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values);
 
@@ -121,19 +127,12 @@ public interface DBSelector {
       String... terms);
 
   /**
-   * Performs a boolean lookup on a specified field and retrieves the rows that match the specified
-   * condition.
-   *
-   * i.e. SELECT * from WHERE A <Operator> B
-   *
-   * @param fieldName The name of the database field .
-   * @param operator The {@link RelationalOperator} that should be used for comparison.
-   * @param value The value the field should be compared to.
-   * @return List of rows (one row is represented by one Map of the field ames and the data
-   * contained in the field).
+   * {@link #getRows(String, RelationalOperator, Iterable)}
    */
-  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator,
-      String value);
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator,
+      String value){
+    return getRows(fieldName, operator, Collections.singleton(value));
+  }
 
   /**
    * Performs a boolean lookup on a specified field  and retrieves the rows that match the specified
@@ -156,14 +155,9 @@ public interface DBSelector {
   List<PrimitiveTypeProvider> getAll(String column);
 
   /**
-   * SELECT * from
+   * Get all rows from all tables
    */
   List<Map<String, PrimitiveTypeProvider>> getAll();
 
   boolean existsEntity(String name);
-
-  /**
-   * Get first k rows
-   */
-  List<Map<String, PrimitiveTypeProvider>> preview(int k);
 }
