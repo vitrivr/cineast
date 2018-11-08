@@ -18,14 +18,9 @@ public interface DBSelector {
 
   boolean close();
 
-  /**
-   * @deprecated use {@link #getNearestNeighboursGeneric(int, PrimitiveTypeProvider, String, Class,
-   * ReadableQueryConfig)} instead. This mode forces the implementing class to handle typeproviders
-   * separately and reduces code duplication.
-   */
-  @Deprecated
-  <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
-      Class<T> distanceElementClass, ReadableQueryConfig config);
+  default <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] query, String column, Class<E> distanceElementClass, ReadableQueryConfig config){
+    return getNearestNeighboursGeneric(k, new FloatArrayTypeProvider(query), column, distanceElementClass, config);
+  }
 
   /**
    * * Finds the {@code k}-nearest neighbours of the given {@code queryProvider} in {@code column}
@@ -40,19 +35,9 @@ public interface DBSelector {
    * @param <E> type of the {@link DistanceElement}
    * @return a list of elements with their distance
    */
-  default <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k,
+  <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k,
       PrimitiveTypeProvider queryProvider, String column, Class<E> distanceElementClass,
-      ReadableQueryConfig config) {
-    if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType()
-        .equals(ProviderDataType.INT_ARRAY)) {
-      //Default-implementation for backwards compatibility.
-      return getNearestNeighbours(k, PrimitiveTypeProvider.getSafeFloatArray(queryProvider), column,
-          distanceElementClass, config);
-    }
-    LogManager.getLogger().error("{} does not support other queries than float-arrays.",
-        this.getClass().getSimpleName());
-    throw new UnsupportedOperationException();
-  }
+      ReadableQueryConfig config);
 
   /**
    * Performs a batched kNN-search with multiple query vectors. That is, the storage engine is
@@ -114,9 +99,6 @@ public interface DBSelector {
   /**
    * Performs a fulltext search with multiple query terms. That is, the storage engine is tasked to
    * lookup for entries in the provided fields that match the provided query terms.
-   *
-   * TODO: This is a quick & dirty solution so far. Should be re-engineered to fit different
-   * use-cases.
    *
    * @param rows The number of rows that should be returned.
    * @param fieldname The field that should be used for lookup.

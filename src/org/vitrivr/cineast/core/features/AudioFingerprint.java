@@ -110,7 +110,7 @@ public class AudioFingerprint extends StagedFeatureModule {
         final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
         List<SegmentDistanceElement> partialResults;
         if (features.size() == 1) {
-            partialResults = this.selector.getNearestNeighboursGeneric(numberOfPartialResults, new FloatArrayTypeProvider(features.get(0)), "feature", SegmentDistanceElement.class, configs.get(0));
+            partialResults = this.selector.getNearestNeighboursGeneric(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
         } else {
             Map<String, String> options = new HashMap<>(1);
             options.put("fuzzydefault", String.valueOf(Float.MAX_VALUE));
