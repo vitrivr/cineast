@@ -35,9 +35,19 @@ public interface DBSelector {
    * @param <E> type of the {@link DistanceElement}
    * @return a list of elements with their distance
    */
-  <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k,
+  default <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k,
       PrimitiveTypeProvider queryProvider, String column, Class<E> distanceElementClass,
-      ReadableQueryConfig config);
+      ReadableQueryConfig config){
+      if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType()
+          .equals(ProviderDataType.INT_ARRAY)) {
+        //Default-implementation for backwards compatibility.
+        return getNearestNeighboursGeneric(k, PrimitiveTypeProvider.getSafeFloatArray(queryProvider), column,
+            distanceElementClass, config);
+      }
+      LogManager.getLogger().error("{} does not support other queries than float-arrays.",
+          this.getClass().getSimpleName());
+      throw new UnsupportedOperationException();
+  }
 
   /**
    * Performs a batched kNN-search with multiple query vectors. That is, the storage engine is
