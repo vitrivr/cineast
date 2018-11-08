@@ -5,14 +5,12 @@ import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.SolrTextRetriever;
 
-import java.util.Arrays;
-
-public class SubtitleFulltextSearch extends SolrTextRetriever {
+public class AudioTranscriptionSearch extends SolrTextRetriever {
     /**
-     * Default constructor for {@link SubtitleFulltextSearch}.
+     * Default constructor for {@link AudioTranscriptionSearch}.
      */
-    public SubtitleFulltextSearch() {
-        super("features_asr");
+    public AudioTranscriptionSearch() {
+        super("features_audiotranscription");
     }
 
     /**

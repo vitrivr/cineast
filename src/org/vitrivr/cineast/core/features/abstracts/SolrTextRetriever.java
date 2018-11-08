@@ -49,22 +49,12 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
         this.tableName = tableName;
     }
 
-    /**
-     * Initializes the database selector.
-     *
-     * @param selectorSupply
-     */
     @Override
     public void init(DBSelectorSupplier selectorSupply) {
         this.selector = selectorSupply.get();
         this.selector.open(this.getEntityName());
     }
 
-    /**
-     * Initializes the persistency writer.
-     *
-     * @param phandlerSupply
-     */
     @Override
     public void init(PersistencyWriterSupplier phandlerSupply) {
         this.writer = new SimpleFulltextFeatureDescriptorWriter(phandlerSupply.get(), this.tableName, 10);
@@ -72,8 +62,7 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
 
     /**
      * Initializes the persistent layer with two fields: "id" and "feature" both using the Apache Solr storage handler.
-     *
-     * @param supply A supplier for {@link EntityCreator} instances.
+     * The "feature" in this context is the full text for the given segment
      */
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
@@ -85,10 +74,6 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
         supply.get().createEntity(this.tableName, fields);
     }
 
-    /**
-     *
-     * @param supply
-     */
     @Override
     public void dropPersistentLayer(Supplier<EntityCreator> supply) {
         supply.get().dropEntity(this.tableName);
@@ -114,19 +99,27 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
      *
      * <strong>Important:</strong> This implementation is tailored to the Apache Solr storage engine used by ADAMpro. It uses Lucene's
      * fuzzy search functionality.
-     *
-     * TODO: The class should probably be generalized in the future.
-     *
-     * @param sc The {@link SegmentContainer} used for lookup.
-     * @param qc The {@link ReadableQueryConfig} used to configure the query.
-     * @return List of {@link ScoreElement}s.
      */
     @Override
     public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-        final String[] terms = Arrays.stream(sc.getText().split("\\s")).map(s -> s + "~0.5").toArray(String[]::new);
+        final String[] terms = generateQuery(sc, qc);
+        return getSimilar(qc, terms);
+    }
+
+    /**
+     * Generate a query term which will then be used for retrieval.
+     */
+    protected abstract String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc);
+
+    /**
+     * Convenience-Method for implementing classes once they have generated their query terms
+     */
+    protected List<ScoreElement> getSimilar(ReadableQueryConfig qc, String ... terms){
         final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector.getFulltextRows(500, SimpleFulltextFeatureDescriptor.FIELDNAMES[1], terms);
+
         final CorrespondenceFunction f = CorrespondenceFunction.fromFunction(score -> score / terms.length / 10f);
         final List<ScoreElement> scoreElements = new ArrayList<>(resultList.size());
+
         for (Map<String, PrimitiveTypeProvider> result : resultList) {
             String id = result.get("id").getString();
             double score = f.applyAsDouble(result.get("ap_score").getFloat());
