@@ -51,8 +51,6 @@ import org.vitrivr.cineast.core.importer.handlers.DataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.JsonDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.OcrDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.ProtoDataImportHandler;
-import org.vitrivr.cineast.core.importer.handlers.TagsFulltextDataImportHandler;
-import org.vitrivr.cineast.core.importer.handlers.VbsMetaDataImportHandler;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
@@ -293,14 +291,6 @@ public class API {
         break;
       case "ocr":
         handler = new OcrDataImportHandler(1, batchsize);
-        handler.doImport(path);
-        break;
-      case "meta":
-        handler = new VbsMetaDataImportHandler(1, batchsize);
-        handler.doImport(path);
-        break;
-      case "tagsft":
-        handler = new TagsFulltextDataImportHandler(1, batchsize);
         handler.doImport(path);
         break;
     }
