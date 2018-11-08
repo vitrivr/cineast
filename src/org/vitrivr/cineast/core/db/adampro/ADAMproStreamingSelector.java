@@ -74,7 +74,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
   }
 
   @Override
-  public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector,
+  public <T extends DistanceElement> List<T> getNearestNeighboursGeneric(int k, float[] vector,
       String column, Class<T> distanceElementClass, ReadableQueryConfig config) {
 
     NearestNeighbourQueryMessage nnqMessage = mb.buildNearestNeighbourQueryMessage(column,
