@@ -69,26 +69,10 @@ public abstract class AbstractADAMproSelector implements DBSelector {
   }
 
   @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
-    return getRows(fieldName, Collections.singleton(value));
-  }
-
-  @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
-    return getRows(fieldName, Arrays.asList(values));
-  }
-
-  @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values) {
     return getRows(fieldName, RelationalOperator.EQ, values);
   }
 
-  @Override
-  public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, String value) {
-    return getRows(fieldName, operator, Collections.singleton(value));
-  }
-
-  @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
     return preview(Integer.MAX_VALUE);
   }
@@ -103,7 +87,6 @@ public abstract class AbstractADAMproSelector implements DBSelector {
     }
   }
 
-  @Override
   public List<Map<String, PrimitiveTypeProvider>> preview(int k) {
     PreviewMessage msg = PreviewMessage.newBuilder().setEntity(this.entityName).setN(k)
         .build();
@@ -125,7 +108,7 @@ public abstract class AbstractADAMproSelector implements DBSelector {
     return resultsToMap(resultList);
   }
 
-  protected  <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResultInfoMessage response, int k, Class<? extends T> distanceElementClass) {
+  protected <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResultInfoMessage response, int k, Class<? extends T> distanceElementClass) {
     List<T> result = new ArrayList<>(k);
     for (QueryResultTupleMessage msg : response.getResultsList()) {
       String id = msg.getDataMap().get("id").getStringData();

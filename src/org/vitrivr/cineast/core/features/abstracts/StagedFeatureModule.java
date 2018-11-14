@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
@@ -188,7 +189,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
         List<SegmentDistanceElement> partialResults;
         if (features.size() == 1) {
-            partialResults = this.selector.getNearestNeighbours(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
+            partialResults = this.selector.getNearestNeighboursGeneric(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
         } else {
             partialResults = this.selector.getBatchedNearestNeighbours(numberOfPartialResults, features, "feature", SegmentDistanceElement.class, configs);
         }

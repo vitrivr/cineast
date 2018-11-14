@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,14 +18,9 @@ public interface DBSelector {
 
   boolean close();
 
-  /**
-   * @deprecated use {@link #getNearestNeighboursGeneric(int, PrimitiveTypeProvider, String, Class,
-   * ReadableQueryConfig)} instead. This mode forces the implementing class to handle typeproviders
-   * separately and reduces code duplication.
-   */
-  @Deprecated
-  <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
-      Class<T> distanceElementClass, ReadableQueryConfig config);
+  default <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] query, String column, Class<E> distanceElementClass, ReadableQueryConfig config){
+    return getNearestNeighboursGeneric(k, new FloatArrayTypeProvider(query), column, distanceElementClass, config);
+  }
 
   /**
    * * Finds the {@code k}-nearest neighbours of the given {@code queryProvider} in {@code column}
@@ -40,16 +37,16 @@ public interface DBSelector {
    */
   default <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k,
       PrimitiveTypeProvider queryProvider, String column, Class<E> distanceElementClass,
-      ReadableQueryConfig config) {
-    if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType()
-        .equals(ProviderDataType.INT_ARRAY)) {
-      //Default-implementation for backwards compatibility.
-      return getNearestNeighbours(k, PrimitiveTypeProvider.getSafeFloatArray(queryProvider), column,
-          distanceElementClass, config);
-    }
-    LogManager.getLogger().error("{} does not support other queries than float-arrays.",
-        this.getClass().getSimpleName());
-    throw new UnsupportedOperationException();
+      ReadableQueryConfig config){
+      if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType()
+          .equals(ProviderDataType.INT_ARRAY)) {
+        //Default-implementation for backwards compatibility.
+        return getNearestNeighboursGeneric(k, PrimitiveTypeProvider.getSafeFloatArray(queryProvider), column,
+            distanceElementClass, config);
+      }
+      LogManager.getLogger().error("{} does not support other queries than float-arrays.",
+          this.getClass().getSimpleName());
+      throw new UnsupportedOperationException();
   }
 
   /**
@@ -99,18 +96,19 @@ public interface DBSelector {
         .collect(Collectors.toList());
   }
 
-  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value);
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value){
+    return getRows(fieldName, Collections.singleton(value));
+  }
 
-  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values);
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values){
+    return getRows(fieldName, Arrays.asList(values));
+  }
 
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values);
 
   /**
    * Performs a fulltext search with multiple query terms. That is, the storage engine is tasked to
    * lookup for entries in the provided fields that match the provided query terms.
-   *
-   * TODO: This is a quick & dirty solution so far. Should be re-engineered to fit different
-   * use-cases.
    *
    * @param rows The number of rows that should be returned.
    * @param fieldname The field that should be used for lookup.
@@ -121,19 +119,12 @@ public interface DBSelector {
       String... terms);
 
   /**
-   * Performs a boolean lookup on a specified field and retrieves the rows that match the specified
-   * condition.
-   *
-   * i.e. SELECT * from WHERE A <Operator> B
-   *
-   * @param fieldName The name of the database field .
-   * @param operator The {@link RelationalOperator} that should be used for comparison.
-   * @param value The value the field should be compared to.
-   * @return List of rows (one row is represented by one Map of the field ames and the data
-   * contained in the field).
+   * {@link #getRows(String, RelationalOperator, Iterable)}
    */
-  List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator,
-      String value);
+  default List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator,
+      String value){
+    return getRows(fieldName, operator, Collections.singleton(value));
+  }
 
   /**
    * Performs a boolean lookup on a specified field  and retrieves the rows that match the specified
@@ -156,14 +147,9 @@ public interface DBSelector {
   List<PrimitiveTypeProvider> getAll(String column);
 
   /**
-   * SELECT * from
+   * Get all rows from all tables
    */
   List<Map<String, PrimitiveTypeProvider>> getAll();
 
   boolean existsEntity(String name);
-
-  /**
-   * Get first k rows
-   */
-  List<Map<String, PrimitiveTypeProvider>> preview(int k);
 }

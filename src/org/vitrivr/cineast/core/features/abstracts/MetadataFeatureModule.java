@@ -19,6 +19,7 @@ import org.vitrivr.cineast.core.data.distance.ObjectDistanceElement;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.SimpleFeatureDescriptor;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -161,7 +162,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
     QueryConfig qc = QueryConfig.clone(rqc).setDistanceIfEmpty(this.defaultDistance());
     int maxResultsPerModule = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
 
-    List<ObjectDistanceElement> distances = this.dbSelector.getNearestNeighbours(
+    List<ObjectDistanceElement> distances = this.dbSelector.getNearestNeighboursGeneric(
         maxResultsPerModule,
         feature,
         FEATURE_COLUMN_NAME,
