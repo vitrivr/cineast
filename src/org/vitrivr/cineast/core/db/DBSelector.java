@@ -104,6 +104,9 @@ public interface DBSelector {
     return getRows(fieldName, Arrays.asList(values));
   }
 
+  /**
+   * SELECT * where fieldName IN (values)
+   */
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values);
 
   /**

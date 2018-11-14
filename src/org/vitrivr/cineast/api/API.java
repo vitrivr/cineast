@@ -47,6 +47,7 @@ import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.importer.handlers.AsrDataImportHandler;
+import org.vitrivr.cineast.core.importer.handlers.CaptionDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.DataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.JsonDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.OcrDataImportHandler;
@@ -291,6 +292,10 @@ public class API {
         break;
       case "ocr":
         handler = new OcrDataImportHandler(1, batchsize);
+        handler.doImport(path);
+        break;
+      case "caption":
+        handler = new CaptionDataImportHandler(1, batchsize);
         handler.doImport(path);
         break;
     }
