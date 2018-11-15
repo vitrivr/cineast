@@ -90,6 +90,7 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
 
     @Override
     public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
+      LOGGER.error("Similar to shotID is not supported for SolrTextRetriever");
         return new ArrayList<>(0); // currently not supported
     }
 
