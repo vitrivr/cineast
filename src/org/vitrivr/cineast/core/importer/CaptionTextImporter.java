@@ -72,7 +72,6 @@ public class CaptionTextImporter implements Importer<Pair<String, String>> {
     }
   }
 
-  //TODO Can i have multiple features per ID?
   @Override
   public Map<String, PrimitiveTypeProvider> convert(Pair<String, String> data) {
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(2);
