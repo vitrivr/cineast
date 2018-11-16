@@ -5,6 +5,7 @@ import static org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescrip
 
 import java.io.Closeable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
+import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.dao.reader.DatabaseLookupException;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -53,7 +55,27 @@ public class MediaSegmentMetadataHandler implements Closeable {
       return false;
     }
 
-    return this.writer.persist(this.writer.generateTuple(descriptor.getSegmentId(), descriptor.getDomain(), descriptor.getKey(), descriptor.getValue()));
+    return this.writer.persist(this.toPersistenTuple(descriptor));
+
+  }
+
+  public boolean addDescriptors(Collection<MediaSegmentMetadataDescriptor> descriptors){
+
+    if (descriptors == null){
+      return false;
+    }
+
+    if(descriptors.isEmpty()){
+      return true;
+    }
+
+    ArrayList<PersistentTuple> tuples = new ArrayList<>(descriptors.size());
+
+    for(MediaSegmentMetadataDescriptor descriptor : descriptors){
+      tuples.add(this.toPersistenTuple(descriptor));
+    }
+
+    return this.writer.persist(tuples);
 
   }
 
@@ -88,5 +110,9 @@ public class MediaSegmentMetadataHandler implements Closeable {
   protected void finalize() throws Throwable {
     close();
     super.finalize();
+  }
+
+  private PersistentTuple toPersistenTuple(MediaSegmentMetadataDescriptor descriptor){
+    return this.writer.generateTuple(descriptor.getSegmentId(), descriptor.getDomain(), descriptor.getKey(), descriptor.getValue());
   }
 }
