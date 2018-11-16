@@ -21,7 +21,6 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import sun.util.locale.provider.LocaleServiceProviderPool.LocalizedObjectGetter;
 
 public class CaptionTextImporter implements Importer<Pair<String, String>> {
 
