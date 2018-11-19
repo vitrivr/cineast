@@ -144,6 +144,7 @@ dependencies {
      *  Java 9+
      */
     compile group: 'com.sun.activation', name: 'javax.activation', version: '1.2.0'
+    compile group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.1'
 
     /**
      * Manual Fixes for the javacpp-devs because of naming conventions & versions. Each os is handled independently
