@@ -141,6 +141,11 @@ dependencies {
     compile group: 'io.prometheus', name: 'simpleclient_servlet', version: '0.2.0'
 
     /**
+     *  Java 9+
+     */
+    compile group: 'com.sun.activation', name: 'javax.activation', version: '1.2.0'
+
+    /**
      * Manual Fixes for the javacpp-devs because of naming conventions & versions. Each os is handled independently
      */
 
