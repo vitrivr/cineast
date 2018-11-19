@@ -107,11 +107,13 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
         .partition(list, labels.length, labels[0].length, GRID_PARTITIONS, GRID_PARTITIONS);
 
     float[] vector = new float[2 * GRID_PARTITIONS * GRID_PARTITIONS];
-    float[] weights = new float[GRID_PARTITIONS * GRID_PARTITIONS];
+    float[] weights = new float[2 * GRID_PARTITIONS * GRID_PARTITIONS];
 
     for (int i = 0; i < GRID_PARTITIONS * GRID_PARTITIONS; ++i) {
       DeepLabLabel dominantLabel = DeepLabLabel.getDominantLabel(ade20kPartitions.get(i));
-      weights[i] = dominantLabel == DeepLabLabel.NOTHING ? 0f : 1f; //TODO expose this to the API
+      float weight = dominantLabel == DeepLabLabel.NOTHING ? 0f : 1f; //TODO expose this to the API
+      weights[2 * i] = weight;
+      weights[2 * i + 1] = weight;
       vector[2 * i] = dominantLabel.getEmbeddX();
       vector[2 * i + 1] = dominantLabel.getEmbeddY();
 
