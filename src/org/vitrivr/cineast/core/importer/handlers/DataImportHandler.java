@@ -101,7 +101,7 @@ public abstract class DataImportHandler {
   /**
    * Awaits completion of the individual Futures. This method blocks until all Futures have been completed.
    */
-  protected void waitForCompletion() {
+  public void waitForCompletion() {
     this.futures.removeIf(f -> {
       try {
         return (f.get() == null);

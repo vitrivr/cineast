@@ -49,9 +49,11 @@ import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.importer.handlers.AsrDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.CaptionDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.DataImportHandler;
+import org.vitrivr.cineast.core.importer.handlers.GoogleVisionImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.JsonDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.OcrDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.ProtoDataImportHandler;
+import org.vitrivr.cineast.core.importer.vbs2019.GoogleVisionCategory;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
@@ -297,6 +299,17 @@ public class API {
       case "caption":
         handler = new CaptionDataImportHandler(1, batchsize);
         handler.doImport(path);
+        break;
+      case "vision":
+        LOGGER.info("Starting import for Google Vision files at {}", path);
+        List<GoogleVisionImportHandler> handlers = new ArrayList<>();
+        for (GoogleVisionCategory category : GoogleVisionCategory.values()) {
+          GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, batchsize, category, true);
+          _handler.doImport(path);
+          handlers.add(_handler);
+        }
+        handlers.forEach(GoogleVisionImportHandler::waitForCompletion);
+        LOGGER.info("Submitted all Google Vision imports for {}", path);
         break;
     }
   }

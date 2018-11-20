@@ -39,14 +39,13 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
    * @param category only tuples of this kind are imported
    */
   public GoogleVisionImporter(Path input, GoogleVisionCategory category, boolean importTags) throws IOException {
-    objectID = input.getFileName().toString().substring(input.getFileName().toString().indexOf("_")).replace("shot", "");
+    objectID = input.getFileName().toString().substring(0, input.getFileName().toString().indexOf("_")).replace("shot", "");
     segmentID = input.getFileName().toString().replace("shot" + objectID + "_", "").replace("_RKF.png.json", "");
     this.category = category;
     this.importTags = importTags;
     if (importTags = true) {
       tagHandler = new TagHandler();
     }
-    LOGGER.debug("Filename {} mapped to objectID {} and segmentID {}", input.getFileName(), objectID, segmentID);
     ObjectMapper mapper = new ObjectMapper();
     JsonParser parser = mapper.getFactory().createParser(input.toFile());
     if (parser.nextToken() == JsonToken.START_OBJECT) {
@@ -63,8 +62,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
   private synchronized Optional<GoogleVisionTuple> nextPair() {
     while (currentTuples == null || !currentTuples.hasNext() || currentCategory != category) {
       Entry<String, JsonNode> next = elements.next();
-      currentCategory = GoogleVisionCategory.valueOf(next.getKey());
-      LOGGER.debug("Checking category {}", currentCategory);
+      currentCategory = GoogleVisionCategory.valueOf(next.getKey().toUpperCase());
       if (currentCategory != category) {
         continue;
       }

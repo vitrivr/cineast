@@ -7,30 +7,33 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.features.DescriptionTextSearch;
 import org.vitrivr.cineast.core.importer.vbs2019.CaptionTextImporter;
+import org.vitrivr.cineast.core.importer.vbs2019.GoogleVisionCategory;
+import org.vitrivr.cineast.core.importer.vbs2019.GoogleVisionImporter;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-public class CaptionDataImportHandler extends DataImportHandler {
+public class GoogleVisionImportHandler extends DataImportHandler {
 
   private static final Logger LOGGER = LogManager.getLogger();
+  private final GoogleVisionCategory category;
+  private final boolean importTags;
 
-  public CaptionDataImportHandler(int threads, int batchsize) {
+  public GoogleVisionImportHandler(int threads, int batchsize, GoogleVisionCategory category, boolean importTags) {
     super(threads, batchsize);
+    this.category = category;
+    this.importTags = importTags;
   }
 
   @Override
   public void doImport(Path root) {
     try {
-      LOGGER.info("Starting data import for caption files in: {}", root.toString());
       Files.walk(root, 2).filter(p -> p.toString().toLowerCase().endsWith(".json")).forEach(p -> {
         try {
-          this.futures.add(this.service.submit(new DataImportRunner(new CaptionTextImporter(p), DescriptionTextSearch.DESCRIPTION_TEXT_TABLE_NAME, "captions")));
+          this.futures.add(this.service.submit(new DataImportRunner(new GoogleVisionImporter(p, category, importTags), category.tableName, "gvision-" + category + "-" + importTags)));
         } catch (IOException e) {
           LOGGER.fatal("Failed to open path at {} ", p);
           throw new RuntimeException(e);
         }
       });
-      this.waitForCompletion();
-      LOGGER.info("Completed data import with Caption Import files in: {}", root.toString());
     } catch (IOException e) {
       LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", root.toString(), LogHelper.getStackTrace(e));
     }

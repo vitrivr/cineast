@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.importer.vbs2019;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class GoogleVisionTuple {
 
@@ -37,5 +38,10 @@ public class GoogleVisionTuple {
       default:
         throw new UnsupportedOperationException();
     }
+  }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this);
   }
 }
