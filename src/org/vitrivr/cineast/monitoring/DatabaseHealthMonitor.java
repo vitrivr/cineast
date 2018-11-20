@@ -37,8 +37,12 @@ public class DatabaseHealthMonitor {
         long start = System.currentTimeMillis();
         boolean ping = selector.ping();
         if (!ping) {
-          LOGGER.error("Connection issue");
-          executionTime.observe(-1);
+          LOGGER.error("Connection issue, waiting for 1 minute");
+          try {
+            Thread.sleep(60_000);
+          } catch (InterruptedException e) {
+            LOGGER.error(e);
+          }
         } else {
           long stop = System.currentTimeMillis();
           LOGGER.trace("Ping of {} ms", stop - start);
