@@ -41,6 +41,7 @@ public class PrometheusServer {
     PrometheusExtractionTaskMonitor.init();
     ImportTaskMonitor.init();
     DatabaseHealthMonitor.init();
+    RetrievalTaskMonitor.init();
     try {
       server.get().start();
     } catch (Exception e) {
