@@ -130,8 +130,8 @@ public class ADAMproEntityCreator implements EntityCreator {
         fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[2]).setAttributetype(AttributeType.INT).build());
         fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[3]).setAttributetype(AttributeType.INT).build());
         fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[4]).setAttributetype(AttributeType.INT).build());
-        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[5]).setAttributetype(AttributeType.FLOAT).build());
-        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[6]).setAttributetype(AttributeType.FLOAT).build());
+        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[5]).setAttributetype(AttributeType.DOUBLE).build());
+        fields.add(builder.setName(MediaSegmentDescriptor.FIELDNAMES[6]).setAttributetype(AttributeType.DOUBLE).build());
 
         final CreateEntityMessage message = CreateEntityMessage.newBuilder().setEntity(MediaSegmentDescriptor.ENTITY).addAllAttributes(fields).build();
 
@@ -179,7 +179,7 @@ public class ADAMproEntityCreator implements EntityCreator {
         final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
         final HashMap<String,String> hints = new HashMap<>(1);
         hints.put("indexed", "true");
-        String handler = "parquet";
+        String handler = "cassandra";
         for(AttributeDefinition def : attributes){
           if(def.getType().equals(AttributeType.VECTOR) && def.hasHint("handler")){
             handler = def.getHint("handler").get();
@@ -225,6 +225,7 @@ public class ADAMproEntityCreator implements EntityCreator {
         for (AttributeDefinition attribute : attributes) {
             builder.setName(attribute.getName()).setAttributetype(mapAttributeType(attribute.getType()));
             attribute.ifHintPresent("handler", builder::setHandler);
+            //builder.setHandler("cassandra");
             attribute.ifHintPresent("indexed", h -> builder.putAllParams(ImmutableMap.of("indexed", h)));
             fieldList.add(builder.build());
             builder.clear();

@@ -195,6 +195,12 @@ public enum MediaType {
      */
     public static Pair<String, Long> parsesSegmentId(String segmentId) {
         final String[] components = segmentId.split(String.valueOf(DELIMITER));
-        return new ImmutablePair<>(components[0], Long.valueOf(components[1]));
+        StringBuilder sb = new StringBuilder();
+        sb.append(components[0]);
+        for(int i = 1; i < components.length - 1; ++i){
+            sb.append(DELIMITER);
+            sb.append(components[i]);
+        }
+        return new ImmutablePair<>(sb.toString(), Long.valueOf(components[components.length - 1]));
     }
 }

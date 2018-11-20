@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import org.tensorflow.Tensor;
 import org.tensorflow.types.UInt8;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
+import org.vitrivr.cineast.core.data.SemanticMap;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -95,8 +98,34 @@ public class ConceptMasks extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    //TODO
-    return Collections.emptyList();
+
+
+    Optional<SemanticMap> optional = sc.getSemanticMap();
+    if (!optional.isPresent()){
+      return Collections.emptyList();
+    }
+
+    DeepLabLabel[][] labels = optional.get().getLabels();
+
+    List<DeepLabLabel> list = linearize(labels);
+
+    ArrayList<LinkedList<DeepLabLabel>> partitions = GridPartitioner
+        .partition(list, labels.length, labels[0].length, GRID_PARTITIONS, GRID_PARTITIONS);
+
+    float[] vector = new float[2 * GRID_PARTITIONS * GRID_PARTITIONS];
+    float[] weights = new float[2 * GRID_PARTITIONS * GRID_PARTITIONS];
+
+    for (int i = 0; i < GRID_PARTITIONS * GRID_PARTITIONS; ++i) {
+      DeepLabLabel dominantLabel = DeepLabLabel.getDominantLabel(partitions.get(i));
+      float weight = dominantLabel == DeepLabLabel.NOTHING ? 0f : 1f; //TODO expose this to the API
+      weights[2 * i] = weight;
+      weights[2 * i + 1] = weight;
+      vector[2 * i] = dominantLabel.getEmbeddX();
+      vector[2 * i + 1] = dominantLabel.getEmbeddY();
+
+    }
+    return this.getSimilar(vector, new QueryConfig(qc).setDistanceWeights(weights));
+
   }
 
 }
