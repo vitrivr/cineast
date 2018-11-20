@@ -290,4 +290,9 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
       String... terms) {
     throw new IllegalStateException("Not implemented.");
   }
+
+  @Override
+  public boolean ping() {
+    return true;
+  }
 }

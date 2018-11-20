@@ -71,6 +71,11 @@ public class NoDBSelector implements DBSelector {
         return false;
     }
 
+  @Override
+  public boolean ping() {
+    return true;
+  }
+
     @Override
     public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<String> values) {
         return new ArrayList<>(0);

@@ -117,6 +117,33 @@ public class AdamSearchGrpc {
               "AdamSearch", "GetScoredExecutionPath"),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage,
+      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_STOP_QUERY =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamSearch", "StopQuery"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
+      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_STOP_ALL_QUERIES =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamSearch", "StopAllQueries"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
+      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_PING =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "AdamSearch", "Ping"),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -228,6 +255,27 @@ public class AdamSearchGrpc {
       asyncUnimplementedUnaryCall(METHOD_GET_SCORED_EXECUTION_PATH, responseObserver);
     }
 
+    /**
+     */
+    public void stopQuery(org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_STOP_QUERY, responseObserver);
+    }
+
+    /**
+     */
+    public void stopAllQueries(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_STOP_ALL_QUERIES, responseObserver);
+    }
+
+    /**
+     */
+    public void ping(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_PING, responseObserver);
+    }
+
     @java.lang.Override public io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -300,6 +348,27 @@ public class AdamSearchGrpc {
                 org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage,
                 org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage>(
                   this, METHODID_GET_SCORED_EXECUTION_PATH)))
+          .addMethod(
+              METHOD_STOP_QUERY,
+              asyncUnaryCall(
+                  new MethodHandlers<
+                      org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage,
+                      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
+                      this, METHODID_STOP_QUERY)))
+          .addMethod(
+              METHOD_STOP_ALL_QUERIES,
+              asyncUnaryCall(
+                  new MethodHandlers<
+                      org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
+                      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
+                      this, METHODID_STOP_ALL_QUERIES)))
+          .addMethod(
+              METHOD_PING,
+              asyncUnaryCall(
+                  new MethodHandlers<
+                      org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
+                      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
+                      this, METHODID_PING)))
           .build();
     }
   }
@@ -414,6 +483,30 @@ public class AdamSearchGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_GET_SCORED_EXECUTION_PATH, getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void stopQuery(org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_STOP_QUERY, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void stopAllQueries(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_STOP_ALL_QUERIES, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void ping(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request,
+        io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_PING, getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -511,6 +604,27 @@ public class AdamSearchGrpc {
       return blockingUnaryCall(
           getChannel(), METHOD_GET_SCORED_EXECUTION_PATH, getCallOptions(), request);
     }
+
+    /**
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage stopQuery(org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_STOP_QUERY, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage stopAllQueries(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_STOP_ALL_QUERIES, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.vitrivr.adampro.grpc.AdamGrpc.AckMessage ping(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_PING, getCallOptions(), request);
+    }
   }
 
   /**
@@ -599,6 +713,30 @@ public class AdamSearchGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_GET_SCORED_EXECUTION_PATH, getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> stopQuery(
+        org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_STOP_QUERY, getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> stopAllQueries(
+        org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_STOP_ALL_QUERIES, getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> ping(
+        org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_PING, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CACHE_INDEX = 0;
@@ -610,7 +748,10 @@ public class AdamSearchGrpc {
   private static final int METHODID_DO_PROGRESSIVE_QUERY = 6;
   private static final int METHODID_GET_CACHED_RESULTS = 7;
   private static final int METHODID_GET_SCORED_EXECUTION_PATH = 8;
-  private static final int METHODID_DO_STREAMING_QUERY = 9;
+  private static final int METHODID_STOP_QUERY = 9;
+  private static final int METHODID_STOP_ALL_QUERIES = 10;
+  private static final int METHODID_PING = 11;
+  private static final int METHODID_DO_STREAMING_QUERY = 12;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -665,6 +806,18 @@ public class AdamSearchGrpc {
           serviceImpl.getScoredExecutionPath((org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage) request,
               (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage>) responseObserver);
           break;
+        case METHODID_STOP_QUERY:
+          serviceImpl.stopQuery((org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage) request,
+              (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
+          break;
+        case METHODID_STOP_ALL_QUERIES:
+          serviceImpl.stopAllQueries((org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage) request,
+              (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
+          break;
+        case METHODID_PING:
+          serviceImpl.ping((org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage) request,
+              (io.grpc.stub.StreamObserver<org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>) responseObserver);
+          break;
         default:
           throw new AssertionError();
       }
@@ -695,7 +848,10 @@ public class AdamSearchGrpc {
         METHOD_DO_PARALLEL_QUERY,
         METHOD_DO_PROGRESSIVE_QUERY,
         METHOD_GET_CACHED_RESULTS,
-        METHOD_GET_SCORED_EXECUTION_PATH);
+        METHOD_GET_SCORED_EXECUTION_PATH,
+        METHOD_STOP_QUERY,
+        METHOD_STOP_ALL_QUERIES,
+        METHOD_PING);
   }
 
 }

@@ -155,4 +155,9 @@ public interface DBSelector {
   List<Map<String, PrimitiveTypeProvider>> getAll();
 
   boolean existsEntity(String name);
+
+  /**
+   * Healthcheck. Returns false if something is wrong
+   */
+  boolean ping();
 }

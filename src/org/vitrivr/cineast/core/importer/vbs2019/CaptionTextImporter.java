@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.importer;
+package org.vitrivr.cineast.core.importer.vbs2019;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.importer.Importer;
 
 public class CaptionTextImporter implements Importer<Pair<String, String>> {
 
@@ -75,11 +76,8 @@ public class CaptionTextImporter implements Importer<Pair<String, String>> {
   public Map<String, PrimitiveTypeProvider> convert(Pair<String, String> data) {
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(2);
     String id = "v_" + objectID + "_" + data.first;
-    map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[0],
-        PrimitiveTypeProvider.fromObject(id));
-    map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[1],
-        PrimitiveTypeProvider.fromObject(data.second));
-    LOGGER.debug("Converting to {}:{}", id, data.second);
+    map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject(id));
+    map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(data.second));
     return map;
   }
 }

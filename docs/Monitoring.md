@@ -2,11 +2,13 @@
 ## Starting a prometheus instance
 
 * Install docker
+
+### Ubuntu
 * ```docker run --name prometheus-cineast -d -v /abs/path/to/cineast/docs/prometheus.yml:/etc/prometheus/prometheus.yml --network host prom/prometheus```
 
 Small note: we could also set up a bridge network with a fixed IP for the host machine, but just using the host NW for this container is easier.
 
-## Mac
+### Mac
 * ```docker run --name prometheus-cineast -d -v /abs/path/to/cineast/docs/prometheus_mac.yml:/etc/prometheus/prometheus.yml -p 9090:9090 prom/prometheus```
 We're not using host mode since it doesn't work on mac.
 ## Lifecycle
@@ -19,8 +21,9 @@ Since the .yml-file is now linked within the docker-container, you can simply mo
 * ```docker run -d -p 3000:3000 grafana/grafana```
 * Default login is admin/admin
 
-## Lifecycle / Setup
+## Setup
 * Use the saved grafana-dashboard for an overview of metrics
+* Add a Data Source named `prom-localhost` of Type `Prometheus` with URL `http://localhost:9090` and Access `Browser`
 
 # Netdata
 Netdata is optional - but it can be neatly integrated into prometheus/grafana.
