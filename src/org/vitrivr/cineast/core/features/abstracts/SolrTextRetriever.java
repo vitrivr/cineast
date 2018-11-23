@@ -126,7 +126,6 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
    * Convenience-Method for implementing classes once they have generated their query terms
    */
   protected List<ScoreElement> getSimilar(ReadableQueryConfig qc, String... terms) {
-    LOGGER.debug("Searching for query terms {}", terms);
     final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector
         .getFulltextRows(500, SimpleFulltextFeatureDescriptor.FIELDNAMES[1], terms);
 
@@ -139,8 +138,6 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
       double score = f.applyAsDouble(result.get("ap_score").getFloat());
       scoreElements.add(new SegmentScoreElement(id, score));
     }
-    LOGGER.debug("Example result: {}",
-        scoreElements.size() > 0 ? scoreElements.get(0) : "No Results");
     return scoreElements;
   }
 
