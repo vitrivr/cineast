@@ -35,7 +35,7 @@ public class JsonDataImportHandler extends DataImportHandler {
                 final String filename = p.getFileName().toString();
                 final String suffix = filename.substring(filename.lastIndexOf("."));
                 try {
-                    this.futures.add(this.service.submit(new DataImportRunner(new JsonObjectImporter(p.toFile()), filename.replace(suffix, ""))));
+                  this.futures.add(this.service.submit(new DataImportRunner(new JsonObjectImporter(p.toFile()), filename.replace(suffix, ""), "json_" + filename.replace(suffix, ""))));
                 } catch (IOException e) {
                     LOGGER.error("Could not start data import for file '{}'. Skipping...?", p.toString());
                 }

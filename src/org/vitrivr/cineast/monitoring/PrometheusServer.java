@@ -39,6 +39,9 @@ public class PrometheusServer {
     server.get().setHandler(context);
     context.addServlet(new ServletHolder(new MetricsServlet()), "/metrics");
     PrometheusExtractionTaskMonitor.init();
+    ImportTaskMonitor.init();
+    DatabaseHealthMonitor.init();
+    RetrievalTaskMonitor.init();
     try {
       server.get().start();
     } catch (Exception e) {
@@ -51,6 +54,7 @@ public class PrometheusServer {
     if (server.isPresent()) {
       try {
         server.get().stop();
+        DatabaseHealthMonitor.stop();
       } catch (Exception e) {
         LOGGER.error(e);
       }

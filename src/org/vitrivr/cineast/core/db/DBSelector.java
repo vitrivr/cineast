@@ -104,6 +104,9 @@ public interface DBSelector {
     return getRows(fieldName, Arrays.asList(values));
   }
 
+  /**
+   * SELECT * where fieldName IN (values)
+   */
   List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, Iterable<String> values);
 
   /**
@@ -152,4 +155,9 @@ public interface DBSelector {
   List<Map<String, PrimitiveTypeProvider>> getAll();
 
   boolean existsEntity(String name);
+
+  /**
+   * Healthcheck. Returns false if something is wrong
+   */
+  boolean ping();
 }

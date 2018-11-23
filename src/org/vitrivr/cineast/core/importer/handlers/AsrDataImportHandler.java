@@ -29,7 +29,7 @@ public class AsrDataImportHandler extends DataImportHandler {
     @Override
     public void doImport(Path path) {
         try {
-            this.futures.add(this.service.submit(new DataImportRunner(new PlainTextImporter(path), "features_asr")));
+          this.futures.add(this.service.submit(new DataImportRunner(new PlainTextImporter(path), "features_asr", "asr")));
         } catch (IOException e) {
             LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", path.toString(), LogHelper.getStackTrace(e));
         }

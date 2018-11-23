@@ -9,28 +9,29 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class OcrDataImportHandler extends DataImportHandler {
-    /** */
-    private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     *
-     * @param threads
-     * @param batchsize
-     */
-    public OcrDataImportHandler(int threads, int batchsize) {
-        super(threads, batchsize);
-    }
+  /** */
+  private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     *
-     * @param path
-     */
-    @Override
-    public void doImport(Path path) {
-        try {
-            this.futures.add(this.service.submit(new DataImportRunner(new PlainTextImporter(path), "features_ocr")));
-        } catch (IOException e) {
-            LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", path.toString(), LogHelper.getStackTrace(e));
-        }
+  /**
+   *
+   * @param threads
+   * @param batchsize
+   */
+  public OcrDataImportHandler(int threads, int batchsize) {
+    super(threads, batchsize);
+  }
+
+  /**
+   *
+   * @param path
+   */
+  @Override
+  public void doImport(Path path) {
+    try {
+      this.futures.add(this.service.submit(new DataImportRunner(new PlainTextImporter(path), "features_ocr", "ocr")));
+    } catch (IOException e) {
+      LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", path.toString(), LogHelper.getStackTrace(e));
     }
+  }
 }

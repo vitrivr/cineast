@@ -98,7 +98,11 @@ public class Tags implements Extractor, Retriever{
     return processTagScores(tagScores);
     
   }
-  
+
+  /**
+   * @param tagScores maps {@link Tag#getId()} to the weight / confidence of the corresponding tag.
+   * This value is then multiplied with the score of the retrieved tag to get the score.
+   */
   private List<ScoreElement> processTagScores(TObjectFloatHashMap<String> tagScores){
     List<Map<String, PrimitiveTypeProvider>> tagInstances = this.selector.getRows("tag", tagScores.keySet());
     

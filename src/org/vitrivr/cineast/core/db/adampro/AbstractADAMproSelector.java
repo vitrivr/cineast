@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
@@ -158,4 +159,8 @@ public abstract class AbstractADAMproSelector implements DBSelector {
     return _return;
   }
 
+  @Override
+  public boolean ping() {
+    return adampro.pingBlocking().getCode() == Code.OK ? true : false;
+  }
 }

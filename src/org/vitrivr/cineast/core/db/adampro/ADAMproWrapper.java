@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.db.adampro;
 import com.google.common.util.concurrent.Futures;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import java.util.concurrent.Executors;
@@ -17,6 +18,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.CreateEntityMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.EntityPropertiesMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage;
@@ -37,6 +39,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import sun.awt.EventListenerAggregate;
 
 public class ADAMproWrapper implements AutoCloseable {
 
@@ -91,6 +94,20 @@ public class ADAMproWrapper implements AutoCloseable {
       return future.get();
     } catch (InterruptedException | ExecutionException e) {
       LOGGER.error("error in insertOneBlocking: {}", LogHelper.getStackTrace(e));
+      return INTERRUPTED_ACK_MESSAGE;
+    }
+  }
+
+  public synchronized ListenableFuture<AckMessage> ping() {
+    return this.searchStub.ping(EmptyMessage.getDefaultInstance());
+  }
+
+  public AckMessage pingBlocking() {
+    ListenableFuture<AckMessage> future = this.ping();
+    try {
+      return future.get();
+    } catch (InterruptedException | ExecutionException e) {
+      LOGGER.error("error in pingBlocking: {}", LogHelper.getStackTrace(e));
       return INTERRUPTED_ACK_MESSAGE;
     }
   }
