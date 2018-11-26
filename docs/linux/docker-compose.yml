@@ -26,3 +26,7 @@ services:
     container_name: grafana-cineast
     ports:
     - 3000:3000
+
+networks:
+  default:
+    network_mode: "host"
