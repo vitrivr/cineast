@@ -161,6 +161,6 @@ public abstract class AbstractADAMproSelector implements DBSelector {
 
   @Override
   public boolean ping() {
-    return adampro.pingBlocking().getCode() == Code.OK ? true : false;
+    return adampro.pingBlocking().getCode() == Code.OK;
   }
 }
