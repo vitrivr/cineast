@@ -1,33 +1,23 @@
-# Prometheus
-## Starting a prometheus instance
-
-* Install docker
-
-### Ubuntu
-* ```docker run --name prometheus-cineast -d -v /abs/path/to/cineast/docs/prometheus.yml:/etc/prometheus/prometheus.yml --network host prom/prometheus```
-
-Small note: we could also set up a bridge network with a fixed IP for the host machine, but just using the host NW for this container is easier.
-
-### Mac
-* ```docker run --name prometheus-cineast -d -v /abs/path/to/cineast/docs/prometheus_mac.yml:/etc/prometheus/prometheus.yml -p 9090:9090 prom/prometheus```
-We're not using host mode since it doesn't work on mac.
-## Lifecycle
-Since the .yml-file is now linked within the docker-container, you can simply modify it and then use ```docker restart prometheus-cineast``` to load the new config.
+# Prerequisites 
+## Installation requirements
+* docker 
+* docker-compose
 
 ## Monitoring Docker
 You can check out the official documentation on [Docker docs](https://docs.docker.com/config/thirdparty/prometheus/)
 
+# Start Monitoring stack
+* ```docker-compose up -d```, where `-d` is responsible for launching it in the background.
+
+# Prometheus Lifecycle
+Since the .yml-file is now linked within the docker-container, you can simply modify it and then use ```docker restart prometheus-cineast``` to load the new config.
 
 # Grafana
-## Starting an instance
-
-* Install docker
-* ```docker run -d -p 3000:3000 grafana/grafana```
-* Default login is admin/admin
 
 ## Setup
-* Use the saved grafana-dashboard for an overview of metrics
-* Add a Data Source named `prom-localhost` of Type `Prometheus` with URL `http://localhost:9090` and Access `Browser`
+* Default login is admin/admin
+* Add a Data Source named `prom-localhost` of Type `Prometheus` with URL `http://$prometheusURL:9090` and Access `Browser`. Be aware that `localhost` here would mean the node accessing grafana, not the one grafana is running on.
+* Use the saved grafana-dashboard for an overview of metrics. You can import it as JSON.
 
 # Netdata
 Netdata is optional - but it can be neatly integrated into prometheus/grafana.
