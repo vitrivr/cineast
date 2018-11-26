@@ -21,8 +21,6 @@ services:
     - /var/run:/var/run:rw
     - /sys:/sys:ro
     - /var/lib/docker/:/var/lib/docker:ro
-    depends_on:
-    - redis
   grafana:
     image: grafana/grafana:latest
     container_name: grafana-cineast
