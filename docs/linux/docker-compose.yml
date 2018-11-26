@@ -11,6 +11,8 @@ services:
     - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
     - cadvisor
+    networks:
+      hostnet: {}
   cadvisor:
     image: google/cadvisor:latest
     container_name: cadvisor
@@ -21,12 +23,17 @@ services:
     - /var/run:/var/run:rw
     - /sys:/sys:ro
     - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      hostnet: {}
   grafana:
     image: grafana/grafana:latest
     container_name: grafana-cineast
     ports:
     - 3000:3000
+    networks:
+      hostnet: {}
 
 networks:
-  default:
-    network_mode: "host"
+  hostnet:
+    external: true
+    name: host
