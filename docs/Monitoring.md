@@ -14,6 +14,10 @@ We're not using host mode since it doesn't work on mac.
 ## Lifecycle
 Since the .yml-file is now linked within the docker-container, you can simply modify it and then use ```docker restart prometheus-cineast``` to load the new config.
 
+## Monitoring Docker
+You can check out the official documentation on [Docker docs](https://docs.docker.com/config/thirdparty/prometheus/)
+
+
 # Grafana
 ## Starting an instance
 
