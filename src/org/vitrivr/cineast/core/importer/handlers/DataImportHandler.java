@@ -61,6 +61,7 @@ public abstract class DataImportHandler {
         LOGGER.info("Completed import of: {}, task {}", this.entityName, taskName);
         long stop = System.currentTimeMillis();
         ImportTaskMonitor.reportExecutionTime(taskName, stop - start);
+        Thread.sleep(1_000);
       } catch (Exception e) {
         LOGGER.error("Error for task {} while copying data for '{}': {}", taskName, this.entityName, LogHelper.getStackTrace(e));
       }
