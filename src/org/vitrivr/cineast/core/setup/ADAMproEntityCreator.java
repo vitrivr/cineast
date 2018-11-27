@@ -179,7 +179,7 @@ public class ADAMproEntityCreator implements EntityCreator {
         final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
         final HashMap<String,String> hints = new HashMap<>(1);
         hints.put("indexed", "true");
-        String handler = "cassandra";
+        String handler = "parquet";
         for(AttributeDefinition def : attributes){
           if(def.getType().equals(AttributeType.VECTOR) && def.hasHint("handler")){
             handler = def.getHint("handler").get();
