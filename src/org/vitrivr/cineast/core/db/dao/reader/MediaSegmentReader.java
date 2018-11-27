@@ -6,6 +6,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimaps;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,10 @@ public class MediaSegmentReader extends AbstractEntityReader {
   public Map<String, MediaSegmentDescriptor> lookUpSegments(Iterable<String> segmentIds) {
     Stream<MediaSegmentDescriptor> descriptors =
         this.lookUpSegmentsByField(FIELDNAMES[0], segmentIds);
-    return Maps.uniqueIndex(descriptors.iterator(), MediaSegmentDescriptor::getSegmentId);
+    //this implicitly deduplicates the stream
+    Map<String, MediaSegmentDescriptor> _return = new HashMap<>();
+    descriptors.forEach(msd -> _return.put(msd.getSegmentId(), msd));
+    return _return;
   }
 
   public List<MediaSegmentDescriptor> lookUpSegmentsOfObject(String objectId) {
