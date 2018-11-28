@@ -7,11 +7,13 @@ import org.vitrivr.cineast.core.features.abstracts.SolrTextRetriever;
 
 public class AudioTranscriptionSearch extends SolrTextRetriever {
 
+  public static final String AUDIO_TRANSCRIPTION_TABLE_NAME = "features_audiotranscription";
+
   /**
    * Default constructor for {@link AudioTranscriptionSearch}.
    */
   public AudioTranscriptionSearch() {
-    super("features_audiotranscription");
+    super(AudioTranscriptionSearch.AUDIO_TRANSCRIPTION_TABLE_NAME);
   }
 
   /**
