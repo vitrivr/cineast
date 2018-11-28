@@ -28,6 +28,6 @@ public class AudioTranscriptionSearch extends SolrTextRetriever {
 
   @Override
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-    return new String[]{"\"" + sc.getText() + "\""};
+    return sc.getText().split(" ");
   }
 }
