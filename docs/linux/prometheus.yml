@@ -23,24 +23,26 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:4569']
 
-  - job_name: 'netdata-scrape'
+  - job_name: 'host-netdata'
 
     metrics_path: '/api/v1/allmetrics'
     params:
-      # format: prometheus | prometheus_all_hosts
       format: [prometheus]
-      #
-      # sources: as-collected | raw | average | sum | volume
-      # default is: average
-      #source: [average]
-      #
-      # server name for this prometheus - the default is the client IP
-      # for netdata to uniquely identify it
-      #server: ['prometheus1']
     honor_labels: true
 
     static_configs:
       - targets: ['localhost:19999']
+
+
+  - job_name: 'ADAMpro-netdata'
+
+    metrics_path: '/api/v1/allmetrics'
+    params:
+      format: [prometheus]
+    honor_labels: true
+
+    static_configs:
+    - targets: ['localhost:19998']
 
 
   - job_name: 'docker'
