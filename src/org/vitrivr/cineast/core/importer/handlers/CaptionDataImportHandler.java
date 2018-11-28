@@ -23,7 +23,7 @@ public class CaptionDataImportHandler extends DataImportHandler {
       LOGGER.info("Starting data import for caption files in: {}", root.toString());
       Files.walk(root, 2).filter(p -> p.toString().toLowerCase().endsWith(".json")).forEach(p -> {
         try {
-          this.futures.add(this.service.submit(new DataImportRunner(new CaptionTextImporter(p), DescriptionTextSearch.DESCRIPTION_TEXT_TABLE_NAME, "captions")));
+          this.futures.add(this.service.submit(new DataImportRunner(new CaptionTextImporter(p), DescriptionTextSearch.DESCRIPTION_TEXT_TABLE_NAME, "caption file")));
         } catch (IOException e) {
           LOGGER.fatal("Failed to open path at {} ", p);
           throw new RuntimeException(e);
