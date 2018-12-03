@@ -116,7 +116,7 @@ public interface EntityCreator extends AutoCloseable {
      * Initialises the entity responsible for holding the mapping between human readable tags and their descriptions to the internally used ids
      */
     default boolean createTagEntity() {
-        return this.createIdEntity(TagHandler.ENTITY, new AttributeDefinition("name", AttributeType.STRING), new AttributeDefinition("description", AttributeType.STRING));
+        return this.createIdEntity(TagHandler.TAG_ENTITY_NAME, new AttributeDefinition(TagHandler.TAG_NAME_COLUMNNAME, AttributeType.STRING), new AttributeDefinition(TagHandler.TAG_DESCRIPTION_COLUMNNAME, AttributeType.STRING));
     }
 
 
@@ -168,7 +168,7 @@ public interface EntityCreator extends AutoCloseable {
      * Drops the entity responsible for holding metadata information about multimedia objects.
      */
     default boolean dropTagEntity() {
-        if (this.dropEntity(TagHandler.ENTITY)) {
+        if (this.dropEntity(TagHandler.TAG_ENTITY_NAME)) {
             LOGGER.info("Successfully dropped tag entity.");
             return true;
         } else {

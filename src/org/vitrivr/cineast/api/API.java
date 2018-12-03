@@ -54,6 +54,7 @@ import org.vitrivr.cineast.core.importer.vbs2019.GoogleVisionImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.JsonDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.OcrDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.ProtoDataImportHandler;
+import org.vitrivr.cineast.core.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
@@ -305,11 +306,15 @@ public class API {
         handler = new AudioTranscriptImportHandler(1, batchsize);
         handler.doImport(path);
         break;
+      case "tags":
+        handler = new TagImportHandler(1, batchsize);
+        handler.doImport(path);
+        break;
       case "vision":
         LOGGER.info("Starting import for Google Vision files at {}", path);
         List<GoogleVisionImportHandler> handlers = new ArrayList<>();
         for (GoogleVisionCategory category : GoogleVisionCategory.values()) {
-          GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, batchsize, category, true);
+          GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, batchsize, category, false);
           _handler.doImport(path);
           handlers.add(_handler);
         }
