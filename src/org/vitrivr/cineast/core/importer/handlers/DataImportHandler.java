@@ -58,6 +58,7 @@ public abstract class DataImportHandler {
         final Copier copier = new Copier(this.entityName, this.importer);
         LOGGER.info("Starting progress on: {}, task {}", this.entityName, taskName);
         copier.copyBatched(DataImportHandler.this.batchsize);
+        copier.close();
         LOGGER.info("Completed import of: {}, task {}", this.entityName, taskName);
         long stop = System.currentTimeMillis();
         ImportTaskMonitor.reportExecutionTime(taskName, stop - start);
