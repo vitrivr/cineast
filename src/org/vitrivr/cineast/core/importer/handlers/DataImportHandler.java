@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.importer.handlers;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -10,6 +12,8 @@ import java.util.concurrent.Future;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.importer.Copier;
 import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -95,9 +99,6 @@ public abstract class DataImportHandler {
     this.batchsize = batchsize;
   }
 
-  /**
-   * @param path
-   */
   public abstract void doImport(Path path);
 
   /**

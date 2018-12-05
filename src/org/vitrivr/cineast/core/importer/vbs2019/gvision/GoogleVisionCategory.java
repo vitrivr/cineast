@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.importer.vbs2019;
+package org.vitrivr.cineast.core.importer.vbs2019.gvision;
 
 public enum GoogleVisionCategory {
 

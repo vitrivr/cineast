@@ -20,7 +20,11 @@ public class TagHandler implements Closeable {
     /**
      * Name of the entity that contains the {@link Tag}s.
      */
-    public static final String ENTITY = "cineast_tags";
+    public static final String TAG_ENTITY_NAME = "cineast_tags";
+
+    public static final String TAG_ID_COLUMNNAME= "id";
+    public static final String TAG_NAME_COLUMNNAME = "name";
+    public static final String TAG_DESCRIPTION_COLUMNNAME = "description";
 
     /**
      * A map containing cached {@link Tag}s.
@@ -45,9 +49,9 @@ public class TagHandler implements Closeable {
             throw new NullPointerException("writer cannot be null");
         }
 
-        this.selector.open(ENTITY);
-        this.writer.open(ENTITY);
-        this.writer.setFieldNames("id", "name", "description");
+        this.selector.open(TAG_ENTITY_NAME);
+        this.writer.open(TAG_ENTITY_NAME);
+        this.writer.setFieldNames(TAG_ID_COLUMNNAME, TAG_NAME_COLUMNNAME, TAG_DESCRIPTION_COLUMNNAME);
     }
 
     /**

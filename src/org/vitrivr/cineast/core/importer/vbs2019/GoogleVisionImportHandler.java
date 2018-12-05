@@ -1,13 +1,12 @@
-package org.vitrivr.cineast.core.importer.handlers;
+package org.vitrivr.cineast.core.importer.vbs2019;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.features.DescriptionTextSearch;
-import org.vitrivr.cineast.core.importer.vbs2019.CaptionTextImporter;
-import org.vitrivr.cineast.core.importer.vbs2019.GoogleVisionCategory;
+import org.vitrivr.cineast.core.importer.handlers.DataImportHandler;
+import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.core.importer.vbs2019.GoogleVisionImporter;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -28,7 +27,7 @@ public class GoogleVisionImportHandler extends DataImportHandler {
     try {
       Files.walk(root, 2).filter(p -> p.toString().toLowerCase().endsWith(".json")).forEach(p -> {
         try {
-          this.futures.add(this.service.submit(new DataImportRunner(new GoogleVisionImporter(p, category, importTags), category.tableName, "gvision-" + category + "-" + importTags)));
+          this.futures.add(this.service.submit(new DataImportRunner(new GoogleVisionImporter(p, category, importTags), category.tableName, "gvision-" + category + "-" + importTags+"-file")));
         } catch (IOException e) {
           LOGGER.fatal("Failed to open path at {} ", p);
           throw new RuntimeException(e);

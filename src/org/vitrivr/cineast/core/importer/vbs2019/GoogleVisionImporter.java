@@ -21,7 +21,8 @@ import org.vitrivr.cineast.core.data.tag.CompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.TagHandler;
 import org.vitrivr.cineast.core.importer.Importer;
-import org.vitrivr.cineast.core.util.TimeHelper;
+import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionCategory;
+import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionTuple;
 
 public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
 

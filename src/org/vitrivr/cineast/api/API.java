@@ -47,13 +47,15 @@ import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.importer.handlers.AsrDataImportHandler;
-import org.vitrivr.cineast.core.importer.handlers.CaptionDataImportHandler;
+import org.vitrivr.cineast.core.importer.vbs2019.AudioTranscriptImportHandler;
+import org.vitrivr.cineast.core.importer.vbs2019.CaptionTextImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.DataImportHandler;
-import org.vitrivr.cineast.core.importer.handlers.GoogleVisionImportHandler;
+import org.vitrivr.cineast.core.importer.vbs2019.GoogleVisionImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.JsonDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.OcrDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.ProtoDataImportHandler;
-import org.vitrivr.cineast.core.importer.vbs2019.GoogleVisionCategory;
+import org.vitrivr.cineast.core.importer.vbs2019.TagImportHandler;
+import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
@@ -297,14 +299,22 @@ public class API {
         handler.doImport(path);
         break;
       case "caption":
-        handler = new CaptionDataImportHandler(1, batchsize);
+        handler = new CaptionTextImportHandler(1, batchsize);
+        handler.doImport(path);
+        break;
+      case "audio":
+        handler = new AudioTranscriptImportHandler(1, batchsize);
+        handler.doImport(path);
+        break;
+      case "tags":
+        handler = new TagImportHandler(1, batchsize);
         handler.doImport(path);
         break;
       case "vision":
         LOGGER.info("Starting import for Google Vision files at {}", path);
         List<GoogleVisionImportHandler> handlers = new ArrayList<>();
         for (GoogleVisionCategory category : GoogleVisionCategory.values()) {
-          GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, batchsize, category, true);
+          GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, batchsize, category, false);
           _handler.doImport(path);
           handlers.add(_handler);
         }

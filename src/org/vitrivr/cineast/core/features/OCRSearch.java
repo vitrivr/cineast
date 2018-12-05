@@ -30,6 +30,6 @@ public class OCRSearch extends SolrTextRetriever {
 
   @Override
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-    return new String[]{"\"" + sc.getText() + "\"~0.5"};
+    return (String[]) Arrays.stream(sc.getText().split(" ")).map(str -> str+"~0.5").toArray();
   }
 }

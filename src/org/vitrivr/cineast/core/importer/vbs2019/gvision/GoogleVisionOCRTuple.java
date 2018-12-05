@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.importer.vbs2019;
+package org.vitrivr.cineast.core.importer.vbs2019.gvision;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

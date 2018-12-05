@@ -1,27 +1,27 @@
 package org.vitrivr.cineast.core.data.tag;
 
-public class CompleteTag implements Tag{
+public class CompleteTag implements Tag {
 
- private final String id, name, description;
-  
-  public CompleteTag(String id, String name, String description){
+  private final String id, name, description;
+
+  public CompleteTag(String id, String name, String description) {
     this.id = id;
     this.name = name;
     this.description = (description == null) ? "" : description;
-    if(this.id == null){
-      throw new NullPointerException("id cannot be null");
+    if (this.id == null) {
+      throw new NullPointerException("id cannot be null for " + this.toString());
     }
-    
-    if(this.id.isEmpty()){
-      throw new IllegalArgumentException("id cannot be empty");
+
+    if (this.id.isEmpty()) {
+      throw new IllegalArgumentException("id cannot be empty for " + this.toString());
     }
-    
-    if(this.name == null){
-      throw new NullPointerException("name cannot be null");
+
+    if (this.name == null) {
+      throw new NullPointerException("name cannot be null for " + this.toString());
     }
-    
-    if(this.name.isEmpty()){
-      throw new IllegalArgumentException("name cannot be empty");
+
+    if (this.name.isEmpty()) {
+      throw new IllegalArgumentException("name cannot be empty for " + this.toString());
     }
   }
 
@@ -105,5 +105,5 @@ public class CompleteTag implements Tag{
   public boolean hasDescription() {
     return !this.description.isEmpty();
   }
-  
+
 }

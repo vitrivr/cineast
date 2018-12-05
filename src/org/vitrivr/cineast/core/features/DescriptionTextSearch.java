@@ -22,6 +22,6 @@ public class DescriptionTextSearch extends SolrTextRetriever {
 
   @Override
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-    return new String[]{"\"" + sc.getText() + "\"~10"};
+    return sc.getText().split(" ");
   }
 }
