@@ -51,14 +51,13 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   public <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k,
       PrimitiveTypeProvider queryProvider, String column, Class<E> distanceElementClass,
       ReadableQueryConfig config) {
+    List<Map<String, PrimitiveTypeProvider>> results;
     if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType()
         .equals(ProviderDataType.INT_ARRAY)) {
-      return getNearestNeighboursGeneric(k, queryProvider,
-          column, distanceElementClass,
-          config);
+      results = getNearestNeighbourRows(k, queryProvider.getFloatArray(), column, config);
+    } else {
+     results = getNearestNeighbourRows(k, queryProvider, column, config);
     }
-    List<Map<String, PrimitiveTypeProvider>> results = getNearestNeighbourRows(k, queryProvider,
-        column, config);
     return results.stream()
         .map(m -> DistanceElement.create(
             distanceElementClass, m.get("id").getString(), m.get("distance").getDouble()))
