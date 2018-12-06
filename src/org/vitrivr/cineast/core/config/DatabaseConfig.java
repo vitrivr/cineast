@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.NoDBSelector;
+import org.vitrivr.cineast.core.db.NoDBWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.adampro.ADAMproSelector;
 import org.vitrivr.cineast.core.db.adampro.ADAMproStreamingSelector;
@@ -38,6 +39,7 @@ public final class DatabaseConfig {
 
   private Integer batchsize = DEFAULT_BATCH_SIZE;
 
+  private static final PersistencyWriterSupplier NO_WRITER_SUPPLY = () -> new NoDBWriter();
   private static final PersistencyWriterSupplier ADAMPRO_WRITER_SUPPLY = () -> new ADAMproWriter();
   private static final PersistencyWriterSupplier PROTO_WRITER_SUPPLY = () -> new ProtobufFileWriter();
   private static final PersistencyWriterSupplier JSON_WRITER_SUPPLY = () -> new JsonFileWriter();
@@ -53,6 +55,7 @@ public final class DatabaseConfig {
   private static final Supplier<EntityCreator> NO_CREATOR_SUPPLY = () -> new NoEntityCreator();
 
   public static enum Writer {
+    NONE,
     PROTO,
     JSON,
     ADAMPRO
@@ -133,6 +136,8 @@ public final class DatabaseConfig {
 
   public PersistencyWriterSupplier getWriterSupplier() {
     switch (this.writer) {
+      case NONE:
+        return NO_WRITER_SUPPLY;
       case ADAMPRO:
         return ADAMPRO_WRITER_SUPPLY;
       case PROTO:
