@@ -56,19 +56,18 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
                     /* Merge partial results with score-map. */
                     float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation
                     ScoreElement.mergeWithScoreMap(ContinuousRetrievalLogic.retrieve(qc, category, qconf), map, weight);
-
-                    /* Transform raw results into list of StringDoublePair's (segmentId -> score). */
-                    final int max = Config.sharedConfig().getRetriever().getMaxResults();
-                    final List<StringDoublePair> results = map.keySet().stream()
-                            .map(key -> new StringDoublePair(key, map.get(key)))
-                            .filter(p -> p.value > 0.0)
-                            .sorted(StringDoublePair.COMPARATOR)
-                            .limit(max)
-                            .collect(Collectors.toList());
-
-                    /* Finalize and submit per-category results. */
-                    this.finalizeAndSubmitResults(session, uuid, category, results);
                 }
+                /* Transform raw results into list of StringDoublePair's (segmentId -> score). */
+                final int max = Config.sharedConfig().getRetriever().getMaxResults();
+                final List<StringDoublePair> results = map.keySet().stream()
+                    .map(key -> new StringDoublePair(key, map.get(key)))
+                    .filter(p -> p.value > 0.0)
+                    .sorted(StringDoublePair.COMPARATOR)
+                    .limit(max)
+                    .collect(Collectors.toList());
+
+                /* Finalize and submit per-category results. */
+                this.finalizeAndSubmitResults(session, uuid, category, results);
             }
 
             /* End of Query: Send QueryEnd Message to client. */
