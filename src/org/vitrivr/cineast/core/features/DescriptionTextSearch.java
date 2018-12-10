@@ -6,7 +6,7 @@ import org.vitrivr.cineast.core.features.abstracts.SolrTextRetriever;
 
 public class DescriptionTextSearch extends SolrTextRetriever {
 
-  public static final String DESCRIPTION_TEXT_TABLE_NAME = "features_densecap";
+  public static final String DESCRIPTION_TEXT_TABLE_NAME = "features_captioning";
 
   /**
    * Default constructor for {@link DescriptionTextSearch}
