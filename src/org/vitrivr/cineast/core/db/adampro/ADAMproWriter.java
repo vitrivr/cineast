@@ -26,8 +26,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 public class ADAMproWriter extends ProtobufTupleGenerator {
 
   /**
-   * flag to choose if every selector should have its own connection to ADAMpro or if they should
-   * share one
+   * flag to choose if every selector should have its own connection to ADAMpro or if they should share one
    */
   private static boolean useGlobalWrapper = true;
 
@@ -37,7 +36,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
   private ADAMproWrapper adampro = useGlobalWrapper ? GLOBAL_ADAMPRO_WRAPPER : new ADAMproWrapper();
 
   private static final Logger LOGGER = LogManager.getLogger();
-  
+
   private String entityName;
   private final InsertMessage.Builder imBuilder = InsertMessage.newBuilder();
   private QueryMessage.Builder qmBuilder;
@@ -85,16 +84,16 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
     QueryResultInfoMessage responce;
     try {
       QueryResultsMessage qRMessage = f.get();
-      if(!qRMessage.hasAck()){
+      if (!qRMessage.hasAck()) {
         LOGGER.error("error in {}.exists, no acc in QueryResultsMessage", entityName);
         return false;
       }
       AckMessage ack = qRMessage.getAck();
-      if(ack.getCode() != AckMessage.Code.OK){
+      if (ack.getCode() != AckMessage.Code.OK) {
         LOGGER.error("error in {}.exists: {}", entityName, ack.getMessage());
         return false;
       }
-      if(qRMessage.getResponsesCount() == 0){
+      if (qRMessage.getResponsesCount() == 0) {
         LOGGER.error("error in {}.exists, no QueryResultInfoMessage in QueryResultsMessage", entityName);
         return false;
       }
@@ -129,9 +128,10 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
       this.imBuilder.addAllTuples(tmp);
       im = this.imBuilder.build();
     }
+    LOGGER.debug("Inserting {} elements into {} with serialized size {}", tuples.size(), this.entityName, im.getSerializedSize());
     ListenableFuture<AckMessage> future = this.adampro.insert(im);
     AckMessage ack;
-    try{
+    try {
       ack = future.get();
     } catch (InterruptedException | ExecutionException e) {
       LOGGER.error("error in {}.persist: {}", entityName, LogHelper.getStackTrace(e));
