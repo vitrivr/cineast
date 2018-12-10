@@ -77,7 +77,7 @@ public class CaptionTextImporter implements Importer<Triple<String, String, Stri
   @Override
   public Map<String, PrimitiveTypeProvider> convert(Triple<String, String, String> data) {
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(2);
-    String id = "v_" + data.getMiddle() + "_" + data.getLeft();
+    String id = "v_" + data.getLeft() + "_" + data.getMiddle();
     map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[0], PrimitiveTypeProvider.fromObject(id));
     map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(data.getRight()));
     return map;
