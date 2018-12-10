@@ -33,7 +33,7 @@ public class OCRSearch extends SolrTextRetriever {
     String[] split = sc.getText().split(" ");
     String[] _return = new String[split.length];
     for (int i = 0; i < split.length; i++) {
-      _return[i] = split + "~0.5";
+      _return[i] = split[i] + "~0.5";
     }
     return _return;
   }
