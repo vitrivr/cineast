@@ -10,35 +10,33 @@ public class GoogleVisionTuple {
   public final Optional<GoogleVisionWebTuple> web;
   public final Optional<GoogleVisionLabelTuple> label;
   public final Optional<GoogleVisionOCRTuple> ocr;
-  public final String movieID;
-  public final String segmentID;
+  public final String completeID;
 
   public GoogleVisionTuple(GoogleVisionCategory category,
       Optional<GoogleVisionWebTuple> web,
       Optional<GoogleVisionLabelTuple> label,
-      Optional<GoogleVisionOCRTuple> ocr, String movieID, String segmentID) {
+      Optional<GoogleVisionOCRTuple> ocr, String completeID) {
     this.category = category;
     this.web = web;
     this.label = label;
     this.ocr = ocr;
-    this.movieID = movieID;
-    this.segmentID = segmentID;
+    this.completeID = completeID;
   }
 
-  public static GoogleVisionTuple of(GoogleVisionCategory category, JsonNode jsonNode, String movieID, String segmentID) {
+  public static GoogleVisionTuple of(GoogleVisionCategory category, JsonNode jsonNode, String completeID) {
     switch (category) {
       case PARTIALLY_MATCHING_IMAGES:
         throw new UnsupportedOperationException();
       case WEB:
-        return new GoogleVisionTuple(category, Optional.of(new GoogleVisionWebTuple(jsonNode)), Optional.absent(), Optional.absent(), movieID, segmentID);
+        return new GoogleVisionTuple(category, Optional.of(new GoogleVisionWebTuple(jsonNode)), Optional.absent(), Optional.absent(), completeID);
       case PAGES_MATCHING_IMAGES:
         throw new UnsupportedOperationException();
       case FULLY_MATCHING_IMAGES:
         throw new UnsupportedOperationException();
       case LABELS:
-        return new GoogleVisionTuple(category, Optional.absent(), Optional.of(new GoogleVisionLabelTuple(jsonNode)), Optional.absent(), movieID, segmentID);
+        return new GoogleVisionTuple(category, Optional.absent(), Optional.of(new GoogleVisionLabelTuple(jsonNode)), Optional.absent(), completeID);
       case OCR:
-        return new GoogleVisionTuple(category, Optional.absent(), Optional.absent(), Optional.of(new GoogleVisionOCRTuple(jsonNode)), movieID, segmentID);
+        return new GoogleVisionTuple(category, Optional.absent(), Optional.absent(), Optional.of(new GoogleVisionOCRTuple(jsonNode)), completeID);
       default:
         throw new UnsupportedOperationException();
     }

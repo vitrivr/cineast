@@ -31,8 +31,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
   private Iterator<Entry<String, JsonNode>> _segments;
   private Iterator<Entry<String, JsonNode>> _categories;
   private static final Logger LOGGER = LogManager.getLogger();
-  private int _movieIDCounter;
-  private String _segmentID;
+  private String _completeID;
   private final GoogleVisionCategory targetCategory;
   private Iterator<JsonNode> _categoryValues;
   private GoogleVisionCategory _category;
@@ -45,7 +44,6 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
     this.targetCategory = targetCategory;
     mapper = new ObjectMapper();
     parser = mapper.getFactory().createParser(input.toFile());
-    _movieIDCounter = 1;
     if (parser.nextToken() == JsonToken.START_ARRAY) {
       if (parser.nextToken() == JsonToken.START_OBJECT) {
         ObjectNode node = mapper.readTree(parser);
@@ -65,7 +63,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
   private Optional<GoogleVisionTuple> generateTuple() {
     JsonNode next = _categoryValues.next();
     try {
-      return Optional.of(GoogleVisionTuple.of(targetCategory, next, String.format("%05d", _movieIDCounter), _segmentID));
+      return Optional.of(GoogleVisionTuple.of(targetCategory, next, _completeID));
     } catch (UnsupportedOperationException e) {
       LOGGER.trace("Cannot generate tuple for category {} and tuple {}", targetCategory, next);
       return Optional.empty();
@@ -107,7 +105,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
         return Optional.empty();
       }
       Entry<String, JsonNode> nextSegment = _segments.next();
-      _segmentID = nextSegment.getKey();
+      _completeID = nextSegment.getKey();
       _categories = nextSegment.getValue().fields();
       //Initialize category values
       Entry<String, JsonNode> nextCategory = _categories.next();
@@ -125,10 +123,6 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
 
     do {
       //we need to go to the next movie
-      _movieIDCounter++;
-      if (_movieIDCounter % 1_000 == 0) {
-        LOGGER.info("Processed {} movies for category {}", _movieIDCounter, targetCategory);
-      }
       try {
         if (parser.nextToken() == JsonToken.START_OBJECT) {
           ObjectNode nextMovie = mapper.readTree(parser);
@@ -171,15 +165,15 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
   @Override
   public Map<String, PrimitiveTypeProvider> convert(GoogleVisionTuple data) {
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(2);
-    PrimitiveTypeProvider id = PrimitiveTypeProvider.fromObject("v_" + data.movieID + "_" + data.segmentID);
     Optional<Tag> tag = Optional.empty();
+    PrimitiveTypeProvider id = PrimitiveTypeProvider.fromObject(data.completeID);
     switch (data.category) {
       case PARTIALLY_MATCHING_IMAGES:
         throw new UnsupportedOperationException();
       case WEB:
         map.put("id", id);
         map.put("tagid", PrimitiveTypeProvider.fromObject(data.web.get().labelId));
-        map.put("score", PrimitiveTypeProvider.fromObject(data.web.get().score));
+        map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.web.get().score)));
         try {
           tag = Optional.of(new CompleteTag(data.web.get().labelId, data.web.get().description, data.web.get().description));
         } catch (IllegalArgumentException e) {
@@ -193,7 +187,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
       case LABELS:
         map.put("id", id);
         map.put("tagid", PrimitiveTypeProvider.fromObject(data.label.get().labelId));
-        map.put("score", PrimitiveTypeProvider.fromObject(data.label.get().score));
+        map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.label.get().score)));
         tag = Optional.of(new CompleteTag(data.label.get().labelId, data.label.get().description, data.label.get().description));
         break;
       case OCR:
