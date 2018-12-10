@@ -13,46 +13,45 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.swing.text.html.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.tag.CompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
-import org.vitrivr.cineast.core.db.dao.TagHandler;
 import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionTuple;
 
 public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
 
-  private final Iterator<Entry<String, JsonNode>> elements;
+  private final JsonParser parser;
+  private final ObjectMapper mapper;
+  private Iterator<Entry<String, JsonNode>> _segments;
+  private Iterator<Entry<String, JsonNode>> _categories;
   private static final Logger LOGGER = LogManager.getLogger();
-  private final String objectID;
-  private final String segmentID;
-  private final GoogleVisionCategory category;
-  private boolean importTags;
-  private Iterator<JsonNode> currentTuples;
-  private GoogleVisionCategory currentCategory;
-  private TagHandler tagHandler;
+  private int _movieIDCounter;
+  private String _segmentID;
+  private final GoogleVisionCategory targetCategory;
+  private Iterator<JsonNode> _categoryValues;
+  private GoogleVisionCategory _category;
 
   /**
-   * @param category only tuples of this kind are imported
+   * @param targetCategory only tuples of this kind are imported
    */
-  public GoogleVisionImporter(Path input, GoogleVisionCategory category, boolean importTags) throws IOException {
-    objectID = input.getFileName().toString().substring(0, input.getFileName().toString().indexOf("_")).replace("shot", "");
-    segmentID = input.getFileName().toString().replace("shot" + objectID + "_", "").replace("_RKF.png.json", "");
-    this.category = category;
-    this.importTags = importTags;
-    if (importTags = true) {
-      tagHandler = new TagHandler();
-    }
-    ObjectMapper mapper = new ObjectMapper();
-    JsonParser parser = mapper.getFactory().createParser(input.toFile());
-    if (parser.nextToken() == JsonToken.START_OBJECT) {
-      ObjectNode node = mapper.readTree(parser);
-      elements = node.fields();
-      if (elements == null) {
+  public GoogleVisionImporter(Path input, GoogleVisionCategory targetCategory, boolean importTags) throws IOException {
+    LOGGER.info("Starting Importer for path {} and category {}", input, targetCategory);
+    this.targetCategory = targetCategory;
+    mapper = new ObjectMapper();
+    parser = mapper.getFactory().createParser(input.toFile());
+    _movieIDCounter = 1;
+    if (parser.nextToken() == JsonToken.START_ARRAY) {
+      if (parser.nextToken() == JsonToken.START_OBJECT) {
+        ObjectNode node = mapper.readTree(parser);
+        _segments = node.fields();
+      }
+      if (_segments == null) {
         throw new IOException("Empty file");
       }
     } else {
@@ -60,16 +59,96 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
     }
   }
 
-  private synchronized Optional<GoogleVisionTuple> nextPair() {
-    while (currentTuples == null || !currentTuples.hasNext() || currentCategory != category) {
-      Entry<String, JsonNode> next = elements.next();
-      currentCategory = GoogleVisionCategory.valueOf(next.getKey().toUpperCase());
-      if (currentCategory != category) {
-        continue;
-      }
-      currentTuples = next.getValue().iterator();
+  /**
+   * Generate a {@link GoogleVisionTuple} from the current state
+   */
+  private Optional<GoogleVisionTuple> generateTuple() {
+    JsonNode next = _categoryValues.next();
+    try {
+      return Optional.of(GoogleVisionTuple.of(targetCategory, next, String.format("%05d", _movieIDCounter), _segmentID));
+    } catch (UnsupportedOperationException e) {
+      LOGGER.trace("Cannot generate tuple for category {} and tuple {}", targetCategory, next);
+      return Optional.empty();
     }
-    return Optional.of(GoogleVisionTuple.of(category, currentTuples.next()));
+  }
+
+  /**
+   * Search for the next valid {@link GoogleVisionTuple} in the current segment
+   */
+  private Optional<GoogleVisionTuple> searchWithinSegment() {
+    //First, check if there's still a value left in the current array
+    if (_category == targetCategory && _categoryValues.hasNext()) {
+      return generateTuple();
+    }
+
+    //if not, check if we can get values for the target category in the given segment
+    while (_categories != null && _category != targetCategory && _categories.hasNext()) {
+      Entry<String, JsonNode> nextCategory = _categories.next();
+      _category = GoogleVisionCategory.valueOf(nextCategory.getKey().toUpperCase());
+      _categoryValues = nextCategory.getValue().iterator();
+    }
+
+    //If we succeeded in the previous loop, we should be at the target category and still have a value left to hand out.
+    if (_category == targetCategory && _categoryValues.hasNext()) {
+      return generateTuple();
+    }
+    //else we have nothing in this category
+    return Optional.empty();
+  }
+
+  private Optional<GoogleVisionTuple> searchWithinMovie() {
+    do {
+      Optional<GoogleVisionTuple> tuple = searchWithinSegment();
+      if (tuple.isPresent()) {
+        return tuple;
+      }
+      //we need to move on to the next segment
+      if (!_segments.hasNext()) {
+        return Optional.empty();
+      }
+      Entry<String, JsonNode> nextSegment = _segments.next();
+      _segmentID = nextSegment.getKey();
+      _categories = nextSegment.getValue().fields();
+      //Initialize category values
+      Entry<String, JsonNode> nextCategory = _categories.next();
+      _category = GoogleVisionCategory.valueOf(nextCategory.getKey().toUpperCase());
+      _categoryValues = nextCategory.getValue().iterator();
+    } while (_segments.hasNext());
+    return Optional.empty();
+  }
+
+  private synchronized Optional<GoogleVisionTuple> nextPair() {
+    Optional<GoogleVisionTuple> tuple = searchWithinMovie();
+    if (tuple.isPresent()) {
+      return tuple;
+    }
+
+    do {
+      //we need to go to the next movie
+      _movieIDCounter++;
+      if (_movieIDCounter % 1_000 == 0) {
+        LOGGER.info("Processed {} movies for category {}", _movieIDCounter, targetCategory);
+      }
+      try {
+        if (parser.nextToken() == JsonToken.START_OBJECT) {
+          ObjectNode nextMovie = mapper.readTree(parser);
+          if (nextMovie == null) {
+            LOGGER.info("File for category {} is done", targetCategory);
+            return Optional.empty();
+          }
+          _segments = nextMovie.fields();
+          tuple = searchWithinMovie();
+          if (tuple.isPresent()) {
+            return tuple;
+          }
+        } else {
+          LOGGER.error("File done");
+          return Optional.empty();
+        }
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    } while (true);
   }
 
   /**
@@ -84,6 +163,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
       }
       return node.get();
     } catch (NoSuchElementException e) {
+      e.printStackTrace();
       return null;
     }
   }
@@ -91,7 +171,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
   @Override
   public Map<String, PrimitiveTypeProvider> convert(GoogleVisionTuple data) {
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(2);
-    PrimitiveTypeProvider id = PrimitiveTypeProvider.fromObject("v_" + objectID + "_" + segmentID);
+    PrimitiveTypeProvider id = PrimitiveTypeProvider.fromObject("v_" + data.movieID + "_" + data.segmentID);
     Optional<Tag> tag = Optional.empty();
     switch (data.category) {
       case PARTIALLY_MATCHING_IMAGES:
@@ -100,7 +180,11 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
         map.put("id", id);
         map.put("tagid", PrimitiveTypeProvider.fromObject(data.web.get().labelId));
         map.put("score", PrimitiveTypeProvider.fromObject(data.web.get().score));
-        tag = Optional.of(new CompleteTag(data.web.get().labelId, data.web.get().description, data.web.get().description));
+        try {
+          tag = Optional.of(new CompleteTag(data.web.get().labelId, data.web.get().description, data.web.get().description));
+        } catch (IllegalArgumentException e) {
+          LOGGER.trace("Error while initalizing tag {}", e.getMessage());
+        }
         break;
       case PAGES_MATCHING_IMAGES:
         throw new UnsupportedOperationException();
@@ -120,12 +204,6 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
         break;
       default:
         throw new UnsupportedOperationException();
-    }
-    LOGGER.debug("Converting {} to {}", data, map);
-    if (importTags && tag.isPresent()) {
-      if (tagHandler.getTagById(tag.get().getId()) == null) {
-        tagHandler.addTag(tag.get());
-      }
     }
     return map;
   }
