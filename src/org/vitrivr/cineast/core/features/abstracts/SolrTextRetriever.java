@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
@@ -127,7 +128,7 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
    */
   protected List<ScoreElement> getSimilar(ReadableQueryConfig qc, String... terms) {
     final List<Map<String, PrimitiveTypeProvider>> resultList = this.selector
-        .getFulltextRows(500, SimpleFulltextFeatureDescriptor.FIELDNAMES[1], terms);
+        .getFulltextRows(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), SimpleFulltextFeatureDescriptor.FIELDNAMES[1], terms);
 
     final CorrespondenceFunction f = CorrespondenceFunction
         .fromFunction(score -> score / terms.length / 10f);
