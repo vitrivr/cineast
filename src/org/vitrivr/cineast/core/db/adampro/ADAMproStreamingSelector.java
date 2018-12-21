@@ -95,11 +95,11 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
       if (ack.getCode() != AckMessage.Code.OK) {
         LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
         LOGGER.error("Query was {} ",sqMessage.toString());
-        return new ArrayList<>(0);
+        continue;
       }
 
       if (result.getResponsesCount() == 0) {
-        return new ArrayList<>(0);
+        continue;
       }
 
       QueryResultInfoMessage response = result.getResponses(0); // only head (end-result) is important
