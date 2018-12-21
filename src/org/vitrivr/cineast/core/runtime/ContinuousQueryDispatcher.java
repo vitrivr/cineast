@@ -26,6 +26,7 @@ import org.vitrivr.cineast.core.features.listener.RetrievalResultListener;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.ScoreFusion;
 
 import gnu.trove.iterator.TDoubleIterator;
@@ -217,7 +218,7 @@ public class ContinuousQueryDispatcher {
       TObjectDoubleMap<String> scoreBySegmentId) {
     List<SegmentScoreElement> results = new ArrayList<>(scoreBySegmentId.size());
     scoreBySegmentId.forEachEntry((segmentId, score) -> {
-      results.add(new SegmentScoreElement(segmentId, score / this.retrieverWeightSum));
+      results.add(new SegmentScoreElement(segmentId, MathHelper.limit(score / this.retrieverWeightSum, 0d, 1d)));
       return true;
     });
 

@@ -173,9 +173,11 @@ public class MathHelper {
 	}
 
 	public static float limit(float val, float min, float max){
-		val = val > max ? max : val;
-		val = val < min ? min : val;
-		return val;
+		return val > max ? max : (val < min ? min : val);
+	}
+
+	public static double limit(double val, double min, double max){
+		return val > max ? max : (val < min ? min : val);
 	}
 
 	/**
