@@ -22,6 +22,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.EntityPropertiesMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.PropertiesMessage;
@@ -291,6 +292,20 @@ public class ADAMproWrapper implements AutoCloseable {
       return future.get().getCode() == AckMessage.Code.OK;
     } catch (InterruptedException | ExecutionException e) {
       LOGGER.error("error in dropEntityBlocking: {}", LogHelper.getStackTrace(e));
+      return false;
+    }
+  }
+
+  public ListenableFuture<AckMessage> dropIndex(String indexName){
+    return this.definitionStub.dropIndex(IndexNameMessage.newBuilder().setIndex(indexName).build());
+  }
+
+  public boolean dropIndexBlocking(String indexName){
+    ListenableFuture<AckMessage> future = this.dropIndex(indexName);
+    try {
+      return future.get().getCode() == AckMessage.Code.OK;
+    } catch (InterruptedException | ExecutionException e) {
+      LOGGER.error("error in dropIndexBlocking: {}", LogHelper.getStackTrace(e));
       return false;
     }
   }

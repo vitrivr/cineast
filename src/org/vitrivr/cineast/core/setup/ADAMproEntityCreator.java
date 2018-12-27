@@ -256,6 +256,10 @@ public class ADAMproEntityCreator implements EntityCreator {
         return this.adampro.dropEntityBlocking(entityName);
     }
 
+    public boolean dropIndex(String indexName){
+        return this.adampro.dropIndexBlocking(indexName);
+    }
+
     /* (non-Javadoc)
      * @see org.vitrivr.cineast.core.setup.IEntityCreator#close()
      */
