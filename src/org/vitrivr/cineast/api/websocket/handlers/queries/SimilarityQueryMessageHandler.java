@@ -10,6 +10,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.query.QueryComponent;
@@ -101,14 +102,16 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
             final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
             final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.loadSegmentMetadata(segmentIds);
 
-            /* Fetch object IDs. */
+            /* Load object information. */
             final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
             final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
+            final List<MediaObjectMetadataDescriptor> objectMetadata = this.loadObjectMetadata(objectIds);
 
             this.write(session, new MediaObjectQueryResult(queryId, objects));
             this.write(session, new MediaSegmentQueryResult(queryId, segments));
             this.write(session, new SimilarityQueryResult(queryId, category, sub));
             this.write(session, new MediaSegmentMetadataQueryResult(queryId, segmentMetadata));
+            this.write(session, new MediaObjectMetadataQueryResult(queryId, objectMetadata));
         }
     }
 }

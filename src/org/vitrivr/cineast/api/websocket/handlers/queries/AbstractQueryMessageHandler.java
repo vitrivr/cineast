@@ -7,9 +7,11 @@ import java.util.Map;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.lookup.MetadataLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
@@ -28,6 +30,9 @@ public abstract class AbstractQueryMessageHandler<T> extends StatelessWebsocketM
 
     /** {@link MediaSegmentMetadataReader} instance used to read {@link MediaSegmentMetadataDescriptor}s from the storage layer. */
     private final MediaSegmentMetadataReader segmentMetadataReader = new MediaSegmentMetadataReader();
+
+    /** {@link MediaObjectMetadataReader} instance used to read {@link MediaObjectMetadataReader}s from the storage layer. */
+    private final MediaObjectMetadataReader objectMetadataReader = new MediaObjectMetadataReader();
 
     /**
      * Performs a lookup for the {@link MediaSegmentDescriptor} identified by the provided IDs and returns a list of the
@@ -55,6 +60,16 @@ public abstract class AbstractQueryMessageHandler<T> extends StatelessWebsocketM
         final ArrayList<MediaObjectDescriptor> vdList = new ArrayList<>(map.size());
         objectIds.stream().filter(map::containsKey).forEach(s -> vdList.add(map.get(s)));
         return vdList;
+    }
+
+    /**
+     * Performs a lookup for {@link MediaObjectMetadataReader} identified by the provided segment IDs.
+     *
+     * @param objectIds List of object IDs for which to lookup metadata.
+     * @return List of {@link MediaSegmentMetadataDescriptor}
+     */
+    protected List<MediaObjectMetadataDescriptor> loadObjectMetadata(List<String> objectIds) {
+        return this.objectMetadataReader.lookupMultimediaMetadata(objectIds);
     }
 
     /**
