@@ -386,9 +386,8 @@ public class ADAMproMessageBuilder {
             this.nnqmBuilder.setDistance(buildDistanceMessage(qc));
             if (qc != null) {
                 Optional<float[]> weights = qc.getDistanceWeights();
-                if (weights.isPresent()) {
-                    nnqmBuilder.setWeights(DataMessageConverter.convertVectorMessage(weights.get()));
-                }
+                weights.ifPresent(floats -> nnqmBuilder
+                    .setWeights(DataMessageConverter.convertVectorMessage(floats)));
             }
             return nnqmBuilder.build();
         }

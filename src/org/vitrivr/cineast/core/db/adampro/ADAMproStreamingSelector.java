@@ -79,7 +79,7 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
 
     NearestNeighbourQueryMessage nnqMessage = mb.buildNearestNeighbourQueryMessage(column,
         DataMessageConverter.convertVectorMessage(vector), k, config);
-    QueryMessage sqMessage = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
+    QueryMessage sqMessage = this.mb.buildQueryMessage(config.getHints().isEmpty() ? ADAMproMessageBuilder.DEFAULT_HINT : config.getHints(), fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
 
     ArrayList<QueryResultsMessage> resultList = this.adampro
         .streamingStandardQuery(sqMessage);
