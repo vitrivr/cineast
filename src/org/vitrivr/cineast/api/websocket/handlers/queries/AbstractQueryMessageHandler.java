@@ -48,7 +48,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
      * @param message Message of type a that needs to be handled.
      */
     public final void handle(Session session, T message) {
-        final org.vitrivr.cineast.core.config.QueryConfig qconf = (message.getQueryConfig() == null) ? org.vitrivr.cineast.core.config.QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()) : message.getQueryConfig();
+        final QueryConfig qconf = (message.getQueryConfig() == null) ? QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()) : message.getQueryConfig();
         final String uuid = qconf.getQueryId().toString();
 
         /* Begin of Query: Send QueryStart Message to Client. */
