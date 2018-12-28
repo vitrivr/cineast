@@ -91,27 +91,27 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
      * @param raw List of raw per-category results (segmentId -> score).
      */
     private void finalizeAndSubmitResults(Session session, String queryId, String category, List<StringDoublePair> raw) {
-
         final int stride = 1000;
         for (int i=0; i<Math.floorDiv(raw.size(), stride)+1; i++) {
             final List<StringDoublePair> sub = raw.subList(i*stride, Math.min((i+1)*stride, raw.size()));
-
             final List<String> segmentIds = sub.stream().map(s -> s.key).collect(Collectors.toList());
 
-            /* Load segment information. */
+            /* Load segment & object information. */
             final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
-            final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.loadSegmentMetadata(segmentIds);
-
-            /* Load object information. */
             final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
             final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
-            final List<MediaObjectMetadataDescriptor> objectMetadata = this.loadObjectMetadata(objectIds);
+            if (segments.size() == 0 || objects.size() == 0) {
+                continue;
+            }
 
+            /* Write segments, objects and similarity search data to stream. */
             this.write(session, new MediaObjectQueryResult(queryId, objects));
             this.write(session, new MediaSegmentQueryResult(queryId, segments));
             this.write(session, new SimilarityQueryResult(queryId, category, sub));
-            this.write(session, new MediaSegmentMetadataQueryResult(queryId, segmentMetadata));
-            this.write(session, new MediaObjectMetadataQueryResult(queryId, objectMetadata));
+
+            /* Load and transmit segment & object metadata. */
+            this.loadAndWriteSegmentMetadata(session, queryId, segmentIds);
+            this.loadAndWriteObjectMetadata(session, queryId, objectIds);
         }
     }
 }

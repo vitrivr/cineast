@@ -38,12 +38,7 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
         this.write(session, new QueryStart(uuid));
 
         /* Extract categories from MoreLikeThisQuery. */
-        final HashSet<String> categoryMap = new HashSet<>();
-        message.getCategories().forEach((String category) -> {
-            if (!categoryMap.contains(category)) {
-                categoryMap.add(category);
-            }
-        });
+        final HashSet<String> categoryMap = new HashSet<>(message.getCategories());
 
         /* Retrieve per-category results and return them. */
         for (String category : categoryMap) {

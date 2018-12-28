@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
@@ -11,6 +12,8 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.lookup.MetadataLookup;
+import org.vitrivr.cineast.core.data.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.core.data.messages.result.MediaSegmentMetadataQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
@@ -65,20 +68,29 @@ public abstract class AbstractQueryMessageHandler<T> extends StatelessWebsocketM
     /**
      * Performs a lookup for {@link MediaObjectMetadataReader} identified by the provided segment IDs.
      *
+     * @param session The WebSocket session to write the data to.
+     * @param queryId The current query id used for transmitting data back.
      * @param objectIds List of object IDs for which to lookup metadata.
-     * @return List of {@link MediaSegmentMetadataDescriptor}
      */
-    protected List<MediaObjectMetadataDescriptor> loadObjectMetadata(List<String> objectIds) {
-        return this.objectMetadataReader.lookupMultimediaMetadata(objectIds);
+    protected void loadAndWriteObjectMetadata(Session session, String queryId, List<String> objectIds) {
+        final List<MediaObjectMetadataDescriptor> objectMetadata = this.objectMetadataReader.lookupMultimediaMetadata(objectIds);
+        if (objectMetadata.size() > 0) {
+            this.write(session, new MediaObjectMetadataQueryResult(queryId, objectMetadata));
+        }
     }
 
     /**
-     * Performs a lookup for {@link MediaSegmentMetadataDescriptor} identified by the provided segment IDs.
+     * Performs a lookup for {@link MediaSegmentMetadataDescriptor} identified by the provided segment IDs and writes
+     * them to the WebSocket stream.
      *
+     * @param session The WebSocket session to write the data to.
+     * @param queryId The current query id used for transmitting data back.
      * @param segmentIds List of segment IDs for which to lookup metadata.
-     * @return List of {@link MediaSegmentMetadataDescriptor}
      */
-    protected List<MediaSegmentMetadataDescriptor> loadSegmentMetadata(List<String> segmentIds) {
-        return this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
+    protected void loadAndWriteSegmentMetadata(Session session, String queryId, List<String> segmentIds) {
+        final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
+        if (segmentMetadata.size() > 0) {
+            this.write(session, new MediaSegmentMetadataQueryResult(queryId, segmentMetadata));
+        }
     }
 }
