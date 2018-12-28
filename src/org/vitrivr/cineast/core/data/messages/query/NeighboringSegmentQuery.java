@@ -51,6 +51,6 @@ public class NeighboringSegmentQuery extends Query {
 
     @Override
     public MessageType getMessageType() {
-        return null;
+        return MessageType.Q_NESEG;
     }
 }
