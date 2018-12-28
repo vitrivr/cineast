@@ -18,6 +18,7 @@ import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.MoreLikeThisQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.NeighbouringQueryMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.SegmentQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
@@ -57,6 +58,7 @@ public class WebsocketAPI {
         STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.Q_NESEG, new NeighbouringQueryMessageHandler());
+        STATELESS_HANDLERS.put(MessageType.Q_SEG, new SegmentQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.PING, new StatusMessageHandler());
         STATELESS_HANDLERS.put(MessageType.M_LOOKUP, new MetadataLookupMessageHandler());
     }
