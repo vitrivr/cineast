@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.WriteCallback;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -22,9 +23,9 @@ import org.vitrivr.cineast.core.util.json.JsonWriter;
  */
 public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMessageHandler<A> {
 
-    protected static Logger LOGGER = LogManager.getLogger();
+    protected static final Logger LOGGER = LogManager.getLogger();
 
-    /* JsonWriter used to serialize resulting objects to a JSON representation. */
+    /** JsonWriter used to serialize resulting objects to a JSON representation. */
     private JsonWriter writer = new JacksonJsonProvider();
 
     /**
@@ -34,10 +35,16 @@ public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMes
      * @param message
      */
     protected final void write(Session session, Message message) {
-        try {
-            session.getRemote().sendString(this.writer.toJson(message));
-        } catch (IOException e) {
-            LOGGER.fatal("Failed to write message to WebSocket stream!", LogHelper.getStackTrace(e));
-        }
+        session.getRemote().sendString(this.writer.toJson(message), new WriteCallback() {
+            @Override
+            public void writeFailed(Throwable x) {
+                LOGGER.fatal("Failed to write {} message to WebSocket stream!", message.getMessageType(), LogHelper.getStackTrace(x));
+            }
+
+            @Override
+            public void writeSuccess() {
+                LOGGER.debug("Successfully wrote {} message to WebSocket stream!", message.getMessageType());
+            }
+        });
     }
 }
