@@ -7,24 +7,28 @@ import java.util.Map;
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 
+import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.lookup.MetadataLookup;
-import org.vitrivr.cineast.core.data.messages.result.MediaObjectMetadataQueryResult;
-import org.vitrivr.cineast.core.data.messages.result.MediaSegmentMetadataQueryResult;
+import org.vitrivr.cineast.core.data.messages.query.MoreLikeThisQuery;
+import org.vitrivr.cineast.core.data.messages.query.Query;
+import org.vitrivr.cineast.core.data.messages.result.*;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
+import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 27.04.17
  */
-public abstract class AbstractQueryMessageHandler<T> extends StatelessWebsocketMessageHandler<T> {
+public abstract class AbstractQueryMessageHandler<T extends Query> extends StatelessWebsocketMessageHandler<T> {
     /** {@link MediaSegmentReader} instance used to read segments from the storage layer. */
     private final MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
 
@@ -36,6 +40,43 @@ public abstract class AbstractQueryMessageHandler<T> extends StatelessWebsocketM
 
     /** {@link MediaObjectMetadataReader} instance used to read {@link MediaObjectMetadataReader}s from the storage layer. */
     private final MediaObjectMetadataReader objectMetadataReader = new MediaObjectMetadataReader();
+
+    /**
+     * Handles a {@link Query} message
+     *
+     * @param session WebSocketSession for which the message arrived.
+     * @param message Message of type a that needs to be handled.
+     */
+    public final void handle(Session session, T message) {
+        final org.vitrivr.cineast.core.config.QueryConfig qconf = (message.getQueryConfig() == null) ? org.vitrivr.cineast.core.config.QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()) : message.getQueryConfig();
+        final String uuid = qconf.getQueryId().toString();
+
+        /* Begin of Query: Send QueryStart Message to Client. */
+        this.write(session, new QueryStart(uuid));
+
+        /* Execute actual query. */
+        try {
+            this.execute(session, qconf, message);
+        } catch (Exception e) {
+            /* Error: Send QueryError Message to Client. */
+            this.write(session, new QueryError(uuid, e.getMessage()));
+            LOGGER.error("An exception occurred during execution of similarity query message {}.", LogHelper.getStackTrace(e));
+            return;
+        }
+
+        /* End of Query: Send QueryEnd Message to Client. */
+        this.write(session, new QueryEnd(uuid));
+    }
+
+    /**
+     * Executes the actual query specified by the {@link Query} object.
+     *
+     * @param session WebSocket session the invocation is associated with.
+     * @param qconf The {@link QueryConfig} that contains additional specifications.
+     * @param message {@link Query} that must be executed.
+     * @throws Exception
+     */
+    protected abstract void execute(Session session, QueryConfig qconf, T message) throws Exception;
 
     /**
      * Performs a lookup for the {@link MediaSegmentDescriptor} identified by the provided IDs and returns a list of the

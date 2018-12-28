@@ -22,22 +22,17 @@ import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
  */
 public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler<MoreLikeThisQuery> {
     /**
-     * Handles a {@link MoreLikeThisQuery} message. Executes the similarity-query based on the segmentId specified
+     * Executes a {@link MoreLikeThisQuery} message. Performs a similarity query based on the segmentId specified
      * the {@link MoreLikeThisQuery} object.
      *
-     * @param session WebSocket session the invokation is associated with.
+     * @param session WebSocket session the invocation is associated with.
+     * @param qconf The {@link QueryConfig} that contains additional specifications.
      * @param message Instance of {@link MoreLikeThisQuery}
      */
     @Override
-    public void handle(Session session, MoreLikeThisQuery message) {
-        /* Prepare QueryConfig (so as to obtain a QueryId). */
-        final QueryConfig qconf = (message.getQueryConfig() == null) ? QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()) : message.getQueryConfig();
-        final String uuid = qconf.getQueryId().toString();
-
-        /* Begin of Query: Send QueryStart Message to Client. */
-        this.write(session, new QueryStart(uuid));
-
+    public void execute(Session session, QueryConfig qconf, MoreLikeThisQuery message) throws Exception {
         /* Extract categories from MoreLikeThisQuery. */
+        final String queryId = qconf.getQueryId().toString();
         final HashSet<String> categoryMap = new HashSet<>(message.getCategories());
 
         /* Retrieve per-category results and return them. */
@@ -48,18 +43,42 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
                     .limit(Config.sharedConfig().getRetriever().getMaxResults())
                     .collect(Collectors.toList());
 
-
-            /* Fetch the List of SegmentDescriptors and MultimediaObjectDescriptors. */
-            final List<MediaSegmentDescriptor> descriptors = this.loadSegments(results.stream().map(s -> s.key).collect(Collectors.toList()));
-            final List<MediaObjectDescriptor> objects = this.loadObjects(descriptors.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList()));
-
-            /* Write partial results to stream. */
-            this.write(session, new MediaSegmentQueryResult(uuid, descriptors));
-            this.write(session, new MediaObjectQueryResult(uuid, objects));
-            this.write(session, new SimilarityQueryResult(uuid, category, results));
+            /* Finalize and submit per-category results. */
+            this.finalizeAndSubmitResults(session, queryId, category, results);
         }
+    }
 
-        /* End of Query: Send QueryEnd Message to Client. */
-        this.write(session, new QueryEnd(uuid));
+    /**
+     * Fetches and submits all the data (e.g. {@link MediaObjectDescriptor}, {@link MediaSegmentDescriptor}) associated with the
+     * raw results produced by a similarity search in a specific category.
+     *
+     * @param session The {@link Session} object used to transmit the results.
+     * @param queryId ID of the running query.
+     * @param category Name of the query category.
+     * @param raw List of raw per-category results (segmentId -> score).
+     */
+    private void finalizeAndSubmitResults(Session session, String queryId, String category, List<StringDoublePair> raw) {
+        final int stride = 1000;
+        for (int i=0; i<Math.floorDiv(raw.size(), stride)+1; i++) {
+            final List<StringDoublePair> sub = raw.subList(i*stride, Math.min((i+1)*stride, raw.size()));
+            final List<String> segmentIds = sub.stream().map(s -> s.key).collect(Collectors.toList());
+
+            /* Load segment & object information. */
+            final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
+            final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
+            final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
+            if (segments.size() == 0 || objects.size() == 0) {
+                continue;
+            }
+
+            /* Write segments, objects and similarity search data to stream. */
+            this.write(session, new MediaObjectQueryResult(queryId, objects));
+            this.write(session, new MediaSegmentQueryResult(queryId, segments));
+            this.write(session, new SimilarityQueryResult(queryId, category, sub));
+
+            /* Load and transmit segment & object metadata. */
+            this.loadAndWriteSegmentMetadata(session, queryId, segmentIds);
+            this.loadAndWriteObjectMetadata(session, queryId, objectIds);
+        }
     }
 }
