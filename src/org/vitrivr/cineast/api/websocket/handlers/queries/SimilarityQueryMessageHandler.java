@@ -89,7 +89,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
             final List<MediaSegmentDescriptor> segments = this.loadSegments(segmentIds);
             final List<String> objectIds = segments.stream().map(MediaSegmentDescriptor::getObjectId).collect(Collectors.toList());
             final List<MediaObjectDescriptor> objects = this.loadObjects(objectIds);
-            if (segments.size() == 0 || objects.size() == 0) {
+            if (segments.isEmpty() || objects.isEmpty()) {
                 continue;
             }
 

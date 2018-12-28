@@ -115,7 +115,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
      */
     protected void loadAndWriteObjectMetadata(Session session, String queryId, List<String> objectIds) {
         final List<MediaObjectMetadataDescriptor> objectMetadata = this.objectMetadataReader.lookupMultimediaMetadata(objectIds);
-        if (objectMetadata.size() > 0) {
+        if (!objectMetadata.isEmpty()) {
             this.write(session, new MediaObjectMetadataQueryResult(queryId, objectMetadata));
         }
     }
@@ -130,7 +130,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
      */
     protected void loadAndWriteSegmentMetadata(Session session, String queryId, List<String> segmentIds) {
         final List<MediaSegmentMetadataDescriptor> segmentMetadata = this.segmentMetadataReader.lookupMultimediaMetadata(segmentIds);
-        if (segmentMetadata.size() > 0) {
+        if (!segmentMetadata.isEmpty()) {
             this.write(session, new MediaSegmentMetadataQueryResult(queryId, segmentMetadata));
         }
     }

@@ -30,7 +30,7 @@ public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler
         /* Retrieve segments. If empty, abort query. */
         final List<String> segmentIds = message.getSegmentIds();
         final List<MediaSegmentDescriptor> segment = this.loadSegments(segmentIds);
-        if (segmentIds.size() == 0) return;
+        if (segmentIds.isEmpty()) return;
 
         /* Write segments to stream. */
         this.write(session, new MediaSegmentQueryResult(uuid, segment));
