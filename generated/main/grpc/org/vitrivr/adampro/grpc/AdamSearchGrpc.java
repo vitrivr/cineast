@@ -18,9 +18,9 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 /**
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.0.1)",
+    value = "by gRPC proto compiler (version 1.7.0)",
     comments = "Source: grpc.proto")
-public class AdamSearchGrpc {
+public final class AdamSearchGrpc {
 
   private AdamSearchGrpc() {}
 
@@ -30,120 +30,172 @@ public class AdamSearchGrpc {
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_CACHE_INDEX =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "CacheIndex"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage, org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "CacheIndex"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("CacheIndex"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_CACHE_ENTITY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "CacheEntity"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage, org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "CacheEntity"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("CacheEntity"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_PREVIEW =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "Preview"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage, org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "Preview"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("Preview"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "DoQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage, org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "DoQuery"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("DoQuery"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_STREAMING_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING,
-          generateFullMethodName(
-              "AdamSearch", "DoStreamingQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage, org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "DoStreamingQuery"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("DoStreamingQuery"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage> METHOD_DO_BATCH_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "DoBatchQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage, org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "DoBatchQuery"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("DoBatchQuery"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_PARALLEL_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING,
-          generateFullMethodName(
-              "AdamSearch", "DoParallelQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage, org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "DoParallelQuery"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("DoParallelQuery"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_DO_PROGRESSIVE_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING,
-          generateFullMethodName(
-              "AdamSearch", "DoProgressiveQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage, org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "DoProgressiveQuery"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("DoProgressiveQuery"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage> METHOD_GET_CACHED_RESULTS =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "GetCachedResults"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage, org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "GetCachedResults"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.CachedResultsMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("GetCachedResults"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage> METHOD_GET_SCORED_EXECUTION_PATH =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "GetScoredExecutionPath"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage, org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "GetScoredExecutionPath"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.QuerySimulationMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("GetScoredExecutionPath"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_STOP_QUERY =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "StopQuery"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage, org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "StopQuery"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("StopQuery"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_STOP_ALL_QUERIES =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "StopAllQueries"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage, org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "StopAllQueries"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("StopAllQueries"))
+          .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
       org.vitrivr.adampro.grpc.AdamGrpc.AckMessage> METHOD_PING =
-      io.grpc.MethodDescriptor.create(
-          io.grpc.MethodDescriptor.MethodType.UNARY,
-          generateFullMethodName(
-              "AdamSearch", "Ping"),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()));
+      io.grpc.MethodDescriptor.<org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage, org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "AdamSearch", "Ping"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new AdamSearchMethodDescriptorSupplier("Ping"))
+          .build();
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -161,7 +213,7 @@ public class AdamSearchGrpc {
   }
 
   /**
-   * Creates a new ListenableFuture-style stub that supports unary and streaming output calls on the service
+   * Creates a new ListenableFuture-style stub that supports unary calls on the service
    */
   public static AdamSearchFutureStub newFutureStub(
       io.grpc.Channel channel) {
@@ -276,7 +328,7 @@ public class AdamSearchGrpc {
       asyncUnimplementedUnaryCall(METHOD_PING, responseObserver);
     }
 
-    @java.lang.Override public io.grpc.ServerServiceDefinition bindService() {
+    @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
             METHOD_CACHE_INDEX,
@@ -349,26 +401,26 @@ public class AdamSearchGrpc {
                 org.vitrivr.adampro.grpc.AdamGrpc.ScoredExecutionPathsMessage>(
                   this, METHODID_GET_SCORED_EXECUTION_PATH)))
           .addMethod(
-              METHOD_STOP_QUERY,
-              asyncUnaryCall(
-                  new MethodHandlers<
-                      org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage,
-                      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
-                      this, METHODID_STOP_QUERY)))
+            METHOD_STOP_QUERY,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.StopQueryMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
+                  this, METHODID_STOP_QUERY)))
           .addMethod(
-              METHOD_STOP_ALL_QUERIES,
-              asyncUnaryCall(
-                  new MethodHandlers<
-                      org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
-                      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
-                      this, METHODID_STOP_ALL_QUERIES)))
+            METHOD_STOP_ALL_QUERIES,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
+                  this, METHODID_STOP_ALL_QUERIES)))
           .addMethod(
-              METHOD_PING,
-              asyncUnaryCall(
-                  new MethodHandlers<
-                      org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
-                      org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
-                      this, METHODID_PING)))
+            METHOD_PING,
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage,
+                org.vitrivr.adampro.grpc.AdamGrpc.AckMessage>(
+                  this, METHODID_PING)))
           .build();
     }
   }
@@ -753,7 +805,7 @@ public class AdamSearchGrpc {
   private static final int METHODID_PING = 11;
   private static final int METHODID_DO_STREAMING_QUERY = 12;
 
-  private static class MethodHandlers<Req, Resp> implements
+  private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
@@ -761,7 +813,7 @@ public class AdamSearchGrpc {
     private final AdamSearchImplBase serviceImpl;
     private final int methodId;
 
-    public MethodHandlers(AdamSearchImplBase serviceImpl, int methodId) {
+    MethodHandlers(AdamSearchImplBase serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -837,21 +889,68 @@ public class AdamSearchGrpc {
     }
   }
 
-  public static io.grpc.ServiceDescriptor getServiceDescriptor() {
-    return new io.grpc.ServiceDescriptor(SERVICE_NAME,
-        METHOD_CACHE_INDEX,
-        METHOD_CACHE_ENTITY,
-        METHOD_PREVIEW,
-        METHOD_DO_QUERY,
-        METHOD_DO_STREAMING_QUERY,
-        METHOD_DO_BATCH_QUERY,
-        METHOD_DO_PARALLEL_QUERY,
-        METHOD_DO_PROGRESSIVE_QUERY,
-        METHOD_GET_CACHED_RESULTS,
-        METHOD_GET_SCORED_EXECUTION_PATH,
-        METHOD_STOP_QUERY,
-        METHOD_STOP_ALL_QUERIES,
-        METHOD_PING);
+  private static abstract class AdamSearchBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
+    AdamSearchBaseDescriptorSupplier() {}
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
+      return org.vitrivr.adampro.grpc.AdamGrpc.getDescriptor();
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.ServiceDescriptor getServiceDescriptor() {
+      return getFileDescriptor().findServiceByName("AdamSearch");
+    }
   }
 
+  private static final class AdamSearchFileDescriptorSupplier
+      extends AdamSearchBaseDescriptorSupplier {
+    AdamSearchFileDescriptorSupplier() {}
+  }
+
+  private static final class AdamSearchMethodDescriptorSupplier
+      extends AdamSearchBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
+    private final String methodName;
+
+    AdamSearchMethodDescriptorSupplier(String methodName) {
+      this.methodName = methodName;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.MethodDescriptor getMethodDescriptor() {
+      return getServiceDescriptor().findMethodByName(methodName);
+    }
+  }
+
+  private static volatile io.grpc.ServiceDescriptor serviceDescriptor;
+
+  public static io.grpc.ServiceDescriptor getServiceDescriptor() {
+    io.grpc.ServiceDescriptor result = serviceDescriptor;
+    if (result == null) {
+      synchronized (AdamSearchGrpc.class) {
+        result = serviceDescriptor;
+        if (result == null) {
+          serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
+              .setSchemaDescriptor(new AdamSearchFileDescriptorSupplier())
+              .addMethod(METHOD_CACHE_INDEX)
+              .addMethod(METHOD_CACHE_ENTITY)
+              .addMethod(METHOD_PREVIEW)
+              .addMethod(METHOD_DO_QUERY)
+              .addMethod(METHOD_DO_STREAMING_QUERY)
+              .addMethod(METHOD_DO_BATCH_QUERY)
+              .addMethod(METHOD_DO_PARALLEL_QUERY)
+              .addMethod(METHOD_DO_PROGRESSIVE_QUERY)
+              .addMethod(METHOD_GET_CACHED_RESULTS)
+              .addMethod(METHOD_GET_SCORED_EXECUTION_PATH)
+              .addMethod(METHOD_STOP_QUERY)
+              .addMethod(METHOD_STOP_ALL_QUERIES)
+              .addMethod(METHOD_PING)
+              .build();
+        }
+      }
+    }
+    return result;
+  }
 }
