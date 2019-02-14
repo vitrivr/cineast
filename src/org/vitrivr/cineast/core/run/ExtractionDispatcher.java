@@ -8,6 +8,7 @@ import org.vitrivr.cineast.core.run.filehandler.AbstractExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.AudioExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.GenericExtractionItemHandler;
 import org.vitrivr.cineast.core.run.filehandler.ImageExtractionFileHandler;
+import org.vitrivr.cineast.core.run.filehandler.ImageSequenceExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.Model3DExtractionFileHandler;
 import org.vitrivr.cineast.core.run.filehandler.VideoExtractionFileHandler;
 
@@ -84,6 +85,10 @@ public class ExtractionDispatcher {
             this.handler = new Model3DExtractionFileHandler(this.pathProvider,
                 this.context);
             this.fileHandlerThread = new Thread((Model3DExtractionFileHandler) handler);
+            break;
+          case IMAGE_SEQUENCE:
+            this.handler = new ImageSequenceExtractionFileHandler(this.pathProvider, this.context);
+            this.fileHandlerThread = new Thread((ImageSequenceExtractionFileHandler) handler);
             break;
           default:
             break;
