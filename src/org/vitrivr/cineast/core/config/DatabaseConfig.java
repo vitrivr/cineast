@@ -13,7 +13,7 @@ import org.vitrivr.cineast.core.db.json.JsonFileWriter;
 import org.vitrivr.cineast.core.db.json.JsonSelector;
 import org.vitrivr.cineast.core.db.protobuf.ProtoSelector;
 import org.vitrivr.cineast.core.db.protobuf.ProtobufFileWriter;
-import org.vitrivr.cineast.core.setup.ADAMproEntityCreator;
+import org.vitrivr.cineast.core.db.adampro.ADAMproEntityCreator;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.setup.NoEntityCreator;
 

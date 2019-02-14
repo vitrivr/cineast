@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.setup;
+package org.vitrivr.cineast.core.db.adampro;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +16,8 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.db.adampro.ADAMproWrapper;
 
 import com.google.common.collect.ImmutableMap;
+import org.vitrivr.cineast.core.setup.AttributeDefinition;
+import org.vitrivr.cineast.core.setup.EntityCreator;
 
 public class ADAMproEntityCreator implements EntityCreator {
     /**
