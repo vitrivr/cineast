@@ -40,7 +40,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import sun.awt.EventListenerAggregate;
 
 public class ADAMproWrapper implements AutoCloseable {
 
