@@ -61,11 +61,6 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
   }
 
   @Override
-  public boolean idExists(String id) {
-    return exists("id", id);
-  }
-
-  @Override
   public boolean exists(String key, String value) {
     WhereMessage where;
     synchronized (this.wmBuilder) {
@@ -105,13 +100,6 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 
     return responce.getResultsCount() > 0;
 
-  }
-
-  @Override
-  public boolean persist(PersistentTuple tuple) {
-    List<PersistentTuple> tuples = new ArrayList<>(1);
-    tuples.add(tuple);
-    return persist(tuples);
   }
 
   @Override

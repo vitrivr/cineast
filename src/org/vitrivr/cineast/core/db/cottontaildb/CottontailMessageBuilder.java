@@ -8,6 +8,8 @@ public class CottontailMessageBuilder {
   private static final Schema.Builder schemaBuilder = Schema.newBuilder();
   private static final Entity.Builder entityBuilder = Entity.newBuilder();
 
+  public static final Schema CINEAST_SCHEMA = schemaFromName("cineast");
+
   public static Schema schemaFromName(String schema){
     synchronized (schemaBuilder){
       return schemaBuilder.clear().setName(schema).build();

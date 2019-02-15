@@ -16,7 +16,6 @@ import org.vitrivr.cineast.core.setup.EntityCreator;
 
 public class CottontailEntityCreator implements EntityCreator {
 
-  private static final Schema SCHEMA = CottontailMessageBuilder.schemaFromName("cineast");
 
   private CottontailWrapper cottontail = new CottontailWrapper();
 
@@ -32,7 +31,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaObjectDescriptor.FIELDNAMES[3]).setType(Type.STRING).build());
 
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entityFromName(SCHEMA, MediaObjectDescriptor.ENTITY))
+        .setEntity(CottontailMessageBuilder.entityFromName(CottontailMessageBuilder.CINEAST_SCHEMA, MediaObjectDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
@@ -52,7 +51,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaObjectMetadataDescriptor.FIELDNAMES[3]).setType(Type.STRING).build());
 
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entityFromName(SCHEMA, MediaObjectMetadataDescriptor.ENTITY))
+        .setEntity(CottontailMessageBuilder.entityFromName(CottontailMessageBuilder.CINEAST_SCHEMA, MediaObjectMetadataDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
@@ -71,7 +70,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaSegmentMetadataDescriptor.FIELDNAMES[3]).setType(Type.STRING).build());
 
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entityFromName(SCHEMA, MediaSegmentMetadataDescriptor.ENTITY))
+        .setEntity(CottontailMessageBuilder.entityFromName(CottontailMessageBuilder.CINEAST_SCHEMA, MediaSegmentMetadataDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
@@ -93,7 +92,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaSegmentDescriptor.FIELDNAMES[6]).setType(Type.INTEGER).build()); //FIXME should be double
 
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entityFromName(SCHEMA, MediaSegmentDescriptor.ENTITY))
+        .setEntity(CottontailMessageBuilder.entityFromName(CottontailMessageBuilder.CINEAST_SCHEMA, MediaSegmentDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
@@ -140,7 +139,7 @@ public class CottontailEntityCreator implements EntityCreator {
     }
 
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entityFromName(SCHEMA,entityName))
+        .setEntity(CottontailMessageBuilder.entityFromName(CottontailMessageBuilder.CINEAST_SCHEMA, entityName))
         .addAllColumns(columns).build();
 
     return true;
