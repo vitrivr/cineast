@@ -120,7 +120,7 @@ public class ADAMproEntityCreator implements EntityCreator {
      */
     @Override
     public boolean createSegmentEntity() {
-        final ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(4);
+        final ArrayList<AttributeDefinitionMessage> fields = new ArrayList<>(6);
 
         final AttributeDefinitionMessage.Builder builder = AttributeDefinitionMessage.newBuilder();
 

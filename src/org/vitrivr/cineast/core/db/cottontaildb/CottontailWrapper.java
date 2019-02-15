@@ -83,7 +83,7 @@ public class CottontailWrapper implements AutoCloseable{
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() {
     this.channel.shutdown();
   }
 }
