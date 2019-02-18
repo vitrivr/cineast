@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
@@ -13,6 +14,7 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
 import com.google.common.primitives.Doubles;
@@ -22,7 +24,9 @@ import com.google.common.primitives.Longs;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.vitrivr.cineast.core.data.providers.primitive.BooleanTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.DoubleTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
@@ -33,6 +37,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.LongTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
+import org.vitrivr.cineast.core.db.RelationalOperator;
 
 public class CottontailMessageBuilder {
 
@@ -87,30 +92,86 @@ public class CottontailMessageBuilder {
 
   public static AtomicLiteralBooleanPredicate atomicPredicate(
       String attribute,
-      AtomicLiteralBooleanPredicate.Operator operator,
-      boolean negation,
+      RelationalOperator operator,
       Data... data) {
     synchronized (atomicPredicateBuilder) {
-      atomicPredicateBuilder.clear().setAttribute(attribute).setNot(negation).setOp(operator);
+      atomicPredicateBuilder.clear().setAttribute(attribute);
       if (data != null) {
         for (Data d : data) {
           atomicPredicateBuilder.addData(d);
         }
       }
+
+      switch (operator){
+
+        case EQ:{
+          atomicPredicateBuilder.setOp(Operator.EQUAL);
+          break;
+        }
+        case NEQ:{
+          atomicPredicateBuilder.setOp(Operator.EQUAL).setNot(true);
+          break;
+        }
+        case GEQ:{
+          atomicPredicateBuilder.setOp(Operator.GEQUAL);
+          break;
+        }
+        case LEQ:{
+          atomicPredicateBuilder.setOp(Operator.LEQUAL);
+          break;
+        }
+        case GREATER:{
+          atomicPredicateBuilder.setOp(Operator.GREATER);
+          break;
+        }
+        case LESS:{
+          atomicPredicateBuilder.setOp(Operator.LESS);
+          break;
+        }
+        case BETWEEN:{
+          atomicPredicateBuilder.setOp(Operator.BETWEEN);
+          break;
+        }
+        case LIKE:{ //currently not supported
+          break;
+        }
+        case ILIKE:{ //currently not supported
+          break;
+        }
+        case NLIKE:{ //currently not supported
+          break;
+        }
+        case RLIKE:{ //currently not supported
+          break;
+        }
+        case ISNULL:{
+          atomicPredicateBuilder.setOp(Operator.ISNULL);
+          break;
+        }
+        case ISNOTNULL:{
+          atomicPredicateBuilder.setOp(Operator.ISNOTNULL);
+          break;
+        }
+
+        case IN:{
+          atomicPredicateBuilder.setOp(Operator.IN);
+          break;
+        }
+      }
+
       return atomicPredicateBuilder.build();
     }
   }
 
   public static Where atomicWhere(
       String attribute,
-      AtomicLiteralBooleanPredicate.Operator operator,
-      boolean negation,
+      RelationalOperator operator,
       Data... data) {
 
     synchronized (whereBuilder) {
       return whereBuilder
           .clear()
-          .setAtomic(atomicPredicate(attribute, operator, negation, data))
+          .setAtomic(atomicPredicate(attribute, operator, data))
           .build();
     }
   }
@@ -259,6 +320,8 @@ public class CottontailMessageBuilder {
 
   }
 
+
+
   public static List<Data> toData(Iterable<Object> obs){
 
     List<Data> _return = new ArrayList<>();
@@ -275,6 +338,23 @@ public class CottontailMessageBuilder {
     synchronized (queryMessageBuilder){
       return queryMessageBuilder.clear().setQuery(query).setQueryId(queryId).build();
     }
+  }
+
+  public static Map<String, PrimitiveTypeProvider> tupleToMap(Tuple tuple){
+
+    if (tuple == null){
+      return null;
+    }
+
+    Map<String, Data> datamap = tuple.getDataMap();
+    Map<String, PrimitiveTypeProvider> map = new HashMap<>(datamap.size());
+
+    for(String k: datamap.keySet()){
+      map.put(k, fromData(datamap.get(k)));
+    }
+
+    return map;
+
   }
 
 }

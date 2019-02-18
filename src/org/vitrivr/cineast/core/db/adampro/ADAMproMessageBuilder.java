@@ -313,6 +313,7 @@ public class ADAMproMessageBuilder {
             final DataMessage.Builder damBuilder = DataMessage.newBuilder();
             final Stream<String> valueStream = StreamSupport.stream(values.spliterator(), false);
             switch (operator) {
+                case IN:
                 case EQ:
                     this.wmBuilder.setAttribute(key);
                     this.wmBuilder.setOp("=");

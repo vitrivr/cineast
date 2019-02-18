@@ -105,7 +105,7 @@ public class CottontailWrapper implements AutoCloseable{
     ArrayList<QueryResponseMessage> results = new ArrayList<>();
     Semaphore semaphore = new Semaphore(1);
 
-    StreamObserver<QueryResponseMessage> observer = new StreamObserver<>() {
+    StreamObserver<QueryResponseMessage> observer = new StreamObserver<QueryResponseMessage>() {
       @Override
       public void onNext(QueryResponseMessage value) {
         results.add(value);
@@ -113,7 +113,7 @@ public class CottontailWrapper implements AutoCloseable{
 
       @Override
       public void onError(Throwable t) {
-
+        LOGGER.error("error in CottonDQL.Query: {}", LogHelper.getStackTrace(t));
       }
 
       @Override

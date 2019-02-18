@@ -3,7 +3,10 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -22,6 +25,8 @@ public class CottontailSelector implements DBSelector {
       useGlobalWrapper ? GLOBAL_COTTONTAIL_WRAPPER : new CottontailWrapper();
 
   private Entity entity;
+
+  private static final Projection SELECT_ALL_PROJECTION = CottontailMessageBuilder.projection(Operation.SELECT, "*");
 
   @Override
   public boolean open(String name) {
@@ -67,17 +72,15 @@ public class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
       Iterable<String> values) {
 
-    Projection projection = null; //TODO
-
     List<QueryResponseMessage> results = this.cottontail
         .query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, projection, CottontailMessageBuilder
-                    .atomicWhere(fieldName, Operator.IN, false,
+                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, CottontailMessageBuilder
+                    .atomicWhere(fieldName, RelationalOperator.IN,
                         CottontailMessageBuilder.toData(values)), null)
                 , ""));
 
-    return null; //TODO
+    return processResults(results);
   }
 
   @Override
@@ -94,12 +97,36 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public List<PrimitiveTypeProvider> getAll(String column) {
-    return null;
+
+    Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, column);
+
+    List<QueryResponseMessage> results = this.cottontail
+        .query(
+            CottontailMessageBuilder.queryMessage(
+                CottontailMessageBuilder.query(entity, projection, null, null)
+                , ""));
+
+    List<PrimitiveTypeProvider> _return = new ArrayList<>();
+
+    for(QueryResponseMessage response : results){
+      for(Tuple t : response.getResultsList()){
+        _return.add(CottontailMessageBuilder.fromData(t.getDataMap().get(column)));
+      }
+    }
+
+    return _return;
+
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getAll() {
-    return null;
+    List<QueryResponseMessage> results = this.cottontail
+        .query(
+            CottontailMessageBuilder.queryMessage(
+                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, null)
+                , ""));
+
+    return processResults(results);
   }
 
   @Override
@@ -111,4 +138,19 @@ public class CottontailSelector implements DBSelector {
   public boolean ping() {
     return false;
   }
+
+  private static List<Map<String, PrimitiveTypeProvider>> processResults(Iterable<QueryResponseMessage> qureyresponses){
+    ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>();
+
+    for(QueryResponseMessage response : qureyresponses){
+      for(Tuple t : response.getResultsList()){
+        _return.add(CottontailMessageBuilder.tupleToMap(t));
+      }
+    }
+
+    return _return;
+
+  }
+
+
 }

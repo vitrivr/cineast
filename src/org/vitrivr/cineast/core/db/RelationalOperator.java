@@ -38,5 +38,7 @@ public enum RelationalOperator {
     ISNULL,
 
     /** TRUE if A is not null. */
-    ISNOTNULL
+    ISNOTNULL,
+
+    IN
 }
