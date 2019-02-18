@@ -31,7 +31,7 @@ public final class CottonDDLGrpc {
   public static final io.grpc.MethodDescriptor<com.google.protobuf.Empty,
       ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema> METHOD_LIST_SCHEMAS =
       io.grpc.MethodDescriptor.<com.google.protobuf.Empty, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema>newBuilder()
-          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
           .setFullMethodName(generateFullMethodName(
               "CottonDDL", "ListSchemas"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
@@ -42,35 +42,35 @@ public final class CottonDDLGrpc {
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema,
-      com.google.protobuf.Empty> METHOD_CREATE_SCHEMA =
-      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema, com.google.protobuf.Empty>newBuilder()
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_CREATE_SCHEMA =
+      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
               "CottonDDL", "CreateSchema"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              com.google.protobuf.Empty.getDefaultInstance()))
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
           .setSchemaDescriptor(new CottonDDLMethodDescriptorSupplier("CreateSchema"))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema,
-      com.google.protobuf.Empty> METHOD_DROP_SCHEMA =
-      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema, com.google.protobuf.Empty>newBuilder()
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_DROP_SCHEMA =
+      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
               "CottonDDL", "DropSchema"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              com.google.protobuf.Empty.getDefaultInstance()))
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
           .setSchemaDescriptor(new CottonDDLMethodDescriptorSupplier("DropSchema"))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema,
       ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity> METHOD_LIST_ENTITIES =
       io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity>newBuilder()
-          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
           .setFullMethodName(generateFullMethodName(
               "CottonDDL", "ListEntities"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
@@ -81,54 +81,54 @@ public final class CottonDDLGrpc {
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage,
-      com.google.protobuf.Empty> METHOD_CREATE_ENTITY =
-      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage, com.google.protobuf.Empty>newBuilder()
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_CREATE_ENTITY =
+      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
               "CottonDDL", "CreateEntity"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              com.google.protobuf.Empty.getDefaultInstance()))
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
           .setSchemaDescriptor(new CottonDDLMethodDescriptorSupplier("CreateEntity"))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity,
-      com.google.protobuf.Empty> METHOD_DROP_ENTITY =
-      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, com.google.protobuf.Empty>newBuilder()
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_DROP_ENTITY =
+      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
               "CottonDDL", "DropEntity"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              com.google.protobuf.Empty.getDefaultInstance()))
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
           .setSchemaDescriptor(new CottonDDLMethodDescriptorSupplier("DropEntity"))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity,
-      com.google.protobuf.Empty> METHOD_OPTIMIZE_ENTITY =
-      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, com.google.protobuf.Empty>newBuilder()
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_OPTIMIZE_ENTITY =
+      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
               "CottonDDL", "OptimizeEntity"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              com.google.protobuf.Empty.getDefaultInstance()))
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
           .setSchemaDescriptor(new CottonDDLMethodDescriptorSupplier("OptimizeEntity"))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity,
-      com.google.protobuf.Empty> METHOD_TRUNCATE_ENTITY =
-      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, com.google.protobuf.Empty>newBuilder()
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_TRUNCATE_ENTITY =
+      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
               "CottonDDL", "TruncateEntity"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              com.google.protobuf.Empty.getDefaultInstance()))
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
           .setSchemaDescriptor(new CottonDDLMethodDescriptorSupplier("TruncateEntity"))
           .build();
 
@@ -172,14 +172,14 @@ public final class CottonDDLGrpc {
     /**
      */
     public void createSchema(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_CREATE_SCHEMA, responseObserver);
     }
 
     /**
      */
     public void dropSchema(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_DROP_SCHEMA, responseObserver);
     }
 
@@ -196,28 +196,28 @@ public final class CottonDDLGrpc {
     /**
      */
     public void createEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_CREATE_ENTITY, responseObserver);
     }
 
     /**
      */
     public void dropEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_DROP_ENTITY, responseObserver);
     }
 
     /**
      */
     public void optimizeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_OPTIMIZE_ENTITY, responseObserver);
     }
 
     /**
      */
     public void truncateEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_TRUNCATE_ENTITY, responseObserver);
     }
 
@@ -225,7 +225,7 @@ public final class CottonDDLGrpc {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
             METHOD_LIST_SCHEMAS,
-            asyncUnaryCall(
+            asyncServerStreamingCall(
               new MethodHandlers<
                 com.google.protobuf.Empty,
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema>(
@@ -235,18 +235,18 @@ public final class CottonDDLGrpc {
             asyncUnaryCall(
               new MethodHandlers<
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema,
-                com.google.protobuf.Empty>(
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
                   this, METHODID_CREATE_SCHEMA)))
           .addMethod(
             METHOD_DROP_SCHEMA,
             asyncUnaryCall(
               new MethodHandlers<
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema,
-                com.google.protobuf.Empty>(
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
                   this, METHODID_DROP_SCHEMA)))
           .addMethod(
             METHOD_LIST_ENTITIES,
-            asyncUnaryCall(
+            asyncServerStreamingCall(
               new MethodHandlers<
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema,
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity>(
@@ -256,28 +256,28 @@ public final class CottonDDLGrpc {
             asyncUnaryCall(
               new MethodHandlers<
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage,
-                com.google.protobuf.Empty>(
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
                   this, METHODID_CREATE_ENTITY)))
           .addMethod(
             METHOD_DROP_ENTITY,
             asyncUnaryCall(
               new MethodHandlers<
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity,
-                com.google.protobuf.Empty>(
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
                   this, METHODID_DROP_ENTITY)))
           .addMethod(
             METHOD_OPTIMIZE_ENTITY,
             asyncUnaryCall(
               new MethodHandlers<
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity,
-                com.google.protobuf.Empty>(
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
                   this, METHODID_OPTIMIZE_ENTITY)))
           .addMethod(
             METHOD_TRUNCATE_ENTITY,
             asyncUnaryCall(
               new MethodHandlers<
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity,
-                com.google.protobuf.Empty>(
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
                   this, METHODID_TRUNCATE_ENTITY)))
           .build();
     }
@@ -308,14 +308,14 @@ public final class CottonDDLGrpc {
      */
     public void listSchemas(com.google.protobuf.Empty request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema> responseObserver) {
-      asyncUnaryCall(
+      asyncServerStreamingCall(
           getChannel().newCall(METHOD_LIST_SCHEMAS, getCallOptions()), request, responseObserver);
     }
 
     /**
      */
     public void createSchema(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_CREATE_SCHEMA, getCallOptions()), request, responseObserver);
     }
@@ -323,7 +323,7 @@ public final class CottonDDLGrpc {
     /**
      */
     public void dropSchema(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_DROP_SCHEMA, getCallOptions()), request, responseObserver);
     }
@@ -335,14 +335,14 @@ public final class CottonDDLGrpc {
      */
     public void listEntities(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity> responseObserver) {
-      asyncUnaryCall(
+      asyncServerStreamingCall(
           getChannel().newCall(METHOD_LIST_ENTITIES, getCallOptions()), request, responseObserver);
     }
 
     /**
      */
     public void createEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_CREATE_ENTITY, getCallOptions()), request, responseObserver);
     }
@@ -350,7 +350,7 @@ public final class CottonDDLGrpc {
     /**
      */
     public void dropEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_DROP_ENTITY, getCallOptions()), request, responseObserver);
     }
@@ -358,7 +358,7 @@ public final class CottonDDLGrpc {
     /**
      */
     public void optimizeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_OPTIMIZE_ENTITY, getCallOptions()), request, responseObserver);
     }
@@ -366,7 +366,7 @@ public final class CottonDDLGrpc {
     /**
      */
     public void truncateEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_TRUNCATE_ENTITY, getCallOptions()), request, responseObserver);
     }
@@ -395,21 +395,22 @@ public final class CottonDDLGrpc {
      * Handling DB schemas. 
      * </pre>
      */
-    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema listSchemas(com.google.protobuf.Empty request) {
-      return blockingUnaryCall(
+    public java.util.Iterator<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema> listSchemas(
+        com.google.protobuf.Empty request) {
+      return blockingServerStreamingCall(
           getChannel(), METHOD_LIST_SCHEMAS, getCallOptions(), request);
     }
 
     /**
      */
-    public com.google.protobuf.Empty createSchema(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request) {
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus createSchema(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request) {
       return blockingUnaryCall(
           getChannel(), METHOD_CREATE_SCHEMA, getCallOptions(), request);
     }
 
     /**
      */
-    public com.google.protobuf.Empty dropSchema(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request) {
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus dropSchema(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request) {
       return blockingUnaryCall(
           getChannel(), METHOD_DROP_SCHEMA, getCallOptions(), request);
     }
@@ -419,35 +420,36 @@ public final class CottonDDLGrpc {
      * Handling entities. 
      * </pre>
      */
-    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity listEntities(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request) {
-      return blockingUnaryCall(
+    public java.util.Iterator<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity> listEntities(
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request) {
+      return blockingServerStreamingCall(
           getChannel(), METHOD_LIST_ENTITIES, getCallOptions(), request);
     }
 
     /**
      */
-    public com.google.protobuf.Empty createEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage request) {
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus createEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_CREATE_ENTITY, getCallOptions(), request);
     }
 
     /**
      */
-    public com.google.protobuf.Empty dropEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus dropEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
       return blockingUnaryCall(
           getChannel(), METHOD_DROP_ENTITY, getCallOptions(), request);
     }
 
     /**
      */
-    public com.google.protobuf.Empty optimizeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus optimizeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
       return blockingUnaryCall(
           getChannel(), METHOD_OPTIMIZE_ENTITY, getCallOptions(), request);
     }
 
     /**
      */
-    public com.google.protobuf.Empty truncateEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus truncateEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
       return blockingUnaryCall(
           getChannel(), METHOD_TRUNCATE_ENTITY, getCallOptions(), request);
     }
@@ -472,19 +474,8 @@ public final class CottonDDLGrpc {
     }
 
     /**
-     * <pre>
-     * Handling DB schemas. 
-     * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema> listSchemas(
-        com.google.protobuf.Empty request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_LIST_SCHEMAS, getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> createSchema(
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> createSchema(
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_CREATE_SCHEMA, getCallOptions()), request);
@@ -492,26 +483,15 @@ public final class CottonDDLGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> dropSchema(
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> dropSchema(
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_DROP_SCHEMA, getCallOptions()), request);
     }
 
     /**
-     * <pre>
-     * Handling entities. 
-     * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity> listEntities(
-        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_LIST_ENTITIES, getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> createEntity(
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> createEntity(
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_CREATE_ENTITY, getCallOptions()), request);
@@ -519,7 +499,7 @@ public final class CottonDDLGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> dropEntity(
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> dropEntity(
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_DROP_ENTITY, getCallOptions()), request);
@@ -527,7 +507,7 @@ public final class CottonDDLGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> optimizeEntity(
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> optimizeEntity(
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_OPTIMIZE_ENTITY, getCallOptions()), request);
@@ -535,7 +515,7 @@ public final class CottonDDLGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> truncateEntity(
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> truncateEntity(
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_TRUNCATE_ENTITY, getCallOptions()), request);
@@ -574,11 +554,11 @@ public final class CottonDDLGrpc {
           break;
         case METHODID_CREATE_SCHEMA:
           serviceImpl.createSchema((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema) request,
-              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
           break;
         case METHODID_DROP_SCHEMA:
           serviceImpl.dropSchema((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema) request,
-              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
           break;
         case METHODID_LIST_ENTITIES:
           serviceImpl.listEntities((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema) request,
@@ -586,19 +566,19 @@ public final class CottonDDLGrpc {
           break;
         case METHODID_CREATE_ENTITY:
           serviceImpl.createEntity((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage) request,
-              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
           break;
         case METHODID_DROP_ENTITY:
           serviceImpl.dropEntity((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity) request,
-              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
           break;
         case METHODID_OPTIMIZE_ENTITY:
           serviceImpl.optimizeEntity((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity) request,
-              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
           break;
         case METHODID_TRUNCATE_ENTITY:
           serviceImpl.truncateEntity((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity) request,
-              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
           break;
         default:
           throw new AssertionError();

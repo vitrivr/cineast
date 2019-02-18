@@ -11,6 +11,7 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus;
 import com.google.common.util.concurrent.ListenableFuture;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
@@ -42,12 +43,12 @@ public class CottontailWrapper implements AutoCloseable{
     this.queryStub = CottonDQLGrpc.newFutureStub(channel);
   }
 
-  public synchronized ListenableFuture<com.google.protobuf.Empty> createEntity(CreateEntityMessage createMessage){
+  public synchronized ListenableFuture<SuccessStatus> createEntity(CreateEntityMessage createMessage){
     return this.definitionStub.createEntity(createMessage);
   }
 
   public synchronized void createEntityBlocking(CreateEntityMessage createMessage){
-    ListenableFuture<com.google.protobuf.Empty> future = this.createEntity(createMessage);
+    ListenableFuture<SuccessStatus> future = this.createEntity(createMessage);
     try {
       future.get();
     } catch (InterruptedException | ExecutionException e) {
@@ -55,12 +56,12 @@ public class CottontailWrapper implements AutoCloseable{
     }
   }
 
-  public synchronized ListenableFuture<com.google.protobuf.Empty> createSchema(String schama){
-    return this.definitionStub.createSchema(CottontailMessageBuilder.schemaFromName(schama));
+  public synchronized ListenableFuture<SuccessStatus> createSchema(String schama){
+    return this.definitionStub.createSchema(CottontailMessageBuilder.schema(schama));
   }
 
   public synchronized void createSchemaBlocking(String schema){
-    ListenableFuture<com.google.protobuf.Empty> future = this.createSchema(schema);
+    ListenableFuture<SuccessStatus> future = this.createSchema(schema);
     try {
       future.get();
     } catch (InterruptedException | ExecutionException e) {

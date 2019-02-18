@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +30,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaObjectDescriptor.FIELDNAMES[3]).setType(Type.STRING).build());
 
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entityFromName(CottontailMessageBuilder.CINEAST_SCHEMA, MediaObjectDescriptor.ENTITY))
+        .setEntity(CottontailMessageBuilder.entity(MediaObjectDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
@@ -51,7 +50,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaObjectMetadataDescriptor.FIELDNAMES[3]).setType(Type.STRING).build());
 
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entityFromName(CottontailMessageBuilder.CINEAST_SCHEMA, MediaObjectMetadataDescriptor.ENTITY))
+        .setEntity(CottontailMessageBuilder.entity(MediaObjectMetadataDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
@@ -70,7 +69,7 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaSegmentMetadataDescriptor.FIELDNAMES[3]).setType(Type.STRING).build());
 
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entityFromName(CottontailMessageBuilder.CINEAST_SCHEMA, MediaSegmentMetadataDescriptor.ENTITY))
+        .setEntity(CottontailMessageBuilder.entity(MediaSegmentMetadataDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
@@ -88,11 +87,11 @@ public class CottontailEntityCreator implements EntityCreator {
     columns.add(builder.clear().setName(MediaSegmentDescriptor.FIELDNAMES[2]).setType(Type.INTEGER).build());
     columns.add(builder.clear().setName(MediaSegmentDescriptor.FIELDNAMES[3]).setType(Type.INTEGER).build());
     columns.add(builder.clear().setName(MediaSegmentDescriptor.FIELDNAMES[4]).setType(Type.INTEGER).build());
-    columns.add(builder.clear().setName(MediaSegmentDescriptor.FIELDNAMES[5]).setType(Type.INTEGER).build()); //FIXME should be double
-    columns.add(builder.clear().setName(MediaSegmentDescriptor.FIELDNAMES[6]).setType(Type.INTEGER).build()); //FIXME should be double
+    columns.add(builder.clear().setName(MediaSegmentDescriptor.FIELDNAMES[5]).setType(Type.DOUBLE).build());
+    columns.add(builder.clear().setName(MediaSegmentDescriptor.FIELDNAMES[6]).setType(Type.DOUBLE).build());
 
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entityFromName(CottontailMessageBuilder.CINEAST_SCHEMA, MediaSegmentDescriptor.ENTITY))
+        .setEntity(CottontailMessageBuilder.entity(MediaSegmentDescriptor.ENTITY))
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
@@ -139,7 +138,7 @@ public class CottontailEntityCreator implements EntityCreator {
     }
 
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entityFromName(CottontailMessageBuilder.CINEAST_SCHEMA, entityName))
+        .setEntity(CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName))
         .addAllColumns(columns).build();
 
     return true;
@@ -165,12 +164,12 @@ public class CottontailEntityCreator implements EntityCreator {
 
       case BOOLEAN:
         return Type.BOOLEAN;
-     // case DOUBLE:
-     //   return Type.DOUBLE;
+      case DOUBLE:
+        return Type.DOUBLE;
       case VECTOR:
-        return Type.DOUBLE_ARRAY;
-     // case FLOAT:
-     //   return Type.FLOAT;
+        return Type.DOUBLE_VEC;
+      case FLOAT:
+        return Type.FLOAT;
       /*case GEOGRAPHY:
         return Type.GEOGRAPHY;
       case GEOMETRY:
@@ -182,7 +181,7 @@ public class CottontailEntityCreator implements EntityCreator {
       case STRING:
         return Type.STRING;
       case TEXT:
-     //   return Type.TEXT;
+        return Type.STRING;
       default:
         throw new RuntimeException("type " + type + " has no matching analogue in CottontailDB");
     }

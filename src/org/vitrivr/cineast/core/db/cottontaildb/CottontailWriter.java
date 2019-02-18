@@ -35,7 +35,6 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
   private static final DoubleVector.Builder doubleVectorBuilder = DoubleVector.newBuilder();
   private static final IntVector.Builder intVectorBuilder = IntVector.newBuilder();
   private static final LongVector.Builder longVectorBuilder = LongVector.newBuilder();
-  private static final BoolVector.Builder boolVectorBuilder = BoolVector.newBuilder();
   private static boolean useGlobalWrapper = true;
   private static final CottontailWrapper GLOBAL_COTTONTAIL_WRAPPER =
       useGlobalWrapper ? new CottontailWrapper() : null;
@@ -120,19 +119,6 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
                 .setVectorData(
                     vectorBuilder.setLongVector(
                         longVectorBuilder.addAllVector(Longs.asList((long[]) o))))
-                .build();
-          }
-        }
-      }
-
-      if (o instanceof boolean[]) {
-        synchronized (vectorBuilder) {
-          vectorBuilder.clear();
-          synchronized (boolVectorBuilder) {
-            return dataBuilder
-                .setVectorData(
-                    vectorBuilder.setBooleanVector(
-                        boolVectorBuilder.addAllVector(Booleans.asList((boolean[]) o))))
                 .build();
           }
         }
