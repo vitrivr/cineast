@@ -18,7 +18,9 @@ public interface DBSelector {
 
   boolean close();
 
-  <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] query, String column, Class<E> distanceElementClass, ReadableQueryConfig config);
+  default <E extends DistanceElement> List<E> getNearestNeighboursGeneric(int k, float[] query, String column, Class<E> distanceElementClass, ReadableQueryConfig config){
+    return getNearestNeighboursGeneric(k, new FloatArrayTypeProvider(query), column, distanceElementClass, config);
+  }
 
   /**
    * * Finds the {@code k}-nearest neighbours of the given {@code queryProvider} in {@code column}
