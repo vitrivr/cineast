@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
@@ -9,6 +10,7 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query;
@@ -27,6 +29,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.providers.primitive.BooleanTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.DoubleTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
@@ -41,6 +46,8 @@ import org.vitrivr.cineast.core.db.RelationalOperator;
 
 public class CottontailMessageBuilder {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+
   private static final Schema.Builder schemaBuilder = Schema.newBuilder();
   public static final Schema CINEAST_SCHEMA = schema("cineast");
   private static final Entity.Builder entityBuilder = Entity.newBuilder();
@@ -51,6 +58,7 @@ public class CottontailMessageBuilder {
       AtomicLiteralBooleanPredicate.newBuilder();
   private static final Query.Builder queryBuilder = Query.newBuilder();
   private static final QueryMessage.Builder queryMessageBuilder = QueryMessage.newBuilder();
+  private static final BatchedQueryMessage.Builder batchedQueryMessageBuilder = BatchedQueryMessage.newBuilder();
 
   private static final Vector.Builder vectorBuilder = Vector.newBuilder();
   private static final FloatVector.Builder floatVectorBuilder = FloatVector.newBuilder();
@@ -58,8 +66,7 @@ public class CottontailMessageBuilder {
   private static final IntVector.Builder intVectorBuilder = IntVector.newBuilder();
   private static final LongVector.Builder longVectorBuilder = LongVector.newBuilder();
   private static final Data.Builder dataBuilder = Data.newBuilder();
-
-
+  private static final Knn.Builder knnBuilder = Knn.newBuilder();
 
   public static Schema schema(String schema) {
     synchronized (schemaBuilder) {
@@ -73,7 +80,7 @@ public class CottontailMessageBuilder {
     }
   }
 
-  public static Entity entity(String name){
+  public static Entity entity(String name) {
     return entity(CINEAST_SCHEMA, name);
   }
 
@@ -91,9 +98,7 @@ public class CottontailMessageBuilder {
   }
 
   public static AtomicLiteralBooleanPredicate atomicPredicate(
-      String attribute,
-      RelationalOperator operator,
-      Data... data) {
+      String attribute, RelationalOperator operator, Data... data) {
     synchronized (atomicPredicateBuilder) {
       atomicPredicateBuilder.clear().setAttribute(attribute);
       if (data != null) {
@@ -102,90 +107,94 @@ public class CottontailMessageBuilder {
         }
       }
 
-      switch (operator){
+      switch (operator) {
+        case EQ:
+          {
+            atomicPredicateBuilder.setOp(Operator.EQUAL);
+            break;
+          }
+        case NEQ:
+          {
+            atomicPredicateBuilder.setOp(Operator.EQUAL).setNot(true);
+            break;
+          }
+        case GEQ:
+          {
+            atomicPredicateBuilder.setOp(Operator.GEQUAL);
+            break;
+          }
+        case LEQ:
+          {
+            atomicPredicateBuilder.setOp(Operator.LEQUAL);
+            break;
+          }
+        case GREATER:
+          {
+            atomicPredicateBuilder.setOp(Operator.GREATER);
+            break;
+          }
+        case LESS:
+          {
+            atomicPredicateBuilder.setOp(Operator.LESS);
+            break;
+          }
+        case BETWEEN:
+          {
+            atomicPredicateBuilder.setOp(Operator.BETWEEN);
+            break;
+          }
+        case LIKE:
+          { // currently not supported
+            break;
+          }
+        case ILIKE:
+          { // currently not supported
+            break;
+          }
+        case NLIKE:
+          { // currently not supported
+            break;
+          }
+        case RLIKE:
+          { // currently not supported
+            break;
+          }
+        case ISNULL:
+          {
+            atomicPredicateBuilder.setOp(Operator.ISNULL);
+            break;
+          }
+        case ISNOTNULL:
+          {
+            atomicPredicateBuilder.setOp(Operator.ISNOTNULL);
+            break;
+          }
 
-        case EQ:{
-          atomicPredicateBuilder.setOp(Operator.EQUAL);
-          break;
-        }
-        case NEQ:{
-          atomicPredicateBuilder.setOp(Operator.EQUAL).setNot(true);
-          break;
-        }
-        case GEQ:{
-          atomicPredicateBuilder.setOp(Operator.GEQUAL);
-          break;
-        }
-        case LEQ:{
-          atomicPredicateBuilder.setOp(Operator.LEQUAL);
-          break;
-        }
-        case GREATER:{
-          atomicPredicateBuilder.setOp(Operator.GREATER);
-          break;
-        }
-        case LESS:{
-          atomicPredicateBuilder.setOp(Operator.LESS);
-          break;
-        }
-        case BETWEEN:{
-          atomicPredicateBuilder.setOp(Operator.BETWEEN);
-          break;
-        }
-        case LIKE:{ //currently not supported
-          break;
-        }
-        case ILIKE:{ //currently not supported
-          break;
-        }
-        case NLIKE:{ //currently not supported
-          break;
-        }
-        case RLIKE:{ //currently not supported
-          break;
-        }
-        case ISNULL:{
-          atomicPredicateBuilder.setOp(Operator.ISNULL);
-          break;
-        }
-        case ISNOTNULL:{
-          atomicPredicateBuilder.setOp(Operator.ISNOTNULL);
-          break;
-        }
-
-        case IN:{
-          atomicPredicateBuilder.setOp(Operator.IN);
-          break;
-        }
+        case IN:
+          {
+            atomicPredicateBuilder.setOp(Operator.IN);
+            break;
+          }
       }
 
       return atomicPredicateBuilder.build();
     }
   }
 
-  public static Where atomicWhere(
-      String attribute,
-      RelationalOperator operator,
-      Data... data) {
+  public static Where atomicWhere(String attribute, RelationalOperator operator, Data... data) {
 
     synchronized (whereBuilder) {
-      return whereBuilder
-          .clear()
-          .setAtomic(atomicPredicate(attribute, operator, data))
-          .build();
+      return whereBuilder.clear().setAtomic(atomicPredicate(attribute, operator, data)).build();
     }
   }
 
-
-  public static Query query(Entity entity, Projection projection, Where where, Knn knn){
-    synchronized (queryBuilder){
-      queryBuilder.clear()
-          .setFrom(from(entity))
-          .setProjection(projection);
-      if (where != null){
+  public static Query query(Entity entity, Projection projection, Where where, Knn knn) {
+    synchronized (queryBuilder) {
+      queryBuilder.clear().setFrom(from(entity)).setProjection(projection);
+      if (where != null) {
         queryBuilder.setWhere(where);
       }
-      if (knn != null){
+      if (knn != null) {
         queryBuilder.setKnn(knn);
       }
       return queryBuilder.build();
@@ -222,16 +231,8 @@ public class CottontailMessageBuilder {
       }
 
       if (o instanceof float[]) {
-        synchronized (vectorBuilder) {
-          vectorBuilder.clear();
-          synchronized (floatVectorBuilder) {
-            return dataBuilder
-                .setVectorData(
-                    vectorBuilder.setFloatVector(
-                        floatVectorBuilder.addAllVector(Floats.asList((float[]) o))))
-                .build();
-          }
-        }
+
+        return dataBuilder.setVectorData(toVector((float[]) o)).build();
       }
 
       if (o instanceof double[]) {
@@ -277,10 +278,10 @@ public class CottontailMessageBuilder {
     }
   }
 
-  public static Data[] toDatas(Iterable<?> objects){
+  public static Data[] toDatas(Iterable<?> objects) {
     ArrayList<Data> tmp = new ArrayList<>();
 
-    for (Object o: objects){
+    for (Object o : objects) {
       tmp.add(toData(o));
     }
 
@@ -290,10 +291,9 @@ public class CottontailMessageBuilder {
     return _return;
   }
 
-  public static PrimitiveTypeProvider fromData(Data d){
+  public static PrimitiveTypeProvider fromData(Data d) {
 
-    switch(d.getDataCase()){
-
+    switch (d.getDataCase()) {
       case BOOLEANDATA:
         return new BooleanTypeProvider(d.getBooleanData());
       case INTDATA:
@@ -306,68 +306,115 @@ public class CottontailMessageBuilder {
         return new DoubleTypeProvider(d.getDoubleData());
       case STRINGDATA:
         return new StringTypeProvider(d.getStringData());
-      case VECTORDATA:{
-
-        Vector v = d.getVectorData();
-        switch(v.getVectorDataCase()){
-
-          case FLOATVECTOR:
-            return FloatArrayTypeProvider.fromList(v.getFloatVector().getVectorList());
-          case DOUBLEVECTOR:
-            return FloatArrayTypeProvider.fromDoubleList(v.getDoubleVector().getVectorList());
-          case INTVECTOR:
-            return IntArrayTypeProvider.fromList(v.getIntVector().getVectorList());
-          case LONGVECTOR:
-            return IntArrayTypeProvider.fromLongList(v.getLongVector().getVectorList());
-          case VECTORDATA_NOT_SET:
-            return new NothingProvider();
+      case VECTORDATA:
+        {
+          Vector v = d.getVectorData();
+          switch (v.getVectorDataCase()) {
+            case FLOATVECTOR:
+              return FloatArrayTypeProvider.fromList(v.getFloatVector().getVectorList());
+            case DOUBLEVECTOR:
+              return FloatArrayTypeProvider.fromDoubleList(v.getDoubleVector().getVectorList());
+            case INTVECTOR:
+              return IntArrayTypeProvider.fromList(v.getIntVector().getVectorList());
+            case LONGVECTOR:
+              return IntArrayTypeProvider.fromLongList(v.getLongVector().getVectorList());
+            case VECTORDATA_NOT_SET:
+              return new NothingProvider();
+          }
         }
-
-      }
 
       case DATA_NOT_SET:
         return new NothingProvider();
     }
 
     return new NothingProvider();
-
   }
 
+  public static Vector toVector(float[] vector) {
+    synchronized (vectorBuilder) {
+      vectorBuilder.clear();
+      synchronized (floatVectorBuilder) {
+        return vectorBuilder
+            .setFloatVector(floatVectorBuilder.addAllVector(Floats.asList(vector)))
+            .build();
+      }
+    }
+  }
 
-
-  public static List<Data> toData(Iterable<Object> obs){
+  public static List<Data> toData(Iterable<Object> obs) {
 
     List<Data> _return = new ArrayList<>();
 
-    for(Object o: obs){
+    for (Object o : obs) {
       _return.add(toData(o));
     }
 
     return _return;
-
   }
 
-  public static QueryMessage queryMessage(Query query, String queryId){
-    synchronized (queryMessageBuilder){
+  public static QueryMessage queryMessage(Query query, String queryId) {
+    synchronized (queryMessageBuilder) {
       return queryMessageBuilder.clear().setQuery(query).setQueryId(queryId).build();
     }
   }
 
-  public static Map<String, PrimitiveTypeProvider> tupleToMap(Tuple tuple){
+  public static BatchedQueryMessage batchedQueryMessage(Iterable<Query> queries){
+    synchronized (batchedQueryMessageBuilder){
+      return batchedQueryMessageBuilder.clear().addAllQueries(queries).build();
+    }
+  }
 
-    if (tuple == null){
+  public static Map<String, PrimitiveTypeProvider> tupleToMap(Tuple tuple) {
+
+    if (tuple == null) {
       return null;
     }
 
     Map<String, Data> datamap = tuple.getDataMap();
     Map<String, PrimitiveTypeProvider> map = new HashMap<>(datamap.size());
 
-    for(String k: datamap.keySet()){
+    for (String k : datamap.keySet()) {
       map.put(k, fromData(datamap.get(k)));
     }
 
     return map;
-
   }
 
+  public static Knn knn(
+      String attribute,
+      float[] vector,
+      float[] weights,
+      int k,
+      ReadableQueryConfig.Distance distance) {
+
+    synchronized (knnBuilder) {
+      knnBuilder.clear().setK(k).setQuery(toVector(vector)).setAttribute(attribute);
+
+      if (weights != null) {
+        knnBuilder.setWeights(toVector(weights));
+      }
+
+      switch (distance) {
+        case manhattan:
+          {
+            knnBuilder.setDistance(Distance.L1);
+            break;
+          }
+        case euclidean:
+          {
+            knnBuilder.setDistance(Distance.L2);
+          }
+        case squaredeuclidean:
+          {
+            knnBuilder.setDistance(Distance.L2SQUARED);
+          }
+        default:
+          {
+            LOGGER.error("distance '{}' not supported by cottontail", distance);
+          }
+      }
+
+      return knnBuilder.build();
+    }
+  }
 }

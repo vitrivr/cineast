@@ -7,6 +7,7 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLFutureStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc.CottonDQLStub;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
@@ -127,6 +128,39 @@ public class CottontailWrapper implements AutoCloseable{
       semaphore.tryAcquire(maxCallTimeOutMs, TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       LOGGER.warn("Waiting for response in CottontailWrapper.query has been interrupted: {}", LogHelper.getStackTrace(e));
+    }
+    return results;
+
+  }
+
+  public List<QueryResponseMessage> batchedQuery(BatchedQueryMessage query) {
+
+    ArrayList<QueryResponseMessage> results = new ArrayList<>();
+    Semaphore semaphore = new Semaphore(1);
+
+    StreamObserver<QueryResponseMessage> observer = new StreamObserver<QueryResponseMessage>() {
+      @Override
+      public void onNext(QueryResponseMessage value) {
+        results.add(value);
+      }
+
+      @Override
+      public void onError(Throwable t) {
+        LOGGER.error("error in CottonDQL.Query: {}", LogHelper.getStackTrace(t));
+      }
+
+      @Override
+      public void onCompleted() {
+        semaphore.release();
+      }
+    };
+
+    this.queryStub.batchedQuery(query, observer);
+
+    try {
+      semaphore.tryAcquire(maxCallTimeOutMs, TimeUnit.MILLISECONDS);
+    } catch (InterruptedException e) {
+      LOGGER.warn("Waiting for response in CottontailWrapper.batchedQuery has been interrupted: {}", LogHelper.getStackTrace(e));
     }
     return results;
 
