@@ -2,16 +2,15 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc.CottonDDLFutureStub;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc.CottonDDLStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLFutureStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc.CottonDQLFutureStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc.CottonDQLStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema;
@@ -21,8 +20,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Semaphore;
@@ -40,7 +37,8 @@ public class CottontailWrapper implements AutoCloseable{
   private static final InsertStatus INTERRUPTED_INSERT = InsertStatus.newBuilder().setSuccess(false).build();
 
   private ManagedChannel channel;
-  private final CottonDDLFutureStub definitionStub;
+  private final CottonDDLFutureStub definitionFutureStub;
+  private final CottonDDLStub definitionStub;
   private final CottonDMLFutureStub managementStub;
   private final CottonDQLStub queryStub;
 
@@ -50,13 +48,14 @@ public class CottontailWrapper implements AutoCloseable{
   public CottontailWrapper(){
     DatabaseConfig config = Config.sharedConfig().getDatabase();
     this.channel = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPlaintext()).maxInboundMessageSize(maxMessageSize).build();
-    this.definitionStub = CottonDDLGrpc.newFutureStub(channel);
+    this.definitionFutureStub = CottonDDLGrpc.newFutureStub(channel);
+    this.definitionStub = CottonDDLGrpc.newStub(channel);
     this.managementStub = CottonDMLGrpc.newFutureStub(channel);
     this.queryStub = CottonDQLGrpc.newStub(channel);
   }
 
   public synchronized ListenableFuture<SuccessStatus> createEntity(CreateEntityMessage createMessage){
-    return this.definitionStub.createEntity(createMessage);
+    return this.definitionFutureStub.createEntity(createMessage);
   }
 
   public synchronized void createEntityBlocking(CreateEntityMessage createMessage){
@@ -69,7 +68,7 @@ public class CottontailWrapper implements AutoCloseable{
   }
 
   public synchronized ListenableFuture<SuccessStatus> createSchema(String schama){
-    return this.definitionStub.createSchema(CottontailMessageBuilder.schema(schama));
+    return this.definitionFutureStub.createSchema(CottontailMessageBuilder.schema(schama));
   }
 
   public synchronized void createSchemaBlocking(String schema){
@@ -132,4 +131,38 @@ public class CottontailWrapper implements AutoCloseable{
     return results;
 
   }
+
+  public List<Entity> listEntities(Schema schema){
+    ArrayList<Entity> entities = new ArrayList<>();
+    Semaphore semaphore = new Semaphore(1);
+
+    StreamObserver<Entity> observer = new StreamObserver<Entity>() {
+      @Override
+      public void onNext(Entity value) {
+        entities.add(value);
+      }
+
+      @Override
+      public void onError(Throwable t) {
+        LOGGER.error("error in CottonDDL.ListSchemas: {}", LogHelper.getStackTrace(t));
+      }
+
+      @Override
+      public void onCompleted() {
+        semaphore.release();
+      }
+    };
+
+    definitionStub.listEntities(schema, observer);
+
+    try {
+      semaphore.tryAcquire(maxCallTimeOutMs, TimeUnit.MILLISECONDS);
+    } catch (InterruptedException e) {
+      LOGGER.warn("Waiting for response in CottontailWrapper.listEntities has been interrupted: {}", LogHelper.getStackTrace(e));
+    }
+
+    return entities;
+
+  }
+
 }

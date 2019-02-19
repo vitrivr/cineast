@@ -1,11 +1,13 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
+import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.CINEAST_SCHEMA;
+
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,26 +48,44 @@ public class CottontailSelector implements DBSelector {
   @Override
   public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k,
       List<float[]> vectors, String column, Class<T> distanceElementClass,
-      List<ReadableQueryConfig> configs) {
+      List<ReadableQueryConfig> configs) { //TODO
     return null;
   }
 
   @Override
   public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k,
       List<float[]> vectors, String column, Class<T> distanceElementClass,
-      List<ReadableQueryConfig> configs, MergeOperation merge, Map<String, String> options) {
+      List<ReadableQueryConfig> configs, MergeOperation merge, Map<String, String> options) { //TODO
     return null;
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k, float[] vector,
-      String column, ReadableQueryConfig config) {
+      String column, ReadableQueryConfig config) { //TODO
     return null;
   }
 
   @Override
   public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
-    return null;
+
+    Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, vectorName);
+    Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
+
+    List<QueryResponseMessage> results = this.cottontail
+        .query(
+            CottontailMessageBuilder.queryMessage(
+                CottontailMessageBuilder.query(entity, projection, where, null),
+             ""));
+
+    List<float[]> _return = new ArrayList<>();
+
+    for(QueryResponseMessage response : results){
+      for(Tuple t : response.getResultsList()){
+        _return.add(CottontailMessageBuilder.fromData(t.getDataMap().get(vectorName)).getFloatArray());
+      }
+    }
+
+    return _return;
   }
 
   @Override
@@ -85,14 +105,24 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname,
-      String... terms) {
+      String... terms) { //TODO
     return null;
   }
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
       RelationalOperator operator, Iterable<String> values) {
-    return null;
+
+    Where where = CottontailMessageBuilder.atomicWhere(fieldName, operator, CottontailMessageBuilder.toDatas(values));
+
+    List<QueryResponseMessage> results = this.cottontail
+        .query(
+            CottontailMessageBuilder.queryMessage(
+                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, where, null), "")
+        );
+
+
+    return processResults(results);
   }
 
   @Override
@@ -131,11 +161,20 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public boolean existsEntity(String name) {
+
+    List<Entity> entities = this.cottontail.listEntities(CINEAST_SCHEMA);
+
+    for(Entity entity: entities){
+      if(entity.getName().equals(name)){
+        return true;
+      }
+    }
+
     return false;
   }
 
   @Override
-  public boolean ping() {
+  public boolean ping() { //currently not supported
     return false;
   }
 

@@ -277,6 +277,19 @@ public class CottontailMessageBuilder {
     }
   }
 
+  public static Data[] toDatas(Iterable<?> objects){
+    ArrayList<Data> tmp = new ArrayList<>();
+
+    for (Object o: objects){
+      tmp.add(toData(o));
+    }
+
+    Data[] _return = new Data[tmp.size()];
+    tmp.toArray(_return);
+
+    return _return;
+  }
+
   public static PrimitiveTypeProvider fromData(Data d){
 
     switch(d.getDataCase()){
