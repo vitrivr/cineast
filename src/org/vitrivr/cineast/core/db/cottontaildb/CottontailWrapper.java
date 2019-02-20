@@ -155,9 +155,9 @@ public class CottontailWrapper implements AutoCloseable{
       }
     };
 
-    this.queryStub.batchedQuery(query, observer);
-
     try {
+      semaphore.acquire();
+      this.queryStub.batchedQuery(query, observer);
       semaphore.tryAcquire(maxCallTimeOutMs, TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       LOGGER.warn("Waiting for response in CottontailWrapper.batchedQuery has been interrupted: {}", LogHelper.getStackTrace(e));
@@ -187,16 +187,14 @@ public class CottontailWrapper implements AutoCloseable{
       }
     };
 
-    definitionStub.listEntities(schema, observer);
-
     try {
+      semaphore.acquire();
+      definitionStub.listEntities(schema, observer);
       semaphore.tryAcquire(maxCallTimeOutMs, TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       LOGGER.warn("Waiting for response in CottontailWrapper.listEntities has been interrupted: {}", LogHelper.getStackTrace(e));
     }
 
     return entities;
-
   }
-
 }
