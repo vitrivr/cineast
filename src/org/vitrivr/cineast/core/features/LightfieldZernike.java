@@ -33,7 +33,7 @@ public class LightfieldZernike extends Lightfield {
      * Default constructor for LightfieldZernike class.
      */
     public LightfieldZernike() {
-        super("features_lightfieldzernike", 2.0f, MathConstants.VERTICES_3D_DODECAHEDRON);
+        super("features_lightfieldzernike", 2.0f, SIZE, MathConstants.VERTICES_3D_DODECAHEDRON);
     }
 
     /**

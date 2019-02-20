@@ -27,11 +27,11 @@ public class MedianColorGrid8 extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public MedianColorGrid8() {
-    super("features_MedianColorGrid8", 12595f / 4f);
+    super("features_MedianColorGrid8", 12595f / 4f, 192);
   }
 
   protected MedianColorGrid8(String tableName, float maxDist) {
-    super(tableName, maxDist);
+    super(tableName, maxDist, 192);
   }
 
 

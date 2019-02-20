@@ -31,7 +31,11 @@ public class EHD extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public EHD() {
-    super("features_EHD", 16f / 4f);
+    this(80);
+  }
+
+  protected EHD(int vectorLength){
+    super("features_EHD", 16f / 4f, vectorLength);
   }
 
   private static final float[]

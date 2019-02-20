@@ -24,7 +24,7 @@ public class DominantEdgeGrid8 extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public DominantEdgeGrid8() {
-    super("features_DominantEdgeGrid8", 437f / 4f);
+    super("features_DominantEdgeGrid8", 437f / 4f, 8*8);
   }
 
   @Override

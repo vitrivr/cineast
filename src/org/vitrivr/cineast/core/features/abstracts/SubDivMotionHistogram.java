@@ -17,8 +17,8 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 public abstract class SubDivMotionHistogram extends MotionHistogramCalculator implements Extractor {
   protected PersistencyWriter<?> phandler;
   
-  protected SubDivMotionHistogram(String tableName, String fieldName, double maxDist) {
-    super(tableName, fieldName, (float) maxDist);
+  protected SubDivMotionHistogram(String tableName, String fieldName, double maxDist, int cells) {
+    super(tableName, fieldName, (float) maxDist, cells);
   }
 
   @Override

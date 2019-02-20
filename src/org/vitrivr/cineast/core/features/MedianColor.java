@@ -21,7 +21,7 @@ public class MedianColor extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public MedianColor() {
-    super("features_MedianColor", 196f / 4f);
+    super("features_MedianColor", 196f / 4f, 3);
   }
 
   protected LabContainer getMedian(MedianImgProvider provider) {

@@ -47,8 +47,11 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   private SimpleFeatureDescriptorWriter featureWriter;
   private DBSelector dbSelector;
   private MediaSegmentReader mediaSegmentReader;
+  private final int vectorLength;
 
-  protected MetadataFeatureModule() {}
+  protected MetadataFeatureModule(int vectorLength) {
+    this.vectorLength = vectorLength;
+  }
 
   /** Returns the name of the feature entity as stored in the persistent layer. */
   public abstract String featureEntityName();
@@ -67,7 +70,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
 
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().createFeatureEntity(this.featureEntityName(), true, FEATURE_COLUMN_NAME);
+    supply.get().createFeatureEntity(this.featureEntityName(), true, this.vectorLength, FEATURE_COLUMN_NAME);
   }
 
   @Override

@@ -15,7 +15,7 @@ import org.vitrivr.cineast.core.util.ARPartioner;
 public class AverageColorARP44 extends AbstractFeatureModule {
 
   public AverageColorARP44() {
-    super("features_AverageColorARP44", 115854f / 4f);
+    super("features_AverageColorARP44", 115854f / 4f, 96);
   }
 
   @Override

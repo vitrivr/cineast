@@ -28,7 +28,7 @@ public class SaturationGrid8 extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public SaturationGrid8() {
-    super("features_SaturationGrid8", 45f / 4f);
+    super("features_SaturationGrid8", 45f / 4f, 128);
   }
 
   private Pair<FloatVector, float[]> computeGrid(SegmentContainer qc) {

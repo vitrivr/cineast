@@ -31,6 +31,8 @@ public final class AttributeDefinition {
     /** Hints to the underlying storage engine. Those hints are highly implementation specific! l. */
     private final Map<String,String> hints;
 
+    private final int length;
+
     /**
      * Constructor for {@link AttributeDefinition}
      *
@@ -41,6 +43,10 @@ public final class AttributeDefinition {
         this(name, type, new HashMap<>());
     }
 
+    public AttributeDefinition(String name, AttributeType type, int length) {
+        this(name, type, length, new HashMap<>());
+    }
+
     /**
      * Constructor for {@link AttributeDefinition}
      *
@@ -49,9 +55,14 @@ public final class AttributeDefinition {
      * @param hints Hint to the storage engine regarding the handler.
      */
     public AttributeDefinition(String name, AttributeType type, Map<String,String> hints) {
+        this(name, type, -1, hints);
+    }
+
+    public AttributeDefinition(String name, AttributeType type, int length, Map<String,String> hints) {
         this.name = name;
         this.type = type;
         this.hints = hints;
+        this.length = length;
     }
 
     /**
@@ -104,5 +115,9 @@ public final class AttributeDefinition {
         if (this.hints.containsKey(hint)) {
             consumer.accept(this.hints.get(hint));
         }
+    }
+
+    public int getLength(){
+        return this.length;
     }
 }

@@ -25,7 +25,7 @@ import org.vitrivr.cineast.core.util.TimeHelper;
 public class ForegroundBoundingBox extends AbstractFeatureModule {
 
   public ForegroundBoundingBox() {
-    super("features_ForegroundBoundingBox", 0.5f);
+    super("features_ForegroundBoundingBox", 0.5f, 4);
   }
 
   private static final Logger LOGGER = LogManager.getLogger();

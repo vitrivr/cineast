@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.util.ImageHistogramEqualizer;
 public class AverageColorARP44Normalized extends AbstractFeatureModule {
 
   public AverageColorARP44Normalized() {
-    super("features_AverageColorARP44Normalized", 115854f / 4f);
+    super("features_AverageColorARP44Normalized", 115854f / 4f, 96);
   }
 
   @Override

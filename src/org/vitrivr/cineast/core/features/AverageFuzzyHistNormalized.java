@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.util.ImageHistogramEqualizer;
 public class AverageFuzzyHistNormalized extends AbstractFeatureModule {
 
   public AverageFuzzyHistNormalized() {
-    super("features_AverageFuzzyHistNormalized", 2f / 4f);
+    super("features_AverageFuzzyHistNormalized", 2f / 4f, 15);
   }
 
   @Override

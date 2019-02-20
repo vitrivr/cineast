@@ -37,7 +37,9 @@ public class SpatialDistance extends MetadataFeatureModule<Location> {
       CorrespondenceFunction.hyperbolic(HALF_SIMILARITY_DISTANCE);
 
   // Empty public constructor necessary for instantiation through reflection
-  public SpatialDistance() {}
+  public SpatialDistance() {
+    super(2);
+  }
 
   @Override
   public String domain() {

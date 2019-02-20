@@ -72,7 +72,7 @@ public abstract class CENS extends StagedFeatureModule {
      * @param maxFrequency Maximum frequency to consider during HPCP analysis.
      */
     public CENS(String tableName, float minFrequency, float maxFrequency) {
-        super(tableName, 2.0f);
+        super(tableName, 2.0f, SHINGLE_SIZE * HPCP.Resolution.FULLSEMITONE.bins);
 
         /* Apply fields. */
         this.minFrequency = minFrequency;

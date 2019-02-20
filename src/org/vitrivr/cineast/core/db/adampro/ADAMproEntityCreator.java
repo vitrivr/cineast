@@ -149,6 +149,7 @@ public class ADAMproEntityCreator implements EntityCreator {
     }
 
 
+
     /**
      * Creates and initializes a new feature entity with the provided name and the provided attributes. The new entity will have a field
      * called "id", which is of type "string" and has an index. Also, for each of the provided feature attribute a field of the type "vector"
@@ -156,12 +157,13 @@ public class ADAMproEntityCreator implements EntityCreator {
      *
      * @param featurename ame of the new entity.
      * @param unique Whether or not the provided feature should be unique per id.
-     * @param featureAttributes List of the feature names.
+     * @param featureNames List of the feature names.
      * @return True on success, false otherwise.
      */
     @Override
-    public boolean createFeatureEntity(String featurename, boolean unique, String... featureAttributes) {
-        final AttributeDefinition[] attributes = Arrays.stream(featureAttributes)
+    public boolean createFeatureEntity(String featurename, boolean unique, int length,
+        String... featureNames) {
+        final AttributeDefinition[] attributes = Arrays.stream(featureNames)
             .map(s -> new AttributeDefinition(s, AttributeDefinition.AttributeType.VECTOR))
             .toArray(AttributeDefinition[]::new);
         return this.createFeatureEntity(featurename, unique, attributes);

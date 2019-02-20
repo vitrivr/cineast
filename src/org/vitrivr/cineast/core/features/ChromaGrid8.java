@@ -28,7 +28,7 @@ public class ChromaGrid8 extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public ChromaGrid8() {
-    super("features_ChromaGrid8", 86609f / 4f);
+    super("features_ChromaGrid8", 86609f / 4f, 128);
   }
 
   private Pair<FloatVector, float[]> buildChromaGrid(SegmentContainer qc) {

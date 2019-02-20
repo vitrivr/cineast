@@ -47,8 +47,8 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      * @param tableName
      * @param maxDist
      */
-    protected StagedFeatureModule(String tableName, float maxDist) {
-        super(tableName, maxDist);
+    protected StagedFeatureModule(String tableName, float maxDist, int vectorLength) {
+        super(tableName, maxDist, vectorLength);
         this.benchmark_engine = BenchmarkManager.getDefaultEngine();
     }
 

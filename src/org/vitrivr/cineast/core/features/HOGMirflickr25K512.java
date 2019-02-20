@@ -15,7 +15,7 @@ public class HOGMirflickr25K512 extends HOG {
      * Constructor: defines name of entity and max distance.
      */
     public HOGMirflickr25K512() {
-        super("features_hogmf25k512", (float)MathHelper.SQRT2/4.0f);
+        super("features_hogmf25k512", (float)MathHelper.SQRT2/4.0f, 512);
     }
 
     /**

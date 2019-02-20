@@ -24,7 +24,7 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public EdgeGrid16Full() {
-    super("features_EdgeGrid16Full", 124f / 4f);
+    super("features_EdgeGrid16Full", 124f / 4f, 256);
   }
 
   @Override

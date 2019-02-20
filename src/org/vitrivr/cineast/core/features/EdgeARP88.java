@@ -23,7 +23,7 @@ public class EdgeARP88 extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public EdgeARP88() {
-    super("features_EdgeARP88", 31f / 4f);
+    super("features_EdgeARP88", 31f / 4f, 64);
   }
 
   @Override

@@ -66,7 +66,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      * @param resolution Resolution of HPCP (i.e. number of HPCP bins).
      */
     protected HPCPShingle(String name, float min_frequency, float max_frequency, HPCP.Resolution resolution) {
-        super(name, 2.0f);
+        super(name, 2.0f, SHINGLE_SIZE * resolution.bins);
 
         /* Assign variables. */
         this.min_frequency = min_frequency;

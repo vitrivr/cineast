@@ -15,7 +15,7 @@ public class SubDivMotionSum4 extends MotionHistogramCalculator {
 
 
   public SubDivMotionSum4() {
-    super("features_SubDivMotionHistogram4", "sums", 100 * 16);
+    super("features_SubDivMotionHistogram4", "sums", 100 * 16, 4);
   }
 
   @Override

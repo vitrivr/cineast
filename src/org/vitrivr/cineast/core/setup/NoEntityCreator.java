@@ -47,14 +47,11 @@ public class NoEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createFeatureEntity(String featurename, boolean unique) {
+  public boolean createFeatureEntity(String featurename, boolean unique, int length,
+      String... featureNames) {
     return false;
   }
 
-  @Override
-  public boolean createFeatureEntity(String featurename, boolean unique, String... featrueNames) {
-    return false;
-  }
 
   @Override
   public boolean createFeatureEntity(String featurename, boolean unique,

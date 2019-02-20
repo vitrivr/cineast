@@ -30,13 +30,15 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
   protected SimpleFeatureDescriptorWriter writer;
   protected DBSelector selector;
   protected final float maxDist;
+  protected final int vectorLength;
   protected final String tableName;
   protected PersistencyWriter<?> phandler;
   protected CorrespondenceFunction correspondence;
 
-  protected AbstractFeatureModule(String tableName, float maxDist) {
+  protected AbstractFeatureModule(String tableName, float maxDist, int vectorLength) {
     this.tableName = tableName;
     this.maxDist = maxDist;
+    this.vectorLength = vectorLength;
     this.correspondence = CorrespondenceFunction.linear(maxDist);
   }
 
@@ -125,7 +127,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
 
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().createFeatureEntity(this.tableName, true);
+    supply.get().createFeatureEntity(this.tableName, true, this.vectorLength);
   }
 
   @Override

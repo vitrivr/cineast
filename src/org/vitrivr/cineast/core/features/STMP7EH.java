@@ -15,6 +15,10 @@ public class STMP7EH extends EHD {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
+  public STMP7EH(){
+    super(160);
+  }
+
   @Override
   public void init(PersistencyWriterSupplier supply) {
     this.phandler = supply.get();

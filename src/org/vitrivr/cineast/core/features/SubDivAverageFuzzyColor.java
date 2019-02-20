@@ -19,7 +19,7 @@ public class SubDivAverageFuzzyColor extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public SubDivAverageFuzzyColor() {
-    super("features_SubDivAverageFuzzyColor", 2f / 4f);
+    super("features_SubDivAverageFuzzyColor", 2f / 4f, 60);
   }
 
   @Override

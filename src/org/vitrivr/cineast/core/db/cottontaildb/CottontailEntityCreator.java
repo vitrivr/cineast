@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
+import static org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType.VECTOR;
+
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type;
@@ -106,9 +108,10 @@ public class CottontailEntityCreator implements EntityCreator {
   }
 
   @Override
-  public boolean createFeatureEntity(String featurename, boolean unique, String... featureNames) {
+  public boolean createFeatureEntity(String featurename, boolean unique, int length,
+      String... featureNames) {
     final AttributeDefinition[] attributes = Arrays.stream(featureNames)
-        .map(s -> new AttributeDefinition(s, AttributeDefinition.AttributeType.VECTOR))
+        .map(s -> new AttributeDefinition(s, VECTOR, length))
         .toArray(AttributeDefinition[]::new);
     return this.createFeatureEntity(featurename, unique, attributes);
   }
@@ -139,6 +142,9 @@ public class CottontailEntityCreator implements EntityCreator {
     ColumnDefinition.Builder builder = ColumnDefinition.newBuilder();
     for (AttributeDefinition attribute : attributes) {
       builder.setName(attribute.getName()).setType(mapAttributeType(attribute.getType()));
+      if(attribute.getType() == VECTOR && attribute.getLength() > 0){
+        builder.setLength(attribute.getLength());
+      }
       columns.add(builder.build());
       builder.clear();
     }

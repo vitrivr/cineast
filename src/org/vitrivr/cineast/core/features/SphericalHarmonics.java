@@ -49,7 +49,7 @@ public abstract class SphericalHarmonics extends StagedFeatureModule {
      * @param max_l Maximum harmonic l to consider for feature vector.
      */
     public SphericalHarmonics(String name, int grid_size, int min_l, int max_l) {
-        super(name, 2.0f);
+        super(name, 2.0f, (grid_size/2 - 10)*(SphericalHarmonicsFunction.numberOfCoefficients(max_l, true) - SphericalHarmonicsFunction.numberOfCoefficients(min_l-1, true)));
         this.grid_size = grid_size;
         this.min_l = min_l;
         this.max_l = max_l;

@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.util.ImageHistogramEqualizer;
 public class CLDNormalized extends AbstractFeatureModule {
 
   public CLDNormalized() {
-    super("features_CLDNormalized", 1960f / 4f);
+    super("features_CLDNormalized", 1960f / 4f, 12);
   }
 
   @Override

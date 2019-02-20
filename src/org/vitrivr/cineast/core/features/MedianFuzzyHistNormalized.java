@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.util.ImageHistogramEqualizer;
 public class MedianFuzzyHistNormalized extends AbstractFeatureModule {
 
   public MedianFuzzyHistNormalized() {
-    super("features_MedianFuzzyHistNormalized", 2f / 4f);
+    super("features_MedianFuzzyHistNormalized", 2f / 4f, 15);
   }
 
   @Override

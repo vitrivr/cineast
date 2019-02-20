@@ -43,7 +43,7 @@ public class MFCCShingle extends StagedFeatureModule {
      *
      */
     public MFCCShingle() {
-        super("features_mfccshingles", 2.0f);
+        super("features_mfccshingles", 2.0f, SHINGLE_SIZE * 13);
         this.distanceThreshold = 0.1f;
     }
 

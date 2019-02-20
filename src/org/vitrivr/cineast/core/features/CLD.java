@@ -13,7 +13,7 @@ import org.vitrivr.cineast.core.util.ColorLayoutDescriptor;
 public class CLD extends AbstractFeatureModule {
 
   public CLD() {
-    super("features_CLD", 1960f / 4f);
+    super("features_CLD", 1960f / 4f, 12);
   }
 
 

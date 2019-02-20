@@ -31,7 +31,7 @@ public class ConceptMasksAde20k extends AbstractFeatureModule {
   private DeepLab ade20k;
 
   public ConceptMasksAde20k() {
-    super("features_conceptmasksade20k", 1);
+    super("features_conceptmasksade20k", 1, GRID_PARTITIONS * GRID_PARTITIONS * 2);
     this.correspondence = CorrespondenceFunction.hyperbolic(2000);
 
   }

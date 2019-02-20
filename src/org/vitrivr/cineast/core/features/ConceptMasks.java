@@ -30,7 +30,7 @@ public class ConceptMasks extends AbstractFeatureModule {
   private final DeepLab ade20k, cityscapes, pascalvoc;
 
   public ConceptMasks() {
-    super("features_conceptmasks", 1);
+    super("features_conceptmasks", 1, GRID_PARTITIONS * GRID_PARTITIONS * 2);
     this.correspondence = CorrespondenceFunction.hyperbolic(10); //TODO determine distance
     this.ade20k = new DeepLabAde20k();
     this.cityscapes = new DeepLabCityscapes();

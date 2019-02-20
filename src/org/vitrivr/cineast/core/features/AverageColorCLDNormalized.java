@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.util.ImageHistogramEqualizer;
 public class AverageColorCLDNormalized extends AbstractFeatureModule {
 
   public AverageColorCLDNormalized() {
-    super("features_AverageColorCLDNormalized", 1960f / 4f);
+    super("features_AverageColorCLDNormalized", 1960f / 4f, 12);
   }
 
   @Override

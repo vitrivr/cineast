@@ -26,7 +26,7 @@ public class DominantColors extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public DominantColors() {
-    super("features_DominantColors", 488f / 4f);
+    super("features_DominantColors", 488f / 4f, 9);
   }
 
   public static LabContainer[] getDominantColor(MultiImage img) {

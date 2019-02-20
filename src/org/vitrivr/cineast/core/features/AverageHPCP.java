@@ -51,7 +51,7 @@ public abstract class AverageHPCP extends StagedFeatureModule {
      * @param average Number of frames to average.
      */
     protected AverageHPCP(String name, float min_frequency, float max_frequency, HPCP.Resolution resolution, int average) {
-        super(name, 2.0f);
+        super(name, 2.0f, 2*resolution.bins);
 
         /* Assign variables. */
         this.min_frequency = min_frequency;

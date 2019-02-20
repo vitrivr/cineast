@@ -17,7 +17,7 @@ import org.vitrivr.cineast.core.util.ImageHistogramEqualizer;
 public class MedianColorARP44Normalized extends AbstractFeatureModule {
 
   public MedianColorARP44Normalized() {
-    super("features_MedianColorARP44Normalized", 115854f / 4f);
+    super("features_MedianColorARP44Normalized", 115854f / 4f, 96);
   }
 
   @Override

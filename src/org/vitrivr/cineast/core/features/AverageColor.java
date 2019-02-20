@@ -18,7 +18,7 @@ import org.vitrivr.cineast.core.util.TimeHelper;
 public class AverageColor extends AbstractFeatureModule {
 
   public AverageColor() {
-    super("features_AverageColor", 196f / 4f);
+    super("features_AverageColor", 196f / 4f, 3);
   }
 
   private static final Logger LOGGER = LogManager.getLogger();

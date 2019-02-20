@@ -25,11 +25,11 @@ import org.vitrivr.cineast.core.util.GridPartitioner;
 public class AverageColorGrid8 extends AbstractFeatureModule {
 
   public AverageColorGrid8() {
-    super("features_AverageColorGrid8", 12595f / 4f);
+    super("features_AverageColorGrid8", 12595f / 4f, 192);
   }
 
   protected AverageColorGrid8(String tableName, float maxDist) {
-    super(tableName, maxDist);
+    super(tableName, maxDist, 192);
   }
 
   private static final Logger LOGGER = LogManager.getLogger();

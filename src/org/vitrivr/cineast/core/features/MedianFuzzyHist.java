@@ -19,7 +19,7 @@ public class MedianFuzzyHist extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public MedianFuzzyHist() {
-    super("features_MedianFuzzyHist", 2f / 4f);
+    super("features_MedianFuzzyHist", 2f / 4f, 15);
   }
 
   @Override

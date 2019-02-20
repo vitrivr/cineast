@@ -44,7 +44,7 @@ public class AudioFingerprint extends StagedFeatureModule {
      * Default constructor;
      */
     public AudioFingerprint() {
-        super("features_audiofingerprint", 4000.0f);
+        super("features_audiofingerprint", 4000.0f, FINGERPRINT);
     }
 
     /**

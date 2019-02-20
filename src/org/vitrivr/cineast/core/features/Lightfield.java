@@ -59,8 +59,8 @@ public abstract class Lightfield extends StagedFeatureModule {
      * @param maxDist
      * @param camerapositions
      */
-    protected Lightfield(String tableName, float maxDist, double[][] camerapositions) {
-        super(tableName, maxDist);
+    protected Lightfield(String tableName, float maxDist, int vectorLength, double[][] camerapositions) {
+        super(tableName, maxDist, vectorLength);
         if (camerapositions.length == 0) {
           throw new IllegalArgumentException("You must specify at least one camera position!");
         }

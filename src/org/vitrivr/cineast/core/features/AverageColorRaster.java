@@ -27,6 +27,8 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
+import org.vitrivr.cineast.core.setup.AttributeDefinition;
+import org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.ColorUtils;
 import org.vitrivr.cineast.core.util.GridPartitioner;
@@ -36,7 +38,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public AverageColorRaster() {
-    super("features_AverageColorRaster", 1);
+    super("features_AverageColorRaster", 1, 1);
   }
 
   @Override
@@ -301,7 +303,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().createFeatureEntity(this.tableName, true, "hist", "raster");
+    supply.get().createFeatureEntity(this.tableName, true, new AttributeDefinition("hist", AttributeType.VECTOR, 15), new AttributeDefinition("raster", AttributeType.VECTOR, 64));
   }
 
 }

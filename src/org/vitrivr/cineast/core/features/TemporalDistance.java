@@ -36,7 +36,9 @@ public class TemporalDistance extends MetadataFeatureModule<InstantVector> {
       CorrespondenceFunction.hyperbolic(TIME_SCALE);
 
   // Empty public constructor necessary for instantiation through reflection
-  public TemporalDistance() {}
+  public TemporalDistance() {
+    super(1);
+  }
 
   @Override
   public String domain() {

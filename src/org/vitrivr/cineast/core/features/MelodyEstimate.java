@@ -50,7 +50,7 @@ public class MelodyEstimate extends StagedFeatureModule {
      *
      */
     public MelodyEstimate() {
-        super("feature_melodyestimate", 2.0f);
+        super("feature_melodyestimate", 2.0f, SHINGLE_SIZE * 12);
     }
 
     /**

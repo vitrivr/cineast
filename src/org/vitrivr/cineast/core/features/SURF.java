@@ -33,8 +33,8 @@ public abstract class SURF extends AbstractCodebookFeatureModule {
     /**
     * @param tableName
     */
-    protected SURF(String tableName) {
-    super(tableName, 2.0f);
+    protected SURF(String tableName, int vectorLength) {
+    super(tableName, 2.0f, vectorLength);
     }
 
     @Override

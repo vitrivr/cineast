@@ -13,7 +13,7 @@ import org.vitrivr.cineast.core.util.ColorLayoutDescriptor;
 public class AverageColorCLD extends AbstractFeatureModule {
 
   public AverageColorCLD() {
-    super("features_AverageColorCLD", 1960f / 4f);
+    super("features_AverageColorCLD", 1960f / 4f, 12);
   }
 
   @Override

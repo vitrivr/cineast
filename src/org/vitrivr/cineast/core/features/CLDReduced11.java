@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.util.ColorReductionUtil;
 public class CLDReduced11 extends AbstractFeatureModule {
 
   public CLDReduced11() {
-    super("features_CLDReduced11", 1960f / 4f);
+    super("features_CLDReduced11", 1960f / 4f, 12);
   }
 
   @Override

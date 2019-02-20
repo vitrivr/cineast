@@ -33,8 +33,8 @@ public abstract class HOG extends AbstractCodebookFeatureModule {
      * @param tableName
      * @param maxDist
      */
-    protected HOG(String tableName, float maxDist) {
-        super(tableName, maxDist);
+    protected HOG(String tableName, float maxDist, int vectorLength) {
+        super(tableName, maxDist, vectorLength);
     }
 
     /**

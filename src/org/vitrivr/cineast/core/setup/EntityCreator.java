@@ -192,11 +192,11 @@ public interface EntityCreator extends AutoCloseable {
      * @param featurename the name of the feature module
      * @param unique      true if the feature module produces at most one vector per segment
      */
-    default boolean createFeatureEntity(String featurename, boolean unique) {
-        return createFeatureEntity(featurename, unique, "feature");
+    default boolean createFeatureEntity(String featurename, boolean unique, int length) {
+        return createFeatureEntity(featurename, unique, length, "feature");
     }
 
-    boolean createFeatureEntity(String featurename, boolean unique, String... featureNames);
+    boolean createFeatureEntity(String featurename, boolean unique, int length, String... featureNames);
 
     boolean createFeatureEntity(String featurename, boolean unique, AttributeDefinition... attributes);
 

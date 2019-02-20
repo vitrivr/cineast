@@ -75,7 +75,7 @@ public class DCTImageHash extends AbstractFeatureModule {
    * No-args constructor for reflection
    */
   public DCTImageHash() {
-    super(TABLE_NAME, 64);
+    super(TABLE_NAME, 64, 64);
   }
 
   private BitSet extractHash(MultiImage image) {
