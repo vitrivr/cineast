@@ -181,7 +181,7 @@ public class CottontailEntityCreator implements EntityCreator {
       case DOUBLE:
         return Type.DOUBLE;
       case VECTOR:
-        return Type.DOUBLE_VEC;
+        return Type.FLOAT_VEC;
       case FLOAT:
         return Type.FLOAT;
       /*case GEOGRAPHY:

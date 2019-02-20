@@ -122,9 +122,9 @@ public class CottontailWrapper implements AutoCloseable{
       }
     };
 
-    this.queryStub.query(query, observer);
-
     try {
+      semaphore.acquire();
+      this.queryStub.query(query, observer);
       semaphore.tryAcquire(maxCallTimeOutMs, TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       LOGGER.warn("Waiting for response in CottontailWrapper.query has been interrupted: {}", LogHelper.getStackTrace(e));
