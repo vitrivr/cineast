@@ -37,6 +37,8 @@ public interface EntityCreator extends AutoCloseable {
      */
     default boolean setup(HashMap<String, String> options) {
 
+        this.init();
+
         if (options.containsKey(SETUP_FLAG_CLEAN)) {
             LOGGER.info("Dropping all entities");
             this.dropAllEntities();
@@ -72,6 +74,10 @@ public interface EntityCreator extends AutoCloseable {
         return true;
     }
 
+
+    default void init(){
+
+    }
 
     /**
      * Drops all entities currently required by Cineast.

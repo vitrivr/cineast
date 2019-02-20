@@ -18,6 +18,12 @@ public class CottontailEntityCreator implements EntityCreator {
 
   private CottontailWrapper cottontail = new CottontailWrapper();
 
+
+  @Override
+  public void init() {
+    cottontail.createSchema("cineast");
+  }
+
   @Override
   public boolean createMultiMediaObjectsEntity() {
 
@@ -140,6 +146,8 @@ public class CottontailEntityCreator implements EntityCreator {
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
         .setEntity(CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName))
         .addAllColumns(columns).build();
+
+    cottontail.createEntityBlocking(message);
 
     return true;
   }
