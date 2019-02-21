@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.CINEAST_SCHEMA;
 
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
@@ -14,6 +15,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import com.google.common.collect.Iterables;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -181,6 +186,12 @@ public class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getRows(
       String fieldName, Iterable<String> values) {
 
+    CottontailGrpc.Data[] array = new  CottontailGrpc.Data[Iterables.size(values)];
+    int i = 0;
+    for (String s : values) {
+      array[i] = CottontailMessageBuilder.toData(s);
+      i++;
+    }
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
@@ -188,7 +199,7 @@ public class CottontailSelector implements DBSelector {
                     entity,
                     SELECT_ALL_PROJECTION,
                     CottontailMessageBuilder.atomicWhere(
-                        fieldName, RelationalOperator.IN, CottontailMessageBuilder.toData(values)),
+                        fieldName, RelationalOperator.IN, array),
                     null),
                 ""));
 
