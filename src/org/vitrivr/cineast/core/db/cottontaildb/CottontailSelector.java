@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Iterables;
+import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -275,7 +276,7 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public boolean ping() { // currently not supported
-    return false;
+      return this.cottontail.ping();
   }
 
   private static List<Map<String, PrimitiveTypeProvider>> processResults(
