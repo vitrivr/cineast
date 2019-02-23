@@ -346,6 +346,9 @@ public class CottontailMessageBuilder {
             case squaredeuclidean: {
                 knnBuilder.setDistance(Distance.L2SQUARED);
             }
+            case chisquared: {
+                knnBuilder.setDistance(Distance.CHISQUARED);
+            }
             default: {
                 LOGGER.error("distance '{}' not supported by cottontail", distance);
             }

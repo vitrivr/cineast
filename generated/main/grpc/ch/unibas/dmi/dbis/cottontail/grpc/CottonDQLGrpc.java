@@ -53,6 +53,19 @@ public final class CottonDQLGrpc {
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage.getDefaultInstance()))
           .setSchemaDescriptor(new CottonDQLMethodDescriptorSupplier("BatchedQuery"))
           .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<com.google.protobuf.Empty,
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_PING =
+      io.grpc.MethodDescriptor.<com.google.protobuf.Empty, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "CottonDQL", "Ping"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              com.google.protobuf.Empty.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
+          .setSchemaDescriptor(new CottonDQLMethodDescriptorSupplier("Ping"))
+          .build();
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -95,6 +108,13 @@ public final class CottonDQLGrpc {
       asyncUnimplementedUnaryCall(METHOD_BATCHED_QUERY, responseObserver);
     }
 
+    /**
+     */
+    public void ping(com.google.protobuf.Empty request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_PING, responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -111,6 +131,13 @@ public final class CottonDQLGrpc {
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage,
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage>(
                   this, METHODID_BATCHED_QUERY)))
+          .addMethod(
+            METHOD_PING,
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.google.protobuf.Empty,
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
+                  this, METHODID_PING)))
           .build();
     }
   }
@@ -148,6 +175,14 @@ public final class CottonDQLGrpc {
       asyncServerStreamingCall(
           getChannel().newCall(METHOD_BATCHED_QUERY, getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void ping(com.google.protobuf.Empty request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_PING, getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -183,6 +218,13 @@ public final class CottonDQLGrpc {
       return blockingServerStreamingCall(
           getChannel(), METHOD_BATCHED_QUERY, getCallOptions(), request);
     }
+
+    /**
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus ping(com.google.protobuf.Empty request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_PING, getCallOptions(), request);
+    }
   }
 
   /**
@@ -202,10 +244,19 @@ public final class CottonDQLGrpc {
         io.grpc.CallOptions callOptions) {
       return new CottonDQLFutureStub(channel, callOptions);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> ping(
+        com.google.protobuf.Empty request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_PING, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_QUERY = 0;
   private static final int METHODID_BATCHED_QUERY = 1;
+  private static final int METHODID_PING = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -231,6 +282,10 @@ public final class CottonDQLGrpc {
         case METHODID_BATCHED_QUERY:
           serviceImpl.batchedQuery((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage>) responseObserver);
+          break;
+        case METHODID_PING:
+          serviceImpl.ping((com.google.protobuf.Empty) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -295,6 +350,7 @@ public final class CottonDQLGrpc {
               .setSchemaDescriptor(new CottonDQLFileDescriptorSupplier())
               .addMethod(METHOD_QUERY)
               .addMethod(METHOD_BATCHED_QUERY)
+              .addMethod(METHOD_PING)
               .build();
         }
       }

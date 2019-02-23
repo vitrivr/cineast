@@ -16967,6 +16967,10 @@ public final class CottontailGrpc {
        * <code>L2SQUARED = 2;</code>
        */
       L2SQUARED(2),
+      /**
+       * <code>CHISQUARED = 3;</code>
+       */
+      CHISQUARED(3),
       UNRECOGNIZED(-1),
       ;
 
@@ -16982,6 +16986,10 @@ public final class CottontailGrpc {
        * <code>L2SQUARED = 2;</code>
        */
       public static final int L2SQUARED_VALUE = 2;
+      /**
+       * <code>CHISQUARED = 3;</code>
+       */
+      public static final int CHISQUARED_VALUE = 3;
 
 
       public final int getNumber() {
@@ -17005,6 +17013,7 @@ public final class CottontailGrpc {
           case 0: return L1;
           case 1: return L2;
           case 2: return L2SQUARED;
+          case 3: return CHISQUARED;
           default: return null;
         }
       }
@@ -21852,48 +21861,50 @@ public final class CottontailGrpc {
       "rom\"s\n\nProjection\022!\n\002op\030\001 \001(\0162\025.Projecti" +
       "on.Operation\022\022\n\nattributes\030\002 \003(\t\".\n\tOper" +
       "ation\022\n\n\006SELECT\020\000\022\t\n\005COUNT\020\001\022\n\n\006EXISTS\020\002",
-      "\"\241\001\n\003Knn\022\021\n\tattribute\030\001 \001(\t\022\t\n\001k\030\002 \001(\r\022\037" +
+      "\"\261\001\n\003Knn\022\021\n\tattribute\030\001 \001(\t\022\t\n\001k\030\002 \001(\r\022\037" +
       "\n\010distance\030\003 \001(\0162\r.Knn.Distance\022\026\n\005query" +
       "\030\004 \001(\0132\007.Vector\022\030\n\007weights\030\005 \001(\0132\007.Vecto" +
-      "r\")\n\010Distance\022\006\n\002L1\020\000\022\006\n\002L2\020\001\022\r\n\tL2SQUAR" +
-      "ED\020\002\"u\n\005Where\0220\n\006atomic\030\001 \001(\0132\036.AtomicLi" +
-      "teralBooleanPredicateH\000\022-\n\010compound\030\002 \001(" +
-      "\0132\031.CompoundBooleanPredicateH\000B\013\n\tpredic" +
-      "ate\"\377\001\n\035AtomicLiteralBooleanPredicate\022\021\n" +
-      "\tattribute\030\001 \001(\t\022\013\n\003not\030\002 \001(\010\0223\n\002op\030\003 \001(" +
-      "\0162\'.AtomicLiteralBooleanPredicate.Operat",
-      "or\022\023\n\004data\030\004 \003(\0132\005.Data\"t\n\010Operator\022\t\n\005E" +
-      "QUAL\020\000\022\013\n\007GREATER\020\001\022\010\n\004LESS\020\002\022\n\n\006GEQUAL\020" +
-      "\003\022\n\n\006LEQUAL\020\004\022\006\n\002IN\020\005\022\013\n\007BETWEEN\020\006\022\n\n\006IS" +
-      "NULL\020\007\022\r\n\tISNOTNULL\020\010\"\264\002\n\030CompoundBoolea" +
-      "nPredicate\022/\n\005aleft\030\001 \001(\0132\036.AtomicLitera" +
-      "lBooleanPredicateH\000\022*\n\005cleft\030\002 \001(\0132\031.Com" +
-      "poundBooleanPredicateH\000\022.\n\002op\030\003 \001(\0162\".Co" +
-      "mpoundBooleanPredicate.Operator\0220\n\006arigh" +
-      "t\030\004 \001(\0132\036.AtomicLiteralBooleanPredicateH" +
-      "\001\022+\n\006cright\030\005 \001(\0132\031.CompoundBooleanPredi",
-      "cateH\001\"\033\n\010Operator\022\007\n\003AND\020\000\022\006\n\002OR\020\001B\006\n\004l" +
-      "eftB\007\n\005right*\246\001\n\004Type\022\013\n\007BOOLEAN\020\000\022\010\n\004BY" +
-      "TE\020\001\022\t\n\005SHORT\020\002\022\013\n\007INTEGER\020\003\022\010\n\004LONG\020\004\022\t" +
-      "\n\005FLOAT\020\005\022\n\n\006DOUBLE\020\006\022\n\n\006STRING\020\007\022\016\n\nDOU" +
-      "BLE_VEC\020\010\022\r\n\tFLOAT_VEC\020\t\022\014\n\010LONG_VEC\020\n\022\013" +
-      "\n\007INT_VEC\020\013\022\010\n\004BLOB\020\0142\344\002\n\tCottonDDL\0220\n\013L" +
-      "istSchemas\022\026.google.protobuf.Empty\032\007.Sch" +
-      "ema0\001\022\'\n\014CreateSchema\022\007.Schema\032\016.Success" +
-      "Status\022%\n\nDropSchema\022\007.Schema\032\016.SuccessS" +
-      "tatus\022\"\n\014ListEntities\022\007.Schema\032\007.Entity0",
-      "\001\0224\n\014CreateEntity\022\024.CreateEntityMessage\032" +
-      "\016.SuccessStatus\022%\n\nDropEntity\022\007.Entity\032\016" +
-      ".SuccessStatus\022)\n\016OptimizeEntity\022\007.Entit" +
-      "y\032\016.SuccessStatus\022)\n\016TruncateEntity\022\007.En" +
-      "tity\032\016.SuccessStatus2g\n\tCottonDML\022\'\n\006Ins" +
-      "ert\022\016.InsertMessage\032\r.InsertStatus\0221\n\014In" +
-      "sertStream\022\016.InsertMessage\032\r.InsertStatu" +
-      "s(\0010\0012{\n\tCottonDQL\022/\n\005Query\022\r.QueryMessa" +
-      "ge\032\025.QueryResponseMessage0\001\022=\n\014BatchedQu" +
-      "ery\022\024.BatchedQueryMessage\032\025.QueryRespons",
-      "eMessage0\001B4\n\"ch.unibas.dmi.dbis.cottont" +
-      "ail.grpcB\016CottontailGrpcb\006proto3"
+      "r\"9\n\010Distance\022\006\n\002L1\020\000\022\006\n\002L2\020\001\022\r\n\tL2SQUAR" +
+      "ED\020\002\022\016\n\nCHISQUARED\020\003\"u\n\005Where\0220\n\006atomic\030" +
+      "\001 \001(\0132\036.AtomicLiteralBooleanPredicateH\000\022" +
+      "-\n\010compound\030\002 \001(\0132\031.CompoundBooleanPredi" +
+      "cateH\000B\013\n\tpredicate\"\377\001\n\035AtomicLiteralBoo" +
+      "leanPredicate\022\021\n\tattribute\030\001 \001(\t\022\013\n\003not\030" +
+      "\002 \001(\010\0223\n\002op\030\003 \001(\0162\'.AtomicLiteralBoolean",
+      "Predicate.Operator\022\023\n\004data\030\004 \003(\0132\005.Data\"" +
+      "t\n\010Operator\022\t\n\005EQUAL\020\000\022\013\n\007GREATER\020\001\022\010\n\004L" +
+      "ESS\020\002\022\n\n\006GEQUAL\020\003\022\n\n\006LEQUAL\020\004\022\006\n\002IN\020\005\022\013\n" +
+      "\007BETWEEN\020\006\022\n\n\006ISNULL\020\007\022\r\n\tISNOTNULL\020\010\"\264\002" +
+      "\n\030CompoundBooleanPredicate\022/\n\005aleft\030\001 \001(" +
+      "\0132\036.AtomicLiteralBooleanPredicateH\000\022*\n\005c" +
+      "left\030\002 \001(\0132\031.CompoundBooleanPredicateH\000\022" +
+      ".\n\002op\030\003 \001(\0162\".CompoundBooleanPredicate.O" +
+      "perator\0220\n\006aright\030\004 \001(\0132\036.AtomicLiteralB" +
+      "ooleanPredicateH\001\022+\n\006cright\030\005 \001(\0132\031.Comp",
+      "oundBooleanPredicateH\001\"\033\n\010Operator\022\007\n\003AN" +
+      "D\020\000\022\006\n\002OR\020\001B\006\n\004leftB\007\n\005right*\246\001\n\004Type\022\013\n" +
+      "\007BOOLEAN\020\000\022\010\n\004BYTE\020\001\022\t\n\005SHORT\020\002\022\013\n\007INTEG" +
+      "ER\020\003\022\010\n\004LONG\020\004\022\t\n\005FLOAT\020\005\022\n\n\006DOUBLE\020\006\022\n\n" +
+      "\006STRING\020\007\022\016\n\nDOUBLE_VEC\020\010\022\r\n\tFLOAT_VEC\020\t" +
+      "\022\014\n\010LONG_VEC\020\n\022\013\n\007INT_VEC\020\013\022\010\n\004BLOB\020\0142\344\002" +
+      "\n\tCottonDDL\0220\n\013ListSchemas\022\026.google.prot" +
+      "obuf.Empty\032\007.Schema0\001\022\'\n\014CreateSchema\022\007." +
+      "Schema\032\016.SuccessStatus\022%\n\nDropSchema\022\007.S" +
+      "chema\032\016.SuccessStatus\022\"\n\014ListEntities\022\007.",
+      "Schema\032\007.Entity0\001\0224\n\014CreateEntity\022\024.Crea" +
+      "teEntityMessage\032\016.SuccessStatus\022%\n\nDropE" +
+      "ntity\022\007.Entity\032\016.SuccessStatus\022)\n\016Optimi" +
+      "zeEntity\022\007.Entity\032\016.SuccessStatus\022)\n\016Tru" +
+      "ncateEntity\022\007.Entity\032\016.SuccessStatus2g\n\t" +
+      "CottonDML\022\'\n\006Insert\022\016.InsertMessage\032\r.In" +
+      "sertStatus\0221\n\014InsertStream\022\016.InsertMessa" +
+      "ge\032\r.InsertStatus(\0010\0012\255\001\n\tCottonDQL\022/\n\005Q" +
+      "uery\022\r.QueryMessage\032\025.QueryResponseMessa" +
+      "ge0\001\022=\n\014BatchedQuery\022\024.BatchedQueryMessa",
+      "ge\032\025.QueryResponseMessage0\001\0220\n\004Ping\022\026.go" +
+      "ogle.protobuf.Empty\032\016.SuccessStatus\"\000B4\n" +
+      "\"ch.unibas.dmi.dbis.cottontail.grpcB\016Cot" +
+      "tontailGrpcb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
