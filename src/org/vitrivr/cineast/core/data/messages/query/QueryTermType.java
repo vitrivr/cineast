@@ -37,7 +37,13 @@ public enum QueryTermType {
     TAG(TagQueryContainer.class),
 
     /** Denotes a {@link QueryTerm} that should be regarded as a semantic sketch query. */
-    SEMANTIC(SemanticMapQueryContainer.class);
+    SEMANTIC(SemanticMapQueryContainer.class),
+
+    /**
+     * Denotes a {@link QueryTerm} containing an Id for a 'More-Like-This' query.
+     * This is used over the @link {@link MoreLikeThisQuery} in REST calls.
+     */
+    ID(IdQueryContainer.class);
 
     /** Instance of the {@link QueryContainer} class that represents this {@link QueryTermType}. */
     private final Class<? extends QueryContainer> c;
