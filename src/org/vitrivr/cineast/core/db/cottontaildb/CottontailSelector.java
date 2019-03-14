@@ -11,6 +11,7 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
+import com.google.common.base.Joiner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -209,8 +210,27 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(
-      int rows, String fieldname, String... terms) { // TODO
-    return Collections.emptyList();
+      int rows, String fieldname, String... terms) {
+
+    String searchString = Joiner.on(' ').join(terms); //TODO there might be a better way to do this?
+
+    Where where = CottontailMessageBuilder.atomicWhere(fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toData(searchString));
+
+    List<QueryResponseMessage> results =
+        this.cottontail.query(
+            CottontailMessageBuilder.queryMessage(
+                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, where, null), ""));
+
+    List<Map<String, PrimitiveTypeProvider>> _return = processResults(results);
+
+    //FIXME this is done to ensure compatibility to features expecting ADAMpro output. A better abstaction is needed here.
+    for (Map<String, PrimitiveTypeProvider> map : _return){
+      if(map.containsKey("lucene_score")){
+        map.put("ap_score", map.get("lucene_score"));
+      }
+    }
+
+    return _return;
   }
 
   @Override
