@@ -176,17 +176,20 @@ public class API {
    * Starts the Legacy JSON interface (program-argument)
    */
   private static void handleLegacy() {
-    try {
-      System.out.println("Starting Legacy API...");
-      ServerSocket ssocket = new ServerSocket(Config.sharedConfig().getApi().getLegacyPort());
-      while (running) {
-        JSONAPIThread thread = new JSONAPIThread(ssocket.accept());
-        thread.start();
-      }
-      ssocket.close();
-    } catch (IOException e) {
-      System.err.println("Error occurred while listening on ServerSocket.");
-    }
+//    try {
+//      System.out.println("Starting Legacy API...");
+//      ServerSocket ssocket = new ServerSocket(Config.sharedConfig().getApi().getLegacyPort());
+//      while (running) {
+//        JSONAPIThread thread = new JSONAPIThread(ssocket.accept());
+//        thread.start();
+//      }
+//      ssocket.close();
+//    } catch (IOException e) {
+//      System.err.println("Error occurred while listening on ServerSocket.");
+//    }
+
+    LOGGER.error("Legacy API no longer supported.");
+
   }
 
   /**
