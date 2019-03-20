@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class RangeBooleanRetriever extends BooleanRetriever {
 
   private static final List<RelationalOperator> SUPPORTED_OPERATORS =
       Collections.unmodifiableList(
-          List.of(
+          Arrays.asList(
               RelationalOperator.BETWEEN,
               RelationalOperator.EQ,
               RelationalOperator.GEQ,
