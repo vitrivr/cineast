@@ -1,12 +1,18 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.score.BooleanSegmentScoreElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.BooleanExpression;
@@ -25,6 +31,21 @@ public abstract class BooleanRetriever implements Retriever {
   protected BooleanRetriever(String entity, Collection<String> attributes){
     this.entity = entity;
     this.attributes.addAll(attributes);
+  }
+
+  protected BooleanRetriever(Map<String, String> properties){
+    if(!properties.containsKey("entity")){
+      throw new RuntimeException("no entity specified in properties map of BooleanRetriever");
+    }
+    this.entity = properties.get("entity");
+
+    if(properties.containsKey("attribute")){
+      List<String> attrs = Arrays.stream(properties.get("attribute").split(",")).map(String::trim)
+          .collect(
+              Collectors.toList());
+      this.attributes.addAll(attrs);
+    }
+
   }
 
   protected abstract Collection<RelationalOperator> getSupportedOperators();
@@ -56,10 +77,37 @@ public abstract class BooleanRetriever implements Retriever {
     return getMatching(relevantExpressions, qc);
   }
 
-  protected abstract List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc);
+  protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc){
+
+    Set<String> relevantIds = null;
+
+    for (BooleanExpression be: expressions){
+      List<Map<String, PrimitiveTypeProvider>> rows = selector
+          .getRows(be.getAttribute(), be.getOperator(), be.getValues().stream().map(
+              PrimitiveTypeProvider::getString).collect(Collectors.toList()));
+
+      Set<String> ids = rows.stream().map(x -> x.get("id").getString())
+          .collect(Collectors.toSet());
+
+      if(relevantIds == null){
+        relevantIds = new HashSet<>(ids.size());
+        relevantIds.addAll(ids);
+      }else{
+        relevantIds.retainAll(ids);
+      }
+
+    }
+
+    if(relevantIds == null || relevantIds.isEmpty()){
+      return Collections.emptyList();
+    }
+    
+    return relevantIds.stream().map(BooleanSegmentScoreElement::new).collect(Collectors.toList());
+
+  }
 
   @Override
-  public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
+  public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) { //nop
     return Collections.emptyList();
   }
 
