@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
 import org.vitrivr.cineast.core.data.score.BooleanSegmentScoreElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -27,6 +29,7 @@ public abstract class BooleanRetriever implements Retriever {
   protected DBSelector selector;
   protected final String entity;
   protected final HashSet<String> attributes = new HashSet<>();
+  protected final HashMap<String, ProviderDataType> columnTypes = new HashMap<>();
 
   protected BooleanRetriever(String entity, Collection<String> attributes){
     this.entity = entity;
@@ -86,8 +89,19 @@ public abstract class BooleanRetriever implements Retriever {
           .getRows(be.getAttribute(), be.getOperator(), be.getValues().stream().map(
               PrimitiveTypeProvider::getString).collect(Collectors.toList()));
 
+      if(rows.isEmpty()){
+        return Collections.emptyList();
+      }
+
       Set<String> ids = rows.stream().map(x -> x.get("id").getString())
           .collect(Collectors.toSet());
+
+      Map<String, PrimitiveTypeProvider> firstRow = rows.get(0);
+      firstRow.keySet().stream().forEach(x -> {
+        if (!this.columnTypes.containsKey(x)){
+          this.columnTypes.put(x, firstRow.get(x).getType());
+        }
+      });
 
       if(relevantIds == null){
         relevantIds = new HashSet<>(ids.size());
@@ -124,5 +138,9 @@ public abstract class BooleanRetriever implements Retriever {
   @Override
   public void dropPersistentLayer(Supplier<EntityCreator> supply) {
     //nop
+  }
+
+  public ProviderDataType getColumnType(String column){
+    return this.columnTypes.get(column);
   }
 }
