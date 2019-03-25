@@ -43,7 +43,9 @@ public enum QueryTermType {
      * Denotes a {@link QueryTerm} containing an Id for a 'More-Like-This' query.
      * This is used over the @link {@link MoreLikeThisQuery} in REST calls.
      */
-    ID(IdQueryContainer.class);
+    ID(IdQueryContainer.class),
+
+    BOOLEAN(BooleanQueryContainer.class);
 
     /** Instance of the {@link QueryContainer} class that represents this {@link QueryTermType}. */
     private final Class<? extends QueryContainer> c;

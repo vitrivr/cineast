@@ -48,7 +48,7 @@ public class SemanticMapQueryContainer extends QueryContainer {
         if (!jsonNode.has(IMAGE_FIELD_NAME)) throw new IllegalArgumentException("The provided data structure does not contain the required field 'image' (semantic map).");
         if (!jsonNode.has(MAP_FIELD_NAME)) throw new IllegalArgumentException("The provided data structure does not contain the required field 'map' (category to color map).");
 
-        final BufferedImage image = ImageParser.dataURLtoBufferedImage(jsonNode.get("image").asText());
+        final BufferedImage image = ImageParser.dataURLtoBufferedImage(jsonNode.get(IMAGE_FIELD_NAME).asText());
         final Map<String, String> classes = new LinkedHashMap<>();
 
         if (jsonNode.get(MAP_FIELD_NAME).isArray()) {
