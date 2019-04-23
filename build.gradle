@@ -213,7 +213,10 @@ sourceSets {
 
 jar {
 	manifest {
-		attributes 'Main-Class': 'org.vitrivr.cineast.api.API'
+		attributes(
+                'Main-Class': 'org.vitrivr.cineast.api.API',
+                'Multi-Release' : 'true'
+        )
 	}
 
 	from {
