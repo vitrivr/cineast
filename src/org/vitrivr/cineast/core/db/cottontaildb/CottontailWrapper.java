@@ -3,7 +3,6 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc.CottonDDLBlockingStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc.CottonDDLFutureStub;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc.CottonDDLStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLFutureStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc;
@@ -110,7 +109,7 @@ public class CottontailWrapper implements AutoCloseable {
             if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
                 LOGGER.error("CottontailWrapper.batchedQuery has timed out (timeout = {}ms).", MAX_QUERY_CALL_TIMEOUT);
             } else {
-                LOGGER.error("Error occurred during invocation of CottontailWrapper.batchedQuery:", e.getMessage());
+                LOGGER.error("Error occurred during invocation of CottontailWrapper.batchedQuery: {}", e.getMessage());
             }
         }
         return results;
@@ -130,7 +129,7 @@ public class CottontailWrapper implements AutoCloseable {
             if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
                 LOGGER.error("CottontailWrapper.batchedQuery has timed out (timeout = {}ms).", MAX_QUERY_CALL_TIMEOUT);
             } else {
-                LOGGER.error("Error occurred during invocation of CottontailWrapper.batchedQuery:", e.getMessage());
+                LOGGER.error("Error occurred during invocation of CottontailWrapper.batchedQuery: {}", e.getMessage());
             }
         }
         return results;
@@ -150,7 +149,7 @@ public class CottontailWrapper implements AutoCloseable {
             if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
                 LOGGER.error("CottontailWrapper.ping has timed out.");
             } else {
-                LOGGER.error("Error occurred during invocation of CottontailWrapper.ping:", e.getMessage());
+                LOGGER.error("Error occurred during invocation of CottontailWrapper.ping: {}", e.getMessage());
 
             }
             return false;
@@ -172,7 +171,7 @@ public class CottontailWrapper implements AutoCloseable {
             if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
                 LOGGER.error("CottontailWrapper.listEntities has timed out (timeout = {}ms).", MAX_CALL_TIMEOUT);
             } else {
-                LOGGER.error("Error occurred during invocation of CottontailWrapper.listEntities:", e.getMessage());
+                LOGGER.error("Error occurred during invocation of CottontailWrapper.listEntities: {}", e.getMessage());
             }
         }
         return entities;
