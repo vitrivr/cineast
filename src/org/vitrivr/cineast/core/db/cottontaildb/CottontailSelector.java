@@ -153,7 +153,7 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"), null, knn),
+                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, knn),
                 config.getQueryId().toString()));
 
     return processResults(results);
