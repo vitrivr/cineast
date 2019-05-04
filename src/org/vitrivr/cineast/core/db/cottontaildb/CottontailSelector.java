@@ -76,7 +76,7 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, knn),
+                CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"), null, knn),
                 config.getQueryId().toString()));
 
     List<E> _return = new ArrayList<>();
@@ -104,7 +104,7 @@ public class CottontailSelector implements DBSelector {
       queries.add(
           CottontailMessageBuilder.query(
               entity,
-              SELECT_ALL_PROJECTION,
+              CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"),
               null,
               CottontailMessageBuilder.knn(
                   column,
@@ -153,7 +153,7 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, null, knn),
+                CottontailMessageBuilder.query(entity, CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"), null, knn),
                 config.getQueryId().toString()));
 
     return processResults(results);
@@ -197,11 +197,7 @@ public class CottontailSelector implements DBSelector {
     List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(
-                    entity,
-                    SELECT_ALL_PROJECTION,
-                    CottontailMessageBuilder.atomicWhere(
-                        fieldName, RelationalOperator.IN, array),
+                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.IN, array),
                     null),
                 ""));
 
@@ -212,25 +208,17 @@ public class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(
       int rows, String fieldname, String... terms) {
 
-    String searchString = Joiner.on(' ').join(terms); //TODO there might be a better way to do this?
+    final String searchString = Joiner.on(' ').join(terms); //TODO there might be a better way to do this?
 
-    Where where = CottontailMessageBuilder.atomicWhere(fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toData(searchString));
+    final Where where = CottontailMessageBuilder.atomicWhere(fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toData(searchString));
+    final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id","").putAttributes("score","ap_score").build();
 
-    List<QueryResponseMessage> results =
+    final List<QueryResponseMessage> results =
         this.cottontail.query(
             CottontailMessageBuilder.queryMessage(
-                CottontailMessageBuilder.query(entity, SELECT_ALL_PROJECTION, where, null), ""));
+                CottontailMessageBuilder.query(entity, projection, where, null), ""));
 
-    List<Map<String, PrimitiveTypeProvider>> _return = processResults(results);
-
-    //FIXME this is done to ensure compatibility to features expecting ADAMpro output. A better abstaction is needed here.
-    for (Map<String, PrimitiveTypeProvider> map : _return){
-      if(map.containsKey("lucene_score")){
-        map.put("ap_score", map.get("lucene_score"));
-      }
-    }
-
-    return _return;
+    return processResults(results);
   }
 
   @Override
