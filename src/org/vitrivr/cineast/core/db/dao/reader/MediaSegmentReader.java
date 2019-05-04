@@ -101,7 +101,7 @@ public class MediaSegmentReader extends AbstractEntityReader {
   private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(
       String fieldName, Iterable<String> fieldValues) {
     Set<String> uniqueFieldValues = new HashSet<>();
-    fieldValues.forEach(value -> uniqueFieldValues.add(value));
+    fieldValues.forEach(uniqueFieldValues::add);
 
     List<Map<String, PrimitiveTypeProvider>> segmentsProperties =
         this.selector.getRows(fieldName, uniqueFieldValues);
