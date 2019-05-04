@@ -76,7 +76,9 @@ public class CottontailMessageBuilder {
 
     public static Projection projection(Projection.Operation operation, String... attributes) {
         List<String> attrs = attributes == null ? Collections.emptyList() : Arrays.asList(attributes);
-        return Projection.newBuilder().setOp(operation).addAllAttributes(attrs).build();
+        final Projection.Builder projection = Projection.newBuilder().setOp(operation);
+        attrs.forEach(e -> projection.putAttributes(e,""));
+        return projection.build();
     }
 
     public static AtomicLiteralBooleanPredicate atomicPredicate(
@@ -118,6 +120,7 @@ public class CottontailMessageBuilder {
                 break;
             }
             case LIKE: { // currently not supported
+                builder.setOp(Operator.LIKE);
                 break;
             }
             case ILIKE: { // currently not supported
