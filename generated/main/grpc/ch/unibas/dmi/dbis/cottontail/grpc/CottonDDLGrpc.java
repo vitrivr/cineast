@@ -106,6 +106,45 @@ public final class CottonDDLGrpc {
           .setSchemaDescriptor(new CottonDDLMethodDescriptorSupplier("DropEntity"))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage,
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_CREATE_INDEX =
+      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "CottonDDL", "CreateIndex"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
+          .setSchemaDescriptor(new CottonDDLMethodDescriptorSupplier("CreateIndex"))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage,
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_DROP_INDEX =
+      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "CottonDDL", "DropIndex"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
+          .setSchemaDescriptor(new CottonDDLMethodDescriptorSupplier("DropIndex"))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage,
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_REBUILD_INDEX =
+      io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "CottonDDL", "RebuildIndex"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus.getDefaultInstance()))
+          .setSchemaDescriptor(new CottonDDLMethodDescriptorSupplier("RebuildIndex"))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity,
       ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> METHOD_OPTIMIZE_ENTITY =
       io.grpc.MethodDescriptor.<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>newBuilder()
@@ -208,6 +247,30 @@ public final class CottonDDLGrpc {
     }
 
     /**
+     * <pre>
+     * Handling indexes. 
+     * </pre>
+     */
+    public void createIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_CREATE_INDEX, responseObserver);
+    }
+
+    /**
+     */
+    public void dropIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_DROP_INDEX, responseObserver);
+    }
+
+    /**
+     */
+    public void rebuildIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_REBUILD_INDEX, responseObserver);
+    }
+
+    /**
      */
     public void optimizeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
@@ -265,6 +328,27 @@ public final class CottonDDLGrpc {
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity,
                 ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
                   this, METHODID_DROP_ENTITY)))
+          .addMethod(
+            METHOD_CREATE_INDEX,
+            asyncUnaryCall(
+              new MethodHandlers<
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage,
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
+                  this, METHODID_CREATE_INDEX)))
+          .addMethod(
+            METHOD_DROP_INDEX,
+            asyncUnaryCall(
+              new MethodHandlers<
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage,
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
+                  this, METHODID_DROP_INDEX)))
+          .addMethod(
+            METHOD_REBUILD_INDEX,
+            asyncUnaryCall(
+              new MethodHandlers<
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage,
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>(
+                  this, METHODID_REBUILD_INDEX)))
           .addMethod(
             METHOD_OPTIMIZE_ENTITY,
             asyncUnaryCall(
@@ -356,6 +440,33 @@ public final class CottonDDLGrpc {
     }
 
     /**
+     * <pre>
+     * Handling indexes. 
+     * </pre>
+     */
+    public void createIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_CREATE_INDEX, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void dropIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_DROP_INDEX, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void rebuildIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage request,
+        io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_REBUILD_INDEX, getCallOptions()), request, responseObserver);
+    }
+
+    /**
      */
     public void optimizeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request,
         io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> responseObserver) {
@@ -441,6 +552,30 @@ public final class CottonDDLGrpc {
     }
 
     /**
+     * <pre>
+     * Handling indexes. 
+     * </pre>
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus createIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_CREATE_INDEX, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus dropIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_DROP_INDEX, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus rebuildIndex(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_REBUILD_INDEX, getCallOptions(), request);
+    }
+
+    /**
      */
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus optimizeEntity(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
       return blockingUnaryCall(
@@ -506,6 +641,33 @@ public final class CottonDDLGrpc {
     }
 
     /**
+     * <pre>
+     * Handling indexes. 
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> createIndex(
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_CREATE_INDEX, getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> dropIndex(
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_DROP_INDEX, getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> rebuildIndex(
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_REBUILD_INDEX, getCallOptions()), request);
+    }
+
+    /**
      */
     public com.google.common.util.concurrent.ListenableFuture<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus> optimizeEntity(
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity request) {
@@ -528,8 +690,11 @@ public final class CottonDDLGrpc {
   private static final int METHODID_LIST_ENTITIES = 3;
   private static final int METHODID_CREATE_ENTITY = 4;
   private static final int METHODID_DROP_ENTITY = 5;
-  private static final int METHODID_OPTIMIZE_ENTITY = 6;
-  private static final int METHODID_TRUNCATE_ENTITY = 7;
+  private static final int METHODID_CREATE_INDEX = 6;
+  private static final int METHODID_DROP_INDEX = 7;
+  private static final int METHODID_REBUILD_INDEX = 8;
+  private static final int METHODID_OPTIMIZE_ENTITY = 9;
+  private static final int METHODID_TRUNCATE_ENTITY = 10;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -570,6 +735,18 @@ public final class CottonDDLGrpc {
           break;
         case METHODID_DROP_ENTITY:
           serviceImpl.dropEntity((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
+          break;
+        case METHODID_CREATE_INDEX:
+          serviceImpl.createIndex((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
+          break;
+        case METHODID_DROP_INDEX:
+          serviceImpl.dropIndex((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DropIndexMessage) request,
+              (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
+          break;
+        case METHODID_REBUILD_INDEX:
+          serviceImpl.rebuildIndex((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.RebuildIndexMessage) request,
               (io.grpc.stub.StreamObserver<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus>) responseObserver);
           break;
         case METHODID_OPTIMIZE_ENTITY:
@@ -647,6 +824,9 @@ public final class CottonDDLGrpc {
               .addMethod(METHOD_LIST_ENTITIES)
               .addMethod(METHOD_CREATE_ENTITY)
               .addMethod(METHOD_DROP_ENTITY)
+              .addMethod(METHOD_CREATE_INDEX)
+              .addMethod(METHOD_DROP_INDEX)
+              .addMethod(METHOD_REBUILD_INDEX)
               .addMethod(METHOD_OPTIMIZE_ENTITY)
               .addMethod(METHOD_TRUNCATE_ENTITY)
               .build();
