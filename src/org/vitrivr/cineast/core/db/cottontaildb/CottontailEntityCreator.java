@@ -4,6 +4,7 @@ import static org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType.V
 
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,7 +166,9 @@ public class CottontailEntityCreator implements EntityCreator {
 
   @Override
   public boolean dropEntity(String entityName) {
-    return false;
+    final Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName);
+    cottontail.dropEntityBlocking(entity);
+    return true;
   }
 
   @Override
@@ -193,7 +196,6 @@ public class CottontailEntityCreator implements EntityCreator {
       case LONG:
         return Type.LONG;
       case STRING:
-        return Type.STRING;
       case TEXT:
         return Type.STRING;
       default:

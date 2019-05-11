@@ -59,12 +59,13 @@ public class CottontailWrapper implements AutoCloseable {
     }
 
     public synchronized void createEntityBlocking(CreateEntityMessage createMessage) {
-        ListenableFuture<SuccessStatus> future = this.createEntity(createMessage);
-        try {
-            future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("error in createEntityBlocking: {}", LogHelper.getStackTrace(e));
-        }
+        final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
+        stub.createEntity(createMessage);
+    }
+
+    public synchronized void dropEntityBlocking(Entity entity) {
+        final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
+        stub.dropEntity(entity);
     }
 
     public synchronized ListenableFuture<SuccessStatus> createSchema(String schama) {

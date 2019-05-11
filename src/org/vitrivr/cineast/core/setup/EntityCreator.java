@@ -9,6 +9,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.db.dao.TagHandler;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType;
@@ -89,6 +90,7 @@ public interface EntityCreator extends AutoCloseable {
         this.dropMultiMediaObjectsEntity();
         this.dropMetadataEntity();
         this.dropSegmentEntity();
+        this.dropSegmentMetadataEntity();
         this.dropTagEntity();
 
         LOGGER.info("...done");
@@ -152,6 +154,19 @@ public interface EntityCreator extends AutoCloseable {
      */
     default boolean dropSegmentEntity() {
         if (this.dropEntity(MediaSegmentDescriptor.ENTITY)) {
+            LOGGER.info("Successfully dropped segment entity.");
+            return true;
+        } else {
+            LOGGER.error("Error occurred while dropping segment entity");
+            return false;
+        }
+    }
+
+    /**
+     * Drops the entity responsible for holding metadata about segments of a multimedia object
+     */
+    default boolean dropSegmentMetadataEntity() {
+        if (this.dropEntity(MediaSegmentMetadataDescriptor.ENTITY)) {
             LOGGER.info("Successfully dropped segment entity.");
             return true;
         } else {
