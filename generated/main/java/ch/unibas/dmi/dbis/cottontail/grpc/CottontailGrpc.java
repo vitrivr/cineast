@@ -4150,6 +4150,19 @@ public final class CottontailGrpc {
      */
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getVectorDataOrBuilder();
 
+    /**
+     * <code>.Null nullData = 8;</code>
+     */
+    boolean hasNullData();
+    /**
+     * <code>.Null nullData = 8;</code>
+     */
+    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null getNullData();
+    /**
+     * <code>.Null nullData = 8;</code>
+     */
+    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder getNullDataOrBuilder();
+
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.DataCase getDataCase();
   }
   /**
@@ -4244,6 +4257,20 @@ public final class CottontailGrpc {
               dataCase_ = 7;
               break;
             }
+            case 66: {
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder subBuilder = null;
+              if (dataCase_ == 8) {
+                subBuilder = ((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) data_).toBuilder();
+              }
+              data_ =
+                  input.readMessage(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) data_);
+                data_ = subBuilder.buildPartial();
+              }
+              dataCase_ = 8;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -4279,6 +4306,7 @@ public final class CottontailGrpc {
       DOUBLEDATA(5),
       STRINGDATA(6),
       VECTORDATA(7),
+      NULLDATA(8),
       DATA_NOT_SET(0);
       private final int value;
       private DataCase(int value) {
@@ -4301,6 +4329,7 @@ public final class CottontailGrpc {
           case 5: return DOUBLEDATA;
           case 6: return STRINGDATA;
           case 7: return VECTORDATA;
+          case 8: return NULLDATA;
           case 0: return DATA_NOT_SET;
           default: return null;
         }
@@ -4440,6 +4469,32 @@ public final class CottontailGrpc {
       return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance();
     }
 
+    public static final int NULLDATA_FIELD_NUMBER = 8;
+    /**
+     * <code>.Null nullData = 8;</code>
+     */
+    public boolean hasNullData() {
+      return dataCase_ == 8;
+    }
+    /**
+     * <code>.Null nullData = 8;</code>
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null getNullData() {
+      if (dataCase_ == 8) {
+         return (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) data_;
+      }
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.getDefaultInstance();
+    }
+    /**
+     * <code>.Null nullData = 8;</code>
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder getNullDataOrBuilder() {
+      if (dataCase_ == 8) {
+         return (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) data_;
+      }
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.getDefaultInstance();
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -4477,6 +4532,9 @@ public final class CottontailGrpc {
       }
       if (dataCase_ == 7) {
         output.writeMessage(7, (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector) data_);
+      }
+      if (dataCase_ == 8) {
+        output.writeMessage(8, (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) data_);
       }
       unknownFields.writeTo(output);
     }
@@ -4517,6 +4575,10 @@ public final class CottontailGrpc {
       if (dataCase_ == 7) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(7, (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector) data_);
+      }
+      if (dataCase_ == 8) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(8, (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) data_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4570,6 +4632,10 @@ public final class CottontailGrpc {
           result = result && getVectorData()
               .equals(other.getVectorData());
           break;
+        case 8:
+          result = result && getNullData()
+              .equals(other.getNullData());
+          break;
         case 0:
         default:
       }
@@ -4616,6 +4682,10 @@ public final class CottontailGrpc {
         case 7:
           hash = (37 * hash) + VECTORDATA_FIELD_NUMBER;
           hash = (53 * hash) + getVectorData().hashCode();
+          break;
+        case 8:
+          hash = (37 * hash) + NULLDATA_FIELD_NUMBER;
+          hash = (53 * hash) + getNullData().hashCode();
           break;
         case 0:
         default:
@@ -4802,6 +4872,13 @@ public final class CottontailGrpc {
             result.data_ = vectorDataBuilder_.build();
           }
         }
+        if (dataCase_ == 8) {
+          if (nullDataBuilder_ == null) {
+            result.data_ = data_;
+          } else {
+            result.data_ = nullDataBuilder_.build();
+          }
+        }
         result.dataCase_ = dataCase_;
         onBuilt();
         return result;
@@ -4873,6 +4950,10 @@ public final class CottontailGrpc {
           }
           case VECTORDATA: {
             mergeVectorData(other.getVectorData());
+            break;
+          }
+          case NULLDATA: {
+            mergeNullData(other.getNullData());
             break;
           }
           case DATA_NOT_SET: {
@@ -5285,6 +5366,142 @@ public final class CottontailGrpc {
         dataCase_ = 7;
         onChanged();;
         return vectorDataBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder> nullDataBuilder_;
+      /**
+       * <code>.Null nullData = 8;</code>
+       */
+      public boolean hasNullData() {
+        return dataCase_ == 8;
+      }
+      /**
+       * <code>.Null nullData = 8;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null getNullData() {
+        if (nullDataBuilder_ == null) {
+          if (dataCase_ == 8) {
+            return (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) data_;
+          }
+          return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.getDefaultInstance();
+        } else {
+          if (dataCase_ == 8) {
+            return nullDataBuilder_.getMessage();
+          }
+          return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.Null nullData = 8;</code>
+       */
+      public Builder setNullData(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null value) {
+        if (nullDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          data_ = value;
+          onChanged();
+        } else {
+          nullDataBuilder_.setMessage(value);
+        }
+        dataCase_ = 8;
+        return this;
+      }
+      /**
+       * <code>.Null nullData = 8;</code>
+       */
+      public Builder setNullData(
+          ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder builderForValue) {
+        if (nullDataBuilder_ == null) {
+          data_ = builderForValue.build();
+          onChanged();
+        } else {
+          nullDataBuilder_.setMessage(builderForValue.build());
+        }
+        dataCase_ = 8;
+        return this;
+      }
+      /**
+       * <code>.Null nullData = 8;</code>
+       */
+      public Builder mergeNullData(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null value) {
+        if (nullDataBuilder_ == null) {
+          if (dataCase_ == 8 &&
+              data_ != ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.getDefaultInstance()) {
+            data_ = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.newBuilder((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) data_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            data_ = value;
+          }
+          onChanged();
+        } else {
+          if (dataCase_ == 8) {
+            nullDataBuilder_.mergeFrom(value);
+          }
+          nullDataBuilder_.setMessage(value);
+        }
+        dataCase_ = 8;
+        return this;
+      }
+      /**
+       * <code>.Null nullData = 8;</code>
+       */
+      public Builder clearNullData() {
+        if (nullDataBuilder_ == null) {
+          if (dataCase_ == 8) {
+            dataCase_ = 0;
+            data_ = null;
+            onChanged();
+          }
+        } else {
+          if (dataCase_ == 8) {
+            dataCase_ = 0;
+            data_ = null;
+          }
+          nullDataBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.Null nullData = 8;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder getNullDataBuilder() {
+        return getNullDataFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.Null nullData = 8;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder getNullDataOrBuilder() {
+        if ((dataCase_ == 8) && (nullDataBuilder_ != null)) {
+          return nullDataBuilder_.getMessageOrBuilder();
+        } else {
+          if (dataCase_ == 8) {
+            return (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) data_;
+          }
+          return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.Null nullData = 8;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder> 
+          getNullDataFieldBuilder() {
+        if (nullDataBuilder_ == null) {
+          if (!(dataCase_ == 8)) {
+            data_ = ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.getDefaultInstance();
+          }
+          nullDataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder>(
+                  (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) data_,
+                  getParentForChildren(),
+                  isClean());
+          data_ = null;
+        }
+        dataCase_ = 8;
+        onChanged();;
+        return nullDataBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -6661,6 +6878,398 @@ public final class CottontailGrpc {
     }
 
     public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface NullOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:Null)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * <pre>
+   ** A null entry.
+   * </pre>
+   *
+   * Protobuf type {@code Null}
+   */
+  public  static final class Null extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:Null)
+      NullOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Null.newBuilder() to construct.
+    private Null(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Null() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Null(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Null_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Null_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null)) {
+        return super.equals(obj);
+      }
+      ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null other = (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) obj;
+
+      boolean result = true;
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     ** A null entry.
+     * </pre>
+     *
+     * Protobuf type {@code Null}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:Null)
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.NullOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Null_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Null_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.class, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.Builder.class);
+      }
+
+      // Construct using ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.internal_static_Null_descriptor;
+      }
+
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null getDefaultInstanceForType() {
+        return ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.getDefaultInstance();
+      }
+
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null build() {
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null buildPartial() {
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null result = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null(this);
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) {
+          return mergeFrom((ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null other) {
+        if (other == ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:Null)
+    }
+
+    // @@protoc_insertion_point(class_scope:Null)
+    private static final ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null();
+    }
+
+    public static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Null>
+        PARSER = new com.google.protobuf.AbstractParser<Null>() {
+      public Null parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Null(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Null> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Null> getParserForType() {
+      return PARSER;
+    }
+
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Null getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -25065,6 +25674,11 @@ public final class CottontailGrpc {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Vector_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Null_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Null_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_FloatVector_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -25199,95 +25813,96 @@ public final class CottontailGrpc {
       "ertStatus\022\017\n\007success\030\001 \001(\010\022\021\n\ttimestamp\030" +
       "\002 \001(\003\"[\n\005Tuple\022\036\n\004data\030\001 \003(\0132\020.Tuple.Dat",
       "aEntry\0322\n\tDataEntry\022\013\n\003key\030\001 \001(\t\022\024\n\005valu" +
-      "e\030\002 \001(\0132\005.Data:\0028\001\"\254\001\n\004Data\022\025\n\013booleanDa" +
+      "e\030\002 \001(\0132\005.Data:\0028\001\"\307\001\n\004Data\022\025\n\013booleanDa" +
       "ta\030\001 \001(\010H\000\022\021\n\007intData\030\002 \001(\005H\000\022\022\n\010longDat" +
       "a\030\003 \001(\003H\000\022\023\n\tfloatData\030\004 \001(\002H\000\022\024\n\ndouble" +
       "Data\030\005 \001(\001H\000\022\024\n\nstringData\030\006 \001(\tH\000\022\035\n\nve" +
-      "ctorData\030\007 \001(\0132\007.VectorH\000B\006\n\004data\"\246\001\n\006Ve" +
-      "ctor\022#\n\013floatVector\030\001 \001(\0132\014.FloatVectorH" +
-      "\000\022%\n\014doubleVector\030\002 \001(\0132\r.DoubleVectorH\000" +
-      "\022\037\n\tintVector\030\003 \001(\0132\n.IntVectorH\000\022!\n\nlon" +
-      "gVector\030\004 \001(\0132\013.LongVectorH\000B\014\n\nvectorDa",
-      "ta\"\035\n\013FloatVector\022\016\n\006vector\030\001 \003(\002\"\036\n\014Dou" +
-      "bleVector\022\016\n\006vector\030\001 \003(\001\"\033\n\tIntVector\022\016" +
-      "\n\006vector\030\001 \003(\005\"\034\n\nLongVector\022\016\n\006vector\030\001" +
-      " \003(\003\"\034\n\nBoolVector\022\016\n\006vector\030\001 \003(\010\"g\n\020Co" +
-      "lumnDefinition\022\014\n\004name\030\001 \001(\t\022\023\n\004type\030\002 \001" +
-      "(\0162\005.Type\022\016\n\006length\030\003 \001(\r\022\016\n\006unique\030\004 \001(" +
-      "\010\022\020\n\010nullable\030\005 \001(\010\"R\n\023CreateEntityMessa" +
-      "ge\022\027\n\006entity\030\001 \001(\0132\007.Entity\022\"\n\007columns\030\002" +
-      " \003(\0132\021.ColumnDefinition\"\234\001\n\022CreateIndexM" +
-      "essage\022\025\n\005index\030\001 \001(\0132\006.Index\022\017\n\007columns",
-      "\030\002 \003(\t\022/\n\006params\030\003 \003(\0132\037.CreateIndexMess" +
-      "age.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 " +
-      "\001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\")\n\020DropIndexMessa" +
-      "ge\022\025\n\005index\030\001 \001(\0132\006.Index\",\n\023RebuildInde" +
-      "xMessage\022\025\n\005index\030\001 \001(\0132\006.Index\"?\n\rInser" +
-      "tMessage\022\027\n\006entity\030\001 \001(\0132\007.Entity\022\025\n\005tup" +
-      "le\030\002 \003(\0132\006.Tuple\"\204\001\n\005Query\022\023\n\004from\030\001 \001(\013" +
-      "2\005.From\022\037\n\nprojection\030\002 \001(\0132\013.Projection" +
-      "\022\025\n\005where\030\003 \001(\0132\006.Where\022\021\n\003knn\030\004 \001(\0132\004.K" +
-      "nn\022\r\n\005count\030\005 \001(\r\022\014\n\004skip\030\006 \001(\r\".\n\023Batch",
-      "edQueryMessage\022\027\n\007queries\030\001 \003(\0132\006.Query\"" +
-      "6\n\014QueryMessage\022\017\n\007queryId\030\001 \001(\t\022\025\n\005quer" +
-      "y\030\002 \001(\0132\006.Query\"\223\001\n\024QueryResponseMessage" +
-      "\022\017\n\007queryId\030\001 \001(\t\022\r\n\005start\030\002 \001(\010\022\014\n\004page" +
-      "\030\003 \001(\r\022\020\n\010pageSize\030\004 \001(\r\022\017\n\007maxPage\030\005 \001(" +
-      "\r\022\021\n\ttotalHits\030\006 \001(\r\022\027\n\007results\030\007 \003(\0132\006." +
-      "Tuple\")\n\004From\022\031\n\006entity\030\001 \001(\0132\007.EntityH\000" +
-      "B\006\n\004from\"\303\001\n\nProjection\022!\n\002op\030\001 \001(\0162\025.Pr" +
-      "ojection.Operation\022/\n\nattributes\030\002 \003(\0132\033" +
-      ".Projection.AttributesEntry\0321\n\017Attribute",
-      "sEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"." +
-      "\n\tOperation\022\n\n\006SELECT\020\000\022\t\n\005COUNT\020\001\022\n\n\006EX" +
-      "ISTS\020\002\"\261\001\n\003Knn\022\021\n\tattribute\030\001 \001(\t\022\t\n\001k\030\002" +
-      " \001(\r\022\037\n\010distance\030\003 \001(\0162\r.Knn.Distance\022\026\n" +
-      "\005query\030\004 \001(\0132\007.Vector\022\030\n\007weights\030\005 \001(\0132\007" +
-      ".Vector\"9\n\010Distance\022\006\n\002L1\020\000\022\006\n\002L2\020\001\022\r\n\tL" +
-      "2SQUARED\020\002\022\016\n\nCHISQUARED\020\003\"u\n\005Where\0220\n\006a" +
-      "tomic\030\001 \001(\0132\036.AtomicLiteralBooleanPredic" +
-      "ateH\000\022-\n\010compound\030\002 \001(\0132\031.CompoundBoolea" +
-      "nPredicateH\000B\013\n\tpredicate\"\211\002\n\035AtomicLite",
-      "ralBooleanPredicate\022\021\n\tattribute\030\001 \001(\t\022\013" +
-      "\n\003not\030\002 \001(\010\0223\n\002op\030\003 \001(\0162\'.AtomicLiteralB" +
-      "ooleanPredicate.Operator\022\023\n\004data\030\004 \003(\0132\005" +
-      ".Data\"~\n\010Operator\022\t\n\005EQUAL\020\000\022\013\n\007GREATER\020" +
-      "\001\022\010\n\004LESS\020\002\022\n\n\006GEQUAL\020\003\022\n\n\006LEQUAL\020\004\022\006\n\002I" +
-      "N\020\005\022\013\n\007BETWEEN\020\006\022\n\n\006ISNULL\020\007\022\r\n\tISNOTNUL" +
-      "L\020\010\022\010\n\004LIKE\020\t\"\264\002\n\030CompoundBooleanPredica" +
-      "te\022/\n\005aleft\030\001 \001(\0132\036.AtomicLiteralBoolean" +
-      "PredicateH\000\022*\n\005cleft\030\002 \001(\0132\031.CompoundBoo" +
-      "leanPredicateH\000\022.\n\002op\030\003 \001(\0162\".CompoundBo",
-      "oleanPredicate.Operator\0220\n\006aright\030\004 \001(\0132" +
-      "\036.AtomicLiteralBooleanPredicateH\001\022+\n\006cri" +
-      "ght\030\005 \001(\0132\031.CompoundBooleanPredicateH\001\"\033" +
-      "\n\010Operator\022\007\n\003AND\020\000\022\006\n\002OR\020\001B\006\n\004leftB\007\n\005r" +
-      "ight*\246\001\n\004Type\022\013\n\007BOOLEAN\020\000\022\010\n\004BYTE\020\001\022\t\n\005" +
-      "SHORT\020\002\022\013\n\007INTEGER\020\003\022\010\n\004LONG\020\004\022\t\n\005FLOAT\020" +
-      "\005\022\n\n\006DOUBLE\020\006\022\n\n\006STRING\020\007\022\016\n\nDOUBLE_VEC\020" +
-      "\010\022\r\n\tFLOAT_VEC\020\t\022\014\n\010LONG_VEC\020\n\022\013\n\007INT_VE" +
-      "C\020\013\022\010\n\004BLOB\020\0142\376\003\n\tCottonDDL\0220\n\013ListSchem" +
-      "as\022\026.google.protobuf.Empty\032\007.Schema0\001\022\'\n",
-      "\014CreateSchema\022\007.Schema\032\016.SuccessStatus\022%" +
-      "\n\nDropSchema\022\007.Schema\032\016.SuccessStatus\022\"\n" +
-      "\014ListEntities\022\007.Schema\032\007.Entity0\001\0224\n\014Cre" +
-      "ateEntity\022\024.CreateEntityMessage\032\016.Succes" +
-      "sStatus\022%\n\nDropEntity\022\007.Entity\032\016.Success" +
-      "Status\0222\n\013CreateIndex\022\023.CreateIndexMessa" +
-      "ge\032\016.SuccessStatus\022.\n\tDropIndex\022\021.DropIn" +
-      "dexMessage\032\016.SuccessStatus\0224\n\014RebuildInd" +
-      "ex\022\024.RebuildIndexMessage\032\016.SuccessStatus" +
-      "\022)\n\016OptimizeEntity\022\007.Entity\032\016.SuccessSta",
-      "tus\022)\n\016TruncateEntity\022\007.Entity\032\016.Success" +
-      "Status2g\n\tCottonDML\022\'\n\006Insert\022\016.InsertMe" +
-      "ssage\032\r.InsertStatus\0221\n\014InsertStream\022\016.I" +
-      "nsertMessage\032\r.InsertStatus(\0010\0012\255\001\n\tCott" +
-      "onDQL\022/\n\005Query\022\r.QueryMessage\032\025.QueryRes" +
-      "ponseMessage0\001\022=\n\014BatchedQuery\022\024.Batched" +
-      "QueryMessage\032\025.QueryResponseMessage0\001\0220\n" +
-      "\004Ping\022\026.google.protobuf.Empty\032\016.SuccessS" +
-      "tatus\"\000B4\n\"ch.unibas.dmi.dbis.cottontail" +
-      ".grpcB\016CottontailGrpcb\006proto3"
+      "ctorData\030\007 \001(\0132\007.VectorH\000\022\031\n\010nullData\030\010 " +
+      "\001(\0132\005.NullH\000B\006\n\004data\"\246\001\n\006Vector\022#\n\013float" +
+      "Vector\030\001 \001(\0132\014.FloatVectorH\000\022%\n\014doubleVe" +
+      "ctor\030\002 \001(\0132\r.DoubleVectorH\000\022\037\n\tintVector" +
+      "\030\003 \001(\0132\n.IntVectorH\000\022!\n\nlongVector\030\004 \001(\013",
+      "2\013.LongVectorH\000B\014\n\nvectorData\"\006\n\004Null\"\035\n" +
+      "\013FloatVector\022\016\n\006vector\030\001 \003(\002\"\036\n\014DoubleVe" +
+      "ctor\022\016\n\006vector\030\001 \003(\001\"\033\n\tIntVector\022\016\n\006vec" +
+      "tor\030\001 \003(\005\"\034\n\nLongVector\022\016\n\006vector\030\001 \003(\003\"" +
+      "\034\n\nBoolVector\022\016\n\006vector\030\001 \003(\010\"g\n\020ColumnD" +
+      "efinition\022\014\n\004name\030\001 \001(\t\022\023\n\004type\030\002 \001(\0162\005." +
+      "Type\022\016\n\006length\030\003 \001(\r\022\016\n\006unique\030\004 \001(\010\022\020\n\010" +
+      "nullable\030\005 \001(\010\"R\n\023CreateEntityMessage\022\027\n" +
+      "\006entity\030\001 \001(\0132\007.Entity\022\"\n\007columns\030\002 \003(\0132" +
+      "\021.ColumnDefinition\"\234\001\n\022CreateIndexMessag",
+      "e\022\025\n\005index\030\001 \001(\0132\006.Index\022\017\n\007columns\030\002 \003(" +
+      "\t\022/\n\006params\030\003 \003(\0132\037.CreateIndexMessage.P" +
+      "aramsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r" +
+      "\n\005value\030\002 \001(\t:\0028\001\")\n\020DropIndexMessage\022\025\n" +
+      "\005index\030\001 \001(\0132\006.Index\",\n\023RebuildIndexMess" +
+      "age\022\025\n\005index\030\001 \001(\0132\006.Index\"?\n\rInsertMess" +
+      "age\022\027\n\006entity\030\001 \001(\0132\007.Entity\022\025\n\005tuple\030\002 " +
+      "\003(\0132\006.Tuple\"\204\001\n\005Query\022\023\n\004from\030\001 \001(\0132\005.Fr" +
+      "om\022\037\n\nprojection\030\002 \001(\0132\013.Projection\022\025\n\005w" +
+      "here\030\003 \001(\0132\006.Where\022\021\n\003knn\030\004 \001(\0132\004.Knn\022\r\n",
+      "\005count\030\005 \001(\r\022\014\n\004skip\030\006 \001(\r\".\n\023BatchedQue" +
+      "ryMessage\022\027\n\007queries\030\001 \003(\0132\006.Query\"6\n\014Qu" +
+      "eryMessage\022\017\n\007queryId\030\001 \001(\t\022\025\n\005query\030\002 \001" +
+      "(\0132\006.Query\"\223\001\n\024QueryResponseMessage\022\017\n\007q" +
+      "ueryId\030\001 \001(\t\022\r\n\005start\030\002 \001(\010\022\014\n\004page\030\003 \001(" +
+      "\r\022\020\n\010pageSize\030\004 \001(\r\022\017\n\007maxPage\030\005 \001(\r\022\021\n\t" +
+      "totalHits\030\006 \001(\r\022\027\n\007results\030\007 \003(\0132\006.Tuple" +
+      "\")\n\004From\022\031\n\006entity\030\001 \001(\0132\007.EntityH\000B\006\n\004f" +
+      "rom\"\303\001\n\nProjection\022!\n\002op\030\001 \001(\0162\025.Project" +
+      "ion.Operation\022/\n\nattributes\030\002 \003(\0132\033.Proj",
+      "ection.AttributesEntry\0321\n\017AttributesEntr" +
+      "y\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\".\n\tOpe" +
+      "ration\022\n\n\006SELECT\020\000\022\t\n\005COUNT\020\001\022\n\n\006EXISTS\020" +
+      "\002\"\261\001\n\003Knn\022\021\n\tattribute\030\001 \001(\t\022\t\n\001k\030\002 \001(\r\022" +
+      "\037\n\010distance\030\003 \001(\0162\r.Knn.Distance\022\026\n\005quer" +
+      "y\030\004 \001(\0132\007.Vector\022\030\n\007weights\030\005 \001(\0132\007.Vect" +
+      "or\"9\n\010Distance\022\006\n\002L1\020\000\022\006\n\002L2\020\001\022\r\n\tL2SQUA" +
+      "RED\020\002\022\016\n\nCHISQUARED\020\003\"u\n\005Where\0220\n\006atomic" +
+      "\030\001 \001(\0132\036.AtomicLiteralBooleanPredicateH\000" +
+      "\022-\n\010compound\030\002 \001(\0132\031.CompoundBooleanPred",
+      "icateH\000B\013\n\tpredicate\"\211\002\n\035AtomicLiteralBo" +
+      "oleanPredicate\022\021\n\tattribute\030\001 \001(\t\022\013\n\003not" +
+      "\030\002 \001(\010\0223\n\002op\030\003 \001(\0162\'.AtomicLiteralBoolea" +
+      "nPredicate.Operator\022\023\n\004data\030\004 \003(\0132\005.Data" +
+      "\"~\n\010Operator\022\t\n\005EQUAL\020\000\022\013\n\007GREATER\020\001\022\010\n\004" +
+      "LESS\020\002\022\n\n\006GEQUAL\020\003\022\n\n\006LEQUAL\020\004\022\006\n\002IN\020\005\022\013" +
+      "\n\007BETWEEN\020\006\022\n\n\006ISNULL\020\007\022\r\n\tISNOTNULL\020\010\022\010" +
+      "\n\004LIKE\020\t\"\264\002\n\030CompoundBooleanPredicate\022/\n" +
+      "\005aleft\030\001 \001(\0132\036.AtomicLiteralBooleanPredi" +
+      "cateH\000\022*\n\005cleft\030\002 \001(\0132\031.CompoundBooleanP",
+      "redicateH\000\022.\n\002op\030\003 \001(\0162\".CompoundBoolean" +
+      "Predicate.Operator\0220\n\006aright\030\004 \001(\0132\036.Ato" +
+      "micLiteralBooleanPredicateH\001\022+\n\006cright\030\005" +
+      " \001(\0132\031.CompoundBooleanPredicateH\001\"\033\n\010Ope" +
+      "rator\022\007\n\003AND\020\000\022\006\n\002OR\020\001B\006\n\004leftB\007\n\005right*" +
+      "\246\001\n\004Type\022\013\n\007BOOLEAN\020\000\022\010\n\004BYTE\020\001\022\t\n\005SHORT" +
+      "\020\002\022\013\n\007INTEGER\020\003\022\010\n\004LONG\020\004\022\t\n\005FLOAT\020\005\022\n\n\006" +
+      "DOUBLE\020\006\022\n\n\006STRING\020\007\022\016\n\nDOUBLE_VEC\020\010\022\r\n\t" +
+      "FLOAT_VEC\020\t\022\014\n\010LONG_VEC\020\n\022\013\n\007INT_VEC\020\013\022\010" +
+      "\n\004BLOB\020\0142\376\003\n\tCottonDDL\0220\n\013ListSchemas\022\026.",
+      "google.protobuf.Empty\032\007.Schema0\001\022\'\n\014Crea" +
+      "teSchema\022\007.Schema\032\016.SuccessStatus\022%\n\nDro" +
+      "pSchema\022\007.Schema\032\016.SuccessStatus\022\"\n\014List" +
+      "Entities\022\007.Schema\032\007.Entity0\001\0224\n\014CreateEn" +
+      "tity\022\024.CreateEntityMessage\032\016.SuccessStat" +
+      "us\022%\n\nDropEntity\022\007.Entity\032\016.SuccessStatu" +
+      "s\0222\n\013CreateIndex\022\023.CreateIndexMessage\032\016." +
+      "SuccessStatus\022.\n\tDropIndex\022\021.DropIndexMe" +
+      "ssage\032\016.SuccessStatus\0224\n\014RebuildIndex\022\024." +
+      "RebuildIndexMessage\032\016.SuccessStatus\022)\n\016O",
+      "ptimizeEntity\022\007.Entity\032\016.SuccessStatus\022)" +
+      "\n\016TruncateEntity\022\007.Entity\032\016.SuccessStatu" +
+      "s2g\n\tCottonDML\022\'\n\006Insert\022\016.InsertMessage" +
+      "\032\r.InsertStatus\0221\n\014InsertStream\022\016.Insert" +
+      "Message\032\r.InsertStatus(\0010\0012\255\001\n\tCottonDQL" +
+      "\022/\n\005Query\022\r.QueryMessage\032\025.QueryResponse" +
+      "Message0\001\022=\n\014BatchedQuery\022\024.BatchedQuery" +
+      "Message\032\025.QueryResponseMessage0\001\0220\n\004Ping" +
+      "\022\026.google.protobuf.Empty\032\016.SuccessStatus" +
+      "\"\000B4\n\"ch.unibas.dmi.dbis.cottontail.grpc",
+      "B\016CottontailGrpcb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -25349,57 +25964,63 @@ public final class CottontailGrpc {
     internal_static_Data_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Data_descriptor,
-        new java.lang.String[] { "BooleanData", "IntData", "LongData", "FloatData", "DoubleData", "StringData", "VectorData", "Data", });
+        new java.lang.String[] { "BooleanData", "IntData", "LongData", "FloatData", "DoubleData", "StringData", "VectorData", "NullData", "Data", });
     internal_static_Vector_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_Vector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Vector_descriptor,
         new java.lang.String[] { "FloatVector", "DoubleVector", "IntVector", "LongVector", "VectorData", });
-    internal_static_FloatVector_descriptor =
+    internal_static_Null_descriptor =
       getDescriptor().getMessageTypes().get(8);
+    internal_static_Null_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Null_descriptor,
+        new java.lang.String[] { });
+    internal_static_FloatVector_descriptor =
+      getDescriptor().getMessageTypes().get(9);
     internal_static_FloatVector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_FloatVector_descriptor,
         new java.lang.String[] { "Vector", });
     internal_static_DoubleVector_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_DoubleVector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DoubleVector_descriptor,
         new java.lang.String[] { "Vector", });
     internal_static_IntVector_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_IntVector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_IntVector_descriptor,
         new java.lang.String[] { "Vector", });
     internal_static_LongVector_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_LongVector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_LongVector_descriptor,
         new java.lang.String[] { "Vector", });
     internal_static_BoolVector_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_BoolVector_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BoolVector_descriptor,
         new java.lang.String[] { "Vector", });
     internal_static_ColumnDefinition_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_ColumnDefinition_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ColumnDefinition_descriptor,
         new java.lang.String[] { "Name", "Type", "Length", "Unique", "Nullable", });
     internal_static_CreateEntityMessage_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_CreateEntityMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CreateEntityMessage_descriptor,
         new java.lang.String[] { "Entity", "Columns", });
     internal_static_CreateIndexMessage_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_CreateIndexMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CreateIndexMessage_descriptor,
@@ -25411,55 +26032,55 @@ public final class CottontailGrpc {
         internal_static_CreateIndexMessage_ParamsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_DropIndexMessage_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_DropIndexMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DropIndexMessage_descriptor,
         new java.lang.String[] { "Index", });
     internal_static_RebuildIndexMessage_descriptor =
-      getDescriptor().getMessageTypes().get(17);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_RebuildIndexMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_RebuildIndexMessage_descriptor,
         new java.lang.String[] { "Index", });
     internal_static_InsertMessage_descriptor =
-      getDescriptor().getMessageTypes().get(18);
+      getDescriptor().getMessageTypes().get(19);
     internal_static_InsertMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_InsertMessage_descriptor,
         new java.lang.String[] { "Entity", "Tuple", });
     internal_static_Query_descriptor =
-      getDescriptor().getMessageTypes().get(19);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_Query_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Query_descriptor,
         new java.lang.String[] { "From", "Projection", "Where", "Knn", "Count", "Skip", });
     internal_static_BatchedQueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(20);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_BatchedQueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BatchedQueryMessage_descriptor,
         new java.lang.String[] { "Queries", });
     internal_static_QueryMessage_descriptor =
-      getDescriptor().getMessageTypes().get(21);
+      getDescriptor().getMessageTypes().get(22);
     internal_static_QueryMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QueryMessage_descriptor,
         new java.lang.String[] { "QueryId", "Query", });
     internal_static_QueryResponseMessage_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_QueryResponseMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QueryResponseMessage_descriptor,
         new java.lang.String[] { "QueryId", "Start", "Page", "PageSize", "MaxPage", "TotalHits", "Results", });
     internal_static_From_descriptor =
-      getDescriptor().getMessageTypes().get(23);
+      getDescriptor().getMessageTypes().get(24);
     internal_static_From_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_From_descriptor,
         new java.lang.String[] { "Entity", "From", });
     internal_static_Projection_descriptor =
-      getDescriptor().getMessageTypes().get(24);
+      getDescriptor().getMessageTypes().get(25);
     internal_static_Projection_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Projection_descriptor,
@@ -25471,25 +26092,25 @@ public final class CottontailGrpc {
         internal_static_Projection_AttributesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_Knn_descriptor =
-      getDescriptor().getMessageTypes().get(25);
+      getDescriptor().getMessageTypes().get(26);
     internal_static_Knn_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Knn_descriptor,
         new java.lang.String[] { "Attribute", "K", "Distance", "Query", "Weights", });
     internal_static_Where_descriptor =
-      getDescriptor().getMessageTypes().get(26);
+      getDescriptor().getMessageTypes().get(27);
     internal_static_Where_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Where_descriptor,
         new java.lang.String[] { "Atomic", "Compound", "Predicate", });
     internal_static_AtomicLiteralBooleanPredicate_descriptor =
-      getDescriptor().getMessageTypes().get(27);
+      getDescriptor().getMessageTypes().get(28);
     internal_static_AtomicLiteralBooleanPredicate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_AtomicLiteralBooleanPredicate_descriptor,
         new java.lang.String[] { "Attribute", "Not", "Op", "Data", });
     internal_static_CompoundBooleanPredicate_descriptor =
-      getDescriptor().getMessageTypes().get(28);
+      getDescriptor().getMessageTypes().get(29);
     internal_static_CompoundBooleanPredicate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CompoundBooleanPredicate_descriptor,
