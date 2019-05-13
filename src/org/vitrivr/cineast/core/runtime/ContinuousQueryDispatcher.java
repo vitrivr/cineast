@@ -19,6 +19,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.score.BooleanSegmentScoreElement;
 import org.vitrivr.cineast.core.data.score.ObjectScoreElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
@@ -190,6 +191,8 @@ public class ContinuousQueryDispatcher {
         scoreById = scoreByObjectId;
       } else if (element instanceof SegmentScoreElement) {
         scoreById = scoreBySegmentId;
+      } else if (element instanceof BooleanSegmentScoreElement) {
+        scoreById = scoreBySegmentId; //TODO: Cleanup?
       } else {
         LOGGER.error(
             "Unknown subclass {} of ScoreElement in ContinuousQueryDispatcher.addRetrievalResult.",
