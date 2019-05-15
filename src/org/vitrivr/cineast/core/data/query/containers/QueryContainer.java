@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.util.MathHelper;
 
@@ -45,5 +49,10 @@ public abstract class QueryContainer implements SegmentContainer {
   @Override
   public String getSuperId() {
     return this.superId;
+  }
+
+  @Override
+  public String toString(){
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
   }
 }
