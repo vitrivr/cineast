@@ -26,7 +26,8 @@ import org.vitrivr.cineast.core.setup.EntityCreator;
 
 /**
  * This is a proof of concept class and will probably be replaced by a more general solution to text
- * retrieval in the future
+ * retrieval in the future.
+ * Expects two fields for a feature: id and feature. this corresponds to {@link SimpleFulltextFeatureDescriptor#FIELDNAMES}
  */
 public abstract class SolrTextRetriever implements Retriever, Extractor {
 
@@ -75,7 +76,7 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
 
   /**
    * Initializes the persistent layer with two fields: "id" and "feature" both using the Apache Solr
-   * storage handler. The "feature" in this context is the full text for the given segment
+   * storage handler. This corresponds to the Fieldnames of the {@link SimpleFulltextFeatureDescriptor} The "feature" in this context is the full text for the given segment
    */
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
