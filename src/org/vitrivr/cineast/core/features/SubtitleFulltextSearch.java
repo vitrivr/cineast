@@ -27,9 +27,4 @@ public class SubtitleFulltextSearch extends SolrTextRetriever {
         .map(s -> new SimpleFulltextFeatureDescriptor(shot.getId(), s.getText()))
         .forEach(s -> this.writer.write(s));
   }
-
-  @Override
-  protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-    return new String[]{"\"" + sc.getText() + "\""};
-  }
 }

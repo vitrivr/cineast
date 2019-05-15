@@ -12,11 +12,12 @@ import java.util.Arrays;
  */
 public class OCRSearch extends SolrTextRetriever {
 
+  public static final String OCR_TABLE_NAME = "features_ocr";
   /**
    * Default constructor for {@link OCRSearch}.
    */
   public OCRSearch() {
-    super("features_ocr");
+    super(OCR_TABLE_NAME);
   }
 
   /**

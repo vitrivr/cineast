@@ -47,7 +47,7 @@ public class MediaSegmentMetadataReader extends AbstractEntityReader {
     public List<MediaSegmentMetadataDescriptor> lookupMultimediaMetadata(List<String> segmentIds) {
         final List<Map<String, PrimitiveTypeProvider>> results = this.selector.getRows(MediaSegmentMetadataDescriptor.FIELDNAMES[0], segmentIds);
         if(results.isEmpty()){
-            LOGGER.debug("Could not find any MediaObjectMetadataDescriptor for provided ID's {}.", String.join(", ", segmentIds ));
+            LOGGER.debug("Could not find any MediaObjectMetadataDescriptor for provided IDs: {}. ID count: {}", String.join(", ", segmentIds ), segmentIds.size());
             return new ArrayList<>(0);
         }
 

@@ -16,7 +16,7 @@ public class DatabaseHealthMonitor {
   private static final Logger LOGGER = LogManager.getLogger();
   private static volatile boolean running = false;
   private static DBSelector selector;
-  private static final long PING_INTERVAL = 2000;
+  private static final long PING_INTERVAL = 2_000;
 
   public static void init() {
     if (initalized) {

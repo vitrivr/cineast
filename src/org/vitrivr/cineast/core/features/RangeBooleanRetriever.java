@@ -18,10 +18,12 @@ public class RangeBooleanRetriever extends BooleanRetriever {
           Arrays.asList(
               RelationalOperator.BETWEEN,
               RelationalOperator.EQ,
+              RelationalOperator.NEQ,
               RelationalOperator.GEQ,
               RelationalOperator.GREATER,
               RelationalOperator.LEQ,
-              RelationalOperator.LESS));
+              RelationalOperator.LESS,
+              RelationalOperator.IN));
 
   private final HashMap<String, PrimitiveTypeProvider> minimumMap = new HashMap<>();
   private final HashMap<String, PrimitiveTypeProvider> maximumMap = new HashMap<>();

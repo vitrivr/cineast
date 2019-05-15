@@ -128,7 +128,7 @@ public class DataURLParser {
     public static boolean isValidDataUrl(String dataUrl, String verify) {
         /* Check if string is actually a valid data URL. */
         if (!dataUrl.startsWith("data:")) {
-            LOGGER.warn("This is not a valid data URL.");
+            LOGGER.warn("{} is not a valid data URL.", dataUrl);
             return false;
         }
 
