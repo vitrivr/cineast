@@ -48,15 +48,15 @@ public class QueryComponent {
    */
   public static HashMap<String, ArrayList<QueryContainer>> toCategoryMap(Collection<QueryComponent> components) {
     final HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
-    if (components.size() == 0) {
+    if (components.isEmpty()) {
       LOGGER.warn("Empty components collection");
     }
     for (QueryComponent component : components) {
-      if (component.getTerms().size() == 0) {
+      if (component.getTerms().isEmpty()) {
         LOGGER.warn("No terms for component {}", component);
       }
       for (QueryTerm term : component.getTerms()) {
-        if (term.getCategories().size() == 0) {
+        if (term.getCategories().isEmpty()) {
           LOGGER.warn("No categories for term {}", term);
         }
         for (String category : term.getCategories()) {
