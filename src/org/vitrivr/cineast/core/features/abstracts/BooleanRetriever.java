@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
@@ -26,6 +28,7 @@ import org.vitrivr.cineast.core.setup.EntityCreator;
 
 public abstract class BooleanRetriever implements Retriever {
 
+  private static final Logger LOGGER = LogManager.getLogger();
   protected DBSelector selector;
   protected final String entity;
   protected final HashSet<String> attributes = new HashSet<>();
@@ -74,6 +77,7 @@ public abstract class BooleanRetriever implements Retriever {
         Collectors.toList());
 
     if (relevantExpressions.isEmpty()){
+      LOGGER.debug("No relevant expressions in {} for query {}", this.getClass().getSimpleName(), sc.toString());
       return Collections.emptyList();
     }
 
