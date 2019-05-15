@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.importer.handlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.features.OCRSearch;
 import org.vitrivr.cineast.core.importer.PlainTextImporter;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -29,7 +30,7 @@ public class OcrDataImportHandler extends DataImportHandler {
   @Override
   public void doImport(Path path) {
     try {
-      this.futures.add(this.service.submit(new DataImportRunner(new PlainTextImporter(path), "features_ocr", "ocr")));
+      this.futures.add(this.service.submit(new DataImportRunner(new PlainTextImporter(path), OCRSearch.OCR_TABLE_NAME, "ocr")));
     } catch (IOException e) {
       LOGGER.error("Could not start data import process with path '{}' due to an IOException: {}. Aborting...", path.toString(), LogHelper.getStackTrace(e));
     }

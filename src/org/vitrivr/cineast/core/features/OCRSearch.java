@@ -20,15 +20,6 @@ public class OCRSearch extends SolrTextRetriever {
     super(OCR_TABLE_NAME);
   }
 
-  /**
-   *
-   * @param shot
-   */
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    /* TODO: Not implemented because OCR extraction is not integrated into pipeline yet. */
-  }
-
   @Override
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
     String[] split = sc.getText().split(" ");

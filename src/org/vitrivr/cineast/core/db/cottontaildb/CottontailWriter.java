@@ -42,6 +42,8 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
     @Override
     public boolean close() {
+        LOGGER.debug("Closing Cottontailwriter");
+        this.cottontail.commitInsert();
         if (useGlobalWrapper) {
             return false;
         }
@@ -77,9 +79,9 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
         InsertMessage im = InsertMessage.newBuilder().setEntity(this.entity).addAllTuple(tuples.stream().map(this::getPersistentRepresentation).collect(
                 Collectors.toList())).build();
-        InsertStatus status = this.cottontail.insertBlocking(im);
+        this.cottontail.batchedInsert(im);
 
-        return status.getSuccess();
+        return true;
     }
 
     @Override
