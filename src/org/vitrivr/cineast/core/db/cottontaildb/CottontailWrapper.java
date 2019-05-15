@@ -5,6 +5,7 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc.CottonDDLBlockingStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDDLGrpc.CottonDDLFutureStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLFutureStub;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc.CottonDQLBlockingStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
@@ -22,9 +23,11 @@ import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.NettyChannelBuilder;
+import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,16 +44,47 @@ public class CottontailWrapper implements AutoCloseable {
   private final ManagedChannel channel;
   private final CottonDDLFutureStub definitionFutureStub;
   private final CottonDMLFutureStub managementStub;
+  private final CottonDMLStub insertStub;
+  private final Semaphore insertLock;
 
   private static final int maxMessageSize = 10_000_000;
   private static final long MAX_QUERY_CALL_TIMEOUT = 300_000; //TODO expose to config
   private static final long MAX_CALL_TIMEOUT = 5000; //TODO expose to config
+  private StreamObserver<InsertMessage> insertStream;
 
   public CottontailWrapper() {
     DatabaseConfig config = Config.sharedConfig().getDatabase();
     this.channel = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPlaintext()).maxInboundMessageSize(maxMessageSize).build();
     this.definitionFutureStub = CottonDDLGrpc.newFutureStub(channel);
     this.managementStub = CottonDMLGrpc.newFutureStub(channel);
+    this.insertStub = CottonDMLGrpc.newStub(channel);
+    this.insertLock = new Semaphore(1);
+    this.insertLock.acquireUninterruptibly();
+    openNewInsertStream();
+    this.insertLock.release();
+  }
+
+  private void openNewInsertStream(){
+    if(this.insertLock.tryAcquire()){
+      LOGGER.warn("Insert lock not acquired before opening new stream! this is a severe implementation problem. Returning.");
+      return;
+    }
+    this.insertStream = this.insertStub.insertStream(new StreamObserver<InsertStatus>() {
+      @Override
+      public void onNext(InsertStatus value) {
+        //ignore
+      }
+
+      @Override
+      public void onError(Throwable t) {
+        LOGGER.error("Error on insert stream", t);
+      }
+
+      @Override
+      public void onCompleted() {
+        //ignore
+      }
+    });
   }
 
   public synchronized ListenableFuture<SuccessStatus> createEntity(CreateEntityMessage createMessage) {
@@ -110,6 +144,22 @@ public class CottontailWrapper implements AutoCloseable {
       LOGGER.error("error in insertBlocking: {}", LogHelper.getStackTrace(e));
       return INTERRUPTED_INSERT;
     }
+  }
+
+  /**
+   * Uses batched insert. Flushing is currently not possible, but you can call {@link #close()} to ensure a commit.
+   */
+  public synchronized void batchedInsert(InsertMessage im) {
+    insertLock.acquireUninterruptibly();
+    insertStream.onNext(im);
+    insertLock.release();
+  }
+
+  public void commitInsert(){
+    insertLock.acquireUninterruptibly();
+    insertStream.onCompleted();
+    openNewInsertStream();
+    insertLock.release();
   }
 
   /**
@@ -199,6 +249,7 @@ public class CottontailWrapper implements AutoCloseable {
    */
   @Override
   public void close() {
+    this.insertStream.onCompleted();
     this.channel.shutdown();
   }
 }
