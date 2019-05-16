@@ -76,12 +76,8 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
     @Override
     public boolean persist(List<PersistentTuple> tuples) {
-
-        InsertMessage im = InsertMessage.newBuilder().setEntity(this.entity).addAllTuple(tuples.stream().map(this::getPersistentRepresentation).collect(
-                Collectors.toList())).build();
-        this.cottontail.batchedInsert(im);
-
-        return true;
+        InsertMessage im = InsertMessage.newBuilder().setEntity(this.entity).addAllTuple(tuples.stream().map(this::getPersistentRepresentation).collect(Collectors.toList())).build();
+        return this.cottontail.insertBlocking(im).getSuccess();
     }
 
     @Override
