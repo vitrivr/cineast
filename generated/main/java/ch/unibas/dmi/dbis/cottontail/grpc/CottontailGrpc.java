@@ -15154,18 +15154,18 @@ public final class CottontailGrpc {
      * Size of the result-set (default: unlimited). 
      * </pre>
      *
-     * <code>uint32 count = 5;</code>
+     * <code>uint64 limit = 5;</code>
      */
-    int getCount();
+    long getLimit();
 
     /**
      * <pre>
      * Number of records to skip. 
      * </pre>
      *
-     * <code>uint32 skip = 6;</code>
+     * <code>uint64 skip = 6;</code>
      */
-    int getSkip();
+    long getSkip();
   }
   /**
    * <pre>
@@ -15184,8 +15184,8 @@ public final class CottontailGrpc {
       super(builder);
     }
     private Query() {
-      count_ = 0;
-      skip_ = 0;
+      limit_ = 0L;
+      skip_ = 0L;
     }
 
     @java.lang.Override
@@ -15270,12 +15270,12 @@ public final class CottontailGrpc {
             }
             case 40: {
 
-              count_ = input.readUInt32();
+              limit_ = input.readUInt64();
               break;
             }
             case 48: {
 
-              skip_ = input.readUInt32();
+              skip_ = input.readUInt64();
               break;
             }
           }
@@ -15386,29 +15386,29 @@ public final class CottontailGrpc {
       return getKnn();
     }
 
-    public static final int COUNT_FIELD_NUMBER = 5;
-    private int count_;
+    public static final int LIMIT_FIELD_NUMBER = 5;
+    private long limit_;
     /**
      * <pre>
      * Size of the result-set (default: unlimited). 
      * </pre>
      *
-     * <code>uint32 count = 5;</code>
+     * <code>uint64 limit = 5;</code>
      */
-    public int getCount() {
-      return count_;
+    public long getLimit() {
+      return limit_;
     }
 
     public static final int SKIP_FIELD_NUMBER = 6;
-    private int skip_;
+    private long skip_;
     /**
      * <pre>
      * Number of records to skip. 
      * </pre>
      *
-     * <code>uint32 skip = 6;</code>
+     * <code>uint64 skip = 6;</code>
      */
-    public int getSkip() {
+    public long getSkip() {
       return skip_;
     }
 
@@ -15436,11 +15436,11 @@ public final class CottontailGrpc {
       if (knn_ != null) {
         output.writeMessage(4, getKnn());
       }
-      if (count_ != 0) {
-        output.writeUInt32(5, count_);
+      if (limit_ != 0L) {
+        output.writeUInt64(5, limit_);
       }
-      if (skip_ != 0) {
-        output.writeUInt32(6, skip_);
+      if (skip_ != 0L) {
+        output.writeUInt64(6, skip_);
       }
       unknownFields.writeTo(output);
     }
@@ -15466,13 +15466,13 @@ public final class CottontailGrpc {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, getKnn());
       }
-      if (count_ != 0) {
+      if (limit_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(5, count_);
+          .computeUInt64Size(5, limit_);
       }
-      if (skip_ != 0) {
+      if (skip_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(6, skip_);
+          .computeUInt64Size(6, skip_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -15510,8 +15510,8 @@ public final class CottontailGrpc {
         result = result && getKnn()
             .equals(other.getKnn());
       }
-      result = result && (getCount()
-          == other.getCount());
+      result = result && (getLimit()
+          == other.getLimit());
       result = result && (getSkip()
           == other.getSkip());
       result = result && unknownFields.equals(other.unknownFields);
@@ -15541,10 +15541,12 @@ public final class CottontailGrpc {
         hash = (37 * hash) + KNN_FIELD_NUMBER;
         hash = (53 * hash) + getKnn().hashCode();
       }
-      hash = (37 * hash) + COUNT_FIELD_NUMBER;
-      hash = (53 * hash) + getCount();
+      hash = (37 * hash) + LIMIT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getLimit());
       hash = (37 * hash) + SKIP_FIELD_NUMBER;
-      hash = (53 * hash) + getSkip();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getSkip());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -15702,9 +15704,9 @@ public final class CottontailGrpc {
           knn_ = null;
           knnBuilder_ = null;
         }
-        count_ = 0;
+        limit_ = 0L;
 
-        skip_ = 0;
+        skip_ = 0L;
 
         return this;
       }
@@ -15748,7 +15750,7 @@ public final class CottontailGrpc {
         } else {
           result.knn_ = knnBuilder_.build();
         }
-        result.count_ = count_;
+        result.limit_ = limit_;
         result.skip_ = skip_;
         onBuilt();
         return result;
@@ -15803,10 +15805,10 @@ public final class CottontailGrpc {
         if (other.hasKnn()) {
           mergeKnn(other.getKnn());
         }
-        if (other.getCount() != 0) {
-          setCount(other.getCount());
+        if (other.getLimit() != 0L) {
+          setLimit(other.getLimit());
         }
-        if (other.getSkip() != 0) {
+        if (other.getSkip() != 0L) {
           setSkip(other.getSkip());
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -16304,27 +16306,27 @@ public final class CottontailGrpc {
         return knnBuilder_;
       }
 
-      private int count_ ;
+      private long limit_ ;
       /**
        * <pre>
        * Size of the result-set (default: unlimited). 
        * </pre>
        *
-       * <code>uint32 count = 5;</code>
+       * <code>uint64 limit = 5;</code>
        */
-      public int getCount() {
-        return count_;
+      public long getLimit() {
+        return limit_;
       }
       /**
        * <pre>
        * Size of the result-set (default: unlimited). 
        * </pre>
        *
-       * <code>uint32 count = 5;</code>
+       * <code>uint64 limit = 5;</code>
        */
-      public Builder setCount(int value) {
+      public Builder setLimit(long value) {
         
-        count_ = value;
+        limit_ = value;
         onChanged();
         return this;
       }
@@ -16333,24 +16335,24 @@ public final class CottontailGrpc {
        * Size of the result-set (default: unlimited). 
        * </pre>
        *
-       * <code>uint32 count = 5;</code>
+       * <code>uint64 limit = 5;</code>
        */
-      public Builder clearCount() {
+      public Builder clearLimit() {
         
-        count_ = 0;
+        limit_ = 0L;
         onChanged();
         return this;
       }
 
-      private int skip_ ;
+      private long skip_ ;
       /**
        * <pre>
        * Number of records to skip. 
        * </pre>
        *
-       * <code>uint32 skip = 6;</code>
+       * <code>uint64 skip = 6;</code>
        */
-      public int getSkip() {
+      public long getSkip() {
         return skip_;
       }
       /**
@@ -16358,9 +16360,9 @@ public final class CottontailGrpc {
        * Number of records to skip. 
        * </pre>
        *
-       * <code>uint32 skip = 6;</code>
+       * <code>uint64 skip = 6;</code>
        */
-      public Builder setSkip(int value) {
+      public Builder setSkip(long value) {
         
         skip_ = value;
         onChanged();
@@ -16371,11 +16373,11 @@ public final class CottontailGrpc {
        * Number of records to skip. 
        * </pre>
        *
-       * <code>uint32 skip = 6;</code>
+       * <code>uint64 skip = 6;</code>
        */
       public Builder clearSkip() {
         
-        skip_ = 0;
+        skip_ = 0L;
         onChanged();
         return this;
       }
@@ -25887,7 +25889,7 @@ public final class CottontailGrpc {
       "\003(\0132\006.Tuple\"\204\001\n\005Query\022\023\n\004from\030\001 \001(\0132\005.Fr" +
       "om\022\037\n\nprojection\030\002 \001(\0132\013.Projection\022\025\n\005w" +
       "here\030\003 \001(\0132\006.Where\022\021\n\003knn\030\004 \001(\0132\004.Knn\022\r\n",
-      "\005count\030\005 \001(\r\022\014\n\004skip\030\006 \001(\r\".\n\023BatchedQue" +
+      "\005limit\030\005 \001(\004\022\014\n\004skip\030\006 \001(\004\".\n\023BatchedQue" +
       "ryMessage\022\027\n\007queries\030\001 \003(\0132\006.Query\"6\n\014Qu" +
       "eryMessage\022\017\n\007queryId\030\001 \001(\t\022\025\n\005query\030\002 \001" +
       "(\0132\006.Query\"\223\001\n\024QueryResponseMessage\022\017\n\007q" +
@@ -26101,7 +26103,7 @@ public final class CottontailGrpc {
     internal_static_Query_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Query_descriptor,
-        new java.lang.String[] { "From", "Projection", "Where", "Knn", "Count", "Skip", });
+        new java.lang.String[] { "From", "Projection", "Where", "Knn", "Limit", "Skip", });
     internal_static_BatchedQueryMessage_descriptor =
       getDescriptor().getMessageTypes().get(21);
     internal_static_BatchedQueryMessage_fieldAccessorTable = new
