@@ -1,10 +1,8 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
@@ -43,7 +41,6 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
     @Override
     public boolean close() {
         LOGGER.debug("Closing Cottontailwriter");
-        this.cottontail.commitInsert();
         if (useGlobalWrapper) {
             return false;
         }
