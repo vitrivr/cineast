@@ -3,6 +3,8 @@ package org.vitrivr.cineast.api.websocket.handlers.queries;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
 import org.vitrivr.cineast.core.config.Config;
@@ -29,6 +31,8 @@ import org.vitrivr.cineast.core.util.LogHelper;
  * @created 27.04.17
  */
 public abstract class AbstractQueryMessageHandler<T extends Query> extends StatelessWebsocketMessageHandler<T> {
+
+  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * {@link MediaSegmentReader} instance used to read segments from the storage layer.
@@ -66,6 +70,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
         this.write(session, new QueryStart(uuid));
 
         /* Execute actual query. */
+        LOGGER.trace("Executing query from message {}", message);
         this.execute(session, qconf, message);
       } catch (Exception e) {
         /* Error: Send QueryError Message to Client. */
