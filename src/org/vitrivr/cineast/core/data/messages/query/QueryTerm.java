@@ -3,6 +3,8 @@ package org.vitrivr.cineast.core.data.messages.query;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
 /**
@@ -34,12 +36,7 @@ public class QueryTerm {
 
   @Override
   public String toString() {
-    return "QueryTerm{" +
-        "categories=" + String.join(", ", categories) +
-        ", type=" + type +
-        ", data='" + data + '\'' +
-        ", cachedQueryContainer=" + cachedQueryContainer +
-        '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
   }
 
   /**
