@@ -15,7 +15,8 @@ public class CollectionBooleanRetriever extends BooleanRetriever {
           Arrays.asList(
               RelationalOperator.EQ,
               RelationalOperator.NEQ,
-              RelationalOperator.IN));
+              RelationalOperator.IN,
+              RelationalOperator.LIKE));
 
   protected CollectionBooleanRetriever(String entity, Collection<String> attributes) {
     super(entity, attributes);
