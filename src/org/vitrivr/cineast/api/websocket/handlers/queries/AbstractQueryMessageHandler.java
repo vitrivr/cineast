@@ -74,8 +74,8 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
         this.execute(session, qconf, message);
       } catch (Exception e) {
         /* Error: Send QueryError Message to Client. */
-        this.write(session, new QueryError(uuid, e.getMessage()));
         LOGGER.error("An exception occurred during execution of similarity query message {}.", LogHelper.getStackTrace(e));
+        this.write(session, new QueryError(uuid, e.getMessage()));
         return;
       }
 

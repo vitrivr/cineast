@@ -680,7 +680,7 @@ public class API {
           }
         }
       } catch (IOException e) {
-        //ignore
+        e.printStackTrace();
       }
     }
   }
