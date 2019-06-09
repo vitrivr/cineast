@@ -33,7 +33,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
   /**
    * {@link MediaSegmentReader} instance used to read segments from the storage layer.
    */
-  private final MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
+  protected final MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
 
   /**
    * {@link MediaObjectReader} instance used to read multimedia objects from the storage layer.
