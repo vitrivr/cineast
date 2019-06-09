@@ -93,6 +93,16 @@ public class MediaSegmentReader extends AbstractEntityReader {
     return Multimaps.index(descriptors.iterator(), MediaSegmentDescriptor::getObjectId);
   }
 
+  public List<MediaSegmentDescriptor> lookUpSegmentByNumber(String objectId, int segmentNumber){
+    List<MediaSegmentDescriptor> all = this.lookUpSegmentsOfObject(objectId);
+    return all.stream().filter(it -> it.getSequenceNumber() == segmentNumber).collect(Collectors.toList());
+  }
+
+  public List<MediaSegmentDescriptor> lookUpSegmentsByNumberRange(String objectId, int lower, int upper){ //TODO implementing this without selecting all segments would require additional functionality in DBSelector
+    List<MediaSegmentDescriptor> all = this.lookUpSegmentsOfObject(objectId);
+    return all.stream().filter(it -> it.getSequenceNumber() >= lower && it.getSequenceNumber() <= upper).collect(Collectors.toList());
+  }
+
   private Stream<MediaSegmentDescriptor> lookUpSegmentsByField(
       String fieldName, String fieldValue) {
     return lookUpSegmentsByField(fieldName, Collections.singletonList(fieldValue));
