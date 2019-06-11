@@ -332,10 +332,51 @@ public class CottontailMessageBuilder {
             int k,
             ReadableQueryConfig.Distance distance) {
         Knn.Builder knnBuilder = Knn.newBuilder();
-        knnBuilder.clear().setK(k).setQuery(toVector(vector)).setAttribute(attribute);
+        knnBuilder.clear().setK(k).addQuery(toVector(vector)).setAttribute(attribute);
 
         if (weights != null) {
-            knnBuilder.setWeights(toVector(weights));
+            knnBuilder.addWeights(toVector(weights));
+        }
+
+        switch (distance) {
+            case manhattan: {
+                knnBuilder.setDistance(Distance.L1);
+                break;
+            }
+            case euclidean: {
+                knnBuilder.setDistance(Distance.L2);
+                break;
+            }
+            case squaredeuclidean: {
+                knnBuilder.setDistance(Distance.L2SQUARED);
+                break;
+            }
+            case chisquared: {
+                knnBuilder.setDistance(Distance.CHISQUARED);
+                break;
+            }
+            default: {
+                LOGGER.error("distance '{}' not supported by cottontail", distance);
+                break;
+            }
+        }
+
+        return knnBuilder.build();
+    }
+
+    public static Knn batchedKnn(
+            String attribute,
+            List<float[]> vectors,
+            List<float[]> weights,
+            int k,
+            ReadableQueryConfig.Distance distance
+    ) {
+        Knn.Builder knnBuilder = Knn.newBuilder();
+        knnBuilder.clear().setK(k).setAttribute(attribute);
+        vectors.forEach(v -> knnBuilder.addQuery(toVector(v)));
+
+        if (weights != null) {
+            weights.forEach(w -> knnBuilder.addWeights(toVector(w)));
         }
 
         switch (distance) {

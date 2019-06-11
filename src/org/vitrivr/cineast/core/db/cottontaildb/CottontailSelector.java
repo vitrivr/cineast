@@ -96,7 +96,7 @@ public class CottontailSelector implements DBSelector {
       Class<E> distanceElementClass,
       List<ReadableQueryConfig> configs) {
 
-    int size = Math.min(vectors.size(), configs.size());
+   /* int size = Math.min(vectors.size(), configs.size());
 
     List<Query> queries = new ArrayList<>(vectors.size());
 
@@ -116,6 +116,27 @@ public class CottontailSelector implements DBSelector {
 
     List<QueryResponseMessage> results =
         this.cottontail.batchedQuery(CottontailMessageBuilder.batchedQueryMessage(queries));
+
+    List<E> _return = new ArrayList<>();
+
+    for (QueryResponseMessage r : results) {
+      _return.addAll(handleNearestNeighbourResponse(r, distanceElementClass));
+    }
+
+    return _return;*/
+
+    Query query = CottontailMessageBuilder.query(
+            entity,
+            CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"),
+            null,
+            CottontailMessageBuilder.batchedKnn(
+                    column,
+                    vectors,
+                    null,
+                    k,
+                    configs.get(0).getDistance().orElse(Distance.manhattan)));
+
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(query, configs.get(0).getQueryId().toString()));
 
     List<E> _return = new ArrayList<>();
 

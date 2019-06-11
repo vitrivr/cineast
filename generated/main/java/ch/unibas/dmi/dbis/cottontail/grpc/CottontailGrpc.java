@@ -20791,30 +20791,52 @@ public final class CottontailGrpc {
     ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance getDistance();
 
     /**
-     * <code>.Vector query = 4;</code>
+     * <code>repeated .Vector query = 4;</code>
      */
-    boolean hasQuery();
+    java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> 
+        getQueryList();
     /**
-     * <code>.Vector query = 4;</code>
+     * <code>repeated .Vector query = 4;</code>
      */
-    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getQuery();
+    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getQuery(int index);
     /**
-     * <code>.Vector query = 4;</code>
+     * <code>repeated .Vector query = 4;</code>
      */
-    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getQueryOrBuilder();
+    int getQueryCount();
+    /**
+     * <code>repeated .Vector query = 4;</code>
+     */
+    java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
+        getQueryOrBuilderList();
+    /**
+     * <code>repeated .Vector query = 4;</code>
+     */
+    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getQueryOrBuilder(
+        int index);
 
     /**
-     * <code>.Vector weights = 5;</code>
+     * <code>repeated .Vector weights = 5;</code>
      */
-    boolean hasWeights();
+    java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> 
+        getWeightsList();
     /**
-     * <code>.Vector weights = 5;</code>
+     * <code>repeated .Vector weights = 5;</code>
      */
-    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getWeights();
+    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getWeights(int index);
     /**
-     * <code>.Vector weights = 5;</code>
+     * <code>repeated .Vector weights = 5;</code>
      */
-    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getWeightsOrBuilder();
+    int getWeightsCount();
+    /**
+     * <code>repeated .Vector weights = 5;</code>
+     */
+    java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
+        getWeightsOrBuilderList();
+    /**
+     * <code>repeated .Vector weights = 5;</code>
+     */
+    ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getWeightsOrBuilder(
+        int index);
   }
   /**
    * <pre>
@@ -20837,6 +20859,8 @@ public final class CottontailGrpc {
       attribute_ = "";
       k_ = 0;
       distance_ = 0;
+      query_ = java.util.Collections.emptyList();
+      weights_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -20885,29 +20909,21 @@ public final class CottontailGrpc {
               break;
             }
             case 34: {
-              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder subBuilder = null;
-              if (query_ != null) {
-                subBuilder = query_.toBuilder();
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                query_ = new java.util.ArrayList<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector>();
+                mutable_bitField0_ |= 0x00000008;
               }
-              query_ = input.readMessage(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(query_);
-                query_ = subBuilder.buildPartial();
-              }
-
+              query_.add(
+                  input.readMessage(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.parser(), extensionRegistry));
               break;
             }
             case 42: {
-              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder subBuilder = null;
-              if (weights_ != null) {
-                subBuilder = weights_.toBuilder();
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                weights_ = new java.util.ArrayList<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector>();
+                mutable_bitField0_ |= 0x00000010;
               }
-              weights_ = input.readMessage(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(weights_);
-                weights_ = subBuilder.buildPartial();
-              }
-
+              weights_.add(
+                  input.readMessage(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.parser(), extensionRegistry));
               break;
             }
           }
@@ -20918,6 +20934,12 @@ public final class CottontailGrpc {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          query_ = java.util.Collections.unmodifiableList(query_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          weights_ = java.util.Collections.unmodifiableList(weights_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -21050,6 +21072,7 @@ public final class CottontailGrpc {
       // @@protoc_insertion_point(enum_scope:Knn.Distance)
     }
 
+    private int bitField0_;
     public static final int ATTRIBUTE_FIELD_NUMBER = 1;
     private volatile java.lang.Object attribute_;
     /**
@@ -21110,45 +21133,73 @@ public final class CottontailGrpc {
     }
 
     public static final int QUERY_FIELD_NUMBER = 4;
-    private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector query_;
+    private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> query_;
     /**
-     * <code>.Vector query = 4;</code>
+     * <code>repeated .Vector query = 4;</code>
      */
-    public boolean hasQuery() {
-      return query_ != null;
+    public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> getQueryList() {
+      return query_;
     }
     /**
-     * <code>.Vector query = 4;</code>
+     * <code>repeated .Vector query = 4;</code>
      */
-    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getQuery() {
-      return query_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance() : query_;
+    public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
+        getQueryOrBuilderList() {
+      return query_;
     }
     /**
-     * <code>.Vector query = 4;</code>
+     * <code>repeated .Vector query = 4;</code>
      */
-    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getQueryOrBuilder() {
-      return getQuery();
+    public int getQueryCount() {
+      return query_.size();
+    }
+    /**
+     * <code>repeated .Vector query = 4;</code>
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getQuery(int index) {
+      return query_.get(index);
+    }
+    /**
+     * <code>repeated .Vector query = 4;</code>
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getQueryOrBuilder(
+        int index) {
+      return query_.get(index);
     }
 
     public static final int WEIGHTS_FIELD_NUMBER = 5;
-    private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector weights_;
+    private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> weights_;
     /**
-     * <code>.Vector weights = 5;</code>
+     * <code>repeated .Vector weights = 5;</code>
      */
-    public boolean hasWeights() {
-      return weights_ != null;
+    public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> getWeightsList() {
+      return weights_;
     }
     /**
-     * <code>.Vector weights = 5;</code>
+     * <code>repeated .Vector weights = 5;</code>
      */
-    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getWeights() {
-      return weights_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance() : weights_;
+    public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
+        getWeightsOrBuilderList() {
+      return weights_;
     }
     /**
-     * <code>.Vector weights = 5;</code>
+     * <code>repeated .Vector weights = 5;</code>
      */
-    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getWeightsOrBuilder() {
-      return getWeights();
+    public int getWeightsCount() {
+      return weights_.size();
+    }
+    /**
+     * <code>repeated .Vector weights = 5;</code>
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getWeights(int index) {
+      return weights_.get(index);
+    }
+    /**
+     * <code>repeated .Vector weights = 5;</code>
+     */
+    public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getWeightsOrBuilder(
+        int index) {
+      return weights_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -21172,11 +21223,11 @@ public final class CottontailGrpc {
       if (distance_ != ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance.L1.getNumber()) {
         output.writeEnum(3, distance_);
       }
-      if (query_ != null) {
-        output.writeMessage(4, getQuery());
+      for (int i = 0; i < query_.size(); i++) {
+        output.writeMessage(4, query_.get(i));
       }
-      if (weights_ != null) {
-        output.writeMessage(5, getWeights());
+      for (int i = 0; i < weights_.size(); i++) {
+        output.writeMessage(5, weights_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -21197,13 +21248,13 @@ public final class CottontailGrpc {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(3, distance_);
       }
-      if (query_ != null) {
+      for (int i = 0; i < query_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getQuery());
+          .computeMessageSize(4, query_.get(i));
       }
-      if (weights_ != null) {
+      for (int i = 0; i < weights_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getWeights());
+          .computeMessageSize(5, weights_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -21226,16 +21277,10 @@ public final class CottontailGrpc {
       result = result && (getK()
           == other.getK());
       result = result && distance_ == other.distance_;
-      result = result && (hasQuery() == other.hasQuery());
-      if (hasQuery()) {
-        result = result && getQuery()
-            .equals(other.getQuery());
-      }
-      result = result && (hasWeights() == other.hasWeights());
-      if (hasWeights()) {
-        result = result && getWeights()
-            .equals(other.getWeights());
-      }
+      result = result && getQueryList()
+          .equals(other.getQueryList());
+      result = result && getWeightsList()
+          .equals(other.getWeightsList());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -21253,13 +21298,13 @@ public final class CottontailGrpc {
       hash = (53 * hash) + getK();
       hash = (37 * hash) + DISTANCE_FIELD_NUMBER;
       hash = (53 * hash) + distance_;
-      if (hasQuery()) {
+      if (getQueryCount() > 0) {
         hash = (37 * hash) + QUERY_FIELD_NUMBER;
-        hash = (53 * hash) + getQuery().hashCode();
+        hash = (53 * hash) + getQueryList().hashCode();
       }
-      if (hasWeights()) {
+      if (getWeightsCount() > 0) {
         hash = (37 * hash) + WEIGHTS_FIELD_NUMBER;
-        hash = (53 * hash) + getWeights().hashCode();
+        hash = (53 * hash) + getWeightsList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -21391,6 +21436,8 @@ public final class CottontailGrpc {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getQueryFieldBuilder();
+          getWeightsFieldBuilder();
         }
       }
       public Builder clear() {
@@ -21402,16 +21449,16 @@ public final class CottontailGrpc {
         distance_ = 0;
 
         if (queryBuilder_ == null) {
-          query_ = null;
+          query_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
         } else {
-          query_ = null;
-          queryBuilder_ = null;
+          queryBuilder_.clear();
         }
         if (weightsBuilder_ == null) {
-          weights_ = null;
+          weights_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
         } else {
-          weights_ = null;
-          weightsBuilder_ = null;
+          weightsBuilder_.clear();
         }
         return this;
       }
@@ -21435,19 +21482,30 @@ public final class CottontailGrpc {
 
       public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn buildPartial() {
         ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn result = new ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         result.attribute_ = attribute_;
         result.k_ = k_;
         result.distance_ = distance_;
         if (queryBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            query_ = java.util.Collections.unmodifiableList(query_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
           result.query_ = query_;
         } else {
           result.query_ = queryBuilder_.build();
         }
         if (weightsBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            weights_ = java.util.Collections.unmodifiableList(weights_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
           result.weights_ = weights_;
         } else {
           result.weights_ = weightsBuilder_.build();
         }
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -21499,11 +21557,57 @@ public final class CottontailGrpc {
         if (other.distance_ != 0) {
           setDistanceValue(other.getDistanceValue());
         }
-        if (other.hasQuery()) {
-          mergeQuery(other.getQuery());
+        if (queryBuilder_ == null) {
+          if (!other.query_.isEmpty()) {
+            if (query_.isEmpty()) {
+              query_ = other.query_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureQueryIsMutable();
+              query_.addAll(other.query_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.query_.isEmpty()) {
+            if (queryBuilder_.isEmpty()) {
+              queryBuilder_.dispose();
+              queryBuilder_ = null;
+              query_ = other.query_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              queryBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getQueryFieldBuilder() : null;
+            } else {
+              queryBuilder_.addAllMessages(other.query_);
+            }
+          }
         }
-        if (other.hasWeights()) {
-          mergeWeights(other.getWeights());
+        if (weightsBuilder_ == null) {
+          if (!other.weights_.isEmpty()) {
+            if (weights_.isEmpty()) {
+              weights_ = other.weights_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureWeightsIsMutable();
+              weights_.addAll(other.weights_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.weights_.isEmpty()) {
+            if (weightsBuilder_.isEmpty()) {
+              weightsBuilder_.dispose();
+              weightsBuilder_ = null;
+              weights_ = other.weights_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              weightsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getWeightsFieldBuilder() : null;
+            } else {
+              weightsBuilder_.addAllMessages(other.weights_);
+            }
+          }
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -21531,6 +21635,7 @@ public final class CottontailGrpc {
         }
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object attribute_ = "";
       /**
@@ -21671,116 +21776,239 @@ public final class CottontailGrpc {
         return this;
       }
 
-      private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector query_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> queryBuilder_;
-      /**
-       * <code>.Vector query = 4;</code>
-       */
-      public boolean hasQuery() {
-        return queryBuilder_ != null || query_ != null;
+      private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> query_ =
+        java.util.Collections.emptyList();
+      private void ensureQueryIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          query_ = new java.util.ArrayList<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector>(query_);
+          bitField0_ |= 0x00000008;
+         }
       }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> queryBuilder_;
+
       /**
-       * <code>.Vector query = 4;</code>
+       * <code>repeated .Vector query = 4;</code>
        */
-      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getQuery() {
+      public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> getQueryList() {
         if (queryBuilder_ == null) {
-          return query_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance() : query_;
+          return java.util.Collections.unmodifiableList(query_);
         } else {
-          return queryBuilder_.getMessage();
+          return queryBuilder_.getMessageList();
         }
       }
       /**
-       * <code>.Vector query = 4;</code>
+       * <code>repeated .Vector query = 4;</code>
        */
-      public Builder setQuery(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
+      public int getQueryCount() {
+        if (queryBuilder_ == null) {
+          return query_.size();
+        } else {
+          return queryBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .Vector query = 4;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getQuery(int index) {
+        if (queryBuilder_ == null) {
+          return query_.get(index);
+        } else {
+          return queryBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .Vector query = 4;</code>
+       */
+      public Builder setQuery(
+          int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
         if (queryBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          query_ = value;
+          ensureQueryIsMutable();
+          query_.set(index, value);
           onChanged();
         } else {
-          queryBuilder_.setMessage(value);
+          queryBuilder_.setMessage(index, value);
         }
-
         return this;
       }
       /**
-       * <code>.Vector query = 4;</code>
+       * <code>repeated .Vector query = 4;</code>
        */
       public Builder setQuery(
+          int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
+        if (queryBuilder_ == null) {
+          ensureQueryIsMutable();
+          query_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          queryBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Vector query = 4;</code>
+       */
+      public Builder addQuery(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
+        if (queryBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureQueryIsMutable();
+          query_.add(value);
+          onChanged();
+        } else {
+          queryBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Vector query = 4;</code>
+       */
+      public Builder addQuery(
+          int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
+        if (queryBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureQueryIsMutable();
+          query_.add(index, value);
+          onChanged();
+        } else {
+          queryBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Vector query = 4;</code>
+       */
+      public Builder addQuery(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
         if (queryBuilder_ == null) {
-          query_ = builderForValue.build();
+          ensureQueryIsMutable();
+          query_.add(builderForValue.build());
           onChanged();
         } else {
-          queryBuilder_.setMessage(builderForValue.build());
+          queryBuilder_.addMessage(builderForValue.build());
         }
-
         return this;
       }
       /**
-       * <code>.Vector query = 4;</code>
+       * <code>repeated .Vector query = 4;</code>
        */
-      public Builder mergeQuery(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
+      public Builder addQuery(
+          int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
         if (queryBuilder_ == null) {
-          if (query_ != null) {
-            query_ =
-              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.newBuilder(query_).mergeFrom(value).buildPartial();
-          } else {
-            query_ = value;
-          }
+          ensureQueryIsMutable();
+          query_.add(index, builderForValue.build());
           onChanged();
         } else {
-          queryBuilder_.mergeFrom(value);
+          queryBuilder_.addMessage(index, builderForValue.build());
         }
-
         return this;
       }
       /**
-       * <code>.Vector query = 4;</code>
+       * <code>repeated .Vector query = 4;</code>
+       */
+      public Builder addAllQuery(
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> values) {
+        if (queryBuilder_ == null) {
+          ensureQueryIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, query_);
+          onChanged();
+        } else {
+          queryBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Vector query = 4;</code>
        */
       public Builder clearQuery() {
         if (queryBuilder_ == null) {
-          query_ = null;
+          query_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
           onChanged();
         } else {
-          query_ = null;
-          queryBuilder_ = null;
+          queryBuilder_.clear();
         }
-
         return this;
       }
       /**
-       * <code>.Vector query = 4;</code>
+       * <code>repeated .Vector query = 4;</code>
        */
-      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder getQueryBuilder() {
-        
-        onChanged();
-        return getQueryFieldBuilder().getBuilder();
+      public Builder removeQuery(int index) {
+        if (queryBuilder_ == null) {
+          ensureQueryIsMutable();
+          query_.remove(index);
+          onChanged();
+        } else {
+          queryBuilder_.remove(index);
+        }
+        return this;
       }
       /**
-       * <code>.Vector query = 4;</code>
+       * <code>repeated .Vector query = 4;</code>
        */
-      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getQueryOrBuilder() {
-        if (queryBuilder_ != null) {
-          return queryBuilder_.getMessageOrBuilder();
-        } else {
-          return query_ == null ?
-              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance() : query_;
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder getQueryBuilder(
+          int index) {
+        return getQueryFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .Vector query = 4;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getQueryOrBuilder(
+          int index) {
+        if (queryBuilder_ == null) {
+          return query_.get(index);  } else {
+          return queryBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>.Vector query = 4;</code>
+       * <code>repeated .Vector query = 4;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
+           getQueryOrBuilderList() {
+        if (queryBuilder_ != null) {
+          return queryBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(query_);
+        }
+      }
+      /**
+       * <code>repeated .Vector query = 4;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder addQueryBuilder() {
+        return getQueryFieldBuilder().addBuilder(
+            ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .Vector query = 4;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder addQueryBuilder(
+          int index) {
+        return getQueryFieldBuilder().addBuilder(
+            index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .Vector query = 4;</code>
+       */
+      public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder> 
+           getQueryBuilderList() {
+        return getQueryFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
           getQueryFieldBuilder() {
         if (queryBuilder_ == null) {
-          queryBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          queryBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder>(
-                  getQuery(),
+                  query_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
                   getParentForChildren(),
                   isClean());
           query_ = null;
@@ -21788,116 +22016,239 @@ public final class CottontailGrpc {
         return queryBuilder_;
       }
 
-      private ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector weights_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> weightsBuilder_;
-      /**
-       * <code>.Vector weights = 5;</code>
-       */
-      public boolean hasWeights() {
-        return weightsBuilder_ != null || weights_ != null;
+      private java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> weights_ =
+        java.util.Collections.emptyList();
+      private void ensureWeightsIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          weights_ = new java.util.ArrayList<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector>(weights_);
+          bitField0_ |= 0x00000010;
+         }
       }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> weightsBuilder_;
+
       /**
-       * <code>.Vector weights = 5;</code>
+       * <code>repeated .Vector weights = 5;</code>
        */
-      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getWeights() {
+      public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> getWeightsList() {
         if (weightsBuilder_ == null) {
-          return weights_ == null ? ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance() : weights_;
+          return java.util.Collections.unmodifiableList(weights_);
         } else {
-          return weightsBuilder_.getMessage();
+          return weightsBuilder_.getMessageList();
         }
       }
       /**
-       * <code>.Vector weights = 5;</code>
+       * <code>repeated .Vector weights = 5;</code>
        */
-      public Builder setWeights(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
+      public int getWeightsCount() {
+        if (weightsBuilder_ == null) {
+          return weights_.size();
+        } else {
+          return weightsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .Vector weights = 5;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector getWeights(int index) {
+        if (weightsBuilder_ == null) {
+          return weights_.get(index);
+        } else {
+          return weightsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .Vector weights = 5;</code>
+       */
+      public Builder setWeights(
+          int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
         if (weightsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          weights_ = value;
+          ensureWeightsIsMutable();
+          weights_.set(index, value);
           onChanged();
         } else {
-          weightsBuilder_.setMessage(value);
+          weightsBuilder_.setMessage(index, value);
         }
-
         return this;
       }
       /**
-       * <code>.Vector weights = 5;</code>
+       * <code>repeated .Vector weights = 5;</code>
        */
       public Builder setWeights(
+          int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
+        if (weightsBuilder_ == null) {
+          ensureWeightsIsMutable();
+          weights_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          weightsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Vector weights = 5;</code>
+       */
+      public Builder addWeights(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
+        if (weightsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureWeightsIsMutable();
+          weights_.add(value);
+          onChanged();
+        } else {
+          weightsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Vector weights = 5;</code>
+       */
+      public Builder addWeights(
+          int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
+        if (weightsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureWeightsIsMutable();
+          weights_.add(index, value);
+          onChanged();
+        } else {
+          weightsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Vector weights = 5;</code>
+       */
+      public Builder addWeights(
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
         if (weightsBuilder_ == null) {
-          weights_ = builderForValue.build();
+          ensureWeightsIsMutable();
+          weights_.add(builderForValue.build());
           onChanged();
         } else {
-          weightsBuilder_.setMessage(builderForValue.build());
+          weightsBuilder_.addMessage(builderForValue.build());
         }
-
         return this;
       }
       /**
-       * <code>.Vector weights = 5;</code>
+       * <code>repeated .Vector weights = 5;</code>
        */
-      public Builder mergeWeights(ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector value) {
+      public Builder addWeights(
+          int index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder builderForValue) {
         if (weightsBuilder_ == null) {
-          if (weights_ != null) {
-            weights_ =
-              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.newBuilder(weights_).mergeFrom(value).buildPartial();
-          } else {
-            weights_ = value;
-          }
+          ensureWeightsIsMutable();
+          weights_.add(index, builderForValue.build());
           onChanged();
         } else {
-          weightsBuilder_.mergeFrom(value);
+          weightsBuilder_.addMessage(index, builderForValue.build());
         }
-
         return this;
       }
       /**
-       * <code>.Vector weights = 5;</code>
+       * <code>repeated .Vector weights = 5;</code>
+       */
+      public Builder addAllWeights(
+          java.lang.Iterable<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector> values) {
+        if (weightsBuilder_ == null) {
+          ensureWeightsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, weights_);
+          onChanged();
+        } else {
+          weightsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Vector weights = 5;</code>
        */
       public Builder clearWeights() {
         if (weightsBuilder_ == null) {
-          weights_ = null;
+          weights_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
           onChanged();
         } else {
-          weights_ = null;
-          weightsBuilder_ = null;
+          weightsBuilder_.clear();
         }
-
         return this;
       }
       /**
-       * <code>.Vector weights = 5;</code>
+       * <code>repeated .Vector weights = 5;</code>
        */
-      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder getWeightsBuilder() {
-        
-        onChanged();
-        return getWeightsFieldBuilder().getBuilder();
+      public Builder removeWeights(int index) {
+        if (weightsBuilder_ == null) {
+          ensureWeightsIsMutable();
+          weights_.remove(index);
+          onChanged();
+        } else {
+          weightsBuilder_.remove(index);
+        }
+        return this;
       }
       /**
-       * <code>.Vector weights = 5;</code>
+       * <code>repeated .Vector weights = 5;</code>
        */
-      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getWeightsOrBuilder() {
-        if (weightsBuilder_ != null) {
-          return weightsBuilder_.getMessageOrBuilder();
-        } else {
-          return weights_ == null ?
-              ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance() : weights_;
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder getWeightsBuilder(
+          int index) {
+        return getWeightsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .Vector weights = 5;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder getWeightsOrBuilder(
+          int index) {
+        if (weightsBuilder_ == null) {
+          return weights_.get(index);  } else {
+          return weightsBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>.Vector weights = 5;</code>
+       * <code>repeated .Vector weights = 5;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      public java.util.List<? extends ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
+           getWeightsOrBuilderList() {
+        if (weightsBuilder_ != null) {
+          return weightsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(weights_);
+        }
+      }
+      /**
+       * <code>repeated .Vector weights = 5;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder addWeightsBuilder() {
+        return getWeightsFieldBuilder().addBuilder(
+            ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .Vector weights = 5;</code>
+       */
+      public ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder addWeightsBuilder(
+          int index) {
+        return getWeightsFieldBuilder().addBuilder(
+            index, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .Vector weights = 5;</code>
+       */
+      public java.util.List<ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder> 
+           getWeightsBuilderList() {
+        return getWeightsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
           ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder> 
           getWeightsFieldBuilder() {
         if (weightsBuilder_ == null) {
-          weightsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          weightsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.Builder, ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.VectorOrBuilder>(
-                  getWeights(),
+                  weights_,
+                  ((bitField0_ & 0x00000010) == 0x00000010),
                   getParentForChildren(),
                   isClean());
           weights_ = null;
@@ -25905,8 +26256,8 @@ public final class CottontailGrpc {
       "ISTINCT\020\002\022\n\n\006EXISTS\020\003\022\007\n\003SUM\020\004\022\007\n\003MAX\020\005\022" +
       "\007\n\003MIN\020\006\022\010\n\004MEAN\020\007\"\261\001\n\003Knn\022\021\n\tattribute\030" +
       "\001 \001(\t\022\t\n\001k\030\002 \001(\r\022\037\n\010distance\030\003 \001(\0162\r.Knn" +
-      ".Distance\022\026\n\005query\030\004 \001(\0132\007.Vector\022\030\n\007wei" +
-      "ghts\030\005 \001(\0132\007.Vector\"9\n\010Distance\022\006\n\002L1\020\000\022" +
+      ".Distance\022\026\n\005query\030\004 \003(\0132\007.Vector\022\030\n\007wei" +
+      "ghts\030\005 \003(\0132\007.Vector\"9\n\010Distance\022\006\n\002L1\020\000\022" +
       "\006\n\002L2\020\001\022\r\n\tL2SQUARED\020\002\022\016\n\nCHISQUARED\020\003\"u" +
       "\n\005Where\0220\n\006atomic\030\001 \001(\0132\036.AtomicLiteralB",
       "ooleanPredicateH\000\022-\n\010compound\030\002 \001(\0132\031.Co" +
