@@ -1,8 +1,8 @@
 {
 	"database": {
-		"host": "dmi-p10.dmi.unibas.ch",
+		"host": "localhost",
 		"selector": "COTTONTAIL",
-    	"writer": "COTTONTAIL",
+    		"writer": "COTTONTAIL",
 		"port": 1865,
 		"plaintext": true
 	},

@@ -1,17 +1,14 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
 import org.eclipse.jetty.websocket.api.Session;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
-import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
-import org.vitrivr.cineast.core.data.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.core.data.messages.query.NeighboringSegmentQuery;
 import org.vitrivr.cineast.core.data.messages.result.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler<NeighboringSegmentQuery> {
     /**
@@ -28,14 +25,26 @@ public class NeighbouringQueryMessageHandler extends AbstractQueryMessageHandler
         final String uuid = qconf.getQueryId().toString();
 
         /* Retrieve segments. If empty, abort query. */
-        final List<String> segmentIds = message.getSegmentIds();
-        final List<MediaSegmentDescriptor> segment = this.loadSegments(segmentIds);
-        if (segmentIds.isEmpty()) return;
+        final String segmentId = message.getSegmentId();
+
+        if (segmentId == null || segmentId.isEmpty()){
+            return;
+        }
+
+        Optional<MediaSegmentDescriptor> segmentOption = this.mediaSegmentReader.lookUpSegment(segmentId);
+
+        if(!segmentOption.isPresent()){
+            return;
+        }
+
+        MediaSegmentDescriptor segment = segmentOption.get();
+
+        final List<MediaSegmentDescriptor> segments = this.mediaSegmentReader.lookUpSegmentsByNumberRange(segment.getObjectId(), segment.getSequenceNumber() - message.getCount(), segment.getSequenceNumber() + message.getCount());
 
         /* Write segments to stream. */
-        this.write(session, new MediaSegmentQueryResult(uuid, segment));
+        this.write(session, new MediaSegmentQueryResult(uuid, segments));
 
         /* Load and transmit segment metadata. */
-        this.loadAndWriteSegmentMetadata(session, uuid, segmentIds);
+        this.loadAndWriteSegmentMetadata(session, uuid, segments.stream().map(MediaSegmentDescriptor::getSegmentId).collect(Collectors.toList()));
     }
 }
