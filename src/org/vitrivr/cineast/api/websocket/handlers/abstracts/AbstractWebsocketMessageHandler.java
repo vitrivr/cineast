@@ -21,7 +21,7 @@ import org.vitrivr.cineast.core.util.json.JsonWriter;
  */
 public abstract class AbstractWebsocketMessageHandler<A> implements WebsocketMessageHandler<A> {
 
-  protected static final Logger LOGGER = LogManager.getLogger();
+  private static final Logger LOGGER = LogManager.getLogger();
 
   /**
    * JsonWriter used to serialize resulting objects to a JSON representation.
