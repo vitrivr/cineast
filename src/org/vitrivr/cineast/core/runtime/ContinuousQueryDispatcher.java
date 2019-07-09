@@ -100,12 +100,17 @@ public class ContinuousQueryDispatcher {
       weightSum += i.next();
     }
     this.retrieverWeightSum = weightSum;
+    LOGGER.trace("Initialized continuous query dispatcher with retrievers {}", retrieverWeights);
   }
 
   private List<SegmentScoreElement> doRetrieve() {
+    LOGGER.trace("Initializing executor with retrievers {}", retrieverWeights);
     initExecutor();
+    LOGGER.trace("Starting tasks with retrievers {}", retrieverWeights);
     List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures = this.startTasks();
+    LOGGER.trace("Extracting results with retrievers {}", retrieverWeights);
     List<SegmentScoreElement> segmentScores = this.extractResults(futures);
+    LOGGER.trace("Retrieved {} results, finishing", segmentScores.size());
     this.finish();
     return segmentScores;
   }
