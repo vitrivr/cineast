@@ -199,8 +199,8 @@ sourceSets {
 			srcDir 'config'
 		}
 		proto {
-            srcDir 'adampro-grpc/src/main/protobuf'
-            //srcDir 'cottontaildb-proto/src/main/protobuf'
+            //srcDir 'adampro-grpc/src/main/protobuf'
+            srcDir 'cottontaildb-proto/src/main/protobuf'
 		}
     }
     test {
