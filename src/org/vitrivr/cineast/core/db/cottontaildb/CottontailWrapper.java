@@ -45,7 +45,6 @@ public class CottontailWrapper implements AutoCloseable {
   private final CottonDDLFutureStub definitionFutureStub;
   private final CottonDMLFutureStub managementStub;
   private final CottonDMLStub insertStub;
-  private final Semaphore insertLock;
 
   private static final int maxMessageSize = 10_000_000;
   private static final long MAX_QUERY_CALL_TIMEOUT = 300_000; //TODO expose to config
@@ -58,33 +57,6 @@ public class CottontailWrapper implements AutoCloseable {
     this.definitionFutureStub = CottonDDLGrpc.newFutureStub(channel);
     this.managementStub = CottonDMLGrpc.newFutureStub(channel);
     this.insertStub = CottonDMLGrpc.newStub(channel);
-    this.insertLock = new Semaphore(1);
-    this.insertLock.acquireUninterruptibly();
-    openNewInsertStream();
-    this.insertLock.release();
-  }
-
-  private void openNewInsertStream(){
-    if(this.insertLock.tryAcquire()){
-      LOGGER.warn("Insert lock not acquired before opening new stream! this is a severe implementation problem. Returning.");
-      return;
-    }
-    this.insertStream = this.insertStub.insertStream(new StreamObserver<InsertStatus>() {
-      @Override
-      public void onNext(InsertStatus value) {
-        //ignore
-      }
-
-      @Override
-      public void onError(Throwable t) {
-        LOGGER.error("Error on insert stream", t);
-      }
-
-      @Override
-      public void onCompleted() {
-        //ignore
-      }
-    });
   }
 
   public synchronized ListenableFuture<SuccessStatus> createEntity(CreateEntityMessage createMessage) {
@@ -144,22 +116,6 @@ public class CottontailWrapper implements AutoCloseable {
       LOGGER.error("error in insertBlocking: {}", LogHelper.getStackTrace(e));
       return INTERRUPTED_INSERT;
     }
-  }
-
-  /**
-   * Uses batched insert. Flushing is currently not possible, but you can call {@link #close()} to ensure a commit.
-   */
-  public synchronized void batchedInsert(InsertMessage im) {
-    insertLock.acquireUninterruptibly();
-    insertStream.onNext(im);
-    insertLock.release();
-  }
-
-  public void commitInsert(){
-    insertLock.acquireUninterruptibly();
-    insertStream.onCompleted();
-    openNewInsertStream();
-    insertLock.release();
   }
 
   /**

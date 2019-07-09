@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 
 public class QueryConfig extends ReadableQueryConfig {
@@ -116,10 +118,6 @@ public class QueryConfig extends ReadableQueryConfig {
         return new QueryConfig(qc, null);
     }
 
-//  protected void setNet(NeuralNet net) {
-//    this.net = net;
-//  }
-
     protected QueryConfig setDistance(Distance distance) {
         this.distance = distance;
         if (distance == Distance.euclidean) {
@@ -150,7 +148,8 @@ public class QueryConfig extends ReadableQueryConfig {
         return this;
     }
 
-//  protected void setClassificationCutoff(float classificationCutoff) {
-//    this.classificationCutoff = classificationCutoff;
-//  }
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
 }
