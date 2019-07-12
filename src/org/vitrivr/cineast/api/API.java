@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ServerSocket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -47,13 +46,13 @@ import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.importer.handlers.AsrDataImportHandler;
-import org.vitrivr.cineast.core.importer.vbs2019.AudioTranscriptImportHandler;
-import org.vitrivr.cineast.core.importer.vbs2019.CaptionTextImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.DataImportHandler;
-import org.vitrivr.cineast.core.importer.vbs2019.GoogleVisionImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.JsonDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.OcrDataImportHandler;
 import org.vitrivr.cineast.core.importer.handlers.ProtoDataImportHandler;
+import org.vitrivr.cineast.core.importer.vbs2019.AudioTranscriptImportHandler;
+import org.vitrivr.cineast.core.importer.vbs2019.CaptionTextImportHandler;
+import org.vitrivr.cineast.core.importer.vbs2019.GoogleVisionImportHandler;
 import org.vitrivr.cineast.core.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
@@ -69,8 +68,7 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.monitoring.PrometheusServer;
 
 /**
- * Entry point. Has an executable main class which connects to the DB and opens a connection to the
- * webserver Ports and additional settings can be specified at cineast.properties
+ * Entry point. Has an executable main class which connects to the DB and opens a connection to the webserver Ports and additional settings can be specified at cineast.properties
  */
 public class API {
 
@@ -83,9 +81,6 @@ public class API {
 
   private static boolean running = true;
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     CommandLine commandline = handleCommandLine(args);
     if (commandline != null) {
@@ -121,7 +116,7 @@ public class API {
         SessionExtractionContainer.open(new File(commandline.getOptionValue("server")));
       }
 
-            /* Handle --3d; start handleExtraction. */
+      /* Handle --3d; start handleExtraction. */
       if (commandline.hasOption("3d")) {
         handle3Dtest();
         return;
@@ -141,7 +136,7 @@ public class API {
         handleHTTP();
       }
 
-            /* Start the Legacy API if it was configured. */
+      /* Start the Legacy API if it was configured. */
       if (Config.sharedConfig().getApi().getEnableLegacy()) {
         handleLegacy();
       }
@@ -193,12 +188,10 @@ public class API {
   }
 
   /**
-   * Starts the codebook generation process (CLI only). A valid classname name, input/output path
-   * and the number of words must be specified.
+   * Starts the codebook generation process (CLI only). A valid classname name, input/output path and the number of words must be specified.
    *
    * @param name Name of the codebook generator class. Either a FQN oder the classes simple name.
-   * @param input Path to the input folder containing the data to derive a codebook from (e.g.
-   * images).
+   * @param input Path to the input folder containing the data to derive a codebook from (e.g. images).
    * @param output Path to the output file for the codebook.
    * @param words The number of words in the codebook.
    */
@@ -217,9 +210,7 @@ public class API {
   }
 
   /**
-   * Starts the extraction process (CLI and program-argument). A valid configuration file (JSON)
-   * must be provided in order to configure that extraction run. Refer to {@link IngestConfig} class
-   * for structural information.
+   * Starts the extraction process (CLI and program-argument). A valid configuration file (JSON) must be provided in order to configure that extraction run. Refer to {@link IngestConfig} class for structural information.
    *
    * @param file Configuration file for the extraction.
    * @see ExtractionDispatcher
@@ -253,9 +244,7 @@ public class API {
   }
 
   /**
-   * Starts an evaluation process. A valid configuration file (JSON) must be provided in order to
-   * configure that evaluation run. Refer to {@link EvaluationConfig} class for structural
-   * information.
+   * Starts an evaluation process. A valid configuration file (JSON) must be provided in order to configure that evaluation run. Refer to {@link EvaluationConfig} class for structural information.
    *
    * @param path Path to the configuration file for the extraction.
    * @see EvaluationConfig
@@ -320,6 +309,11 @@ public class API {
           GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, batchsize, category, false);
           _handler.doImport(path);
           handlers.add(_handler);
+          if (category == GoogleVisionCategory.LABELS || category == GoogleVisionCategory.WEB) {
+            GoogleVisionImportHandler _handlerTrue = new GoogleVisionImportHandler(1, batchsize, category, true);
+            _handlerTrue.doImport(path);
+            handlers.add(_handlerTrue);
+          }
         }
         handlers.forEach(GoogleVisionImportHandler::waitForCompletion);
         LOGGER.info("Submitted all Google Vision imports for {}", path);
@@ -328,9 +322,7 @@ public class API {
   }
 
   /**
-   * Performs a test of the JOGLOffscreenRenderer class. If the environment supports OpenGL
-   * rendering, an image should be generated depicting two colored triangles on black background. If
-   * OpenGL rendering is not supported, an exception will be thrown.
+   * Performs a test of the JOGLOffscreenRenderer class. If the environment supports OpenGL rendering, an image should be generated depicting two colored triangles on black background. If OpenGL rendering is not supported, an exception will be thrown.
    */
   private static void handle3Dtest() {
 
@@ -461,13 +453,13 @@ public class API {
                 break;
               }
 
-                            /* Parse information from input. */
+              /* Parse information from input. */
               String codebookGenerator = commands.get(1);
               Path src = Paths.get(commands.get(2));
               Path dst = Paths.get(commands.get(3));
               Integer words = Integer.parseInt(commands.get(4));
 
-                            /* Start codebook generation. */
+              /* Start codebook generation. */
               API.handleCodebook(codebookGenerator, src, dst, words);
               break;
             }
@@ -680,8 +672,8 @@ public class API {
               System.err.println("unrecognized command: " + line);
           }
         }
-      } catch (IOException e) {
-        //ignore
+      } catch (Throwable t) {
+        t.printStackTrace();
       }
     }
   }

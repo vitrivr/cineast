@@ -4,6 +4,8 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.API;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -15,12 +17,15 @@ import org.vitrivr.cineast.core.runtime.ContinuousQueryDispatcher;
 
 public class ContinuousRetrievalLogic {
 
+  private static final Logger LOGGER = LogManager.getLogger();
+
   public static List<SegmentScoreElement> retrieve(QueryContainer qc, String category,
       ReadableQueryConfig config) {
     TObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever()
         .getRetrieversByCategory(category);
     if (retrievers.isEmpty()) {
-      return new ArrayList<SegmentScoreElement>(0);
+      LOGGER.warn("Empty retriever list for query {}, category {} and config {}, returning no results", qc, category, config);
+      return new ArrayList<>(0);
     }
     return ContinuousQueryDispatcher.retrieve(qc, retrievers, API.getInitializer(), config);
   }
@@ -29,7 +34,8 @@ public class ContinuousRetrievalLogic {
     TObjectDoubleHashMap<Retriever> retrievers = Config.sharedConfig().getRetriever()
         .getRetrieversByCategory(category);
     if (retrievers.isEmpty()) {
-      return new ArrayList<SegmentScoreElement>(0);
+      LOGGER.warn("Empty retriever list for id {}, category {} and config {}, returning no results", id, category, config);
+      return new ArrayList<>(0);
     }
     return ContinuousQueryDispatcher.retrieve(id, retrievers, API.getInitializer(), config);
   }

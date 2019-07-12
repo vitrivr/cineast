@@ -13,13 +13,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import javax.swing.text.html.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.tag.CompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
+import org.vitrivr.cineast.core.features.TagsFtSearch;
 import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionTuple;
@@ -35,11 +35,14 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
   private final GoogleVisionCategory targetCategory;
   private Iterator<JsonNode> _categoryValues;
   private GoogleVisionCategory _category;
+  private final boolean importTagsFt;
 
   /**
+   * @param importTagsFt whether tags should be imported into {@link TagsFtSearch} or {@link GoogleVisionCategory#tableName}
    * @param targetCategory only tuples of this kind are imported
    */
-  public GoogleVisionImporter(Path input, GoogleVisionCategory targetCategory, boolean importTags) throws IOException {
+  public GoogleVisionImporter(Path input, GoogleVisionCategory targetCategory, boolean importTagsFt) throws IOException {
+    this.importTagsFt = importTagsFt;
     LOGGER.info("Starting Importer for path {} and category {}", input, targetCategory);
     this.targetCategory = targetCategory;
     mapper = new ObjectMapper();
@@ -115,12 +118,16 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
     return Optional.empty();
   }
 
-  private synchronized Optional<GoogleVisionTuple> nextPair() {
+  /**
+   * Gets the next {@link GoogleVisionTuple} to Import.
+   */
+  private synchronized Optional<GoogleVisionTuple> nextTuple() {
+    //Check first if there are tuples left within the current movie / aggregation of segments
     Optional<GoogleVisionTuple> tuple = searchWithinMovie();
     if (tuple.isPresent()) {
       return tuple;
     }
-
+//if the current movie has no tuples left to import, we need to go to the next movie until we find a tuple
     do {
       //we need to go to the next movie
       try {
@@ -151,7 +158,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
   @Override
   public GoogleVisionTuple readNext() {
     try {
-      Optional<GoogleVisionTuple> node = nextPair();
+      Optional<GoogleVisionTuple> node = nextTuple();
       if (!node.isPresent()) {
         return null;
       }
@@ -161,7 +168,11 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
       return null;
     }
   }
-
+  /**
+   * Converts the given {@link GoogleVisionTuple} to a representation appropriate to the given feature.
+   * @param data the tuple to be converted to a tuple in the feature table
+   * @return a map where the key corresponds to the column-name and the value to the value to be inserted in that column for the given tuple
+   */
   @Override
   public Map<String, PrimitiveTypeProvider> convert(GoogleVisionTuple data) {
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(2);
@@ -171,13 +182,18 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
       case PARTIALLY_MATCHING_IMAGES:
         throw new UnsupportedOperationException();
       case WEB:
-        map.put("id", id);
-        map.put("tagid", PrimitiveTypeProvider.fromObject(data.web.get().labelId));
-        map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.web.get().score)));
-        try {
-          tag = Optional.of(new CompleteTag(data.web.get().labelId, data.web.get().description, data.web.get().description));
-        } catch (IllegalArgumentException e) {
-          LOGGER.trace("Error while initalizing tag {}", e.getMessage());
+        if(importTagsFt){
+          map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[0], id);
+          map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(data.web.get().description));
+        }else {
+          map.put("id", id);
+          map.put("tagid", PrimitiveTypeProvider.fromObject(data.web.get().labelId));
+          map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.web.get().score)));
+          try {
+            tag = Optional.of(new CompleteTag(data.web.get().labelId, data.web.get().description, data.web.get().description));
+          } catch (IllegalArgumentException e) {
+            LOGGER.trace("Error while initalizing tag {}", e.getMessage());
+          }
         }
         break;
       case PAGES_MATCHING_IMAGES:
@@ -185,10 +201,15 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
       case FULLY_MATCHING_IMAGES:
         throw new UnsupportedOperationException();
       case LABELS:
-        map.put("id", id);
-        map.put("tagid", PrimitiveTypeProvider.fromObject(data.label.get().labelId));
-        map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.label.get().score)));
-        tag = Optional.of(new CompleteTag(data.label.get().labelId, data.label.get().description, data.label.get().description));
+        if(importTagsFt){
+          map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[0], id);
+          map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(data.label.get().description));
+        }else {
+          map.put("id", id);
+          map.put("tagid", PrimitiveTypeProvider.fromObject(data.label.get().labelId));
+          map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.label.get().score)));
+          tag = Optional.of(new CompleteTag(data.label.get().labelId, data.label.get().description, data.label.get().description));
+        }
         break;
       case OCR:
         map.put("id", id);

@@ -1,142 +1,148 @@
 {
-	"database": {
-		"host": "dmi-p10.dmi.unibas.ch",
-		"selector": "COTTONTAIL",
-    	"writer": "COTTONTAIL",
-		"port": 1865,
-		"plaintext": true
-	},
-	"benchmark": {
-		"mode": "OFF",
-		"path": "benchmarks"
-	},
-	"retriever": {
-		"threadPoolSize": 2,
-		"maxResults": 200,
-		"resultsPerModule": 250,
-		"features": {
-			"boolean" : [
-				{"feature":  "DailyRangeBooleanRetriever", "weight": 1.0},
-				{"feature":  "DailyCollectionBooleanRetriever", "weight": 1.0},
-				{"feature":  "WSDMTICollectionBooleanRetriever", "weight": 1.0}
-			],
-			"semantic" : [
-				{"feature": "ConceptMasksAde20k", "weight" : 1.0}
-			],
-			"globalcolor": [
-				{"feature": "AverageColor",	"weight": 2.3},
-				{"feature": "MedianColor", "weight": 1.2},
-				{"feature": "AverageFuzzyHist", "weight": 0.7},
-        		{"feature": "AverageFuzzyHistNormalized", "weight": 0.7},
-        		{"feature": "HueHistogram", "weight": 0.7},
-				{"feature": "MedianFuzzyHist", 	"weight": 1.3 }
-			],
-			"localcolor": [
-				{"feature": "AverageColorARP44", "weight": 0.5},
-				{"feature": "AverageColorARP44Normalized", "weight": 0.5},
-				{"feature": "SubDivAverageFuzzyColor", "weight": 0.5},
-				{"feature": "SubDivMedianFuzzyColor", "weight": 0.85},
-				{"feature": "AverageColorGrid8", "weight": 1.8},
-				{"feature": "AverageColorGrid8Normalized", "weight": 1.8},
-				{"feature": "AverageColorCLD", "weight": 1.4},
-				{"feature": "AverageColorCLDNormalized", "weight": 1.4},
-				{"feature": "CLD", "weight": 1.3},
-				{"feature": "CLDNormalized", "weight": 1.3},
-				{"feature": "MedianColorGrid8", "weight": 1.7},
+  "database": {
+    "host": "dmi-p10.dmi.unibas.ch",
+    "selector": "COTTONTAIL",
+    "writer": "COTTONTAIL",
+    "port": 1865,
+    "plaintext": true
+  },
+  "benchmark": {
+    "mode": "OFF",
+    "path": "benchmarks"
+  },
+  "retriever": {
+    "threadPoolSize": 2,
+    "maxResults": 200,
+    "resultsPerModule": 250,
+    "features": {
+      "boolean" : [
+        {"feature":  "DailyRangeBooleanRetriever", "weight": 1.0},
+        {"feature":  "DailyCollectionBooleanRetriever", "weight": 1.0},
+        {"feature":  "WSDMTICollectionBooleanRetriever", "weight": 1.0}
+      ],
+      "semantic" : [
+        {"feature": "ConceptMasksAde20k", "weight" : 1.0}
+      ],
+      "globalcolor": [
+        {"feature": "AverageColor",  "weight": 2.3},
+        {"feature": "MedianColor", "weight": 1.2},
+        {"feature": "AverageFuzzyHist", "weight": 0.7},
+        {"feature": "AverageFuzzyHistNormalized", "weight": 0.7},
+        {"feature": "HueHistogram", "weight": 0.7},
+        {"feature": "MedianFuzzyHist",   "weight": 1.3 }
+      ],
+      "localcolor": [
+        {"feature": "AverageColorARP44", "weight": 0.5},
+        {"feature": "AverageColorARP44Normalized", "weight": 0.5},
+        {"feature": "SubDivAverageFuzzyColor", "weight": 0.5},
+        {"feature": "SubDivMedianFuzzyColor", "weight": 0.85},
+        {"feature": "AverageColorGrid8", "weight": 1.8},
+        {"feature": "AverageColorGrid8Normalized", "weight": 1.8},
+        {"feature": "AverageColorCLD", "weight": 1.4},
+        {"feature": "AverageColorCLDNormalized", "weight": 1.4},
+        {"feature": "CLD", "weight": 1.3},
+        {"feature": "CLDNormalized", "weight": 1.3},
+        {"feature": "MedianColorGrid8", "weight": 1.7},
         {"feature": "AverageColorRaster", "weight": 1.0}
-			],
-			"edge": [
-				{"feature": "EdgeARP88", "weight": 0.85},
-				{"feature": "EdgeGrid16", "weight": 1.15},
-				{"feature": "EHD", "weight": 0.7},
-				{"feature": "DominantEdgeGrid16", "weight": 1.4},
-				{"feature": "DominantEdgeGrid8", "weight": 1.4}
-			],
-			"motion": [
-				{"feature": "SubDivMotionHistogram3", "weight": 0.5},
-				{"feature": "SubDivMotionHistogram5", "weight": 0.5},
-				{"feature": "SubDivMotionHistogramBackground3", "weight": 0.5},
-				{"feature": "SubDivMotionHistogramBackground5", "weight": 0.5}
-			],
-			"quantized": [
-				{"feature": "AverageColorGrid8Reduced11", "weight": 1.0},
-				{"feature": "AverageColorGrid8Reduced15", "weight": 1.0},
-				{"feature": "AverageColorRasterReduced11", "weight": 1.0},
-				{"feature": "AverageColorRasterReduced15", "weight": 1.0},
-				{"feature": "CLDReduced11", "weight": 1.0},
-				{"feature": "CLDReduced15", "weight": 1.0}
-			],
-			"localfeatures": [
-				{"feature": "SURFMirflickr25K512", "weight": 1.75},
-				{"feature": "HOGMirflickr25K512", "weight": 1.0}
-			],
-			"localfeatures_fast": [
-				{"feature": "SURFMirflickr25K256", "weight": 1.75},
-				{"feature": "HOGMirflickr25K256", "weight": 1.0}
-			]
-		}
-	},
+      ],
+      "edge": [
+        {"feature": "EdgeARP88", "weight": 0.85},
+        {"feature": "EdgeGrid16", "weight": 1.15},
+        {"feature": "EHD", "weight": 0.7},
+        {"feature": "DominantEdgeGrid16", "weight": 1.4},
+        {"feature": "DominantEdgeGrid8", "weight": 1.4}
+      ],
+      "motion": [
+        {"feature": "SubDivMotionHistogram3", "weight": 0.5},
+        {"feature": "SubDivMotionHistogram5", "weight": 0.5},
+        {"feature": "SubDivMotionHistogramBackground3", "weight": 0.5},
+        {"feature": "SubDivMotionHistogramBackground5", "weight": 0.5}
+      ],
+      "quantized": [
+        {"feature": "AverageColorGrid8Reduced11", "weight": 1.0},
+        {"feature": "AverageColorGrid8Reduced15", "weight": 1.0},
+        {"feature": "AverageColorRasterReduced11", "weight": 1.0},
+        {"feature": "AverageColorRasterReduced15", "weight": 1.0},
+        {"feature": "CLDReduced11", "weight": 1.0},
+        {"feature": "CLDReduced15", "weight": 1.0}
+      ],
+      "localfeatures": [
+        {"feature": "SURFMirflickr25K512", "weight": 1.75},
+        {"feature": "HOGMirflickr25K512", "weight": 1.0}
+      ],
+      "localfeatures_fast": [
+        {"feature": "SURFMirflickr25K256", "weight": 1.75},
+        {"feature": "HOGMirflickr25K256", "weight": 1.0}
+      ],
+      "tagsft": [
+        {"feature": "SegmentTags", "weight": 1.0}
+      ],
+      "ocr": [
+        {"feature": "OCRSearch", "weight": 1.0}
+      ]
+    }
+  },
 
-	"decoders": {
-		"VIDEO": {
-			"decoder": "FFMpegVideoDecoder",
-			"properties": {
-				"maxFrameWidth": 640,
-				"maxFrameHeight": 480
-			}
-		},
-		"IMAGE": {
-			"decoder": "DefaultImageDecoder",
-			"properties": {
-				"bounds": 1024
-			}
-		},
-		"AUDIO": {
-			"decoder": "FFMpegAudioDecoder",
-			"properties": {
-				"samplerate": 44100,
-				"channels": 2
-			}
-		}
-	},
+  "decoders": {
+    "VIDEO": {
+      "decoder": "FFMpegVideoDecoder",
+      "properties": {
+        "maxFrameWidth": 640,
+        "maxFrameHeight": 480
+      }
+    },
+    "IMAGE": {
+      "decoder": "DefaultImageDecoder",
+      "properties": {
+        "bounds": 1024
+      }
+    },
+    "AUDIO": {
+      "decoder": "FFMpegAudioDecoder",
+      "properties": {
+        "samplerate": 44100,
+        "channels": 2
+      }
+    }
+  },
 
-	"extractor": {
-		"threadPoolSize": 4,
-		"outputLocation": "out"
-	},
+  "extractor": {
+    "threadPoolSize": 4,
+    "outputLocation": "out"
+  },
 
-	"imagecache": {
-		"softMemoryLimit": 2048,
-		"hardMemoryLimit": 1024
-	},
+  "imagecache": {
+    "softMemoryLimit": 2048,
+    "hardMemoryLimit": 1024
+  },
 
-	"api": {
-		"enableCLI": true,
-		"enableWebsocket": true,
-		"enableWebsocketSecure": false,
-		"enableRest": true,
-		"enableRestSecure": false,
-		"enableLegacy": false,
-		"maxMessageSize": 40960000,
-		"httpPort": 4567,
-		"httpsPort": 4568,
-		"legacyPort": 12345,
-		"threadPoolSize": 12,
-		"serveContent": true,
-		"serveUI": true,
-		"uiLocation": "dist",
-		"thumbnailLocation": "thumbnails",
-		"objectLocation": "objects"
-	},
+  "api": {
+    "enableCLI": true,
+    "enableWebsocket": true,
+    "enableWebsocketSecure": false,
+    "enableRest": true,
+    "enableRestSecure": false,
+    "enableLegacy": false,
+    "maxMessageSize": 40960000,
+    "httpPort": 4567,
+    "httpsPort": 4568,
+    "legacyPort": 12345,
+    "threadPoolSize": 12,
+    "serveContent": true,
+    "serveUI": true,
+    "uiLocation": "dist",
+    "thumbnailLocation": "thumbnails",
+    "objectLocation": "objects"
+  },
 
-	"visualization": {
-		"cacheEnabled": false,
-		"cachePath": "cache/art/"
-	},
+  "visualization": {
+    "cacheEnabled": false,
+    "cachePath": "cache/art/"
+  },
 
-	"monitoring":{
-		"enablePrometheus": true,
-		"prometheusPort": 4569
-	}
+  "monitoring":{
+    "enablePrometheus": true,
+    "prometheusPort": 4569
+  }
 
 }
