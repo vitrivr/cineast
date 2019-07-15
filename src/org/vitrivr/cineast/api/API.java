@@ -81,9 +81,6 @@ public class API {
 
   private static boolean running = true;
 
-  /**
-   *
-   */
   public static void main(String[] args) {
     CommandLine commandline = handleCommandLine(args);
     if (commandline != null) {
@@ -424,82 +421,81 @@ public class API {
       String line = null;
       try {
         while ((line = reader.readLine()) != null) {
-          try {
-            line = line.trim();
-            if (line.isEmpty()) {
-              continue;
+          line = line.trim();
+          if (line.isEmpty()) {
+            continue;
+          }
+          Matcher matcher = inputSplitPattern.matcher(line);
+          List<String> commands = new ArrayList<String>();
+          while (matcher.find()) {
+            commands.add(matcher.group(1).replace("\"", ""));
+          }
+
+          if (commands.isEmpty()) {
+            continue;
+          }
+
+          switch (commands.get(0).toLowerCase()) {
+            case "extract": {
+              if (commands.size() < 2) {
+                System.err.println(
+                    "You must specify the path to the extraction configuration file (1 argument).");
+                break;
+              }
+              File file = new File(commands.get(1));
+              API.handleExtraction(file);
+              break;
             }
-            Matcher matcher = inputSplitPattern.matcher(line);
-            List<String> commands = new ArrayList<String>();
-            while (matcher.find()) {
-              commands.add(matcher.group(1).replace("\"", ""));
+            case "codebook": {
+              if (commands.size() < 5) {
+                System.err.println(
+                    "You must specify the name of the codebook generator, the source and destination path and the number of words for the codebook (4 arguments).");
+                break;
+              }
+
+              /* Parse information from input. */
+              String codebookGenerator = commands.get(1);
+              Path src = Paths.get(commands.get(2));
+              Path dst = Paths.get(commands.get(3));
+              Integer words = Integer.parseInt(commands.get(4));
+
+              /* Start codebook generation. */
+              API.handleCodebook(codebookGenerator, src, dst, words);
+              break;
             }
-
-            if (commands.isEmpty()) {
-              continue;
+            case "import": {
+              if (commands.size() < 3) {
+                System.err.println("You must specify the mode and the path to data file/folder.");
+                break;
+              }
+              final String mode = commands.get(1);
+              Path path = Paths.get(commands.get(2));
+              int batchsize = 100;
+              if (commands.size() == 4) {
+                batchsize = Integer.parseInt(commands.get(3));
+              }
+              handleImport(path, mode, batchsize);
+              break;
             }
-
-            switch (commands.get(0).toLowerCase()) {
-              case "extract": {
-                if (commands.size() < 2) {
-                  System.err.println(
-                      "You must specify the path to the extraction configuration file (1 argument).");
-                  break;
-                }
-                File file = new File(commands.get(1));
-                API.handleExtraction(file);
-                break;
-              }
-              case "codebook": {
-                if (commands.size() < 5) {
-                  System.err.println(
-                      "You must specify the name of the codebook generator, the source and destination path and the number of words for the codebook (4 arguments).");
-                  break;
-                }
-
-                /* Parse information from input. */
-                String codebookGenerator = commands.get(1);
-                Path src = Paths.get(commands.get(2));
-                Path dst = Paths.get(commands.get(3));
-                Integer words = Integer.parseInt(commands.get(4));
-
-                /* Start codebook generation. */
-                API.handleCodebook(codebookGenerator, src, dst, words);
-                break;
-              }
-              case "import": {
-                if (commands.size() < 3) {
-                  System.err.println("You must specify the mode and the path to data file/folder.");
-                  break;
-                }
-                final String mode = commands.get(1);
-                Path path = Paths.get(commands.get(2));
-                int batchsize = 100;
-                if (commands.size() == 4) {
-                  batchsize = Integer.parseInt(commands.get(3));
-                }
-                handleImport(path, mode, batchsize);
-                break;
-              }
-              case "3d":
-              case "test3d": {
-                handle3Dtest();
-                break;
-              }
-              case "setup": {
-                HashMap<String, String> options = new HashMap<>();
-                if (commands.size() > 1) {
-                  String[] flags = commands.get(1).split(";");
-                  for (String flag : flags) {
-                    String[] pair = flag.split("=");
-                    if (pair.length == 2) {
-                      options.put(pair[0], pair[1]);
-                    }
+            case "3d":
+            case "test3d": {
+              handle3Dtest();
+              break;
+            }
+            case "setup": {
+              HashMap<String, String> options = new HashMap<>();
+              if (commands.size() > 1) {
+                String[] flags = commands.get(1).split(";");
+                for (String flag : flags) {
+                  String[] pair = flag.split("=");
+                  if (pair.length == 2) {
+                    options.put(pair[0], pair[1]);
                   }
                 }
-                handleSetup(options);
-                break;
               }
+              handleSetup(options);
+              break;
+            }
 //            case "ws":
 //            case "websocket": {
 //              if (commands.size() < 2) {
@@ -514,173 +510,170 @@ public class API {
 //              }
 //              break;
 //            }
-              case "retrieve": {
-                if (commands.size() < 3) {
-                  System.err.println(
-                      "You must specify the segment id to be used as a query and the category of retrievers.");
-                  break;
-                }
-
-                String segmentId = commands.get(1);
-                String category = commands.get(2);
-
-                List<SegmentScoreElement> results = ContinuousRetrievalLogic
-                    .retrieve(segmentId, category,
-                        QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()));
-
-                System.out.println("results:");
-                for (SegmentScoreElement e : results) {
-                  System.out.print(e.getSegmentId());
-                  System.out.print(": ");
-                  System.out.println(e.getScore());
-                }
-                System.out.println();
-
-                break;
-              }
-              case "evaluation":
-              case "evaluate": {
-                if (commands.size() < 2) {
-                  System.err.println(
-                      "You must specify the path to the evaluation configuration file (1 argument).");
-                  break;
-                }
-                Path path = Paths.get(commands.get(1));
-                API.handleEvaluation(path);
-                break;
-              }
-              case "exportresults": {
-                ContinuousRetrievalLogic.addRetrievalResultListener(
-                    new RetrievalResultCSVExporter()
-                );
-                System.out
-                    .println("added RetrievalResultCSVExporter to ContinuousRetrievalLogic");
+            case "retrieve": {
+              if (commands.size() < 3) {
+                System.err.println(
+                    "You must specify the segment id to be used as a query and the category of retrievers.");
                 break;
               }
 
-              case "metadata": {
-                if (commands.size() < 2) {
-                  System.err.println("You must specify at least one object id to lookup.");
-                  break;
-                }
-                List<String> ids = commands.subList(1, commands.size());
-                Ordering<MediaObjectMetadataDescriptor> ordering =
-                    Ordering.explicit(ids).onResultOf(d -> d.getObjectId());
-                try (MediaObjectMetadataReader r = new MediaObjectMetadataReader()) {
-                  List<MediaObjectMetadataDescriptor> descriptors = r.lookupMultimediaMetadata(ids);
-                  descriptors.sort(ordering);
-                  descriptors.forEach(System.out::println);
-                }
-                break;
+              String segmentId = commands.get(1);
+              String category = commands.get(2);
+
+              List<SegmentScoreElement> results = ContinuousRetrievalLogic
+                  .retrieve(segmentId, category,
+                      QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()));
+
+              System.out.println("results:");
+              for (SegmentScoreElement e : results) {
+                System.out.print(e.getSegmentId());
+                System.out.print(": ");
+                System.out.println(e.getScore());
               }
-              case "adduser": {
-                if (commands.size() < 3) {
-                  System.err.println("You must specify username and password of the user to add");
-                  break;
-                }
+              System.out.println();
 
-                String username = commands.get(1);
-                String password = commands.get(2);
-
-                boolean admin = commands.size() >= 4 && commands.get(3).equalsIgnoreCase("admin");
-
-                CredentialManager.createUser(username, password, admin);
-
-                break;
-              }
-              case "exit":
-              case "quit": {
-                System.exit(0);
-                break;
-              }
-              case "help": {
-                System.out.println("3d\t\t\ttests the 3d rendering capabilities");
-                System.out.println(
-                    "codebook\t\tgenerates a visual codebook from a folder containing images");
-                System.out.println("\t\t\t\t<generator> <source> <destination> <number of words>");
-                System.out.println("exit\t\t\texit cineast");
-                System.out.println(
-                    "exportresults\t\tenables RetrievalResultCSVExporter for retrieval results");
-                System.out.println("help\t\t\tprints this message");
-                System.out.println(
-                    "import\t\t\timports data from specified path into currently configured database");
-                System.out.println("\t\t\t\t<path>");
-                System.out.println("metadata\t\tshows all avalilable metadata for specified segment");
-                System.out.println("\t\t\t\t<segment id>");
-                System.out.println("quit\t\t\tsee 'exit'");
-                System.out.println(
-                    "retrieve\t\tshows segments simiar to specified segment given the specified category");
-                System.out.println("\t\t\t\t<segment id> <category>");
-                System.out.println("setup\t\t\tinitializes database");
-                System.out.println("test3d\t\t\tsee '3d'");
-                System.out.println();
-                break;
-              }
-              case "load_tags": {
-
-                if (commands.size() < 2) {
-                  System.err.println("You must specify the path of the csv file to load");
-                  break;
-                }
-
-                File inputFile = new File(commands.get(1));
-                if (!inputFile.exists() || !inputFile.isFile() || !inputFile.canRead()) {
-                  System.err.println("cannot read '" + inputFile.getAbsolutePath() + "'");
-                  break;
-                }
-
-                TagHandler tagHandler = new TagHandler();
-
-                try {
-                  FileReader in = new FileReader(inputFile);
-                  Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
-
-                  for (CSVRecord record : records) {
-                    if (record.size() < 2) {
-                      continue;
-                    }
-                    Tag toInsert;
-                    if (record.size() >= 3) {
-                      toInsert = new IncompleteTag(record.get(0), record.get(1), record.get(2));
-                    } else {
-                      toInsert = new IncompleteTag(record.get(0), record.get(1), "");
-                    }
-
-                    if (!toInsert.hasId() || !toInsert.hasName()) {
-                      continue;
-                    }
-
-                    Tag previous = tagHandler.getTagById(toInsert.getId());
-                    if (previous != null) {
-                      System.out.println(
-                          "Tag with id '" + previous.getId() + "' already exists: " + previous);
-                      continue;
-                    }
-
-                    if (tagHandler.addTag(toInsert)) {
-                      System.out.println("added tag " + toInsert);
-                    } else {
-                      System.out.println("could not add tag " + toInsert);
-                    }
-
-                  }
-                } catch (IOException e) {
-                  System.err.println("Error while reading '" + inputFile.getAbsolutePath() + "'");
-                  e.printStackTrace();
-                }
-
-                tagHandler.close();
-                break;
-              }
-              default:
-                System.err.println("unrecognized command: " + line);
+              break;
             }
-          } catch (Throwable t) {
-            t.printStackTrace();
+            case "evaluation":
+            case "evaluate": {
+              if (commands.size() < 2) {
+                System.err.println(
+                    "You must specify the path to the evaluation configuration file (1 argument).");
+                break;
+              }
+              Path path = Paths.get(commands.get(1));
+              API.handleEvaluation(path);
+              break;
+            }
+            case "exportresults": {
+              ContinuousRetrievalLogic.addRetrievalResultListener(
+                  new RetrievalResultCSVExporter()
+              );
+              System.out
+                  .println("added RetrievalResultCSVExporter to ContinuousRetrievalLogic");
+              break;
+            }
+
+            case "metadata": {
+              if (commands.size() < 2) {
+                System.err.println("You must specify at least one object id to lookup.");
+                break;
+              }
+              List<String> ids = commands.subList(1, commands.size());
+              Ordering<MediaObjectMetadataDescriptor> ordering =
+                  Ordering.explicit(ids).onResultOf(d -> d.getObjectId());
+              try (MediaObjectMetadataReader r = new MediaObjectMetadataReader()) {
+                List<MediaObjectMetadataDescriptor> descriptors = r.lookupMultimediaMetadata(ids);
+                descriptors.sort(ordering);
+                descriptors.forEach(System.out::println);
+              }
+              break;
+            }
+            case "adduser": {
+              if (commands.size() < 3) {
+                System.err.println("You must specify username and password of the user to add");
+                break;
+              }
+
+              String username = commands.get(1);
+              String password = commands.get(2);
+
+              boolean admin = commands.size() >= 4 && commands.get(3).equalsIgnoreCase("admin");
+
+              CredentialManager.createUser(username, password, admin);
+
+              break;
+            }
+            case "exit":
+            case "quit": {
+              System.exit(0);
+              break;
+            }
+            case "help": {
+              System.out.println("3d\t\t\ttests the 3d rendering capabilities");
+              System.out.println(
+                  "codebook\t\tgenerates a visual codebook from a folder containing images");
+              System.out.println("\t\t\t\t<generator> <source> <destination> <number of words>");
+              System.out.println("exit\t\t\texit cineast");
+              System.out.println(
+                  "exportresults\t\tenables RetrievalResultCSVExporter for retrieval results");
+              System.out.println("help\t\t\tprints this message");
+              System.out.println(
+                  "import\t\t\timports data from specified path into currently configured database");
+              System.out.println("\t\t\t\t<path>");
+              System.out.println("metadata\t\tshows all avalilable metadata for specified segment");
+              System.out.println("\t\t\t\t<segment id>");
+              System.out.println("quit\t\t\tsee 'exit'");
+              System.out.println(
+                  "retrieve\t\tshows segments simiar to specified segment given the specified category");
+              System.out.println("\t\t\t\t<segment id> <category>");
+              System.out.println("setup\t\t\tinitializes database");
+              System.out.println("test3d\t\t\tsee '3d'");
+              System.out.println();
+              break;
+            }
+            case "load_tags": {
+
+              if (commands.size() < 2) {
+                System.err.println("You must specify the path of the csv file to load");
+                break;
+              }
+
+              File inputFile = new File(commands.get(1));
+              if (!inputFile.exists() || !inputFile.isFile() || !inputFile.canRead()) {
+                System.err.println("cannot read '" + inputFile.getAbsolutePath() + "'");
+                break;
+              }
+
+              TagHandler tagHandler = new TagHandler();
+
+              try {
+                FileReader in = new FileReader(inputFile);
+                Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
+
+                for (CSVRecord record : records) {
+                  if (record.size() < 2) {
+                    continue;
+                  }
+                  Tag toInsert;
+                  if (record.size() >= 3) {
+                    toInsert = new IncompleteTag(record.get(0), record.get(1), record.get(2));
+                  } else {
+                    toInsert = new IncompleteTag(record.get(0), record.get(1), "");
+                  }
+
+                  if (!toInsert.hasId() || !toInsert.hasName()) {
+                    continue;
+                  }
+
+                  Tag previous = tagHandler.getTagById(toInsert.getId());
+                  if (previous != null) {
+                    System.out.println(
+                        "Tag with id '" + previous.getId() + "' already exists: " + previous);
+                    continue;
+                  }
+
+                  if (tagHandler.addTag(toInsert)) {
+                    System.out.println("added tag " + toInsert);
+                  } else {
+                    System.out.println("could not add tag " + toInsert);
+                  }
+
+                }
+              } catch (IOException e) {
+                System.err.println("Error while reading '" + inputFile.getAbsolutePath() + "'");
+                e.printStackTrace();
+              }
+
+              tagHandler.close();
+              break;
+            }
+            default:
+              System.err.println("unrecognized command: " + line);
           }
         }
-      } catch (IOException e) {
-        e.printStackTrace();
+      } catch (Throwable t) {
+        t.printStackTrace();
       }
     }
   }

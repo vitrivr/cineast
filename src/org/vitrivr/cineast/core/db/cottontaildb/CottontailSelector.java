@@ -12,15 +12,10 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.google.common.collect.Iterables;
-import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -96,45 +91,16 @@ public class CottontailSelector implements DBSelector {
       Class<E> distanceElementClass,
       List<ReadableQueryConfig> configs) {
 
-   /* int size = Math.min(vectors.size(), configs.size());
-
-    List<Query> queries = new ArrayList<>(vectors.size());
-
-    for (int i = 0; i < size; ++i) {
-      queries.add(
-          CottontailMessageBuilder.query(
-              entity,
-              CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"),
-              null,
-              CottontailMessageBuilder.knn(
-                  column,
-                  vectors.get(i),
-                  configs.get(i).getDistanceWeights().orElse(null),
-                  k,
-                  configs.get(i).getDistance().orElse(Distance.manhattan))));
-    }
-
-    List<QueryResponseMessage> results =
-        this.cottontail.batchedQuery(CottontailMessageBuilder.batchedQueryMessage(queries));
-
-    List<E> _return = new ArrayList<>();
-
-    for (QueryResponseMessage r : results) {
-      _return.addAll(handleNearestNeighbourResponse(r, distanceElementClass));
-    }
-
-    return _return;*/
-
     Query query = CottontailMessageBuilder.query(
-            entity,
-            CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"),
+        entity,
+        CottontailMessageBuilder.projection(Operation.SELECT, "id", "distance"),
+        null,
+        CottontailMessageBuilder.batchedKnn(
+            column,
+            vectors,
             null,
-            CottontailMessageBuilder.batchedKnn(
-                    column,
-                    vectors,
-                    null,
-                    k,
-                    configs.get(0).getDistance().orElse(Distance.manhattan)));
+            k,
+            configs.get(0).getDistance().orElse(Distance.manhattan)));
 
     List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(query, configs.get(0).getQueryId().toString()));
 
@@ -209,7 +175,7 @@ public class CottontailSelector implements DBSelector {
   public List<Map<String, PrimitiveTypeProvider>> getRows(
       String fieldName, Iterable<String> values) {
 
-    CottontailGrpc.Data[] array = new  CottontailGrpc.Data[Iterables.size(values)];
+    CottontailGrpc.Data[] array = new CottontailGrpc.Data[Iterables.size(values)];
     int i = 0;
     for (String s : values) {
       array[i] = CottontailMessageBuilder.toData(s);
@@ -232,7 +198,7 @@ public class CottontailSelector implements DBSelector {
     final String searchString = Joiner.on(' ').join(terms); //TODO there might be a better way to do this?
 
     final Where where = CottontailMessageBuilder.atomicWhere(fieldname, RelationalOperator.LIKE, CottontailMessageBuilder.toData(searchString));
-    final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id","").putAttributes("score","ap_score").build();
+    final Projection projection = Projection.newBuilder().setOp(Operation.SELECT).putAttributes("id", "").putAttributes("score", "ap_score").build();
 
     final List<QueryResponseMessage> results =
         this.cottontail.query(
@@ -305,7 +271,7 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public boolean ping() { // currently not supported
-      return this.cottontail.ping();
+    return this.cottontail.ping();
   }
 
   private static List<Map<String, PrimitiveTypeProvider>> processResults(

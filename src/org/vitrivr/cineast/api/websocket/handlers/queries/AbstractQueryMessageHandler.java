@@ -68,6 +68,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
       try {
         /* Begin of Query: Send QueryStart Message to Client. */
         this.write(session, new QueryStart(uuid));
+        LOGGER.trace("Executing query from message {}", message);
 
         /* Execute actual query. */
         LOGGER.trace("Executing query from message {}", message);

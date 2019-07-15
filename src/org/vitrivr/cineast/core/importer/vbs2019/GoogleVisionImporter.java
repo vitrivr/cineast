@@ -19,7 +19,6 @@ import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.tag.CompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
-import org.vitrivr.cineast.core.features.Tags;
 import org.vitrivr.cineast.core.features.TagsFtSearch;
 import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.core.importer.vbs2019.gvision.GoogleVisionCategory;
@@ -29,7 +28,6 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
 
   private final JsonParser parser;
   private final ObjectMapper mapper;
-  private final boolean importTagsFt;
   private Iterator<Entry<String, JsonNode>> _segments;
   private Iterator<Entry<String, JsonNode>> _categories;
   private static final Logger LOGGER = LogManager.getLogger();
@@ -37,10 +35,11 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
   private final GoogleVisionCategory targetCategory;
   private Iterator<JsonNode> _categoryValues;
   private GoogleVisionCategory _category;
+  private final boolean importTagsFt;
 
   /**
-   * @param targetCategory only tuples of this kind are imported
    * @param importTagsFt whether tags should be imported into {@link TagsFtSearch} or {@link GoogleVisionCategory#tableName}
+   * @param targetCategory only tuples of this kind are imported
    */
   public GoogleVisionImporter(Path input, GoogleVisionCategory targetCategory, boolean importTagsFt) throws IOException {
     this.importTagsFt = importTagsFt;
@@ -128,9 +127,9 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
     if (tuple.isPresent()) {
       return tuple;
     }
-
-    //if the current movie has no tuples left to import, we need to go to the next movie until we find a tuple
+//if the current movie has no tuples left to import, we need to go to the next movie until we find a tuple
     do {
+      //we need to go to the next movie
       try {
         if (parser.nextToken() == JsonToken.START_OBJECT) {
           ObjectNode nextMovie = mapper.readTree(parser);
@@ -153,6 +152,9 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
     } while (true);
   }
 
+  /**
+   * @return Pair mapping a segmentID to a List of Descriptions
+   */
   @Override
   public GoogleVisionTuple readNext() {
     try {
@@ -166,7 +168,6 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
       return null;
     }
   }
-
   /**
    * Converts the given {@link GoogleVisionTuple} to a representation appropriate to the given feature.
    * @param data the tuple to be converted to a tuple in the feature table

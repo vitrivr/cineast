@@ -16,9 +16,6 @@ public class GoogleVisionImportHandler extends DataImportHandler {
   private final GoogleVisionCategory category;
   private final boolean importTagsFt;
 
-  /**
-   * @param importTagsFt See {@link GoogleVisionImporter} parameter documentation for importTagsFt
-   */
   public GoogleVisionImportHandler(int threads, int batchsize, GoogleVisionCategory category, boolean importTagsFt) {
     super(threads, batchsize);
     this.category = category;
@@ -30,7 +27,7 @@ public class GoogleVisionImportHandler extends DataImportHandler {
     try {
       Files.walk(root, 2).filter(p -> p.toString().toLowerCase().endsWith(".json")).forEach(p -> {
         try {
-          this.futures.add(this.service.submit(new DataImportRunner(new GoogleVisionImporter(p, category, importTagsFt), importTagsFt? TagsFtSearch.TAGS_FT_TABLE_NAME : category.tableName, "gvision-" + category + "-" + importTagsFt + "-file")));
+          this.futures.add(this.service.submit(new DataImportRunner(new GoogleVisionImporter(p, category, importTagsFt), importTagsFt ? TagsFtSearch.TAGS_FT_TABLE_NAME : category.tableName, "gvision-" + category + "-" + importTagsFt + "-file")));
         } catch (IOException e) {
           LOGGER.fatal("Failed to open path at {} ", p);
           throw new RuntimeException(e);

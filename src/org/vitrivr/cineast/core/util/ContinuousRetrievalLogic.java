@@ -17,7 +17,7 @@ import org.vitrivr.cineast.core.runtime.ContinuousQueryDispatcher;
 
 public class ContinuousRetrievalLogic {
 
-  public static final Logger LOGGER = LogManager.getLogger();
+  private static final Logger LOGGER = LogManager.getLogger();
 
   public static List<SegmentScoreElement> retrieve(QueryContainer qc, String category,
       ReadableQueryConfig config) {
