@@ -1,5 +1,4 @@
 {
-	"type":"VIDEO",
 	"input":{
 		"path": "data/",
 		"depth": 3,
