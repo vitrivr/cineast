@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IdConfig;
+import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
@@ -43,14 +44,14 @@ import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 
 /**
- * This class should fit most media-types.
- * However, a concrete implementation must provide the correct {@link Decoder} and {@link Segmenter}
- * classes.
+ * This class should fit most media-types. However, a concrete implementation must provide the correct {@link Decoder} and {@link Segmenter} classes.
  *
  * @author rgasser
  * @created 14.01.17
+ * @deprecated in general, there is no need for an explicit specification of the {@link MediaType} in the {@link IngestConfig} since the {@link GenericExtractionItemHandler} has all required functionality
  * @see org.vitrivr.cineast.core.run.ExtractionDispatcher
  */
+@Deprecated
 public abstract class AbstractExtractionFileHandler<T> implements Runnable,
     ExtractionItemProcessor {
 
@@ -95,26 +96,27 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
    */
   public AbstractExtractionFileHandler(ExtractionContainerProvider itemProvider,
       ExtractionContextProvider context) throws IOException {
+    LOGGER.warn("This class has been deprecated in favor of the GenericExtractionItemHandler");
     this.itemProvider = itemProvider;
 
-        /* Setup the required persistence-writer classes. */
+    /* Setup the required persistence-writer classes. */
     final PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
     this.objectWriter = new MediaObjectWriter(writerSupplier.get());
     this.mediaSegmentWriter = new MediaSegmentWriter(writerSupplier.get(), context.getBatchsize());
     this.metadataWriter = new MediaObjectMetadataWriter(writerSupplier.get(),
         context.getBatchsize());
 
-        /* Setup the required persistence-reader classes. */
+    /* Setup the required persistence-reader classes. */
     final DBSelectorSupplier readerSupplier = context.persistencyReader();
     this.objectReader = new MediaObjectReader(readerSupplier.get());
     this.segmentReader = new MediaSegmentReader(readerSupplier.get());
 
-        /* Setup the ExtractionPipeline and the metadata extractors. */
+    /* Setup the ExtractionPipeline and the metadata extractors. */
     this.pipeline = new ExtractionPipeline(context,
         new DefaultExtractorInitializer(writerSupplier));
     this.metadataExtractors = context.metadataExtractors();
 
-        /* Store the context. */
+    /* Store the context. */
     this.context = context;
   }
 
@@ -145,32 +147,32 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
         LOGGER.info("Processing file {}.", item);
         if (decoder.init(item.getPathForExtraction(),
             Config.sharedConfig().getDecoders().get(this.context.sourceType()))) {
-                /* Create / lookup MediaObjectDescriptor for new file. */
+          /* Create / lookup MediaObjectDescriptor for new file. */
           final MediaObjectDescriptor descriptor = this
               .fetchOrCreateMultimediaObjectDescriptor(generator, item, context.sourceType());
           if (!this.checkAndPersistMultimediaObject(descriptor)) {
             continue;
           }
 
-                /* Store objectId for further reference and initialize a new segment number. */
+          /* Store objectId for further reference and initialize a new segment number. */
           final String objectId = descriptor.getObjectId();
           int segmentNumber = 1;
 
-                /* Initialize segmenter and pass to executor service. */
+          /* Initialize segmenter and pass to executor service. */
           segmenter.init(decoder, descriptor);
           this.executorService.execute(segmenter);
 
-                /* Poll for output from the segmenter until that segmenter reports that no more output
-                 * is going to be generated.
-                 *
-                 * For every segment: Increase the segment-number, persist a segment descriptor and emit the segment
-                 * to the ExtractionPipeline!
-                 */
+          /* Poll for output from the segmenter until that segmenter reports that no more output
+           * is going to be generated.
+           *
+           * For every segment: Increase the segment-number, persist a segment descriptor and emit the segment
+           * to the ExtractionPipeline!
+           */
           while (!segmenter.complete()) {
             try {
               final SegmentContainer container = segmenter.getNext();
               if (container != null) {
-                            /* Create segment-descriptor and try to persist it. */
+                /* Create segment-descriptor and try to persist it. */
                 final MediaSegmentDescriptor mediaSegmentDescriptor = this
                     .fetchOrCreateSegmentDescriptor(objectId, segmentNumber,
                         container.getStart(), container.getEnd(),
@@ -179,14 +181,14 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
                   continue;
                 }
 
-                            /* Update container ID's. */
+                /* Update container ID's. */
                 container.setId(mediaSegmentDescriptor.getSegmentId());
                 container.setSuperId(mediaSegmentDescriptor.getObjectId());
 
-                            /* Timeout in ms used when emitting segments into the ExtractionPipeline. */
+                /* Timeout in ms used when emitting segments into the ExtractionPipeline. */
                 int emissionTimout = 1000;
 
-                            /* Emit container to extraction pipeline. */
+                /* Emit container to extraction pipeline. */
                 while (!this.pipeline.emit(container, emissionTimout)) {
                   LOGGER.warn(
                       "ExtractionPipeline is full - deferring emission of segment. Consider increasing the thread-pool count for the extraction pipeline.");
@@ -194,7 +196,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
                   emissionTimout += 500;
                 }
 
-                            /* Increase the segment number. */
+                /* Increase the segment number. */
                 segmentNumber += 1;
               }
             } catch (InterruptedException e) {
@@ -209,10 +211,10 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
               .collect(Collectors.toList());
           this.metadataWriter.write(metadata);
 
-                /* Extract metadata. */
+          /* Extract metadata. */
           this.extractAndPersistMetadata(item, objectId);
 
-                /* Force flush the segment, object and metadata information. */
+          /* Force flush the segment, object and metadata information. */
           this.mediaSegmentWriter.flush();
           this.objectWriter.flush();
           this.metadataWriter.flush();
@@ -221,23 +223,23 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
         }
 
 
-            /* Increment the files counter. */
+        /* Increment the files counter. */
         this.count_processed += 1;
 
-            /*  Create new decoder pair for a new file if the decoder reports that it cannot be reused.*/
+        /*  Create new decoder pair for a new file if the decoder reports that it cannot be reused.*/
         if (!decoder.canBeReused()) {
           decoder.close();
           decoder = this.newDecoder();
         }
 
-            /* notify all listeners about the completed extraction */
+        /* notify all listeners about the completed extraction */
         for (int i = 0; i < this.completeListeners.size(); ++i) {
           this.completeListeners.get(i).onCompleted(item);
         }
 
-            /*
-             * Trigger garbage collection once in a while. This is specially relevant when many small files are processed, since unused allocated memory could accumulate and trigger swapping.
-             */
+        /*
+         * Trigger garbage collection once in a while. This is specially relevant when many small files are processed, since unused allocated memory could accumulate and trigger swapping.
+         */
         if (this.count_processed % 50 == 0) {
           System.gc();
         }
@@ -247,7 +249,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
       }
     }
 
-        /* Shutdown the FileHandler. */
+    /* Shutdown the FileHandler. */
     this.shutdown();
   }
 
@@ -256,33 +258,34 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
    */
   private void shutdown() {
     try {
-            /* Wait a few seconds for the ExtractionPipeline to submit remaining tasks to the queue. */
+      /* Wait a few seconds for the ExtractionPipeline to submit remaining tasks to the queue. */
       Thread.sleep(5000);
 
-            /* Now shutdown the ExecutorService and tell the pipeline to stop. */
+      /* Now shutdown the ExecutorService and tell the pipeline to stop. */
       LOGGER.info("File decoding and segmenting complete! Shutting down...");
       this.executorService.shutdown();
       this.pipeline.stop();
 
-            /* Wait for pipeline to complete. */
+      /* Wait for pipeline to complete. */
       LOGGER.info("Waiting for ExtractionPipeline to terminate! This could take a while.");
       this.executorService.awaitTermination(30, TimeUnit.MINUTES);
     } catch (InterruptedException e) {
       LOGGER.warn("Interrupted while waiting for ExtractionPipeline to shutdown!");
     } finally {
-            /* Close all the MetadataExtracto classes. */
+
+      /* Close all the MetadataExtractor classes. */
       for (MetadataExtractor extractor : this.metadataExtractors) {
         extractor.finish();
       }
 
-            /* Close all the writers and readers. */
+      /* Close all the writers and readers. */
       this.mediaSegmentWriter.close();
       this.objectWriter.close();
       this.metadataWriter.close();
       this.objectReader.close();
       this.segmentReader.close();
 
-            /* Measure duration. */
+      /* Measure duration. */
       Duration duration = Duration.ofMillis(System.currentTimeMillis() - this.start_timestamp);
       LOGGER.info("File extraction complete! It took {} to extract {} out files.",
           duration.toString(), this.count_processed);
@@ -290,8 +293,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
   }
 
   /**
-   * returns the next file which can be decoded by the decoder or <code>null</code> if there are no
-   * more files
+   * returns the next file which can be decoded by the decoder or <code>null</code> if there are no more files
    */
   protected ExtractionItemContainer nextItem(final Decoder<T> decoder) {
     while (this.itemProvider != null && this.itemProvider.isOpen()) {
@@ -333,9 +335,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
   }
 
   /**
-   * Checks if the MediaObjectDescriptor already exists and decides whether extraction should
-   * continue for that object or not (based on the ingest settings). If it does not exist, the
-   * MediaObjectDescriptor is persisted.
+   * Checks if the MediaObjectDescriptor already exists and decides whether extraction should continue for that object or not (based on the ingest settings). If it does not exist, the MediaObjectDescriptor is persisted.
    *
    * @param descriptor MediaObjectDescriptor that should be persisted.
    * @return true if object should be processed further or false if it should be skipped.
@@ -363,9 +363,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
   }
 
   /**
-   * Persists a MediaSegmentDescriptor and performs an existence check before, if so configured. Based on
-   * the outcome of that persistence check and the settings in the ExtractionContext this method
-   * returns true if segment should be processed further or false otherwise.
+   * Persists a MediaSegmentDescriptor and performs an existence check before, if so configured. Based on the outcome of that persistence check and the settings in the ExtractionContext this method returns true if segment should be processed further or false otherwise.
    *
    * @param descriptor MediaSegmentDescriptor that should be persisted.
    * @return true if segment should be processed further or false if it should be skipped.
@@ -398,11 +396,10 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
   }
 
   /**
-   * Convenience method to lookup a MediaSegmentDescriptor for a given path and type or create a new one
-   * if needed. If a new descriptor is required, MediaSegmentDescriptor.newSegmentDescriptor() is used.
+   * Convenience method to lookup a MediaSegmentDescriptor for a given path and type or create a new one if needed. If a new descriptor is required, MediaSegmentDescriptor.newSegmentDescriptor() is used.
    */
   protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber,
-                                                                  int start, int end, float startabs, float endabs) {
+      int start, int end, float startabs, float endabs) {
     String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
     return this.segmentReader.lookUpSegment(segmentId).orElse(MediaSegmentDescriptor
         .newSegmentDescriptor(objectId, segmentNumber, start, end, startabs, endabs));
@@ -433,16 +430,14 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
   abstract Decoder<T> newDecoder();
 
   /**
-   * Returns a new instance of Segmenter<T> that should be used with a concrete implementation
-   * of this interface.
+   * Returns a new instance of Segmenter<T> that should be used with a concrete implementation of this interface.
    *
    * @return Segmenter<T>
    */
   abstract Segmenter<T> newSegmenter();
 
   /**
-   * Adds a {@link ExtractionCompleteListener} to be notified about every object for which the
-   * extraction completes.
+   * Adds a {@link ExtractionCompleteListener} to be notified about every object for which the extraction completes.
    *
    * @param listener {@link ExtractionCompleteListener}
    */
