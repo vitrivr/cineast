@@ -48,7 +48,7 @@ import org.vitrivr.cineast.core.util.MimeTypeHelper;
  *
  * @author rgasser
  * @created 14.01.17
- * @deprecated in general, there is no need for an explicit specification of the {@link MediaType} in the {@link IngestConfig} since the {@link GenericExtractionItemHandler} has all required functionality
+ * @deprecated the {@link GenericExtractionItemHandler} also supports only extracting a specific {@link MediaType}
  * @see org.vitrivr.cineast.core.run.ExtractionDispatcher
  */
 @Deprecated
