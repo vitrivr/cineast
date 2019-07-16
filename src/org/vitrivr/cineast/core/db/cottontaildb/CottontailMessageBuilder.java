@@ -32,6 +32,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.providers.primitive.BooleanTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.DoubleTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
@@ -194,6 +195,10 @@ public class CottontailMessageBuilder {
       return dataBuilder.setVectorData(toVector((float[]) o)).build();
     }
 
+    if (o instanceof ReadableFloatVector) {
+      return dataBuilder.setVectorData(toVector(((ReadableFloatVector) o))).build();
+    }
+
     Vector.Builder vectorBuilder = Vector.newBuilder();
 
     if (o instanceof double[]) {
@@ -223,6 +228,8 @@ public class CottontailMessageBuilder {
                   LongVector.newBuilder().addAllVector(Longs.asList((long[]) o))))
           .build();
     }
+
+    LOGGER.debug("Unknown type {} in message builder, serializing to string representation {}", o.getClass().getName(), o.toString());
 
     return dataBuilder.setStringData(o.toString()).build();
   }
@@ -282,6 +289,14 @@ public class CottontailMessageBuilder {
     return Vector.newBuilder()
         .setFloatVector(FloatVector.newBuilder().addAllVector(Floats.asList(vector)))
         .build();
+  }
+
+  private static Vector toVector(ReadableFloatVector vector) {
+    List<Float> floats = new ArrayList<>();
+    for (int i = 0; i < vector.getElementCount(); i++) {
+      floats.add(vector.getElement(i));
+    }
+    return Vector.newBuilder().setFloatVector(FloatVector.newBuilder().addAllVector(floats)).build();
   }
 
   public static List<Data> toData(Iterable<Object> obs) {
