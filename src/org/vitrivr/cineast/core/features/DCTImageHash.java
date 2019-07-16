@@ -18,6 +18,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.providers.primitive.BitSetTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -29,10 +30,7 @@ import org.vitrivr.cineast.core.util.TimeHelper;
 /**
  * Simple Image Fingerprinting Feature. Re-implemented based on the following two papers:
  *
- * Christoph Zauner. Implementation and benchmarking of perceptual image hash func- tions. Master’s
- * thesis, University of Applied Sciences Hagenberg, Austria, 2010. Baris Coskun and Bulent Sankur.
- * Robust video hash extraction. In Signal Processing Conference, 2004 12th European, pages
- * 2295–2298. IEEE, 2004.
+ * Christoph Zauner. Implementation and benchmarking of perceptual image hash func- tions. Master’s thesis, University of Applied Sciences Hagenberg, Austria, 2010. Baris Coskun and Bulent Sankur. Robust video hash extraction. In Signal Processing Conference, 2004 12th European, pages 2295–2298. IEEE, 2004.
  *
  * @author silvan on 18.12.17.
  */
@@ -113,6 +111,9 @@ public class DCTImageHash extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     MultiImage image = shot.getMostRepresentativeFrame().getImage();
     BitSet feature = extractHash(image);
     if (shot.getId() == null || feature == null) {
@@ -139,8 +140,6 @@ public class DCTImageHash extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    return TimeHelper.timeCall(() -> this
-        .getSimilar(new BitSetTypeProvider(extractHash(sc.getMostRepresentativeFrame().getImage())),
-            qc), "getSimilar for DCTImageHash", Level.DEBUG);
+    return this.getSimilar(new BitSetTypeProvider(extractHash(sc.getMostRepresentativeFrame().getImage())), qc);
   }
 }

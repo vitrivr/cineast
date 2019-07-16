@@ -8,6 +8,7 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
@@ -24,19 +25,18 @@ public class MedianFuzzyHist extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
-      FuzzyColorHistogram fch = FuzzyColorHistogramCalculator
-          .getHistogramNormalized(shot.getMedianImg().getBufferedImage());
+      FuzzyColorHistogram fch = FuzzyColorHistogramCalculator.getHistogramNormalized(shot.getMedianImg().getBufferedImage());
       persist(shot.getId(), fch);
     }
-    LOGGER.traceExit();
   }
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    FuzzyColorHistogram query = FuzzyColorHistogramCalculator
-        .getHistogramNormalized(sc.getMedianImg().getBufferedImage());
+    FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(sc.getMedianImg().getBufferedImage());
     return getSimilar(ReadableFloatVector.toArray(query), qc);
   }
 

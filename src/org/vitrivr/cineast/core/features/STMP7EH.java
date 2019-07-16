@@ -27,7 +27,9 @@ public class STMP7EH extends EHD {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
       List<VideoFrame> videoFrames = shot.getVideoFrames();
       float[] hist = new float[80];
@@ -51,7 +53,6 @@ public class STMP7EH extends EHD {
       }
       persist(shot.getId(), new FloatVectorImpl(vec));
     }
-    LOGGER.traceExit();
   }
 
 }

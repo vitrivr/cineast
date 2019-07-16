@@ -3,7 +3,6 @@ package org.vitrivr.cineast.core.features;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +11,7 @@ import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.descriptor.EdgeImg;
@@ -28,11 +28,12 @@ public class EdgeARP88 extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
       persist(shot.getId(), getEdges(shot.getMostRepresentativeFrame().getImage()));
     }
-    LOGGER.traceExit();
   }
 
   private static FloatVector getEdges(MultiImage img) {

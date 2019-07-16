@@ -84,7 +84,9 @@ public class HueValueVarianceGrid8 extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
       SummaryStatistics[] stats = new SummaryStatistics[128];
       for (int i = 0; i < 128; ++i) {
@@ -132,8 +134,7 @@ public class HueValueVarianceGrid8 extends AbstractFeatureModule {
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     Pair<FloatVector, float[]> p = computeGrid(sc);
-    return getSimilar(ReadableFloatVector.toArray(p.first),
-        new QueryConfig(qc).setDistanceWeights(p.second));
+    return getSimilar(ReadableFloatVector.toArray(p.first), new QueryConfig(qc).setDistanceWeights(p.second));
   }
 
 }

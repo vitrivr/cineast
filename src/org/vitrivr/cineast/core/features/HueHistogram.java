@@ -19,6 +19,9 @@ public class HueHistogram extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
 
     float[] hist = new float[16];
 

@@ -10,6 +10,7 @@ import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.providers.MedianImgProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -61,22 +62,20 @@ public class MedianColor extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
-      TimeHelper.tic();
-      LOGGER.traceEntry();
       LabContainer median = getMedian(shot);
 
       persist(shot.getId(), median);
-      LOGGER.debug("MedianColor.processShot() done in {}", TimeHelper.toc());
-      LOGGER.traceExit();
     }
   }
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    LOGGER.traceEntry();
     LabContainer query = getMedian(sc.getMedianImg());
-    return LOGGER.traceExit(getSimilar(ReadableFloatVector.toArray(query), qc));
+    return getSimilar(ReadableFloatVector.toArray(query), qc);
   }
 
 }

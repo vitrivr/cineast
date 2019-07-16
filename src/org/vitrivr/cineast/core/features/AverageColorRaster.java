@@ -154,15 +154,13 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
-    if (!phandler.idExists(shot.getId())) {
-
-      Pair<float[], float[]> pair = computeRaster(shot);
-
-      persist(shot.getId(), new FloatVectorImpl(pair.first), new FloatVectorImpl(pair.second));
-
+    if (shot.getAvgImg() == MultiImage.EMPTY_MULTIIMAGE) {
+      return;
     }
-    LOGGER.traceExit();
+    if (!phandler.idExists(shot.getId())) {
+      Pair<float[], float[]> pair = computeRaster(shot);
+      persist(shot.getId(), new FloatVectorImpl(pair.first), new FloatVectorImpl(pair.second));
+    }
   }
 
   protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {
@@ -283,9 +281,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-
     Pair<float[], float[]> pair = computeRaster(sc);
-
     return getSimilar(pair.second, pair.first, qc);
   }
 

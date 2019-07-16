@@ -82,7 +82,9 @@ public class SaturationGrid8 extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
       ArrayList<SummaryStatistics> stats = new ArrayList<SummaryStatistics>(64);
       for (int i = 0; i < 64; ++i) {
@@ -124,14 +126,12 @@ public class SaturationGrid8 extends AbstractFeatureModule {
       persist(shot.getId(), new FloatVectorImpl(result));
 
     }
-    LOGGER.traceExit();
   }
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     Pair<FloatVector, float[]> p = computeGrid(sc);
-    return getSimilar(ReadableFloatVector.toArray(p.first),
-        new QueryConfig(qc).setDistanceWeights(p.second));
+    return getSimilar(ReadableFloatVector.toArray(p.first), new QueryConfig(qc).setDistanceWeights(p.second));
   }
 
 }

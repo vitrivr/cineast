@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,7 +83,9 @@ public class ChromaGrid8 extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
       ArrayList<SummaryStatistics> stats = new ArrayList<SummaryStatistics>(64);
       for (int i = 0; i < 64; ++i) {
@@ -126,7 +127,6 @@ public class ChromaGrid8 extends AbstractFeatureModule {
       persist(shot.getId(), new FloatVectorImpl(result));
 
     }
-    LOGGER.traceExit();
   }
 
   @Override
