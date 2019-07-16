@@ -1,7 +1,7 @@
 {
 	"type":"VIDEO",
 	"input":{
-		"path": "/home/ubuntu/osvc/videos",
+		"path": "data/",
 		"depth": 3,
 		"skip": 0,
 		"id": {
@@ -21,10 +21,7 @@
 		{"name": "EdgeGrid16"},
 		{"name": "EHD"},
 		{"name": "MedianColor"},
-		{"name": "MedianColorARP44"},
 		{"name": "MedianColorGrid8"},
-		{"name": "MedianColorRaster"},
-		{"name": "MotionHistogram"},
 		{"name": "HOGMirflickr25K512"},
 		{"name": "SURFMirflickr25K512"}
 	],
@@ -32,7 +29,7 @@
 		{
 			"name": "ShotThumbNails",
 			"properties": {
-				"destination":"/home/ubuntu/osvc/thumbnails"
+				"destination":"thumbnails/"
 			}
 		}
 	],
