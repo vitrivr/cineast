@@ -9,7 +9,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
@@ -17,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IdConfig;
+import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
@@ -34,6 +34,7 @@ import org.vitrivr.cineast.core.db.dao.writer.MediaSegmentWriter;
 import org.vitrivr.cineast.core.decode.audio.FFMpegAudioDecoder;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.decode.image.DefaultImageDecoder;
+import org.vitrivr.cineast.core.decode.image.ImageSequenceDecoder;
 import org.vitrivr.cineast.core.decode.m3d.ModularMeshDecoder;
 import org.vitrivr.cineast.core.decode.video.FFMpegVideoDecoder;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
@@ -50,6 +51,7 @@ import org.vitrivr.cineast.core.segmenter.audio.ConstantLengthAudioSegmenter;
 import org.vitrivr.cineast.core.segmenter.general.PassthroughSegmenter;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.segmenter.image.ImageSegmenter;
+import org.vitrivr.cineast.core.segmenter.image.ImageSequenceSegmenter;
 import org.vitrivr.cineast.core.segmenter.video.VideoHistogramSegmenter;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
@@ -57,8 +59,14 @@ import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 /**
  * This class is used to extract a continous list of {@link org.vitrivr.cineast.core.run.ExtractionItemContainer}s.
- * It replaces the need to extend separate {@link AbstractExtractionFileHandler} per Mediatype. It
- * should also step-by-step phase out the {@link AbstractExtractionFileHandler}.
+ *
+ * It replaces the need to extend separate {@link AbstractExtractionFileHandler} per Mediatype. It should also step-by-step phase out the {@link AbstractExtractionFileHandler}.
+ *
+ * Additionally, has support to extract only specific media types by providing the desired {@link MediaType} in the constructor.
+ *
+ * Has NO AUTOMATIC SUPPORT FOR {@link MediaType#IMAGE_SEQUENCE} since its impossible to distinguish an individual image from a sequence if you're only looking at one item.
+ *
+ * If you want to use {@link MediaType#IMAGE_SEQUENCE}, specify it explicitly in the {@link IngestConfig}
  *
  * @author silvan on 16.04.18.
  */
@@ -74,6 +82,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
   private final MediaSegmentReader segmentReader;
   private final ExtractionContextProvider context;
   private final ExtractionContainerProvider pathProvider;
+  private final MediaType mediaType;
 
   private final ExecutorService executorService = Executors.newFixedThreadPool(2, r -> {
     Thread thread = new Thread(r);
@@ -93,9 +102,14 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
   private HashMap<MediaType, Pair<Decoder, Segmenter>> handlers = new HashMap<>();
 
-  public GenericExtractionItemHandler(ExtractionContainerProvider pathProvider,
-      ExtractionContextProvider context) {
+  /**
+   * @param pathProvider where the {@link ExtractionItemContainer}s will be coming from
+   * @param context context for this extraction run
+   * @param mediaType can be null. if provided, will be used for all given items
+   */
+  public GenericExtractionItemHandler(ExtractionContainerProvider pathProvider, ExtractionContextProvider context, MediaType mediaType) {
     this.pathProvider = pathProvider;
+    this.mediaType = mediaType;
 
     final PersistencyWriterSupplier writerSupplier = context.persistencyWriter();
     this.objectWriter = new MediaObjectWriter(writerSupplier.get());
@@ -111,12 +125,10 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         new DefaultExtractorInitializer(writerSupplier));
     this.metadataExtractors = context.metadataExtractors();
     //Reasonable Defaults
-    handlers.put(MediaType.IMAGE,
-        new ImmutablePair<>(new DefaultImageDecoder(), new ImageSegmenter(context)));
-    handlers.put(MediaType.AUDIO,
-        new ImmutablePair<>(new FFMpegAudioDecoder(), new ConstantLengthAudioSegmenter(context)));
-    handlers.put(MediaType.VIDEO,
-        new ImmutablePair<>(new FFMpegVideoDecoder(), new VideoHistogramSegmenter(context)));
+    handlers.put(MediaType.IMAGE, new ImmutablePair<>(new DefaultImageDecoder(), new ImageSegmenter(context)));
+    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(new ImageSequenceDecoder(), new ImageSequenceSegmenter(context)));
+    handlers.put(MediaType.AUDIO, new ImmutablePair<>(new FFMpegAudioDecoder(), new ConstantLengthAudioSegmenter(context)));
+    handlers.put(MediaType.VIDEO, new ImmutablePair<>(new FFMpegVideoDecoder(), new VideoHistogramSegmenter(context)));
     handlers.put(MediaType.MODEL3D, new ImmutablePair<>(new ModularMeshDecoder(), new PassthroughSegmenter<Mesh>() {
       @Override
       protected SegmentContainer getSegmentFromContent(Mesh content) {
@@ -124,10 +136,10 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       }
     }));
     //Config overwrite
-    Config.sharedConfig().getDecoders().forEach((mediaType, decoderConfig) -> {
-      handlers.put(mediaType, new ImmutablePair<>(ReflectionHelper.newDecoder(decoderConfig.getDecoder(), mediaType), handlers.getOrDefault(mediaType, null)).getRight());
+    Config.sharedConfig().getDecoders().forEach((type, decoderConfig) -> {
+      handlers.put(type, new ImmutablePair<>(ReflectionHelper.newDecoder(decoderConfig.getDecoder(), type), handlers.getOrDefault(type, null)).getRight());
     });
-    //TODO Config should allows for multiple segmenters
+    //TODO Config should allow for multiple segmenters
 
     this.context = context;
   }
@@ -141,7 +153,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     final ObjectIdGenerator generator = this.context.objectIdGenerator();
     Pair<ExtractionItemContainer, MediaType> pair = null;
 
+    /* Initalize all Metadata Extractors */
     for (MetadataExtractor extractor : this.metadataExtractors) {
+      LOGGER.debug("Initializing metadata extractor {}", extractor.getClass().getSimpleName());
       if (extractor instanceof MetadataFeatureModule) {
         this.pipeline.getInitializer().initialize((MetadataFeatureModule<?>) extractor);
       } else {
@@ -149,6 +163,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       }
     }
 
+    /* Process until there's nothing left*/
     while ((pair = this.nextItem()) != null) {
       try {
         LOGGER.info("Processing path {} and mediatype {}", pair.getLeft(), pair.getRight());
@@ -156,7 +171,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         Segmenter segmenter = handlers.get(pair.getRight()).getRight();
         if (decoder.init(pair.getLeft().getPathForExtraction(),
             Config.sharedConfig().getDecoders().get(pair.getRight()))) {
-                /* Create / lookup MediaObjectDescriptor for new file. */
+          /* Create / lookup MediaObjectDescriptor for new file. */
           final MediaObjectDescriptor descriptor = this
               .fetchOrCreateMultimediaObjectDescriptor(generator, pair.getLeft(), pair.getRight());
           if (!this.checkAndPersistMultimediaObject(descriptor)) {
@@ -173,7 +188,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
             try {
               final SegmentContainer container = segmenter.getNext();
               if (container != null) {
-                            /* Create segment-descriptor and try to persist it. */
+                /* Create segment-descriptor and try to persist it. */
                 final MediaSegmentDescriptor mediaSegmentDescriptor = this
                     .fetchOrCreateSegmentDescriptor(objectId, segmentNumber,
                         container.getStart(), container.getEnd(),
@@ -208,10 +223,10 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
               .collect(Collectors.toList());
           this.metadataWriter.write(metadata);
 
-                /* Extract metadata. */
+          /* Extract metadata. */
           this.extractAndPersistMetadata(pair.getLeft(), objectId);
 
-                /* Force flush the segment, object and metadata information. */
+          /* Force flush the segment, object and metadata information. */
           this.mediaSegmentWriter.flush();
           this.objectWriter.flush();
           this.metadataWriter.flush();
@@ -220,10 +235,10 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         }
 
 
-            /* Increment the files counter. */
+        /* Increment the files counter. */
         this.count_processed += 1;
 
-            /*  Create new decoder pair for a new file if the decoder reports that it cannot be reused.*/
+        /*  Create new decoder pair for a new file if the decoder reports that it cannot be reused.*/
         if (!decoder.canBeReused()) {
           decoder.close();
           handlers.put(pair.getRight(), new ImmutablePair<>(ReflectionHelper.newDecoder(Config.sharedConfig().getDecoders().get(pair.getRight()).getDecoder(), pair.getRight()), segmenter));
@@ -234,9 +249,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
           this.completeListeners.get(i).onCompleted(pair.getLeft());
         }
 
-            /*
-             * Trigger garbage collection once in a while. This is specially relevant when many small files are processed, since unused allocated memory could accumulate and trigger swapping.
-             */
+        /*
+         * Trigger garbage collection once in a while. This is specially relevant when many small files are processed, since unused allocated memory could accumulate and trigger swapping.
+         */
         if (this.count_processed % 50 == 0) {
           System.gc();
         }
@@ -265,10 +280,11 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       LOGGER.warn("Interrupted while waiting for ExtractionPipeline to shutdown!");
     } finally {
       for (MetadataExtractor extractor : this.metadataExtractors) {
+        LOGGER.debug("Closing metadata extractor {}", extractor.getClass().getSimpleName());
         extractor.finish();
       }
       LOGGER.debug("Closing & flushing all writers");
-      if(pathProvider!=null){
+      if (pathProvider != null) {
         pathProvider.close();
       }
       this.mediaSegmentWriter.close();
@@ -276,10 +292,15 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       this.metadataWriter.close();
       this.objectReader.close();
       this.segmentReader.close();
-      LOGGER.debug("Done");
+      LOGGER.debug("Shutdown complete");
     }
   }
 
+  /**
+   * Provide the next {@link ExtractionItemContainer} and its corresponding media type. Waits with returning until the next item is available.
+   *
+   * @return can be null. If it is null, it does not make sense to call this method again since the underlying {@link ExtractionContainerProvider} is either not existing or closed
+   */
   private Pair<ExtractionItemContainer, MediaType> nextItem() {
     if (this.pathProvider == null) {
       LOGGER.error("Path provider was null, returning null");
@@ -289,50 +310,63 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       LOGGER.error("Pathprovider closed upon entrance, returning null");
       return null;
     }
-    int sleep = 0;
+
+    /* If the provider is still open, poll it until it's closed*/
     while (this.pathProvider.isOpen()) {
-      if (this.pathProvider.hasNextAvailable()) {
-        Optional<ExtractionItemContainer> providerResult = pathProvider.next();
-        if (!providerResult.isPresent()) {
-          try {
-            Thread.sleep(100);
-            sleep+=100;
-            if(sleep>60_000){
-              LOGGER.debug("Path provider is still open, but no new element has been received in the last 60 seconds");
-            }
-          } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-          }
-          continue;
-        }
-        ExtractionItemContainer item = providerResult.get();
-        String type = MimeTypeHelper.getContentType(item.getPathForExtraction().toString());
-        if (handlers.entrySet().stream()
-            .anyMatch(el -> el != null && el.getValue() != null && el.getValue().getKey() != null && el.getValue().getKey().supportedFiles().contains(type))) {
-          return new ImmutablePair<>(item, handlers.entrySet().stream()
-              .filter(el -> el != null && el.getValue().getKey() != null && el.getValue().getKey().supportedFiles().contains(type)).findFirst()
-              .get().getKey());
-        }else{
-          LOGGER.debug("No matching handlers found for type {}", type);
-          handlers.forEach((key, value) -> LOGGER.debug(key + " | " + value));
-        }
-        //TODO Add support for separate filesystems.
-      } else {
+      /* If there's no item available, sleep */
+      if (!this.pathProvider.hasNextAvailable()) {
         try {
           Thread.sleep(100);
         } catch (InterruptedException e) {
           throw new RuntimeException(e);
         }
+        continue;
       }
+      Optional<ExtractionItemContainer> providerResult = pathProvider.next();
+      /* Check if we've received something */
+      if (!providerResult.isPresent()) {
+        continue;
+      }
+      ExtractionItemContainer item = providerResult.get();
+      /* Get content type */
+      String type = MimeTypeHelper.getContentType(item.getPathForExtraction().toString());
+
+      /* If a media type is specified, use it*/
+      if (item.getObject() != null && item.getObject().getMediatype() != null && item.getObject().getMediatype() != MediaType.UNKNOWN) {
+        return new ImmutablePair<>(item, item.getObject().getMediatype());
+      }
+
+      /* if we were given a default media type, try to use it*/
+      if (mediaType != null) {
+        /* if the given decoder supports the item type, use it*/
+        if (handlers.get(mediaType).getKey().supportedFiles().contains(type)) {
+          return new ImmutablePair<>(item, mediaType);
+        }
+        /* if not, log an  error and move on */
+        LOGGER.error("Media Type {} does not support file type {}", mediaType, type);
+        continue;
+      }
+
+      /* Get the appropriate handler for this item. We ignore image sequences if they're not specified because they support the same file types as images*/
+      if (handlers.entrySet().stream().filter(handler -> handler != null && handler.getKey() != MediaType.IMAGE_SEQUENCE)
+          .anyMatch(handler -> handler.getValue() != null && handler.getValue().getKey() != null && handler.getValue().getKey().supportedFiles().contains(type))) {
+        return new ImmutablePair<>(item, handlers.entrySet().stream()
+            .filter(handler -> handler != null && handler.getValue().getKey() != null && handler.getValue().getKey().supportedFiles().contains(type) && handler.getKey() != MediaType.IMAGE_SEQUENCE).findFirst()
+            .get().getKey());
+      } else {
+        /* If no appropriate handler is found, we log an error and continue with the next item */
+        LOGGER.error("No matching handlers found for type {} and item {}", type, item);
+        handlers.forEach((key, value) -> LOGGER.debug(key + " | " + value));
+      }
+      //TODO Add support for separate filesystems.
     }
+    /* Path provider has been closed */
     LOGGER.info("Pathprovider closed, returning null.");
     return null;
   }
 
   /**
-   * Checks if the MediaObjectDescriptor already exists and decides whether extraction should
-   * continue for that object or not (based on the ingest settings). If it does not exist, the
-   * MediaObjectDescriptor is persisted.
+   * Checks if the MediaObjectDescriptor already exists and decides whether extraction should continue for that object or not (based on the ingest settings). If it does not exist, the MediaObjectDescriptor is persisted.
    *
    * @param descriptor MediaObjectDescriptor that should be persisted.
    * @return true if object should be processed further or false if it should be skipped.
@@ -360,9 +394,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
   }
 
   /**
-   * Persists a MediaSegmentDescriptor and performs an existence check before, if so configured. Based on
-   * the outcome of that persistence check and the settings in the ExtractionContext this method
-   * returns true if segment should be processed further or false otherwise.
+   * Persists a MediaSegmentDescriptor and performs an existence check before, if so configured. Based on the outcome of that persistence check and the settings in the ExtractionContext this method returns true if segment should be processed further or false otherwise.
    *
    * @param descriptor MediaSegmentDescriptor that should be persisted.
    * @return true if segment should be processed further or false if it should be skipped.
@@ -396,11 +428,10 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
   }
 
   /**
-   * Convenience method to lookup a MediaSegmentDescriptor for a given path and type or create a new one
-   * if needed. If a new descriptor is required, MediaSegmentDescriptor.newSegmentDescriptor() is used.
+   * Convenience method to lookup a MediaSegmentDescriptor for a given path and type or create a new one if needed. If a new descriptor is required, MediaSegmentDescriptor.newSegmentDescriptor() is used.
    */
   protected MediaSegmentDescriptor fetchOrCreateSegmentDescriptor(String objectId, int segmentNumber,
-                                                                  int start, int end, float startabs, float endabs) {
+      int start, int end, float startabs, float endabs) {
     String segmentId = MediaType.generateSegmentId(objectId, segmentNumber);
     return this.segmentReader.lookUpSegment(segmentId).orElse(MediaSegmentDescriptor
         .newSegmentDescriptor(objectId, segmentNumber, start, end, startabs, endabs));
@@ -408,7 +439,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
   protected void extractAndPersistMetadata(ExtractionItemContainer item, String objectId) {
     for (MetadataExtractor extractor : this.metadataExtractors) {
-      LOGGER.debug("Extracting metadata for {}", extractor.getClass().getSimpleName());
+      LOGGER.debug("Extracting metadata with {}", extractor.getClass().getSimpleName());
       try {
         List<MediaObjectMetadataDescriptor> metadata = extractor
             .extract(objectId, item.getPathForExtraction());
