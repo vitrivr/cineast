@@ -151,7 +151,7 @@ public class PitchTracker {
      */
     public Melody extractMelody(int iterations) {
         /* Return if no pitch-contours are available. */
-        if (this.pitchContours.size() == 0) {
+        if (this.pitchContours.isEmpty()) {
           return null;
         }
 

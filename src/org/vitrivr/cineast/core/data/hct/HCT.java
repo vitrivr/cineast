@@ -42,7 +42,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
   }
 
   private IHCTCell<T> insert(T nextItem, int levelNo) throws Exception {
-    if (levels.size() == 0) { // first insert
+    if (levels.isEmpty()) { // first insert
       createInitialRoot(nextItem);
       return null;
     }
@@ -82,7 +82,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
   }
 
   private List<HCTCell<T>> getTopLevelCells() {
-    while (levels.get(levels.size() - 1).getCells().size() == 0) {
+    while (levels.get(levels.size() - 1).getCells().isEmpty()) {
       levels.remove(levels.get(levels.size() - 1));
     }
     return levels.get(levels.size() - 1).getCells();
@@ -224,7 +224,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
     List<HCTCell<T>> cells = levels.get(levels.size() - 1).getCells();
 
     IHCTCell<T> parentCell = cellO.getParent();
-    if (cells.size() == 0 || levelNo > topLevelNo)
+    if (cells.isEmpty() || levelNo > topLevelNo)
      {
       return; // experimental
     }
@@ -377,7 +377,7 @@ public class HCT<T extends Comparable<T>> implements IHCT<T>, Serializable {
   public int traverse(IHCTCell<T> parentCell, int counter) {
 
     for (IHCTCell<T> cell : parentCell.getChildren()) {
-      if (cell.getChildren().size() == 0) {
+      if (cell.getChildren().isEmpty()) {
         // reached lowest level
         counter += cell.getValues().size();
       } else {

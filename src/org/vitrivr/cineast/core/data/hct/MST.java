@@ -72,7 +72,7 @@ class MST<T extends Comparable<T>> implements IMST<T>, Serializable {
   }
 
   private MSTNode<T> updateNucleus() throws java.lang.Exception {
-    if (graph.vertexSet().size() == 0) {
+    if (graph.vertexSet().isEmpty()) {
       throw new Exception("This graph contains no nodes!");
     }
     if (graph.vertexSet().size() == 1) {
