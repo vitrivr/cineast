@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -27,7 +29,7 @@ import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 /**
  * Configures a data-ingest or extraction run, acts as an ExtractionContextProvider.
  *
- * A concrete instance be obtained by deserializing a JSON file that is compatible with the
+ * A concrete instance can be obtained by deserializing a JSON file that is compatible with the
  * structure defined by this classes and its fields.
  *
  * @author rgasser
@@ -35,6 +37,8 @@ import org.vitrivr.cineast.core.segmenter.general.Segmenter;
  * @created 13.01.17
  */
 public final class IngestConfig implements ExtractionContextProvider {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     /** MediaType for the Extraction run. */
     private final MediaType type;
