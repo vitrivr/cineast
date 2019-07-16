@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -100,14 +102,16 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
   private final ExtractionPipeline pipeline;
   private long count_processed = 0;
 
-  private HashMap<MediaType, Pair<Decoder, Segmenter>> handlers = new HashMap<>();
+  private Map<MediaType, Pair<Supplier<Decoder>, Supplier<Segmenter>>> handlers = new HashMap<>();
+
+  private Map<MediaType, Pair<Decoder, Segmenter>> handlerCache = new HashMap<>();
 
   /**
    * @param pathProvider where the {@link ExtractionItemContainer}s will be coming from
    * @param context context for this extraction run
    * @param mediaType can be null. if provided, will be used for all given items
    */
-  public GenericExtractionItemHandler(ExtractionContainerProvider pathProvider, ExtractionContextProvider context, MediaType mediaType) {
+  public GenericExtractionItemHandler(ExtractionContainerProvider pathProvider, IngestConfig context, MediaType mediaType) {
     this.pathProvider = pathProvider;
     this.mediaType = mediaType;
 
@@ -124,12 +128,13 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.pipeline = new ExtractionPipeline(context,
         new DefaultExtractorInitializer(writerSupplier));
     this.metadataExtractors = context.metadataExtractors();
+
     //Reasonable Defaults
-    handlers.put(MediaType.IMAGE, new ImmutablePair<>(new DefaultImageDecoder(), new ImageSegmenter(context)));
-    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(new ImageSequenceDecoder(), new ImageSequenceSegmenter(context)));
-    handlers.put(MediaType.AUDIO, new ImmutablePair<>(new FFMpegAudioDecoder(), new ConstantLengthAudioSegmenter(context)));
-    handlers.put(MediaType.VIDEO, new ImmutablePair<>(new FFMpegVideoDecoder(), new VideoHistogramSegmenter(context)));
-    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(new ModularMeshDecoder(), new PassthroughSegmenter<Mesh>() {
+    handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));
+    handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
+    handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
+    handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
+    handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
       @Override
       protected SegmentContainer getSegmentFromContent(Mesh content) {
         return new Model3DSegment(content);
@@ -140,6 +145,8 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       handlers.put(type, new ImmutablePair<>(ReflectionHelper.newDecoder(decoderConfig.getDecoder(), type), handlers.getOrDefault(type, null)).getRight());
     });
     //TODO Config should allow for multiple segmenters
+
+    this.handlers.forEach((key, value) -> handlerCache.put(key, ImmutablePair.of(value.getLeft().get(), value.getRight().get())));
 
     this.context = context;
   }
@@ -167,8 +174,37 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     while ((pair = this.nextItem()) != null) {
       try {
         LOGGER.info("Processing path {} and mediatype {}", pair.getLeft(), pair.getRight());
-        Decoder decoder = handlers.get(pair.getRight()).getLeft();
-        Segmenter segmenter = handlers.get(pair.getRight()).getRight();
+
+        if (handlerCache.get(pair.getRight()) == null) {
+          LOGGER.error("Unknown mediatype {}, exiting extraction", pair.getRight());
+          break;
+        }
+
+        /* Clear non-reusable segmenter */
+        handlerCache.compute(pair.getRight(), (mediaType, cache) -> {
+          Decoder decoder = null;
+          if (cache.getLeft() != null) {
+            if (cache.getLeft().canBeReused()) {
+              decoder = cache.getLeft();
+            }
+          }
+          return ImmutablePair.of(decoder, null);
+        });
+
+        /* Put a new decoder in the cache if there's not one already there */
+        if (handlerCache.get(pair.getRight()).getLeft() == null) {
+          Decoder decoder = handlers.get(pair.getRight()).getLeft().get();
+          handlerCache.compute(pair.getRight(), (mediaType, cache) -> new ImmutablePair<>(decoder, cache.getRight()));
+        }
+        /* Put a new segmenter in the cache if there's not one already there */
+        if (handlerCache.get(pair.getRight()).getRight() == null) {
+          Segmenter segmenter = handlers.get(pair.getRight()).getRight().get();
+          handlerCache.compute(pair.getRight(), (mediaType, cache) -> new ImmutablePair<>(cache.getLeft(), segmenter));
+        }
+
+        Decoder decoder = handlerCache.get(pair.getRight()).getLeft();
+        Segmenter segmenter = handlers.get(pair.getRight()).getRight().get();
+
         if (decoder.init(pair.getLeft().getPathForExtraction(),
             Config.sharedConfig().getDecoders().get(pair.getRight()))) {
           /* Create / lookup MediaObjectDescriptor for new file. */
@@ -241,7 +277,8 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         /*  Create new decoder pair for a new file if the decoder reports that it cannot be reused.*/
         if (!decoder.canBeReused()) {
           decoder.close();
-          handlers.put(pair.getRight(), new ImmutablePair<>(ReflectionHelper.newDecoder(Config.sharedConfig().getDecoders().get(pair.getRight()).getDecoder(), pair.getRight()), segmenter));
+          final MediaType type = pair.getRight();
+          handlerCache.compute(type, (mediaType, cache) -> ImmutablePair.of(handlers.get(type).getLeft().get(), cache.getRight()));
         }
         //We assume segmenters are reusable
 
@@ -339,7 +376,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       /* if we were given a default media type, try to use it*/
       if (mediaType != null) {
         /* if the given decoder supports the item type, use it*/
-        if (handlers.get(mediaType).getKey().supportedFiles().contains(type)) {
+        if (handlerCache.get(mediaType).getKey().supportedFiles().contains(type)) {
           return new ImmutablePair<>(item, mediaType);
         }
         /* if not, log an  error and move on */
@@ -348,9 +385,9 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       }
 
       /* Get the appropriate handler for this item. We ignore image sequences if they're not specified because they support the same file types as images*/
-      if (handlers.entrySet().stream().filter(handler -> handler != null && handler.getKey() != MediaType.IMAGE_SEQUENCE)
+      if (handlerCache.entrySet().stream().filter(handler -> handler != null && handler.getKey() != MediaType.IMAGE_SEQUENCE)
           .anyMatch(handler -> handler.getValue() != null && handler.getValue().getKey() != null && handler.getValue().getKey().supportedFiles().contains(type))) {
-        return new ImmutablePair<>(item, handlers.entrySet().stream()
+        return new ImmutablePair<>(item, handlerCache.entrySet().stream()
             .filter(handler -> handler != null && handler.getValue().getKey() != null && handler.getValue().getKey().supportedFiles().contains(type) && handler.getKey() != MediaType.IMAGE_SEQUENCE).findFirst()
             .get().getKey());
       } else {

@@ -84,7 +84,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** Lists the mimetypes supported by the FFMpegVideoDecoder.
      *
      * TODO: List may not be complete yet. */
-    private static final Set<String> supportedFiles;
+    public static final Set<String> supportedFiles;
     static {
         HashSet<String> tmp = new HashSet<>();
         tmp.add("multimedia/mp4"); /* They share the same suffix with video (.mp4). */

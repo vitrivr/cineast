@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.core.config.IngestConfig;
 import org.vitrivr.cineast.core.run.filehandler.GenericExtractionItemHandler;
 
 /**
@@ -19,7 +20,7 @@ public class ExtractionDispatcher {
   /**
    * ExtractionContextProvider used to setup the extraction.
    */
-  private ExtractionContextProvider context;
+  private IngestConfig context;
 
   /**
    * List of files due for extraction.
@@ -36,7 +37,7 @@ public class ExtractionDispatcher {
   private volatile boolean threadRunning = false;
 
   public boolean initialize(ExtractionContainerProvider pathProvider,
-      ExtractionContextProvider context) throws IOException {
+      IngestConfig context) throws IOException {
     File outputLocation = Config.sharedConfig().getExtractor().getOutputLocation();
     if (outputLocation == null) {
       LOGGER.error("invalid output location specified in config");

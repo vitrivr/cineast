@@ -220,7 +220,7 @@ public class API {
     ExtractionDispatcher dispatcher = new ExtractionDispatcher();
     try {
       JacksonJsonProvider reader = new JacksonJsonProvider();
-      ExtractionContextProvider context = reader.toObject(file, IngestConfig.class);
+      IngestConfig context = reader.toObject(file, IngestConfig.class);
       ExtractionContainerProvider provider = ExtractionContainerProviderFactory
           .tryCreatingTreeWalkPathProvider(file, context);
       if (dispatcher.initialize(provider, context)) {

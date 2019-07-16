@@ -50,7 +50,7 @@ public class SessionExtractionContainer {
     ExtractionDispatcher dispatcher = new ExtractionDispatcher();
     try {
       JacksonJsonProvider reader = new JacksonJsonProvider();
-      ExtractionContextProvider context = reader.toObject(configFile, IngestConfig.class);
+      IngestConfig context = reader.toObject(configFile, IngestConfig.class);
       provider = new SessionContainerProvider();
       if (dispatcher.initialize(provider, context)) {
         dispatcher.registerListener(provider);
