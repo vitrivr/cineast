@@ -23,11 +23,9 @@ import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.NettyChannelBuilder;
-import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,7 +47,6 @@ public class CottontailWrapper implements AutoCloseable {
   private static final int maxMessageSize = 10_000_000;
   private static final long MAX_QUERY_CALL_TIMEOUT = 300_000; //TODO expose to config
   private static final long MAX_CALL_TIMEOUT = 5000; //TODO expose to config
-  private StreamObserver<InsertMessage> insertStream;
 
   public CottontailWrapper() {
     DatabaseConfig config = Config.sharedConfig().getDatabase();
@@ -205,7 +202,6 @@ public class CottontailWrapper implements AutoCloseable {
    */
   @Override
   public void close() {
-    this.insertStream.onCompleted();
     this.channel.shutdown();
   }
 }
