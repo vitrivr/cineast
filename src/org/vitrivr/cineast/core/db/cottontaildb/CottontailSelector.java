@@ -16,6 +16,8 @@ import com.google.common.collect.Iterables;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -32,6 +34,8 @@ public class CottontailSelector implements DBSelector {
   private CottontailWrapper cottontail =
       useGlobalWrapper ? GLOBAL_COTTONTAIL_WRAPPER : new CottontailWrapper();
 
+  private static final Logger LOGGER = LogManager.getLogger();
+
   private Entity entity;
 
   private static final Projection SELECT_ALL_PROJECTION =
@@ -46,6 +50,7 @@ public class CottontailSelector implements DBSelector {
   @Override
   public boolean close() {
     if (useGlobalWrapper) {
+      LOGGER.info("Not closing selector because the global wrapper flag is set");
       return false;
     }
     this.cottontail.close();

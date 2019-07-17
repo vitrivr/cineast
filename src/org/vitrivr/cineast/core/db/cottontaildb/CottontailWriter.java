@@ -42,10 +42,11 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
     @Override
     public boolean close() {
-        LOGGER.debug("Closing Cottontailwriter");
         if (useGlobalWrapper) {
+            LOGGER.debug("Not closing Cottontailwriter because global wrapper flag is set");
             return false;
         }
+        LOGGER.debug("Closing Cottontailwriter");
         this.cottontail.close();
         return true;
     }
