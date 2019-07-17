@@ -10,6 +10,7 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc.CottonDQLBlockingStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus;
@@ -51,6 +52,7 @@ public class CottontailWrapper implements AutoCloseable {
   public CottontailWrapper() {
     DatabaseConfig config = Config.sharedConfig().getDatabase();
     this.channel = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPlaintext()).maxInboundMessageSize(maxMessageSize).build();
+    LOGGER.info("Connected to Cottontail at {}:{}", config.getHost(), config.getPort());
     this.definitionFutureStub = CottonDDLGrpc.newFutureStub(channel);
     this.managementStub = CottonDMLGrpc.newFutureStub(channel);
     this.insertStub = CottonDMLGrpc.newStub(channel);
@@ -71,6 +73,19 @@ public class CottontailWrapper implements AutoCloseable {
       } else {
         e.printStackTrace();
       }
+    }
+  }
+
+  public synchronized void createIndexBlocking(CreateIndexMessage createMessage) {
+    final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
+    try {
+      stub.createIndex(createMessage);
+    } catch (StatusRuntimeException e) {
+      if (e.getStatus().getCode() == Status.ALREADY_EXISTS.getCode()) {
+        LOGGER.warn("Index on {}.{} was not created because it already exists", createMessage.getIndex().getEntity().getName(), createMessage.getColumnsList().toString());
+        return;
+      }
+      e.printStackTrace();
     }
   }
 
