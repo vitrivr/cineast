@@ -329,6 +329,15 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
       this.metadataWriter.close();
       this.objectReader.close();
       this.segmentReader.close();
+      this.handlerCache.values().forEach(el -> {
+        if (el.getLeft() != null) {
+          el.getLeft().close();
+        }
+        if (el.getRight() != null) {
+          el.getRight().close();
+        }
+      });
+      this.pathProvider.close();
       LOGGER.debug("Shutdown complete");
     }
   }
