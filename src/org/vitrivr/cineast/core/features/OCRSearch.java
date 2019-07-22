@@ -1,11 +1,12 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.SolrTextRetriever;
-
-import java.util.Arrays;
 
 /**
  * Uses standard text support from Solr. OCR is handled by adding fuzziness / levenshtein-distance support to the query. This makes sense here since we expect small errors from OCR sources
@@ -13,12 +14,22 @@ import java.util.Arrays;
 public class OCRSearch extends SolrTextRetriever {
 
   public static final String OCR_TABLE_NAME = "features_ocr";
+
   /**
    * Default constructor for {@link OCRSearch}.
    */
   public OCRSearch() {
     super(OCR_TABLE_NAME);
   }
+
+  @Override
+  public void processSegment(SegmentContainer shot) {
+    List<SimpleFulltextFeatureDescriptor> _result = new ArrayList<>();
+    _result.add(new SimpleFulltextFeatureDescriptor(shot.getId(), "coffee"+ RandomStringUtils.randomAlphanumeric(3)));
+    _result.add(new SimpleFulltextFeatureDescriptor(shot.getId(), "test"));
+    this.writer.write(_result);
+  }
+
 
   @Override
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {

@@ -26,7 +26,6 @@ public class Config {
     private RetrieverConfig retriever;
     private ExtractionPipelineConfig extractor;
     private ImageCacheConfig imagecache;
-    private VisualizationConfig visualization;
     private QueryConfig query;
     private HashMap<MediaType, DecoderConfig> decoders;
     private BenchmarkConfig benchmark = new BenchmarkConfig();
@@ -101,14 +100,6 @@ public class Config {
     }
     public void setImagecache(ImageCacheConfig imagecache) {
         this.imagecache = imagecache;
-    }
-
-    @JsonProperty
-    public VisualizationConfig getVisualization() {
-        return visualization;
-    }
-    public void setVisualization(VisualizationConfig visualization) {
-        this.visualization = visualization;
     }
 
 
