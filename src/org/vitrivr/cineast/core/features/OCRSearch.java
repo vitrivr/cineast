@@ -22,14 +22,6 @@ public class OCRSearch extends SolrTextRetriever {
     super(OCR_TABLE_NAME);
   }
 
-  @Override
-  public void processSegment(SegmentContainer shot) {
-    List<SimpleFulltextFeatureDescriptor> _result = new ArrayList<>();
-    _result.add(new SimpleFulltextFeatureDescriptor(shot.getId(), "coffee"+ RandomStringUtils.randomAlphanumeric(3)));
-    _result.add(new SimpleFulltextFeatureDescriptor(shot.getId(), "test"));
-    this.writer.write(_result);
-  }
-
 
   @Override
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {
