@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.db.PersistentTuple;
  * Copies data from an {@link Importer} to a {@link PersistencyWriter}
  *
  */
-public class Copier {
+public class Copier implements AutoCloseable {
 
 	private final String entityName;
 	private final Importer<?> importer;
@@ -29,9 +29,13 @@ public class Copier {
 		this.importer = importer;
 		this.writer = writer;
 	}
-	
+
 	public void copy(){
-		Map<String, PrimitiveTypeProvider> map = this.importer.readNextAsMap();
+		this.copyFrom(this.importer);
+	}
+
+	public void copyFrom(Importer<?> importer){
+		Map<String, PrimitiveTypeProvider> map = importer.readNextAsMap();
 		
 		if(map == null){
 			return;
@@ -55,9 +59,8 @@ public class Copier {
 				objects[i] = PrimitiveTypeProvider.getObject(map.get(names[i]));
 			}
 			persistTuple(this.writer.generateTuple(objects));
-		}while((map = this.importer.readNextAsMap()) != null);
-		
-		this.writer.close();
+		}while((map = importer.readNextAsMap()) != null);
+
 	}
 
 	private void persistTuple(PersistentTuple tuple) {
@@ -65,13 +68,17 @@ public class Copier {
 	}
 
 	public void copyBatched(int batchSize){
+		this.copyBatchedFrom(batchSize, this.importer);
+	}
+
+	public void copyBatchedFrom(int batchSize, Importer<?> importer){
 	  
 	  if(batchSize <= 0){
 	    copy();
 	    return;
 	  }
 	  
-	  Map<String, PrimitiveTypeProvider> map = this.importer.readNextAsMap();
+	  Map<String, PrimitiveTypeProvider> map = importer.readNextAsMap();
     
     if(map == null){
       return;
@@ -103,17 +110,20 @@ public class Copier {
         tupleCache.clear();
       }
       
-    }while((map = this.importer.readNextAsMap()) != null);
+    }while((map = importer.readNextAsMap()) != null);
     
     this.writer.persist(tupleCache);
-    
-    this.writer.close();
+
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
-		this.writer.close();
+		this.close();
 		super.finalize();
 	}
-	
+
+	@Override
+	public void close(){
+		this.writer.close();
+	}
 }

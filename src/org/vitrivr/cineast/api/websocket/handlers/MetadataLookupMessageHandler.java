@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.api.websocket.handlers.abstracts.StatelessWebsocketMessageHandler;
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.lookup.MetadataLookup;
-import org.vitrivr.cineast.core.data.messages.result.MetadataQueryResult;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaMetadataReader;
+import org.vitrivr.cineast.core.data.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 
 /**
  * @author rgasser
@@ -18,7 +18,7 @@ public class MetadataLookupMessageHandler extends StatelessWebsocketMessageHandl
 
     /**
      * Invoked when a Message of type MetadataLookup arrives and requires handling. Looks up the
-     * MultimediaMetadataDescriptors of the requested objects, wraps them in a MetadataQueryResult object
+     * MultimediaMetadataDescriptors of the requested objects, wraps them in a MediaObjectMetadataQueryResult object
      * and writes them to the stream.
      *
      * @param session WebSocketSession for which the message arrived.
@@ -26,9 +26,9 @@ public class MetadataLookupMessageHandler extends StatelessWebsocketMessageHandl
      */
     @Override
     public void handle(Session session, MetadataLookup message) {
-        MultimediaMetadataReader reader = new MultimediaMetadataReader();
-        List<MultimediaMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(message.getIds());
-        this.write(session, new MetadataQueryResult("", descriptors));
+        MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+        List<MediaObjectMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(message.getIds());
+        this.write(session, new MediaObjectMetadataQueryResult("", descriptors));
         reader.close();
     }
 }

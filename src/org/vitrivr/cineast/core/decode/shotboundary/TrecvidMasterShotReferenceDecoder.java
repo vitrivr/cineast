@@ -11,7 +11,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
 public class TrecvidMasterShotReferenceDecoder {
 
@@ -24,9 +24,9 @@ public class TrecvidMasterShotReferenceDecoder {
 	 * @param msr the file containing the master shot reference
 	 * @param videoId the video id
 	 */
-	public static List<SegmentDescriptor> decode(File msr, String videoId){
+	public static List<MediaSegmentDescriptor> decode(File msr, String videoId){
 		
-		ArrayList<SegmentDescriptor> _return = new ArrayList<>();
+		ArrayList<MediaSegmentDescriptor> _return = new ArrayList<>();
 		
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(msr));
@@ -59,8 +59,8 @@ public class TrecvidMasterShotReferenceDecoder {
 				
 				++shotCounter;
 
-				/* TODO: Derive absolute start and end position of SegmentDescriptor. */
-				_return.add(new SegmentDescriptor(videoId, MediaType.generateSegmentId(MediaType.VIDEO, videoId, shotCounter), shotCounter, start, end, -1.0f, -1.0f));
+				/* TODO: Derive absolute start and end position of MediaSegmentDescriptor. */
+				_return.add(new MediaSegmentDescriptor(videoId, MediaType.generateSegmentId(MediaType.VIDEO, videoId, shotCounter), shotCounter, start, end, -1.0f, -1.0f));
 			}
 			
 			reader.close();

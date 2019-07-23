@@ -24,12 +24,14 @@ public class EdgeARP88Full extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public EdgeARP88Full() {
-    super("features_EdgeARP88Full", 31f / 4f);
+    super("features_EdgeARP88Full", 31f / 4f, 64);
   }
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
       SummaryStatistics[] stats = new SummaryStatistics[64];
       for (int i = 0; i < 64; ++i) {
@@ -56,7 +58,6 @@ public class EdgeARP88Full extends AbstractFeatureModule {
       }
       persist(shot.getId(), new FloatVectorImpl(result));
     }
-    LOGGER.traceExit();
   }
 
   private static FloatVector getEdges(MultiImage img) {

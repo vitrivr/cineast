@@ -43,7 +43,7 @@ public class MFCCShingle extends StagedFeatureModule {
      *
      */
     public MFCCShingle() {
-        super("features_mfccshingles", 2.0f);
+        super("features_mfccshingles", 2.0f, SHINGLE_SIZE * 13);
         this.distanceThreshold = 0.1f;
     }
 
@@ -81,7 +81,7 @@ public class MFCCShingle extends StagedFeatureModule {
 
          /* Set QueryConfig and extract correspondence function. */
         qc = this.setQueryConfig(qc);
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.correspondence);
         for (DistanceElement hit : partialResults) {
             if (hit.getDistance() < this.distanceThreshold) {
                 scoreMap.adjustOrPutValue(hit.getId(), 1, scoreMap.get(hit.getId())/2);
@@ -104,7 +104,7 @@ public class MFCCShingle extends StagedFeatureModule {
     @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
                 .addHint(ReadableQueryConfig.Hints.inexact);
     }
@@ -134,6 +134,9 @@ public class MFCCShingle extends StagedFeatureModule {
     private List<float[]> getFeatures(SegmentContainer segment) {
         final Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
         final STFT stft = segment.getSTFT(parameters.first, (parameters.first-2*parameters.second)/2, parameters.second, new HanningWindow());
+        if (stft == null) {
+            return new ArrayList<>(0);
+        }
         final List<MFCC> mfccs = MFCC.calculate(stft);
         int vectors = mfccs.size() - SHINGLE_SIZE;
 

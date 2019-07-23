@@ -87,7 +87,7 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
 	}
 
 
-	public static void setFolder(File outputFolder) {
+	public static void setDefaultFolder(File outputFolder) {
 		if(outputFolder == null){
 			throw new NullPointerException("outputfolder cannot be null");
 		}
@@ -105,5 +105,6 @@ public class ProtobufFileWriter extends ProtobufTupleGenerator {
     close();
     super.finalize();
   }
+
 
 }

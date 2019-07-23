@@ -31,7 +31,11 @@ public class EHD extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public EHD() {
-    super("features_EHD", 16f / 4f);
+    this(80);
+  }
+
+  protected EHD(int vectorLength){
+    super("features_EHD", 16f / 4f, vectorLength);
   }
 
   private static final float[]
@@ -44,7 +48,9 @@ public class EHD extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
       List<VideoFrame> videoFrames = shot.getVideoFrames();
       float[] hist = new float[80];
@@ -58,7 +64,6 @@ public class EHD extends AbstractFeatureModule {
       }
       persist(shot.getId(), new FloatVectorImpl(hist));
     }
-    LOGGER.traceExit();
   }
 
   protected static float[] process(MultiImage img, float[] hist) {
@@ -119,8 +124,7 @@ public class EHD extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    FloatVector query = new FloatVectorImpl(
-        process(sc.getMostRepresentativeFrame().getImage(), new float[80]));
+    FloatVector query = new FloatVectorImpl(process(sc.getMostRepresentativeFrame().getImage(), new float[80]));
     return getSimilar(ReadableFloatVector.toArray(query), qc);
   }
 

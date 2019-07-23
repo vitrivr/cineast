@@ -57,7 +57,7 @@ public interface FloatArrayDistance extends Distance<float[]>, DistanceMeasure {
     case hamming:
       return new HammingDistance();
     case haversine:
-      break;
+      return new HaversineDistance();
     case jaccard:
       return new JaccardDistance();
     case kullbackleibler:

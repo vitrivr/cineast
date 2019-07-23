@@ -18,12 +18,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.db.dao.reader.MultimediaObjectLookup;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.decode.general.Converter;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -40,17 +40,17 @@ EvaluationRuntime implements Callable {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /** SegmentLookup instance used to read segments from the storage layer. */
-    private final SegmentLookup segmentLookup = new SegmentLookup();
+    /** MediaSegmentReader instance used to read segments from the storage layer. */
+    private final MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
 
-    /** MultimediaObjectLookup instance used to read multimedia objects from the storage layer. */
-    private final MultimediaObjectLookup multimediaObjectLookup = new MultimediaObjectLookup();
+    /** MediaObjectReader instance used to read multimedia objects from the storage layer. */
+    private final MediaObjectReader mediaObjectReader = new MediaObjectReader();
 
     /** Instacen of EvaluationConfig that is used with this runtime. */
     private final EvaluationConfig config;
 
     /** Caching structure used to cache MultimediaObjectDescriptors. */
-    private final HashMap<String,MultimediaObjectDescriptor> cache;
+    private final HashMap<String, MediaObjectDescriptor> cache;
 
     /** Number of files that were processed successfully. */
     private int processed = 0;
@@ -196,7 +196,7 @@ EvaluationRuntime implements Callable {
          */
         for (int k=1; k<=scores.size(); k++) {
             SegmentScoreElement score = scores.get(k-1);
-            MultimediaObjectDescriptor object = this.objectDescriptorForId(score.getSegmentId());
+            MediaObjectDescriptor object = this.objectDescriptorForId(score.getSegmentId());
             if (object != null) {
                 if (gt.classForDocId(object.getName()).orElse("<none>").equals(fileClass)) {
                     result.documentAvailable(object.getName(), k, true);
@@ -216,19 +216,19 @@ EvaluationRuntime implements Callable {
     }
 
     /**
-     * Returns a MultimediaObjectDescriptor for the provided docID. This method uses a cache to speedup
+     * Returns a MediaObjectDescriptor for the provided docID. This method uses a cache to speedup
      * lookup of objects.
      *
-     * @param docID ID of the segment for which the MultimediaObjectDescriptor is required.
-     * @return MultimediaObjectDescriptor
+     * @param docID ID of the segment for which the MediaObjectDescriptor is required.
+     * @return MediaObjectDescriptor
      */
-    private MultimediaObjectDescriptor objectDescriptorForId(String docID) {
+    private MediaObjectDescriptor objectDescriptorForId(String docID) {
         if (this.cache.containsKey(docID)) {
           return this.cache.get(docID);
         }
-        Optional<SegmentDescriptor> descriptor = this.segmentLookup.lookUpSegment(docID);
+        Optional<MediaSegmentDescriptor> descriptor = this.mediaSegmentReader.lookUpSegment(docID);
         if (descriptor.isPresent()) {
-            MultimediaObjectDescriptor object = this.multimediaObjectLookup.lookUpObjectById(descriptor.get().getObjectId());
+            MediaObjectDescriptor object = this.mediaObjectReader.lookUpObjectById(descriptor.get().getObjectId());
             this.cache.put(docID, object);
             return object;
         } else {

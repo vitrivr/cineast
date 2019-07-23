@@ -14,10 +14,13 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.setup.AttributeDefinition;
+import org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 
 import georegression.struct.point.Point2D_F32;
@@ -29,12 +32,14 @@ public abstract class MotionHistogramCalculator implements Retriever {
   protected final CorrespondenceFunction linearCorrespondence;
   protected final String tableName;
   protected final String fieldName;
+  private final int vectorLength;
 
-  protected MotionHistogramCalculator(String tableName, String fieldName, float maxDist) {
+  protected MotionHistogramCalculator(String tableName, String fieldName, float maxDist, int cells) {
     this.maxDist = maxDist;
     this.linearCorrespondence = CorrespondenceFunction.linear(this.maxDist);
     this.tableName = tableName;
     this.fieldName = fieldName;
+    this.vectorLength = cells * cells;
   }
 
   @Override
@@ -113,7 +118,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
   protected List<ScoreElement> getSimilar(float[] vector, ReadableQueryConfig qc) {
     ReadableQueryConfig qcc = setQueryConfig(qc);
     List<SegmentDistanceElement> distances = this.selector
-        .getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
+        .getNearestNeighboursGeneric(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
             this.fieldName, SegmentDistanceElement.class, qcc);
     return DistanceElement.toScore(distances, qcc.getCorrespondenceFunction().get());
   }
@@ -136,7 +141,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().createFeatureEntity(this.tableName, true, "hist", "sums");
+    supply.get().createFeatureEntity(this.tableName, true, new AttributeDefinition("hist", AttributeType.VECTOR, vectorLength * 8), new AttributeDefinition("sums", AttributeType.VECTOR, vectorLength));
   }
 
   @Override

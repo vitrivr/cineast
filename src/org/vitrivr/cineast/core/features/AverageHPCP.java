@@ -51,7 +51,7 @@ public abstract class AverageHPCP extends StagedFeatureModule {
      * @param average Number of frames to average.
      */
     protected AverageHPCP(String name, float min_frequency, float max_frequency, HPCP.Resolution resolution, int average) {
-        super(name, 2.0f);
+        super(name, 2.0f, 2*resolution.bins);
 
         /* Assign variables. */
         this.min_frequency = min_frequency;
@@ -96,7 +96,7 @@ public abstract class AverageHPCP extends StagedFeatureModule {
         }
 
         /* Prepare final result-set. */
-        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.correspondence);
         return ScoreElement.filterMaximumScores(map.entrySet().stream().map(e -> e.getValue().toScore(fkt)));
     }
 

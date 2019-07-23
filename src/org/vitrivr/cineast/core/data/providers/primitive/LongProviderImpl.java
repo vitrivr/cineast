@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
-public class LongProviderImpl implements LongProvider {
+public class LongProviderImpl implements LongProvider, DoubleProvider {
 
 	private final long value;
 	
@@ -42,5 +42,10 @@ public class LongProviderImpl implements LongProvider {
 	@Override
 	public String toString() {
 		return String.format("LongProviderImpl [value=%s]", value);
+	}
+
+	@Override
+	public double getDouble() {
+		return value;
 	}
 }

@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.features.abstracts.MotionHistogramCalculator;
 public class SubDivMotionSumBackground2 extends MotionHistogramCalculator {
 
   public SubDivMotionSumBackground2() {
-    super("features_SubDivMotionHistogramBackground2", "sums", 400);
+    super("features_SubDivMotionHistogramBackground2", "sums", 400, 2);
   }
 
   @Override

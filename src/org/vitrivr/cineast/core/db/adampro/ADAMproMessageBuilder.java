@@ -1,13 +1,9 @@
 package org.vitrivr.cineast.core.db.adampro;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage;
@@ -26,6 +22,9 @@ import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
+import org.vitrivr.cineast.core.db.RelationalOperator;
+
+import javax.management.relation.Relation;
 
 /**
  * @author rgasser
@@ -279,33 +278,97 @@ public class ADAMproMessageBuilder {
     }
 
     /**
+     * Builds a {@link WhereMessage} using the specified settings and the equals operator.
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key The name of the field (key).
+     * @param value The values that should be compared against the field.
+     * @return {@link WhereMessage}
      */
     public WhereMessage buildWhereMessage(String key, String value) {
         return buildWhereMessage(key, Collections.singleton(value));
     }
 
     /**
+     * Builds a {@link WhereMessage} using the specified settings and the equals operator.
      *
-     * @param key
-     * @param values
-     * @return
+     * @param key The name of the field (key).
+     * @param values The list of values that should be compared against the field.
+     * @return {@link WhereMessage}
      */
     public WhereMessage buildWhereMessage(String key, Iterable<String> values) {
-        synchronized (wmBuilder) {
-            wmBuilder.clear();
-            DataMessage.Builder damBuilder = DataMessage.newBuilder();
+        return this.buildWhereMessage(key, values, RelationalOperator.EQ);
+    }
 
-            wmBuilder.setAttribute(key);
-
-            for (String value : values) {
-                wmBuilder.addValues(damBuilder.setStringData(value).build());
+    /**
+     * Builds a {@link WhereMessage} using the specified settings.
+     *
+     * @param key The name of the field (key).
+     * @param values The list of values that should be compared against the field.
+     * @param operator The {@link RelationalOperator} used to compare the field (key) and the values.
+     * @return {@link WhereMessage}
+     */
+    public WhereMessage buildWhereMessage(String key, Iterable<String> values, RelationalOperator operator) {
+        synchronized (this.wmBuilder) {
+            this.wmBuilder.clear();
+            final DataMessage.Builder damBuilder = DataMessage.newBuilder();
+            final Stream<String> valueStream = StreamSupport.stream(values.spliterator(), false);
+            switch (operator) {
+                case IN:
+                case EQ:
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("=");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
+                    break;
+                case NEQ:
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("!=");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
+                    break;
+                case GEQ:
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp(">=");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
+                    break;
+                case LEQ:
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("<=");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
+                    break;
+                case GREATER:
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("<");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
+                    break;
+                case LESS:
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp(">");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData(v).build()).collect(Collectors.toList()));
+                    break;
+                case ILIKE:
+                    this.wmBuilder.setAttribute("lower(" + key + ")");
+                    this.wmBuilder.setOp("LIKE");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData("%" + v.toLowerCase() + "%").build()).collect(Collectors.toList()));
+                    break;
+                case LIKE:
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("LIKE");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData("%" + v + "%").build()).collect(Collectors.toList()));
+                    break;
+                case NLIKE:
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("NOT LIKE");
+                    this.wmBuilder.addAllValues(valueStream.map(v -> damBuilder.setStringData("%" + v + "%").build()).collect(Collectors.toList()));
+                    break;
+                case RLIKE:
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("RLIKE");
+                    break;
+                default:
+                    this.wmBuilder.setAttribute(key);
+                    this.wmBuilder.setOp("=");
+                    break;
             }
-
-            return wmBuilder.build();
+            return this.wmBuilder.build();
         }
     }
 
@@ -324,9 +387,8 @@ public class ADAMproMessageBuilder {
             this.nnqmBuilder.setDistance(buildDistanceMessage(qc));
             if (qc != null) {
                 Optional<float[]> weights = qc.getDistanceWeights();
-                if (weights.isPresent()) {
-                    nnqmBuilder.setWeights(DataMessageConverter.convertVectorMessage(weights.get()));
-                }
+                weights.ifPresent(floats -> nnqmBuilder
+                    .setWeights(DataMessageConverter.convertVectorMessage(floats)));
             }
             return nnqmBuilder.build();
         }

@@ -33,7 +33,7 @@ public class MinkowskiDistance implements FloatArrayDistance {
     double dist = 0d;
 
     for (int i = 0; i < len; ++i) {
-      dist += Math.pow(t[i] - u[i], exponenet);
+      dist += Math.pow(Math.abs(t[i] - u[i]), exponenet);
     }
 
     return Math.pow(dist, 1d / exponenet);

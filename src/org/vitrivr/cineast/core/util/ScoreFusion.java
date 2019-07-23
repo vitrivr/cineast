@@ -5,8 +5,8 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.entities.SegmentDescriptor;
-import org.vitrivr.cineast.core.db.dao.reader.SegmentLookup;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 
 import com.google.common.collect.ListMultimap;
 
@@ -29,28 +29,28 @@ public class ScoreFusion {
    */
   public static void fuseObjectsIntoSegments(TObjectDoubleMap<String> scoreBySegmentId,
       TObjectDoubleMap<String> scoreByObjectId) {
-    SegmentLookup segmentLookup = new SegmentLookup();
+    MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
 
     Set<String> objectIds = scoreByObjectId.keySet();
-    ListMultimap<String, SegmentDescriptor> segmentsByObjectId =
-        segmentLookup.lookUpSegmentsOfObjects(objectIds);
+    ListMultimap<String, MediaSegmentDescriptor> segmentsByObjectId =
+        mediaSegmentReader.lookUpSegmentsOfObjects(objectIds);
     for (String objectId : segmentsByObjectId.keySet()) {
       assert scoreByObjectId.containsKey(objectId);
       double objectScore = scoreByObjectId.get(objectId);
-      List<SegmentDescriptor> segments = segmentsByObjectId.get(objectId);
+      List<MediaSegmentDescriptor> segments = segmentsByObjectId.get(objectId);
       if (segments.isEmpty()) {
         logger.error("Object {} has no segments", objectId);
         continue;
       }
       fuseObjectScoreIntoSegments(scoreBySegmentId, objectScore, segments);
     }
-    segmentLookup.close();
+    mediaSegmentReader.close();
   }
 
   private static void fuseObjectScoreIntoSegments(TObjectDoubleMap<String> scoreBySegmentId,
-      double objectScore, List<SegmentDescriptor> segments) {
+      double objectScore, List<MediaSegmentDescriptor> segments) {
     boolean objectSegmentsFoundInResults = false;
-    for (SegmentDescriptor segment : segments) {
+    for (MediaSegmentDescriptor segment : segments) {
       boolean foundElement = scoreBySegmentId.adjustValue(segment.getSegmentId(), objectScore);
       if (foundElement) {
         objectSegmentsFoundInResults = true;
@@ -58,7 +58,7 @@ public class ScoreFusion {
     }
 
     if (!objectSegmentsFoundInResults) {
-      SegmentDescriptor firstSegment = segments.get(0);
+      MediaSegmentDescriptor firstSegment = segments.get(0);
       String firstId = firstSegment.getSegmentId();
       scoreBySegmentId.put(firstId, objectScore);
     }

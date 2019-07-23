@@ -58,7 +58,7 @@ public class LightfieldFourier extends Lightfield {
      * Default constructor for LightfieldFourier class.
      */
     public LightfieldFourier() {
-        super("features_lightfieldfourier", 2.0f, MathConstants.VERTICES_3D_DODECAHEDRON);
+        super("features_lightfieldfourier", 2.0f, SIZE, MathConstants.VERTICES_3D_DODECAHEDRON);
         this.transformer = new FastFourierTransformer(DftNormalization.STANDARD);
     }
 

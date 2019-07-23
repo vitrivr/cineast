@@ -2,7 +2,7 @@ apply plugin: 'com.google.osdetector'
 apply plugin: 'de.undercouch.download'
 import de.undercouch.gradle.tasks.download.Download
 
-project.ext.jomlVersion = "1.9.2"
+project.ext.jomlVersion = "1.9.6"
 project.ext.joglVersion = "2.3.2"
 
 buildscript {
@@ -14,19 +14,19 @@ buildscript {
   }
   dependencies {
       classpath "gradle.plugin.com.google.gradle:osdetector-gradle-plugin:1.4.0"
-      classpath 'gradle.plugin.com.google.protobuf:protobuf-gradle-plugin:0.8.0'
+      classpath 'gradle.plugin.com.google.protobuf:protobuf-gradle-plugin:0.8.8'
       classpath 'de.undercouch:gradle-download-task:3.1.2'
       classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
   }
 }
 
-apply plugin: 'com.google.protobuf'
 apply plugin: 'java'
+apply plugin: 'com.google.protobuf'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 repositories {
    mavenCentral()
-  
+
 }
 
 junitPlatform {
@@ -49,11 +49,11 @@ compileTestJava.options.compilerArgs += enabledWarnings
 
 protobuf {
   protoc {
-    artifact = 'com.google.protobuf:protoc:3.1.0'
+    artifact = 'com.google.protobuf:protoc:3.4.0'
   }
   plugins {
     grpc {
-      artifact = 'io.grpc:protoc-gen-grpc-java:1.0.1'
+      artifact = 'io.grpc:protoc-gen-grpc-java:1.7.0'
     }
   }
   generatedFilesBaseDir = "$projectDir/generated/"
@@ -74,32 +74,41 @@ if(osdetector.arch.equals('x86_32')){
 }
 
 dependencies {
-    compile group: 'org.boofcv', name: 'all', version: '0.26'
-	compile group: 'org.jcodec', name: 'jcodec-javase', version: '0.1.9'
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.10.0'
+    compile group: 'org.boofcv', name: 'boofcv-all', version: '0.29'
+    compile group: 'org.ejml', name: 'ejml-all', version: '0.33'
+    compile group: 'org.ejml', name: 'ejml-core', version: '0.33'
+    compile group: 'org.jcodec', name: 'jcodec-javase', version: '0.1.9'
 	compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
 	compile group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
-	compile group: 'com.google.guava', name: 'guava', version: '19.0'
-	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.7'
-	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.7'
-	compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.7'
-	compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
-	compile group: 'commons-cli', name: 'commons-cli', version: '1.3.1'
-	compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.1.0'
-	compile group: 'io.grpc', name: 'grpc-netty', version: '1.0.2'
-	compile group: 'io.grpc', name: 'grpc-protobuf', version: '1.0.2'
-	compile group: 'io.grpc', name: 'grpc-stub', version: '1.0.2'
-    compile group: 'org.bytedeco', name: 'javacpp', version: '1.3.1'
+	compile group: 'com.google.guava', name: 'guava', version: '24.1-jre'
+	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.2'
+	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.2'
+	compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.11.2'
+	compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
+	compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+	compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.4.0'
+	compile group: 'io.grpc', name: 'grpc-netty', version: '1.7.0'
+	compile group: 'io.grpc', name: 'grpc-protobuf', version: '1.7.0'
+	compile group: 'io.grpc', name: 'grpc-stub', version: '1.7.0'
+    compile group: 'org.bytedeco', name: 'javacpp', version: '1.3.3'
 	compile group: 'org.jgrapht', name: 'jgrapht-core', version: '1.0.1'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.8'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8'
-    compile group: 'com.sparkjava', name: 'spark-core', version: '2.5.5'
+    compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.5'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
+    compile group: 'com.googlecode.javaewah', name: 'JavaEWAH', version: '1.1.6'
+    compile group: 'org.tensorflow', name: 'tensorflow', version: '1.9.0'
+    compile group: 'com.eclipsesource.minimal-json', name: 'minimal-json', version: '0.9.5'
 
     /**
      * Apache Commons Libraries
      */
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
     compile group: 'de.svenkubiak', name: 'jBCrypt', version: '0.4'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
 
     /**
      * TwelveMonkey's ImageIO library + Metadata Extractor for advanced image support .
@@ -118,19 +127,32 @@ dependencies {
     /**
      * Test dependencies (JUnit 5)
      */
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0-M5'
-    testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version:'1.0.0-M5'
-    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.0.0-M5'
-    
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.2'
+    testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version:'1.0.2'
+    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.0.2'
+
+
+    /**
+     * Prometheus
+     */
+    compile group: 'io.prometheus', name: 'simpleclient', version: '0.2.0'
+    compile group: 'io.prometheus', name: 'simpleclient_hotspot', version: '0.2.0'
+    compile group: 'io.prometheus', name: 'simpleclient_httpserver', version: '0.2.0'
+    compile group: 'io.prometheus', name: 'simpleclient_pushgateway', version: '0.2.0'
+    compile group: 'io.prometheus', name: 'simpleclient_servlet', version: '0.2.0'
+
+    /**
+     *  Java 9+
+     */
+    compile group: 'com.sun.activation', name: 'javax.activation', version: '1.2.0'
+    compile group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.1'
 
     /**
      * Manual Fixes for the javacpp-devs because of naming conventions & versions. Each os is handled independently
      */
-	 
+
     if(osdetector.os.equals('windows')){
-	
-        compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.11.0-1.3'
-        compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.11.0-1.3', classifier: osclassifier
+
         compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.2.1-1.3'
         compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.2.1-1.3', classifier: osclassifier
 
@@ -141,8 +163,7 @@ dependencies {
         compile "org.jogamp.jogl:jogl-all:${joglVersion}:natives-windows-i586"
     }
     if(osdetector.os.contains('linux')){
-        compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.11.0-1.3'
-        compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.11.0-1.3', classifier: osclassifier
+
         compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.2.1-1.3'
         compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.2.1-1.3', classifier: osclassifier
 
@@ -157,8 +178,7 @@ dependencies {
         compile "org.jogamp.jogl:jogl-all:${joglVersion}:natives-linux-i586"
     }
     if(osdetector.os.equals('osx')){
-        compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.11.0-1.3'
-        compile group: 'org.bytedeco.javacpp-presets', name: 'tensorflow', version: '0.11.0-1.3', classifier: 'mac' + osclassifier
+
         compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.2.1-1.3'
         compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '3.2.1-1.3', classifier: 'mac' + osclassifier
 
@@ -179,7 +199,8 @@ sourceSets {
 			srcDir 'config'
 		}
 		proto {
-			srcDir 'adampro-grpc/src/main/protobuf'
+            //srcDir 'adampro-grpc/src/main/protobuf'
+            srcDir 'cottontaildb-proto/src/main/protobuf'
 		}
     }
     test {
@@ -191,14 +212,17 @@ sourceSets {
 }
 
 jar {
-	manifest { 
-		attributes 'Main-Class': 'org.vitrivr.cineast.api.API'
-	}  
+	manifest {
+		attributes(
+                'Main-Class': 'org.vitrivr.cineast.api.API',
+                'Multi-Release' : 'true'
+        )
+	}
 
 	from {
 		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
 	}
-	
+
 	archiveName = 'cineast.jar'
 }
 
@@ -214,20 +238,17 @@ task downloadExternalFiles(type: Download){
 	dest 'resources/vgg16'
 }
 
-task copyResources() << {
-	copy {
-		from "cineast.json"
-		into "$buildDir/libs/"
+task copyResources{
+	doLast {
+		copy {
+			from "cineast.json"
+			into "$buildDir/libs/"
+		}
+		copy {
+			from "resources"
+			into "$buildDir/libs/resources/"
+		}
 	}
-	copy {
-		from "mime.types"
-		into "$buildDir/libs/"
-	}
-	copy {
-		from "resources"
-		into "$buildDir/libs/resources/"
-	}
-	
 }
-	
+
 task deploy(dependsOn: [build, jar, copyResources])

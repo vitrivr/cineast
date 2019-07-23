@@ -4,7 +4,7 @@ package org.vitrivr.cineast.core.metadata;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
  * @author rgasser
@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
 public class IPTCMetadataExtractor implements MetadataExtractor {
 
     /**
-     * Extracts the metadata from the specified path and returns a List of MultimediaMetadataDescriptor objects
+     * Extracts the metadata from the specified path and returns a List of MediaObjectMetadataDescriptor objects
      * (one for each metadata entry).
      *
      * @param objectId ID of the multimedia object for which metadata will be generated.
@@ -22,7 +22,7 @@ public class IPTCMetadataExtractor implements MetadataExtractor {
      * @return List of MultimediaMetadataDescriptors. The list may be empty but must always be returned!
      */
     @Override
-    public List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
+    public List<MediaObjectMetadataDescriptor> extract(String objectId, Path path) {
         return null;
     }
 

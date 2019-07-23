@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.setup.AttributeDefinition;
+import org.vitrivr.cineast.core.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.setup.EntityCreator;
 import org.vitrivr.cineast.core.util.ColorReductionUtil;
 
@@ -24,7 +26,7 @@ public class AverageColorRasterReduced15 extends AverageColorRaster {
 	
 	@Override
 	public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-		supply.get().createFeatureEntity("features_AverageColorRasterReduced15", true, "hist", "raster");
+		supply.get().createFeatureEntity("features_AverageColorRasterReduced15", true, new AttributeDefinition("hist", AttributeType.VECTOR, 15), new AttributeDefinition("raster", AttributeType.VECTOR, 64));
 	}
 
 	@Override

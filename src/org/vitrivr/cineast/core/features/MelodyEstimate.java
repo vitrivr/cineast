@@ -50,7 +50,7 @@ public class MelodyEstimate extends StagedFeatureModule {
      *
      */
     public MelodyEstimate() {
-        super("feature_melodyestimate", 2.0f);
+        super("feature_melodyestimate", 2.0f, SHINGLE_SIZE * 12);
     }
 
     /**
@@ -61,6 +61,9 @@ public class MelodyEstimate extends StagedFeatureModule {
     @Override
     public void processSegment(SegmentContainer sc) {
         Melody melody = this.transcribe(sc);
+        if(melody == null){
+            return;
+        }
         List<float[]> features = this.getFeatures(melody);
         for (float[] feature : features) {
             this.persist(sc.getId(), new FloatVectorImpl(feature));
@@ -80,6 +83,10 @@ public class MelodyEstimate extends StagedFeatureModule {
     @Override
     protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
         Melody melody = this.transcribe(sc);
+        if(melody == null){
+            LOGGER.debug("No melody, skipping");
+            return null;
+        }
         return this.getFeatures(melody);
     }
 
@@ -95,7 +102,7 @@ public class MelodyEstimate extends StagedFeatureModule {
     @Override
     protected List<ScoreElement> postprocessQuery(List<SegmentDistanceElement> partialResults, ReadableQueryConfig qc) {
         /* TODO: Improve... */
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.correspondence);
         return ScoreElement.filterMaximumScores(partialResults.stream().map(d -> d.toScore(correspondence)));
     }
 
@@ -109,7 +116,7 @@ public class MelodyEstimate extends StagedFeatureModule {
     @Override
     protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 

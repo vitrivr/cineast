@@ -1,15 +1,17 @@
 package org.vitrivr.cineast.core.segmenter.audio;
 
 import java.util.ArrayDeque;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.segments.AudioSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.decode.general.Decoder;
+import org.vitrivr.cineast.core.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 /**
@@ -26,6 +28,17 @@ import org.vitrivr.cineast.core.segmenter.general.Segmenter;
  */
 public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
 
+    /** Key in the configuration map used to configure the length setting. */
+    private static final String PROPERTY_LENGTH_KEY = "length";
+
+    /** Key in the configuration map used to configure the overlap setting. */
+    private static final String PROPERTY_OVERLAP_KEY = "overlap";
+
+    /** Key in the configuration map used to configure the length setting. */
+    private static final Float PROPERTY_LENGTH_DEFAULT = 10.0f;
+
+    /** Key in the configuration map used to configure the overlap setting. */
+    private static final Float PROPERTY_OVERLAP_DEFAULT = 1.0f;
 
     private static final int SEGMENT_QUEUE_LENGTH = 10;
     private static final int SEGMENT_POLLING_TIMEOUT = 1000;
@@ -52,28 +65,50 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
     private AtomicBoolean complete = new AtomicBoolean(false);
 
     /**
-     * Constructor.
+     * Constructor for {@link ConstantLengthAudioSegmenter}.
      *
      * @param length Length of an individual segment in seconds.
      * @param overlap Overlap between to subsequent AudioSegments
      */
     public ConstantLengthAudioSegmenter(float length, float overlap) {
-        if (overlap >= 0.9f * length) {
-          throw new IllegalArgumentException("Overlap must be smaller than total segment length.");
-        }
         this.length = length;
         this.overlap = overlap;
+        if (overlap >= 0.9f * length) {
+            throw new IllegalArgumentException("Overlap must be smaller than total segment length.");
+        }
     }
 
     /**
-     * Method used to initialize the Segmenter. A class implementing the Decoder interface
-     * with the same type must be provided.
+     * Constructor for {@link ConstantLengthAudioSegmenter required for instantiation through {@link org.vitrivr.cineast.core.util.ReflectionHelper}.
+     *
+     * @param context The {@link ExtractionContextProvider} for the extraction context this {@link ConstantLengthAudioSegmenter} is created in.
+     */
+    public ConstantLengthAudioSegmenter(ExtractionContextProvider context) {
+        this(PROPERTY_LENGTH_DEFAULT, PROPERTY_OVERLAP_DEFAULT);
+    }
+
+    /**
+     * Constructor for {@link ConstantLengthAudioSegmenter required for instantiation through {@link org.vitrivr.cineast.core.util.ReflectionHelper}.
+     *
+     * @param context The {@link ExtractionContextProvider} for the extraction context this {@link ConstantLengthAudioSegmenter} is created in.
+     * @param properties A HashMap containing the configuration properties for {@link ConstantLengthAudioSegmenter}
+     */
+    public ConstantLengthAudioSegmenter(ExtractionContextProvider context, Map<String,String> properties) {
+        this.length = Float.parseFloat(properties.getOrDefault(PROPERTY_LENGTH_KEY, PROPERTY_LENGTH_DEFAULT.toString()));
+        this.overlap = Float.parseFloat(properties.getOrDefault(PROPERTY_OVERLAP_KEY, PROPERTY_OVERLAP_DEFAULT.toString()));
+        if (overlap >= 0.9f * length) {
+            throw new IllegalArgumentException("Overlap must be smaller than total segment length.");
+        }
+    }
+
+    /**
+     * Method used to initialize the Segmenter. A class implementing the Decoder interface with the same type must be provided.
      *
      * @param decoder Decoder used for frames-decoding.
      * @param object Media object that is about to be segmented.
      */
     @Override
-    public void init(Decoder<AudioFrame> decoder, MultimediaObjectDescriptor object) {
+    public void init(Decoder<AudioFrame> decoder, MediaObjectDescriptor object) {
         this.decoder = decoder;
         this.complete.set(false);
     }

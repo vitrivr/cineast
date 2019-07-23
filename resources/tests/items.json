@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "object": {
+        "name": "nameOne",
+        "path": "test/one.png"
+      },
+      "metadata": [
+        {
+          "domain": "Web",
+          "key": "key",
+          "value": "testval"
+        }
+      ],
+      "uri": "file:///home/test/one.png"
+    },
+    {
+      "object": {
+        "name": "nameTwo",
+        "mediatype": "IMAGE"
+      },
+      "metadata": [
+        {
+          "domain": "Web",
+          "key": "key",
+          "value": "testval"
+        }
+      ],
+      "uri": "file:///two.jpg"
+    }
+  ]
+}

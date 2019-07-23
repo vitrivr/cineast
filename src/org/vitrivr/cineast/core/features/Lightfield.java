@@ -59,8 +59,8 @@ public abstract class Lightfield extends StagedFeatureModule {
      * @param maxDist
      * @param camerapositions
      */
-    protected Lightfield(String tableName, float maxDist, double[][] camerapositions) {
-        super(tableName, maxDist);
+    protected Lightfield(String tableName, float maxDist, int vectorLength, double[][] camerapositions) {
+        super(tableName, maxDist, vectorLength);
         if (camerapositions.length == 0) {
           throw new IllegalArgumentException("You must specify at least one camera position!");
         }
@@ -142,7 +142,7 @@ public abstract class Lightfield extends StagedFeatureModule {
         }
 
         /* Add results to list and return list of results. */
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.correspondence);
         return ScoreElement.filterMaximumScores(map.entrySet().stream().map((e) -> e.getValue().toScore(correspondence)));
     }
 
@@ -156,7 +156,7 @@ public abstract class Lightfield extends StagedFeatureModule {
     @Override
     protected ReadableQueryConfig setQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 

@@ -67,6 +67,14 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
     return 0.2126f * r + 0.7152f * g + 0.0722f * b;
   }
 
+  /**
+   * http://www.itu.int/rec/R-REC-BT.601
+   */
+  public static float getLuminanceBT601(int color) {
+    return RGBContainer.getRed(color) * 0.299f + RGBContainer.getGreen(color) * 0.587f
+        + RGBContainer.getBlue(color) * 0.114f;
+  }
+
   public static int getRed(int color) {
     return (color >> 16 & 0xFF);
   }
@@ -102,15 +110,43 @@ public class ReadableRGBContainer extends AbstractColorContainer<ReadableRGBCont
   @Override
   public float getElement(int num) {
     switch (num) {
-      case 0: return r / 255f;
-      case 1: return g / 255f;
-      case 2: return b / 255f;
-      case 3: return a / 255f;
-      default: throw new IndexOutOfBoundsException(num + ">= 4");
+      case 0:
+        return r / 255f;
+      case 1:
+        return g / 255f;
+      case 2:
+        return b / 255f;
+      case 3:
+        return a / 255f;
+      default:
+        throw new IndexOutOfBoundsException(num + ">= 4");
     }
   }
 
   public String toFeatureString() {
     return "<" + r + ", " + g + ", " + b + ">";
+  }
+
+  public static ReadableRGBContainer fromColorString(String colorString){
+    if (colorString == null || colorString.length() != 7){
+      return new ReadableRGBContainer(0);
+    }
+
+    int r = 0, g = 0, b = 0;
+
+    try{
+      r = Integer.parseInt(colorString.substring(1,3), 16);
+    }catch (NumberFormatException e){}
+
+    try{
+      g = Integer.parseInt(colorString.substring(3,5), 16);
+    }catch (NumberFormatException e){}
+
+    try{
+      b = Integer.parseInt(colorString.substring(5,7), 16);
+    }catch (NumberFormatException e){}
+
+    return new ReadableRGBContainer(r, g, b);
+
   }
 }

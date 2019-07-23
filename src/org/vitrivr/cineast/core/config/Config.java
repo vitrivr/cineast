@@ -26,11 +26,10 @@ public class Config {
     private RetrieverConfig retriever;
     private ExtractionPipelineConfig extractor;
     private ImageCacheConfig imagecache;
-    private VisualizationConfig visualization;
-    private NeuralNetConfig neuralnet;
     private QueryConfig query;
     private HashMap<MediaType, DecoderConfig> decoders;
     private BenchmarkConfig benchmark = new BenchmarkConfig();
+    private MonitoringConfig monitoring = new MonitoringConfig();
 
 
     /**
@@ -50,16 +49,18 @@ public class Config {
      *
      * @param name Name of the config file.
      */
-    public static Config loadConfig(String name) {
-        Config config = (new JacksonJsonProvider()).toObject(new File(name), Config.class);
-        LOGGER.info("Config file loaded!");
-        if (config == null) {
-            LOGGER.warn("Could not read config file '{}'.", name);
-            return null;
-        } else {
-            return config;
-        }
+  public static Config loadConfig(String name) {
+    Config config = (new JacksonJsonProvider()).toObject(new File(name), Config.class);
+
+    if (config == null) {
+      LOGGER.warn("Could not read config file '{}'.", name);
+      return null;
+    } else {
+      LOGGER.info("Config file loaded!");
+      sharedConfig = config;
+      return config;
     }
+  }
 
     @JsonProperty
     public APIConfig getApi() {
@@ -101,21 +102,6 @@ public class Config {
         this.imagecache = imagecache;
     }
 
-    @JsonProperty
-    public VisualizationConfig getVisualization() {
-        return visualization;
-    }
-    public void setVisualization(VisualizationConfig visualization) {
-        this.visualization = visualization;
-    }
-
-    @JsonProperty
-    public NeuralNetConfig getNeuralnet() {
-        return this.neuralnet;
-    }
-    public void setNeuralnet(NeuralNetConfig neuralnet) {
-        this.neuralnet = neuralnet;
-    }
 
     @JsonProperty
     public QueryConfig getQuery() {
@@ -139,5 +125,14 @@ public class Config {
     }
     public void setBenchmark(BenchmarkConfig benchmark) {
         this.benchmark = benchmark;
+    }
+
+    @JsonProperty
+    public MonitoringConfig getMonitoring() {
+      return monitoring;
+    }
+
+    public void setMonitoring(MonitoringConfig monitoring) {
+      this.monitoring = monitoring;
     }
 }

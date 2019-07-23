@@ -13,7 +13,7 @@ public class SURFMirflickr25K256 extends SURF {
      * Default constructor.
      */
     public SURFMirflickr25K256() {
-        super("features_surfmf25k256");
+        super("features_surfmf25k256", 256);
     }
 
     /**

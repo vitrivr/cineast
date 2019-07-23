@@ -1,12 +1,6 @@
 package org.vitrivr.cineast.core.db.adampro;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -34,6 +28,7 @@ import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultTupleMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
+import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.DefaultValueHashMap;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -42,49 +37,17 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.db.MergeOperation;
+import org.vitrivr.cineast.core.db.RelationalOperator;
+import org.vitrivr.cineast.core.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.ListenableFuture;
 
-public class ADAMproSelector implements DBSelector {
+public class ADAMproSelector extends AbstractADAMproSelector {
 
-    /**
-     * flag to choose if every selector should have its own connection to ADAMpro or if they should
-     * share one.
-     */
-    private static boolean useGlobalWrapper = true;
 
     private static final Logger LOGGER = LogManager.getLogger();
-
-    private static final ADAMproWrapper GLOBAL_ADAMPRO_WRAPPER = useGlobalWrapper ? new ADAMproWrapper() : null;
-
-    private ADAMproWrapper adampro = useGlobalWrapper ? GLOBAL_ADAMPRO_WRAPPER : new ADAMproWrapper();
-
-    /** MessageBuilder instance used to create the query messages. */
-    private final ADAMproMessageBuilder mb = new ADAMproMessageBuilder();
-
-    /** Name of the entity the current instance of ADAMproSelector uses. */
-    private String entityName;
-
-    /** FromMessaged used by the instance of ADAMproSelector. */
-    private FromMessage fromMessage;
-
-    @Override
-    public boolean open(String name) {
-        this.entityName = name;
-        this.fromMessage = this.mb.buildFromMessage(name);
-        return true;
-    }
-
-    @Override
-    public boolean close() {
-        if (useGlobalWrapper) {
-            return false;
-        }
-        this.adampro.close();
-        return true;
-    }
 
     @Override
     public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
@@ -157,24 +120,24 @@ public class ADAMproSelector implements DBSelector {
      * Performs a batched kNN-search with multiple vectors. That is, ADAM pro is tasked to perform the kNN search for each vector in the
      * provided list and return results of each query.
      *
-     * @param k The number k vectors to return per query.
-     * @param vectors The list of vectors to use.
-     * @param column The column to perform the kNN search on.
+     * @param k                    The number k vectors to return per query.
+     * @param vectors              The list of vectors to use.
+     * @param column               The column to perform the kNN search on.
      * @param distanceElementClass The class to use to create the resulting DistanceElements
-     * @param configs The query configurations, which may contain distance definitions or query-hints. Every feature should have its own QueryConfig object.
-     * @param <T> The type T of the resulting DistanceElements.
+     * @param configs              The query configurations, which may contain distance definitions or query-hints. Every feature should have its own QueryConfig object.
+     * @param <T>                  The type T of the resulting DistanceElements.
      * @return List of results.
      */
     @Override
     public <T extends DistanceElement> List<T> getBatchedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs) {
         /* Check if sizes of configs and vectors array correspond. */
         if (vectors.size() > configs.size()) {
-          throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
+            throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
         }
 
         /* Prepare list of QueryMessages. */
         List<QueryMessage> queryMessages = new ArrayList<>(vectors.size());
-        for (int i = 0; i<vectors.size(); i++) {
+        for (int i = 0; i < vectors.size(); i++) {
             float[] vector = vectors.get(i);
             ReadableQueryConfig config = configs.get(i);
 
@@ -209,7 +172,7 @@ public class ADAMproSelector implements DBSelector {
         /*
          * Merge results of the partial queries.
          */
-        for (int i = 0; i<result.getResultsCount(); i++) {
+        for (int i = 0; i < result.getResultsCount(); i++) {
             QueryResultsMessage partial = result.getResults(i);
             AckMessage ack = partial.getAck();
             if (ack.getCode() != AckMessage.Code.OK) {
@@ -218,7 +181,7 @@ public class ADAMproSelector implements DBSelector {
             }
 
             if (partial.getResponsesCount() == 0) {
-              continue;
+                continue;
             }
 
             QueryResultInfoMessage response = partial.getResponses(0); // only head (end-result) is important
@@ -232,24 +195,24 @@ public class ADAMproSelector implements DBSelector {
      * Performs a combined kNN-search with multiple query vectors. That is, the storage engine is tasked to perform the kNN search for each vector and then
      * merge the partial result sets pairwise using the desired MergeOperation.
      *
-     * @param k The number k vectors to return per query.
-     * @param vectors The list of vectors to use.
-     * @param column The column to perform the kNN search on.
+     * @param k                    The number k vectors to return per query.
+     * @param vectors              The list of vectors to use.
+     * @param column               The column to perform the kNN search on.
      * @param distanceElementClass class of the {@link DistanceElement} type
-     * @param configs The query configuration, which may contain distance definitions or query-hints.
+     * @param configs              The query configuration, which may contain distance definitions or query-hints.
      * @param <T>
      * @return
      */
     @Override
-    public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation mergeOperation, Map<String,String> options) {
+    public <T extends DistanceElement> List<T> getCombinedNearestNeighbours(int k, List<float[]> vectors, String column, Class<T> distanceElementClass, List<ReadableQueryConfig> configs, MergeOperation mergeOperation, Map<String, String> options) {
         /* Check if sizes of configs and vectors array correspond. */
         if (vectors.size() > configs.size()) {
-          throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
+            throw new IllegalArgumentException("You must provide a separate QueryConfig entry for each vector - even if it is the same instance of the QueryConfig.");
         }
 
         /* Prepare list of QueryMessages. */
         List<SubExpressionQueryMessage> queryMessages = new ArrayList<>(vectors.size());
-        for (int i = 0; i<vectors.size(); i++) {
+        for (int i = 0; i < vectors.size(); i++) {
             float[] vector = vectors.get(i);
             ReadableQueryConfig config = configs.get(i);
 
@@ -296,7 +259,8 @@ public class ADAMproSelector implements DBSelector {
 
         AckMessage ack = result.getAck();
         if (ack.getCode() != AckMessage.Code.OK) {
-            LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
+            LOGGER.error("error in getNearestNeighbours on entity {}, (Code {}) : {}", entityName, ack.getCode(), ack.getMessage());
+            LOGGER.error("Query was {} ",sqMessage.toString());
             return new ArrayList<>(0);
         }
 
@@ -309,128 +273,25 @@ public class ADAMproSelector implements DBSelector {
     }
 
     @Override
-    public <T extends DistanceElement> List<T> getNearestNeighbours(int k, float[] vector, String column,
-        Class<T> distanceElementClass, ReadableQueryConfig config) {
-      NearestNeighbourQueryMessage nnqMessage = mb.buildNearestNeighbourQueryMessage(column,
-          DataMessageConverter.convertVectorMessage(vector), k, config);
-      QueryMessage sqMessage = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
-      ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
+    public <T extends DistanceElement> List<T> getNearestNeighboursGeneric(int k, float[] vector, String column,
+                                                                    Class<T> distanceElementClass, ReadableQueryConfig config) {
+        NearestNeighbourQueryMessage nnqMessage = mb.buildNearestNeighbourQueryMessage(column,
+                DataMessageConverter.convertVectorMessage(vector), k, config);
+        QueryMessage sqMessage = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, fromMessage, null, ADAMproMessageBuilder.DEFAULT_PROJECTION_MESSAGE, nnqMessage);
+        ListenableFuture<QueryResultsMessage> future = this.adampro.standardQuery(sqMessage);
 
-      QueryResultsMessage result;
-      try {
-        result = future.get();
-      } catch (InterruptedException | ExecutionException e) {
-        LOGGER.error(LogHelper.getStackTrace(e));
-        return new ArrayList<>(0);
-      }
-
-      AckMessage ack = result.getAck();
-      if (ack.getCode() != AckMessage.Code.OK) {
-        LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
-        return new ArrayList<>(0);
-      }
-
-      if (result.getResponsesCount() == 0) {
-        return new ArrayList<>(0);
-      }
-
-      QueryResultInfoMessage response = result.getResponses(0); // only head (end-result) is important
-      return handleNearestNeighbourResponse(response, k, distanceElementClass);
-  }
-
-    
-    private <T extends DistanceElement> List<T> handleNearestNeighbourResponse(QueryResultInfoMessage response, int k, Class<? extends T> distanceElementClass) {
-      List<T> result = new ArrayList<>(k);
-      for (QueryResultTupleMessage msg : response.getResultsList()) {
-        String id = msg.getDataMap().get("id").getStringData();
-        if (id == null) {
-          continue;
-        }
-        double distance = msg.getDataMap().get("ap_distance").getDoubleData();
-        T e = DistanceElement.create(distanceElementClass, id, distance);
-        result.add(e);
-      }
-
-      return result;
-  }
-
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String value) {
-        return getRows(fieldName, Collections.singleton(value));
-    }
-
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, String... values) {
-        return getRows(fieldName, Arrays.asList(values));
-    }
-
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName,
-                                                            Iterable<String> values) {
-        if (values == null || Iterables.isEmpty(values)) {
-            return new ArrayList<>(0);
-        }
-
-        WhereMessage where = this.mb.buildWhereMessage(fieldName, values);
-        BooleanQueryMessage bqMessage = this.mb.buildBooleanQueryMessage(where);
-        return executeBooleanQuery(bqMessage);
-    }
-
-    /**
-     * SELECT label FROM ... Be careful with the size of the resulting List :)
-     */
-    @Override
-    public List<PrimitiveTypeProvider> getAll(String label) {
-        List<Map<String, PrimitiveTypeProvider>> resultList = getAll();
-        return resultList.stream().map(row -> row.get(label)).collect(Collectors.toList());
-    }
-
-    /**
-     * TODO This is currently an ugly hack where we abuse the preview-function with LIMIT = COUNT()
-     * using the getProperties ADAMpro-method. Once ADAMpro supports SELECT * FROM $ENTITY, this
-     * method should be rewritten
-     */
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> getAll() {
-        ListenableFuture<PropertiesMessage> future = this.adampro.getProperties(
-                EntityPropertiesMessage.newBuilder().setEntity(this.entityName).build());
-        int count = 1_000;
-        PropertiesMessage propertiesMessage;
-        try {
-            propertiesMessage = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("error in getAll, entitiy {}: {}", this.entityName, LogHelper.getStackTrace(e));
-            return new ArrayList<>(0);
-        }
-        try {
-            count = Integer.parseInt(propertiesMessage.getPropertiesMap().get("count"));
-        } catch (Exception e) {
-            LOGGER.error("error in getAll, entitiy {}: {}", this.entityName, LogHelper.getStackTrace(e));
-        }
-        return preview(count);
-    }
-
-    @Override
-    public boolean existsEntity(String eName) {
-        ListenableFuture<ExistsMessage> future = this.adampro.existsEntity(eName);
-        try {
-            return future.get().getExists();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("error in existsEntity, entitiy {}: {}", this.entityName, LogHelper.getStackTrace(e));
-            return false;
-        }
-    }
-
-    @Override
-    public List<Map<String, PrimitiveTypeProvider>> preview(int k) {
-        PreviewMessage msg = PreviewMessage.newBuilder().setEntity(this.entityName).setN(k)
-                .build();
-        ListenableFuture<QueryResultsMessage> f = this.adampro.previewEntity(msg);
         QueryResultsMessage result;
         try {
-            result = f.get();
+            result = future.get();
         } catch (InterruptedException | ExecutionException e) {
             LOGGER.error(LogHelper.getStackTrace(e));
+            return new ArrayList<>(0);
+        }
+
+        AckMessage ack = result.getAck();
+        if (ack.getCode() != AckMessage.Code.OK) {
+            LOGGER.error("error in getNearestNeighbours on entity {}, ({}) : {}", entityName, ack.getCode(), ack.getMessage());
+            LOGGER.error("Query was {} ",sqMessage.toString());
             return new ArrayList<>(0);
         }
 
@@ -439,35 +300,22 @@ public class ADAMproSelector implements DBSelector {
         }
 
         QueryResultInfoMessage response = result.getResponses(0); // only head (end-result) is important
-
-        List<QueryResultTupleMessage> resultList = response.getResultsList();
-        return resultsToMap(resultList);
+        return handleNearestNeighbourResponse(response, k, distanceElementClass);
     }
 
-    /**
-     * @param resultList can be empty
-     * @return an ArrayList of length one if the resultList is empty, else the transformed QueryResultTupleMessage
-     */
-    private List<Map<String, PrimitiveTypeProvider>> resultsToMap(
-            List<QueryResultTupleMessage> resultList) {
-        if (resultList.isEmpty()) {
+
+    @Override
+    public List<Map<String, PrimitiveTypeProvider>> getRows(String fieldName, RelationalOperator operator, Iterable<String> values) {
+        if (values == null || Iterables.isEmpty(values)) {
             return new ArrayList<>(0);
         }
 
-        ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>(resultList.size());
-
-        for (QueryResultTupleMessage resultMessage : resultList) {
-            Map<String, DataMessage> data = resultMessage.getDataMap();
-            Set<String> keys = data.keySet();
-            DefaultValueHashMap<String, PrimitiveTypeProvider> map = new DefaultValueHashMap<>(NothingProvider.INSTANCE);
-            for (String key : keys) {
-                map.put(key, DataMessageConverter.convert(data.get(key)));
-            }
-            _return.add(map);
-        }
-
-        return _return;
+        /* TODO: Escape quotes. */
+        final WhereMessage where = this.mb.buildWhereMessage(fieldName, values, operator);
+        final BooleanQueryMessage bqMessage = this.mb.buildBooleanQueryMessage(where);
+        return executeBooleanQuery(bqMessage);
     }
+
 
     /**
      * Executes a QueryMessage and returns the resulting tuples
@@ -501,7 +349,7 @@ public class ADAMproSelector implements DBSelector {
     }
 
     private List<Map<String, PrimitiveTypeProvider>> executeBooleanQuery(BooleanQueryMessage bqm) {
-        QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage,  bqm, null, null);
+        QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage, bqm, null, null);
         return executeQuery(qbqm);
     }
 
@@ -516,7 +364,7 @@ public class ADAMproSelector implements DBSelector {
         NearestNeighbourQueryMessage nnqMessage = this.mb.buildNearestNeighbourQueryMessage(column,
                 DataMessageConverter.convertVectorMessage(vector), k, config);
 
-    /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
+        /* Extract hints from QueryConfig. If they're not set, then replace by DEFAULT_HINT. */
         Collection<ReadableQueryConfig.Hints> hints;
         if (!config.getHints().isEmpty()) {
             hints = config.getHints();
@@ -546,19 +394,43 @@ public class ADAMproSelector implements DBSelector {
 
         AckMessage ack = response.getAck();
         if (ack.getCode() != Code.OK) {
-            LOGGER.error("error in getNearestNeighbourRows, entitiy {} ({}) : {}", entityName, ack.getCode(), ack.getMessage());
+            LOGGER.error("error in getNearestNeighbourRows, entity {} ({}) : {}", entityName, ack.getCode(), ack.getMessage());
             return _return;
         }
         return resultsToMap(response.getResultsList());
     }
 
-
-
-    public List<Map<String, PrimitiveTypeProvider>> getFromExternal(String externalHandlerName, Map<String, String> parameters) {
-
-        ExternalHandlerQueryMessage.Builder ehqmBuilder = ExternalHandlerQueryMessage.newBuilder();
+    /**
+     * Performs a fulltext search with multiple query terms. The underlying entity is expected to use Apache Solr as storage
+     * handler. If it doesn't, this method will fail!
+     *
+     * The method performs an Apache Solr lookup equivalent to: [field]: ([term1] [term2] ... [termN]). Full Lucene query syntax is supported.
+     *
+     * TODO: This is a quick & dirty solution. Should be re-engineered to fit different use-cases.
+     *
+     * @param rows The number of rows that should be returned.
+     * @param fieldname The field that should be used for lookup.
+     * @param terms The query terms. Individual terms will be connected by a logical OR.
+     * @return List of rows that math the fulltext search.
+     */
+    public List<Map<String, PrimitiveTypeProvider>> getFulltextRows(int rows, String fieldname, String... terms) {
+        final ExternalHandlerQueryMessage.Builder ehqmBuilder = ExternalHandlerQueryMessage.newBuilder();
         ehqmBuilder.setEntity(this.entityName);
-        ehqmBuilder.setHandler(externalHandlerName);
+        ehqmBuilder.setHandler("solr");
+
+        /* */
+        final Map<String, String> parameters = new HashMap<>();
+        parameters.put("rows", Integer.toString(rows));
+
+
+        final StringBuilder sb = new StringBuilder();
+        sb.append('(');
+        for (String item : terms) {
+            sb.append(item);
+            sb.append(" ");
+        }
+        sb.append(')');
+        parameters.put("query", fieldname + ":" + sb.toString());
 
         ehqmBuilder.putAllParams(parameters);
 
@@ -572,5 +444,4 @@ public class ADAMproSelector implements DBSelector {
 
         return executeQuery(qm);
     }
-
 }

@@ -7,6 +7,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -16,8 +17,8 @@ import org.vitrivr.cineast.core.features.extractor.Extractor;
 public abstract class SubDivMotionHistogram extends MotionHistogramCalculator implements Extractor {
   protected PersistencyWriter<?> phandler;
   
-  protected SubDivMotionHistogram(String tableName, String fieldName, double maxDist) {
-    super(tableName, fieldName, (float) maxDist);
+  protected SubDivMotionHistogram(String tableName, String fieldName, double maxDist, int cells) {
+    super(tableName, fieldName, (float) maxDist, cells);
   }
 
   @Override
@@ -36,7 +37,7 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
   protected List<ScoreElement> getSimilar(float[] vector, ReadableQueryConfig qc) {
     ReadableQueryConfig rqc = setQueryConfig(qc);
     List<SegmentDistanceElement> distances = this.selector
-        .getNearestNeighbours(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
+        .getNearestNeighboursGeneric(Config.sharedConfig().getRetriever().getMaxResultsPerModule(), vector,
             "hist", SegmentDistanceElement.class, qc);
     return DistanceElement.toScore(distances, rqc.getCorrespondenceFunction().get());
   }

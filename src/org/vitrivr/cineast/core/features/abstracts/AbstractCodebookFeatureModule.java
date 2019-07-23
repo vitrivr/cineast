@@ -42,8 +42,8 @@ public abstract class AbstractCodebookFeatureModule extends StagedFeatureModule 
      * @param tableName
      * @param maxDist
      */
-    protected AbstractCodebookFeatureModule(String tableName, float maxDist) {
-        super(tableName, maxDist);
+    protected AbstractCodebookFeatureModule(String tableName, float maxDist, int vectorLength) {
+        super(tableName, maxDist, vectorLength);
     }
 
     /**

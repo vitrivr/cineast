@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.activation.MimetypesFileTypeMap;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DecoderConfig;
@@ -19,6 +17,7 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.decode.general.Converter;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.MimeTypeHelper;
 
 /**
  *
@@ -86,36 +85,29 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
      */
     @Override
     public Mesh getNext() {
-        try {
-            MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
-            String contenttype = filetypes.getContentType(this.inputFile.toFile());
+        final String contenttype = MimeTypeHelper.getContentType(this.inputFile.toFile());
 
-            /* Try to detach decoder from the list of cached decoders. */
-            Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
+        /* Try to detach decoder from the list of cached decoders. */
+        Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
 
-            /* If decoder is null, create a new one. */
-            if (decoder == null) {
-              decoder = decoderForContenttype(contenttype);
-            }
-
-            /* If decoder is still null, return an emtpy Mesh. */
-            if (decoder == null) {
-                LOGGER.warn("Could not find mesh decoder for provided contenttype {}.", contenttype);
-                return Mesh.EMPTY;
-            } else {
-                this.cachedDecoders.put(contenttype, decoder);
-            }
-
-            /* Initialize the decoder and return the decoded mesh. */
-            decoder.init(this.inputFile, null);
-            Mesh mesh = decoder.getNext();
-            this.complete.set(true);
-            return mesh;
-        } catch (IOException e) {
-            LOGGER.error("Could not decode mesh file {} due to an IO exception ({})", this.inputFile.toString(), LogHelper.getStackTrace(e));
-            this.complete.set(true);
-            return null;
+        /* If decoder is null, create a new one. */
+        if (decoder == null) {
+          decoder = decoderForContenttype(contenttype);
         }
+
+        /* If decoder is still null, return an emtpy Mesh. */
+        if (decoder == null) {
+            LOGGER.warn("Could not find mesh decoder for provided contenttype {}.", contenttype);
+            return Mesh.EMPTY;
+        } else {
+            this.cachedDecoders.put(contenttype, decoder);
+        }
+
+        /* Initialize the decoder and return the decoded mesh. */
+        decoder.init(this.inputFile, null);
+        Mesh mesh = decoder.getNext();
+        this.complete.set(true);
+        return mesh;
     }
 
     /**
@@ -126,34 +118,28 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
      */
     @Override
     public QueryContainer convert(Path path) {
-        try {
-            MimetypesFileTypeMap filetypes = new MimetypesFileTypeMap("mime.types");
-            String contenttype = filetypes.getContentType(path.toFile());
+        final String contenttype = MimeTypeHelper.getContentType(path.toFile());
 
-            /* Try to detach decoder from the list of cached decoders. */
-            Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
+        /* Try to detach decoder from the list of cached decoders. */
+        Decoder<Mesh> decoder = this.cachedDecoders.get(contenttype);
 
-            /* If decoder is null, create a new one. */
-            if (decoder == null) {
-              decoder = decoderForContenttype(contenttype);
-            }
-
-            /* If decoder is still null, return an emtpy Mesh. */
-            if (decoder == null) {
-                LOGGER.warn("Could not find mesh decoder for provided contenttype {}.", contenttype);
-                return null;
-            } else {
-                this.cachedDecoders.put(contenttype, decoder);
-            }
-
-            /* Initialize the decoder and return the decoded mesh. */
-            decoder.init(path, null);
-            Mesh mesh = decoder.getNext();
-            return new ModelQueryContainer(mesh);
-        } catch (IOException e) {
-            LOGGER.error("Could not decode mesh file {} due to an IO exception ({})", path.toString(), LogHelper.getStackTrace(e));
-            return null;
+        /* If decoder is null, create a new one. */
+        if (decoder == null) {
+          decoder = decoderForContenttype(contenttype);
         }
+
+        /* If decoder is still null, return an emtpy Mesh. */
+        if (decoder == null) {
+            LOGGER.warn("Could not find mesh decoder for provided contenttype {}.", contenttype);
+            return null;
+        } else {
+            this.cachedDecoders.put(contenttype, decoder);
+        }
+
+        /* Initialize the decoder and return the decoded mesh. */
+        decoder.init(path, null);
+        Mesh mesh = decoder.getNext();
+        return new ModelQueryContainer(mesh);
     }
 
     /**

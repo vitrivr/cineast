@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.vitrivr.cineast.core.data.entities.MultimediaMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 public class JsonMetaDataExtractor implements MetadataExtractor {
@@ -15,7 +15,7 @@ public class JsonMetaDataExtractor implements MetadataExtractor {
   private static final JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
 
   @Override
-  public List<MultimediaMetadataDescriptor> extract(String objectId, Path path) {
+  public List<MediaObjectMetadataDescriptor> extract(String objectId, Path path) {
     File file = path.toFile();
     File parent = file.getParentFile();
     File jsonFile = new File(parent, file.getName() + ".json");
@@ -35,13 +35,13 @@ public class JsonMetaDataExtractor implements MetadataExtractor {
       return new ArrayList<>(0);
     }
     
-    ArrayList<MultimediaMetadataDescriptor> _return = new ArrayList<>(json.size());
+    ArrayList<MediaObjectMetadataDescriptor> _return = new ArrayList<>(json.size());
     
     Set<String> keys = json.keySet();
     
     for(String key : keys){
       _return.add(
-          MultimediaMetadataDescriptor.of(objectId, domain(), key, json.get(key))
+          MediaObjectMetadataDescriptor.of(objectId, domain(), key, json.get(key))
           );
     }
     

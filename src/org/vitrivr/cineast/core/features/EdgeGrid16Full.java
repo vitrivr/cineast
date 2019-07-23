@@ -24,12 +24,14 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
   private static final Logger LOGGER = LogManager.getLogger();
 
   public EdgeGrid16Full() {
-    super("features_EdgeGrid16Full", 124f / 4f);
+    super("features_EdgeGrid16Full", 124f / 4f, 256);
   }
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
       SummaryStatistics[] stats = new SummaryStatistics[256];
       for (int i = 0; i < 256; ++i) {
@@ -56,7 +58,6 @@ public class EdgeGrid16Full extends AbstractFeatureModule {
       }
       persist(shot.getId(), new FloatVectorImpl(result));
     }
-    LOGGER.traceExit();
   }
 
   private static FloatVector getEdges(MultiImage img) {

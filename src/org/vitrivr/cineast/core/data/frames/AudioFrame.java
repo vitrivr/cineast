@@ -20,7 +20,7 @@ import javax.sound.sampled.AudioFormat;
  */
 public class AudioFrame {
     /** Default empty frames frame. Encodes a single, mute sample for one channel. */
-    public final static AudioFrame EMPTY_FRAME = new AudioFrame(0,0, new byte[2], new AudioDescriptor(22050, 1, 1));
+    public final static AudioFrame EMPTY_FRAME = new AudioFrame(0,0, new byte[0], new AudioDescriptor(22050, 1, 0));
 
     /** Number of bits in a sample. */
     public final static int BITS_PER_SAMPLE = 16;
@@ -31,14 +31,14 @@ public class AudioFrame {
     /** Timestamp in milliseconds of the first sample in the AudioFrame, relative to the whole file. */
     private final long timestamp;
 
+    /** AudioDescriptor that describes the audio in this frame. */
+    private final AudioDescriptor descriptor;
+
     /** Number of samples per channel in this AudioFrame. */
     private int numberOfSamples;
 
     /** ByteBuffer holding the raw 16bit int data. */
     private ByteBuffer data;
-
-    /** AudioDescriptor that describes the audio in this frame. */
-    private final AudioDescriptor descriptor;
 
     /**
      * Default constructor.
@@ -84,29 +84,30 @@ public class AudioFrame {
     }
 
     /**
-     * Returns the size of the frames data in bytes.
+     * Returns the size of the {@link AudioFrame} data in bytes.
      *
-     * @return
+     * @return Size of {@link AudioFrame} in bytes.
      */
     public final int size() {
         return this.data.array().length;
     }
 
     /**
-     * Returns the total number of samples per channel in this AudioFrame.
+     * Returns the total number of samples per channel in this {@link AudioFrame}.
      *
-     * @return
+     * @return Number of samples per channel.
      */
     public final int numberOfSamples() {
         return this.numberOfSamples;
     }
 
     /**
+     * Getter for the frame id (counter).
      *
-     * @return
+     * @return Sample id
      */
     public final long getIdx() {
-        return idx;
+        return this.idx;
     }
 
     /**
@@ -115,7 +116,7 @@ public class AudioFrame {
      * @return Byte array containing the frames data of this AudioFrame.
      */
     public final byte[] getData() {
-        return data.array();
+        return this.data.array();
     }
 
     /**
@@ -128,27 +129,27 @@ public class AudioFrame {
     }
 
     /**
-     * Returns the duration of the AudioFrame in seconds.
+     * Returns the duration of the {@link AudioFrame} in seconds.
      *
-     * @return
+     * @return Duration of the {@link AudioFrame}
      */
     public final float getDuration() {
         return this.numberOfSamples/this.descriptor.getSamplingrate();
     }
 
     /**
-     * Returns the relative start of the AudioFrame in seconds.
+     * Returns the relative start of the {@link AudioFrame} in seconds.
      *
-     * @return
+     * @return Relative start of the {@link AudioFrame}
      */
     public final float getStart() {
-        return this.timestamp /1000.0f;
+        return this.timestamp/1000.0f;
     }
 
     /**
      * Returns the relative end of the AudioFrame in seconds.
      *
-     * @return
+     * @return Relative end of the {@link AudioFrame}.
      */
     public final float getEnd() {
         return this.getStart() + this.numberOfSamples/this.descriptor.getSamplingrate();
@@ -249,17 +250,20 @@ public class AudioFrame {
     }
 
     /**
+     * Appends the provided {@link AudioFrame} to the this {@link AudioFrame} and returns true, if the
+     * operation was successful and false otherwise.
      *
-     * @param that
-     * @return
+     * @param that The {@link AudioFrame} that should be appended.
+     * @return True on success, false otherwise.
      */
     public boolean append(AudioFrame that) {
         return this.append(that, that.numberOfSamples);
     }
 
     /**
+     * Internal method to update the buffer holding the actual audio data.
      *
-     * @param data
+     * @param data Byte array with the samples.
      */
     private void setData(byte[] data) {
         this.data = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);

@@ -1,10 +1,14 @@
 package org.vitrivr.cineast.core.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-
 import org.vitrivr.cineast.core.config.deserializers.FeatureCategoriesDeserializer;
 import org.vitrivr.cineast.core.data.DoublePair;
 import org.vitrivr.cineast.core.features.AverageColor;
@@ -44,15 +48,8 @@ import org.vitrivr.cineast.core.features.SubDivMotionSum4;
 import org.vitrivr.cineast.core.features.SubDivMotionSum5;
 import org.vitrivr.cineast.core.features.SubtitleFulltextSearch;
 import org.vitrivr.cineast.core.features.exporter.QueryImageExporter;
-import org.vitrivr.cineast.core.features.neuralnet.classification.tf.NeuralNetVGG16Feature;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 public final class RetrieverConfig {
 	private static final HashMap<String, List<DoublePair<Class<? extends Retriever>>>> DEFAULT_RETRIEVER_CATEGORIES = new HashMap<>();
@@ -116,10 +113,6 @@ public final class RetrieverConfig {
 		list.add(DoublePair.pair(SubDivMotionSum5.class, 			0.5));
 		DEFAULT_RETRIEVER_CATEGORIES.put("motion", list);
 
-		list = new ArrayList<>(1);
-		list.add(DoublePair.pair(NeuralNetVGG16Feature.class, 1.0));
-		DEFAULT_RETRIEVER_CATEGORIES.put("neuralnet", list);
-		
 		list = new ArrayList<>(3);
 		list.add(DoublePair.pair(SubtitleFulltextSearch.class,    1.0));
 		list.add(DoublePair.pair(DescriptionTextSearch.class,    1.0));
@@ -193,4 +186,19 @@ public final class RetrieverConfig {
 
 		return _return;
 	}
+
+  public Optional<Retriever> getRetrieverByName(String retrieverName) {
+    for (List<DoublePair<Class<? extends Retriever>>> pair : this.retrieverCategories
+        .values()) {
+      for (DoublePair<Class<? extends Retriever>> retrieverPair : pair) {
+        if (retrieverPair.key.getSimpleName().equals(retrieverName)) {
+          Retriever retriever = ReflectionHelper.instanciate(retrieverPair.key);
+          if (retriever != null) {
+            return Optional.of(retriever);
+          }
+        }
+      }
+    }
+    return Optional.empty();
+  }
 }

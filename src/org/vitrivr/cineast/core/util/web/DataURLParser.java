@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.util.web;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import org.apache.commons.codec.binary.Base64;
@@ -91,6 +92,30 @@ public class DataURLParser {
         return Base64.decodeBase64(base46data);
     }
 
+    /**
+     * Converts a Base64 data URL to a UTF8 String and returns it. Only URLs that contain the verify substring at position five of the
+     * String will be converted!
+     *
+     * @param dataUrl String containing the data url.
+     * @param verify Substring that must be contained at position 5 in order for the data to be converted.
+     * @return String representation of the data.
+     */
+    public static String dataURLtoString(String dataUrl, String verify) {
+        if (dataUrl == null) {
+            return null;
+        }
+        dataUrl = dataUrl.replace(' ', '+');
+
+        /* Check data URL. */
+        if (!isValidDataUrl(dataUrl, verify)) {
+            return null;
+        }
+
+        /* Convert and return byte array. */
+        int headerLength = dataUrl.indexOf(',');
+        String base46data = dataUrl.substring(headerLength + 1);
+        return new String (Base64.decodeBase64(base46data), StandardCharsets.UTF_8);
+    }
 
     /**
      * Checks if the provided data URL is actually a valid data URL. Returns true, if so and false
@@ -103,7 +128,7 @@ public class DataURLParser {
     public static boolean isValidDataUrl(String dataUrl, String verify) {
         /* Check if string is actually a valid data URL. */
         if (!dataUrl.startsWith("data:")) {
-            LOGGER.warn("This is not a valid data URL.");
+            LOGGER.warn("{} is not a valid data URL.", dataUrl);
             return false;
         }
 

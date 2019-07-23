@@ -21,13 +21,15 @@ bin
 .classpath
 .settings/
 
-
+##IntelliJ
 .idea
+cineast.iml
+
+##Data
 /proto/
 /representative_frames/
 /thumbnails/
 /queryImages/
-/src/org/vitrivr/cineast/test/
 
 ##Framecache
 /framecache_*
@@ -40,3 +42,10 @@ bin
 *.tfmodel
 /data/
 /retrieval_results/
+retrieval_results_*
+out/
+basel-historic-images/
+index*
+
+##JSON
+/db/**/*.json

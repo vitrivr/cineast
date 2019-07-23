@@ -19,6 +19,7 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.score.BooleanSegmentScoreElement;
 import org.vitrivr.cineast.core.data.score.ObjectScoreElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
@@ -26,6 +27,7 @@ import org.vitrivr.cineast.core.features.listener.RetrievalResultListener;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.ScoreFusion;
 
 import gnu.trove.iterator.TDoubleIterator;
@@ -98,12 +100,17 @@ public class ContinuousQueryDispatcher {
       weightSum += i.next();
     }
     this.retrieverWeightSum = weightSum;
+    LOGGER.trace("Initialized continuous query dispatcher with retrievers {}", retrieverWeights);
   }
 
   private List<SegmentScoreElement> doRetrieve() {
+    LOGGER.trace("Initializing executor with retrievers {}", retrieverWeights);
     initExecutor();
+    LOGGER.trace("Starting tasks with retrievers {}", retrieverWeights);
     List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures = this.startTasks();
+    LOGGER.trace("Extracting results with retrievers {}", retrieverWeights);
     List<SegmentScoreElement> segmentScores = this.extractResults(futures);
+    LOGGER.trace("Retrieved {} results, finishing", segmentScores.size());
     this.finish();
     return segmentScores;
   }
@@ -189,6 +196,8 @@ public class ContinuousQueryDispatcher {
         scoreById = scoreByObjectId;
       } else if (element instanceof SegmentScoreElement) {
         scoreById = scoreBySegmentId;
+      } else if (element instanceof BooleanSegmentScoreElement) {
+        scoreById = scoreBySegmentId; //TODO: Cleanup?
       } else {
         LOGGER.error(
             "Unknown subclass {} of ScoreElement in ContinuousQueryDispatcher.addRetrievalResult.",
@@ -217,7 +226,7 @@ public class ContinuousQueryDispatcher {
       TObjectDoubleMap<String> scoreBySegmentId) {
     List<SegmentScoreElement> results = new ArrayList<>(scoreBySegmentId.size());
     scoreBySegmentId.forEachEntry((segmentId, score) -> {
-      results.add(new SegmentScoreElement(segmentId, score / this.retrieverWeightSum));
+      results.add(new SegmentScoreElement(segmentId, MathHelper.limit(score / this.retrieverWeightSum, 0d, 1d)));
       return true;
     });
 

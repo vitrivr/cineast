@@ -16,7 +16,7 @@ import org.vitrivr.cineast.core.util.MathHelper;
 public class SubDivMotionHistogram5 extends SubDivMotionHistogram {
 
   public SubDivMotionHistogram5() {
-    super("features_SubDivMotionHistogram5", "hists", MathHelper.SQRT2 * 25);
+    super("features_SubDivMotionHistogram5", "hists", MathHelper.SQRT2 * 25, 5);
   }
 
   @Override

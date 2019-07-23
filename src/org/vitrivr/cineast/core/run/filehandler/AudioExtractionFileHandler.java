@@ -1,19 +1,15 @@
 package org.vitrivr.cineast.core.run.filehandler;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Iterator;
-
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.decode.audio.FFMpegAudioDecoder;
 import org.vitrivr.cineast.core.decode.general.Decoder;
 import org.vitrivr.cineast.core.run.ExtractionContextProvider;
+import org.vitrivr.cineast.core.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.segmenter.audio.ConstantLengthAudioSegmenter;
 import org.vitrivr.cineast.core.segmenter.general.Segmenter;
 
 /**
- *
- * TODO: Make length and overlap configurable!
  *
  * @author rgasser
  * @version 1.0
@@ -27,7 +23,7 @@ public class AudioExtractionFileHandler extends AbstractExtractionFileHandler<Au
      * @param files   List of files that should be extracted.
      * @param context ExtractionContextProvider that holds extraction specific configurations.
      */
-    public AudioExtractionFileHandler(Iterator<Path> files, ExtractionContextProvider context) throws IOException {
+    public AudioExtractionFileHandler(ExtractionContainerProvider files, ExtractionContextProvider context) throws IOException {
         super(files, context);
     }
 
@@ -50,6 +46,8 @@ public class AudioExtractionFileHandler extends AbstractExtractionFileHandler<Au
      */
     @Override
     public Segmenter<AudioFrame> newSegmenter() {
-        return new ConstantLengthAudioSegmenter(10.0f, 1.0f);
+        Segmenter<AudioFrame> segmenter = this.context.newSegmenter();
+        if (segmenter == null) segmenter = new ConstantLengthAudioSegmenter(this.context);
+        return segmenter;
     }
 }

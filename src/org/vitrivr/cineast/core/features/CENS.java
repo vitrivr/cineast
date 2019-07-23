@@ -72,7 +72,7 @@ public abstract class CENS extends StagedFeatureModule {
      * @param maxFrequency Maximum frequency to consider during HPCP analysis.
      */
     public CENS(String tableName, float minFrequency, float maxFrequency) {
-        super(tableName, 2.0f);
+        super(tableName, 2.0f, SHINGLE_SIZE * HPCP.Resolution.FULLSEMITONE.bins);
 
         /* Apply fields. */
         this.minFrequency = minFrequency;
@@ -93,18 +93,19 @@ public abstract class CENS extends StagedFeatureModule {
      */
     @Override
     protected List<float[]> preprocessQuery(SegmentContainer sc, ReadableQueryConfig qc) {
-        /* Prepare empty features. */
-        List<float[]> features = new ArrayList<>(3 * QUERY_SETTINGS.length);
 
         /* Create STFT. If this fails, return empty list. */
-        Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(sc.getSamplingrate(), WINDOW_SIZE);
-        STFT stft = sc.getSTFT(parameters.first, (parameters.first-2*parameters.second)/3 ,parameters.second, new BlackmanHarrisWindow());
+        final Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(sc.getSamplingrate(), WINDOW_SIZE);
+        final STFT stft = sc.getSTFT(parameters.first, (parameters.first-2*parameters.second)/3 ,parameters.second, new BlackmanHarrisWindow());
         if (stft == null) {
-          return features;
+            return new ArrayList<>(0);
         }
 
+         /* Prepare empty features. */
+        final List<float[]> features = new ArrayList<>(3 * QUERY_SETTINGS.length);
+
         /* Prepare HPCPs... */
-        HPCP hpcps = new HPCP(HPCP.Resolution.FULLSEMITONE, minFrequency, maxFrequency);
+        final HPCP hpcps = new HPCP(HPCP.Resolution.FULLSEMITONE, minFrequency, maxFrequency);
         hpcps.addContribution(stft);
 
         /*
@@ -141,7 +142,7 @@ public abstract class CENS extends StagedFeatureModule {
         }
 
         /* Prepare final list of results. */
-        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction correspondence = qc.getCorrespondenceFunction().orElse(this.correspondence);
         return ScoreElement.filterMaximumScores(map.entrySet().stream().map((e) -> e.getValue().toScore(correspondence)));
     }
 
@@ -177,7 +178,7 @@ public abstract class CENS extends StagedFeatureModule {
     @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
                 .addHint(ReadableQueryConfig.Hints.inexact);
     }

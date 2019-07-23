@@ -11,6 +11,7 @@ import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
@@ -46,8 +47,8 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      * @param tableName
      * @param maxDist
      */
-    protected StagedFeatureModule(String tableName, float maxDist) {
-        super(tableName, maxDist);
+    protected StagedFeatureModule(String tableName, float maxDist, int vectorLength) {
+        super(tableName, maxDist, vectorLength);
         this.benchmark_engine = BenchmarkManager.getDefaultEngine();
     }
 
@@ -84,7 +85,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         /* Extract features. */
         List<float[]> features = this.preprocessQuery(sc, qcc);
 
-        if (features.size() == 0) {
+        if (features == null || features.isEmpty()) {
             LOGGER.warn("No features could be generated from the provided query. Aborting query execution...");
             benchmark.abort();
             return new ArrayList<>(0);
@@ -138,7 +139,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
 
         /* Lookup features. */
         List<float[]> features = this.selector.getFeatureVectors("id", segmentId, "feature");
-        if (features.size() == 0) {
+        if (features.isEmpty()) {
             LOGGER.warn("No features could be fetched for the provided segmentId '{}'. Aborting query execution...", segmentId);
             benchmark.end();
             return new ArrayList<>(0);
@@ -188,7 +189,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
         List<SegmentDistanceElement> partialResults;
         if (features.size() == 1) {
-            partialResults = this.selector.getNearestNeighbours(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
+            partialResults = this.selector.getNearestNeighboursGeneric(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
         } else {
             partialResults = this.selector.getBatchedNearestNeighbours(numberOfPartialResults, features, "feature", SegmentDistanceElement.class, configs);
         }
@@ -230,7 +231,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      */
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean);
     }
 }

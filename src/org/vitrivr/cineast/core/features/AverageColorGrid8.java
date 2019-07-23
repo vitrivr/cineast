@@ -25,24 +25,25 @@ import org.vitrivr.cineast.core.util.GridPartitioner;
 public class AverageColorGrid8 extends AbstractFeatureModule {
 
   public AverageColorGrid8() {
-    super("features_AverageColorGrid8", 12595f / 4f);
+    super("features_AverageColorGrid8", 12595f / 4f, 192);
   }
 
   protected AverageColorGrid8(String tableName, float maxDist) {
-    super(tableName, maxDist);
+    super(tableName, maxDist, 192);
   }
 
   private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getAvgImg() == MultiImage.EMPTY_MULTIIMAGE) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
       MultiImage avgimg = shot.getAvgImg();
 
       persist(shot.getId(), partition(avgimg).first);
     }
-    LOGGER.traceExit();
   }
 
   protected static Pair<FloatVector, float[]> partition(MultiImage img) {

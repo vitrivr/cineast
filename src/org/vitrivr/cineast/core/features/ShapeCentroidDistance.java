@@ -32,7 +32,7 @@ public class ShapeCentroidDistance extends AbstractFeatureModule {
      *
      */
     public ShapeCentroidDistance() {
-        super("features_shapecentroid", 2.0f);
+        super("features_shapecentroid", 2.0f, DESCRIPTOR_LENGTH);
     }
 
     /**

@@ -50,7 +50,7 @@ public class AudioSignalVisualizer {
      */
     public static BufferedImage visualizeSpectogram(List<Spectrum> spectra, int width, int height) {
 
-        if (spectra.size() == 0) {
+        if (spectra.isEmpty()) {
           return null;
         }
 

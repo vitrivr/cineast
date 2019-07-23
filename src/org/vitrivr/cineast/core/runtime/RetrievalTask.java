@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.runtime;
 
 import java.util.List;
 import java.util.concurrent.Callable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -10,52 +9,57 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.monitoring.RetrievalTaskMonitor;
 
 public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreElement>>> {
 
-	private final Retriever retriever;
-	private final QueryContainer query;
-	private final String shotId;
-	private static final Logger LOGGER = LogManager.getLogger();
-	private final ReadableQueryConfig config;
-		
-	
-	public RetrievalTask(Retriever retriever, QueryContainer query, ReadableQueryConfig qc) {
-		this.retriever = retriever;
-		this.query = query;
-		this.config = qc;
-		this.shotId = null;
-	}
-	
-	public RetrievalTask(Retriever retriever, QueryContainer query) {
-		this(retriever, query, null);
-	}
+  private final Retriever retriever;
+  private final QueryContainer query;
+  private final String shotId;
+  private static final Logger LOGGER = LogManager.getLogger();
+  private final ReadableQueryConfig config;
 
 
-	public RetrievalTask(Retriever retriever, String segmentId, ReadableQueryConfig qc) {
-		this.retriever = retriever;
-		this.shotId = segmentId;
-		this.config = qc;
-		this.query = null;
+  public RetrievalTask(Retriever retriever, QueryContainer query, ReadableQueryConfig qc) {
+    this.retriever = retriever;
+    this.query = query;
+    this.config = qc;
+    this.shotId = null;
+  }
 
-	}
+  public RetrievalTask(Retriever retriever, QueryContainer query) {
+    this(retriever, query, null);
+  }
 
-	public RetrievalTask(Retriever retriever, String segmentId){
-		this(retriever, segmentId, null);
-	}
-	
-	@Override
-	public Pair<RetrievalTask, List<ScoreElement>> call() throws Exception {
-		LOGGER.traceEntry();
-		LOGGER.debug("starting {}", retriever.getClass().getSimpleName());
-		List<ScoreElement> result;
-		if(this.query == null){
-			result = this.retriever.getSimilar(this.shotId, this.config);
-		}else{
-			result = this.retriever.getSimilar(this.query, this.config);
-		}
-		return LOGGER.traceExit(new Pair<RetrievalTask, List<ScoreElement>>(this, result));
-	}
+
+  public RetrievalTask(Retriever retriever, String segmentId, ReadableQueryConfig qc) {
+    this.retriever = retriever;
+    this.shotId = segmentId;
+    this.config = qc;
+    this.query = null;
+
+  }
+
+  public RetrievalTask(Retriever retriever, String segmentId) {
+    this(retriever, segmentId, null);
+  }
+
+  @Override
+  public Pair<RetrievalTask, List<ScoreElement>> call() throws Exception {
+    LOGGER.traceEntry();
+    long start = System.currentTimeMillis();
+    LOGGER.debug("starting {}", retriever.getClass().getSimpleName());
+    List<ScoreElement> result;
+    if (this.query == null) {
+      result = this.retriever.getSimilar(this.shotId, this.config);
+    } else {
+      result = this.retriever.getSimilar(this.query, this.config);
+    }
+    long stop = System.currentTimeMillis();
+    RetrievalTaskMonitor.reportExecutionTime(retriever.getClass().getSimpleName(), stop - start);
+    LOGGER.debug("{}.getSimilar() done in {} ms", retriever.getClass().getSimpleName(), stop - start);
+    return LOGGER.traceExit(new Pair<RetrievalTask, List<ScoreElement>>(this, result));
+  }
 
   public Retriever getRetriever() {
     return retriever;

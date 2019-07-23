@@ -1,11 +1,9 @@
 package org.vitrivr.cineast.core.data.messages.query;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.messages.interfaces.Message;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -18,23 +16,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @version 1.0
  * @created 27.04.17
  */
-public class SimilarityQuery implements Message {
-    /** List of QueryComponents that are part of this similarity-query. */
-    private QueryComponent[] components;
-
-    /** List of MediaTypes that should be considered when executing the query. */
-    private MediaType[] types;
+public class SimilarityQuery extends Query {
+    /** List of {@link QueryComponent}s that are part of this {@link SimilarityQuery}. */
+    private List<QueryComponent> components;
 
     /**
      * Constructor for the SimilarityQuery object.
      *
-     * @param components List of query components.
-     * @param types List of MediaTypes.
+     * @param components List of {@link QueryComponent}s.
+     * @param config The {@link ReadableQueryConfig}. May be null!
      */
     @JsonCreator
-    public SimilarityQuery(@JsonProperty("containers") QueryComponent[] components, @JsonProperty("types") MediaType[] types) {
+    public SimilarityQuery(@JsonProperty(value = "containers", required = true) List<QueryComponent> components,
+                           @JsonProperty(value = "config", required = false) QueryConfig config) {
+        super(config);
         this.components = components;
-        this.types = types;
     }
 
     /**
@@ -43,11 +39,7 @@ public class SimilarityQuery implements Message {
      * @return
      */
     public List<QueryComponent> getComponents() {
-        if (this.components != null) {
-            return Arrays.asList(this.components);
-        } else {
-            return new ArrayList<>(0);
-        }
+        return this.components;
     }
 
     /**

@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
-public class IntProviderImpl implements IntProvider, LongProvider {
+public class IntProviderImpl implements IntProvider, LongProvider, FloatProvider, DoubleProvider {
 
 	private final int value;
 	
@@ -24,6 +24,16 @@ public class IntProviderImpl implements IntProvider, LongProvider {
 		int result = 1;
 		result = prime * result + value;
 		return result;
+	}
+
+	@Override
+	public double getDouble() {
+		return value;
+	}
+
+	@Override
+	public float getFloat() {
+		return value;
 	}
 
 	@Override

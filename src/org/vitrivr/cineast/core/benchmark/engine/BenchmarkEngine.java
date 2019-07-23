@@ -254,7 +254,7 @@ public class BenchmarkEngine {
      */
     public synchronized List<Benchmark> drain() {
         /* If the deque is null, return empty string. */
-        if (this.deque == null || this.deque.size() == 0) {
+        if (this.deque == null || this.deque.isEmpty()) {
           return new ArrayList<>(1);
         }
 

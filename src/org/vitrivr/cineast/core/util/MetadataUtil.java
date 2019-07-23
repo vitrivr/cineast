@@ -38,16 +38,19 @@ public final class MetadataUtil {
    * @return an {@link Optional} containing the first {@code Directory} of type {@code T} of the
    *         metadata of the file, if present, otherwise an empty {@code Optional}.
    */
-  public static <T extends Directory> Optional<T> getMetadataDirectoryOfType(Path path,
+  public static <T extends Directory> T getMetadataDirectoryOfType(Path path,
       Class<T> directoryType) {
-    Optional<Metadata> metadata = Optional.empty();
+    Metadata metadata = null;
     try {
-      metadata = Optional.of(ImageMetadataReader.readMetadata(path.toFile()));
+      metadata = ImageMetadataReader.readMetadata(path.toFile());
     } catch (ImageProcessingException | IOException e) {
       logger.error("Error while reading exif data of file {}: {}",
           path, LogHelper.getStackTrace(e));
     }
-    return metadata.map(m -> m.getFirstDirectoryOfType(directoryType));
+    if(metadata==null){
+      return null;
+    }
+    return metadata.getFirstDirectoryOfType( directoryType );
   }
 
   /**

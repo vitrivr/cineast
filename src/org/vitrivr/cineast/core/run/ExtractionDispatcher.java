@@ -2,22 +2,11 @@ package org.vitrivr.cineast.core.run;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Iterator;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.IngestConfig;
-import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.run.filehandler.AudioExtractionFileHandler;
-import org.vitrivr.cineast.core.run.filehandler.ImageExtractionFileHandler;
-import org.vitrivr.cineast.core.run.filehandler.Model3DExtractionFileHandler;
-import org.vitrivr.cineast.core.run.filehandler.VideoExtractionFileHandler;
-import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+import org.vitrivr.cineast.core.run.filehandler.GenericExtractionItemHandler;
 
 /**
  * @author rgasser
@@ -28,20 +17,27 @@ public class ExtractionDispatcher {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  /** ExtractionContextProvider used to setup the extraction. */
-  private ExtractionContextProvider context;
-
-  /** List of files due for extraction. */
-  private Iterator<Path> paths;
-
-  /** Reference to the thread that is being used to run the ExtractionFileHandler. */
-  private Thread fileHandlerThread;
+  /**
+   * ExtractionContextProvider used to setup the extraction.
+   */
+  private IngestConfig context;
 
   /**
-   *
-   * @param jobFile
+   * List of files due for extraction.
    */
-  public boolean initialize(File jobFile) throws IOException {
+  private ExtractionContainerProvider pathProvider;
+
+  /**
+   * Reference to the thread that is being used to run the ExtractionFileHandler.
+   */
+  private Thread fileHandlerThread;
+
+  private ExtractionItemProcessor handler;
+
+  private volatile boolean threadRunning = false;
+
+  public boolean initialize(ExtractionContainerProvider pathProvider,
+      IngestConfig context) throws IOException {
     File outputLocation = Config.sharedConfig().getExtractor().getOutputLocation();
     if (outputLocation == null) {
       LOGGER.error("invalid output location specified in config");
@@ -54,74 +50,40 @@ public class ExtractionDispatcher {
       return false;
     }
 
-    JacksonJsonProvider reader = new JacksonJsonProvider();
-    this.context = reader.toObject(jobFile, IngestConfig.class);
+    this.pathProvider = pathProvider;
+    this.context = context;
 
-    /* Check if context could be read and an input path was specified. */
-    if (context == null || this.context.inputPath() == null) {
-      return false;
+    if (this.fileHandlerThread == null) {
+      this.handler = new GenericExtractionItemHandler(this.pathProvider, this.context, this.context.sourceType());
+      this.fileHandlerThread = new Thread((GenericExtractionItemHandler) handler);
+    } else {
+      LOGGER.warn("You cannot initialize the current instance of ExtractionDispatcher again!");
     }
-    Path jobDirectory = jobFile.getAbsoluteFile().toPath().getParent();
-    Path path = jobDirectory.resolve(this.context.inputPath()).normalize().toAbsolutePath();
 
-    /*
-     * Recursively add all files under that path to the List of files that should be processed. Uses
-     * the context-provider to determine the depth of recursion, skip files and limit the number of
-     * files.
-     */
-    if (!Files.exists(path)) {
-      LOGGER.warn("The path '{}' specified in the extraction configuration does not exist!",
-          path.toString());
-      return false;
-    }
-    this.paths = Files.walk(path, this.context.depth(), FileVisitOption.FOLLOW_LINKS).filter(p -> {
-      try {
-        return Files.exists(p) && Files.isRegularFile(p) && !Files.isHidden(p)
-            && Files.isReadable(p);
-      } catch (IOException e) {
-        LOGGER.error("An IO exception occurred while testing the media file at '{}'.", p.toString(),
-            LogHelper.getStackTrace(e));
-        return false;
-      }
-    }).iterator();
-    return true;
+    return this.pathProvider.isOpen();
   }
 
   /**
    * Starts extraction by dispatching a new ExtractionFileHandler thread.
    *
-   * @throws IOException
-   *           If an error occurs during pre-processing of the files.
+   * @throws IOException If an error occurs during pre-processing of the files.
    */
-  public void start() throws IOException {
-    if (this.fileHandlerThread == null) {
-      MediaType sourceType = this.context.sourceType();
-      switch (sourceType) {
-      case IMAGE:
-        this.fileHandlerThread = new Thread(
-            new ImageExtractionFileHandler(this.paths, this.context));
-        break;
-      case VIDEO:
-        this.fileHandlerThread = new Thread(
-            new VideoExtractionFileHandler(this.paths, this.context));
-        break;
-      case AUDIO:
-        this.fileHandlerThread = new Thread(
-            new AudioExtractionFileHandler(this.paths, this.context));
-        break;
-      case MODEL3D:
-        this.fileHandlerThread = new Thread(
-            new Model3DExtractionFileHandler(this.paths, this.context));
-        break;
-      default:
-        break;
-      }
-      if (fileHandlerThread != null) {
-        this.fileHandlerThread.setName("extraction-file-handler-thread");
-        this.fileHandlerThread.start();
-      }
+  public synchronized void start() throws IOException {
+    if (fileHandlerThread != null && !threadRunning) {
+      this.fileHandlerThread.setName("extraction-file-handler-thread");
+      this.fileHandlerThread.start();
+      threadRunning = true;
     } else {
       LOGGER.warn("You cannot start the current instance of ExtractionDispatcher again!");
     }
+  }
+
+  public void registerListener(ExtractionCompleteListener listener) {
+    if (this.fileHandlerThread == null) {
+      LOGGER.error("Could not register listener, no thread available");
+      throw new RuntimeException();
+    }
+    LOGGER.debug("Registering Listener {}", listener.getClass().getSimpleName());
+    handler.addExtractionCompleteListener(listener);
   }
 }

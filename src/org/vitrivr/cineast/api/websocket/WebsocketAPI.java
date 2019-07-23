@@ -3,7 +3,7 @@ package org.vitrivr.cineast.api.websocket;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +17,8 @@ import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.MoreLikeThisQueryMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.NeighbouringQueryMessageHandler;
+import org.vitrivr.cineast.api.websocket.handlers.queries.SegmentQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
@@ -41,38 +43,31 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 @WebSocket
 public class WebsocketAPI {
 
-    private static Logger LOGGER = LogManager.getLogger();
+    /** Logging facility. */
+    private static final Logger LOGGER = LogManager.getLogger();
 
-    /** Store sessions if you want to, for example, broadcast a message to all users.*/
-    private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
+    /** Store SESSIONS if you want to, for example, broadcast a message to all users.*/
+    private static final Queue<Session> SESSIONS = new ConcurrentLinkedQueue<>();
 
-//    /** Named context of the endpoint. Will be appended to the endpoint URL. */
-//    private static final String CONTEXT = "api";
-//
-//    /** Version of the protocol used by the endpoint. Will be appended to the endpoint URL. */
-//    private static final String VERSION = "v1";
+    /** A cached ThreadPoolExecutor used to execute tasks submitted and handled by the WebSocket API */
+    private static final ExecutorService EXECUTORS = new ThreadPoolExecutor(2,Integer.MAX_VALUE,60L,TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
 
-    /** List of stateless WebsocketMessageHandler classes for the API. */
+    /** List of stateless {@link WebsocketMessageHandler} classes for the API. */
     private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
-
-//    /** Flag that indicates whether the WebSocket API is running. */
-//    private static AtomicBoolean RUNNING = new AtomicBoolean(false);
-
-    /* Register the MessageHandlers for the different messages. */
     static {
         STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler());
+        STATELESS_HANDLERS.put(MessageType.Q_NESEG, new NeighbouringQueryMessageHandler());
+        STATELESS_HANDLERS.put(MessageType.Q_SEG, new SegmentQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.PING, new StatusMessageHandler());
         STATELESS_HANDLERS.put(MessageType.M_LOOKUP, new MetadataLookupMessageHandler());
     }
 
     /* */
     private JacksonJsonProvider reader = new JacksonJsonProvider();
-
  
     /**
-     * Invoked whenever a new connection is established. Configures the session and
-     * stashes it in the SESSIONS map.
+     * Invoked whenever a new connection is established. Configures the session and stashes it in the {@link WebsocketAPI#SESSIONS} map.
      *
      * @param session Session associated with the new connection.
      */
@@ -80,21 +75,20 @@ public class WebsocketAPI {
     public void connected(Session session) {
         session.getPolicy().setMaxTextMessageSize(Config.sharedConfig().getApi().getMaxMessageSize());
         session.getPolicy().setMaxBinaryMessageSize(Config.sharedConfig().getApi().getMaxMessageSize());
-        sessions.add(session);
+        SESSIONS.add(session);
         LOGGER.debug("New session {} connected!", session.getRemoteAddress().toString());
     }
 
     /**
-     * Invoked whenever a new connection is closed. Removes the session from
-     * the SESSIONS map.
+     * Invoked whenever a new connection is closed. Removes the session from the {@link WebsocketAPI#SESSIONS} map.
      *
-     * @param session
+     * @param session Session associated with the new connection.
      * @param statusCode
      * @param reason
      */
     @OnWebSocketClose
     public void closed(Session session, int statusCode, String reason) {
-        sessions.remove(session);
+        SESSIONS.remove(session);
         LOGGER.debug("Connection of session closed (Code: {}, Reason: {}).", statusCode, reason);
     }
 
@@ -118,12 +112,12 @@ public class WebsocketAPI {
      */
     @OnWebSocketMessage
     public void message(Session session, String message) throws IOException {
-        AnyMessage testMessage = reader.toObject(message, AnyMessage.class);
+        final AnyMessage testMessage = this.reader.toObject(message, AnyMessage.class);
         if (testMessage != null) {
-            MessageType type = testMessage.getMessageType();
-            WebsocketMessageHandler handler = STATELESS_HANDLERS.get(type);
+            final MessageType type = testMessage.getMessageType();
+            final WebsocketMessageHandler handler = STATELESS_HANDLERS.get(type);
             if (handler != null) {
-                handler.handle(session, reader.toObject(message, type.getMessageClass()));
+                EXECUTORS.execute(() -> handler.handle(session, this.reader.toObject(message, type.getMessageClass())));
             }
         }
     }

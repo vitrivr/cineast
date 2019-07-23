@@ -66,7 +66,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
      * @param resolution Resolution of HPCP (i.e. number of HPCP bins).
      */
     protected HPCPShingle(String name, float min_frequency, float max_frequency, HPCP.Resolution resolution) {
-        super(name, 2.0f);
+        super(name, 2.0f, SHINGLE_SIZE * resolution.bins);
 
         /* Assign variables. */
         this.min_frequency = min_frequency;
@@ -111,7 +111,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
         }
 
         /* Prepare final result-set. */
-        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.correspondence);
         return ScoreElement.filterMaximumScores(map.entrySet().stream().map(e -> e.getValue().toScore(fkt)));
     }
 
@@ -161,7 +161,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
     @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.euclidean)
                 .addHint(ReadableQueryConfig.Hints.inexact);
     }
@@ -177,7 +177,7 @@ public abstract class HPCPShingle extends StagedFeatureModule {
         Pair<Integer,Integer> parameters = FFTUtil.parametersForDuration(segment.getSamplingrate(), WINDOW_SIZE);
         STFT stft = segment.getSTFT(parameters.first,(parameters.first - 2*parameters.second)/2, parameters.second, new HanningWindow());
         if (stft == null) {
-          return new ArrayList<>();
+            return new ArrayList<>(0);
         }
 
         HPCP hpcps = new HPCP(this.resolution, this.min_frequency, this.max_frequency);

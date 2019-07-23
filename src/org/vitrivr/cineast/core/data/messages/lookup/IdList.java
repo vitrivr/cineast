@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.data.messages.lookup;
 
+import com.google.common.collect.Lists;
+import java.util.Arrays;
+import java.util.List;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
@@ -18,6 +21,8 @@ public class IdList implements Message {
   public String[] getIds(){
     return this.ids;
   }
+
+  public List<String> getIdList(){ return Arrays.asList(this.ids);}
   
   @Override
   public MessageType getMessageType() {

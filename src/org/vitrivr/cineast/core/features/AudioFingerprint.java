@@ -12,6 +12,8 @@ import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -42,7 +44,7 @@ public class AudioFingerprint extends StagedFeatureModule {
      * Default constructor;
      */
     public AudioFingerprint() {
-        super("features_audiofingerprint", 4000.0f);
+        super("features_audiofingerprint", 4000.0f, FINGERPRINT);
     }
 
     /**
@@ -108,7 +110,7 @@ public class AudioFingerprint extends StagedFeatureModule {
         final int numberOfPartialResults = Config.sharedConfig().getRetriever().getMaxResultsPerModule();
         List<SegmentDistanceElement> partialResults;
         if (features.size() == 1) {
-            partialResults = this.selector.getNearestNeighbours(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
+            partialResults = this.selector.getNearestNeighboursGeneric(numberOfPartialResults, features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
         } else {
             Map<String, String> options = new HashMap<>(1);
             options.put("fuzzydefault", String.valueOf(Float.MAX_VALUE));
@@ -149,7 +151,7 @@ public class AudioFingerprint extends StagedFeatureModule {
         }
 
         /* Prepare final results. */
-        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.linearCorrespondence);
+        final CorrespondenceFunction fkt = qc.getCorrespondenceFunction().orElse(this.correspondence);
         map.forEach((key, value) -> results.add(value.toScore(fkt)));
         return ScoreElement.filterMaximumScores(results.stream());
     }
@@ -228,7 +230,7 @@ public class AudioFingerprint extends StagedFeatureModule {
     @Override
     protected QueryConfig defaultQueryConfig(ReadableQueryConfig qc) {
         return new QueryConfig(qc)
-                .setCorrespondenceFunctionIfEmpty(this.linearCorrespondence)
+                .setCorrespondenceFunctionIfEmpty(this.correspondence)
                 .setDistanceIfEmpty(QueryConfig.Distance.manhattan)
                 .addHint(ReadableQueryConfig.Hints.inexact);
     }
