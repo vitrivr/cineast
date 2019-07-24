@@ -17,16 +17,6 @@ import java.util.concurrent.ExecutionException;
 
 public class ADAMproWriter extends ProtobufTupleGenerator {
 
-  /**
-   * flag to choose if every selector should have its own connection to ADAMpro or if they should share one
-   */
-  private static boolean useGlobalWrapper = true;
-
-  private static final ADAMproWrapper GLOBAL_ADAMPRO_WRAPPER = useGlobalWrapper
-      ? new ADAMproWrapper() : null;
-
-  private ADAMproWrapper adampro = useGlobalWrapper ? GLOBAL_ADAMPRO_WRAPPER : new ADAMproWrapper();
-
   private static final Logger LOGGER = LogManager.getLogger();
 
   private String entityName;
@@ -34,6 +24,12 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
   private QueryMessage.Builder qmBuilder;
   private final WhereMessage.Builder wmBuilder = WhereMessage.newBuilder();
   private FromMessage from;
+  private final ADAMproWrapper adampro;
+
+  public ADAMproWriter(ADAMproWrapper wrapper){
+    this.adampro = wrapper;
+  }
+
 
   @Override
   public boolean open(String name) {
@@ -45,10 +41,7 @@ public class ADAMproWriter extends ProtobufTupleGenerator {
 
   @Override
   public boolean close() {
-    if (useGlobalWrapper) {
-      return false;
-    }
-    this.adampro.close();
+    //this.adampro.close();
     return true;
   }
 

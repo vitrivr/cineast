@@ -21,16 +21,6 @@ import java.util.stream.Collectors;
 public abstract class AbstractADAMproSelector implements DBSelector {
 
   /**
-   * flag to choose if every selector should have its own connection to ADAMpro or if they should
-   * share one.
-   */
-  static boolean useGlobalWrapper = true;
-
-  static final ADAMproWrapper GLOBAL_ADAMPRO_WRAPPER = useGlobalWrapper ? new ADAMproWrapper() : null;
-
-  protected ADAMproWrapper adampro = useGlobalWrapper ? GLOBAL_ADAMPRO_WRAPPER : new ADAMproWrapper();
-
-  /**
    * MessageBuilder instance used to create the query messages.
    */
   protected final ADAMproMessageBuilder mb = new ADAMproMessageBuilder();
@@ -45,6 +35,12 @@ public abstract class AbstractADAMproSelector implements DBSelector {
    */
   protected FromMessage fromMessage;
 
+  final ADAMproWrapper adampro;
+
+  public AbstractADAMproSelector(ADAMproWrapper wrapper){
+    this.adampro = wrapper;
+  }
+
   @Override
   public boolean open(String name) {
     this.entityName = name;
@@ -54,10 +50,8 @@ public abstract class AbstractADAMproSelector implements DBSelector {
 
   @Override
   public boolean close() {
-    if (useGlobalWrapper) {
-      return false;
-    }
-    this.adampro.close();
+
+    //this.adampro.close();
     return true;
   }
 

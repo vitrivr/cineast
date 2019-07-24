@@ -24,6 +24,10 @@ public class ADAMproSelector extends AbstractADAMproSelector {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    public ADAMproSelector(ADAMproWrapper wrapper) {
+        super(wrapper);
+    }
+
     @Override
     public List<float[]> getFeatureVectors(String fieldName, String value, String vectorName) {
         QueryMessage qbqm = this.mb.buildQueryMessage(ADAMproMessageBuilder.DEFAULT_HINT, this.fromMessage, this.mb.buildBooleanQueryMessage(this.mb.buildWhereMessage(fieldName, value)), null, null);

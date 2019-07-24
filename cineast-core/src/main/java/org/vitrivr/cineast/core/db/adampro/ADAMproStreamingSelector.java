@@ -21,6 +21,10 @@ public class ADAMproStreamingSelector extends AbstractADAMproSelector {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
+  public ADAMproStreamingSelector(ADAMproWrapper wrapper) {
+    super(wrapper);
+  }
+
   private List<Map<String, PrimitiveTypeProvider>> executeQuery(QueryMessage qm) {
     ArrayList<QueryResultsMessage> resultList = this.adampro
         .streamingStandardQuery(qm);

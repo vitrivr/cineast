@@ -43,7 +43,7 @@ public class ADAMproWrapper implements AutoCloseable {
   
   public ADAMproWrapper(DatabaseConfig config) {
     this.channel = NettyChannelBuilder.forAddress(config.getHost(), config.getPort())
-        .maxMessageSize(maxMessageSize).usePlaintext(config.getPlaintext()).build();
+        .maxInboundMessageSize(maxMessageSize).usePlaintext(config.getPlaintext()).build();
     this.definitionStub = AdamDefinitionGrpc.newFutureStub(channel);
     this.searchStub = AdamSearchGrpc.newFutureStub(channel);
     this.streamSearchStub = AdamSearchGrpc.newStub(channel);

@@ -21,7 +21,11 @@ public class ADAMproEntityCreator implements EntityCreator {
     /**
      * Wrapper used to send messages to ADAM pro.
      */
-    private ADAMproWrapper adampro = new ADAMproWrapper();
+    private final ADAMproWrapper adampro;
+
+    public ADAMproEntityCreator(ADAMproWrapper wrapper){
+        this.adampro = wrapper;
+    }
 
     /**
      * Initialises the main entity holding information about multimedia objects in the ADAMpro
@@ -267,7 +271,7 @@ public class ADAMproEntityCreator implements EntityCreator {
      */
     @Override
     public void close() {
-        this.adampro.close();
+        //this.adampro.close();
     }
 
     public static final AttributeType mapAttributeType(AttributeDefinition.AttributeType type) {
