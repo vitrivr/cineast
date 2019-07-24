@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.db.json;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -14,8 +13,6 @@ import java.util.List;
 
 public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
   
-  private static File defaultBaseFolder = new File(
-      Config.sharedConfig().getExtractor().getOutputLocation(), "json");
   private File baseFolder;
   private PrintWriter out;
   private boolean first = true;
@@ -24,9 +21,7 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     this.baseFolder = baseFolder;
   }
   
-  public JsonFileWriter() {
-    this(defaultBaseFolder);
-  }
+
   
   @Override
   public boolean open(String name) {
@@ -81,15 +76,7 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     }
     return success;
   }
-  
-  public static void setDefaultFolder(File outputFolder) {
-    if (outputFolder == null) {
-      throw new NullPointerException("outputfolder cannot be null");
-    }
-    defaultBaseFolder = outputFolder;
-    defaultBaseFolder.mkdirs();
-  }
-  
+
   @Override
   public boolean idExists(String id) {
     return false;

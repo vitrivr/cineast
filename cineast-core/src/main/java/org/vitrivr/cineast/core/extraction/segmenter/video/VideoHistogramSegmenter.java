@@ -11,11 +11,11 @@ import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.segments.VideoSegment;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
+import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
-import org.vitrivr.cineast.standalone.run.ExtractionContextProvider;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;

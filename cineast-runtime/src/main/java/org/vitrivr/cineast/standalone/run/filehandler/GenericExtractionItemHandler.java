@@ -465,8 +465,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     if (fetchedDescriptor.exists() && fetchedDescriptor.getMediatype() == type) {
       return fetchedDescriptor;
     }
-    return MediaObjectDescriptor
-        .mergeItem(fetchedDescriptor, generator, item, type);
+    return AbstractExtractionFileHandler.mergeItem(fetchedDescriptor, generator, item, type);
   }
 
   /**

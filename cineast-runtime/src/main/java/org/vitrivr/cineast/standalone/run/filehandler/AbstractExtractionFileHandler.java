@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.standalone.run.filehandler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +31,8 @@ import org.vitrivr.cineast.standalone.run.*;
 import org.vitrivr.cineast.standalone.runtime.ExtractionPipeline;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -388,8 +391,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
     if (fetchedDescriptor.exists() && fetchedDescriptor.getMediatype() == this.context.sourceType()) {
       return fetchedDescriptor;
     }
-    return MediaObjectDescriptor
-        .mergeItem(fetchedDescriptor, generator, item, type);
+    return mergeItem(fetchedDescriptor, generator, item, type);
   }
 
   /**
@@ -445,4 +447,36 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
       completeListeners.add(listener);
     }
   }
+
+  /**
+   * create a new descriptor based on the provided one.
+   *
+   * if an id is already given in the descriptor, it takes precedence over generating a new one. if
+   * a new path is provided as an argument, it takes precedence over one which might already be
+   * existing in the descriptor. if a new type is provided as an argument, it takes precedence over
+   * one which might already be existing in the descriptor.
+   *
+   * The exists variable is taken from the provided descriptor, since that is more current than the
+   * one provided in the item
+   */
+  public static MediaObjectDescriptor mergeItem(MediaObjectDescriptor descriptor,
+                                                ObjectIdGenerator generator, ExtractionItemContainer item, MediaType type) {
+    Path _path = item.getPathForExtraction() == null ? Paths.get(descriptor.getPath())
+            : item.getPathForExtraction();
+    String _name =
+            StringUtils.isEmpty(item.getObject().getName()) ? StringUtils.isEmpty(descriptor.getName())
+                    ? MediaObjectDescriptor.cleanPath(_path.getFileName()) : descriptor.getName()
+                    : item.getObject().getName();
+    boolean exists = descriptor.exists();
+    MediaType _type = type == null ? descriptor.getMediatype() : type;
+    String _id =
+            StringUtils.isEmpty(item.getObject().getObjectId()) ?
+                    StringUtils.isEmpty(descriptor.getObjectId())
+                            ? generator.next(_path, _type) : descriptor.getObjectId()
+                    : item.getObject().getObjectId();
+    String storagePath = StringUtils.isEmpty(item.getObject().getPath()) ? descriptor.getPath()
+            : item.getObject().getPath();
+    return new MediaObjectDescriptor(_id, _name, storagePath, _type, exists);
+  }
+
 }

@@ -5,6 +5,7 @@ import org.vitrivr.cineast.core.data.FloatArrayIterable;
 import org.vitrivr.cineast.core.data.IntArrayIterable;
 import org.vitrivr.cineast.core.data.providers.primitive.*;
 
+
 import java.util.List;
 
 public final class DataMessageConverter {
@@ -13,32 +14,32 @@ public final class DataMessageConverter {
 	
 	public static final PrimitiveTypeProvider convert(DataMessage message){
 		switch(message.getDatatypeCase()){
-		case DatatypeCase.BOOLEANDATA:
+		case BOOLEANDATA:
 			return new BooleanTypeProvider(message.getBooleanData());
-		case DatatypeCase.DOUBLEDATA:
+		case DOUBLEDATA:
 			return new DoubleTypeProvider(message.getDoubleData());
-		case DatatypeCase.VECTORDATA:
+		case VECTORDATA:
 			VectorMessage VectorMessage = message.getVectorData();
 			switch(VectorMessage.getVectorCase()){
-			case VectorCase.DENSEVECTOR:
+			case DENSEVECTOR:
 				return new FloatVectorProvider(convert(VectorMessage.getDenseVector()));
-			case VectorCase.INTVECTOR:
+			case INTVECTOR:
 				return new IntVectorProvider(convert(VectorMessage.getIntVector()));
-			case VectorCase.SPARSEVECTOR:
+			case SPARSEVECTOR:
 				return new FloatVectorProvider(convert(VectorMessage.getSparseVector()));
-			case VectorCase.VECTOR_NOT_SET:
+			case VECTOR_NOT_SET:
 			default:
 				return new NothingProvider();
 			}
-		case DatatypeCase.FLOATDATA:
+		case FLOATDATA:
 			return new FloatTypeProvider(message.getFloatData());
-		case DatatypeCase.INTDATA:
+		case INTDATA:
 			return new IntTypeProvider(message.getIntData());
-		case DatatypeCase.LONGDATA:
+		case LONGDATA:
 			return new LongTypeProvider(message.getLongData());
-		case DatatypeCase.STRINGDATA:
+		case STRINGDATA:
 			return new StringTypeProvider(message.getStringData());
-		case DatatypeCase.DATATYPE_NOT_SET:
+		case DATATYPE_NOT_SET:
 		default:
 			return new NothingProvider();
 		

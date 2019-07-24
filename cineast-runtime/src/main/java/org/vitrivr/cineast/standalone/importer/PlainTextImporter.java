@@ -2,6 +2,7 @@ package org.vitrivr.cineast.standalone.importer;
 
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.importer.Importer;
 
 import java.io.IOException;
 import java.nio.file.Files;

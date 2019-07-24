@@ -2,7 +2,7 @@ package org.vitrivr.cineast.standalone.importer.handlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.standalone.importer.TupleInsertMessageImporter;
+import org.vitrivr.cineast.core.importer.TupleInsertMessageImporter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

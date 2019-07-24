@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.standalone.importer;
+package org.vitrivr.cineast.core.importer;
 
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 

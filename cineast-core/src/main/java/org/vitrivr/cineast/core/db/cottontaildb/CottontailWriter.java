@@ -16,11 +16,11 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static boolean useGlobalWrapper = true;
-    private static final CottontailWrapper GLOBAL_COTTONTAIL_WRAPPER =
-            useGlobalWrapper ? new CottontailWrapper() : null;
-    private CottontailWrapper cottontail =
-            useGlobalWrapper ? GLOBAL_COTTONTAIL_WRAPPER : new CottontailWrapper();
+    private final CottontailWrapper cottontail;
+
+    public CottontailWriter(CottontailWrapper wrapper){
+        this.cottontail = wrapper;
+    }
 
     private Entity entity;
 
@@ -33,12 +33,7 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
     @Override
     public boolean close() {
-        if (useGlobalWrapper) {
-            LOGGER.debug("Not closing Cottontailwriter because global wrapper flag is set");
-            return false;
-        }
-        LOGGER.debug("Closing Cottontailwriter");
-        this.cottontail.close();
+        //this.cottontail.close();
         return true;
     }
 

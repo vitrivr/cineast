@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.standalone.importer.Importer;
+import org.vitrivr.cineast.core.importer.Importer;
 
 import java.io.IOException;
 import java.nio.file.Path;

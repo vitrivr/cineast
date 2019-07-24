@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.db.dao;
 
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.tag.CompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
@@ -52,14 +51,6 @@ public class TagHandler implements Closeable {
         this.selector.open(TAG_ENTITY_NAME);
         this.writer.open(TAG_ENTITY_NAME);
         this.writer.setFieldNames(TAG_ID_COLUMNNAME, TAG_NAME_COLUMNNAME, TAG_DESCRIPTION_COLUMNNAME);
-    }
-
-    /**
-     * Default constructor for {@link TagHandler}. Uses the {@link DBSelector} and {@link PersistencyWriter} from the configuration
-     */
-    public TagHandler() {
-        this(Config.sharedConfig().getDatabase().getSelectorSupplier().get(),
-                Config.sharedConfig().getDatabase().getWriterSupplier().get());
     }
 
     /**

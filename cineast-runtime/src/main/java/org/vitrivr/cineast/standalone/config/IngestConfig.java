@@ -187,7 +187,6 @@ public final class IngestConfig implements ExtractionContextProvider {
         }
     }
 
-    @Override
     public ExtractionContainerProvider pathProvider() {
         if (this.input != null) {
             return new SingletonContainerProvider(Paths.get(this.input.getPath()));

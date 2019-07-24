@@ -12,7 +12,7 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.tag.CompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.features.TagsFtSearch;
-import org.vitrivr.cineast.standalone.importer.Importer;
+import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionTuple;
 

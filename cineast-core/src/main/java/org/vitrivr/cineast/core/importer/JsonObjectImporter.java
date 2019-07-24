@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.standalone.importer;
+package org.vitrivr.cineast.core.importer;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.providers.primitive.BitSetProviderImpl;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.importer.Importer;
 
 import java.io.File;
 import java.io.IOException;

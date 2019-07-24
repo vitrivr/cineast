@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.db.dao;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
@@ -41,10 +40,7 @@ public class MediaSegmentMetadataHandler implements Closeable {
     this.writer.setFieldNames(FIELDNAMES);
   }
 
-  public MediaSegmentMetadataHandler() {
-    this(Config.sharedConfig().getDatabase().getSelectorSupplier().get(),
-        Config.sharedConfig().getDatabase().getWriterSupplier().get());
-  }
+
 
 
   public boolean addDescriptor(MediaSegmentMetadataDescriptor descriptor){

@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.db;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.FixedSizePriorityQueue;
@@ -10,8 +9,8 @@ import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.core.util.distance.*;
-import org.vitrivr.cineast.standalone.importer.Importer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,13 +20,17 @@ import java.util.stream.Collectors;
 
 public abstract class ImporterSelector<T extends Importer<?>> implements DBSelector {
 
+  protected ImporterSelector(File baseDirectory){
+    this.baseDirectory = baseDirectory;
+  }
+
   private File file;
+  private final File baseDirectory;
   private static final Logger LOGGER = LogManager.getLogger();
 
   @Override
   public boolean open(String name) {
-    this.file = new File(
-        Config.sharedConfig().getDatabase().getHost() + "/" + name + getFileExtension());
+    this.file = new File(this.baseDirectory, name + getFileExtension());
     return file.exists() && file.isFile() && file.canRead();
   }
 
@@ -251,8 +254,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
 
   @Override
   public boolean existsEntity(String name) {
-    File file = new File(
-        Config.sharedConfig().getDatabase().getHost() + "/" + name + getFileExtension());
+    File file = new File(this.baseDirectory, name + getFileExtension());
     return file.exists() && file.isFile() && file.canRead();
   }
 
