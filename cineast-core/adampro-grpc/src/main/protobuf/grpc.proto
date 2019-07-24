@@ -1,0 +1,615 @@
+syntax = "proto3";
+
+option java_package = "org.vitrivr.adampro.grpc";
+
+option java_outer_classname = "AdamGrpc";
+
+
+
+//****  SERVICES ****//
+
+
+service AdamDefinition {
+  rpc CreateEntity(CreateEntityMessage) returns (AckMessage) {}
+  rpc AvailableAttributeTypes(EmptyMessage) returns (AvailableAttributeTypesMessage) {}
+  rpc Count(EntityNameMessage) returns (AckMessage) {}
+  rpc DropEntity(EntityNameMessage) returns (AckMessage) {}
+  rpc ExistsEntity(EntityNameMessage) returns (ExistsMessage) {}
+  rpc Insert(InsertMessage) returns (AckMessage) {}
+  rpc StreamInsert(stream InsertMessage) returns (stream AckMessage) {}
+  rpc VacuumEntity(EntityNameMessage) returns (AckMessage) {}
+  rpc Delete(DeleteMessage) returns (AckMessage) {}
+  //creates an index on the data
+  rpc Index(IndexMessage) returns (AckMessage) {}
+  rpc GenerateAllIndexes(IndexMessage) returns (AckMessage) {}
+  rpc ExistsIndex(IndexExistsMessage) returns (ExistsMessage) {}
+  rpc DropIndex(IndexNameMessage) returns (AckMessage) {}
+  rpc ListIndexes(EntityNameMessage) returns (IndexesMessage) {}
+  //generates an entity with random data and with all available indexes (for demo purposes)
+  rpc GenerateRandomData(GenerateRandomDataMessage) returns (AckMessage) {}
+  rpc ListEntities(EmptyMessage) returns (EntitiesMessage) {}
+  rpc GetEntityProperties(EntityPropertiesMessage) returns (PropertiesMessage) {}
+  rpc GetAttributeProperties(AttributePropertiesMessage) returns (PropertiesMessage) {}
+  rpc GetIndexProperties(IndexPropertiesMessage) returns (PropertiesMessage) {}
+  rpc RepartitionEntityData(RepartitionMessage) returns (AckMessage) {}
+  rpc RepartitionIndexData(RepartitionMessage) returns (AckMessage) {}
+  rpc AdaptScanMethods(AdaptScanMethodsMessage) returns (AckMessage) {}
+  rpc SparsifyEntity(SparsifyEntityMessage) returns (AckMessage) {}
+  rpc ImportData(ImportMessage) returns (AckMessage) {}
+  rpc ProtoImportData(ProtoImportMessage) returns (stream AckMessage) {}
+  rpc ProtoExportData(ProtoExportMessage) returns (AckMessage) {}
+  rpc ListStorageHandlers(EmptyMessage) returns (StorageHandlersMessage) {}
+  //TODO: register storage handlers
+  rpc TransferStorageHandler(TransferStorageHandlerMessage) returns (AckMessage) {}
+}
+
+service AdamSearch {
+  //caches an index explicitly (before performing a query to speed up retrieval time)
+  rpc CacheIndex (IndexNameMessage) returns (AckMessage) {}
+  rpc CacheEntity (EntityNameMessage) returns (AckMessage) {}
+  rpc Preview(PreviewMessage) returns (QueryResultsMessage) {}
+  //performs a query on an entity with hints on which search method to use
+  //(if no hint is specified a fallback is used)
+  rpc DoQuery(QueryMessage) returns (QueryResultsMessage) {}
+  rpc DoStreamingQuery(stream QueryMessage) returns (stream QueryResultsMessage) {}
+  rpc DoBatchQuery(BatchedQueryMessage) returns (BatchedQueryResultsMessage){}
+  rpc DoParallelQuery(QueryMessage) returns (stream QueryResultsMessage) {}
+  rpc DoProgressiveQuery(QueryMessage) returns (stream QueryResultsMessage) {}
+
+  //return cached results
+  rpc GetCachedResults(CachedResultsMessage) returns (QueryResultsMessage) {}
+  //get scores for execution paths under empirical querying
+  rpc GetScoredExecutionPath(QuerySimulationMessage) returns (ScoredExecutionPathsMessage) {}
+
+  rpc StopQuery(StopQueryMessage) returns (AckMessage) {}
+  rpc StopAllQueries(EmptyMessage) returns (AckMessage) {}
+  rpc Ping(EmptyMessage) returns (AckMessage) {}
+}
+
+
+
+
+//****  GLOBALS ****//
+
+enum AttributeType {
+  UNKOWNAT = 0;
+  AUTO = 1;
+  LONG = 2;
+  INT = 3;
+  FLOAT = 4;
+  DOUBLE = 5;
+  STRING = 6;
+  TEXT = 7;
+  BOOLEAN = 8;
+  VECTOR = 9;
+  SPARSEVECTOR = 13;
+  GEOMETRY = 10;
+  GEOGRAPHY = 11;
+}
+
+enum IndexType {
+  UNKNOWNIT = 0;
+  ecp = 1;
+  lsh = 2;
+  mi = 3;
+  pq = 4;
+  sh = 5;
+  vaf = 6;
+  vav = 7;
+  vap = 8;
+}
+
+message EmptyMessage {
+}
+
+message VectorMessage {
+  oneof vector {
+     DenseVectorMessage denseVector = 1;
+     SparseVectorMessage sparseVector = 2;
+     IntVectorMessage intVector = 3;
+  }
+}
+
+message DenseVectorMessage {
+  repeated float vector = 1 [packed=true];
+}
+
+message SparseVectorMessage {
+    repeated int32 index = 2 [packed=true];
+    repeated float data = 1 [packed=true];
+    int32 length = 3;
+}
+
+message IntVectorMessage {
+  repeated int32 vector = 1 [packed=true];
+}
+
+message DataMessage {
+  oneof datatype {
+     int64 longData = 1;
+     int32 intData = 2;
+     float floatData = 3;
+     double doubleData = 4;
+     string stringData = 5;
+     bool booleanData = 6;
+     VectorMessage vectorData = 7;
+     //string textData = 8;
+     string geographyData = 9;
+     string geometryData = 10;
+  }
+}
+
+
+//****  DATA DEFINITION REQUESTS ****//
+
+message CreateEntityMessage {
+  string entity = 1;
+  repeated AttributeDefinitionMessage attributes = 2;
+}
+
+message AttributeDefinitionMessage {
+  string name = 1;
+  AttributeType attributetype = 2;
+  map<string, string> params = 7;
+  string handler = 8;
+}
+
+message EntityNameMessage {
+  string entity = 1;
+}
+
+message IndexNameMessage {
+  string index = 1;
+}
+
+message EntityPropertiesMessage {
+  string entity = 1;
+  map<string, string> options = 2;
+}
+
+message AttributePropertiesMessage {
+  string entity = 1;
+  string attribute = 2;
+  map<string, string> options = 3;
+}
+
+message IndexPropertiesMessage {
+  string index = 1;
+  map<string, string> options = 2;
+}
+
+message GenerateRandomDataMessage {
+  string entity = 1;
+  int32 ntuples = 2;
+  map<string, string> options = 3;
+}
+
+message InsertMessage {
+  string entity = 1;
+  repeated TupleInsertMessage tuples = 2;
+
+  message TupleInsertMessage {
+    map<string, DataMessage> data = 1;
+  }
+}
+
+message InsertsMessage {
+  repeated InsertMessage inserts = 1;
+}
+
+
+message DeleteMessage {
+  string entity = 1;
+
+  message PredicateMessage {
+    string attribute = 1;
+    repeated DataMessage values = 2;
+    string op = 3;
+  }
+
+
+  repeated PredicateMessage predicates = 2;
+}
+
+message IndexMessage {
+  string entity = 1;
+  string attribute = 2;
+  IndexType indextype = 3;
+  DistanceMessage distance = 4;
+  //for possible options see each index structure
+  map<string, string> options = 5;
+}
+
+message IndexExistsMessage {
+  string entity = 1;
+  string attribute = 2;
+  IndexType indextype = 3;
+  DistanceMessage distance = 4;
+  bool acceptStale = 5;
+}
+
+message RepartitionMessage {
+  string entity = 1; //entity or index
+  int32 numberOfPartitions = 2;
+  string attributes = 3;
+  enum PartitionOptions {
+      CREATE_NEW = 0;
+      REPLACE_EXISTING = 1;
+      CREATE_TEMP = 2;
+    }
+  PartitionOptions option = 4;
+  //Default is handled by API
+  enum Partitioner {
+      SPARK = 0;
+      RANDOM = 1;
+      ECP = 6;
+    }
+  Partitioner partitioner = 5;
+  //for possible options see each Repartitioner
+  map<string, string> options = 6;
+}
+
+message WeightMessage {
+  string entity = 1; //entity or index
+  string attribute = 2;
+  float weight = 3;
+}
+
+enum Optimizer {
+  SVM_OPTIMIZER = 0;
+  NAIVE_OPTIMIZER = 1;
+  LR_OPTIMIZER = 2;
+}
+
+message AdaptScanMethodsMessage {
+  string entity = 1;
+  string attribute = 2;
+
+  enum IndexCollection {
+    EXISTING_INDEXES = 0;
+    NEW_INDEXES = 1;
+  }
+  IndexCollection ic = 3;
+
+  enum QueryCollection {
+    LOGGED_QUERIES = 0;
+    RANDOM_QUERIES = 1;
+  }
+  QueryCollection qc = 4;
+
+  map<string, string> options = 5;
+  Optimizer optimizer = 6;
+}
+
+message QuerySimulationMessage {
+    string entity = 1;
+    NearestNeighbourQueryMessage nnq = 2;
+    Optimizer optimizer = 3;
+}
+
+message StopQueryMessage {
+    string jobid = 1;
+}
+
+message SparsifyEntityMessage {
+  string entity = 1;
+  string attribute = 2;
+}
+
+message ImportMessage {
+  string host = 1;
+  string database = 2;
+  string username = 3;
+  string password = 4;
+}
+
+message ProtoImportMessage {
+  string path = 1;
+}
+
+message ProtoExportMessage {
+  string path = 1;
+  string entity = 2;
+}
+
+message StorageHandlersMessage {
+  repeated StorageHandlerMessage handlers = 1;
+}
+
+message StorageHandlerMessage {
+  string name = 1;
+  repeated AttributeType attributetypes = 2;
+}
+
+message TransferStorageHandlerMessage {
+  string entity = 1;
+  repeated string attributes = 2;
+  string handler = 3;
+}
+
+
+//****  QUERY REQUESTS ****//
+
+message QueryMessage {
+  //optional queryid, which is returned by ADAMpro in the response if set in request
+  string queryid = 1;
+  //SELECT ...
+  ProjectionMessage projection = 2;
+  //FROM ...
+  FromMessage from = 3;
+  //WHERE ...
+  BooleanQueryMessage bq = 6;
+  //USING DISTANCE ...
+  NearestNeighbourQueryMessage nnq = 7;
+
+  //for hints see  org.vitrivr.adampro.query.handler.QueryHints, possible values
+  //include "index", "inexact", "ecp", "lsh", "mi", ""pq", "sh", "exact", "va", "vaf", "vav", "sequential", "empirical"
+  //hints are used to chooose whether an index scan or a sequential scan, etc. should be used
+  repeated string hints = 8;
+
+  //if set to true, no fallback is being used
+  bool noFallback = 9;
+
+  //maximum duration of query in ms
+  int64 time = 10;
+
+  //read query from cache if available with same query id
+  bool readFromCache = 11;
+  //put query into cache with given query id
+  bool putInCache = 12;
+
+  //the information level denotes how much information is returned by ADAMpro (note that depending on the level of information
+  //the query might be performed slower!)
+  //note that you can combine information levels!
+  enum InformationLevel {
+      //returns simple information for the full tree, but no intermediate results
+      INFORMATION_FULL_TREE = 0;
+      //returns only the information on the last step
+      INFORMATION_LAST_STEP_ONLY = 1;
+      //returns all intermediate results (slow!)
+      INFORMATION_INTERMEDIATE_RESULTS = 2;
+      //returns the provenance partition of the data
+      WITH_PROVENANCE_PARTITION_INFORMATION = 3;
+      //returns the provenance source of the data
+      WITH_PROVENANCE_SOURCE_INFORMATION = 4;
+    }
+  repeated InformationLevel information = 13;
+}
+
+message ExpressionQueryMessage {
+  string queryid = 1;
+  enum Operation {
+      UNKNOWNEXPOP = 0;
+      UNION = 1;
+      INTERSECT = 2;
+      EXCEPT = 3;
+      JOIN = 4;
+      FUZZYUNION = 5;
+      FUZZYINTERSECT = 6;
+  }
+
+   enum OperationOrder {
+      UNKNOWNOO = 0;
+      LEFTFIRST = 1;
+      RIGHTFIRST = 2;
+      PARALLEL = 3;
+    }
+
+   SubExpressionQueryMessage left = 2;
+   Operation operation = 3;
+   OperationOrder order = 4;
+   SubExpressionQueryMessage right = 5;
+   map<string, string> options = 6;
+}
+
+message SubExpressionQueryMessage {
+  string queryid = 1;
+  oneof submessage {
+    QueryMessage qm = 2;
+    ExpressionQueryMessage eqm = 3;
+    ExternalHandlerQueryMessage ehqm = 4;
+  }
+}
+
+message ProjectionMessage {
+  enum Operation {
+    UNKNOWNPROJOP = 0;
+    COUNT = 1;
+    EXISTS = 2;
+    DISTINCT = 3;
+  }
+  message AttributeNameMessage {
+    repeated string attribute = 1;
+  }
+
+  AttributeNameMessage attributes = 1;
+  Operation op = 2;
+}
+
+message FromMessage {
+  oneof source {
+    //the source for the query is either an entity
+    string entity = 1;
+    //or an index (note that if you specify the index name, the hints are disregarded)
+    string index = 2;
+    //or a list of indexes
+    IndexListMessage indexes = 3;
+    //or an expression
+    SubExpressionQueryMessage expression = 4;
+  }
+}
+
+message IndexListMessage {
+  repeated string indexes = 1;
+}
+
+message NearestNeighbourQueryMessage {
+  //name of the attribute on which to perform the nearest neighbour query
+  string attribute = 1;
+  //query vector
+  VectorMessage query = 2;
+  //weights vector; the weights are element-wise multiplied when computing the distance
+  VectorMessage weights = 3;
+  //distance function to use
+  DistanceMessage distance = 4;
+  //number of nearest neighbors to retrieve
+  int32 k = 5;
+  //options to hand-over to scan, e.g.
+  //nochecks - will not perform the isQueryConform check before executing query
+  //numOfQ - parameter for LSH and SH Index
+  //ks and max_pos_diff - parameter for for MI Index
+  map<string, string> options = 6;
+  //specifies whether only the candidates from the index search are returned and no exact distance computation is performed
+  bool indexOnly = 7;
+  //partitions ids to consider, optional, if not specified all partitions are considered
+  repeated int32 partitions = 8;
+}
+
+message DistanceMessage {
+  enum DistanceType {
+    UNKNOWND = 0;
+    chisquared = 1;
+    correlation = 2;
+    cosine = 3;
+    hamming = 4;
+    jaccard = 5;
+    kullbackleibler = 6;
+    chebyshev = 7;
+    euclidean = 8;
+    squaredeuclidean = 9;
+    manhattan = 10;
+    minkowski = 11; //add option 'norm'
+    spannorm = 12;
+    modulo = 13;
+    haversine = 14;
+  }
+  DistanceType distancetype = 1;
+  map<string, string> options = 2;
+}
+
+message BooleanQueryMessage {
+  //Boolean query parameters
+  repeated WhereMessage where = 1;
+
+  message WhereMessage {
+    string attribute = 1;
+    repeated DataMessage values = 2;
+    string op = 3;
+  }
+
+  message JoinMessage {
+    string table = 1;
+    repeated string attributes = 2;
+  }
+}
+
+message ExternalHandlerQueryMessage {
+  string queryid = 1;
+  string entity = 2;
+  string handler = 3;
+  map<string, string> params = 4;
+}
+
+message CachedResultsMessage {
+  string queryid = 1;
+}
+
+message BatchedQueryMessage {
+  repeated QueryMessage queries = 1;
+}
+
+message PreviewMessage {
+  string entity = 1;
+  int32 n = 2;
+}
+
+
+
+//****  RESPONSES ****//
+message AckMessage {
+enum Code {
+  ERROR = 0;
+  OK = 1;
+}
+  Code code = 1;
+  string message = 2;
+}
+
+message EntitiesMessage {
+  AckMessage ack = 1;
+  repeated string entities = 2;
+}
+
+message AvailableAttributeTypesMessage {
+  AckMessage ack = 1;
+  repeated AttributeType attributetypes = 2;
+}
+
+message ExistsMessage {
+  AckMessage ack = 1;
+  bool exists = 2;
+}
+
+message IndexesMessage {
+  AckMessage ack = 1;
+
+  message IndexMessage {
+    string index = 1;
+    string attribute = 2;
+    IndexType indextype = 3;
+  }
+  repeated IndexMessage indexes = 2;
+}
+
+message PropertiesMessage {
+  AckMessage ack = 1;
+  string entity = 2;
+  map<string, string> properties = 3;
+}
+
+message QueryResultsMessage {
+  AckMessage ack = 1;
+  repeated QueryResultInfoMessage responses = 2;
+}
+
+message QueryResultInfoMessage {
+  //acknowledgement message returning status of query
+  AckMessage ack = 1;
+  //id of result given in the query request
+  string queryid = 2;
+  //confidence in results (between 0 - 1)
+  double confidence = 3;
+  //retrieval time
+  int64 time = 4;
+  //provenance information, source that returned results
+  string source = 5;
+  map<string, string> info = 6;
+  //result list
+  repeated QueryResultTupleMessage results = 7;
+}
+
+message QueryResultTupleMessage {
+  map<string, DataMessage> data = 1;
+}
+
+message ExportDataFileMessage {
+  AckMessage ack = 1;
+  bytes definitionfile = 2;
+  bytes datafile = 3;
+}
+
+message BatchedQueryResultsMessage {
+  repeated QueryResultsMessage results = 1;
+}
+
+message ScoredExecutionPathMessage {
+  double score = 1;
+  string scan = 2;
+  string scantype = 3;
+  string description = 4;
+}
+
+message ScoredExecutionPathsMessage {
+  AckMessage ack = 1;
+  repeated ScoredExecutionPathMessage executionpaths = 2;
+}

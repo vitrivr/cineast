@@ -1,0 +1,8 @@
+plugins {
+    id 'application'
+}
+
+dependencies {
+    compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.1'
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.10.0'
+}

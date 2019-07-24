@@ -1,2 +1,5 @@
 rootProject.name = 'cineast'
 
+include 'cineast-core'
+include 'cineast-api'
+include 'cineast-runtime'
