@@ -2,7 +2,7 @@ package org.vitrivr.cineast.standalone.importer.vbs2019;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.db.dao.TagHandler;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 
@@ -24,7 +24,7 @@ public class TagImportHandler extends DataImportHandler {
       LOGGER.info("Starting data import for tag files in: {}", root.toString());
       Files.walk(root, 2).filter(p -> p.toString().toLowerCase().endsWith(".json")).forEach(p -> {
         try {
-          this.futures.add(this.service.submit(new DataImportRunner(new TagImporter(p), TagHandler.TAG_ENTITY_NAME, "tag file")));
+          this.futures.add(this.service.submit(new DataImportRunner(new TagImporter(p), TagReader.TAG_ENTITY_NAME, "tag file")));
         } catch (IOException e) {
           LOGGER.fatal("Failed to open path at {} ", p);
           throw new RuntimeException(e);

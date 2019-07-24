@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.db.dao.TagHandler;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.importer.Importer;
 
 import java.io.IOException;
@@ -63,9 +63,9 @@ public class TagImporter implements Importer<Pair<String, String>> {
   @Override
   public Map<String, PrimitiveTypeProvider> convert(Pair<String, String> data) {
     final HashMap<String, PrimitiveTypeProvider> map = new HashMap<>(2);
-    map.put(TagHandler.TAG_ID_COLUMNNAME, PrimitiveTypeProvider.fromObject(data.first));
-    map.put(TagHandler.TAG_NAME_COLUMNNAME, PrimitiveTypeProvider.fromObject(data.second));
-    map.put(TagHandler.TAG_DESCRIPTION_COLUMNNAME, PrimitiveTypeProvider.fromObject(data.second));
+    map.put(TagReader.TAG_ID_COLUMNNAME, PrimitiveTypeProvider.fromObject(data.first));
+    map.put(TagReader.TAG_NAME_COLUMNNAME, PrimitiveTypeProvider.fromObject(data.second));
+    map.put(TagReader.TAG_DESCRIPTION_COLUMNNAME, PrimitiveTypeProvider.fromObject(data.second));
     return map;
   }
 }

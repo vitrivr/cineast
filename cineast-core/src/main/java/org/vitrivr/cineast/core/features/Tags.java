@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-import org.vitrivr.cineast.core.db.dao.TagHandler;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
@@ -30,7 +30,7 @@ public class Tags implements Extractor, Retriever {
 
   private static final String ENTITY_NAME = "feature_tags";
   
-  private static final TagHandler tagHandler = new TagHandler();
+  private TagReader tagReader;
   
   private static final Logger LOGGER = LogManager.getLogger();
   
@@ -51,6 +51,7 @@ public class Tags implements Extractor, Retriever {
   public void init(DBSelectorSupplier selectorSupply) {
     this.selector = selectorSupply.get();
     this.selector.open(ENTITY_NAME);
+    this.tagReader = new TagReader(selectorSupply.get());
   }
 
   @Override
@@ -65,7 +66,7 @@ public class Tags implements Extractor, Retriever {
       }
       
       if(!tag.hasId()){
-        List<Tag> tags = tagHandler.getTagsByName(tag.getName());
+        List<Tag> tags = this.tagReader.getTagsByName(tag.getName());
         
         for(Tag t : tags){
           tagScores.put(t.getId(), 1f);
@@ -147,7 +148,7 @@ public class Tags implements Extractor, Retriever {
       }
       
       if(!tag.hasId()){
-        List<Tag> tags = tagHandler.getTagsByName(tag.getName());
+        List<Tag> tags = this.tagReader.getTagsByName(tag.getName());
         
         if(tags.isEmpty()){
           //TODO create new tags with new IDs

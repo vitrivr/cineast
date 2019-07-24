@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.db.dao;
+package org.vitrivr.cineast.core.db.dao.reader;
 
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.tag.CompleteTag;
@@ -11,9 +11,9 @@ import java.io.Closeable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TagHandler implements Closeable {
+public class TagReader implements Closeable {
 
-    private final PersistencyWriter<?> writer;
+
     private final DBSelector selector;
 
     /**
@@ -31,50 +31,18 @@ public class TagHandler implements Closeable {
     private final HashMap<String, Tag> tagCache = new HashMap<>();
 
     /**
-     * Constructor for {@link TagHandler}
+     * Constructor for {@link TagReader}
      *
      * @param selector {@link DBSelector} instanced used for lookup of tags.
-     * @param writer   {@link PersistencyWriter} used to persist tags.
      */
-    public TagHandler(DBSelector selector, PersistencyWriter<?> writer) {
+    public TagReader(DBSelector selector) {
         this.selector = selector;
-        this.writer = writer;
 
         if (this.selector == null) {
             throw new NullPointerException("selector cannot be null");
         }
 
-        if (this.writer == null) {
-            throw new NullPointerException("writer cannot be null");
-        }
-
         this.selector.open(TAG_ENTITY_NAME);
-        this.writer.open(TAG_ENTITY_NAME);
-        this.writer.setFieldNames(TAG_ID_COLUMNNAME, TAG_NAME_COLUMNNAME, TAG_DESCRIPTION_COLUMNNAME);
-    }
-
-    /**
-     * Adds and persist a new {@link Tag} entry.
-     *
-     * @param id ID of the new entry.
-     * @param name Name of the new entry.
-     * @param description Description of the new entry.
-     * @return True on success, false otherwise.
-     */
-    public boolean addTag(String id, String name, String description) {
-        return this.writer.persist(this.writer.generateTuple(id, name, description));
-    }
-
-    /**
-     * Adds and persist a new {@link Tag} entry.
-     *
-     * @param tag {@link Tag} that should be added.
-     */
-    public boolean addTag(Tag tag) {
-        if (tag == null) {
-            return false;
-        }
-        return addTag(tag.getId(), tag.getName(), tag.getDescription());
     }
 
     /**
@@ -87,7 +55,7 @@ public class TagHandler implements Closeable {
     public List<Tag> getTagsByMatchingName(final String name) {
         final String lname = name.toLowerCase();
         return this.selector.getRows("name", RelationalOperator.ILIKE, lname).stream()
-                .map(TagHandler::fromMap)
+                .map(TagReader::fromMap)
                 .sorted((o1, o2) -> {
                     boolean o1l = o1.getName().toLowerCase().startsWith(lname);
                     boolean o2l = o2.getName().toLowerCase().startsWith(lname);
@@ -165,7 +133,7 @@ public class TagHandler implements Closeable {
      * @return List of all {@link Tag}s contained in the database
      */
     public List<Tag> getAll() {
-        return this.selector.getAll().stream().map(TagHandler::fromMap).filter(Objects::nonNull)
+        return this.selector.getAll().stream().map(TagReader::fromMap).filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -224,7 +192,6 @@ public class TagHandler implements Closeable {
     @Override
     public void close() {
         this.selector.close();
-        this.writer.close();
     }
 
     @Override

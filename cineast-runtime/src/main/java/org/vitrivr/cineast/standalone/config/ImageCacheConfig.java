@@ -21,7 +21,7 @@ public final class ImageCacheConfig {
 	private Policy cachingPolicy =  Policy.AUTOMATIC;
 	private long softMinMemory = 3096;
 	private long hardMinMemory = 2048;
-	private File cacheLocation =new File(".");
+	private File cacheLocation = new File(".");
 
 	@JsonCreator
 	public ImageCacheConfig() {
