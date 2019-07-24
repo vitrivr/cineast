@@ -1,15 +1,16 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.BooleanExpression;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.util.web.DataURLParser;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class BooleanQueryContainer extends QueryContainer {
 

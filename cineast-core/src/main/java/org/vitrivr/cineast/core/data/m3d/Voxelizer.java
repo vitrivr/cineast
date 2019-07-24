@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.core.data.m3d;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +9,9 @@ import org.joml.Vector3i;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.math.MathConstants;
 import org.vitrivr.cineast.core.util.mesh.MeshMathUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class can be used to to transform a 3D polygon Mesh into a 3D VoxelGrid. The class performs this

@@ -10,12 +10,14 @@ import org.vitrivr.cineast.core.features.abstracts.SolrTextRetriever;
 public class OCRSearch extends SolrTextRetriever {
 
   public static final String OCR_TABLE_NAME = "features_ocr";
+
   /**
    * Default constructor for {@link OCRSearch}.
    */
   public OCRSearch() {
     super(OCR_TABLE_NAME);
   }
+
 
   @Override
   protected String[] generateQuery(SegmentContainer sc, ReadableQueryConfig qc) {

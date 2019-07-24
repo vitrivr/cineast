@@ -1,9 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ColorConverter;
@@ -15,11 +11,14 @@ import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.KMeansPP;
-import org.vitrivr.cineast.core.util.TimeHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DominantColors extends AbstractFeatureModule {
 
@@ -61,19 +60,16 @@ public class DominantColors extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
-      TimeHelper.tic();
-      LOGGER.traceEntry();
       LabContainer[] dominant = getDominantColor(shot.getMostRepresentativeFrame().getImage());
-
       persist(shot.getId(), dominant);
-      LOGGER.debug("DominantColor.processShot() done in {}", TimeHelper.toc());
-      LOGGER.traceExit();
     }
   }
 
   private void persist(String shotId, LabContainer[] dominant) {
-
     FloatVectorImpl fvi = new FloatVectorImpl();
     for (LabContainer lab : dominant) {
       fvi.add(lab.getL());
@@ -81,7 +77,6 @@ public class DominantColors extends AbstractFeatureModule {
       fvi.add(lab.getB());
     }
     super.persist(shotId, fvi);
-    LOGGER.debug("{} : {}", shotId, Arrays.toString(dominant));
   }
 
   @Override

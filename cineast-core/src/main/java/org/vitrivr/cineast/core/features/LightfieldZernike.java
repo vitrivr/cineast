@@ -1,9 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.math3.complex.Complex;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -11,6 +7,10 @@ import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.images.ZernikeHelper;
 import org.vitrivr.cineast.core.util.math.MathConstants;
 import org.vitrivr.cineast.core.util.math.ZernikeMoments;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An Extraction and Retrieval module for 3D models that leverages Zernike moment based light field descriptors and as proposed in [1] and [2].

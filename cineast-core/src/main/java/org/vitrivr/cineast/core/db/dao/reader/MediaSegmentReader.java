@@ -1,24 +1,19 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
-import static org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor.FIELDNAMES;
-
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DBSelector;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor.FIELDNAMES;
 
 public class MediaSegmentReader extends AbstractEntityReader {
 

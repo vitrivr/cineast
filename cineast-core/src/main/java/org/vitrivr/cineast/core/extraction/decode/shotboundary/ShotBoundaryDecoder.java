@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.extraction.decode.shotboundary;
 
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
-
-import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 
 public final class ShotBoundaryDecoder {
 

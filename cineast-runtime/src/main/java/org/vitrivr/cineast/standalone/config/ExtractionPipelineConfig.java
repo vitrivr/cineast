@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.standalone.config;
 
-import java.io.File;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.File;
 
 public final class ExtractionPipelineConfig {
 

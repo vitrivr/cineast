@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.data.providers;
 
+import org.vitrivr.cineast.core.data.frames.AudioFrame;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.vitrivr.cineast.core.data.frames.AudioFrame;
 
 /**
  *

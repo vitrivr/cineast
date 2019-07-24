@@ -3,15 +3,14 @@ package org.vitrivr.cineast.core.data.entities;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.apache.commons.lang3.StringUtils;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
-import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author rgasser

@@ -1,14 +1,10 @@
 package org.vitrivr.cineast.core.util;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.ImmutableList;
+
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
-import com.google.common.collect.ImmutableList;
 
 public class GroupingUtil {
   private GroupingUtil() {}

@@ -1,17 +1,16 @@
 package org.vitrivr.cineast.core.db.setup;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.db.dao.TagHandler;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public interface EntityCreator extends AutoCloseable {
     /**

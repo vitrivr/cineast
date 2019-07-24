@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.util.dsp.filter.frequency;
 
-import java.util.Arrays;
-
 import org.apache.commons.math3.complex.Complex;
 import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
+
+import java.util.Arrays;
 
 
 /**

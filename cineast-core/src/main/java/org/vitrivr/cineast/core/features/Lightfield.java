@@ -1,11 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.twelvemonkeys.image.ImageUtil;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
@@ -20,7 +15,11 @@ import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
 import org.vitrivr.cineast.core.render.Renderer;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import com.twelvemonkeys.image.ImageUtil;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * An abstract base class for light field based feature modules as proposed by [1].

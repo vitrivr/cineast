@@ -1,14 +1,6 @@
 package org.vitrivr.cineast.core.features.neuralnet.tf.models.yolo;
 
 
-import java.io.IOException;
-import java.nio.FloatBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
 import org.apache.commons.math3.analysis.function.Sigmoid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +17,15 @@ import org.vitrivr.cineast.core.features.neuralnet.tf.models.yolo.util.Recogniti
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.MathHelper.ArgMaxResult;
+
+import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
 
 
 /**

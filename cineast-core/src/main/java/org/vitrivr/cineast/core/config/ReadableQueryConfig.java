@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.config;
 
-import java.util.*;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
+
+import java.util.*;
 
 public class ReadableQueryConfig {
     /**

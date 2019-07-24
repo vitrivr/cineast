@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.metadata;
 
 
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+
 import java.nio.file.Path;
 import java.util.List;
-
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
  * @author rgasser

@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.util.dsp.fft;
 
+import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
+import org.vitrivr.cineast.core.util.dsp.filter.frequency.FrequencyDomainFilterInterface;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
-import org.vitrivr.cineast.core.util.dsp.filter.frequency.FrequencyDomainFilterInterface;
 
 /**
  * @author rgasser

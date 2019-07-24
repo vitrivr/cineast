@@ -1,18 +1,5 @@
 package org.vitrivr.cineast.core.util;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
-import org.vitrivr.cineast.core.descriptor.PathList;
-
 import boofcv.alg.misc.PixelMath;
 import boofcv.gui.feature.VisualizeFeatures;
 import boofcv.gui.image.ImagePanel;
@@ -21,6 +8,16 @@ import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.ImageRectangle;
 import boofcv.struct.image.GrayU8;
 import georegression.struct.point.Point2D_F32;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.descriptor.PathList;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 public class VisualizationUtil {
 	

@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ColorConverter;
@@ -10,11 +8,13 @@ import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.providers.MedianImgProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
-import org.vitrivr.cineast.core.util.TimeHelper;
+
+import java.util.List;
 
 public class MedianColor extends AbstractFeatureModule {
 
@@ -61,22 +61,20 @@ public class MedianColor extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
-      TimeHelper.tic();
-      LOGGER.traceEntry();
       LabContainer median = getMedian(shot);
 
       persist(shot.getId(), median);
-      LOGGER.debug("MedianColor.processShot() done in {}", TimeHelper.toc());
-      LOGGER.traceExit();
     }
   }
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    LOGGER.traceEntry();
     LabContainer query = getMedian(sc.getMedianImg());
-    return LOGGER.traceExit(getSimilar(ReadableFloatVector.toArray(query), qc));
+    return getSimilar(ReadableFloatVector.toArray(query), qc);
   }
 
 }

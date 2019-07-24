@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.util.images;
 
-import java.awt.image.BufferedImage;
-
 import boofcv.abst.feature.detdesc.DetectDescribePoint;
 import boofcv.abst.feature.detect.interest.ConfigFastHessian;
 import boofcv.factory.feature.detdesc.FactoryDetectDescribe;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.feature.BrightFeature;
 import boofcv.struct.image.GrayF32;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Extracts images based on the SURF algorithm described in [1]. For feature detection, the Fast Hession (FH-9) algorithm is used.

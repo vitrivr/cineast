@@ -1,5 +1,12 @@
 package org.vitrivr.cineast.core.features.codebook;
 
+import boofcv.alg.bow.ClusterVisualWords;
+import boofcv.io.UtilIO;
+import org.ddogleg.clustering.ComputeClusters;
+import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
+import org.vitrivr.cineast.core.extraction.decode.image.DefaultImageDecoder;
+
+import javax.activation.MimetypesFileTypeMap;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,15 +15,6 @@ import java.util.ArrayDeque;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import javax.activation.MimetypesFileTypeMap;
-
-import org.ddogleg.clustering.ComputeClusters;
-import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
-import org.vitrivr.cineast.core.extraction.decode.image.DefaultImageDecoder;
-
-import boofcv.alg.bow.ClusterVisualWords;
-import boofcv.io.UtilIO;
 
 /**
  * Default implementation of a Codebook generator for images. Extend and add the details like

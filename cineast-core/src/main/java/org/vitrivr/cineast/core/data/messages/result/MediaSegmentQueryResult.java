@@ -1,12 +1,11 @@
 package org.vitrivr.cineast.core.data.messages.result;
 
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.abstracts.AbstractQueryResultMessage;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.List;
 
 /**
  * @author rgasser

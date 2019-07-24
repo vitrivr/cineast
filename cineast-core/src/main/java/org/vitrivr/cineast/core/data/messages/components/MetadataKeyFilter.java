@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.data.messages.components;
 
-import java.util.function.Predicate;
-
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+
+import java.util.function.Predicate;
 
 /**
  * Filter for metadata, based on the key.

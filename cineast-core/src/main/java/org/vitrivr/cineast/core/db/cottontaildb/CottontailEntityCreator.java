@@ -1,20 +1,21 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.ColumnDefinition;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.TEXT;
+import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 
 public class CottontailEntityCreator implements EntityCreator {
 
@@ -121,7 +122,7 @@ public class CottontailEntityCreator implements EntityCreator {
   public boolean createFeatureEntity(String featurename, boolean unique,
       AttributeDefinition... attributes) {
     final AttributeDefinition[] extended = new AttributeDefinition[attributes.length + 1];
-    final HashMap<String,String> hints = new HashMap<>(1);
+    final HashMap<String, String> hints = new HashMap<>(1);
 
     extended[0] = new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING, hints);
     System.arraycopy(attributes, 0, extended, 1, attributes.length);
@@ -143,18 +144,27 @@ public class CottontailEntityCreator implements EntityCreator {
     ColumnDefinition.Builder builder = ColumnDefinition.newBuilder();
     for (AttributeDefinition attribute : attributes) {
       builder.setName(attribute.getName()).setType(mapAttributeType(attribute.getType()));
-      if(attribute.getType() == VECTOR && attribute.getLength() > 0){
+      if (attribute.getType() == VECTOR && attribute.getLength() > 0) {
         builder.setLength(attribute.getLength());
       }
       columns.add(builder.build());
       builder.clear();
     }
-
+    Entity entity = CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName);
     CreateEntityMessage message = CreateEntityMessage.newBuilder()
-        .setEntity(CottontailMessageBuilder.entity(CottontailMessageBuilder.CINEAST_SCHEMA, entityName))
+        .setEntity(entity)
         .addAllColumns(columns).build();
 
     cottontail.createEntityBlocking(message);
+
+    for (AttributeDefinition attribute : attributes) {
+      if (attribute.getType() == TEXT) {
+        Index index = Index.newBuilder().setEntity(entity).setName("index-lucene-" + entity.getSchema().getName() + "_" + entityName + "_" + attribute.getName()).setType(IndexType.LUCENE).build();
+        /* Cottontail ignores index params as of july 19 */
+        CreateIndexMessage idxMessage = CreateIndexMessage.newBuilder().setIndex(index).addColumns(attribute.getName()).build();
+        cottontail.createIndexBlocking(idxMessage);
+      }
+    }
 
     return true;
   }

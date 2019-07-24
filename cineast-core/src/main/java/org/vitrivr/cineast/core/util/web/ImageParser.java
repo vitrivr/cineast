@@ -1,14 +1,13 @@
 package org.vitrivr.cineast.core.util.web;
 
+import org.apache.commons.codec.binary.Base64;
+import org.vitrivr.cineast.core.util.LogHelper;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-import org.apache.commons.codec.binary.Base64;
-import org.vitrivr.cineast.core.util.LogHelper;
 
 /**
  * @author rgasser

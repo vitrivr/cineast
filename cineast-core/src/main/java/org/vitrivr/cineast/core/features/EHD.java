@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.List;
-
+import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.image.GrayU8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -17,8 +17,7 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 
-import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.GrayU8;
+import java.util.List;
 
 /**
  * see Efficient Use of MPEG-7 Edge Histogram Descriptor by Won '02
@@ -48,7 +47,9 @@ public class EHD extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
     if (!phandler.idExists(shot.getId())) {
       List<VideoFrame> videoFrames = shot.getVideoFrames();
       float[] hist = new float[80];
@@ -62,7 +63,6 @@ public class EHD extends AbstractFeatureModule {
       }
       persist(shot.getId(), new FloatVectorImpl(hist));
     }
-    LOGGER.traceExit();
   }
 
   protected static float[] process(MultiImage img, float[] hist) {
@@ -123,8 +123,7 @@ public class EHD extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    FloatVector query = new FloatVectorImpl(
-        process(sc.getMostRepresentativeFrame().getImage(), new float[80]));
+    FloatVector query = new FloatVectorImpl(process(sc.getMostRepresentativeFrame().getImage(), new float[80]));
     return getSimilar(ReadableFloatVector.toArray(query), qc);
   }
 

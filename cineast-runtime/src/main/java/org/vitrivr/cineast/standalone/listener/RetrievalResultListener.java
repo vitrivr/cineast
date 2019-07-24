@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.standalone.listener;
 
-import java.util.List;
-
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.standalone.runtime.RetrievalTask;
+
+import java.util.List;
 
 /**
  * Listener which can be attached to retrieval logic to get notified on raw results of a {@link Retriever}

@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.standalone.importer;
 
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 
 public interface Importer<T> {
 

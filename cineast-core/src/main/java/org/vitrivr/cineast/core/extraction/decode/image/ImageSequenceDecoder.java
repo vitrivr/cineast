@@ -1,5 +1,8 @@
 package org.vitrivr.cineast.core.extraction.decode.image;
 
+import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -8,8 +11,6 @@ import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.Set;
-import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 
 public class ImageSequenceDecoder implements Decoder<BufferedImage> {
 

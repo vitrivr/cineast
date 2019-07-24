@@ -1,20 +1,14 @@
 package org.vitrivr.cineast.core.benchmark.engine;
 
-import java.nio.file.Path;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import gnu.trove.map.hash.TObjectIntHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.benchmark.model.Benchmark;
 import org.vitrivr.cineast.core.benchmark.model.BenchmarkImpl;
 import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
 
-import gnu.trove.map.hash.TObjectIntHashMap;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * @author rgasser
@@ -254,7 +248,7 @@ public class BenchmarkEngine {
      */
     public synchronized List<Benchmark> drain() {
         /* If the deque is null, return empty string. */
-        if (this.deque == null || this.deque.size() == 0) {
+        if (this.deque == null || this.deque.isEmpty()) {
           return new ArrayList<>(1);
         }
 

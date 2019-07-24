@@ -1,9 +1,5 @@
 package org.vitrivr.cineast.core.db.dao;
 
-import java.io.Closeable;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.tag.CompleteTag;
@@ -11,6 +7,10 @@ import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.RelationalOperator;
+
+import java.io.Closeable;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TagHandler implements Closeable {
 

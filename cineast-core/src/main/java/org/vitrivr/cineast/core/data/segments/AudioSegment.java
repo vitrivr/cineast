@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.data.segments;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This AudioSegment is part of the Cineast data model and can hold an arbitrary number of AudioFrames that somehow

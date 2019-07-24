@@ -1,11 +1,12 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
-import java.util.Map;
 import org.vitrivr.cineast.api.SessionExtractionContainer;
 import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
 import org.vitrivr.cineast.core.data.messages.session.SessionState;
+
+import java.util.Map;
 
 /**
  * @author silvan on 23.01.18.

@@ -1,21 +1,19 @@
 package org.vitrivr.cineast.core.features.exporter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.util.LogHelper;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.function.Supplier;
-
-import javax.imageio.ImageIO;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.db.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.LogHelper;
 
 public class ShotDescriptorExporter implements Extractor {
 	private static final Logger LOGGER = LogManager.getLogger();

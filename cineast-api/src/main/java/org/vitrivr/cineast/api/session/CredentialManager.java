@@ -1,19 +1,13 @@
 package org.vitrivr.cineast.api.session;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.HashMap;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 import org.vitrivr.cineast.core.data.messages.credentials.Credentials;
 import org.vitrivr.cineast.core.util.LogHelper;
+
+import java.io.*;
+import java.util.HashMap;
 
 public class CredentialManager {
 
@@ -152,13 +146,8 @@ public class CredentialManager {
         return false;
       }
       if (username == null) {
-        if (other.username != null) {
-          return false;
-        }
-      } else if (!username.equals(other.username)) {
-        return false;
-      }
-      return true;
+          return other.username == null;
+      } else return username.equals(other.username);
     }
     
   }

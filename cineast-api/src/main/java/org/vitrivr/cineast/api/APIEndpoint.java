@@ -3,6 +3,7 @@ package org.vitrivr.cineast.api;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.api.rest.handlers.actions.*;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.*;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemObjectResolver;
@@ -11,7 +12,6 @@ import org.vitrivr.cineast.api.rest.routes.ResolvedContentRoute;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 import org.vitrivr.cineast.core.config.APIConfig;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.api.rest.handlers.actions.*;
 import spark.Service;
 
 import java.io.File;

@@ -1,15 +1,11 @@
 package org.vitrivr.cineast.core.util.audio.pitch.tracking;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.util.audio.pitch.Melody;
 import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
 import org.vitrivr.cineast.core.util.dsp.FrequencyUtils;
+
+import java.util.*;
 
 /**
  * This class implements the pitch-tracking algorithm described in [1]. It can be used to extract a melody from a
@@ -151,7 +147,7 @@ public class PitchTracker {
      */
     public Melody extractMelody(int iterations) {
         /* Return if no pitch-contours are available. */
-        if (this.pitchContours.size() == 0) {
+        if (this.pitchContours.isEmpty()) {
           return null;
         }
 

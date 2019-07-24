@@ -1,17 +1,13 @@
 package org.vitrivr.cineast.core.extraction.decode.shotboundary;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrecvidMasterShotReferenceDecoder {
 

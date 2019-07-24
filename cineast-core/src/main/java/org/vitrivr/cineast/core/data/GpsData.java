@@ -1,22 +1,21 @@
 package org.vitrivr.cineast.core.data;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.drew.metadata.exif.GpsDirectory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.MoreObjects;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.MetadataUtil;
+import org.vitrivr.cineast.core.util.OptionalUtil;
+
+import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
-import javax.annotation.Nullable;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.MetadataUtil;
-import org.vitrivr.cineast.core.util.OptionalUtil;
 
 /**
  * Container for GPS data, i.e. location and datetime. The data is extracted from either the Exif

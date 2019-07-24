@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.data.messages.result;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.abstracts.AbstractQueryResultMessage;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;

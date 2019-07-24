@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.db.dao.reader;
 
-import java.io.Closeable;
-
 import org.vitrivr.cineast.core.db.DBSelector;
+
+import java.io.Closeable;
 
 /**
  * @author rgasser

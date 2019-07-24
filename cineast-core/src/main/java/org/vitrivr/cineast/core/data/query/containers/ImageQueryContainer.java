@@ -1,19 +1,18 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
+import georegression.struct.point.Point2D_F32;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
-
-import georegression.struct.point.Point2D_F32;
 import org.vitrivr.cineast.core.util.web.ImageParser;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ImageQueryContainer extends QueryContainer {
 

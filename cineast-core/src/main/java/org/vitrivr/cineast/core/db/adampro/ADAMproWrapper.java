@@ -1,45 +1,25 @@
 package org.vitrivr.cineast.core.db.adampro;
 
 import com.google.common.util.concurrent.Futures;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.concurrent.ExecutionException;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.vitrivr.adampro.grpc.AdamDefinitionGrpc;
-import org.vitrivr.adampro.grpc.AdamDefinitionGrpc.AdamDefinitionFutureStub;
-import org.vitrivr.adampro.grpc.AdamGrpc;
-import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.CreateEntityMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.EmptyMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.EntityNameMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.EntityPropertiesMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.ExistsMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.IndexNameMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.PreviewMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.PropertiesMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
-import org.vitrivr.adampro.grpc.AdamSearchGrpc;
-import org.vitrivr.adampro.grpc.AdamSearchGrpc.AdamSearchFutureStub;
-import org.vitrivr.adampro.grpc.AdamSearchGrpc.AdamSearchStub;
-
-import org.vitrivr.cineast.core.config.DatabaseConfig;
-import org.vitrivr.cineast.core.util.LogHelper;
-
 import com.google.common.util.concurrent.ListenableFuture;
-
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.adampro.grpc.AdamDefinitionGrpc;
+import org.vitrivr.adampro.grpc.AdamDefinitionGrpc.AdamDefinitionFutureStub;
+import org.vitrivr.adampro.grpc.AdamGrpc;
+import org.vitrivr.adampro.grpc.AdamGrpc.*;
+import org.vitrivr.adampro.grpc.AdamSearchGrpc;
+import org.vitrivr.adampro.grpc.AdamSearchGrpc.AdamSearchFutureStub;
+import org.vitrivr.adampro.grpc.AdamSearchGrpc.AdamSearchStub;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.util.LogHelper;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.*;
 
 public class ADAMproWrapper implements AutoCloseable {
 

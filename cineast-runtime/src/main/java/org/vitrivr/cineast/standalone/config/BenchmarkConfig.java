@@ -1,12 +1,11 @@
 package org.vitrivr.cineast.standalone.config;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author rgasser

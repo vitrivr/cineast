@@ -1,9 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
+import boofcv.alg.filter.binary.Contour;
+import georegression.struct.point.Point2D_I32;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
@@ -16,8 +14,9 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.images.ContourHelper;
 
-import boofcv.alg.filter.binary.Contour;
-import georegression.struct.point.Point2D_I32;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author rgasser

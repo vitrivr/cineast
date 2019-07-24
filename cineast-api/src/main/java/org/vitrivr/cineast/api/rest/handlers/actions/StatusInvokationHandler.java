@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
 
-import java.util.Map;
-
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
 import org.vitrivr.cineast.core.data.messages.general.Ping;
+
+import java.util.Map;
 
 /**
  * @author rgasser

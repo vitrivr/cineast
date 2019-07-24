@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.util;
 
+import org.vitrivr.cineast.core.data.Pair;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.vitrivr.cineast.core.data.Pair;
 
 public final class OptionalUtil {
   private OptionalUtil() {}

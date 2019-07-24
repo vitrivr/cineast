@@ -1,9 +1,7 @@
 package org.vitrivr.cineast.standalone.config;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.UUID;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
@@ -12,8 +10,9 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.File;
+import java.util.HashMap;
+import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Config {
@@ -29,7 +28,6 @@ public class Config {
     private RetrieverConfig retriever;
     private ExtractionPipelineConfig extractor;
     private ImageCacheConfig imagecache;
-    private VisualizationConfig visualization;
     private QueryConfig query;
     private HashMap<MediaType, DecoderConfig> decoders;
     private BenchmarkConfig benchmark = new BenchmarkConfig();
@@ -104,14 +102,6 @@ public class Config {
     }
     public void setImagecache(ImageCacheConfig imagecache) {
         this.imagecache = imagecache;
-    }
-
-    @JsonProperty
-    public VisualizationConfig getVisualization() {
-        return visualization;
-    }
-    public void setVisualization(VisualizationConfig visualization) {
-        this.visualization = visualization;
     }
 
 

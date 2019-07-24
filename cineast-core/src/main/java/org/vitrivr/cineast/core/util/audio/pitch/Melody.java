@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.util.audio.pitch;
 
+import org.vitrivr.cineast.core.util.dsp.FrequencyUtils;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.vitrivr.cineast.core.util.dsp.FrequencyUtils;
 
 /**
  * This class represents a melody as as sequence of pitches.

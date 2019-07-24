@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.data;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
-import net.coobird.thumbnailator.Thumbnails;
 
 
 public class InMemoryMultiImage implements MultiImage {

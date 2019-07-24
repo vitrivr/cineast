@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
+
 import java.util.Collection;
 
 public enum DeepLabLabel {

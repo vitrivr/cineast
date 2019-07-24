@@ -1,12 +1,5 @@
 package org.vitrivr.cineast.core.extraction.decode.video;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacpp.*;
@@ -22,9 +15,16 @@ import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.decode.subtitle.SubTitleDecoder;
-import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleDecoderFactory;
+import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
 import org.vitrivr.cineast.core.util.LogHelper;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author rgasser
@@ -68,7 +68,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** Lists the mimetypes supported by the FFMpegVideoDecoder.
      *
      * TODO: List may not be complete yet. */
-    private static final Set<String> supportedFiles;
+    public static final Set<String> supportedFiles;
     static {
         HashSet<String> tmp = new HashSet<>();
         tmp.add("multimedia/mp4"); /* They share the same suffix with video (.mp4). */

@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
-import java.util.List;
-
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
 import org.vitrivr.cineast.core.util.web.AudioParser;
+
+import java.util.List;
 
 /**
  * @author rgasser

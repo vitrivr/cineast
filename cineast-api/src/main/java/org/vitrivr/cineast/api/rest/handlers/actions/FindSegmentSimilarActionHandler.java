@@ -1,11 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.config.Config;
@@ -19,7 +14,7 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.util.*;
 
 /**
  * @author rgasser

@@ -1,5 +1,24 @@
 package org.vitrivr.cineast.standalone.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.config.IdConfig;
+import org.vitrivr.cineast.core.config.SegmenterConfig;
+import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
+import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
+import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
+import org.vitrivr.cineast.standalone.run.path.SessionContainerProvider;
+import org.vitrivr.cineast.standalone.run.path.SingletonContainerProvider;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,28 +28,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.vitrivr.cineast.core.config.DatabaseConfig;
-import org.vitrivr.cineast.core.config.IdConfig;
-import org.vitrivr.cineast.core.config.SegmenterConfig;
-import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.db.DBSelectorSupplier;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
-import org.vitrivr.cineast.core.metadata.MetadataExtractor;
-import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
-import org.vitrivr.cineast.standalone.run.path.SessionContainerProvider;
-import org.vitrivr.cineast.standalone.run.path.SingletonContainerProvider;
-import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
-
 /**
  * Configures a data-ingest or extraction run, acts as an ExtractionContextProvider.
  *
- * A concrete instance be obtained by deserializing a JSON file that is compatible with the
+ * A concrete instance can be obtained by deserializing a JSON file that is compatible with the
  * structure defined by this classes and its fields.
  *
  * @author rgasser
@@ -38,6 +39,8 @@ import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
  * @created 13.01.17
  */
 public final class IngestConfig implements ExtractionContextProvider {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     /** MediaType for the Extraction run. */
     private final MediaType type;

@@ -1,5 +1,4 @@
 //protobuf
-import sbtassembly.AssemblyPlugin.autoImport._
 
 name := "ADAMpro-grpc"
 

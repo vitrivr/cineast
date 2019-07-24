@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.util.mesh;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A collection of utilities surrounding Mesh mathematics. Includes methods to calculate the barycenter or the

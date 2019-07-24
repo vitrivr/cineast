@@ -1,10 +1,11 @@
 package org.vitrivr.cineast.standalone.run.path;
 
-import java.util.List;
-import java.util.Optional;
 import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Convenience Method when you don't want to actually provide Elements.

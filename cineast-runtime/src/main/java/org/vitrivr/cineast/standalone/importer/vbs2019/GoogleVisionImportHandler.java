@@ -1,14 +1,15 @@
 package org.vitrivr.cineast.standalone.importer.vbs2019;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.features.TagsFtSearch;
+import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
-import org.vitrivr.cineast.core.util.LogHelper;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class GoogleVisionImportHandler extends DataImportHandler {
 

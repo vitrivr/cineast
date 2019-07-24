@@ -1,5 +1,18 @@
 package org.vitrivr.cineast.core.features.exporter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.core.util.dsp.fft.STFT;
+import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
+import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
+import org.vitrivr.cineast.core.util.dsp.visualization.AudioSignalVisualizer;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,20 +21,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
-
-import javax.imageio.ImageIO;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.db.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.core.util.dsp.fft.STFT;
-import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
-import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
-import org.vitrivr.cineast.core.util.dsp.visualization.AudioSignalVisualizer;
 
 /**
  * Visualizes and exporst the power spectogram (time vs. frequency vs. power) of the provided

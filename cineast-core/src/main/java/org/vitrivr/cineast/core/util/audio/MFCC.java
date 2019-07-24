@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.util.audio;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class calculates Mel-frequency cepstral coefficient (MFCC) features from the STFT of an audio signal.

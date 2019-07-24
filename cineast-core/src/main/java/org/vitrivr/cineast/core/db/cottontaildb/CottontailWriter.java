@@ -1,23 +1,16 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.RelationalOperator;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
@@ -40,10 +33,11 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
     @Override
     public boolean close() {
-        LOGGER.debug("Closing Cottontailwriter");
         if (useGlobalWrapper) {
+            LOGGER.debug("Not closing Cottontailwriter because global wrapper flag is set");
             return false;
         }
+        LOGGER.debug("Closing Cottontailwriter");
         this.cottontail.close();
         return true;
     }

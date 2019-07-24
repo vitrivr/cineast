@@ -1,14 +1,11 @@
 package org.vitrivr.cineast.core.data;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.Objects;
-
+import com.drew.lang.GeoLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.MathHelper;
 
-import com.drew.lang.GeoLocation;
+import java.util.Objects;
 
 public class Location implements ReadableFloatVector {
   private static final int ELEMENT_COUNT = 2;

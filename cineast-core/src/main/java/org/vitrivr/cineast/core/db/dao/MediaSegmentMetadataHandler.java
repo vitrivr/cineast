@@ -1,14 +1,5 @@
 package org.vitrivr.cineast.core.db.dao;
 
-import static org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor.ENTITY;
-import static org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor.FIELDNAMES;
-
-import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
@@ -19,6 +10,12 @@ import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.dao.reader.DatabaseLookupException;
 import org.vitrivr.cineast.core.util.LogHelper;
+
+import java.io.Closeable;
+import java.util.*;
+
+import static org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor.ENTITY;
+import static org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor.FIELDNAMES;
 
 public class MediaSegmentMetadataHandler implements Closeable {
 

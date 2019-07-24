@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.extraction.segmenter.image;
 
-import java.awt.image.BufferedImage;
-import java.util.Map;
-
 import org.vitrivr.cineast.core.data.segments.ImageSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 import org.vitrivr.cineast.core.extraction.segmenter.general.PassthroughSegmenter;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
+
+import java.awt.image.BufferedImage;
+import java.util.Map;
 
 /**
  * @author rgasser

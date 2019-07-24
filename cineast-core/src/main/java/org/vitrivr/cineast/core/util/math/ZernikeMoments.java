@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.util.math;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.math3.complex.Complex;
 import org.vitrivr.cineast.core.util.math.functions.ZernikeBasisFunction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

@@ -1,10 +1,6 @@
 package org.vitrivr.cineast.core.data.segments;
 
-import org.vitrivr.cineast.core.data.m3d.Mesh;
-import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
-import org.vitrivr.cineast.core.data.m3d.VoxelGrid;
-import org.vitrivr.cineast.core.data.m3d.Voxelizer;
-import org.vitrivr.cineast.core.data.m3d.WritableMesh;
+import org.vitrivr.cineast.core.data.m3d.*;
 import org.vitrivr.cineast.core.util.mesh.MeshTransformUtil;
 
 /**

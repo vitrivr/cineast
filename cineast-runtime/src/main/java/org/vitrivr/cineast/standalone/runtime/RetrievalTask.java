@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.standalone.runtime;
 
-import java.util.List;
-import java.util.concurrent.Callable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -11,6 +8,9 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.standalone.monitoring.RetrievalTaskMonitor;
+
+import java.util.List;
+import java.util.concurrent.Callable;
 
 public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreElement>>> {
 
@@ -47,6 +47,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
 
   @Override
   public Pair<RetrievalTask, List<ScoreElement>> call() throws Exception {
+    LOGGER.traceEntry();
     long start = System.currentTimeMillis();
     LOGGER.debug("starting {}", retriever.getClass().getSimpleName());
     List<ScoreElement> result;
@@ -57,6 +58,7 @@ public class RetrievalTask implements Callable<Pair<RetrievalTask, List<ScoreEle
     }
     long stop = System.currentTimeMillis();
     RetrievalTaskMonitor.reportExecutionTime(retriever.getClass().getSimpleName(), stop - start);
+    LOGGER.debug("{}.getSimilar() done in {} ms", retriever.getClass().getSimpleName(), stop - start);
     return LOGGER.traceExit(new Pair<RetrievalTask, List<ScoreElement>>(this, result));
   }
 

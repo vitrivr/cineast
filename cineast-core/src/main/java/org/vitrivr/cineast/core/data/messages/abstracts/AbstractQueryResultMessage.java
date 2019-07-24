@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.data.messages.abstracts;
 
-import java.util.List;
-
 import org.vitrivr.cineast.core.data.messages.interfaces.QueryResultMessage;
+
+import java.util.List;
 
 /**
  * @author rgasser

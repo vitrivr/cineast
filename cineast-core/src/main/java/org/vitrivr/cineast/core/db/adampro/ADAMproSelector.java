@@ -1,28 +1,13 @@
 package org.vitrivr.cineast.core.db.adampro;
 
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-
+import com.google.common.collect.Iterables;
+import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamGrpc;
-import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.*;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
-import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryResultsMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.ExternalHandlerQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultInfoMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultTupleMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -31,8 +16,8 @@ import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import com.google.common.collect.Iterables;
-import com.google.common.util.concurrent.ListenableFuture;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class ADAMproSelector extends AbstractADAMproSelector {
 

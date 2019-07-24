@@ -1,28 +1,18 @@
 package org.vitrivr.cineast.core.db.adampro;
 
+import org.vitrivr.adampro.grpc.AdamGrpc;
+import org.vitrivr.adampro.grpc.AdamGrpc.*;
+import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.DistanceType;
+import org.vitrivr.adampro.grpc.AdamGrpc.ExpressionQueryMessage.Operation;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.db.DataMessageConverter;
+import org.vitrivr.cineast.core.db.RelationalOperator;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
-import org.vitrivr.adampro.grpc.AdamGrpc;
-import org.vitrivr.adampro.grpc.AdamGrpc.BatchedQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.DistanceMessage.DistanceType;
-import org.vitrivr.adampro.grpc.AdamGrpc.ExpressionQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.ExpressionQueryMessage.Operation;
-import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.ProjectionMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.db.DataMessageConverter;
-import org.vitrivr.cineast.core.db.RelationalOperator;
 
 /**
  * @author rgasser

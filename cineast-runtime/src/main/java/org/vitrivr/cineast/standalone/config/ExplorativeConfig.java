@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.standalone.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 
 public class ExplorativeConfig {

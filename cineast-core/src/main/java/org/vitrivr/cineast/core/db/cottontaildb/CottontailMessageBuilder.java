@@ -1,48 +1,21 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.DoubleVector;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.FloatVector;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.From;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.IntVector;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.LongVector;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.providers.primitive.BooleanTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.DoubleTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.FloatArrayTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.FloatTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.IntArrayTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.IntTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.LongTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
+import org.vitrivr.cineast.core.data.ReadableFloatVector;
+import org.vitrivr.cineast.core.data.providers.primitive.*;
 import org.vitrivr.cineast.core.db.RelationalOperator;
+
+import java.util.*;
 
 public class CottontailMessageBuilder {
 
@@ -194,6 +167,10 @@ public class CottontailMessageBuilder {
       return dataBuilder.setVectorData(toVector((float[]) o)).build();
     }
 
+    if (o instanceof ReadableFloatVector) {
+      return dataBuilder.setVectorData(toVector(((ReadableFloatVector) o))).build();
+    }
+
     Vector.Builder vectorBuilder = Vector.newBuilder();
 
     if (o instanceof double[]) {
@@ -223,6 +200,8 @@ public class CottontailMessageBuilder {
                   LongVector.newBuilder().addAllVector(Longs.asList((long[]) o))))
           .build();
     }
+
+    LOGGER.debug("Unknown type {} in message builder, serializing to string representation {}", o.getClass().getName(), o.toString());
 
     return dataBuilder.setStringData(o.toString()).build();
   }
@@ -282,6 +261,14 @@ public class CottontailMessageBuilder {
     return Vector.newBuilder()
         .setFloatVector(FloatVector.newBuilder().addAllVector(Floats.asList(vector)))
         .build();
+  }
+
+  private static Vector toVector(ReadableFloatVector vector) {
+    List<Float> floats = new ArrayList<>();
+    for (int i = 0; i < vector.getElementCount(); i++) {
+      floats.add(vector.getElement(i));
+    }
+    return Vector.newBuilder().setFloatVector(FloatVector.newBuilder().addAllVector(floats)).build();
   }
 
   public static List<Data> toData(Iterable<Object> obs) {

@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.metadata;
 
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 
 /**
  * A {@link MetadataExtractor} that extracts only a specific feature.

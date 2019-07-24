@@ -5,21 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
-
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
-import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
-import org.vitrivr.cineast.core.data.providers.primitive.StringProvider;
-import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.*;
 import org.vitrivr.cineast.core.db.dao.reader.DatabaseLookupException;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
+
+import javax.annotation.Nullable;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
 
 
 /**

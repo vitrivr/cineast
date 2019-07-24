@@ -1,13 +1,12 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.MoreObjects;
 import org.vitrivr.cineast.core.data.GpsData;
 import org.vitrivr.cineast.core.data.Location;
-
-import com.google.common.base.MoreObjects;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+
+import java.util.Optional;
 
 public class LocationQueryContainer extends QueryContainer {
 

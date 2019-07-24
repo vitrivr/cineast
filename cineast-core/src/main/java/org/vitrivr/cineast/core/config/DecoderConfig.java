@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.config;
 
-import java.util.HashMap;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.HashMap;
 
 public final class DecoderConfig {
 

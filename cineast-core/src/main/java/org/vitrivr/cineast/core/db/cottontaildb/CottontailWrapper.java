@@ -8,31 +8,22 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLFutureStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc.CottonDQLBlockingStub;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertStatus;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Schema;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.SuccessStatus;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.NettyChannelBuilder;
-import io.grpc.stub.StreamObserver;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.util.LogHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.DatabaseConfig;
-import org.vitrivr.cineast.core.util.LogHelper;
 
 public class CottontailWrapper implements AutoCloseable {
 
@@ -48,11 +39,11 @@ public class CottontailWrapper implements AutoCloseable {
   private static final int maxMessageSize = 10_000_000;
   private static final long MAX_QUERY_CALL_TIMEOUT = 300_000; //TODO expose to config
   private static final long MAX_CALL_TIMEOUT = 5000; //TODO expose to config
-  private StreamObserver<InsertMessage> insertStream;
 
   public CottontailWrapper() {
     DatabaseConfig config = Config.sharedConfig().getDatabase();
     this.channel = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPlaintext()).maxInboundMessageSize(maxMessageSize).build();
+    LOGGER.info("Connected to Cottontail at {}:{}", config.getHost(), config.getPort());
     this.definitionFutureStub = CottonDDLGrpc.newFutureStub(channel);
     this.managementStub = CottonDMLGrpc.newFutureStub(channel);
     this.insertStub = CottonDMLGrpc.newStub(channel);
@@ -73,6 +64,19 @@ public class CottontailWrapper implements AutoCloseable {
       } else {
         e.printStackTrace();
       }
+    }
+  }
+
+  public synchronized void createIndexBlocking(CreateIndexMessage createMessage) {
+    final CottonDDLBlockingStub stub = CottonDDLGrpc.newBlockingStub(this.channel);
+    try {
+      stub.createIndex(createMessage);
+    } catch (StatusRuntimeException e) {
+      if (e.getStatus().getCode() == Status.ALREADY_EXISTS.getCode()) {
+        LOGGER.warn("Index on {}.{} was not created because it already exists", createMessage.getIndex().getEntity().getName(), createMessage.getColumnsList().toString());
+        return;
+      }
+      e.printStackTrace();
     }
   }
 
@@ -204,7 +208,6 @@ public class CottontailWrapper implements AutoCloseable {
    */
   @Override
   public void close() {
-    this.insertStream.onCompleted();
     this.channel.shutdown();
   }
 }

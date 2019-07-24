@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.data.providers;
 
-import java.util.Arrays;
-
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
+
+import java.util.Arrays;
 
 /**
  * @author rgasser

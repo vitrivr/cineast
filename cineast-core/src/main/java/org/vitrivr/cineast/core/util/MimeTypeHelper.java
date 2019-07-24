@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.util;
 
-import java.io.File;
 import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
 
 public final class MimeTypeHelper {
 

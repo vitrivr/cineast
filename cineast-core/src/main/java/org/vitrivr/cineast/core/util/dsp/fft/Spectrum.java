@@ -1,15 +1,15 @@
 package org.vitrivr.cineast.core.util.dsp.fft;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.util.MathArrays;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author rgasser

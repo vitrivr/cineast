@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
 import org.vitrivr.cineast.core.data.SemanticMap;
 import org.vitrivr.cineast.core.util.web.DataURLParser;
 import org.vitrivr.cineast.core.util.web.ImageParser;

@@ -1,32 +1,12 @@
 package org.vitrivr.cineast.core.db.adampro;
 
 import com.google.common.collect.Iterables;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamGrpc;
-import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.*;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
-import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.DenseVectorMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.ExternalHandlerQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.NearestNeighbourQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultInfoMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultTupleMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.SubExpressionQueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.VectorMessage;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Hints;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -34,6 +14,8 @@ import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.DataMessageConverter;
 import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.db.RelationalOperator;
+
+import java.util.*;
 
 public class ADAMproStreamingSelector extends AbstractADAMproSelector {
 

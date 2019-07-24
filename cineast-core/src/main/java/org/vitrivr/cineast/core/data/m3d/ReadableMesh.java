@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.data.m3d;
 
-import java.util.List;
-
 import org.joml.Vector3fc;
+
+import java.util.List;
 
 /**
  * @author rgasser

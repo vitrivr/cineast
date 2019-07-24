@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.*;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tensorflow.Tensor;
@@ -20,6 +18,8 @@ import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabAde2
 import org.vitrivr.cineast.core.features.neuralnet.tf.models.deeplab.DeepLabLabel;
 import org.vitrivr.cineast.core.util.GridPartitioner;
 import org.vitrivr.cineast.core.util.LogHelper;
+
+import java.util.*;
 
 public class ConceptMasksAde20k extends AbstractFeatureModule {
 

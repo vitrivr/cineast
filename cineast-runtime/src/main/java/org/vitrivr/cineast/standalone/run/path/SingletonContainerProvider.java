@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.standalone.run.path;
 
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
-
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
+
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Convenience Provider for the {@link org.vitrivr.cineast.core.config.IngestConfig}

@@ -1,9 +1,5 @@
 package org.vitrivr.cineast.core.util.mesh;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
@@ -14,6 +10,10 @@ import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.m3d.ReadableMesh;
 import org.vitrivr.cineast.core.data.m3d.WritableMesh;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * A collection of utilities surrounding transformation of Meshes. Includes methods to scale, move, center or apply the

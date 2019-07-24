@@ -1,9 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
+import boofcv.alg.filter.binary.Contour;
+import georegression.struct.point.Point2D_I32;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
@@ -14,8 +12,9 @@ import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.images.ContourHelper;
 import org.vitrivr.cineast.core.util.math.MathConstants;
 
-import boofcv.alg.filter.binary.Contour;
-import georegression.struct.point.Point2D_I32;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An Extraction and Retrieval module for 3D models that leverages Fourier based light field descriptors and as proposed in [1] and [2].

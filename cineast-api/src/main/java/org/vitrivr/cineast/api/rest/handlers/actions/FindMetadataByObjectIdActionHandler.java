@@ -1,16 +1,17 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.components.AbstractMetadataFilterDescriptor;
 import org.vitrivr.cineast.core.data.messages.lookup.OptionallyFilteredIdList;
 import org.vitrivr.cineast.core.data.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Retrieves all the {@link MediaObjectMetadataDescriptor}s for the given ID of a {@link

@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.data.providers.primitive;
 
 import com.googlecode.javaewah.datastructure.BitSet;
+
 import java.util.Arrays;
 
 public class BitSetProviderImpl implements BitSetProvider {

@@ -1,12 +1,13 @@
 package org.vitrivr.cineast.standalone.run.path;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
+import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
-import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 
 /**
  * @author silvan on 19.01.18.

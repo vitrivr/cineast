@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.core.util.images;
 
-import java.awt.image.BufferedImage;
-
 import boofcv.abst.feature.dense.DescribeImageDense;
 import boofcv.factory.feature.dense.ConfigDenseHoG;
 import boofcv.factory.feature.dense.FactoryDescribeImageDense;
@@ -9,6 +7,8 @@ import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.feature.TupleDesc_F64;
 import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.ImageType;
+
+import java.awt.image.BufferedImage;
 
 /**
  * This class provides methods to extract Histogram of Oriented Gradients (HOG) features from images using

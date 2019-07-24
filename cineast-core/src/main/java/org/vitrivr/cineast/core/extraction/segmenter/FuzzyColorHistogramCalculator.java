@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.extraction.segmenter;
 
-import java.awt.image.BufferedImage;
-
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.FuzzyColorHistogramQuantizer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
+
+import java.awt.image.BufferedImage;
 
 public class FuzzyColorHistogramCalculator {
 

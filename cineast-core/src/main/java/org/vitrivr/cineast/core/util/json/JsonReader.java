@@ -1,8 +1,7 @@
 package org.vitrivr.cineast.core.util.json;
 
-import java.io.File;
-
 import javax.annotation.Nullable;
+import java.io.File;
 
 /**
  * Wraps the Json to Object deserialization so as to make sure that it can be provided

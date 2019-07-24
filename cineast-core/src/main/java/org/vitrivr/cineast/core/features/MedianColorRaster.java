@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.function.Supplier;
-
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+
+import java.util.function.Supplier;
 
 public class MedianColorRaster extends AverageColorRaster {
 

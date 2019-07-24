@@ -1,9 +1,5 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
@@ -13,6 +9,10 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.query.MoreLikeThisQuery;
 import org.vitrivr.cineast.core.data.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author rgasser

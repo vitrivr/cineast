@@ -1,14 +1,7 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.FuzzyColorHistogramQuantizer;
 import org.vitrivr.cineast.core.color.FuzzyColorHistogramQuantizer.Color;
@@ -16,7 +9,6 @@ import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
-
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
@@ -27,12 +19,18 @@ import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ColorUtils;
 import org.vitrivr.cineast.core.util.GridPartitioner;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class AverageColorRaster extends AbstractFeatureModule {
 
@@ -155,15 +153,13 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
-    LOGGER.traceEntry();
-    if (!phandler.idExists(shot.getId())) {
-
-      Pair<float[], float[]> pair = computeRaster(shot);
-
-      persist(shot.getId(), new FloatVectorImpl(pair.first), new FloatVectorImpl(pair.second));
-
+    if (shot.getAvgImg() == MultiImage.EMPTY_MULTIIMAGE) {
+      return;
     }
-    LOGGER.traceExit();
+    if (!phandler.idExists(shot.getId())) {
+      Pair<float[], float[]> pair = computeRaster(shot);
+      persist(shot.getId(), new FloatVectorImpl(pair.first), new FloatVectorImpl(pair.second));
+    }
   }
 
   protected void persist(String shotId, ReadableFloatVector fs1, ReadableFloatVector fs2) {
@@ -283,9 +279,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-
     Pair<float[], float[]> pair = computeRaster(sc);
-
     return getSimilar(pair.second, pair.first, qc);
   }
 

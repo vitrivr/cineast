@@ -1,16 +1,15 @@
 package org.vitrivr.cineast.standalone.tests.util.core.data.entities;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.messages.session.ExtractionContainerMessage;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * @author silvan on 06.04.18.

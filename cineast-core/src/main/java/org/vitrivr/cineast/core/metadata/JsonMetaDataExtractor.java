@@ -1,14 +1,14 @@
 package org.vitrivr.cineast.core.metadata;
 
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 public class JsonMetaDataExtractor implements MetadataExtractor {
 

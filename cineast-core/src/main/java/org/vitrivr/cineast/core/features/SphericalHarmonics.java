@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.FastMath;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -17,6 +14,9 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.StagedFeatureModule;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.math.functions.SphericalHarmonicsFunction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An Extraction and Retrieval module for 3D models that leverages Spherical Harmonics as proposed in [1].

@@ -1,24 +1,23 @@
 package org.vitrivr.cineast.core.util;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-
+import com.eclipsesource.json.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 import org.vitrivr.cineast.core.extraction.decode.general.Converter;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
+import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
+import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.metadata.MetadataExtractor;
-import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
-import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 
-import com.eclipsesource.json.JsonObject;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 
 public class ReflectionHelper {

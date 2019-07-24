@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -14,16 +11,16 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.messages.query.Query;
-import org.vitrivr.cineast.core.data.messages.result.MediaObjectMetadataQueryResult;
-import org.vitrivr.cineast.core.data.messages.result.MediaSegmentMetadataQueryResult;
-import org.vitrivr.cineast.core.data.messages.result.QueryEnd;
-import org.vitrivr.cineast.core.data.messages.result.QueryError;
-import org.vitrivr.cineast.core.data.messages.result.QueryStart;
+import org.vitrivr.cineast.core.data.messages.result.*;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.util.LogHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author rgasser

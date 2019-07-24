@@ -1,10 +1,5 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
@@ -12,6 +7,11 @@ import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.messages.lookup.IdList;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.TagHandler;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class FindTagsByActionHandler extends ParsingActionHandler<IdList> {
     /** The {@link TagHandler} instance used for lookup of {@link Tag}s. */

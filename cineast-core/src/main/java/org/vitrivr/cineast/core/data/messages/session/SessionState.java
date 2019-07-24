@@ -1,10 +1,9 @@
 package org.vitrivr.cineast.core.data.messages.session;
 
-import org.vitrivr.cineast.api.session.Session;
-import org.vitrivr.cineast.api.session.SessionType;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.vitrivr.cineast.api.session.Session;
+import org.vitrivr.cineast.api.session.SessionType;
 
 public class SessionState {
 

@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.util;
 
 import gnu.trove.stack.array.TDoubleArrayStack;
-
-import java.util.function.Supplier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.function.Supplier;
 
 public class TimeHelper {
 

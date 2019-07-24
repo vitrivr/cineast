@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.data.m3d;
 
-import java.awt.Color;
-
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector4i;
+
+import java.awt.*;
 
 /**
  * @author rgasser

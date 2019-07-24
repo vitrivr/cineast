@@ -1,15 +1,5 @@
 package org.vitrivr.cineast.core.util.images;
 
-import static java.awt.image.BufferedImage.TYPE_INT_RGB;
-
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.math3.complex.Complex;
-import org.vitrivr.cineast.core.util.math.ZernikeMoments;
-import org.vitrivr.cineast.core.util.math.functions.ZernikeBasisFunction;
-
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
 import boofcv.alg.filter.binary.GThresholdImageOps;
@@ -20,6 +10,15 @@ import boofcv.struct.image.GrayF32;
 import boofcv.struct.image.GrayS32;
 import boofcv.struct.image.GrayU8;
 import georegression.struct.point.Point2D_I32;
+import org.apache.commons.math3.complex.Complex;
+import org.vitrivr.cineast.core.util.math.ZernikeMoments;
+import org.vitrivr.cineast.core.util.math.functions.ZernikeBasisFunction;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 /**
  * @author rgasser

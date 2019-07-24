@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.data.providers;
 
+import org.vitrivr.cineast.core.data.tag.Tag;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.vitrivr.cineast.core.data.tag.Tag;
 
 public interface TagProvider {
 

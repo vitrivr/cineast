@@ -2,13 +2,14 @@ package org.vitrivr.cineast.standalone.monitoring;
 
 import io.prometheus.client.exporter.MetricsServlet;
 import io.prometheus.client.hotspot.DefaultExports;
-import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.vitrivr.cineast.standalone.config.Config;
+
+import java.util.Optional;
 
 /**
  * Singleton which starts a reporting endpoint for Prometheus

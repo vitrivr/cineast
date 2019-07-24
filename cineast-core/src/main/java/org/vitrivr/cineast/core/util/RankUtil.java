@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.util;
 
-import java.util.List;
-
 import org.vitrivr.cineast.core.data.LongDoublePair;
+
+import java.util.List;
 
 public class RankUtil {
 

@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.data;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * HashMap which returns a default value in case the key is unknown

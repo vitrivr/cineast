@@ -1,10 +1,8 @@
 package org.vitrivr.cineast.standalone.tests.util.math.functions;
 
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.math.functions.factories.PolynomialFunctionFactory;
 

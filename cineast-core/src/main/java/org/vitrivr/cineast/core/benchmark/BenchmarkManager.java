@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.benchmark;
 
+import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
+import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
-import org.vitrivr.cineast.core.benchmark.model.BenchmarkMode;
 
 /**
  * @author rgasser

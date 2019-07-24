@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
-import java.time.Instant;
-import java.util.Optional;
-
 import com.google.common.base.MoreObjects;
 import org.vitrivr.cineast.core.data.GpsData;
+
+import java.time.Instant;
+import java.util.Optional;
 
 public class InstantQueryContainer extends QueryContainer {
     private final Instant instant;

@@ -1,27 +1,20 @@
 package org.vitrivr.cineast.core.db.adampro;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
+import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.adampro.grpc.AdamGrpc;
-import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage;
+import org.vitrivr.adampro.grpc.AdamGrpc.*;
 import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
-import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.FromMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultInfoMessage;
-import org.vitrivr.adampro.grpc.AdamGrpc.QueryResultsMessage;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.protobuf.ProtobufTupleGenerator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ADAMproWriter extends ProtobufTupleGenerator {
 

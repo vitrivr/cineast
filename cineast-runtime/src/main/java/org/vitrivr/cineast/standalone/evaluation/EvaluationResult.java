@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.standalone.evaluation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Helper class that can be used to track evaluation results. It tracks the total number of relevant documents

@@ -1,18 +1,13 @@
 package org.vitrivr.cineast.api;
 
 import io.prometheus.client.Counter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.config.IngestConfig;
-import org.vitrivr.cineast.standalone.run.ExtractionContextProvider;
-import org.vitrivr.cineast.standalone.run.ExtractionDispatcher;
-import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
-import org.vitrivr.cineast.standalone.run.path.SessionContainerProvider;
-import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+
 
 /**
  * Singleton Structure. Intended to be an access points across multiple sessions. Can be closed and
@@ -50,7 +45,7 @@ public class SessionExtractionContainer {
     ExtractionDispatcher dispatcher = new ExtractionDispatcher();
     try {
       JacksonJsonProvider reader = new JacksonJsonProvider();
-      ExtractionContextProvider context = reader.toObject(configFile, IngestConfig.class);
+      IngestConfig context = reader.toObject(configFile, IngestConfig.class);
       provider = new SessionContainerProvider();
       if (dispatcher.initialize(provider, context)) {
         dispatcher.registerListener(provider);

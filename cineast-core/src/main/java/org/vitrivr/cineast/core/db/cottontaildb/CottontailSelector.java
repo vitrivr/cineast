@@ -1,21 +1,12 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.CINEAST_SCHEMA;
-
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.distance.DistanceElement;
@@ -24,6 +15,12 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.CINEAST_SCHEMA;
+
 public class CottontailSelector implements DBSelector {
 
   private static boolean useGlobalWrapper = true;
@@ -31,6 +28,8 @@ public class CottontailSelector implements DBSelector {
       useGlobalWrapper ? new CottontailWrapper() : null;
   private CottontailWrapper cottontail =
       useGlobalWrapper ? GLOBAL_COTTONTAIL_WRAPPER : new CottontailWrapper();
+
+  private static final Logger LOGGER = LogManager.getLogger();
 
   private Entity entity;
 
@@ -46,6 +45,7 @@ public class CottontailSelector implements DBSelector {
   @Override
   public boolean close() {
     if (useGlobalWrapper) {
+      LOGGER.info("Not closing selector because the global wrapper flag is set");
       return false;
     }
     this.cottontail.close();

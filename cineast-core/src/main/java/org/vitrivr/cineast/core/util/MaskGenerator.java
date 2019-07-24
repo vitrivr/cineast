@@ -1,19 +1,5 @@
 package org.vitrivr.cineast.core.util;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-
-import org.ddogleg.nn.FactoryNearestNeighbor;
-import org.ddogleg.nn.NearestNeighbor;
-import org.ddogleg.nn.NnData;
-import org.ddogleg.struct.FastQueue;
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
-import org.vitrivr.cineast.core.descriptor.PathList;
-
 import boofcv.abst.distort.FDistort;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
@@ -29,6 +15,19 @@ import boofcv.struct.convolve.Kernel1D_F32;
 import boofcv.struct.image.GrayU8;
 import georegression.struct.point.Point2D_F32;
 import georegression.struct.point.Point2D_I32;
+import org.ddogleg.nn.FactoryNearestNeighbor;
+import org.ddogleg.nn.NearestNeighbor;
+import org.ddogleg.nn.NnData;
+import org.ddogleg.struct.FastQueue;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.descriptor.PathList;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 public class MaskGenerator {
 

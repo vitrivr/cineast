@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.data;
 
+import com.google.common.collect.HashBiMap;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.collect.HashBiMap;
 
 public class UniqueElementGrid<T> implements Grid<T> {
 

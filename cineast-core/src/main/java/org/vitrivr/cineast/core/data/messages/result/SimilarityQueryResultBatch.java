@@ -1,12 +1,11 @@
 package org.vitrivr.cineast.core.data.messages.result;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.vitrivr.cineast.core.data.StringDoublePair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.vitrivr.cineast.core.data.StringDoublePair;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class SimilarityQueryResultBatch {
 

@@ -1,9 +1,9 @@
 package org.vitrivr.cineast.core.data.providers;
 
+import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
 
 public interface SubtitleItemProvider {
 

@@ -1,9 +1,5 @@
 package org.vitrivr.cineast.core.extraction.segmenter.video;
 
-import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,11 +12,14 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.data.segments.VideoSegment;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
-
-import org.vitrivr.cineast.standalone.run.ExtractionContextProvider;
 import org.vitrivr.cineast.core.extraction.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
+import org.vitrivr.cineast.standalone.run.ExtractionContextProvider;
+
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author rgasser

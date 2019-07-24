@@ -1,16 +1,14 @@
 package org.vitrivr.cineast.core.util;
 
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.ListMultimap;
+import gnu.trove.map.TObjectDoubleMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 
-import com.google.common.collect.ListMultimap;
-
-import gnu.trove.map.TObjectDoubleMap;
+import java.util.List;
+import java.util.Set;
 
 public class ScoreFusion {
   private ScoreFusion() {}

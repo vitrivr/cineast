@@ -1,15 +1,16 @@
 package org.vitrivr.cineast.standalone.run.filehandler;
 
-import java.io.IOException;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.segments.Model3DSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.decode.m3d.ModularMeshDecoder;
-import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
-import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.extraction.segmenter.general.PassthroughSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
+import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
+
+import java.io.IOException;
 
 /**
  * @author rgasser

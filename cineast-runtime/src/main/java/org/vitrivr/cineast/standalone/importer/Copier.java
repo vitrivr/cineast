@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.standalone.importer;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-
-import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
+import org.vitrivr.cineast.standalone.config.Config;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 

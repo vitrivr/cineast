@@ -1,13 +1,12 @@
 package org.vitrivr.cineast.core.features.codebook;
 
-import java.awt.image.BufferedImage;
-
-import org.ddogleg.clustering.FactoryClustering;
-import org.vitrivr.cineast.core.util.images.HOGHelper;
-
 import boofcv.abst.feature.dense.DescribeImageDense;
 import boofcv.struct.feature.TupleDesc_F64;
 import boofcv.struct.image.GrayU8;
+import org.ddogleg.clustering.FactoryClustering;
+import org.vitrivr.cineast.core.util.images.HOGHelper;
+
+import java.awt.image.BufferedImage;
 
 /**
  * @author rgasser

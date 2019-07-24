@@ -3,8 +3,8 @@ package org.vitrivr.cineast.standalone.monitoring;
 import io.prometheus.client.Summary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.standalone.config.Config;
 
 /**
  * @author silvan on 19.11.18.

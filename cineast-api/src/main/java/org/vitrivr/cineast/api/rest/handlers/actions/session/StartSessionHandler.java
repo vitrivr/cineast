@@ -1,7 +1,5 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
-import java.util.Map;
-
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.session.CredentialManager;
@@ -11,6 +9,8 @@ import org.vitrivr.cineast.api.session.SessionType;
 import org.vitrivr.cineast.core.data.messages.credentials.Credentials;
 import org.vitrivr.cineast.core.data.messages.session.SessionState;
 import org.vitrivr.cineast.core.data.messages.session.StartSessionMessage;
+
+import java.util.Map;
 
 public class StartSessionHandler extends ParsingActionHandler<StartSessionMessage> {
     /**

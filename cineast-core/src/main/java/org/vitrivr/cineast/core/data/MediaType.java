@@ -1,12 +1,11 @@
 package org.vitrivr.cineast.core.data;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-
 import gnu.trove.map.hash.TIntObjectHashMap;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.EnumSet;
+import java.util.HashMap;
 
 public enum MediaType {
 

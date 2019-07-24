@@ -2,18 +2,19 @@ package org.vitrivr.cineast.standalone.run.path;
 
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A flexible Pathprovider with no caching. Simply stores a list of paths in memory. Differentiates

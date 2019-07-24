@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.data;
 
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-import gnu.trove.iterator.TIntIterator;
-import gnu.trove.map.hash.TIntObjectHashMap;
 
 public class DynamicGrid<T> implements Serializable, Grid<T> {
 

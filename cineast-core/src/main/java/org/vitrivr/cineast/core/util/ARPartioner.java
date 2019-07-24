@@ -1,9 +1,5 @@
 package org.vitrivr.cineast.core.util;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
@@ -12,6 +8,10 @@ import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public final class ARPartioner {
 

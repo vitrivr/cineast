@@ -1,10 +1,6 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
-
 import org.vitrivr.cineast.core.benchmark.BenchmarkManager;
 import org.vitrivr.cineast.core.benchmark.engine.BenchmarkEngine;
 import org.vitrivr.cineast.core.benchmark.model.Benchmark;
@@ -13,6 +9,9 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.distance.SegmentDistanceElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This implementation of the AbstractFeatureModule executes every query, either based on a SegmentContainer
@@ -85,7 +84,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
         /* Extract features. */
         List<float[]> features = this.preprocessQuery(sc, qcc);
 
-        if (features == null || features.size() == 0) {
+        if (features == null || features.isEmpty()) {
             LOGGER.warn("No features could be generated from the provided query. Aborting query execution...");
             benchmark.abort();
             return new ArrayList<>(0);
@@ -140,7 +139,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
 
         /* Lookup features. */
         List<float[]> features = this.selector.getFeatureVectors("id", segmentId, "feature");
-        if (features.size() == 0) {
+        if (features.isEmpty()) {
             LOGGER.warn("No features could be fetched for the provided segmentId '{}'. Aborting query execution...", segmentId);
             benchmark.end();
             return new ArrayList<>(0);

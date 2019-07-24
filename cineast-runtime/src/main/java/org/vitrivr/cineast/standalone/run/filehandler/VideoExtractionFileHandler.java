@@ -1,13 +1,14 @@
 package org.vitrivr.cineast.standalone.run.filehandler;
 
-import java.io.IOException;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.decode.video.FFMpegVideoDecoder;
-import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
-import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
+import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
+
+import java.io.IOException;
 
 /**
  * @author rgasser

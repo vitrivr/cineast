@@ -1,13 +1,14 @@
 package org.vitrivr.cineast.standalone.importer.vbs2019;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.features.DescriptionTextSearch;
-import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class CaptionTextImportHandler extends DataImportHandler {
 

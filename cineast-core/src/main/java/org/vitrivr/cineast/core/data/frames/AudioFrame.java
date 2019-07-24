@@ -1,10 +1,9 @@
 package org.vitrivr.cineast.core.data.frames;
 
 
+import javax.sound.sampled.AudioFormat;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import javax.sound.sampled.AudioFormat;
 
 /**
  * Represents a single audio-frame containing a specific number of samples (the number depends on the decoder that

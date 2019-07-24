@@ -1,12 +1,9 @@
 package org.vitrivr.cineast.core.features.retriever;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 import org.vitrivr.cineast.core.features.abstracts.BooleanRetriever;
+
+import java.util.*;
 
 public class CollectionBooleanRetriever extends BooleanRetriever {
 

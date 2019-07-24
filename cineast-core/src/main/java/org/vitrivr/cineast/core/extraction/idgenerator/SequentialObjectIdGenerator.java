@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.extraction.idgenerator;
 
+import org.vitrivr.cineast.core.data.MediaType;
+
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.vitrivr.cineast.core.data.MediaType;
 
 /**
  * Generates objectIds from a counter that is incremented every time a new ID is generated.

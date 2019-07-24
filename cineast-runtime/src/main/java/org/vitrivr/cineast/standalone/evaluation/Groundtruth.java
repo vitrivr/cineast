@@ -1,16 +1,11 @@
 package org.vitrivr.cineast.standalone.evaluation;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * Represents a ground truth data collection that assigns IDs of test objects to arbitrary classes and

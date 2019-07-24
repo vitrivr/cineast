@@ -1,10 +1,5 @@
 package org.vitrivr.cineast.core.util.images;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.List;
-
 import boofcv.alg.color.ColorHsv;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
@@ -18,6 +13,10 @@ import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.Planar;
 import georegression.metric.UtilAngle;
 import georegression.struct.point.Point2D_I32;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  * @author rgasser

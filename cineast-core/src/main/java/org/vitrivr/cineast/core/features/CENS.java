@@ -1,10 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
@@ -21,6 +17,10 @@ import org.vitrivr.cineast.core.util.dsp.fft.FFTUtil;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * An Extraction and Retrieval module that leverages pure HPCP based CENS shingles according to [1]. These shingles can be used

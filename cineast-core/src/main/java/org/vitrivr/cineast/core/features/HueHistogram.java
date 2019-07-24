@@ -1,6 +1,5 @@
 package org.vitrivr.cineast.core.features;
 
-import java.util.List;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.HSVContainer;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
@@ -11,6 +10,8 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
+import java.util.List;
+
 public class HueHistogram extends AbstractFeatureModule {
 
   public HueHistogram() {
@@ -19,6 +20,9 @@ public class HueHistogram extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
+    if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
+      return;
+    }
 
     float[] hist = new float[16];
 

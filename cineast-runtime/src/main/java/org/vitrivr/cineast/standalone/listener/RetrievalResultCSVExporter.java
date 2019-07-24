@@ -1,24 +1,20 @@
 package org.vitrivr.cineast.standalone.listener;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
-import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.standalone.runtime.RetrievalTask;
 import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.standalone.runtime.RetrievalTask;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.*;
 
 public class RetrievalResultCSVExporter implements RetrievalResultListener {
 

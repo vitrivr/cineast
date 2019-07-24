@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import java.util.Map;
-
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.messages.lookup.IdList;
 import org.vitrivr.cineast.core.data.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.TagHandler;
+
+import java.util.Map;
 
 public class FindTagsActionHandler extends ParsingActionHandler<IdList> {
 

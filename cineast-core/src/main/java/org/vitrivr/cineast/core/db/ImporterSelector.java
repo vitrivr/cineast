@@ -1,10 +1,5 @@
 package org.vitrivr.cineast.core.db;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.Config;
@@ -15,12 +10,14 @@ import org.vitrivr.cineast.core.data.distance.DistanceElement;
 import org.vitrivr.cineast.core.data.providers.primitive.FloatTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.util.distance.*;
 import org.vitrivr.cineast.standalone.importer.Importer;
-import org.vitrivr.cineast.core.util.distance.BitSetComparator;
-import org.vitrivr.cineast.core.util.distance.BitSetHammingDistance;
-import org.vitrivr.cineast.core.util.distance.Distance;
-import org.vitrivr.cineast.core.util.distance.FloatArrayDistance;
-import org.vitrivr.cineast.core.util.distance.PrimitiveTypeMapDistanceComparator;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class ImporterSelector<T extends Importer<?>> implements DBSelector {
 

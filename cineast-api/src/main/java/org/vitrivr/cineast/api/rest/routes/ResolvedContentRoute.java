@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.api.rest.routes;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Map;
 import org.vitrivr.cineast.api.rest.resolvers.ResolutionResult;
 import org.vitrivr.cineast.api.rest.resolvers.Resolver;
 import spark.Request;
@@ -10,6 +7,10 @@ import spark.Response;
 import spark.Route;
 import spark.utils.GzipUtils;
 import spark.utils.IOUtils;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Map;
 
 public class ResolvedContentRoute implements Route {
 

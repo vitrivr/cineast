@@ -1,14 +1,10 @@
 package org.vitrivr.cineast.core.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
-
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
+
+import java.util.*;
 
 public strictfp class KMeansPP {
 

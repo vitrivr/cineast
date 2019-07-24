@@ -1,12 +1,10 @@
 package org.vitrivr.cineast.standalone.tests.util.math;
 
 import org.joml.Vector3f;
-
 import org.joml.Vector3fc;
 import org.joml.Vector4i;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.util.math.MathConstants;
 import org.vitrivr.cineast.core.util.mesh.MeshMathUtil;

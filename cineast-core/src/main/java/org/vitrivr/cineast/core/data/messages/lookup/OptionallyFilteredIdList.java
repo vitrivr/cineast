@@ -2,12 +2,12 @@ package org.vitrivr.cineast.core.data.messages.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.Arrays;
-import java.util.List;
 import org.vitrivr.cineast.core.data.messages.components.AbstractMetadataFilterDescriptor;
 import org.vitrivr.cineast.core.data.messages.interfaces.Message;
 import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Ignores unkown json properties, e.g. may contain no filter at all.

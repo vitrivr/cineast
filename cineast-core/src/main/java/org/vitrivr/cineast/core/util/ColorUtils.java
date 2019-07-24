@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.util;
 
-import java.util.List;
-
 import org.vitrivr.cineast.core.color.LabContainer;
 import org.vitrivr.cineast.core.color.ReadableLabContainer;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
+
+import java.util.List;
 
 public class ColorUtils {
 	private ColorUtils(){}

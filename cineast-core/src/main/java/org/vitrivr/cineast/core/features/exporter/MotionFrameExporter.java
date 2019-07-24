@@ -1,7 +1,15 @@
 package org.vitrivr.cineast.core.features.exporter;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import georegression.struct.point.Point2D_F32;
+import org.vitrivr.cineast.core.data.Pair;
+import org.vitrivr.cineast.core.data.frames.VideoFrame;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.features.extractor.Extractor;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -10,17 +18,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
-
-import javax.imageio.ImageIO;
-
-import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.frames.VideoFrame;
-import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.db.setup.EntityCreator;
-
-import georegression.struct.point.Point2D_F32;
 
 public class MotionFrameExporter implements Extractor {
 	private static final String PROPERTY_NAME_DESTINATION = "destination";

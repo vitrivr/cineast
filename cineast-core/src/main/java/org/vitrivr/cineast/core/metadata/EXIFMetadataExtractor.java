@@ -3,6 +3,10 @@ package org.vitrivr.cineast.core.metadata;
 import com.drew.metadata.exif.ExifDirectoryBase;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.google.common.collect.Maps;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
+import org.vitrivr.cineast.core.util.MetadataUtil;
+
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,10 +14,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
-import org.vitrivr.cineast.core.util.MetadataUtil;
 
 /**
  * @author rgasser

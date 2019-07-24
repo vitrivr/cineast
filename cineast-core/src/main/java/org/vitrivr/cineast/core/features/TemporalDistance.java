@@ -1,9 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
-
+import com.google.common.collect.ImmutableList;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 import org.vitrivr.cineast.core.data.GpsData;
@@ -12,7 +9,9 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 
-import com.google.common.collect.ImmutableList;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
 
 // TODO: Change from Instant to Range<Instant>
 

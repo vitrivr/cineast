@@ -1,14 +1,14 @@
 package org.vitrivr.cineast.core.extraction.idgenerator;
 
+import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+import org.vitrivr.cineast.core.util.json.JsonReader;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
-import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
-import org.vitrivr.cineast.core.util.json.JsonReader;
 
 /**
  * Generates objectIds from a provided list of objectId's. Those ID's are either assigned in sequence OR mapped

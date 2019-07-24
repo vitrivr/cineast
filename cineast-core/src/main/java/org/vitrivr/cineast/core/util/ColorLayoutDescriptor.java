@@ -1,8 +1,5 @@
 package org.vitrivr.cineast.core.util;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
@@ -10,6 +7,9 @@ import org.vitrivr.cineast.core.color.YCbCrContainer;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
 import org.vitrivr.cineast.core.data.MultiImage;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class ColorLayoutDescriptor {
 

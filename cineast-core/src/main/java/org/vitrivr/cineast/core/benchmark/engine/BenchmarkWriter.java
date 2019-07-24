@@ -1,5 +1,9 @@
 package org.vitrivr.cineast.core.benchmark.engine;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.benchmark.model.Benchmark;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,10 +12,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.benchmark.model.Benchmark;
 
 /**
  * A class that can be used to write the Benchmarks captured in a Benchmark-Engine to disk. Currently,

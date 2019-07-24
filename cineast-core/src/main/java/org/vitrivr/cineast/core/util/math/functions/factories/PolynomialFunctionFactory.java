@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.util.math.functions.factories;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.util.CombinatoricsUtils;
 import org.apache.commons.math3.util.FastMath;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class can be used to generate different types of polynomials. It leverages the PolynomialFunction

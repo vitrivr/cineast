@@ -1,15 +1,14 @@
 package org.vitrivr.cineast.core.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
-import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author rgasser

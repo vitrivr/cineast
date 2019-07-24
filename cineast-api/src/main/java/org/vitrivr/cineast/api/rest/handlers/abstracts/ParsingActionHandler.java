@@ -1,16 +1,14 @@
 package org.vitrivr.cineast.api.rest.handlers.abstracts;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
-import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
 import spark.Request;
 import spark.Response;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author rgasser

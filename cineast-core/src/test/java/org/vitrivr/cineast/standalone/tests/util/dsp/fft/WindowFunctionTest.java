@@ -1,15 +1,14 @@
 package org.vitrivr.cineast.standalone.tests.util.dsp.fft;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.vitrivr.cineast.core.util.dsp.fft.windows.BlackmanHarrisWindow;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.HanningWindow;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.RectangularWindow;
 import org.vitrivr.cineast.core.util.dsp.fft.windows.WindowFunction;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author rgasser

@@ -1,7 +1,6 @@
 {
-	"type":"VIDEO",
 	"input":{
-		"path": "/home/ubuntu/osvc/videos",
+		"path": "data/",
 		"depth": 3,
 		"skip": 0,
 		"id": {
@@ -16,15 +15,14 @@
 		{"name": "AverageColorGrid8"},
 		{"name": "AverageColorRaster"},
 		{"name": "AverageFuzzyHist"},
+		{"name": "AverageColorGrid8Reduced15"},
 		{"name": "CLD"},
 		{"name": "EdgeARP88"},
 		{"name": "EdgeGrid16"},
 		{"name": "EHD"},
+		{"name": "HPCP12Shingle"},
 		{"name": "MedianColor"},
-		{"name": "MedianColorARP44"},
 		{"name": "MedianColorGrid8"},
-		{"name": "MedianColorRaster"},
-		{"name": "MotionHistogram"},
 		{"name": "HOGMirflickr25K512"},
 		{"name": "SURFMirflickr25K512"}
 	],
@@ -32,7 +30,7 @@
 		{
 			"name": "ShotThumbNails",
 			"properties": {
-				"destination":"/home/ubuntu/osvc/thumbnails"
+				"destination":"thumbnails/"
 			}
 		}
 	],

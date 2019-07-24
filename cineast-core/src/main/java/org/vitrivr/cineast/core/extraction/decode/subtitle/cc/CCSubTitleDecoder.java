@@ -1,5 +1,11 @@
 package org.vitrivr.cineast.core.extraction.decode.subtitle.cc;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.extraction.decode.subtitle.SubTitleDecoder;
+import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
+import org.vitrivr.cineast.core.util.LogHelper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,12 +14,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.extraction.decode.subtitle.SubTitleDecoder;
-import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
-import org.vitrivr.cineast.core.util.LogHelper;
 
 public class CCSubTitleDecoder implements SubTitleDecoder {
 

@@ -1,9 +1,10 @@
 package org.vitrivr.cineast.core.features.neuralnet.tf;
 
+import org.tensorflow.Graph;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.tensorflow.Graph;
 
 public final class GraphHelper {
 

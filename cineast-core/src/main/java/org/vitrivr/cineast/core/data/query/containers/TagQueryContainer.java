@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
-import java.util.*;
-
 import org.vitrivr.cineast.core.data.tag.IncompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.data.tag.WeightedTag;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 import org.vitrivr.cineast.core.util.web.DataURLParser;
+
+import java.util.*;
 
 
 public class TagQueryContainer extends QueryContainer {

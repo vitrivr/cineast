@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.data;
 
-import java.util.NoSuchElementException;
-
 import gnu.trove.map.hash.TObjectIntHashMap;
+
+import java.util.NoSuchElementException;
 
 public abstract class Histogram implements ReadableFloatVector {
 

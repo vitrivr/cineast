@@ -1,8 +1,9 @@
 package org.vitrivr.cineast.core.extraction.idgenerator;
 
-import java.nio.file.Path;
 import org.apache.commons.io.FilenameUtils;
 import org.vitrivr.cineast.core.data.MediaType;
+
+import java.nio.file.Path;
 
 public class FileNameObjectIdGenerator implements ObjectIdGenerator {
 

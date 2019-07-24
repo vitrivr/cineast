@@ -1,11 +1,11 @@
 package org.vitrivr.cineast.core.extraction.idgenerator;
 
+import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.util.RandomStringGenerator;
+
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Map;
-
-import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.util.RandomStringGenerator;
 
 /**
  * Generates an objectId from a random string.

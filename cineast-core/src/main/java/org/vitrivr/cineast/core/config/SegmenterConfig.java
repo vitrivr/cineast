@@ -3,15 +3,11 @@ package org.vitrivr.cineast.core.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.vitrivr.cineast.core.data.MediaType;
-
 import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
-
 import org.vitrivr.cineast.core.extraction.segmenter.audio.ConstantLengthAudioSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
-
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 import java.util.HashMap;

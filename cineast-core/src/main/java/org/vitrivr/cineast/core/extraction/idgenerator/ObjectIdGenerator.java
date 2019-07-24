@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.extraction.idgenerator;
 
-import java.nio.file.Path;
-
 import org.vitrivr.cineast.core.data.MediaType;
+
+import java.nio.file.Path;
 
 /**
  * Classes implementing this interface are intended to generate ID's for multimedia-objects. The classes should

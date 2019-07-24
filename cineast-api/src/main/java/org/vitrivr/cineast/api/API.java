@@ -1,27 +1,7 @@
 package org.vitrivr.cineast.api;
 
 import com.google.common.collect.Ordering;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.imageio.ImageIO;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
@@ -39,33 +19,39 @@ import org.vitrivr.cineast.core.data.tag.IncompleteTag;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.TagHandler;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
+import org.vitrivr.cineast.core.db.setup.EntityCreator;
+import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
+import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
+import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
+import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
+import org.vitrivr.cineast.core.util.ReflectionHelper;
+import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+import org.vitrivr.cineast.monitoring.PrometheusServer;
 import org.vitrivr.cineast.standalone.evaluation.EvaluationConfig;
 import org.vitrivr.cineast.standalone.evaluation.EvaluationException;
 import org.vitrivr.cineast.standalone.evaluation.EvaluationRuntime;
-import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
-import org.vitrivr.cineast.standalone.listener.RetrievalResultCSVExporter;
-import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
-import org.vitrivr.cineast.standalone.importer.handlers.AsrDataImportHandler;
-import org.vitrivr.cineast.standalone.importer.handlers.DataImportHandler;
-import org.vitrivr.cineast.standalone.importer.handlers.JsonDataImportHandler;
-import org.vitrivr.cineast.standalone.importer.handlers.OcrDataImportHandler;
-import org.vitrivr.cineast.standalone.importer.handlers.ProtoDataImportHandler;
+import org.vitrivr.cineast.standalone.importer.handlers.*;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.GoogleVisionImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
-import org.vitrivr.cineast.core.render.JOGLOffscreenRenderer;
+import org.vitrivr.cineast.standalone.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
 import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
-import org.vitrivr.cineast.standalone.run.ExtractionContextProvider;
 import org.vitrivr.cineast.standalone.run.ExtractionDispatcher;
 import org.vitrivr.cineast.standalone.run.path.ExtractionContainerProviderFactory;
-import org.vitrivr.cineast.core.db.setup.EntityCreator;
-import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
-import org.vitrivr.cineast.core.util.ReflectionHelper;
-import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
-import org.vitrivr.cineast.monitoring.PrometheusServer;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Entry point. Has an executable main class which connects to the DB and opens a connection to the webserver Ports and additional settings can be specified at cineast.properties
@@ -220,7 +206,7 @@ public class API {
     ExtractionDispatcher dispatcher = new ExtractionDispatcher();
     try {
       JacksonJsonProvider reader = new JacksonJsonProvider();
-      ExtractionContextProvider context = reader.toObject(file, IngestConfig.class);
+      IngestConfig context = reader.toObject(file, IngestConfig.class);
       ExtractionContainerProvider provider = ExtractionContainerProviderFactory
           .tryCreatingTreeWalkPathProvider(file, context);
       if (dispatcher.initialize(provider, context)) {

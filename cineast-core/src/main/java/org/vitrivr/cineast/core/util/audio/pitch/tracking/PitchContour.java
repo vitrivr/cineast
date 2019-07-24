@@ -1,10 +1,10 @@
 package org.vitrivr.cineast.core.util.audio.pitch.tracking;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.vitrivr.cineast.core.util.audio.pitch.Pitch;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This is a helper class for pitch tracking. It represents a pitch contour, that is, a candidate for a melody fragment. The contour

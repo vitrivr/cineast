@@ -1,13 +1,13 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
-import java.util.List;
-import java.util.Map;
-
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
+
+import java.util.List;
+import java.util.Map;
 
 public class FindSegmentsByObjectIdActionHandler extends ParsingActionHandler<AnyMessage> {
 

@@ -1,12 +1,12 @@
 package org.vitrivr.cineast.core.util.audio;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.util.dsp.fft.STFT;
 import org.vitrivr.cineast.core.util.dsp.fft.Spectrum;
 import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class can be used to calculate the Harmonic Pitch Class Profile (HPCP) of a Short-Term Fourier Transform or a single

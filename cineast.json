@@ -1,6 +1,6 @@
 {
   "database": {
-    "host": "dmi-p10.dmi.unibas.ch",
+    "host": "localhost",
     "selector": "COTTONTAIL",
     "writer": "COTTONTAIL",
     "port": 1865,
@@ -73,6 +73,9 @@
       "localfeatures_fast": [
         {"feature": "SURFMirflickr25K256", "weight": 1.75},
         {"feature": "HOGMirflickr25K256", "weight": 1.0}
+      ],
+      "audio": [
+        {"feature": "HPCP12Shingle", "weight": 1.0}
       ],
       "tagsft": [
         {"feature": "SegmentTags", "weight": 1.0}
