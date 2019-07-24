@@ -15,8 +15,6 @@ import org.vitrivr.cineast.core.db.cottontaildb.CottontailSelector;
 import org.vitrivr.cineast.core.db.cottontaildb.CottontailWriter;
 import org.vitrivr.cineast.core.db.json.JsonFileWriter;
 import org.vitrivr.cineast.core.db.json.JsonSelector;
-import org.vitrivr.cineast.core.db.protobuf.ProtoSelector;
-import org.vitrivr.cineast.core.db.protobuf.ProtobufFileWriter;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.db.setup.NoEntityCreator;
 
@@ -43,12 +41,10 @@ public final class DatabaseConfig {
 
   private static final PersistencyWriterSupplier NO_WRITER_SUPPLY = NoDBWriter::new;
   private static final PersistencyWriterSupplier ADAMPRO_WRITER_SUPPLY = ADAMproWriter::new;
-  private static final PersistencyWriterSupplier PROTO_WRITER_SUPPLY = ProtobufFileWriter::new;
   private static final PersistencyWriterSupplier JSON_WRITER_SUPPLY = JsonFileWriter::new;
   private static final PersistencyWriterSupplier COTTONTAIL_WRITER_SUPPLY = CottontailWriter::new;
 
   private static final DBSelectorSupplier NO_SELECTOR_SUPPLY = NoDBSelector::new;
-  private static final DBSelectorSupplier PROTO_SELECTOR_SUPPLY = ProtoSelector::new;
   private static final DBSelectorSupplier JSON_SELECTOR_SUPPLY = JsonSelector::new;
   private static final DBSelectorSupplier ADAMPRO_SELECTOR_SUPPLY = ADAMproSelector::new;
   private static final DBSelectorSupplier ADAMPRO_STREAM_SELECTOR_SUPPLY = ADAMproStreamingSelector::new;
@@ -62,7 +58,6 @@ public final class DatabaseConfig {
 
   public static enum Writer {
     NONE,
-    PROTO,
     JSON,
     ADAMPRO,
     COTTONTAIL
@@ -71,7 +66,6 @@ public final class DatabaseConfig {
   public static enum Selector {
     NONE,
     JSON,
-    PROTO,
     ADAMPRO,
     ADAMPROSTREAM,
     COTTONTAIL
@@ -148,8 +142,6 @@ public final class DatabaseConfig {
         return NO_WRITER_SUPPLY;
       case ADAMPRO:
         return ADAMPRO_WRITER_SUPPLY;
-      case PROTO:
-        return PROTO_WRITER_SUPPLY;
       case JSON:
         return JSON_WRITER_SUPPLY;
       case COTTONTAIL:
@@ -166,8 +158,6 @@ public final class DatabaseConfig {
         return ADAMPRO_SELECTOR_SUPPLY;
       case ADAMPROSTREAM:
         return ADAMPRO_STREAM_SELECTOR_SUPPLY;
-      case PROTO:
-        return PROTO_SELECTOR_SUPPLY;
       case JSON:
         return JSON_SELECTOR_SUPPLY;
       case NONE:

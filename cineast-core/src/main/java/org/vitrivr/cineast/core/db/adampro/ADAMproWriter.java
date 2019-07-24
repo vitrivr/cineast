@@ -9,7 +9,6 @@ import org.vitrivr.adampro.grpc.AdamGrpc.AckMessage.Code;
 import org.vitrivr.adampro.grpc.AdamGrpc.BooleanQueryMessage.WhereMessage;
 import org.vitrivr.adampro.grpc.AdamGrpc.InsertMessage.TupleInsertMessage;
 import org.vitrivr.cineast.core.db.PersistentTuple;
-import org.vitrivr.cineast.core.db.protobuf.ProtobufTupleGenerator;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.util.ArrayList;

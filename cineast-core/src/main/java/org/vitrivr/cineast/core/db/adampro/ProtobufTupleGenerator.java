@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.db.protobuf;
+package org.vitrivr.cineast.core.db.adampro;
 
 import org.vitrivr.adampro.grpc.AdamGrpc;
 import org.vitrivr.adampro.grpc.AdamGrpc.DataMessage;
