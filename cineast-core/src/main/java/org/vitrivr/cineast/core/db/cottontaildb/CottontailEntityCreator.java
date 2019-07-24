@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.db.cottontaildb;
 
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Index.IndexType;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -19,14 +20,24 @@ import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeTyp
 
 public class CottontailEntityCreator implements EntityCreator {
 
+  private final CottontailWrapper cottontail;
 
-  private CottontailWrapper cottontail = new CottontailWrapper();
 
 
-  @Override
-  public void init() {
+  public CottontailEntityCreator(DatabaseConfig config){
+    this.cottontail = new CottontailWrapper(config);
+    init();
+  }
+
+  public CottontailEntityCreator(CottontailWrapper cottontailWrapper){
+    this.cottontail = cottontailWrapper;
+    init();
+  }
+
+  private void init(){
     cottontail.createSchema("cineast");
   }
+
 
   @Override
   public boolean createMultiMediaObjectsEntity() {

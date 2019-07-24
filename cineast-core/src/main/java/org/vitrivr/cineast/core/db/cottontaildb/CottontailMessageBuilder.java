@@ -17,6 +17,9 @@ import org.vitrivr.cineast.core.db.RelationalOperator;
 
 import java.util.*;
 
+import static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.DataCase.*;
+import static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.VectorDataCase.*;
+
 public class CottontailMessageBuilder {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -222,35 +225,35 @@ public class CottontailMessageBuilder {
   public static PrimitiveTypeProvider fromData(Data d) {
 
     switch (d.getDataCase()) {
-      case DataCase.BOOLEANDATA:
+      case BOOLEANDATA:
         return new BooleanTypeProvider(d.getBooleanData());
-      case DataCase.INTDATA:
+      case INTDATA:
         return new IntTypeProvider(d.getIntData());
-      case DataCase.LONGDATA:
+      case LONGDATA:
         return new LongTypeProvider(d.getLongData());
-      case DataCase.FLOATDATA:
+      case FLOATDATA:
         return new FloatTypeProvider(d.getFloatData());
-      case DataCase.DOUBLEDATA:
+      case DOUBLEDATA:
         return new DoubleTypeProvider(d.getDoubleData());
-      case DataCase.STRINGDATA:
+      case STRINGDATA:
         return new StringTypeProvider(d.getStringData());
-      case DataCase.VECTORDATA: {
+      case VECTORDATA: {
         Vector v = d.getVectorData();
         switch (v.getVectorDataCase()) {
-          case VectorDataCase.FLOATVECTOR:
+          case FLOATVECTOR:
             return FloatArrayTypeProvider.fromList(v.getFloatVector().getVectorList());
-          case VectorDataCase.DOUBLEVECTOR:
+          case DOUBLEVECTOR:
             return FloatArrayTypeProvider.fromDoubleList(v.getDoubleVector().getVectorList());
-          case VectorDataCase.INTVECTOR:
+          case INTVECTOR:
             return IntArrayTypeProvider.fromList(v.getIntVector().getVectorList());
-          case VectorDataCase.LONGVECTOR:
+          case LONGVECTOR:
             return IntArrayTypeProvider.fromLongList(v.getLongVector().getVectorList());
-          case VectorDataCase.VECTORDATA_NOT_SET:
+          case VECTORDATA_NOT_SET:
             return new NothingProvider();
         }
       }
 
-      case DataCase.DATA_NOT_SET:
+      case DATA_NOT_SET:
         return new NothingProvider();
     }
 

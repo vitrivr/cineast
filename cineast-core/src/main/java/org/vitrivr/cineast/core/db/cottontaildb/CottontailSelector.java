@@ -23,11 +23,12 @@ import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.
 
 public class CottontailSelector implements DBSelector {
 
-  private static boolean useGlobalWrapper = true;
-  private static final CottontailWrapper GLOBAL_COTTONTAIL_WRAPPER =
-      useGlobalWrapper ? new CottontailWrapper() : null;
-  private CottontailWrapper cottontail =
-      useGlobalWrapper ? GLOBAL_COTTONTAIL_WRAPPER : new CottontailWrapper();
+  private final CottontailWrapper cottontail;
+
+  public CottontailSelector(CottontailWrapper wrapper){
+    this.cottontail = wrapper;
+  }
+
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -44,11 +45,7 @@ public class CottontailSelector implements DBSelector {
 
   @Override
   public boolean close() {
-    if (useGlobalWrapper) {
-      LOGGER.info("Not closing selector because the global wrapper flag is set");
-      return false;
-    }
-    this.cottontail.close();
+    //this.cottontail.close();
     return true;
   }
 
