@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.api.websocket.handlers.interfaces;
 
 import org.eclipse.jetty.websocket.api.Session;
-import org.vitrivr.cineast.core.data.messages.interfaces.Message;
+import org.vitrivr.cineast.api.messages.interfaces.Message;
 
 /**
  * Interface for a WebsocketMessageHandler handler that handles a message of type A (type variable).

@@ -6,8 +6,8 @@ import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
-import org.vitrivr.cineast.core.data.messages.query.MoreLikeThisQuery;
-import org.vitrivr.cineast.core.data.messages.result.MediaSegmentQueryResult;
+import org.vitrivr.cineast.api.messages.query.MoreLikeThisQuery;
+import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
 
 import java.util.HashSet;

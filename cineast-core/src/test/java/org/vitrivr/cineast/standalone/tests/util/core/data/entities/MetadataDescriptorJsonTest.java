@@ -5,7 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.messages.session.ExtractionContainerMessage;
+import org.vitrivr.cineast.api.messages.session.ExtractionContainerMessage;
 
 import java.io.File;
 import java.io.IOException;

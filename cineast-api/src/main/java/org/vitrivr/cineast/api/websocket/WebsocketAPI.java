@@ -12,9 +12,9 @@ import org.vitrivr.cineast.api.websocket.handlers.queries.NeighbouringQueryMessa
 import org.vitrivr.cineast.api.websocket.handlers.queries.SegmentQueryMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.queries.SimilarityQueryMessageHandler;
 import org.vitrivr.cineast.core.config.Config;
-import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
-import org.vitrivr.cineast.core.data.messages.interfaces.Message;
-import org.vitrivr.cineast.core.data.messages.interfaces.MessageType;
+import org.vitrivr.cineast.api.messages.general.AnyMessage;
+import org.vitrivr.cineast.api.messages.interfaces.Message;
+import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 

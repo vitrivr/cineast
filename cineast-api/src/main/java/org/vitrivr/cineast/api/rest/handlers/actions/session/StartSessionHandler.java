@@ -6,9 +6,9 @@ import org.vitrivr.cineast.api.session.CredentialManager;
 import org.vitrivr.cineast.api.session.Session;
 import org.vitrivr.cineast.api.session.SessionManager;
 import org.vitrivr.cineast.api.session.SessionType;
-import org.vitrivr.cineast.core.data.messages.credentials.Credentials;
-import org.vitrivr.cineast.core.data.messages.session.SessionState;
-import org.vitrivr.cineast.core.data.messages.session.StartSessionMessage;
+import org.vitrivr.cineast.api.messages.credentials.Credentials;
+import org.vitrivr.cineast.api.messages.session.SessionState;
+import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 
 import java.util.Map;
 

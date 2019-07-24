@@ -3,8 +3,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions.session;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.session.SessionManager;
 import org.vitrivr.cineast.api.session.SessionType;
-import org.vitrivr.cineast.core.data.messages.general.AnyMessage;
-import org.vitrivr.cineast.core.data.messages.session.SessionState;
+import org.vitrivr.cineast.api.messages.general.AnyMessage;
+import org.vitrivr.cineast.api.messages.session.SessionState;
 
 import java.util.Map;
 

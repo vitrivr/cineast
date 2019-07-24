@@ -3,9 +3,9 @@ package org.vitrivr.cineast.api.rest.handlers.actions;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
-import org.vitrivr.cineast.core.data.messages.components.AbstractMetadataFilterDescriptor;
-import org.vitrivr.cineast.core.data.messages.lookup.OptionallyFilteredIdList;
-import org.vitrivr.cineast.core.data.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescriptor;
+import org.vitrivr.cineast.api.messages.lookup.OptionallyFilteredIdList;
+import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 
 import java.util.ArrayList;

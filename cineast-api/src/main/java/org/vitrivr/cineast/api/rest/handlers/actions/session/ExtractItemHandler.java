@@ -6,8 +6,8 @@ import org.vitrivr.cineast.api.SessionExtractionContainer;
 import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.messages.session.ExtractionContainerMessage;
-import org.vitrivr.cineast.core.data.messages.session.SessionState;
+import org.vitrivr.cineast.api.messages.session.ExtractionContainerMessage;
+import org.vitrivr.cineast.api.messages.session.SessionState;
 
 import java.util.Arrays;
 import java.util.Map;

@@ -2,8 +2,8 @@ package org.vitrivr.cineast.api.rest.handlers.actions;
 
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
-import org.vitrivr.cineast.core.data.messages.lookup.IdList;
-import org.vitrivr.cineast.core.data.messages.result.MediaSegmentQueryResult;
+import org.vitrivr.cineast.api.messages.lookup.IdList;
+import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
-import org.vitrivr.cineast.core.data.messages.query.SegmentQuery;
+import org.vitrivr.cineast.api.messages.query.SegmentQuery;
 
 import java.util.ArrayList;
 import java.util.List;

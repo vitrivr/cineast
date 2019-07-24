@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.data.messages.lookup.IdList;
-import org.vitrivr.cineast.core.data.messages.result.MediaObjectQueryResult;
+import org.vitrivr.cineast.api.messages.lookup.IdList;
+import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.TagHandler;
 

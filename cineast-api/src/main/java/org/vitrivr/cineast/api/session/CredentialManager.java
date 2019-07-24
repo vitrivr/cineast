@@ -3,7 +3,7 @@ package org.vitrivr.cineast.api.session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
-import org.vitrivr.cineast.core.data.messages.credentials.Credentials;
+import org.vitrivr.cineast.api.messages.credentials.Credentials;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.io.*;
