@@ -6,7 +6,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
-import org.vitrivr.cineast.core.db.dao.TagHandler;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
 
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public interface EntityCreator extends AutoCloseable {
     default boolean createTagEntity() {
       final Map<String, String> hints = new HashMap<>(1);
       hints.put("handler", "postgres");
-      return this.createIdEntity(TagHandler.TAG_ENTITY_NAME, new AttributeDefinition(TagHandler.TAG_NAME_COLUMNNAME, AttributeType.STRING, hints), new AttributeDefinition(TagHandler.TAG_DESCRIPTION_COLUMNNAME, AttributeType.STRING, hints));
+      return this.createIdEntity(TagReader.TAG_ENTITY_NAME, new AttributeDefinition(TagReader.TAG_NAME_COLUMNNAME, AttributeType.STRING, hints), new AttributeDefinition(TagReader.TAG_DESCRIPTION_COLUMNNAME, AttributeType.STRING, hints));
     }
 
 
@@ -109,7 +109,7 @@ public interface EntityCreator extends AutoCloseable {
      * Drops the entity responsible for holding metadata information about multimedia objects.
      */
     default boolean dropTagEntity() {
-        if (this.dropEntity(TagHandler.TAG_ENTITY_NAME)) {
+        if (this.dropEntity(TagReader.TAG_ENTITY_NAME)) {
             LOGGER.info("Successfully dropped tag entity.");
             return true;
         } else {

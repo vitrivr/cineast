@@ -146,8 +146,6 @@ public class MediaObjectReader extends AbstractEntityReader {
   }
 
   public List<MediaObjectDescriptor> getAllObjects() {
-    DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
-    selector.open(MediaObjectDescriptor.ENTITY);
     List<Map<String, PrimitiveTypeProvider>> all = selector.getAll();
     List<MediaObjectDescriptor> _return = new ArrayList<>(all.size());
     for (Map<String, PrimitiveTypeProvider> map : all) {

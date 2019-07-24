@@ -11,7 +11,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.MultiImage;
 
 import java.awt.*;
@@ -24,6 +23,8 @@ public class EdgeList {
 
 	private EdgeList() {
 	}
+
+	private static final int CACHE_SIZE = 8;
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final float THRESHOLD_LOW = 0.1f, THRESHOLD_HIGH = 0.3f;
@@ -45,7 +46,7 @@ public class EdgeList {
 	
 	private static LoadingCache<Thread, CannyEdge<GrayU8, GrayS16>> cannies = CacheBuilder
 			.newBuilder()
-			.maximumSize(Config.sharedConfig().getExtractor().getThreadPoolSize() * 2)
+			.maximumSize(CACHE_SIZE)
 			.expireAfterAccess(10, TimeUnit.MINUTES)
 			.build(new CacheLoader<Thread, CannyEdge<GrayU8, GrayS16>>() {
 
