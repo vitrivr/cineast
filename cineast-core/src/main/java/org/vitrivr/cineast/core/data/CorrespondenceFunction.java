@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.core.data;
 
+import com.google.common.base.Preconditions;
+
 import java.util.function.DoubleUnaryOperator;
 
 public class CorrespondenceFunction implements DoubleUnaryOperator {

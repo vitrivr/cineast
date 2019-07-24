@@ -11,7 +11,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 
@@ -27,12 +26,13 @@ public class EdgeImg {
 	private EdgeImg() {
 	}
 
+	private static final int CACHE_SIZE = 8;
+
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final float THRESHOLD_LOW = 0.075f, THRESHOLD_HIGH = 0.3f;
 
-	//private static final CannyEdge<ImageUInt8, ImageSInt16> canny = FactoryEdgeDetectors.canny(2, false, true, ImageUInt8.class, ImageSInt16.class);
-	
+
 	public static MultiImage getEdgeImg(MultiImage img) {
 		LOGGER.traceEntry();
 
@@ -104,8 +104,8 @@ public class EdgeImg {
 		return true;
 	}
 	
-	//private static HashMap<Thread, CannyEdge<ImageUInt8, ImageSInt16>> cannies = new HashMap<Thread, CannyEdge<ImageUInt8,ImageSInt16>>();
-	private static LoadingCache<Thread, CannyEdge<GrayU8, GrayS16>> cannies = CacheBuilder.newBuilder().maximumSize(Config.sharedConfig().getExtractor().getThreadPoolSize() * 2)
+
+	private static LoadingCache<Thread, CannyEdge<GrayU8, GrayS16>> cannies = CacheBuilder.newBuilder().maximumSize(CACHE_SIZE)
 			.expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<Thread, CannyEdge<GrayU8, GrayS16>>(){
 
 				@Override

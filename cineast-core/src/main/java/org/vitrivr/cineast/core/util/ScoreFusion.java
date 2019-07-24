@@ -26,8 +26,7 @@ public class ScoreFusion {
    * @param scoreByObjectId object ids with their respective score
    */
   public static void fuseObjectsIntoSegments(TObjectDoubleMap<String> scoreBySegmentId,
-      TObjectDoubleMap<String> scoreByObjectId) {
-    MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
+      TObjectDoubleMap<String> scoreByObjectId, MediaSegmentReader mediaSegmentReader) {
 
     Set<String> objectIds = scoreByObjectId.keySet();
     ListMultimap<String, MediaSegmentDescriptor> segmentsByObjectId =

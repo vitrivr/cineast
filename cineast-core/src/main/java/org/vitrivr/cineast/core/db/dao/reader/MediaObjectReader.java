@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.db.dao.reader;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -17,12 +16,6 @@ import java.util.Map;
 public class MediaObjectReader extends AbstractEntityReader {
 
   private static final Logger LOGGER = LogManager.getLogger();
-    /**
-     * Default constructor
-     */
-    public MediaObjectReader() {
-        this(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
-    }
 
     /**
      * Constructor for MediaObjectReader

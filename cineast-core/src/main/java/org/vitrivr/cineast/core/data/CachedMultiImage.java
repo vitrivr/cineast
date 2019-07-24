@@ -3,7 +3,6 @@ package org.vitrivr.cineast.core.data;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.awt.image.BufferedImage;

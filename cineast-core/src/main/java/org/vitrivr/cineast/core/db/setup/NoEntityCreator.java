@@ -5,14 +5,6 @@ import java.util.HashMap;
 public class NoEntityCreator implements EntityCreator {
 
 
-  /**
-   * @param options
-   */
-  @Override
-  public boolean setup(HashMap<String, String> options) {
-    return false;
-  }
-
   @Override
   public boolean createMultiMediaObjectsEntity() {
     return false;
