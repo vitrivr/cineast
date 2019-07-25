@@ -10,7 +10,7 @@ public class ColorReductionUtil {
 
   private ColorReductionUtil(){}
   
-  private static enum Color11 {
+  private enum Color11 {
     RED(0xFF0000), ORANGE(0xFFAA00), YELLOW(0xFFFF00), GREEN(0x00FF00), CYAN(0x00FFFF), BLUE(
         0x0000FF), VIOLET(0xAA00FF), PURPLE(0xFF00AA), WHITE(0xFFFFFF), GREY(0x808080), BLACK(0);
 
@@ -34,7 +34,7 @@ public class ColorReductionUtil {
       outColors[i] = quantize15(inColors[i]);
     }
     
-    return MultiImageFactory.newMultiImage(img.getWidth(), img.getHeight(), outColors);
+    return img.factory().newMultiImage(img.getWidth(), img.getHeight(), outColors);
   }
   
   public static int quantize11(int rgb){
@@ -49,7 +49,7 @@ public class ColorReductionUtil {
       outColors[i] = quantize11(inColors[i]);
     }
     
-    return MultiImageFactory.newMultiImage(img.getWidth(), img.getHeight(), outColors);
+    return img.factory().newMultiImage(img.getWidth(), img.getHeight(), outColors);
   }
   
   private static Color11 quantize11(ReadableHSVContainer hsv) {

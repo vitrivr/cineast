@@ -38,6 +38,9 @@ public interface MultiImage {
     public BufferedImage getBufferedImage() {
       return emptyImage;
     }
+
+    @Override
+    public MultiImageFactory factory() { return null; }
     
     @Override
     public void clear() {}
@@ -56,7 +59,8 @@ public interface MultiImage {
 	int getWidth();
 
 	int getHeight();
-	
-	void clear();
 
+	MultiImageFactory factory();
+
+    void clear();
 }

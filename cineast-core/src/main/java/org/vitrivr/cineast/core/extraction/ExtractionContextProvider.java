@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.extraction;
 
 import org.vitrivr.cineast.core.config.IdConfig;
+import org.vitrivr.cineast.core.config.ImageCacheConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -173,4 +174,11 @@ public interface ExtractionContextProvider {
    * @return Batch size.
    */
   Integer getBatchsize();
+
+  /**
+   * The {@link ImageCacheConfig} instance used with this {@link ExtractionContextProvider}.
+   *
+   * @return Optional {@link ImageCacheConfig}
+   */
+  Optional<ImageCacheConfig> imageCache();
 }

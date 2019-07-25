@@ -27,10 +27,11 @@ public class ImageQueryContainer extends QueryContainer {
 	 * Constructs an {@link ImageQueryContainer} from base 64 encoded image data.
 	 *
 	 * @param data The image data that should be converted.
+	 * @param factory The {@link MultiImageFactory} that should be used to generate the {@link MultiImage}.
 	 */
-	public ImageQueryContainer(String data) {
+	public ImageQueryContainer(String data, MultiImageFactory factory) {
 		final BufferedImage image = ImageParser.dataURLtoBufferedImage(data);
-		this.img = MultiImageFactory.newInMemoryMultiImage(image);
+		this.img = factory.newInMemoryMultiImage(image);
 	}
 
 	public ImageQueryContainer(MultiImage img){

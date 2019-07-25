@@ -25,11 +25,13 @@ public class ImageSegment implements SegmentContainer {
     private String objectId;
 
     /**
+     * Default constructor.
      *
-     * @param image
+     * @param image The {@link BufferedImage} to create a segment from.
+     * @param factory The {@link MultiImageFactory} used to convert to a {@link MultiImage}. Handles caching!
      */
-    public ImageSegment(BufferedImage image) {
-        this.image = MultiImageFactory.newMultiImage(image);
+    public ImageSegment(BufferedImage image, MultiImageFactory factory) {
+        this.image = factory.newMultiImage(image);
         this.videoFrame = new VideoFrame(1, 0, this.image, new VideoDescriptor(25, 40, this.image.getWidth(), this.image.getHeight()));
     }
 

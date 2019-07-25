@@ -30,15 +30,16 @@ public class ModelQueryContainer extends QueryContainer {
      * for Meshes OR a valid image (for 2D sketch to 3D model lookup).
      *
      * @param data The 3D model data that should be converted.
+     * @param factory The {@link MultiImageFactory} used to create images.
      */
-    public ModelQueryContainer(String data) {
+    public ModelQueryContainer(String data, MultiImageFactory factory) {
         if (MeshParser.isValidThreeJSV4Geometry(data)) {
             this.mesh = MeshParser.parseThreeJSV4Geometry(data);
             this.normalizedMesh = MeshTransformUtil.khlTransform(mesh, 1.0f);
             this.image = MultiImage.EMPTY_MULTIIMAGE;
         } else if (ImageParser.isValidImage(data)) {
             final BufferedImage img = ImageParser.dataURLtoBufferedImage(data);
-            this.image = MultiImageFactory.newMultiImage(img);
+            this.image = factory.newMultiImage(img);
             this.mesh = Mesh.EMPTY;
             this.normalizedMesh = Mesh.EMPTY;
         } else {
@@ -62,8 +63,8 @@ public class ModelQueryContainer extends QueryContainer {
      *
      * @param image BufferedImage for which to create a {@link ModelQueryContainer}.
      */
-    public ModelQueryContainer(BufferedImage image) {
-        this.image = MultiImageFactory.newMultiImage(image);
+    public ModelQueryContainer(BufferedImage image, MultiImageFactory factory) {
+        this.image = factory.newMultiImage(image);
         this.mesh = Mesh.EMPTY;
         this.normalizedMesh = Mesh.EMPTY;
     }

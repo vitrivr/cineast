@@ -8,6 +8,8 @@ import org.bytedeco.javacpp.avformat.AVFormatContext;
 import org.bytedeco.javacpp.avutil.AVDictionary;
 import org.bytedeco.javacpp.avutil.AVRational;
 import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.config.ImageCacheConfig;
+import org.vitrivr.cineast.core.data.MultiImage;
 import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
@@ -27,9 +29,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
+ * A {@link Decoder} implementation that decodes videos using the ffmpeg library + the corresponding Java bindings.
+ *
  * @author rgasser
  * @version 1.0
- * @created 17.01.17
  */
 public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** Configuration property name for the {@link FFMpegVideoDecoder}: max width of the converted video. */
@@ -56,18 +59,19 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** Configuration property default for the FFMpegVideoDecoder: number of channels of the converted audio. */
     private static final int CONFIG_CHANNELS_DEFAULT = 1;
 
-    /** Configuration property default for the FFMpegVideoDecoder: samplerate of the converted audio */
+    /** Configuration property default for the FFMpegVideoDecoder: sample rate of the converted audio */
     private static final int CONFIG_SAMPLERATE_DEFAULT = 44100;
-
 
     private static final int TARGET_FORMAT = avutil.AV_SAMPLE_FMT_S16;
     private static final int BYTES_PER_SAMPLE = avutil.av_get_bytes_per_sample(TARGET_FORMAT);
 
     private static final Logger LOGGER = LogManager.getLogger();
     
-    /** Lists the mimetypes supported by the FFMpegVideoDecoder.
+    /**
+     * Lists the mime types supported by the FFMpegVideoDecoder.
      *
-     * TODO: List may not be complete yet. */
+     * TODO: List may not be complete yet.
+     */
     public static final Set<String> supportedFiles;
     static {
         HashSet<String> tmp = new HashSet<>();
@@ -125,6 +129,25 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
 
     /** Indicates the EOF has been reached during decoding. */
     private final AtomicBoolean eof = new AtomicBoolean(false);
+
+    /** The {@link MultiImageFactory} reference used to create {@link MultiImage} objects. */
+    private final MultiImageFactory factory;
+
+    /**
+     * Default constructor.
+     */
+    public FFMpegVideoDecoder() {
+        this(new ImageCacheConfig());
+    }
+
+    /**
+     * Constructor
+     *
+     * @param config The {@link ImageCacheConfig}.
+     */
+    public FFMpegVideoDecoder(ImageCacheConfig config) {
+        this.factory = new MultiImageFactory(config);
+    }
 
     /**
      *
@@ -289,7 +312,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         }
 
         /* Prepare frame and associated timestamp and add it to output queue. */
-        VideoFrame videoFrame = new VideoFrame(this.pCodecCtxVideo.frame_number(), this.getFrameTimestamp(this.videoStream), MultiImageFactory.newMultiImage(this.videoDescriptor.getWidth(), this.videoDescriptor.getHeight(), pixels), this.videoDescriptor);
+        VideoFrame videoFrame = new VideoFrame(this.pCodecCtxVideo.frame_number(), this.getFrameTimestamp(this.videoStream), this.factory.newMultiImage(this.videoDescriptor.getWidth(), this.videoDescriptor.getHeight(), pixels), this.videoDescriptor);
         this.videoFrameQueue.add(videoFrame);
     }
 

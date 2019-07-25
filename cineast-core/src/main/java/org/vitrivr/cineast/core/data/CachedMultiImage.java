@@ -12,43 +12,31 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class CachedMultiImage implements MultiImage {
-	
-	private static final File FRAME_CACHE = new File(Config.sharedConfig().getImagecache().getCacheLocation(), "framecache_" + Config.UNIQUE_ID.toString());
-	
-	
+
 	private static final Logger LOGGER = LogManager.getLogger();
-	
-	static{
-		if(!FRAME_CACHE.exists()){
-			FRAME_CACHE.mkdirs();
-		}
-		for(File f : FRAME_CACHE.listFiles()){
-			f.delete();
-		}
-		FRAME_CACHE.deleteOnExit();
-	}
 
 	private BufferedImage thumb;
 	private final int width, height, id;
 	private final File file;
+	private final MultiImageFactory factory;
 	
-	protected CachedMultiImage(int width, int height){
+	protected CachedMultiImage(int width, int height, MultiImageFactory factory){
 		this.id = getId();
 		this.width = width;
 		this.height = height;
-		this.file = new File(FRAME_CACHE, Integer.toString(this.id));
-		this.file.deleteOnExit();
+		this.factory = factory;
+		this.file = new File(this.factory.getCacheLocation(), Integer.toString(this.id));
 	}
 	
-	CachedMultiImage(BufferedImage img){
-		this(img, null);
+	CachedMultiImage(BufferedImage img, MultiImageFactory factory){
+		this(img, null, factory);
 	}
 	
-	CachedMultiImage(BufferedImage img, BufferedImage thumb){
-		this(img.getWidth(), img.getHeight());
+	CachedMultiImage(BufferedImage img, BufferedImage thumb, MultiImageFactory factory){
+		this(img.getWidth(), img.getHeight(), factory);
 		this.thumb = thumb;
 		if(this.thumb == null){
-			gernerateThumb(img);
+			generateThumb(img);
 		}
 		try {
 			int[] colors = img.getRGB(0, 0, width, height, null, 0, width);
@@ -57,23 +45,23 @@ public class CachedMultiImage implements MultiImage {
 			oos.flush();
 			oos.close();
 		} catch (IOException e) {
-			LOGGER.fatal("could not write MultiImage to filecache");
+			LOGGER.fatal("Could not write MultiImage to file cache.");
 			LOGGER.fatal(LogHelper.getStackTrace(e));
 		}
 	}
 	
-	CachedMultiImage(int width, int height, int[] colors){
-		this(width, MultiImageFactory.checkHeight(width, height, colors));
+	CachedMultiImage(int width, int height, int[] colors, MultiImageFactory factory){
+		this(width, MultiImageFactory.checkHeight(width, height, colors), factory);
 		BufferedImage bimg = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
 		bimg.setRGB(0, 0, this.width, this.height, colors, 0, this.width);
-		gernerateThumb(bimg);
+		generateThumb(bimg);
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
 			oos.writeObject(colors);
 			oos.flush();
 			oos.close();
 		} catch (IOException e) {
-			LOGGER.fatal("could not write MultiImage to filecache");
+			LOGGER.fatal("Could not write MultiImage to file cache");
 			LOGGER.fatal(LogHelper.getStackTrace(e));
 		}
 	}
@@ -160,9 +148,14 @@ public class CachedMultiImage implements MultiImage {
 	public int getHeight(){
 		return this.height;
 	}
-	
+
 	@Override
-  public synchronized void clear(){
+	public MultiImageFactory factory() {
+		return this.factory;
+	}
+
+	@Override
+	public synchronized void clear(){
 		this.thumb = null;
 		this.file.delete();
 	}
@@ -172,7 +165,7 @@ public class CachedMultiImage implements MultiImage {
 		return counter.getAndIncrement();
 	}
 	
-	private void gernerateThumb(BufferedImage img){
+	private void generateThumb(BufferedImage img){
 		double scale = MAX_THUMB_SIZE / Math.max(img.getWidth(), img.getHeight());
 		if(scale >= 1 || scale <= 0){
 			this.thumb = img;
@@ -189,5 +182,4 @@ public class CachedMultiImage implements MultiImage {
 	public String toString() {
 		return "CachedMultiImage id: " + this.id + " (" + this.width + "x" + this.height + ") @ " + this.file.getAbsolutePath();
 	}
-	
 }

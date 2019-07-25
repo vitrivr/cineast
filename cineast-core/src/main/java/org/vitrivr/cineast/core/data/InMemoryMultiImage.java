@@ -5,21 +5,23 @@ import net.coobird.thumbnailator.Thumbnails;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-
 public class InMemoryMultiImage implements MultiImage {
 
-	private BufferedImage bimg, thumb;
-	private int[] colors, thumbColors;
-	
-	InMemoryMultiImage(BufferedImage bimg){
-		this(bimg, null);
+	private final BufferedImage bimg;
+	private final int[] colors, thumbColors;
+	private final MultiImageFactory factory;
+	private BufferedImage thumb;
+
+	InMemoryMultiImage(BufferedImage bimg, MultiImageFactory factory){
+		this(bimg, null, factory);
 	}
 	
-	InMemoryMultiImage(BufferedImage bimg, BufferedImage thumb){
+	InMemoryMultiImage(BufferedImage bimg, BufferedImage thumb, MultiImageFactory factory){
 		this.bimg = bimg;
 		this.thumb = thumb;
+		this.factory = factory;
 		if(this.thumb == null){
-			gernerateThumb(bimg);
+			generateThumb(bimg);
 		}
 		this.colors = this.bimg.getRGB(0, 0, this.bimg.getWidth(), this.bimg.getHeight(), null, 0, this.bimg.getWidth());
 		this.thumbColors = this.thumb.getRGB(0, 0, this.thumb.getWidth(), this.thumb.getHeight(), null, 0, this.thumb.getWidth());
@@ -56,13 +58,18 @@ public class InMemoryMultiImage implements MultiImage {
 	}
 
 	@Override
+	public MultiImageFactory factory() {
+		return this.factory;
+	}
+
+	@Override
 	public void clear(){}
 	
-	private void gernerateThumb(BufferedImage img){
+	private void generateThumb(BufferedImage img){
 		double scale = MAX_THUMB_SIZE / Math.max(img.getWidth(), img.getHeight());
 		if(scale >= 1 || scale <= 0){
 			this.thumb = img;
-		}else{
+		} else {
 			try {
 				this.thumb = Thumbnails.of(img).scale(scale).asBufferedImage();
 			} catch (IOException e) {
@@ -70,5 +77,4 @@ public class InMemoryMultiImage implements MultiImage {
 			}
 		}
 	}
-
 }

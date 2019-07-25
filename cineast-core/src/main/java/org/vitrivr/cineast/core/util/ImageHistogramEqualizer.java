@@ -66,7 +66,7 @@ public class ImageHistogramEqualizer {
 					ReadableRGBContainer.getAlpha(color));
 		}
 		
-		return MultiImageFactory.newMultiImage(in.getWidth(), in.getHeight(), returnColors);		
+		return in.factory().newMultiImage(in.getWidth(), in.getHeight(), returnColors);
 		
 	}
 	

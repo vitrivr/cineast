@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.extraction.decode.general;
 
+
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 
 import java.nio.file.Path;

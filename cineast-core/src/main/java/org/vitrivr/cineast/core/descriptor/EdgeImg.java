@@ -43,7 +43,7 @@ public class EdgeImg {
 
 		BufferedImage bout = VisualizeBinaryData.renderBinary(gray, false, null);
 
-		return LOGGER.traceExit(MultiImageFactory.newMultiImage(bout));
+		return LOGGER.traceExit(img.factory().newMultiImage(bout));
 	}
 
 	public static boolean[] getEdgePixels(MultiImage img, boolean[] out) {

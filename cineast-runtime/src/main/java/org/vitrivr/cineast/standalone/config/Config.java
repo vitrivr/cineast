@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.config.ImageCacheConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -17,8 +18,6 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Config {
     private static final Logger LOGGER = LogManager.getLogger();
-
-    public static final UUID UNIQUE_ID = UUID.randomUUID();
 
     /** Global, shared instance of the Config object. Gets loading during application startup. */
     private volatile static Config sharedConfig;

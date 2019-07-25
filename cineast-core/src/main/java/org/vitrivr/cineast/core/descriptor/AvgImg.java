@@ -63,7 +63,7 @@ public class AvgImg {
 		System.gc();
 		LOGGER.debug("AvgImg.getAvg() done in {}", TimeHelper.toc());
 		LOGGER.traceExit();
-		return MultiImageFactory.newMultiImage(width, height, colors);
+		return first.factory().newMultiImage(width, height, colors);
 	}
 	
 }

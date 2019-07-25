@@ -102,7 +102,7 @@ public class MedianImg {
 		
 		System.gc();
 		LOGGER.traceExit();
-		return MultiImageFactory.newMultiImage(width, height, result);
+		return first.factory().newMultiImage(width, height, result);
 		
 		
 //		System.out.println("MedianImg.getMedian()");
