@@ -42,8 +42,11 @@ public class ADAMproWrapper implements AutoCloseable {
   private static final long maxCallTimeOutMs = 300_000; //TODO expose to config
   
   public ADAMproWrapper(DatabaseConfig config) {
-    this.channel = NettyChannelBuilder.forAddress(config.getHost(), config.getPort())
-        .maxInboundMessageSize(maxMessageSize).usePlaintext(config.getPlaintext()).build();
+    NettyChannelBuilder builder = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).maxInboundMessageSize(maxMessageSize);
+    if (config.getPlaintext()) {
+      builder = builder.usePlaintext();
+    }
+    this.channel = builder.build();
     this.definitionStub = AdamDefinitionGrpc.newFutureStub(channel);
     this.searchStub = AdamSearchGrpc.newFutureStub(channel);
     this.streamSearchStub = AdamSearchGrpc.newStub(channel);

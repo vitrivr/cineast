@@ -41,7 +41,11 @@ public class CottontailWrapper implements AutoCloseable {
   private static final long MAX_CALL_TIMEOUT = 5000; //TODO expose to config
 
   public CottontailWrapper(DatabaseConfig config) {
-    this.channel = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).usePlaintext(config.getPlaintext()).maxInboundMessageSize(maxMessageSize).build();
+    NettyChannelBuilder builder = NettyChannelBuilder.forAddress(config.getHost(), config.getPort()).maxInboundMessageSize(maxMessageSize);
+    if (config.getPlaintext()) {
+      builder = builder.usePlaintext();
+    }
+    this.channel = builder.build();
     LOGGER.info("Connected to Cottontail at {}:{}", config.getHost(), config.getPort());
     this.definitionFutureStub = CottonDDLGrpc.newFutureStub(channel);
     this.managementStub = CottonDMLGrpc.newFutureStub(channel);
