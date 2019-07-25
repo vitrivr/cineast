@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.standalone.tests.util.math.functions;
+package org.vitrivr.cineast.core.util.math.functions;
 
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.FastMath;

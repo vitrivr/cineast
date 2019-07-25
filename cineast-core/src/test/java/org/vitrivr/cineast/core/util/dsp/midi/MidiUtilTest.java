@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.standalone.tests.util.dsp.midi;
+package org.vitrivr.cineast.core.util.dsp.midi;
 
 import org.junit.jupiter.api.Test;
 import org.vitrivr.cineast.core.util.dsp.midi.MidiUtil;

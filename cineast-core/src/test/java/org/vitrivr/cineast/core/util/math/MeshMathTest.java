@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.standalone.tests.util.math;
+package org.vitrivr.cineast.core.util.math;
 
 import org.joml.Vector3f;
 import org.joml.Vector3fc;

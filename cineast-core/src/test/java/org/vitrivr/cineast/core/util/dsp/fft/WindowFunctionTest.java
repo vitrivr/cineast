@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.standalone.tests.util.dsp.fft;
+package org.vitrivr.cineast.core.util.dsp.fft;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
