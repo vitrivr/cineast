@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.data;
 import com.drew.metadata.exif.GpsDirectory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Preconditions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.LogHelper;
