@@ -13,6 +13,7 @@ import org.vitrivr.cineast.core.data.score.BooleanSegmentScoreElement;
 import org.vitrivr.cineast.core.data.score.ObjectScoreElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
+import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.features.retriever.RetrieverInitializer;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -44,22 +45,25 @@ public class ContinuousQueryDispatcher {
   private final Function<Retriever, RetrievalTask> taskFactory;
   private final RetrieverInitializer initializer;
   private final TObjectDoubleMap<Retriever> retrieverWeights;
+  private final MediaSegmentReader mediaSegmentReader;
   private final double retrieverWeightSum;
 
   public static List<SegmentScoreElement> retrieve(QueryContainer query,
       TObjectDoubleHashMap<Retriever> retrievers,
       RetrieverInitializer initializer,
-      ReadableQueryConfig config) {
+      ReadableQueryConfig config,
+      MediaSegmentReader mediaSegmentReader) {
     return new ContinuousQueryDispatcher(r -> new RetrievalTask(r, query, config), retrievers,
-        initializer).doRetrieve();
+        initializer, mediaSegmentReader).doRetrieve();
   }
 
   public static List<SegmentScoreElement> retrieve(String segmentId,
       TObjectDoubleHashMap<Retriever> retrievers,
       RetrieverInitializer initializer,
-      ReadableQueryConfig config) {
+      ReadableQueryConfig config,
+      MediaSegmentReader mediaSegmentReader) {
     return new ContinuousQueryDispatcher(r -> new RetrievalTask(r, segmentId, config), retrievers,
-        initializer).doRetrieve();
+        initializer, mediaSegmentReader).doRetrieve();
   }
 
   public static void shutdown() {
@@ -80,10 +84,11 @@ public class ContinuousQueryDispatcher {
 
   private ContinuousQueryDispatcher(Function<Retriever, RetrievalTask> taskFactory,
       TObjectDoubleMap<Retriever> retrieverWeights,
-      RetrieverInitializer initializer) {
+      RetrieverInitializer initializer, MediaSegmentReader mediaSegmentReader) {
     this.taskFactory = taskFactory;
     this.initializer = initializer;
     this.retrieverWeights = retrieverWeights;
+    this.mediaSegmentReader = mediaSegmentReader;
 
     double weightSum = 0d;
     TDoubleIterator i = retrieverWeights.valueCollection().iterator();
@@ -92,6 +97,7 @@ public class ContinuousQueryDispatcher {
     }
     this.retrieverWeightSum = weightSum;
     LOGGER.trace("Initialized continuous query dispatcher with retrievers {}", retrieverWeights);
+
   }
 
   private List<SegmentScoreElement> doRetrieve() {
@@ -100,13 +106,13 @@ public class ContinuousQueryDispatcher {
     LOGGER.trace("Starting tasks with retrievers {}", retrieverWeights);
     List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures = this.startTasks();
     LOGGER.trace("Extracting results with retrievers {}", retrieverWeights);
-    List<SegmentScoreElement> segmentScores = this.extractResults(futures);
+    List<SegmentScoreElement> segmentScores = this.extractResults(futures, this.mediaSegmentReader);
     LOGGER.trace("Retrieved {} results, finishing", segmentScores.size());
     this.finish();
     return segmentScores;
   }
 
-  private static void initExecutor() {
+  private static void initExecutor() { //FIXME this should be somewhere else
     if (executor.isShutdown()) {
       clearExecutor();
     }
@@ -138,7 +144,7 @@ public class ContinuousQueryDispatcher {
   }
 
   private List<SegmentScoreElement> extractResults(
-      List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures) {
+      List<Future<Pair<RetrievalTask, List<ScoreElement>>>> futures, MediaSegmentReader mediaSegmentReader) {
     TObjectDoubleMap<String> scoreByObjectId = new TObjectDoubleHashMap<>();
     TObjectDoubleMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
     while (!futures.isEmpty()) {
@@ -164,7 +170,7 @@ public class ContinuousQueryDispatcher {
       }
     }
 
-    ScoreFusion.fuseObjectsIntoSegments(scoreBySegmentId, scoreByObjectId);
+    ScoreFusion.fuseObjectsIntoSegments(scoreBySegmentId, scoreByObjectId, mediaSegmentReader);
     return this.normalizeSortTruncate(scoreBySegmentId);
   }
 

@@ -2,6 +2,7 @@ package org.vitrivr.cineast.standalone.listener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -21,6 +22,14 @@ public class RetrievalResultCSVExporter implements RetrievalResultListener {
   private static File baseFolder = new File("retrieval_results"); // TODO make configurable
   private static final Logger LOGGER = LogManager.getLogger();
 
+  private final MediaSegmentReader mediaSegmentReader;
+  private final MediaObjectReader mediaObjectReader;
+
+  public RetrievalResultCSVExporter(DatabaseConfig databaseConfig){
+    mediaSegmentReader = new MediaSegmentReader(databaseConfig.getSelectorSupplier().get());
+    mediaObjectReader = new MediaObjectReader(databaseConfig.getSelectorSupplier().get());
+  }
+
   @Override
   public void notify(List<ScoreElement> resultList, RetrievalTask task) {
     ReadableQueryConfig qc = task.getConfig();
@@ -37,22 +46,20 @@ public class RetrievalResultCSVExporter implements RetrievalResultListener {
     outFolder.mkdirs();
     File out = new File(outFolder, filename);
 
-    MediaSegmentReader sl = new MediaSegmentReader();
-    
+
     ArrayList<String> ids = new ArrayList<>(resultList.size());
     for(ScoreElement e : resultList){
       ids.add(e.getId());
     }
     
-    Map<String, MediaSegmentDescriptor> segments = sl.lookUpSegments(ids);
+    Map<String, MediaSegmentDescriptor> segments = mediaSegmentReader.lookUpSegments(ids);
     Set<String> objectIds = new HashSet<>();
     
     for(MediaSegmentDescriptor sd : segments.values()){
       objectIds.add(sd.getObjectId());
     }
     
-    MediaObjectReader ol = new MediaObjectReader();
-    Map<String, MediaObjectDescriptor> objects = ol.lookUpObjects(objectIds);
+    Map<String, MediaObjectDescriptor> objects = mediaObjectReader.lookUpObjects(objectIds);
     
     try (PrintWriter writer = new PrintWriter(out)) {
       
@@ -76,8 +83,6 @@ public class RetrievalResultCSVExporter implements RetrievalResultListener {
     } catch (FileNotFoundException e) {
       LOGGER.error("could not write file '{}': {}", out.getAbsolutePath(), LogHelper.getStackTrace(e));
     }
-    
-    sl.close();
-    ol.close();
+
   }
 }

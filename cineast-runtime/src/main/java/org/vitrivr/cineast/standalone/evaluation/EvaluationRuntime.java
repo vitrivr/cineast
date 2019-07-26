@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -37,10 +38,10 @@ EvaluationRuntime implements Callable {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** MediaSegmentReader instance used to read segments from the storage layer. */
-    private final MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
+    private final MediaSegmentReader mediaSegmentReader;
 
     /** MediaObjectReader instance used to read multimedia objects from the storage layer. */
-    private final MediaObjectReader mediaObjectReader = new MediaObjectReader();
+    private final MediaObjectReader mediaObjectReader;
 
     /** Instacen of EvaluationConfig that is used with this runtime. */
     private final EvaluationConfig config;
@@ -57,14 +58,16 @@ EvaluationRuntime implements Callable {
     /** Number of files that were skipped due to processing errors. */
     private int error = 0;
 
-    /**
-     *
-     * @param config
-     */
-    public EvaluationRuntime(Path config) {
+    private final ContinuousRetrievalLogic retrievalLogic;
+
+
+    public EvaluationRuntime(Path configPath, DatabaseConfig dbConfig, ContinuousRetrievalLogic retrievalLogic) {
         JsonReader reader = new JacksonJsonProvider();
-        this.config = reader.toObject(config.toFile(), EvaluationConfig.class);
+        this.config = reader.toObject(configPath.toFile(), EvaluationConfig.class);
         this.cache = new HashMap<>(this.config.getSize());
+        this.mediaSegmentReader = new MediaSegmentReader(dbConfig.getSelectorSupplier().get());
+        this.mediaObjectReader = new MediaObjectReader(dbConfig.getSelectorSupplier().get());
+        this.retrievalLogic = retrievalLogic;
     }
 
     /**
@@ -121,7 +124,7 @@ EvaluationRuntime implements Callable {
         final Random random = new Random();
 
         /* Perform evaluation for every file. */
-        Path path = null;
+        Path path;
         while(testfilesIterator.hasNext()) {
             path = testfilesIterator.next();
             if (random.nextBoolean() && config.getMode() == EvaluationConfig.EvaluationMode.RANDOM) {
@@ -140,7 +143,7 @@ EvaluationRuntime implements Callable {
 
             LOGGER.info("Starting evaluation for {}", path);
             for (String category : this.config.getCategories()) {
-                List<SegmentScoreElement> scores = ContinuousRetrievalLogic.retrieve(container, category, queryConfig);
+                List<SegmentScoreElement> scores = this.retrievalLogic.retrieve(container, category, queryConfig);
                 EvaluationResult result = this.performEvaluation(scores, path, gt);
                 this.writeToFile(category, result);
             }

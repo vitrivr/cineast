@@ -3,9 +3,9 @@ package org.vitrivr.cineast.standalone.importer.handlers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.monitoring.ImportTaskMonitor;
 import org.vitrivr.cineast.standalone.importer.Copier;
 import org.vitrivr.cineast.core.importer.Importer;
+import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
