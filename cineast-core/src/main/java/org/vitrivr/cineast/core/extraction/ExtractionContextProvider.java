@@ -178,7 +178,7 @@ public interface ExtractionContextProvider {
   /**
    * The {@link ImageCacheConfig} instance used with this {@link ExtractionContextProvider}.
    *
-   * @return Optional {@link ImageCacheConfig}
+   * @return {@link ImageCacheConfig} reference
    */
-  Optional<ImageCacheConfig> imageCache();
+  ImageCacheConfig imageCache();
 }
