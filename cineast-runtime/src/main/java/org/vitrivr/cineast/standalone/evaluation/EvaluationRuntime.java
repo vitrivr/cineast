@@ -43,7 +43,7 @@ EvaluationRuntime implements Callable {
     /** MediaObjectReader instance used to read multimedia objects from the storage layer. */
     private final MediaObjectReader mediaObjectReader;
 
-    /** Instacen of EvaluationConfig that is used with this runtime. */
+    /** Instance of EvaluationConfig that is used with this runtime. */
     private final EvaluationConfig config;
 
     /** Caching structure used to cache MultimediaObjectDescriptors. */
@@ -61,13 +61,13 @@ EvaluationRuntime implements Callable {
     private final ContinuousRetrievalLogic retrievalLogic;
 
 
-    public EvaluationRuntime(Path configPath, DatabaseConfig dbConfig, ContinuousRetrievalLogic retrievalLogic) {
+    public EvaluationRuntime(Path configPath, DatabaseConfig dbConfig) {
         JsonReader reader = new JacksonJsonProvider();
         this.config = reader.toObject(configPath.toFile(), EvaluationConfig.class);
         this.cache = new HashMap<>(this.config.getSize());
         this.mediaSegmentReader = new MediaSegmentReader(dbConfig.getSelectorSupplier().get());
         this.mediaObjectReader = new MediaObjectReader(dbConfig.getSelectorSupplier().get());
-        this.retrievalLogic = retrievalLogic;
+        this.retrievalLogic = new ContinuousRetrievalLogic(dbConfig);
     }
 
     /**

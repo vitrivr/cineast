@@ -20,10 +20,9 @@ public class ExtractionContainerProviderFactory {
    * Tries to create a {@link TreeWalkContainerIteratorProvider}. Will however create a {@link
    * NoContainerProvider} if something goes wrong.
    */
-  public static ExtractionContainerProvider tryCreatingTreeWalkPathProvider(File jobFile,
-      ExtractionContextProvider context) {
+  public static ExtractionContainerProvider tryCreatingTreeWalkPathProvider(File jobFile, ExtractionContextProvider context) {
         /* Check if context could be read and an input path was specified. */
-    if (context == null || context.inputPath() == null || context.pathProvider() == null) {
+    if (context == null || !context.inputPath().isPresent()) {
       return new NoContainerProvider();
     }
     Path jobDirectory = jobFile.getAbsoluteFile().toPath().getParent();
