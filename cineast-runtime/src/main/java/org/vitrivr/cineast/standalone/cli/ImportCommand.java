@@ -2,6 +2,7 @@ package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
+import org.tensorflow.Session.Run;
 import org.vitrivr.cineast.standalone.importer.handlers.*;
 import org.vitrivr.cineast.standalone.importer.vbs2019.AudioTranscriptImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.CaptionTextImportHandler;
@@ -21,7 +22,7 @@ import java.util.List;
  * @version 1.0
  */
 @Command(name = "import", description = "Starts import of pre-extracted data.")
-public class ImportCli extends CineastCli {
+public class ImportCommand implements Runnable {
 
     @Option(name = { "-t", "--type" }, description = "Type of data import that should be started. Possible values are PROTO, JSON, ASR, OCR, CAPTION, AUDIO, TAGS and VISION.")
     private String type;
@@ -34,7 +35,6 @@ public class ImportCli extends CineastCli {
 
     @Override
     public void run() {
-        super.loadConfig();
         System.out.println(String.format("Starting import of type %s for '%s'.", this.type.toString(), this.input));
         final Path path = Paths.get(this.input);
         final ImportType type = ImportType.valueOf(this.type.toUpperCase());

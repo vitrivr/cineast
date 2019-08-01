@@ -18,10 +18,9 @@ import java.io.IOException;
  * @version 1.0
  */
 @Command(name = "3dtest", description = "Starts a 3D rendering test to check availability of an OpenGL renderer.")
-public class ThreeDeeTestCli extends CineastCli {
+public class ThreeDeeTestCommand implements Runnable {
     @Override
     public void run() {
-        super.loadConfig();
         System.out.println("Performing 3D test...");
 
         Mesh mesh = new Mesh(2, 6);

@@ -2,6 +2,7 @@ package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
+
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
@@ -16,7 +17,7 @@ import java.nio.file.Paths;
  * @version 1.0
  */
 @Command(name = "codebook", description = "Generates a codebook of defined size based on a set of images using some specified features.")
-public class CodebookCli extends CineastCli {
+public class CodebookCommand implements Runnable {
 
     @Option(name = { "-n", "--name" }, description = "The fully qualified name of the codebook generator. Supported values are HOGCodebookGenerator and SURFCodebookGenerator.")
     private String name;
@@ -32,7 +33,6 @@ public class CodebookCli extends CineastCli {
 
     @Override
     public void run() {
-        super.loadConfig();
         final CodebookGenerator generator = ReflectionHelper.newCodebookGenerator(name);
         final Path input = Paths.get(this.input);
         final Path output = Paths.get(this.output);

@@ -21,12 +21,11 @@ import java.util.List;
  * @version 1.0
  */
 @Command(name = "metadata", description = "Performs a metadata lookup for the media objects specified.")
-public class MetadataCli extends CineastCli {
+public class MetadataCommand implements Runnable {
     @Option(name = { "-o", "--objectid" }, title = "Object ID", description = "The ID of the object to lookup metadata for.")
     private String objectId;
 
     public void run() {
-        super.loadConfig();
         final List<String> objectIds = new ArrayList<>(1);
         objectIds.add(this.objectId);
         final DatabaseConfig config = Config.sharedConfig().getDatabase();

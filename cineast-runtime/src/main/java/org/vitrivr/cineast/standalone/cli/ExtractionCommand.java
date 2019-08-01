@@ -19,14 +19,13 @@ import java.io.IOException;
  * @version 1.0
  */
 @Command(name = "extract", description = "Starts a media extracting using the specified settings.")
-public class ExtractionCli extends CineastCli {
+public class ExtractionCommand implements Runnable {
 
     @Option(name = { "-e", "--extraction" }, title = "Extraction config", description = "Path that points to a valid Cineast extraction config file.")
     private String extractionConfig;
 
     @Override
     public void run() {
-        super.loadConfig();
         final ExtractionDispatcher dispatcher = new ExtractionDispatcher();
         final File file = new File(this.extractionConfig);
         if (file.exists()) {

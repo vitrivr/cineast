@@ -18,7 +18,7 @@ import java.util.List;
  * @version 1.0
  */
 @Command(name = "retrieve", description = "Retrieves objects from the database using and example object.")
-public class RetrieveCli extends CineastCli {
+public class RetrieveCommand implements Runnable {
     @Option(name = { "-s", "--segmentid" }, title = "Segment ID", description = "The ID of the segment to use an example for retrieval.")
     private String segmentId;
 
@@ -29,7 +29,6 @@ public class RetrieveCli extends CineastCli {
     private boolean export = false;
 
     public void run() {
-        super.loadConfig();
         final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
         if (export) {
             retrieval.addRetrievalResultListener(new RetrievalResultCSVExporter(Config.sharedConfig().getDatabase()));

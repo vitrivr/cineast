@@ -1,25 +1,23 @@
-package org.vitrivr.cineast.standalone.cli;
+package org.vitrivr.cineast.standalone.util;
 
-import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.parser.errors.ParseRestrictionViolatedException;
-
-import org.vitrivr.cineast.standalone.Main;
-
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
- * A CLI command that can be used to start interactive CLI mode.
+ * Helper class that can be used to start an interactive CLI.
  *
  * @author Ralph Gasser
  * @version 1.0
  */
-@Command(name = "interactive", description = "Starts the interactive Cineast CLI.")
-public class InteractiveCli extends CineastCli {
+public class CLI {
 
+    private CLI() {}
 
-    public void run() {
-        super.loadConfig();
+    /**
+     * Starts the interactive CLI. This is method will block.
+     */
+    public static void start(Class<?> cliClass) {
         final Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the interactive Cineast CLI.");
         try {
@@ -30,13 +28,9 @@ public class InteractiveCli extends CineastCli {
                     break;
                 }
 
-                if (line.toLowerCase().equals("interactive")) {
-                    System.err.println("You already are in interactive mode!");
-                    continue;
-                }
-
-                try {/* Try to parse user input. */
-                    com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(Main.class);
+                /* Try to parse user input. */
+                try {
+                    com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(cliClass);
                     final Runnable command = cli.parse(line.split(" "));
                     command.run();
                 } catch (ParseRestrictionViolatedException e) {

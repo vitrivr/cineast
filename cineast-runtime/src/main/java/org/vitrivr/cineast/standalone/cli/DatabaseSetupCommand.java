@@ -18,13 +18,12 @@ import java.util.HashSet;
  * @version 1.0
  */
 @Command(name = "setup", description = "Makes the necessary database setup for Cineast and creates all the required entities.")
-public class DatabaseSetupCli extends CineastCli {
+public class DatabaseSetupCommand implements Runnable {
     @Option(name = { "-c", "--clean" }, description = "Performs a cleanup before starting the setup; i.e. explicitly drops all entities.")
     private boolean clean = false;
 
     @Override
     public void run() {
-        super.loadConfig();
         final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
         if (ec != null) {
             /* Collects all the relevant retriever classes based on the application config. */

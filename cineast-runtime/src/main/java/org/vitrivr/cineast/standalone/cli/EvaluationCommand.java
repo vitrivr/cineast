@@ -17,13 +17,12 @@ import java.nio.file.Paths;
  * @version 1.0
  */
 @Command(name = "evaluation", description = "...")
-public class EvaluationCli extends CineastCli {
+public class EvaluationCommand implements Runnable {
     @Option(name = { "-i", "--input" }, description = "Path to the evaluation config file used for evaluation.")
     private String input;
 
     @Override
     public void run() {
-        super.loadConfig();
         final Path path = Paths.get(this.input);
         try {
             final EvaluationRuntime runtime = new EvaluationRuntime(path, Config.sharedConfig().getDatabase());
