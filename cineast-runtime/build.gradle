@@ -19,6 +19,10 @@ dependencies {
 
     /* Airline (CLI parsing) */
     compile group: 'com.github.rvesse', name: 'airline', version: '2.7.2'
+    
+    /* JLine 3 */
+    compile group: 'org.jline', name: 'jline', version: '3.12.1'
+
 
     /** Prometheus */
     compile group: 'io.prometheus', name: 'simpleclient', version: '0.6.0'
