@@ -2,10 +2,10 @@ package org.vitrivr.cineast.standalone.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.IdConfig;
+import org.vitrivr.cineast.core.config.ImageCacheConfig;
 import org.vitrivr.cineast.core.config.SegmenterConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -39,9 +39,6 @@ import java.util.stream.Collectors;
  * @created 13.01.17
  */
 public final class IngestConfig implements ExtractionContextProvider {
-
-    private static final Logger LOGGER = LogManager.getLogger();
-
     /** MediaType for the Extraction run. */
     private final MediaType type;
 
@@ -66,19 +63,23 @@ public final class IngestConfig implements ExtractionContextProvider {
     /** Configuration for extraction-pipeline. Defaults to global configuration. */
     private final SegmenterConfig segmenter;
 
+    /** Configuration for extraction-pipeline. Defaults to global configuration. */
+    private final ImageCacheConfig imageCacheConfig;
+
     /**
      * Constructor for {@link IngestConfig}. Used by Jackson for JSON deserialization.
      *
      */
     @JsonCreator
-    public IngestConfig(@JsonProperty(value = "type") MediaType type,
+    public IngestConfig(@JsonProperty(value = "type", required = true) MediaType type,
                         @JsonProperty(value = "input", required = true) InputConfig input,
                         @JsonProperty(value = "extractors") List<ExtractorConfig> extractors,
                         @JsonProperty(value = "exporters") List<ExtractorConfig> exporters,
                         @JsonProperty(value = "metadata") List<MetadataConfig> metadata,
                         @JsonProperty(value = "database") DatabaseConfig database,
                         @JsonProperty(value = "pipeline") ExtractionPipelineConfig pipeline,
-                        @JsonProperty(value = "segmenter") SegmenterConfig segmenter) {
+                        @JsonProperty(value = "segmenter") SegmenterConfig segmenter,
+                        @JsonProperty(value = "imagecache") ImageCacheConfig imageCacheConfig) {
 
         if (input == null) throw new IllegalArgumentException("You have not defined an 'type' or 'input' object in your ingest configuration file.");
         this.type = type;
@@ -136,6 +137,10 @@ public final class IngestConfig implements ExtractionContextProvider {
         /* Set SegmenterConfig. */
         if (segmenter == null) segmenter = new SegmenterConfig(this.type);
         this.segmenter = segmenter;
+
+        /* Set ImageCacheConfig. */
+        if (imageCacheConfig == null) imageCacheConfig = Config.sharedConfig().getImagecache();
+        this.imageCacheConfig = imageCacheConfig;
     }
 
     @JsonProperty(required = true)
@@ -354,8 +359,9 @@ public final class IngestConfig implements ExtractionContextProvider {
     }
 
     /**
+     * Returns the size of the extraction task queue. Limits how many extraction tasks can be dispatched and kept in memory.
      *
-     * @return
+     * @return Size of extraction task queue.
      */
     @Override
     public Integer taskQueueSize() {
@@ -363,8 +369,9 @@ public final class IngestConfig implements ExtractionContextProvider {
     }
 
     /**
+     * Returns the size of the segment queue. Segments can be created and kept in memory until that queue is full.
      *
-     * @return
+     * @return Size of segment queue.
      */
     @Override
     public Integer segmentQueueSize() {
@@ -380,5 +387,15 @@ public final class IngestConfig implements ExtractionContextProvider {
     @Override
     public Integer getBatchsize() {
         return this.database.getBatchsize();
+    }
+
+    /**
+     * Returns the instance of {@link ImageCacheConfig}.
+     *
+     * @return {@link ImageCacheConfig} reference.
+     */
+    @Override
+    public ImageCacheConfig imageCache() {
+        return this.imageCacheConfig;
     }
 }
