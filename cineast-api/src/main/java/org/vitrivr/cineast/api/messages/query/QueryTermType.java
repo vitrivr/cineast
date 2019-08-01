@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.api.messages.query;
 
-import org.vitrivr.cineast.api.data.query.*;
-import org.vitrivr.cineast.core.data.containers.*;
+import org.vitrivr.cineast.core.data.query.containers.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

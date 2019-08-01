@@ -3,16 +3,16 @@ package org.vitrivr.cineast.api.rest.handlers.actions;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
-import org.vitrivr.cineast.core.config.Config;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
-import org.vitrivr.cineast.core.data.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
-import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
+import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 import java.util.*;
 

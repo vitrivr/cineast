@@ -4,17 +4,17 @@ import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.core.data.tag.Tag;
-import org.vitrivr.cineast.core.db.dao.TagHandler;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 
 import java.util.Map;
 
 public class FindTagsActionHandler extends ParsingActionHandler<IdList> {
 
-    private static TagHandler tagHandler = new TagHandler();
+    private static TagReader tagReader = new TagReader();
 
 
     public FindTagsActionHandler() {
-        tagHandler.initCache();
+        tagReader.initCache();
     }
 
     /**
@@ -25,7 +25,7 @@ public class FindTagsActionHandler extends ParsingActionHandler<IdList> {
      */
     @Override
     public Object doGet(Map<String, String> parameters) {
-        return tagHandler.getAllCached();
+        return tagReader.getAllCached();
     }
 
     @Override

@@ -61,6 +61,7 @@ project(':cineast-runtime') {
 project(':cineast-api') {
     dependencies {
         implementation project(':cineast-runtime')
+        implementation project(':cineast-core')
     }
 }
 

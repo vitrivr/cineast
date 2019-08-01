@@ -6,7 +6,7 @@ import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.core.data.tag.Tag;
-import org.vitrivr.cineast.core.db.dao.TagHandler;
+import org.vitrivr.cineast.core.db.dao.reader.TagReader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 public class FindTagsByActionHandler extends ParsingActionHandler<IdList> {
-    /** The {@link TagHandler} instance used for lookup of {@link Tag}s. */
-    private static final TagHandler TAG_HANDLER = new TagHandler();
+    /** The {@link TagReader} instance used for lookup of {@link Tag}s. */
+    private static final TagReader TAG_READER = new TagReader();
 
     /** */
     private static final Logger LOGGER = LogManager.getLogger();
@@ -47,12 +47,12 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList> {
         switch (attribute.toLowerCase()) {
             case FIELD_ID:
                 final List<Tag> list = new ArrayList<>(1);
-                list.add(TAG_HANDLER.getTagById(value));
+                list.add(TAG_READER.getTagById(value));
                 return list;
             case FIELD_NAME:
-                return TAG_HANDLER.getTagsByName(value);
+                return TAG_READER.getTagsByName(value);
             case FIELD_MATCHING:
-                return TAG_HANDLER.getTagsByMatchingName(value);
+                return TAG_READER.getTagsByMatchingName(value);
             default:
                 LOGGER.error("Unknown attribute '{}' in FindTagsByActionHandler", attribute);
                 return new ArrayList<>(0);
@@ -69,7 +69,7 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList> {
         if (context == null || context.getIds().length == 0) {
             return Collections.emptyList();
         }
-        return TAG_HANDLER.getTagsById(context.getIds());
+        return TAG_READER.getTagsById(context.getIds());
     }
 
 

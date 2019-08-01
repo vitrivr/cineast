@@ -10,8 +10,9 @@ import org.vitrivr.cineast.api.rest.resolvers.FileSystemObjectResolver;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemThumbnailResolver;
 import org.vitrivr.cineast.api.rest.routes.ResolvedContentRoute;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
-import org.vitrivr.cineast.core.config.APIConfig;
-import org.vitrivr.cineast.core.config.Config;
+
+import org.vitrivr.cineast.standalone.config.APIConfig;
+import org.vitrivr.cineast.standalone.config.Config;
 import spark.Service;
 
 import java.io.File;

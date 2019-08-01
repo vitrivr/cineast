@@ -2,7 +2,8 @@ package org.vitrivr.cineast.api.websocket.handlers.queries;
 
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.eclipse.jetty.websocket.api.Session;
-import org.vitrivr.cineast.core.config.Config;
+import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
+import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
@@ -10,9 +11,10 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
-import org.vitrivr.cineast.core.data.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
-import org.vitrivr.cineast.core.util.ContinuousRetrievalLogic;
+import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
