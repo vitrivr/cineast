@@ -1,7 +1,10 @@
 package org.vitrivr.cineast.core.db.json;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
@@ -111,17 +114,17 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
       } else if (o instanceof boolean[]) {
         _return.add(names[nameIndex++], toArray((boolean[]) o));
       } else if (o instanceof Integer) {
-        _return.add(names[nameIndex++], (int) o);
+        _return.add(names[nameIndex++], new JsonPrimitive((int) o));
       } else if (o instanceof Float) {
-        _return.add(names[nameIndex++], (float) o);
+        _return.add(names[nameIndex++], new JsonPrimitive((float) o));
       } else if (o instanceof Long) {
-        _return.add(names[nameIndex++], (long) o);
+        _return.add(names[nameIndex++], new JsonPrimitive((long) o));
       } else if (o instanceof Double) {
-        _return.add(names[nameIndex++], (double) o);
+        _return.add(names[nameIndex++], new JsonPrimitive((double) o));
       } else if (o instanceof Boolean) {
-        _return.add(names[nameIndex++], (boolean) o);
+        _return.add(names[nameIndex++], new JsonPrimitive((boolean) o));
       } else {
-        _return.add(names[nameIndex++], o.toString());
+        _return.add(names[nameIndex++], new JsonPrimitive(o.toString()));
       }
     }
     
@@ -151,5 +154,4 @@ public class JsonFileWriter extends AbstractPersistencyWriter<JsonObject> {
     }
     return jarr;
   }
-  
 }
