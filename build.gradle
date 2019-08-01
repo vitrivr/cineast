@@ -45,6 +45,9 @@ subprojects {
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.9'
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9'
 
+        /** Airline (CLI parsing). */
+        compile group: 'com.github.rvesse', name: 'airline', version: '2.7.2'
+
         /** Prometheus */
         compile group: 'io.prometheus', name: 'simpleclient', version: '0.6.0'
         compile group: 'io.prometheus', name: 'simpleclient_hotspot', version: '0.6.0'
