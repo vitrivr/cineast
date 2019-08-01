@@ -2,6 +2,28 @@ plugins {
     id 'application'
 }
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.vitrivr.cineast.standalone.Main'
+        )
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 dependencies {
+    /** Jetty Servlet support. */
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.19.v20190610'
+
+    /* Airline (CLI parsing) */
+    compile group: 'com.github.rvesse', name: 'airline', version: '2.7.2'
+
+    /** Prometheus */
+    compile group: 'io.prometheus', name: 'simpleclient', version: '0.6.0'
+    compile group: 'io.prometheus', name: 'simpleclient_hotspot', version: '0.6.0'
+    compile group: 'io.prometheus', name: 'simpleclient_httpserver', version: '0.6.0'
+    compile group: 'io.prometheus', name: 'simpleclient_pushgateway', version: '0.6.0'
+    compile group: 'io.prometheus', name: 'simpleclient_servlet', version: '0.6.0'
 }
