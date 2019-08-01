@@ -29,7 +29,7 @@ public class RetrieveCli extends CineastCli {
     private boolean export = false;
 
     public void run() {
-        super.run();
+        super.loadConfig();
         final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
         if (export) {
             retrieval.addRetrievalResultListener(new RetrievalResultCSVExporter(Config.sharedConfig().getDatabase()));

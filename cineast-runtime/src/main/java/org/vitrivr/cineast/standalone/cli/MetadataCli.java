@@ -26,7 +26,7 @@ public class MetadataCli extends CineastCli {
     private String objectId;
 
     public void run() {
-        super.run();
+        super.loadConfig();
         final List<String> objectIds = new ArrayList<>(1);
         objectIds.add(this.objectId);
         final DatabaseConfig config = Config.sharedConfig().getDatabase();
