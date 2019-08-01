@@ -51,56 +51,45 @@ jar {
 }
 
 dependencies {
-    compile group: "com.squareup.okhttp3", name: "okhttp", version: "3.10.0"
-    compile group: "org.boofcv", name: "boofcv-all", version: "0.29"
-    compile group: "org.ejml", name: "ejml-all", version: "0.33"
-    compile group: "org.ejml", name: "ejml-core", version: "0.33"
-    compile group: "org.jcodec", name: "jcodec-javase", version: "0.1.9"
-    compile group: "net.coobird", name: "thumbnailator", version: "0.4.8"
+    /* Some basic stuff (collections etcc). */
     compile group: "net.sf.trove4j", name: "trove4j", version: "3.0.3"
-    compile group: "com.google.guava", name: "guava", version: "24.1-jre"
+    compile group: "com.google.guava", name: "guava", version: "28.0-jre"
+    compile group: "com.googlecode.javaewah", name: "JavaEWAH", version: "1.1.6"
+    compile group: "com.eclipsesource.minimal-json", name: "minimal-json", version: "0.9.5"
 
-    compile group: "commons-codec", name: "commons-codec", version: "1.11"
-    compile group: "commons-cli", name: "commons-cli", version: "1.4"
+    /* Tensorflow (Java). */
+    compile group: "org.tensorflow", name: "tensorflow", version: "1.9.0"
+
+    /* Protobuf & gRPC. */
     compile group: "com.google.protobuf", name: "protobuf-java", version: "$protobufVersion"
     compile group: "io.grpc", name: "grpc-netty", version: "${grpcVersion}"
     compile group: "io.grpc", name: "grpc-protobuf", version: "${grpcVersion}"
     compile group: "io.grpc", name: "grpc-stub", version: "${grpcVersion}"
-    compile group: "org.bytedeco", name: "javacpp", version: "1.3.3"
-    compile group: "org.jgrapht", name: "jgrapht-core", version: "1.0.1"
-    compile group: "com.sparkjava", name: "spark-core", version: "2.7.1"
-
-    compile group: "com.googlecode.javaewah", name: "JavaEWAH", version: "1.1.6"
-    compile group: "org.tensorflow", name: "tensorflow", version: "1.9.0"
-    compile group: "com.eclipsesource.minimal-json", name: "minimal-json", version: "0.9.5"
 
     /** Apache Commons Libraries */
     compile group: "org.apache.commons", name: "commons-lang3", version: "3.9"
     compile group: "org.apache.commons", name: "commons-math3", version: "3.6.1"
-    compile group: "org.apache.commons", name: "commons-csv", version: "1.5"
-    compile group: "de.svenkubiak", name: "jBCrypt", version: "0.4"
+    compile group: "org.apache.commons", name: "commons-csv", version: "1.6"
     compile group: "commons-io", name: "commons-io", version: "2.6"
+    compile group: "commons-codec", name: "commons-codec", version: "1.12"
 
-
-    /** TwelveMonkey"s ImageIO library + Metadata Extractor for advanced image support . */
+    /** ImageIO and computer graphics libraries. */
     compile group: "com.twelvemonkeys.imageio", name: "imageio-jpeg", version: "3.4.1"
     compile group: "com.twelvemonkeys.imageio", name: "imageio-tiff", version: "3.4.1"
     compile group: "com.drewnoakes", name: "metadata-extractor", version: "2.10.1"
+    compile group: "org.boofcv", name: "boofcv-all", version: "0.29"
+    compile group: "net.coobird", name: "thumbnailator", version: "0.4.8"
 
-    /**
-     * JOGL un JOML dependencies for 3D model support.
-     */
+    /** JOGL and JOML dependencies for 3D model support. */
     compile "org.joml:joml:${jomlVersion}"
     compile "org.jogamp.gluegen:gluegen-rt:${joglVersion}"
     compile "org.jogamp.jogl:jogl-all:${joglVersion}"
 
-    /** Java 9+ */
-    compile group: "com.sun.activation", name: "javax.activation", version: "1.2.0"
-    compile group: "javax.annotation", name: "javax.annotation-api", version: "1.3.1"
+    /** JavaCPP. */
+    compile group: "org.bytedeco", name: "javacpp", version: "1.5.1"
 
     /** Manual Fixes for the javacpp-devs because of naming conventions & versions. Each os is handled independently. */
     if(osdetector.os == "windows"){
-
         compile group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: "${ffmpegVersion}"
         compile group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: "${ffmpegVersion}", classifier: osclassifier
 
@@ -111,7 +100,6 @@ dependencies {
         compile "org.jogamp.jogl:jogl-all:${joglVersion}:natives-windows-i586"
     }
     if(osdetector.os.contains("linux")){
-
         compile group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: "${ffmpegVersion}"
         compile group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: "${ffmpegVersion}", classifier: osclassifier
 
@@ -126,10 +114,8 @@ dependencies {
         compile "org.jogamp.jogl:jogl-all:${joglVersion}:natives-linux-i586"
     }
     if(osdetector.os == "osx"){
-
         compile group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: "${ffmpegVersion}"
         compile group: "org.bytedeco.javacpp-presets", name: "ffmpeg", version: "${ffmpegVersion}", classifier: "mac" + osclassifier
-
         compile "org.jogamp.gluegen:gluegen-rt:${joglVersion}:natives-macosx-universal"
         compile "org.jogamp.jogl:jogl-all:${joglVersion}:natives-macosx-universal"
     }
