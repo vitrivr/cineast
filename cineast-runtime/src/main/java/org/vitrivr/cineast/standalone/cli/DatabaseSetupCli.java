@@ -24,7 +24,7 @@ public class DatabaseSetupCli extends CineastCli {
 
     @Override
     public void run() {
-        super.run();
+        super.loadConfig();
         final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
         if (ec != null) {
             /* Collects all the relevant retriever classes based on the application config. */

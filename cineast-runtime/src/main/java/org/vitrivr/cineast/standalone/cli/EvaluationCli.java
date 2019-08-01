@@ -23,7 +23,7 @@ public class EvaluationCli extends CineastCli {
 
     @Override
     public void run() {
-        super.run();
+        super.loadConfig();
         final Path path = Paths.get(this.input);
         try {
             final EvaluationRuntime runtime = new EvaluationRuntime(path, Config.sharedConfig().getDatabase());

@@ -19,7 +19,7 @@ public class InteractiveCli extends CineastCli {
 
 
     public void run() {
-        super.run();
+        super.loadConfig();
         final Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the interactive Cineast CLI.");
         try {

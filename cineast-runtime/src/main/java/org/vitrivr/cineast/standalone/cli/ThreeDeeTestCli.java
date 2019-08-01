@@ -21,7 +21,7 @@ import java.io.IOException;
 public class ThreeDeeTestCli extends CineastCli {
     @Override
     public void run() {
-        super.run();
+        super.loadConfig();
         System.out.println("Performing 3D test...");
 
         Mesh mesh = new Mesh(2, 6);

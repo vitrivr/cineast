@@ -32,7 +32,7 @@ public class CodebookCli extends CineastCli {
 
     @Override
     public void run() {
-        super.run();
+        super.loadConfig();
         final CodebookGenerator generator = ReflectionHelper.newCodebookGenerator(name);
         final Path input = Paths.get(this.input);
         final Path output = Paths.get(this.output);

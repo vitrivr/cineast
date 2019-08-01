@@ -34,7 +34,7 @@ public class ImportCli extends CineastCli {
 
     @Override
     public void run() {
-        super.run();
+        super.loadConfig();
         System.out.println(String.format("Starting import of type %s for '%s'.", this.type.toString(), this.input));
         final Path path = Paths.get(this.input);
         final ImportType type = ImportType.valueOf(this.type.toUpperCase());

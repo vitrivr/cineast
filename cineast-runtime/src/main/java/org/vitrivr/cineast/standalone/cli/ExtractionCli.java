@@ -26,7 +26,7 @@ public class ExtractionCli extends CineastCli {
 
     @Override
     public void run() {
-        super.run();
+        super.loadConfig();
         final ExtractionDispatcher dispatcher = new ExtractionDispatcher();
         final File file = new File(this.extractionConfig);
         if (file.exists()) {

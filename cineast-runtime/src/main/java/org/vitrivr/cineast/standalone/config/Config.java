@@ -51,8 +51,7 @@ public class Config {
      * @param name Name of the config file.
      */
   public static Config loadConfig(String name) {
-    Config config = (new JacksonJsonProvider()).toObject(new File(name), Config.class);
-
+    final Config config = (new JacksonJsonProvider()).toObject(new File(name), Config.class);
     if (config == null) {
       LOGGER.warn("Could not read config file '{}'.", name);
       return null;
