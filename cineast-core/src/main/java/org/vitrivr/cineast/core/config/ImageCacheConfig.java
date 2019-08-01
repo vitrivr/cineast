@@ -23,7 +23,6 @@ public final class ImageCacheConfig {
 	private long hardMinMemory = 2048;
 	private File cacheLocation = new File(".");
 
-	@JsonCreator
 	public ImageCacheConfig() {}
 
 	/**
@@ -37,28 +36,35 @@ public final class ImageCacheConfig {
 	 * @throws SecurityException in case access to cacheLocation is not permitted
 	 */
 	@JsonCreator
-	public ImageCacheConfig(int softMemoryLimit, int hardMemoryLimit, Policy cachePolicy, File cacheLocation){
+	public ImageCacheConfig(
+		@JsonProperty(value = "softMemoryLimit", required = true, defaultValue = "2048") int softMemoryLimit,
+		@JsonProperty(value = "hardMemoryLimit", required = true, defaultValue = "1024") int hardMemoryLimit,
+		@JsonProperty(value = "cachePolicy", required = false, defaultValue = "AUTOMATIC") String cachePolicy,
+		@JsonProperty(value = "cacheLocation", required = false, defaultValue = ".") String cacheLocation){
+
 		if(softMemoryLimit < 0){
 			throw new IllegalArgumentException("Memory limit must me positive");
 		}
 		if(hardMemoryLimit < 0){
 			throw new IllegalArgumentException("Memory limit must me positive");
 		}
-		if(cachePolicy == null){
-			throw new NullPointerException("CachePolicy cannot be null");
+		if (cachePolicy == null) {
+			cachePolicy = "AUTOMATIC";
 		}
-		if(cacheLocation == null){
-			throw new NullPointerException("CacheLocation cannot be null");
+		if (cacheLocation == null) {
+			cacheLocation = ".";
 		}
-		if(!(cacheLocation.exists() && cacheLocation.isDirectory()) || cacheLocation.mkdirs()){
+
+		final File location = new File(cacheLocation);
+		if(!(location.exists() && location.isDirectory()) || location.mkdirs()){
 			this.cacheLocation = new File(".");
-			LOGGER.warn("Specified cache location ({}) is invalid, using default location: {}", cacheLocation.getAbsolutePath(), this.cacheLocation.getAbsolutePath());
+			LOGGER.warn("Specified cache location ({}) is invalid, using default location: {}", location.getAbsolutePath(), this.cacheLocation.getAbsolutePath());
 		}else{
-			this.cacheLocation = cacheLocation;
+			this.cacheLocation = location;
 		}
 		this.softMinMemory = 1024L * 1024L * softMemoryLimit;
 		this.hardMinMemory = 1024L * 1024L * hardMemoryLimit;
-		this.cachingPolicy = cachePolicy;
+		this.cachingPolicy = Policy.valueOf(cachePolicy);
 	}
 	
 	/**
