@@ -6,11 +6,16 @@ import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.completer.AggregateCompleter;
+import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 /**
  * Helper class that can be used to start an interactive CLI.
@@ -22,7 +27,9 @@ public class CLI {
 
     private static final String PROMPT = "cineast> ";
 
-    private CLI() {}
+    private CLI() {
+    }
+
 
     /**
      * Starts the interactive CLI. This is method will block.
@@ -39,8 +46,15 @@ public class CLI {
             System.exit(-1);
         }
 
+        com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(cliClass);
+        List<String> commandNames = cli.getMetadata().getDefaultGroupCommands().stream()
+                .map(x -> x.getName()).collect(Collectors.toList());
+
+        
         Completer completer = new AggregateCompleter(
-            new Completers.FileNameCompleter() //TODO figure out a way to build a completer based on airline commands
+                new StringsCompleter("quit", "exit"),
+                new StringsCompleter(commandNames),
+                new Completers.FileNameCompleter()
         );
 
         LineReader lineReader = LineReaderBuilder.builder()
@@ -54,19 +68,22 @@ public class CLI {
         try {
             while (true) {
 
-                final String line = lineReader.readLine(PROMPT);
-                if (line.toLowerCase().equals("exit") || line.toLowerCase().equals("quit") ) {
+                final String line = lineReader.readLine(PROMPT).trim();
+                if (line.toLowerCase().equals("exit") || line.toLowerCase().equals("quit")) {
                     break;
                 }
 
-
                 /* Try to parse user input. */
                 try {
-                    com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(cliClass);
+                    //cli = new com.github.rvesse.airline.Cli<>(cliClass);
                     final Runnable command = cli.parse(line.split(" "));
                     command.run();
                 } catch (ParseRestrictionViolatedException e) {
-                    System.err.println(e.getMessage());
+                    terminal.writer().println(
+                            new AttributedStringBuilder().style(AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+                                    .append("Error: ").append(e.getMessage()).toAnsi()
+                    );
+
                 }
             }
         } catch (IllegalStateException | NoSuchElementException e) {

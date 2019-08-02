@@ -20,7 +20,7 @@ public class Main {
 
         /* (Force) load application config. */
         if (Config.loadConfig(args[0]) == null) {
-            System.err.println("Failed to load Cineast configuration from '%s'. Cineast will shutdown...");
+            System.err.println("Failed to load Cineast configuration from '" + args[0] + "'. Cineast will shutdown...");
             System.exit(1);
         }
 
