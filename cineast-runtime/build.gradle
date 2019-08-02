@@ -5,12 +5,17 @@ plugins {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'org.vitrivr.cineast.standalone.Main'
+                'Main-Class': 'org.vitrivr.cineast.standalone.Main',
+                'Multi-Release' : 'true'
         )
     }
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+application {
+    mainClassName = 'org.vitrivr.cineast.standalone.Main'
 }
 
 dependencies {
