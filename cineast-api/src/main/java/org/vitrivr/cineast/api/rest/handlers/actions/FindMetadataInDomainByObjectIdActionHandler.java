@@ -6,6 +6,7 @@ import org.vitrivr.cineast.api.messages.components.MetadataDomainFilter;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHa
   public MediaObjectMetadataQueryResult doGet(Map<String, String> parameters) {
     final String objectId = parameters.get(ATTRIBUTE_ID);
     final String domain = parameters.get(DOMAIN_NAME);
-    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     final List<MediaObjectMetadataDescriptor> descriptors = reader
         .lookupMultimediaMetadata(objectId);
     reader.close();
@@ -72,7 +73,7 @@ public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHa
       return new MediaObjectMetadataQueryResult("", new ArrayList<>(0));
     }
     final String domain = parameters.get(DOMAIN_NAME);
-    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     final List<MediaObjectMetadataDescriptor> descriptors = reader
         .lookupMultimediaMetadata(context.getIdList());
     reader.close();

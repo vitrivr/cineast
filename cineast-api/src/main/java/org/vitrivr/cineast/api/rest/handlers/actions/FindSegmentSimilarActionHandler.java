@@ -23,6 +23,11 @@ import java.util.*;
  */
 public class FindSegmentSimilarActionHandler extends ParsingActionHandler<SimilarityQuery> {
 
+    private final ContinuousRetrievalLogic continuousRetrievalLogic;
+    public FindSegmentSimilarActionHandler(ContinuousRetrievalLogic retrievalLogic){
+        this.continuousRetrievalLogic = retrievalLogic;
+    }
+
     /**
      * Processes a HTTP GET request. Always throws a {@link MethodNotSupportedException}
      *
@@ -77,9 +82,9 @@ public class FindSegmentSimilarActionHandler extends ParsingActionHandler<Simila
 
                 List<SegmentScoreElement> scoreResults;
                 if (qc.hasId()) {
-                    scoreResults = ContinuousRetrievalLogic.retrieve(qc.getId(), category, qconf);
+                    scoreResults = continuousRetrievalLogic.retrieve(qc.getId(), category, qconf);
                 } else {
-                    scoreResults = ContinuousRetrievalLogic.retrieve(qc, category, qconf);
+                    scoreResults = continuousRetrievalLogic.retrieve(qc, category, qconf);
                 }
 
                 for (SegmentScoreElement element : scoreResults) {

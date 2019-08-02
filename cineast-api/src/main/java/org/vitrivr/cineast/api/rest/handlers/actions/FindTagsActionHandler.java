@@ -5,12 +5,13 @@ import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.Map;
 
 public class FindTagsActionHandler extends ParsingActionHandler<IdList> {
 
-    private static TagReader tagReader = new TagReader();
+    private static TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 
 
     public FindTagsActionHandler() {

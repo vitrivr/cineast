@@ -5,6 +5,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.api.messages.general.AnyMessage;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class FindSegmentsByObjectIdActionHandler extends ParsingActionHandler<An
     @Override
     public List<MediaSegmentDescriptor> doGet(Map<String, String> parameters) {
         final String objectId = parameters.get(ID_NAME);
-        final MediaSegmentReader sl = new MediaSegmentReader();
+        final MediaSegmentReader sl = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
         final List<MediaSegmentDescriptor> list = sl.lookUpSegmentsOfObject(objectId);
         sl.close();
         return list;

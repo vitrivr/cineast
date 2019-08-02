@@ -5,6 +5,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.api.messages.general.AnyMessage;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class FindMetadataByDomainWithKeyByObjectIdActionHandler extends
     final String objectId = parameters.get(OBJECT_ID_NAME);
     final String domain = parameters.get(DOMAIN_NAME);
     final String key = parameters.get(KEY_NAME);
-    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     final List<MediaObjectMetadataDescriptor> descriptors = reader
         .lookupMultimediaMetadata(objectId);
     reader.close();

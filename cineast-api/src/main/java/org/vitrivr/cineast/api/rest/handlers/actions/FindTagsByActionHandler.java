@@ -7,6 +7,7 @@ import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.reader.TagReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 public class FindTagsByActionHandler extends ParsingActionHandler<IdList> {
     /** The {@link TagReader} instance used for lookup of {@link Tag}s. */
-    private static final TagReader TAG_READER = new TagReader();
+    private static final TagReader TAG_READER = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 
     /** */
     private static final Logger LOGGER = LogManager.getLogger();

@@ -11,8 +11,10 @@ import org.vitrivr.cineast.api.rest.resolvers.FileSystemThumbnailResolver;
 import org.vitrivr.cineast.api.rest.routes.ResolvedContentRoute;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.standalone.config.APIConfig;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 import spark.Service;
 
 import java.io.File;
@@ -47,6 +49,8 @@ public class APIEndpoint {
 
     /** References to the HTTP and HTTPS service. */
     private static Service http, https;
+
+    public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase()); //TODO there is certainly a nicer way to do this...
 
     /**
      * Dispatches a new Jetty {@link Service} (HTTP endpoint). The method takes care of all the necessary setup.
@@ -150,7 +154,7 @@ public class APIEndpoint {
             service.get("/objects/all/:type", new FindObjectAllActionHandler());
             service.get("/segments/all/object/:id", new FindSegmentsByObjectIdActionHandler());
             service.get("/tags/all", new FindTagsActionHandler());
-            service.post("/segments/similar", new FindSegmentSimilarActionHandler());
+            service.post("/segments/similar", new FindSegmentSimilarActionHandler(retrievalLogic));
             service.post("/segments/by/id", new FindSegmentsByIdActionHandler());
             service.post("/objects/by/id", new FindObjectByActionHandler());
             service.post("/metadata/by/id", new FindMetadataByObjectIdActionHandler());
@@ -173,7 +177,8 @@ public class APIEndpoint {
                     new File(Config.sharedConfig().getApi().getThumbnailLocation()))));
             service.get("/objects/:id", new ResolvedContentRoute(
                 new FileSystemObjectResolver(
-                    new File(Config.sharedConfig().getApi().getObjectLocation()))));
+                    new File(Config.sharedConfig().getApi().getObjectLocation()),
+                        new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get()))));
           });
         }
 

@@ -27,6 +27,13 @@ import java.util.stream.Collectors;
  * @created 12.01.17
  */
 public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<SimilarityQuery> {
+
+    private final ContinuousRetrievalLogic continuousRetrievalLogic;
+
+    public SimilarityQueryMessageHandler(ContinuousRetrievalLogic retrievalLogic){
+        this.continuousRetrievalLogic = retrievalLogic;
+    }
+
     /**
      * Executes a {@link SimilarityQuery}. Performs the similarity query based on the {@link QueryContainer}
      * objects provided in the {@link SimilarityQuery}.
@@ -49,7 +56,7 @@ public class SimilarityQueryMessageHandler extends AbstractQueryMessageHandler<S
             for (QueryContainer qc : categoryMap.get(category)) {
                 /* Merge partial results with score-map. */
                 float weight = qc.getWeight() > 0f ? 1f : -1f; //TODO better normalisation
-                ScoreElement.mergeWithScoreMap(ContinuousRetrievalLogic.retrieve(qc, category, qconf), map, weight);
+                ScoreElement.mergeWithScoreMap(continuousRetrievalLogic.retrieve(qc, category, qconf), map, weight);
             }
             /* Transform raw results into list of StringDoublePair's (segmentId -> score). */
             final int max = Config.sharedConfig().getRetriever().getMaxResults();

@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
+import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.api.websocket.handlers.MetadataLookupMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.StatusMessageHandler;
 import org.vitrivr.cineast.api.websocket.handlers.interfaces.WebsocketMessageHandler;
@@ -51,8 +52,8 @@ public class WebsocketAPI {
     /** List of stateless {@link WebsocketMessageHandler} classes for the API. */
     private static final HashMap<MessageType, WebsocketMessageHandler<?>> STATELESS_HANDLERS = new HashMap<>();
     static {
-        STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler());
-        STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler());
+        STATELESS_HANDLERS.put(MessageType.Q_SIM, new SimilarityQueryMessageHandler(APIEndpoint.retrievalLogic));
+        STATELESS_HANDLERS.put(MessageType.Q_MLT, new MoreLikeThisQueryMessageHandler(APIEndpoint.retrievalLogic));
         STATELESS_HANDLERS.put(MessageType.Q_NESEG, new NeighbouringQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.Q_SEG, new SegmentQueryMessageHandler());
         STATELESS_HANDLERS.put(MessageType.PING, new StatusMessageHandler());

@@ -6,6 +6,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.api.messages.lookup.MetadataLookup;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class MetadataLookupMessageHandler extends StatelessWebsocketMessageHandl
      */
     @Override
     public void handle(Session session, MetadataLookup message) {
-        MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+        MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
         List<MediaObjectMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(message.getIds());
         this.write(session, new MediaObjectMetadataQueryResult("", descriptors));
         reader.close();

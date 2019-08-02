@@ -5,6 +5,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.api.messages.general.AnyMessage;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage>
      */
     @Override
     public List<MediaObjectDescriptor> doGet(Map<String, String> parameters) {
-        final MediaObjectReader ol = new MediaObjectReader();
+        final MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
         final List<MediaObjectDescriptor> multimediaobjectIds = ol.getAllObjects();
         ol.close();
         return multimediaobjectIds;

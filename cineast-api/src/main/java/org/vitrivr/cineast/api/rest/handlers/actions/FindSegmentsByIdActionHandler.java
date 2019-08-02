@@ -5,6 +5,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList> 
     @Override
     public MediaSegmentQueryResult doGet(Map<String, String> parameters) {
         final String segmentId = parameters.get(ID_NAME);
-        final MediaSegmentReader sl = new MediaSegmentReader();
+        final MediaSegmentReader sl = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
         final List<MediaSegmentDescriptor> list = sl.lookUpSegment(segmentId).map(s -> {
             final List<MediaSegmentDescriptor> segments = new ArrayList<>(1);
             segments.add(s);
@@ -46,7 +47,7 @@ public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList> 
         if (context == null || context.getIds().length == 0) {
             return new MediaSegmentQueryResult("",new ArrayList<>(0));
         }
-        final MediaSegmentReader sl = new MediaSegmentReader();
+        final MediaSegmentReader sl = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
         final Map<String, MediaSegmentDescriptor> segments = sl.lookUpSegments(Arrays.asList(context.getIds()));
         sl.close();
         return new MediaSegmentQueryResult("", new ArrayList<>(segments.values())) ;

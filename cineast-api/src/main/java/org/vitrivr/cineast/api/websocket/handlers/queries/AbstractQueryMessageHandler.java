@@ -34,22 +34,22 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
   /**
    * {@link MediaSegmentReader} instance used to read segments from the storage layer.
    */
-  protected final MediaSegmentReader mediaSegmentReader = new MediaSegmentReader();
+  protected final MediaSegmentReader mediaSegmentReader = new MediaSegmentReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 
   /**
    * {@link MediaObjectReader} instance used to read multimedia objects from the storage layer.
    */
-  private final MediaObjectReader mediaObjectReader = new MediaObjectReader();
+  private final MediaObjectReader mediaObjectReader = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 
   /**
    * {@link MediaSegmentMetadataReader} instance used to read {@link MediaSegmentMetadataDescriptor}s from the storage layer.
    */
-  private final MediaSegmentMetadataReader segmentMetadataReader = new MediaSegmentMetadataReader();
+  private final MediaSegmentMetadataReader segmentMetadataReader = new MediaSegmentMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 
   /**
    * {@link MediaObjectMetadataReader} instance used to read {@link MediaObjectMetadataReader}s from the storage layer.
    */
-  private final MediaObjectMetadataReader objectMetadataReader = new MediaObjectMetadataReader();
+  private final MediaObjectMetadataReader objectMetadataReader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 
   /**
    * Handles a {@link Query} message

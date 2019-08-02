@@ -16,9 +16,6 @@ public class FileSystemObjectResolver implements ObjectResolver {
     this.baseDir = basedir;
   }
 
-  public FileSystemObjectResolver(File basedir){
-    this(basedir, new MediaObjectReader());
-  }
 
   @Override
   public ResolutionResult resolve(String id) {

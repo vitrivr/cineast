@@ -6,6 +6,7 @@ import org.vitrivr.cineast.api.messages.components.MetadataKeyFilter;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandl
   public MediaObjectMetadataQueryResult doGet(Map<String, String> parameters) {
     final String objectId = parameters.get(ATTRIBUTE_ID);
     final String key = parameters.get(KEY_NAME);
-    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     final List<MediaObjectMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(objectId);
     reader.close();
     final MetadataKeyFilter predicate = MetadataKeyFilter.createForKeywords(key);
@@ -51,7 +52,7 @@ public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandl
       return new MediaObjectMetadataQueryResult("", new ArrayList<>(0) );
     }
     final String key = parameters.get(KEY_NAME);
-    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     final List<MediaObjectMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(context.getIdList());
     reader.close();
     final MetadataKeyFilter prediate = MetadataKeyFilter.createForKeywords(key);

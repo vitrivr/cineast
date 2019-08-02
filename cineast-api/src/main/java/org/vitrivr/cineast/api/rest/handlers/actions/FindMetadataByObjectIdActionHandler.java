@@ -7,6 +7,7 @@ import org.vitrivr.cineast.api.messages.components.AbstractMetadataFilterDescrip
 import org.vitrivr.cineast.api.messages.lookup.OptionallyFilteredIdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class FindMetadataByObjectIdActionHandler extends
   @Override
   public MediaObjectMetadataQueryResult doGet(Map<String, String> parameters) {
     final String objectId = parameters.get(ATTRIBUTE_ID);
-    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     final List<MediaObjectMetadataDescriptor> descriptors = reader
         .lookupMultimediaMetadata(objectId);
     reader.close();
@@ -53,7 +54,7 @@ public class FindMetadataByObjectIdActionHandler extends
       return new MediaObjectMetadataQueryResult("", new ArrayList<>(0));
     }
 
-    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader();
+    final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     List<MediaObjectMetadataDescriptor> descriptors = reader
         .lookupMultimediaMetadata(context.getIdList());
     reader.close();

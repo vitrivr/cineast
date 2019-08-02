@@ -8,6 +8,7 @@ import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public class FindObjectByActionHandler extends ParsingActionHandler<IdList> {
         String attribute = parameters.get(ATTRIBUTE_NAME);
         String value = parameters.get(VALUE_NAME);
 
-        MediaObjectReader ol = new MediaObjectReader();
+        MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
         MediaObjectDescriptor object = null;
 
         switch (attribute.toLowerCase()) {
@@ -72,7 +73,7 @@ public class FindObjectByActionHandler extends ParsingActionHandler<IdList> {
         if(context == null || context.getIds().length == 0){
             return new MediaObjectQueryResult("",new ArrayList<>(0));
         }
-        final MediaObjectReader ol = new MediaObjectReader();
+        final MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
         final Map<String, MediaObjectDescriptor> objects = ol.lookUpObjects(Arrays.asList(context.getIds()));
         ol.close();
         return new MediaObjectQueryResult("",new ArrayList<>(objects.values()));

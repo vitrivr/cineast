@@ -22,6 +22,13 @@ import java.util.stream.Collectors;
  * @created 27.04.17
  */
 public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler<MoreLikeThisQuery> {
+
+    private final ContinuousRetrievalLogic continuousRetrievalLogic;
+
+    public MoreLikeThisQueryMessageHandler(ContinuousRetrievalLogic retrievalLogic){
+        this.continuousRetrievalLogic = retrievalLogic;
+    }
+
     /**
      * Executes a {@link MoreLikeThisQuery} message. Performs a similarity query based on the segmentId specified
      * the {@link MoreLikeThisQuery} object.
@@ -38,7 +45,7 @@ public class MoreLikeThisQueryMessageHandler extends AbstractQueryMessageHandler
 
         /* Retrieve per-category results and return them. */
         for (String category : categoryMap) {
-            final List<StringDoublePair> results = ContinuousRetrievalLogic.retrieve(message.getSegmentId(), category, qconf).stream()
+            final List<StringDoublePair> results = continuousRetrievalLogic.retrieve(message.getSegmentId(), category, qconf).stream()
                     .map(score -> new StringDoublePair(score.getSegmentId(), score.getScore()))
                     .sorted(StringDoublePair.COMPARATOR)
                     .limit(Config.sharedConfig().getRetriever().getMaxResults())
