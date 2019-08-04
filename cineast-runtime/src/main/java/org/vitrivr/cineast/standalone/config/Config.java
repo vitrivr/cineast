@@ -13,7 +13,6 @@ import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Config {
@@ -24,7 +23,7 @@ public class Config {
 
     private APIConfig api;
     private DatabaseConfig database;
-    private RetrieverConfig retriever;
+    private RetrievalRuntimeConfig retriever;
     private ExtractionPipelineConfig extractor;
     private ImageCacheConfig imagecache;
     private QueryConfig query;
@@ -79,10 +78,10 @@ public class Config {
     }
 
     @JsonProperty
-    public RetrieverConfig getRetriever() {
+    public RetrievalRuntimeConfig getRetriever() {
         return retriever;
     }
-    public void setRetriever(RetrieverConfig retriever) {
+    public void setRetriever(RetrievalRuntimeConfig retriever) {
         this.retriever = retriever;
     }
 

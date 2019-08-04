@@ -13,7 +13,7 @@ import org.vitrivr.cineast.standalone.config.deserializers.FeatureCategoriesDese
 
 import java.util.*;
 
-public final class RetrieverConfig {
+public final class RetrievalRuntimeConfig {
 	private static final HashMap<String, List<DoublePair<Class<? extends Retriever>>>> DEFAULT_RETRIEVER_CATEGORIES = new HashMap<>();
 
 	private int threadPoolSize = 4;
@@ -84,7 +84,7 @@ public final class RetrieverConfig {
 	}
 
 	@JsonCreator
-	public RetrieverConfig() {
+	public RetrievalRuntimeConfig() {
 
 	}
 
