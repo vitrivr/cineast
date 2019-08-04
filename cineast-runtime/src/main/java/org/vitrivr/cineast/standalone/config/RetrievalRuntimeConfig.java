@@ -14,72 +14,70 @@ import org.vitrivr.cineast.standalone.config.deserializers.FeatureCategoriesDese
 import java.util.*;
 
 public final class RetrievalRuntimeConfig {
-	private static final HashMap<String, List<DoublePair<Class<? extends Retriever>>>> DEFAULT_RETRIEVER_CATEGORIES = new HashMap<>();
+	private static final HashMap<String, List<RetrieverConfig>> DEFAULT_RETRIEVER_CATEGORIES = new HashMap<>();
 
 	private int threadPoolSize = 4;
 	private int taskQueueSize = 10;
 	private int maxResults = 100;
 	private int resultsPerModule = 50;
-	private HashMap<String, List<DoublePair<Class<? extends Retriever>>>> retrieverCategories = DEFAULT_RETRIEVER_CATEGORIES;
-	
+	private HashMap<String, List<RetrieverConfig>> retrieverCategories = DEFAULT_RETRIEVER_CATEGORIES;
 
-	
 	static{
 		
-		List<DoublePair<Class<? extends Retriever>>> list;
+		List<RetrieverConfig> list;
 		
 		list = new ArrayList<>(6);
-		list.add(DoublePair.pair(AverageColor.class,				2.3));
-		list.add(DoublePair.pair(DominantColors.class,				1.0));
-		list.add(DoublePair.pair(MedianColor.class,					1.2));
-		list.add(DoublePair.pair(QueryImageExporter.class, 0.0001));
-		list.add(DoublePair.pair(AverageFuzzyHist.class,      0.7));
-		list.add(DoublePair.pair(MedianFuzzyHist.class,       1.3));
+		list.add(new RetrieverConfig(AverageColor.class,				2.3));
+		list.add(new RetrieverConfig(DominantColors.class,				1.0));
+		list.add(new RetrieverConfig(MedianColor.class,					1.2));
+		list.add(new RetrieverConfig(QueryImageExporter.class, 0.0001));
+		list.add(new RetrieverConfig(AverageFuzzyHist.class,      0.7));
+		list.add(new RetrieverConfig(MedianFuzzyHist.class,       1.3));
 		DEFAULT_RETRIEVER_CATEGORIES.put("globalcolor", list);
 
 		list = new ArrayList<>(13);
-		list.add(DoublePair.pair(AverageColorARP44.class, 			0.5));
-		list.add(DoublePair.pair(MedianColorARP44.class, 			0.85));
-		list.add(DoublePair.pair(SubDivAverageFuzzyColor.class, 	0.5));
-		list.add(DoublePair.pair(SubDivMedianFuzzyColor.class, 		0.85));
-		list.add(DoublePair.pair(AverageColorGrid8.class, 			1.8));
-		list.add(DoublePair.pair(ChromaGrid8.class, 				0.95));
-		list.add(DoublePair.pair(SaturationGrid8.class, 			0.65));
-		list.add(DoublePair.pair(AverageColorCLD.class, 			1.4));
-		list.add(DoublePair.pair(CLD.class, 						1.3));
-		list.add(DoublePair.pair(HueValueVarianceGrid8.class, 		0.85));
-		list.add(DoublePair.pair(MedianColorGrid8.class, 			1.7));
-		list.add(DoublePair.pair(AverageColorRaster.class, 			1.0));
-		list.add(DoublePair.pair(MedianColorRaster.class, 			1.0));
+		list.add(new RetrieverConfig(AverageColorARP44.class, 			0.5));
+		list.add(new RetrieverConfig(MedianColorARP44.class, 			0.85));
+		list.add(new RetrieverConfig(SubDivAverageFuzzyColor.class, 	0.5));
+		list.add(new RetrieverConfig(SubDivMedianFuzzyColor.class, 		0.85));
+		list.add(new RetrieverConfig(AverageColorGrid8.class, 			1.8));
+		list.add(new RetrieverConfig(ChromaGrid8.class, 				0.95));
+		list.add(new RetrieverConfig(SaturationGrid8.class, 			0.65));
+		list.add(new RetrieverConfig(AverageColorCLD.class, 			1.4));
+		list.add(new RetrieverConfig(CLD.class, 						1.3));
+		list.add(new RetrieverConfig(HueValueVarianceGrid8.class, 		0.85));
+		list.add(new RetrieverConfig(MedianColorGrid8.class, 			1.7));
+		list.add(new RetrieverConfig(AverageColorRaster.class, 			1.0));
+		list.add(new RetrieverConfig(MedianColorRaster.class, 			1.0));
 		DEFAULT_RETRIEVER_CATEGORIES.put("localcolor", list);
 		
 		list = new ArrayList<>(7);
-		list.add(DoublePair.pair(EdgeARP88.class, 					0.85));
-		list.add(DoublePair.pair(EdgeGrid16.class, 					1.15));
-		list.add(DoublePair.pair(EdgeARP88Full.class, 				0.85));
-		list.add(DoublePair.pair(EdgeGrid16Full.class, 				0.85));
-		list.add(DoublePair.pair(EHD.class, 						0.7));
-		list.add(DoublePair.pair(DominantEdgeGrid16.class, 			1.4));
-		list.add(DoublePair.pair(DominantEdgeGrid8.class, 			1.4));
+		list.add(new RetrieverConfig(EdgeARP88.class, 					0.85));
+		list.add(new RetrieverConfig(EdgeGrid16.class, 					1.15));
+		list.add(new RetrieverConfig(EdgeARP88Full.class, 				0.85));
+		list.add(new RetrieverConfig(EdgeGrid16Full.class, 				0.85));
+		list.add(new RetrieverConfig(EHD.class, 						0.7));
+		list.add(new RetrieverConfig(DominantEdgeGrid16.class, 			1.4));
+		list.add(new RetrieverConfig(DominantEdgeGrid8.class, 			1.4));
 		DEFAULT_RETRIEVER_CATEGORIES.put("edge", list);
 		
 		list = new ArrayList<>(9);
-		list.add(DoublePair.pair(MotionHistogram.class, 			0.5));
-		list.add(DoublePair.pair(SubDivMotionHistogram2.class, 		1.0));
-		list.add(DoublePair.pair(SubDivMotionHistogram3.class, 		1.0));
-		list.add(DoublePair.pair(SubDivMotionHistogram4.class, 		1.0));
-		list.add(DoublePair.pair(SubDivMotionHistogram5.class, 		1.0));
-		list.add(DoublePair.pair(SubDivMotionSum2.class, 			0.5));
-		list.add(DoublePair.pair(SubDivMotionSum3.class, 			0.5));
-		list.add(DoublePair.pair(SubDivMotionSum4.class, 			0.5));
-		list.add(DoublePair.pair(SubDivMotionSum5.class, 			0.5));
+		list.add(new RetrieverConfig(MotionHistogram.class, 			0.5));
+		list.add(new RetrieverConfig(SubDivMotionHistogram2.class, 		1.0));
+		list.add(new RetrieverConfig(SubDivMotionHistogram3.class, 		1.0));
+		list.add(new RetrieverConfig(SubDivMotionHistogram4.class, 		1.0));
+		list.add(new RetrieverConfig(SubDivMotionHistogram5.class, 		1.0));
+		list.add(new RetrieverConfig(SubDivMotionSum2.class, 			0.5));
+		list.add(new RetrieverConfig(SubDivMotionSum3.class, 			0.5));
+		list.add(new RetrieverConfig(SubDivMotionSum4.class, 			0.5));
+		list.add(new RetrieverConfig(SubDivMotionSum5.class, 			0.5));
 		DEFAULT_RETRIEVER_CATEGORIES.put("motion", list);
 
 		list = new ArrayList<>(3);
-		list.add(DoublePair.pair(SubtitleFulltextSearch.class,    1.0));
-		list.add(DoublePair.pair(DescriptionTextSearch.class,    1.0));
+		list.add(new RetrieverConfig(SubtitleFulltextSearch.class,    1.0));
+		list.add(new RetrieverConfig(DescriptionTextSearch.class,    1.0));
 		
-//		list.add(DoublePair.pair(QueryImageExporter.class, 			0.001));
+//		list.add(new RetrieverConfig(QueryImageExporter.class, 			0.001));
 		DEFAULT_RETRIEVER_CATEGORIES.put("meta", list);
 	}
 
@@ -128,21 +126,19 @@ public final class RetrievalRuntimeConfig {
 		_return.addAll(keys);
 		return _return;
 	}
-	public void setRetrieverCategories(HashMap<String, List<DoublePair<Class<? extends Retriever>>>> retrieverCategories) {
-		this.retrieverCategories = retrieverCategories;
-	}
+
 
 	public TObjectDoubleHashMap<Retriever> getRetrieversByCategory(String category){
-		List<DoublePair<Class<? extends Retriever>>> list = this.retrieverCategories.get(category);
+		List<RetrieverConfig> list = this.retrieverCategories.get(category);
 		if(list == null){
 			return new TObjectDoubleHashMap<>(1);
 		}
 
 		TObjectDoubleHashMap<Retriever> _return = new TObjectDoubleHashMap<>(list.size());
-		for(DoublePair<Class<? extends Retriever>> pair : list){
-			Retriever rev = ReflectionHelper.instanciate(pair.key);
+		for(RetrieverConfig config : list){
+			Retriever rev = ReflectionHelper.instanciate(config.getRetrieverClass()); //FIXME use properties
 			if(rev != null){
-				_return.put(rev, pair.value);
+				_return.put(rev, config.getWeight());
 			}
 		}
 
@@ -150,11 +146,11 @@ public final class RetrievalRuntimeConfig {
 	}
 
   public Optional<Retriever> getRetrieverByName(String retrieverName) {
-    for (List<DoublePair<Class<? extends Retriever>>> pair : this.retrieverCategories
+    for (List<RetrieverConfig> configs : this.retrieverCategories
         .values()) {
-      for (DoublePair<Class<? extends Retriever>> retrieverPair : pair) {
-        if (retrieverPair.key.getSimpleName().equals(retrieverName)) {
-          Retriever retriever = ReflectionHelper.instanciate(retrieverPair.key);
+      for (RetrieverConfig config : configs) {
+        if (config.getRetrieverClass().getSimpleName().equals(retrieverName)) {
+          Retriever retriever = ReflectionHelper.instanciate(config.getRetrieverClass()); //FIXME use properties
           if (retriever != null) {
             return Optional.of(retriever);
           }
