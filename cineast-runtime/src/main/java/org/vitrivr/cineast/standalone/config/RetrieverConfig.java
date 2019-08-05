@@ -3,6 +3,7 @@ package org.vitrivr.cineast.standalone.config;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
+import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 import java.util.Map;
 
@@ -12,13 +13,19 @@ public class RetrieverConfig {
     private final double weight;
     private final Map<String, String> properties;
 
+    RetrieverConfig(Class<? extends Retriever> retrieverClass, double weight, Map<String, String> properties){
+        this.retrieverClass = retrieverClass;
+        this.weight = weight;
+        this.properties = properties;
+    }
+
     @JsonCreator
     public RetrieverConfig(
-            @JsonProperty(value = "feature", required = true) Class<? extends Retriever> retrieverClass,
+            @JsonProperty(value = "feature", required = true) String retrieverClassName,
             @JsonProperty(value = "weight", required = false, defaultValue = "1.0") Double weight,
             @JsonProperty(value = "properties", required = false) Map<String, String> properties
-    ){
-        this.retrieverClass = retrieverClass;
+    ) throws InstantiationException, ClassNotFoundException {
+        this.retrieverClass = ReflectionHelper.getClassFromName(retrieverClassName, Retriever.class, ReflectionHelper.FEATURE_MODULE_PACKAGE);
         this.weight = weight;
         this.properties = properties;
     }

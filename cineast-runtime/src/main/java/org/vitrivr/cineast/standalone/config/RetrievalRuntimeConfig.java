@@ -136,7 +136,15 @@ public final class RetrievalRuntimeConfig {
 
 		TObjectDoubleHashMap<Retriever> _return = new TObjectDoubleHashMap<>(list.size());
 		for(RetrieverConfig config : list){
-			Retriever rev = ReflectionHelper.instanciate(config.getRetrieverClass()); //FIXME use properties
+
+			Retriever rev;
+
+			if(config.getProperties() == null){
+			    rev = ReflectionHelper.instanciate(config.getRetrieverClass());
+            } else {
+                rev = ReflectionHelper.instanciate(config.getRetrieverClass(), config.getProperties());
+            }
+
 			if(rev != null){
 				_return.put(rev, config.getWeight());
 			}
@@ -150,7 +158,15 @@ public final class RetrievalRuntimeConfig {
         .values()) {
       for (RetrieverConfig config : configs) {
         if (config.getRetrieverClass().getSimpleName().equals(retrieverName)) {
-          Retriever retriever = ReflectionHelper.instanciate(config.getRetrieverClass()); //FIXME use properties
+
+            Retriever retriever;
+
+            if(config.getProperties() == null){
+                retriever = ReflectionHelper.instanciate(config.getRetrieverClass());
+            } else {
+                retriever = ReflectionHelper.instanciate(config.getRetrieverClass(), config.getProperties());
+            }
+
           if (retriever != null) {
             return Optional.of(retriever);
           }
