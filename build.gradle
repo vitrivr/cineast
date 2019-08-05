@@ -54,14 +54,14 @@ subprojects {
 
 project(':cineast-runtime') {
     dependencies {
-        implementation project(':cineast-core')
+        compile project(':cineast-core')
     }
 }
 
 project(':cineast-api') {
     dependencies {
-        implementation project(':cineast-runtime')
-        implementation project(':cineast-core')
+        compile project(':cineast-runtime')
+        compile project(':cineast-core')
     }
 }
 
