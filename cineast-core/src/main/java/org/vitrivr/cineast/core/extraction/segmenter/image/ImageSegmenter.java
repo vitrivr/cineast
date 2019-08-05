@@ -32,7 +32,7 @@ public class ImageSegmenter extends PassthroughSegmenter<BufferedImage> {
      */
     public ImageSegmenter(ExtractionContextProvider context) {
         super();
-        this.factory = new MultiImageFactory(context.imageCache());
+        this.factory = context.imageCache().sharedMultiImageFactory();
     }
 
     /**

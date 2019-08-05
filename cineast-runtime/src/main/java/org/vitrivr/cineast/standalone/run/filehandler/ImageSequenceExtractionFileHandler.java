@@ -10,6 +10,7 @@ import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+@Deprecated
 public class ImageSequenceExtractionFileHandler extends AbstractExtractionFileHandler<BufferedImage> {
 
   /**

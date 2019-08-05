@@ -145,8 +145,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
     while ((item = this.nextItem(decoder)) != null) {
       try {
         LOGGER.info("Processing file {}.", item);
-        if (decoder.init(item.getPathForExtraction(),
-            Config.sharedConfig().getDecoders().get(this.context.sourceType()))) {
+        if (decoder.init(item.getPathForExtraction(), Config.sharedConfig().getDecoders().get(this.context.sourceType()), Config.sharedConfig().getImagecache())) {
           /* Create / lookup MediaObjectDescriptor for new file. */
           final MediaObjectDescriptor descriptor = this
               .fetchOrCreateMultimediaObjectDescriptor(generator, item, context.sourceType());

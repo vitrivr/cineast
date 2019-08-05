@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector4i;
 import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.config.ImageCacheConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
@@ -22,14 +23,12 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Decodes Wavefront OBJ (.obj) files and returns a Mesh representation. Requires
- * JOML to work properly.
+ * Decodes Wavefront OBJ (.obj) files and returns a Mesh representation. Requires JOML to work properly.
  *
  * Texture information is currently discarded!
  *
  * @author rgasser
- * @version 1.0
- * @created 29.12.16
+ * @version 1.1
  */
 public class OBJMeshDecoder implements Decoder<Mesh> {
     /** Default logging facility. */
@@ -53,12 +52,13 @@ public class OBJMeshDecoder implements Decoder<Mesh> {
      * Initializes the decoder with a file. This is a necessary step before content can be retrieved from
      * the decoder by means of the getNext() method.
      *
-     * @param path   Path to the file that should be decoded.
-     * @param config DecoderConfiguration used by the decoder.
+     * @param path Path to the file that should be decoded.
+     * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
+     * @param cacheConfig The {@link ImageCacheConfig} used by this {@link Decoder}
      * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public boolean init(Path path, DecoderConfig config) {
+    public boolean init(Path path, DecoderConfig decoderConfig, ImageCacheConfig cacheConfig) {
         this.inputFile = path;
         this.complete.set(false);
         return true;
@@ -111,10 +111,10 @@ public class OBJMeshDecoder implements Decoder<Mesh> {
             LOGGER.error("Could not decode OBJ file {} due to an IO exception ({})", this.inputFile.toString(), LogHelper.getStackTrace(e));
             mesh = null;
         } catch (NumberFormatException e) {
-            LOGGER.error("Could not decode OBJ file {} because one of the tokens could not be converted to a valid number.", this.inputFile.toString(), LogHelper.getStackTrace(e));
+            LOGGER.error("Could not decode OBJ file {} because one of the tokens could not be converted to a valid number.", this.inputFile.toString());
             mesh = null;
         } catch (ArrayIndexOutOfBoundsException e) {
-            LOGGER.error("Could not decode OBJ file {} because one of the faces points to invalid vertex indices.", this.inputFile.toString(), LogHelper.getStackTrace(e));
+            LOGGER.error("Could not decode OBJ file {} because one of the faces points to invalid vertex indices.", this.inputFile.toString());
             mesh = null;
         } finally {
             this.complete.set(true);

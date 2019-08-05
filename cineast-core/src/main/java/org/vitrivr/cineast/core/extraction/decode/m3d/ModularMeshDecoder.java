@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.extraction.decode.m3d;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.config.ImageCacheConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 
 import org.vitrivr.cineast.core.data.query.containers.ModelQueryContainer;
@@ -24,8 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * model-file's mime-type.
  *
  * @author rgasser
- * @version 1.0
- * @created 08.03.17
+ * @version 1.1
  */
 public class ModularMeshDecoder implements MeshDecoder, Converter {
     /** Default logging facility. */
@@ -57,12 +57,13 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
      * Initializes the decoder with a file. This is a necessary step before content can be retrieved from
      * the decoder by means of the getNext() method.
      *
-     * @param path   Path to the file that should be decoded.
-     * @param config DecoderConfiguration used by the decoder.
+     * @param path Path to the file that should be decoded.
+     * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
+     * @param cacheConfig The {@link ImageCacheConfig} used by this {@link Decoder}
      * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public boolean init(Path path, DecoderConfig config) {
+    public boolean init(Path path, DecoderConfig decoderConfig, ImageCacheConfig cacheConfig) {
         this.inputFile = path;
         this.complete.set(false);
         return true;
@@ -103,7 +104,7 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
         }
 
         /* Initialize the decoder and return the decoded mesh. */
-        decoder.init(this.inputFile, null);
+        decoder.init(this.inputFile, null, null);
         Mesh mesh = decoder.getNext();
         this.complete.set(true);
         return mesh;
@@ -136,7 +137,7 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
         }
 
         /* Initialize the decoder and return the decoded mesh. */
-        decoder.init(path, null);
+        decoder.init(path, null, null);
         Mesh mesh = decoder.getNext();
         return new ModelQueryContainer(mesh);
     }

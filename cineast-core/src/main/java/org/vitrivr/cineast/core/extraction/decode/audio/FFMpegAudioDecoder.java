@@ -12,8 +12,10 @@ import org.bytedeco.javacpp.avutil.AVFrame;
 import org.bytedeco.javacpp.avutil.AVRational;
 import org.bytedeco.javacpp.swresample.SwrContext;
 import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.config.ImageCacheConfig;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
+import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
 import java.io.ByteArrayOutputStream;
@@ -26,6 +28,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * A {@link Decoder} implementation that decodes audio using the ffmpeg library + the corresponding Java bindings.
+ *
+ * @author rgasser
+ * @version 1.1
+ */
 public class FFMpegAudioDecoder implements AudioDecoder {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -235,20 +243,21 @@ public class FFMpegAudioDecoder implements AudioDecoder {
      * Initializes the decoder with a file. This is a necessary step before content can be retrieved from
      * the decoder by means of the getNext() method.
      *
-     * @param path   Path to the file that should be decoded.
-     * @param config DecoderConfiguration used by the decoder.
-     * @return Current instance of the decoder.
+     * @param path Path to the file that should be decoded.
+     * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
+     * @param cacheConfig The {@link ImageCacheConfig} used by this {@link Decoder}
+     * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public boolean init(Path path, DecoderConfig config) {
+    public boolean init(Path path, DecoderConfig decoderConfig, ImageCacheConfig cacheConfig) {
         if(!Files.exists(path)){
             LOGGER.error("File does not exist {}", path.toString());
             return false;
         }
 
         /* Read decoder configuration. */
-        int samplerate = config.namedAsInt(CONFIG_SAMPLERATE_PROPERTY, CONFIG_SAMPLERATE_DEFAULT);
-        int channels = config.namedAsInt(CONFIG_CHANNELS_PROPERTY, CONFIG_CHANNELS_DEFAULT);
+        int samplerate = decoderConfig.namedAsInt(CONFIG_SAMPLERATE_PROPERTY, CONFIG_SAMPLERATE_DEFAULT);
+        int channels = decoderConfig.namedAsInt(CONFIG_CHANNELS_PROPERTY, CONFIG_CHANNELS_DEFAULT);
         long channellayout = avutil.av_get_default_channel_layout(channels);
 
         /* Initialize the AVFormatContext. */

@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.extraction.decode.general;
 
 import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.config.ImageCacheConfig;
 
 import java.nio.file.Path;
 import java.util.Set;
@@ -27,10 +28,11 @@ public interface Decoder<T> extends AutoCloseable {
      * returned false upon initialization.
      *
      * @param path Path to the file that should be decoded.
-     * @param config DecoderConfiguration used by the decoder.
+     * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
+     * @param cacheConfig The {@link ImageCacheConfig} used by the {@link Decoder}.
      * @return True if initialization was successful, false otherwise.
      */
-    boolean init(Path path, DecoderConfig config);
+    boolean init(Path path, DecoderConfig decoderConfig, ImageCacheConfig cacheConfig);
 
     /**
      * Closes the Decoder. This method should cleanup and relinquish all resources.

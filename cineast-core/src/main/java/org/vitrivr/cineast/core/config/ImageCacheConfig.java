@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.data.MultiImageFactory;
 
 import java.io.File;
+import java.util.UUID;
 
 public final class ImageCacheConfig {
 	public enum Policy{
@@ -19,9 +21,11 @@ public final class ImageCacheConfig {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private Policy cachingPolicy =  Policy.AUTOMATIC;
-	private long softMinMemory = 3096;
-	private long hardMinMemory = 2048;
+	private long softMinMemory = 3246391296L;
+	private long hardMinMemory = 2147483648L;
 	private File cacheLocation = new File(".");
+	private final UUID uuid = UUID.randomUUID();
+	private MultiImageFactory factory;
 
 	public ImageCacheConfig() {}
 
@@ -37,8 +41,8 @@ public final class ImageCacheConfig {
 	 */
 	@JsonCreator
 	public ImageCacheConfig(
-		@JsonProperty(value = "softMemoryLimit", required = true, defaultValue = "2048") int softMemoryLimit,
-		@JsonProperty(value = "hardMemoryLimit", required = true, defaultValue = "1024") int hardMemoryLimit,
+		@JsonProperty(value = "softMemoryLimit", required = true, defaultValue = "3246391296") int softMemoryLimit,
+		@JsonProperty(value = "hardMemoryLimit", required = true, defaultValue = "2147483648") int hardMemoryLimit,
 		@JsonProperty(value = "cachePolicy", required = false, defaultValue = "AUTOMATIC") String cachePolicy,
 		@JsonProperty(value = "cacheLocation", required = false, defaultValue = ".") String cacheLocation){
 
@@ -116,27 +120,45 @@ public final class ImageCacheConfig {
 	public final File getCacheLocation(){
 		return this.cacheLocation;
 	}
-
 	public void setCacheLocation(File cacheLocation) {
 		if(cacheLocation == null){
 			throw new NullPointerException("CacheLocation cannot be null");
 		}
 		this.cacheLocation = cacheLocation;
 	}
-	
+
+	/**
+	 * Returns the UUID of this {@link ImageCacheConfig}.
+	 *
+	 * @return UUID of this {@link ImageCacheConfig}.
+	 */
+	public String getUUID() {
+		return this.uuid.toString();
+	}
+
+	/**
+	 * Returns and optionally creates the shared {@link MultiImageFactory} created by this {@link ImageCacheConfig}.
+	 *
+	 * @return Shared {@link MultiImageFactory}.
+	 */
+	public synchronized MultiImageFactory sharedMultiImageFactory() {
+		if (this.factory == null) {
+			this.factory = new MultiImageFactory(this);
+		}
+		return this.factory;
+	}
+
 	@Override
 	public String toString(){
-		StringBuilder builder = new StringBuilder();
-		builder.append("\"cache\" : { \"cachePolicy\" : \"");
-		builder.append(this.cachingPolicy.toString());
-		builder.append("\", \"softMemoryLimit\" : ");
-		builder.append(this.softMinMemory / 1024L / 1024L);
-		builder.append("\", \"hardMemoryLimit\" : ");
-		builder.append(this.hardMinMemory / 1024L / 1024L);
-		builder.append(", \"cacheLocation\" : \"");
-		builder.append(this.cacheLocation.getAbsolutePath());
-		builder.append("\" }");
-		return builder.toString();
+		return "\"cache\" : { \"cachePolicy\" : \"" +
+				this.cachingPolicy.toString() +
+				"\", \"softMemoryLimit\" : " +
+				this.softMinMemory / 1024L / 1024L +
+				"\", \"hardMemoryLimit\" : " +
+				this.hardMinMemory / 1024L / 1024L +
+				", \"cacheLocation\" : \"" +
+				this.cacheLocation.getAbsolutePath() +
+				"\" }";
 	}
 	
 }

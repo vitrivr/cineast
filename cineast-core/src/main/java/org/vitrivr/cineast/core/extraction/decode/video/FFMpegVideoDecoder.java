@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * A {@link Decoder} implementation that decodes videos using the ffmpeg library + the corresponding Java bindings.
  *
  * @author rgasser
- * @version 1.0
+ * @version 1.1
  */
 public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** Configuration property name for the {@link FFMpegVideoDecoder}: max width of the converted video. */
@@ -131,23 +131,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     private final AtomicBoolean eof = new AtomicBoolean(false);
 
     /** The {@link MultiImageFactory} reference used to create {@link MultiImage} objects. */
-    private final MultiImageFactory factory;
-
-    /**
-     * Default constructor.
-     */
-    public FFMpegVideoDecoder() {
-        this(new ImageCacheConfig());
-    }
-
-    /**
-     * Constructor
-     *
-     * @param config The {@link ImageCacheConfig}.
-     */
-    public FFMpegVideoDecoder(ImageCacheConfig config) {
-        this.factory = new MultiImageFactory(config);
-    }
+    private MultiImageFactory factory;
 
     /**
      *
@@ -390,15 +374,23 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      * the decoder by means of the getNext() method.
      *
      * @param path Path to the file that should be decoded.
-     * @param config DecoderConfiguration used by the decoder.
+     * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
+     * @param cacheConfig The {@link ImageCacheConfig} used by this {@link Decoder}
      * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public boolean init(Path path, DecoderConfig config) {
+    public boolean init(Path path, DecoderConfig decoderConfig, ImageCacheConfig cacheConfig) {
         if(!Files.exists(path)){
             LOGGER.error("File does not exist {}", path.toString());
             return false;
         }
+
+        /* Initialize MultiImageFactory using the ImageCacheConfig. */
+        if (cacheConfig == null) {
+            LOGGER.error("You must provide a valid ImageCacheConfig when initializing the FFMpegVideoDecoder.");
+            return false;
+        }
+        this.factory = cacheConfig.sharedMultiImageFactory();
 
         /* Initialize the AVFormatContext. */
         this.pFormatCtx = avformat.avformat_alloc_context();
@@ -430,12 +422,12 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         }
 
         /* Open subtitles file (if configured). */
-        if (config.namedAsBoolean(CONFIG_SUBTITLE_PROPERTY, false)) {
+        if (decoderConfig.namedAsBoolean(CONFIG_SUBTITLE_PROPERTY, false)) {
             final Optional<SubTitleDecoder> subtitles = SubtitleDecoderFactory.subtitleForVideo(path);
             subtitles.ifPresent(subTitleDecoder -> this.subtitles = subTitleDecoder);
         }
 
-        if (this.initVideo(config) && this.initAudio(config)) {
+        if (this.initVideo(decoderConfig) && this.initAudio(decoderConfig)) {
             LOGGER.debug("{} was initialized successfully.", this.getClass().getName());
             return true;
         } else {

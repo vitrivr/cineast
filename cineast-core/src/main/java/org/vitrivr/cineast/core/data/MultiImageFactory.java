@@ -29,7 +29,10 @@ public class MultiImageFactory {
 	 */
 	public MultiImageFactory(ImageCacheConfig config){
 		this.config = config;
-		this.cacheLocation = new File(this.config.getCacheLocation(), "framecache_" + UUID.randomUUID().toString());
+		this.cacheLocation = new File(this.config.getCacheLocation(), "framecache_" + config.getUUID());
+		if (this.cacheLocation.mkdirs()) {
+			this.cacheLocation.deleteOnExit();
+		}
 	}
 	
 	public MultiImage newMultiImage(BufferedImage bimg){

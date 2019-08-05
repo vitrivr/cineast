@@ -4,6 +4,7 @@ import com.twelvemonkeys.image.ResampleOp;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.config.ImageCacheConfig;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.util.LogHelper;
 
@@ -23,8 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author rgasser
- * @version 1.0
- * @created 14.01.17
+ * @version 1.1
  */
 public class DefaultImageDecoder implements Decoder<BufferedImage> {
 
@@ -52,15 +52,16 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
      * the decoder by means of the getNext() method.
      *
      * @param path Path to the file that should be decoded.
-     * @param config DecoderConfiguration used by the decoder.
+     * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
+     * @param cacheConfig The {@link ImageCacheConfig} used by this {@link Decoder}
      * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public boolean init(Path path, DecoderConfig config) {
+    public boolean init(Path path, DecoderConfig decoderConfig, ImageCacheConfig cacheConfig) {
         this.input = path;
         this.complete.set(false);
-        if (config != null) {
-            this.rescale_bounds = config.namedAsInt(CONFIG_BOUNDS_PROPERTY, CONFIG_BOUNDS_DEFAULT);
+        if (decoderConfig != null) {
+            this.rescale_bounds = decoderConfig.namedAsInt(CONFIG_BOUNDS_PROPERTY, CONFIG_BOUNDS_DEFAULT);
         }
         return true;
     }
@@ -101,14 +102,14 @@ public class DefaultImageDecoder implements Decoder<BufferedImage> {
                 output = resampler.filter(input, null);
             }
         } catch (IOException | IllegalArgumentException e) {
-            LOGGER.fatal("A severe error occurred while trying to decode the image file under '{}'. Image will be skipped...", this.input.toString(), LogHelper.getStackTrace(e));
+            LOGGER.fatal("A severe error occurred while trying to decode the image file under '{}'. Image will be skipped...", this.input.toString());
         } finally {
             try {
                 if (is != null) {
                   is.close();
                 }
             } catch (IOException e) {
-                LOGGER.warn("Could not close the input stream of the image file under {}.", this.input.toString(), LogHelper.getStackTrace(e));
+                LOGGER.warn("Could not close the input stream of the image file under {}.", this.input.toString());
             }
             this.complete.set(true);
         }

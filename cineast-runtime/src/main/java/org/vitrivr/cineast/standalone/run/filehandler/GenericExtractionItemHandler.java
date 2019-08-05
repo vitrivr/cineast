@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
+import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -81,6 +82,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
   private final ExtractionContextProvider context;
   private final ExtractionContainerProvider pathProvider;
   private final MediaType mediaType;
+  private final MultiImageFactory imageFactory;
 
   private final ExecutorService executorService = Executors.newFixedThreadPool(2, r -> {
     Thread thread = new Thread(r);
@@ -124,6 +126,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.pipeline = new ExtractionPipeline(context,
         new DefaultExtractorInitializer(writerSupplier));
     this.metadataExtractors = context.metadataExtractors();
+    this.imageFactory = new MultiImageFactory(context.imageCache());
 
     //Reasonable Defaults
     handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));
@@ -202,8 +205,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         Decoder decoder = handlerCache.get(pair.getRight()).getLeft();
         Segmenter segmenter = handlers.get(pair.getRight()).getRight().get();
 
-        if (decoder.init(pair.getLeft().getPathForExtraction(),
-            Config.sharedConfig().getDecoders().get(pair.getRight()))) {
+        if (decoder.init(pair.getLeft().getPathForExtraction(), Config.sharedConfig().getDecoders().get(pair.getRight()), Config.sharedConfig().getImagecache())) {
           /* Create / lookup MediaObjectDescriptor for new file. */
           final MediaObjectDescriptor descriptor = this
               .fetchOrCreateMultimediaObjectDescriptor(generator, pair.getLeft(), pair.getRight());

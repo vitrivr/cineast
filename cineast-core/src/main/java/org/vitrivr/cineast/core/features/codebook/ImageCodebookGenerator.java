@@ -55,19 +55,17 @@ public abstract class ImageCodebookGenerator implements CodebookGenerator {
         final MimetypesFileTypeMap filetypemap = new MimetypesFileTypeMap("mime.types");
 
         /* Filter the list of files and aggregate it. */
-        List<Path> paths = Files.walk(source)
-            .filter(path -> {
+
+
+        /* Prepare array dequeue. */
+        ArrayDeque<Path> files = Files.walk(source).filter(path -> {
                 if (decoder.supportedFiles() != null) {
                     String type = filetypemap.getContentType(path.toString());
                     return decoder.supportedFiles().contains(type);
                 } else {
                     return true;
                 }
-            }).collect(Collectors.toList());
-
-
-        /* Prepare array dequeue. */
-        ArrayDeque<Path> files = new ArrayDeque<>(paths);
+            }).collect(Collectors.toCollection(ArrayDeque::new));
 
         /* Prepare data-structures to track progress. */
         int max = files.size();
@@ -80,12 +78,11 @@ public abstract class ImageCodebookGenerator implements CodebookGenerator {
         System.out.println(String.format("Creating codebook of %d words from %d files.", words, files.size()));
 
         /*
-         * Iterates over the files Dequeue. Every element that has been processed in removed from
-         * that Dequeue.
+         * Iterates over the files Dequeue. Every element that has been processed in removed from that Dequeue.
          */
         Path path = null;
         while ((path = files.poll()) != null) {
-            if (decoder.init(path, null)) {
+            if (decoder.init(path, null, null)) {
                 BufferedImage image = decoder.getNext();
                 if (image != null) {
                     this.process(image);

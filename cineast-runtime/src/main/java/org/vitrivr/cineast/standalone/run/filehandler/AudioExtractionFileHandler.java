@@ -16,6 +16,7 @@ import java.io.IOException;
  * @version 1.0
  * @created 31.01.17
  */
+@Deprecated
 public class AudioExtractionFileHandler extends AbstractExtractionFileHandler<AudioFrame> {
 
     /**

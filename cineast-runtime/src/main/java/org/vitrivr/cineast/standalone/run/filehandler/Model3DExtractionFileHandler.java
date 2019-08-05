@@ -17,6 +17,7 @@ import java.io.IOException;
  * @version 1.0
  * @created 11.03.17
  */
+@Deprecated
 public class Model3DExtractionFileHandler extends AbstractExtractionFileHandler<Mesh> {
     /**
      * Default constructor used to initialize the class.

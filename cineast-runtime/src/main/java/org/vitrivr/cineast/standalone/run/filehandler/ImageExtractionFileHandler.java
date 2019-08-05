@@ -20,6 +20,7 @@ import java.io.IOException;
  * @version 1.0
  * @created 14.01.17
  */
+@Deprecated
 public class ImageExtractionFileHandler extends AbstractExtractionFileHandler<BufferedImage> {
     /**
      * Default constructor.

@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.extraction.decode.image;
 
 import org.vitrivr.cineast.core.config.DecoderConfig;
+import org.vitrivr.cineast.core.config.ImageCacheConfig;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 
 import java.awt.image.BufferedImage;
@@ -36,11 +37,20 @@ public class ImageSequenceDecoder implements Decoder<BufferedImage> {
 
   private DecoderConfig config;
 
+  /**
+   * Initializes the decoder with a file. This is a necessary step before content can be retrieved from
+   * the decoder by means of the getNext() method.
+   *
+   * @param path Path to the file that should be decoded.
+   * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
+   * @param cacheConfig The {@link ImageCacheConfig} used by this {@link Decoder}
+   * @return True if initialization was successful, false otherwise.
+   */
   @Override
-  public boolean init(Path path, DecoderConfig config) {
+  public boolean init(Path path, DecoderConfig decoderConfig, ImageCacheConfig cacheConfig) {
 
     imagePaths.clear();
-    this.config = config;
+    this.config = decoderConfig;
 
     try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path, filter)){
 
@@ -69,7 +79,7 @@ public class ImageSequenceDecoder implements Decoder<BufferedImage> {
       return null;
     }
 
-    this.imageDecoder.init(p, this.config);
+    this.imageDecoder.init(p, this.config, null);
     ++this.count;
 
     return this.imageDecoder.getNext();

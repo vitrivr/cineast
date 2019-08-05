@@ -15,6 +15,7 @@ import java.io.IOException;
  * @version 1.0
  * @created 17.01.17
  */
+@Deprecated
 public class VideoExtractionFileHandler extends AbstractExtractionFileHandler<VideoFrame> {
     /**
      * @param files
