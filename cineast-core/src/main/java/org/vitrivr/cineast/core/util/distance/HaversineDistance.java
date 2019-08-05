@@ -2,6 +2,9 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class HaversineDistance implements FloatArrayDistance {
 
+
+  private static final long serialVersionUID = 1L;
+
   private static final double EARTH_RADIUS = 6371d; // Approx Earth radius in KM
 
   @Override

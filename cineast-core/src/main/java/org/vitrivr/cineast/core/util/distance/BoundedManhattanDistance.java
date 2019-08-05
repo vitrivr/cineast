@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.util.distance;
 
 public class BoundedManhattanDistance implements FloatArrayDistance {
 
+  private static final long serialVersionUID = 1L;
+
   private final double bound;
 
   public BoundedManhattanDistance(double bound){
