@@ -254,9 +254,6 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         /* Initialize the AVFormatContext. */
         this.pFormatCtx = avformat.avformat_alloc_context();
 
-        /* Register all formats and codecs. */
-        avformat.av_register_all();
-
         /* Open file (pure frames or video + frames). */
         if (avformat.avformat_open_input(this.pFormatCtx, path.toString(), null, null) != 0) {
             LOGGER.error("Error while accessing file {}.", path.toString());
@@ -270,7 +267,7 @@ public class FFMpegAudioDecoder implements AudioDecoder {
         }
 
         /* Find the best stream. */
-        AVCodec codec = avcodec.av_codec_next((AVCodec)null);
+        final AVCodec codec = avcodec.av_codec_iterate(new Pointer());
         this.audioStream = avformat.av_find_best_stream(this.pFormatCtx, avutil.AVMEDIA_TYPE_AUDIO,-1, -1, codec, 0);
         if (this.audioStream == -1) {
             LOGGER.error("Couldn't find a supported audio stream.");

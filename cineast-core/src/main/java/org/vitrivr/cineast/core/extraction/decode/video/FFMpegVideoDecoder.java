@@ -403,9 +403,6 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         /* Initialize the AVFormatContext. */
         this.pFormatCtx = avformat.avformat_alloc_context();
 
-        /* Register all formats and codecs. */
-        avformat.av_register_all();
-
         /* Open video file. */
         if (avformat.avformat_open_input(this.pFormatCtx, path.toString(), null, null) != 0) {
             LOGGER.error("Error while accessing file {}", path.toString());
@@ -458,7 +455,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         int maxHeight = config.namedAsInt(CONFIG_HEIGHT_PROPERTY, CONFIG_MAXHEIGHT_DEFAULT);
 
         /* Find the best video stream. */
-        final AVCodec codec = avcodec.av_codec_next((AVCodec)null);
+        final AVCodec codec = avcodec.av_codec_iterate(new Pointer());
         this.videoStream = avformat.av_find_best_stream(this.pFormatCtx, avutil.AVMEDIA_TYPE_VIDEO,-1, -1, codec, 0);
         if (this.videoStream == -1) {
             LOGGER.error("Couldn't find a video stream.");
@@ -535,7 +532,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
         }
 
         /* Find the best frames stream. */
-        final AVCodec codec = avcodec.av_codec_next((AVCodec)null);
+        final AVCodec codec = avcodec.av_codec_iterate(new Pointer());
         this.audioStream = avformat.av_find_best_stream(this.pFormatCtx, avutil.AVMEDIA_TYPE_AUDIO,-1, -1, codec, 0);
         if (this.audioStream < 0) {
             LOGGER.warn("Couldn't find a supported audio stream. Continuing without audio!");

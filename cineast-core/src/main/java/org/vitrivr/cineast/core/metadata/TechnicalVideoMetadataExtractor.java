@@ -2,10 +2,7 @@ package org.vitrivr.cineast.core.metadata;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.PointerPointer;
-import org.bytedeco.javacpp.avcodec;
-import org.bytedeco.javacpp.avformat;
-import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacpp.*;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.extraction.decode.video.FFMpegVideoDecoder;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
@@ -68,9 +65,6 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
     /* Initialize the AVFormatContext. */
     final AVFormatContext pFormatContext = avformat.avformat_alloc_context();
 
-    /* Register all formats and codecs. */
-    avformat.av_register_all();
-
     /* */
     if (avformat.avformat_open_input(pFormatContext, path.toString(), null, null) != 0) {
       LOGGER.error("Error while accessing file {}. Failed to obtain technical video metadata.", path.toString());
@@ -83,7 +77,7 @@ public class TechnicalVideoMetadataExtractor implements MetadataExtractor {
       return metadata;
     }
 
-    final AVCodec codec = avcodec.av_codec_next((AVCodec) null);
+    final AVCodec codec = avcodec.av_codec_iterate(new Pointer());
     final int videoStreamIdx = avformat.av_find_best_stream(pFormatContext, avutil.AVMEDIA_TYPE_VIDEO, -1, -1, codec, 0);
     final AVStream videoStream = pFormatContext.streams(videoStreamIdx);
     final avutil.AVRational timebase = videoStream.time_base();
