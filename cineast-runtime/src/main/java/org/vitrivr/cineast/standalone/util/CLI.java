@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.standalone.util;
 
+import com.github.rvesse.airline.model.CommandMetadata;
 import com.github.rvesse.airline.parser.errors.ParseRestrictionViolatedException;
 import org.jline.builtins.Completers;
 import org.jline.reader.Completer;
@@ -46,18 +47,18 @@ public class CLI {
             System.exit(-1);
         }
 
-        com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(cliClass);
-        List<String> commandNames = cli.getMetadata().getDefaultGroupCommands().stream()
-                .map(x -> x.getName()).collect(Collectors.toList());
+        final com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(cliClass);
+        final List<String> commandNames = cli.getMetadata().getDefaultGroupCommands().stream()
+                .map(CommandMetadata::getName).collect(Collectors.toList());
 
         
-        Completer completer = new AggregateCompleter(
+        final Completer completer = new AggregateCompleter(
                 new StringsCompleter("quit", "exit"),
                 new StringsCompleter(commandNames),
                 new Completers.FileNameCompleter()
         );
 
-        LineReader lineReader = LineReaderBuilder.builder()
+        final LineReader lineReader = LineReaderBuilder.builder()
                 .terminal(terminal)
                 .completer(completer)
                 .build();
@@ -83,7 +84,11 @@ public class CLI {
                             new AttributedStringBuilder().style(AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
                                     .append("Error: ").append(e.getMessage()).toAnsi()
                     );
-
+                } catch (Exception e) {
+                    terminal.writer().println(
+                            new AttributedStringBuilder().style(AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+                                    .append("Error: ").append(e.getMessage()).toAnsi()
+                    );
                 }
             }
         } catch (IllegalStateException | NoSuchElementException e) {
