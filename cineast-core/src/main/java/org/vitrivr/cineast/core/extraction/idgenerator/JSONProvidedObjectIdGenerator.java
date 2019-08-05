@@ -16,8 +16,7 @@ import java.util.Map;
  * files in a run AND that those ID's are unique.
  *
  * @author rgasser
- * @version 1.0
- * @created 23.01.17
+ * @version 1.0.1
  */
 public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
 
@@ -44,9 +43,6 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
     /** The mode of assignment for ID's. */
     private final AssignmentMode mode;
 
-    /** JSONReader used to read the file containing the ID's. */
-    private final JsonReader reader = new JacksonJsonProvider();
-
     /**
      * Constructor for {@link JSONProvidedObjectIdGenerator}.
      *
@@ -59,12 +55,13 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
         } else {
             this.mode = AssignmentMode.MAP;
         }
-        String source = properties.get(PROPERTY_NAME_SOURCE);
+        final String source = properties.get(PROPERTY_NAME_SOURCE);
+        final JsonReader reader = new JacksonJsonProvider();
         if (mode == AssignmentMode.MAP) {
-            this.pathIdMap = this.reader.toObject(new File(source), HashMap.class);
+            this.pathIdMap = reader.toObject(new File(source), HashMap.class);
             this.idList = null;
         } else {
-            this.idList = this.reader.toObject(new File(source), LinkedList.class);
+            this.idList = reader.toObject(new File(source), LinkedList.class);
             this.pathIdMap = null;
         }
     }
