@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.metadata;
+package org.vitrivr.cineast.core.extraction.metadata;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

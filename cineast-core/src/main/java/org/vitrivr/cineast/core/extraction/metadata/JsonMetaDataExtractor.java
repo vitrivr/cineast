@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.metadata;
+package org.vitrivr.cineast.core.extraction.metadata;
 
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;

@@ -14,7 +14,7 @@ import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
 import org.vitrivr.cineast.standalone.run.ExtractionContainerProvider;
 import org.vitrivr.cineast.standalone.run.path.SessionContainerProvider;
 import org.vitrivr.cineast.standalone.run.path.SingletonContainerProvider;

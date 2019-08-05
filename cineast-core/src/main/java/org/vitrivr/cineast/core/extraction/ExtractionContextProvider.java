@@ -8,7 +8,7 @@ import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
-import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
 
 import java.io.File;
 import java.nio.file.Path;

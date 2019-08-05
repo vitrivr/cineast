@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.metadata;
+package org.vitrivr.cineast.core.extraction.metadata;
 
 import com.drew.metadata.exif.ExifDirectoryBase;
 import com.drew.metadata.exif.ExifSubIFDDirectory;

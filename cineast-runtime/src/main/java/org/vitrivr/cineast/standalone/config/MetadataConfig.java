@@ -2,7 +2,7 @@ package org.vitrivr.cineast.standalone.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class MetadataConfig {
     /** Name of the MetadataExtractor. Must correspond to the simple-name or the FQN of the respective class.
      *
-     * @see org.vitrivr.cineast.core.metadata.MetadataExtractor
+     * @see org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor
      */
     private String name;
 

@@ -21,7 +21,7 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.metadata.MetadataFeatureExtractor;
+import org.vitrivr.cineast.core.extraction.metadata.MetadataFeatureExtractor;
 
 import java.nio.file.Path;
 import java.util.Collections;

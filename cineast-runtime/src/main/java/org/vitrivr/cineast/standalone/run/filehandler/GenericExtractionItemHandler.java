@@ -36,7 +36,7 @@ import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSequenceSegmente
 import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
 import org.vitrivr.cineast.core.features.extractor.DefaultExtractorInitializer;
-import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
