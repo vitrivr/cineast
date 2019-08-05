@@ -48,6 +48,7 @@ public class JSONProvidedObjectIdGenerator implements ObjectIdGenerator {
      *
      * @param properties HashMap of named parameters. The values 'source' and 'assignment' are supported parameter keys.
      */
+    @SuppressWarnings("unchecked")
     public JSONProvidedObjectIdGenerator(Map<String,String> properties) {
         String assignment = properties.get(PROPERTY_NAME_ASSIGNMENT);
         if (assignment != null) {

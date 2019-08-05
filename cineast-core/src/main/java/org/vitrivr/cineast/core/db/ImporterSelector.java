@@ -68,6 +68,7 @@ public abstract class ImporterSelector<T extends Importer<?>> implements DBSelec
   /**
    * Full table scan. Don't do it for performance-intensive stuff.
    */
+  @SuppressWarnings("unchecked")
   private List<Map<String, PrimitiveTypeProvider>> getNearestNeighbourRows(int k,
       PrimitiveTypeProvider queryProvider, String column, ReadableQueryConfig config) {
     if (queryProvider.getType().equals(ProviderDataType.FLOAT_ARRAY) || queryProvider.getType()

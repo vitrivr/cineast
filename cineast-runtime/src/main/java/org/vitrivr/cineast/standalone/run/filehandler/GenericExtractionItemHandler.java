@@ -148,6 +148,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void run() {
     LOGGER.info("Starting extraction");
 
@@ -278,8 +279,8 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         }
         //We assume segmenters are reusable
 
-        for (int i = 0; i < this.completeListeners.size(); ++i) {
-          this.completeListeners.get(i).onCompleted(pair.getLeft());
+        for (ExtractionCompleteListener completeListener : this.completeListeners) {
+          completeListener.onCompleted(pair.getLeft());
         }
 
         /*
