@@ -8,11 +8,10 @@ import org.vitrivr.cineast.core.extraction.decode.general.Converter;
 import org.vitrivr.cineast.core.extraction.decode.general.Decoder;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
 import org.vitrivr.cineast.core.extraction.segmenter.general.Segmenter;
-import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.features.codebook.CodebookGenerator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
-import org.vitrivr.cineast.core.metadata.MetadataExtractor;
+import org.vitrivr.cineast.core.extraction.metadata.MetadataExtractor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -22,22 +21,24 @@ import java.util.Map;
 public class ReflectionHelper {
 
 	private static final Logger LOGGER = LogManager.getLogger();
-	
+
+	/** Name of the package where {@link Extractor} and {@link Retriever} classes are located by default. */
 	public static final String FEATURE_MODULE_PACKAGE = "org.vitrivr.cineast.core.features";
 
-	/** Name of the package where CodebookGenerator classes are located by default. */
+	/** Name of the package where {@link CodebookGenerator} classes are located by default. */
 	private static final String CODEBOOK_GENERATOR_PACKAGE = "org.vitrivr.cineast.core.features.codebook";
 
 	/** Name of the package where Exporter classes are located by default. */
 	private static final String EXPORTER_PACKAGE = "org.vitrivr.cineast.core.features.exporter";
 
-	/** Name of the package where ObjectIdGenerator classes are located by default. */
+	/** Name of the package where {@link ObjectIdGenerator} classes are located by default. */
 	private static final String IDGENERATOR_PACKAGE = "org.vitrivr.cineast.core.extraction.idgenerator";
 
-	/** Name of the package where MetadataExtractor classes are located by default. */
-	private static final String METADATA_PACKAGE = "org.vitrivr.cineast.core.metadata";
+	/** Name of the package where {@link MetadataExtractor} classes are located by default. */
+	private static final String METADATA_PACKAGE = "org.vitrivr.cineast.core.extraction.metadata";
 
-	private static final String DECODER_PACKAGE = "org.vitrivr.cineast.core.decode";
+	/** Name of the package where {@link Decoder} classes are located by default. */
+	private static final String DECODER_PACKAGE = "org.vitrivr.cineast.core.extraction.decode";
 
 	/**
 	 * Tries to instantiate a new, named ObjectIdGenerator object. If the methods succeeds to do so,
