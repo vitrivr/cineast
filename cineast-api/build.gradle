@@ -2,9 +2,8 @@ plugins {
     id 'application'
 }
 
-//TODO other main for api package?
 application {
-    mainClassName = 'org.vitrivr.cineast.standalone.Main'
+    mainClassName = 'org.vitrivr.cineast.api.Main'
 }
 
 dependencies {
