@@ -120,19 +120,21 @@ public class CachedDataFactory {
     }
 
     /**
+     * Creates a new {@link MultiImage} from a {@link BufferedImage}.
      *
-     * @param bimg
-     * @return
+     * @param bimg The {@link BufferedImage} to created the {@link MultiImage} from.
+     * @return {@link CachedMultiImage} or {@link InMemoryMultiImage}, depending on cache settings and memory utilisation.
      */
     public MultiImage newMultiImage(BufferedImage bimg) {
         return newMultiImage(bimg, null);
     }
 
     /**
+     * Creates a new {@link MultiImage} from a {@link BufferedImage} and its thumbnail.
      *
-     * @param bimg
-     * @param thumb
-     * @return
+     * @param bimg The {@link BufferedImage} to created the {@link MultiImage} from.
+     * @param thumb The {@link BufferedImage} representing the thumbnail.
+     * @return {@link CachedMultiImage} or {@link InMemoryMultiImage}, depending on cache settings and memory utilisation.
      */
     public MultiImage newMultiImage(BufferedImage bimg, BufferedImage thumb) {
         if (this.config.keepInMemory(bimg.getWidth() * bimg.getHeight() * 3 * 8)) {
@@ -143,15 +145,16 @@ public class CachedDataFactory {
     }
 
     /**
+     * Creates a new {@link MultiImage} from raw color data.
      *
-     * @param width
-     * @param height
-     * @param colors
-     * @return
+     * @param width Width of the image.
+     * @param height Height of the image.
+     * @param colors Array of color values.
+     * @return {@link CachedMultiImage} or {@link InMemoryMultiImage}, depending on cache settings and memory utilisation.
      */
     public MultiImage newMultiImage(int width, int height, int[] colors) {
         height = MultiImage.checkHeight(width, height, colors);
-        final BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        final BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         bimg.setRGB(0, 0, width, height, colors, 0, width);
         if (this.config.keepInMemory(colors.length * 8)) {
             return newInMemoryMultiImage(bimg);
@@ -162,14 +165,16 @@ public class CachedDataFactory {
 
 
     /**
-     * @param width
-     * @param height
-     * @param colors
-     * @return
+     * Creates a new {@link InMemoryMultiImage} from raw color data.
+     *
+     * @param width Width of the image.
+     * @param height Height of the image.
+     * @param colors Array of color values.
+     * @return {@link InMemoryMultiImage}
      */
     public MultiImage newInMemoryMultiImage(int width, int height, int[] colors) {
         height = MultiImage.checkHeight(width, height, colors);
-        final BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        final BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         bimg.setRGB(0, 0, width, height, colors, 0, width);
         return newInMemoryMultiImage(bimg);
     }
@@ -178,7 +183,7 @@ public class CachedDataFactory {
      * Wraps the provided  {@link BufferedImage} in a {@link InMemoryMultiImage} object and returns it.
      *
      * @param bimg The {@link BufferedImage} that should be wrapped.
-     * @return {@link InMemoryMultiImage}.
+     * @return {@link InMemoryMultiImage}
      */
     public MultiImage newInMemoryMultiImage(BufferedImage bimg) {
         return new InMemoryMultiImage(bimg, this);
@@ -190,7 +195,7 @@ public class CachedDataFactory {
      *
      * @param image The image from which to create a {@link CachedMultiImage}.
      * @param prefix The cache prefix used to name the files.
-     * @return {@link CachedMultiImage} or  {@link InMemoryMultiImage}, if former could not be created.
+     * @return {@link CachedMultiImage} or {@link InMemoryMultiImage}, if former could not be created.
      */
     public MultiImage newCachedMultiImage(BufferedImage image, String prefix) {
         try {
