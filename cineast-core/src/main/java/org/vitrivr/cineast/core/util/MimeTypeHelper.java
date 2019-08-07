@@ -32,6 +32,8 @@ public final class MimeTypeHelper {
     FILETYPES.put("mp4", "video/mp4");
 
     //Image Mime Types
+    FILETYPES.put("gif", "image/gif");
+    FILETYPES.put("bmp", "image/bmp");
     FILETYPES.put("jpg", "image/jpeg");
     FILETYPES.put("jpeg", "image/jpeg");
     FILETYPES.put("jpe", "image/jpeg");
