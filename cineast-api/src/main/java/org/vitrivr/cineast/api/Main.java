@@ -28,5 +28,8 @@ public class Main {
 
         /* Either start Cineast in interactive mode. */
         CLI.start(CineastCli.class);
+
+        /* Stops the Cineast API endpoint. */
+        APIEndpoint.stop();
     }
 }

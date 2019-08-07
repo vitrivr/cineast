@@ -138,6 +138,18 @@ public class APIEndpoint {
     }
 
     /**
+     * Stops the RESTful / WebSocket API.
+     */
+    public static void stop() {
+        if (Config.sharedConfig().getApi().getEnableRest() || Config.sharedConfig().getApi().getEnableWebsocket()) {
+            http.stop();
+        }
+        if (Config.sharedConfig().getApi().getEnableRestSecure() || Config.sharedConfig().getApi().getEnableWebsocketSecure()) {
+            https.stop();
+        }
+    }
+
+    /**
      * Registers the routes for the provided service.
      *
      * @param service Service for which routes should be registered.
