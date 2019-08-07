@@ -39,9 +39,6 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
     /** Soft reference to the thumbnail image. May be garbage collected under memory pressure. */
     private SoftReference<BufferedImage> thumb;
 
-    /** Soft reference to the colors array. May be garbage collected under memory pressure. */
-    private SoftReference<int[]> colors;
-
     /** Reference to the {@link CachedDataFactory} that created this {@link CachedMultiImage}. */
     private final CachedDataFactory factory;
 
@@ -70,7 +67,6 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
         this.height = img.getHeight();
         this.type = img.getType();
         this.factory = factory;
-        this.colors = new SoftReference<>(img.getRGB(0, 0, this.width, this.height, null, 0, this.width));
         if (thumb != null) {
             this.thumb = new SoftReference<>(thumb);
         } else {
@@ -97,7 +93,6 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
         final BufferedImage bimg = new BufferedImage(this.width, this.height, this.type);
         bimg.setRGB(0, 0, this.width, this.height, colors, 0, this.width);
         this.thumb = new SoftReference<>(MultiImage.generateThumb(bimg));
-        this.colors = new SoftReference<>(colors);
     }
 
     /**
@@ -120,34 +115,23 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
     }
 
     /**
-     * Getter for the colors array representing this {@link CachedMultiImage}. If the reference to that array does not
-     * exist anymore, the array will be loaded from cache.
-     *
-     * Calling this method will cause the soft reference {@link CachedMultiImage#colors} to be refreshed! However, there is
-     * no guarantee that the reference will still be around when invoking this or any other accessor the next time.
+     * Getter for the colors array representing this {@link CachedMultiImage}.
      *
      * @return The thumbnail image for this {@link CachedMultiImage}
      */
     @Override
     public int[] getColors() {
-        int[] colors = this.colors.get();
-        if (colors == null) {
-            final ByteBuffer buffer = this.buffer();
-            colors = new int[this.width * this.height];
-            for (int i=0; i<colors.length; i++) {
-                colors[i] = buffer.getInt();
-            }
+        final ByteBuffer buffer = this.buffer();
+        final int[] colors = new int[this.width * this.height];
+        for (int i=0; i<colors.length; i++) {
+            colors[i] = buffer.getInt();
         }
-        this.colors = new SoftReference<>(colors);
         return colors;
     }
 
     /**
      * Getter for the {@link BufferedImage} held by this {@link CachedMultiImage}. The image is reconstructed from the the
      * color array. See {@link CachedMultiImage#getColors()}
-     *
-     * Calling this method will cause the soft reference {@link CachedMultiImage#colors} to be refreshed! However, there is
-     * no guarantee that the reference will still be around when invoking this or any other accessor the next time.
      *
      * @return The image held by this  {@link CachedMultiImage}
      */
@@ -161,9 +145,6 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
 
     /**
      * Getter for the colors array representing the thumbnail of this {@link CachedMultiImage}.
-     *
-     * Calling this method will cause the soft reference {@link CachedMultiImage#colors} to be refreshed! However, there is
-     * no guarantee that the reference will still be around when invoking this or any other accessor the next time.
      *
      * @return Color array
      */
@@ -204,12 +185,12 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
     }
 
     /**
-     * Force clears all the soft reference associated with this {@link ByteData} object, that can be re-calculated on demand
+     * Force clears all the {@link SoftReference}s associated with this {@link CachedMultiImage} object.
      */
     @Override
     public void clear() {
+        this.data.clear();
         this.thumb.clear();
-        this.colors.clear();
     }
 
     /**
