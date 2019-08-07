@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.data.frames;
 
 
-import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.extraction.decode.subtitle.SubtitleItem;
 
 import java.util.*;

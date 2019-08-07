@@ -6,7 +6,7 @@ import org.vitrivr.cineast.core.color.ReadableRGBContainer;
 import org.vitrivr.cineast.core.color.YCbCrContainer;
 import org.vitrivr.cineast.core.data.FloatVector;
 import org.vitrivr.cineast.core.data.FloatVectorImpl;
-import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

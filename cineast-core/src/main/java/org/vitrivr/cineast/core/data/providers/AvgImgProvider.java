@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.core.data.providers;
 
-import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
 public interface AvgImgProvider {
 

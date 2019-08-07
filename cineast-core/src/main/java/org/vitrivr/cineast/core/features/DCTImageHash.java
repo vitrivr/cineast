@@ -13,7 +13,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
-import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.providers.primitive.BitSetTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;

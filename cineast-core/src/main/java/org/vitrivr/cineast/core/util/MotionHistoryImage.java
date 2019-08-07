@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.util;
 
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
-import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 

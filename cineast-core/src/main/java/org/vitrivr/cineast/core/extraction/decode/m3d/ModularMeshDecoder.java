@@ -3,7 +3,7 @@ package org.vitrivr.cineast.core.extraction.decode.m3d;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.config.ImageCacheConfig;
+import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 
 import org.vitrivr.cineast.core.data.query.containers.ModelQueryContainer;
@@ -59,11 +59,11 @@ public class ModularMeshDecoder implements MeshDecoder, Converter {
      *
      * @param path Path to the file that should be decoded.
      * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
-     * @param cacheConfig The {@link ImageCacheConfig} used by this {@link Decoder}
+     * @param cacheConfig The {@link CacheConfig} used by this {@link Decoder}
      * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public boolean init(Path path, DecoderConfig decoderConfig, ImageCacheConfig cacheConfig) {
+    public boolean init(Path path, DecoderConfig decoderConfig, CacheConfig cacheConfig) {
         this.inputFile = path;
         this.complete.set(false);
         return true;

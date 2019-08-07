@@ -9,6 +9,7 @@ import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
@@ -62,8 +63,9 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
   private final MediaObjectMetadataWriter metadataWriter;
   private final MediaObjectReader objectReader;
   private final MediaSegmentReader segmentReader;
-  protected final ExtractionContextProvider context;
   private final ExtractionContainerProvider itemProvider;
+  protected final ExtractionContextProvider context;
+  protected final CachedDataFactory cachedDataFactory;
 
   /**
    * ExecutorService used to run the ExtractionPipeline and the Segmenter.
@@ -118,6 +120,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
 
     /* Store the context. */
     this.context = context;
+    this.cachedDataFactory = context.cacheConfig().sharedCachedDataFactory();
   }
 
   @Override

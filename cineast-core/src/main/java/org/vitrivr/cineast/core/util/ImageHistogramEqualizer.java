@@ -4,8 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
-import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.IdConfig;
-import org.vitrivr.cineast.core.config.ImageCacheConfig;
+import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.SegmenterConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -64,7 +64,7 @@ public final class IngestConfig implements ExtractionContextProvider {
     private final SegmenterConfig segmenter;
 
     /** Configuration for extraction-pipeline. Defaults to global configuration. */
-    private final ImageCacheConfig imageCacheConfig;
+    private final CacheConfig cacheConfig;
 
     /**
      * Constructor for {@link IngestConfig}. Used by Jackson for JSON deserialization.
@@ -79,7 +79,7 @@ public final class IngestConfig implements ExtractionContextProvider {
                         @JsonProperty(value = "database") DatabaseConfig database,
                         @JsonProperty(value = "pipeline") ExtractionPipelineConfig pipeline,
                         @JsonProperty(value = "segmenter") SegmenterConfig segmenter,
-                        @JsonProperty(value = "imagecache") ImageCacheConfig imageCacheConfig) {
+                        @JsonProperty(value = "imagecache") CacheConfig cacheConfig) {
 
         if (input == null) throw new IllegalArgumentException("You have not defined an 'type' or 'input' object in your ingest configuration file.");
         this.type = type;
@@ -139,8 +139,8 @@ public final class IngestConfig implements ExtractionContextProvider {
         this.segmenter = segmenter;
 
         /* Set ImageCacheConfig. */
-        if (imageCacheConfig == null) imageCacheConfig = Config.sharedConfig().getImagecache();
-        this.imageCacheConfig = imageCacheConfig;
+        if (cacheConfig == null) cacheConfig = Config.sharedConfig().getImagecache();
+        this.cacheConfig = cacheConfig;
     }
 
     @JsonProperty(required = true)
@@ -390,12 +390,12 @@ public final class IngestConfig implements ExtractionContextProvider {
     }
 
     /**
-     * Returns the instance of {@link ImageCacheConfig}.
+     * Returns the instance of {@link CacheConfig}.
      *
-     * @return {@link ImageCacheConfig} reference.
+     * @return {@link CacheConfig} reference.
      */
     @Override
-    public ImageCacheConfig imageCache() {
-        return this.imageCacheConfig;
+    public CacheConfig cacheConfig() {
+        return this.cacheConfig;
     }
 }

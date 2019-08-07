@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
 import georegression.struct.point.Point2D_F32;
-import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
@@ -27,9 +27,9 @@ public class ImageQueryContainer extends QueryContainer {
 	 * Constructs an {@link ImageQueryContainer} from base 64 encoded image data.
 	 *
 	 * @param data The image data that should be converted.
-	 * @param factory The {@link MultiImageFactory} that should be used to generate the {@link MultiImage}.
+	 * @param factory The {@link CachedDataFactory} that should be used to generate the {@link MultiImage}.
 	 */
-	public ImageQueryContainer(String data, MultiImageFactory factory) {
+	public ImageQueryContainer(String data, CachedDataFactory factory) {
 		final BufferedImage image = ImageParser.dataURLtoBufferedImage(data);
 		this.img = factory.newInMemoryMultiImage(image);
 	}

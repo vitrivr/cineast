@@ -6,7 +6,7 @@ import org.tensorflow.Session;
 import org.tensorflow.Session.Runner;
 import org.tensorflow.Tensor;
 import org.vitrivr.cineast.core.color.RGBContainer;
-import org.vitrivr.cineast.core.data.MultiImage;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.features.neuralnet.tf.GraphBuilder;
 import org.vitrivr.cineast.core.features.neuralnet.tf.GraphHelper;
 import org.vitrivr.cineast.core.util.LogHelper;

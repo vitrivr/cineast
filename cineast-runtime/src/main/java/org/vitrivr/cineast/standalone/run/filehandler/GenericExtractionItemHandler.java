@@ -7,11 +7,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.IdConfig;
 import org.vitrivr.cineast.core.data.MediaType;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.segments.Model3DSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -82,7 +82,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
   private final ExtractionContextProvider context;
   private final ExtractionContainerProvider pathProvider;
   private final MediaType mediaType;
-  private final MultiImageFactory imageFactory;
+  private final CachedDataFactory dataFactory;
 
   private final ExecutorService executorService = Executors.newFixedThreadPool(2, r -> {
     Thread thread = new Thread(r);
@@ -126,7 +126,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.pipeline = new ExtractionPipeline(context,
         new DefaultExtractorInitializer(writerSupplier));
     this.metadataExtractors = context.metadataExtractors();
-    this.imageFactory = new MultiImageFactory(context.imageCache());
+    this.dataFactory = context.cacheConfig().sharedCachedDataFactory();
 
     //Reasonable Defaults
     handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));

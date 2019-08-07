@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.data.segments;
 
-import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 
@@ -28,9 +28,9 @@ public class ImageSegment implements SegmentContainer {
      * Default constructor.
      *
      * @param image The {@link BufferedImage} to create a segment from.
-     * @param factory The {@link MultiImageFactory} used to convert to a {@link MultiImage}. Handles caching!
+     * @param factory The {@link CachedDataFactory} used to convert to a {@link MultiImage}. Handles caching!
      */
-    public ImageSegment(BufferedImage image, MultiImageFactory factory) {
+    public ImageSegment(BufferedImage image, CachedDataFactory factory) {
         this.image = factory.newMultiImage(image);
         this.videoFrame = new VideoFrame(1, 0, this.image, new VideoDescriptor(25, 40, this.image.getWidth(), this.image.getHeight()));
     }

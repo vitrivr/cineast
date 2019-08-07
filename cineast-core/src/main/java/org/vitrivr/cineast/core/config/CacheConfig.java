@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
-public final class ImageCacheConfig {
+public final class CacheConfig {
 	public enum Policy{
 		FORCE_DISK_CACHE, //cache to disk even if newInMemoryMultiImage is requested
 		DISK_CACHE, //cache to disk unless newInMemoryMultiImage is requested
@@ -23,11 +26,11 @@ public final class ImageCacheConfig {
 	private Policy cachingPolicy =  Policy.AUTOMATIC;
 	private long softMinMemory = 3246391296L;
 	private long hardMinMemory = 2147483648L;
-	private File cacheLocation = new File(".");
+	private Path cacheLocation = Paths.get(".");
 	private final UUID uuid = UUID.randomUUID();
-	private MultiImageFactory factory;
+	private CachedDataFactory factory;
 
-	public ImageCacheConfig() {}
+	public CacheConfig() {}
 
 	/**
 	 *
@@ -40,7 +43,7 @@ public final class ImageCacheConfig {
 	 * @throws SecurityException in case access to cacheLocation is not permitted
 	 */
 	@JsonCreator
-	public ImageCacheConfig(
+	public CacheConfig(
 		@JsonProperty(value = "softMemoryLimit", required = true, defaultValue = "3246391296") int softMemoryLimit,
 		@JsonProperty(value = "hardMemoryLimit", required = true, defaultValue = "2147483648") int hardMemoryLimit,
 		@JsonProperty(value = "cachePolicy", required = false, defaultValue = "AUTOMATIC") String cachePolicy,
@@ -59,11 +62,19 @@ public final class ImageCacheConfig {
 			cacheLocation = ".";
 		}
 
-		final File location = new File(cacheLocation);
-		if(!(location.exists() && location.isDirectory()) || location.mkdirs()){
-			this.cacheLocation = new File(".");
-			LOGGER.warn("Specified cache location ({}) is invalid, using default location: {}", location.getAbsolutePath(), this.cacheLocation.getAbsolutePath());
-		}else{
+		final Path location = Paths.get(cacheLocation);
+		if (!Files.exists(location)) {
+			try {
+				Files.createDirectories(location);
+				this.cacheLocation = location;
+			} catch (IOException e) {
+				this.cacheLocation = Paths.get(".");
+				LOGGER.warn("Specified cache location ({}) could not be created! Fallback to default location: {}", location.toAbsolutePath().toString(), this.cacheLocation.toAbsolutePath().toString());
+			}
+		} else if (!Files.isDirectory(location)) {
+			this.cacheLocation = Paths.get(".");
+			LOGGER.warn("Specified cache location ({}) could not be created! Fallback to default location: {}", location.toAbsolutePath().toString(), this.cacheLocation.toAbsolutePath().toString());
+		} else {
 			this.cacheLocation = location;
 		}
 		this.softMinMemory = 1024L * 1024L * softMemoryLimit;
@@ -72,7 +83,6 @@ public final class ImageCacheConfig {
 	}
 	
 	/**
-	 * @return the soft memory limit in bytes
 	 */
 	@JsonProperty
 	public final long getSoftMinMemory(){
@@ -117,10 +127,10 @@ public final class ImageCacheConfig {
 	 * @return the file system location of the cache
 	 */
 	@JsonProperty
-	public final File getCacheLocation(){
+	public final Path getCacheLocation(){
 		return this.cacheLocation;
 	}
-	public void setCacheLocation(File cacheLocation) {
+	public void setCacheLocation(Path cacheLocation) {
 		if(cacheLocation == null){
 			throw new NullPointerException("CacheLocation cannot be null");
 		}
@@ -128,22 +138,41 @@ public final class ImageCacheConfig {
 	}
 
 	/**
-	 * Returns the UUID of this {@link ImageCacheConfig}.
+	 * Returns the UUID of this {@link CacheConfig}.
 	 *
-	 * @return UUID of this {@link ImageCacheConfig}.
+	 * @return UUID of this {@link CacheConfig}.
 	 */
 	public String getUUID() {
 		return this.uuid.toString();
 	}
 
 	/**
-	 * Returns and optionally creates the shared {@link MultiImageFactory} created by this {@link ImageCacheConfig}.
+	 * A simple heuristic to determine whether an object of the given size should be cached or kept in-memory.
 	 *
-	 * @return Shared {@link MultiImageFactory}.
+	 * @param size Size of the object in bytes.
+	 * @return True if object should be kept in memory, false otherwise.
 	 */
-	public synchronized MultiImageFactory sharedMultiImageFactory() {
+	public boolean keepInMemory(int size) {
+		switch (this.cachingPolicy) {
+			case FORCE_DISK_CACHE:
+				return false;
+			case AUTOMATIC:
+				return size <= this.softMinMemory;
+			case AVOID_CACHE:
+				return size <= this.hardMinMemory;
+			default:
+				return true;
+		}
+	}
+
+	/**
+	 * Returns and optionally creates the shared {@link CachedDataFactory} instance created by this {@link CacheConfig}.
+	 *
+	 * @return Shared {@link CachedDataFactory}.
+	 */
+	public synchronized CachedDataFactory sharedCachedDataFactory() {
 		if (this.factory == null) {
-			this.factory = new MultiImageFactory(this);
+			this.factory = new CachedDataFactory(this);
 		}
 		return this.factory;
 	}
@@ -157,7 +186,7 @@ public final class ImageCacheConfig {
 				"\", \"hardMemoryLimit\" : " +
 				this.hardMinMemory / 1024L / 1024L +
 				", \"cacheLocation\" : \"" +
-				this.cacheLocation.getAbsolutePath() +
+				this.cacheLocation.toString() +
 				"\" }";
 	}
 	

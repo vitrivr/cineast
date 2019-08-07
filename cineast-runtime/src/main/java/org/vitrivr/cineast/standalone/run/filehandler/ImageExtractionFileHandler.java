@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.standalone.run.filehandler;
 
 
-import org.vitrivr.cineast.core.data.MultiImageFactory;
 import org.vitrivr.cineast.core.data.segments.ImageSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
@@ -22,6 +21,7 @@ import java.io.IOException;
  */
 @Deprecated
 public class ImageExtractionFileHandler extends AbstractExtractionFileHandler<BufferedImage> {
+
     /**
      * Default constructor.
      *
@@ -50,11 +50,9 @@ public class ImageExtractionFileHandler extends AbstractExtractionFileHandler<Bu
     public Segmenter<BufferedImage> newSegmenter() {
         Segmenter<BufferedImage> segmenter = this.context.newSegmenter();
         if (segmenter == null) segmenter = new PassthroughSegmenter<BufferedImage>() {
-            private final MultiImageFactory factory = new MultiImageFactory(Config.sharedConfig().getImagecache());
-
             @Override
             protected SegmentContainer getSegmentFromContent(BufferedImage content) {
-                return new ImageSegment(content, this.factory);
+                return new ImageSegment(content, ImageExtractionFileHandler.this.cachedDataFactory);
             }
         };
         return segmenter;

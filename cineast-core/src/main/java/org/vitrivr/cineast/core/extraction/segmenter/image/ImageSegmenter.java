@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.extraction.segmenter.image;
 
-import org.vitrivr.cineast.core.config.ImageCacheConfig;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.segments.ImageSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.extraction.ExtractionContextProvider;
@@ -22,8 +21,8 @@ import java.util.Map;
  * @version 1.0
  */
 public class ImageSegmenter extends PassthroughSegmenter<BufferedImage> {
-    /** THe {@link MultiImageFactory} that is used to create image segments. */
-    private final MultiImageFactory factory;
+    /** THe {@link CachedDataFactory} that is used to create {@link org.vitrivr.cineast.core.data.raw.images.MultiImage}s. */
+    private final CachedDataFactory factory;
 
     /**
      * Constructor for {@link ImageSegmenter required for instantiation through {@link ReflectionHelper }.
@@ -32,7 +31,7 @@ public class ImageSegmenter extends PassthroughSegmenter<BufferedImage> {
      */
     public ImageSegmenter(ExtractionContextProvider context) {
         super();
-        this.factory = context.imageCache().sharedMultiImageFactory();
+        this.factory = context.cacheConfig().sharedCachedDataFactory();
     }
 
     /**
@@ -43,7 +42,7 @@ public class ImageSegmenter extends PassthroughSegmenter<BufferedImage> {
      */
     public ImageSegmenter(ExtractionContextProvider context, Map<String,String> properties) {
         super();
-        this.factory = new MultiImageFactory(context.imageCache());
+        this.factory = context.cacheConfig().sharedCachedDataFactory();
     }
 
     /**

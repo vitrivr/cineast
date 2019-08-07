@@ -1,7 +1,7 @@
 package org.vitrivr.cineast.core.data.query.containers;
 
-import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.util.mesh.MeshTransformUtil;
 import org.vitrivr.cineast.core.util.web.ImageParser;
@@ -30,9 +30,9 @@ public class ModelQueryContainer extends QueryContainer {
      * for Meshes OR a valid image (for 2D sketch to 3D model lookup).
      *
      * @param data The 3D model data that should be converted.
-     * @param factory The {@link MultiImageFactory} used to create images.
+     * @param factory The {@link CachedDataFactory} used to create images.
      */
-    public ModelQueryContainer(String data, MultiImageFactory factory) {
+    public ModelQueryContainer(String data, CachedDataFactory factory) {
         if (MeshParser.isValidThreeJSV4Geometry(data)) {
             this.mesh = MeshParser.parseThreeJSV4Geometry(data);
             this.normalizedMesh = MeshTransformUtil.khlTransform(mesh, 1.0f);
@@ -62,8 +62,9 @@ public class ModelQueryContainer extends QueryContainer {
      * Constructor for {@link ModelQueryContainer} with ab image. Used for Query-by-Sketch (2d sketch to 3d model).
      *
      * @param image BufferedImage for which to create a {@link ModelQueryContainer}.
+     * @param factory The {@link CachedDataFactory} to create the {@link MultiImage} with.
      */
-    public ModelQueryContainer(BufferedImage image, MultiImageFactory factory) {
+    public ModelQueryContainer(BufferedImage image, CachedDataFactory factory) {
         this.image = factory.newMultiImage(image);
         this.mesh = Mesh.EMPTY;
         this.normalizedMesh = Mesh.EMPTY;

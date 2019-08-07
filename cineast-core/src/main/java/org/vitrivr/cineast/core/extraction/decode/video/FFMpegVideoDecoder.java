@@ -8,9 +8,9 @@ import org.bytedeco.javacpp.avformat.AVFormatContext;
 import org.bytedeco.javacpp.avutil.AVDictionary;
 import org.bytedeco.javacpp.avutil.AVRational;
 import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.config.ImageCacheConfig;
-import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.config.CacheConfig;
+import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.frames.VideoDescriptor;
@@ -130,8 +130,8 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
     /** Indicates the EOF has been reached during decoding. */
     private final AtomicBoolean eof = new AtomicBoolean(false);
 
-    /** The {@link MultiImageFactory} reference used to create {@link MultiImage} objects. */
-    private MultiImageFactory factory;
+    /** The {@link CachedDataFactory} reference used to create {@link MultiImage} objects. */
+    private CachedDataFactory factory;
 
     /**
      *
@@ -375,11 +375,11 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
      *
      * @param path Path to the file that should be decoded.
      * @param decoderConfig {@link DecoderConfig} used by this {@link Decoder}.
-     * @param cacheConfig The {@link ImageCacheConfig} used by this {@link Decoder}
+     * @param cacheConfig The {@link CacheConfig} used by this {@link Decoder}
      * @return True if initialization was successful, false otherwise.
      */
     @Override
-    public boolean init(Path path, DecoderConfig decoderConfig, ImageCacheConfig cacheConfig) {
+    public boolean init(Path path, DecoderConfig decoderConfig, CacheConfig cacheConfig) {
         if(!Files.exists(path)){
             LOGGER.error("File does not exist {}", path.toString());
             return false;
@@ -390,7 +390,7 @@ public class FFMpegVideoDecoder implements Decoder<VideoFrame> {
             LOGGER.error("You must provide a valid ImageCacheConfig when initializing the FFMpegVideoDecoder.");
             return false;
         }
-        this.factory = cacheConfig.sharedMultiImageFactory();
+        this.factory = cacheConfig.sharedCachedDataFactory();
 
         /* Initialize the AVFormatContext. */
         this.pFormatCtx = avformat.avformat_alloc_context();

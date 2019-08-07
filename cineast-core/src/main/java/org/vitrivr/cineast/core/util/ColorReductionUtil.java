@@ -3,8 +3,7 @@ package org.vitrivr.cineast.core.util;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.FuzzyColorHistogramQuantizer;
 import org.vitrivr.cineast.core.color.ReadableHSVContainer;
-import org.vitrivr.cineast.core.data.MultiImage;
-import org.vitrivr.cineast.core.data.MultiImageFactory;
+import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 
 public class ColorReductionUtil {
 

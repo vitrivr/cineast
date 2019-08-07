@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.DecoderConfig;
-import org.vitrivr.cineast.core.config.ImageCacheConfig;
+import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
@@ -25,7 +25,7 @@ public class Config {
     private DatabaseConfig database;
     private RetrievalRuntimeConfig retriever;
     private ExtractionPipelineConfig extractor;
-    private ImageCacheConfig imagecache;
+    private CacheConfig imagecache;
     private QueryConfig query;
     private HashMap<MediaType, DecoderConfig> decoders;
     private BenchmarkConfig benchmark = new BenchmarkConfig();
@@ -94,10 +94,10 @@ public class Config {
     }
 
     @JsonProperty
-    public ImageCacheConfig getImagecache() {
+    public CacheConfig getImagecache() {
         return imagecache;
     }
-    public void setImagecache(ImageCacheConfig imagecache) {
+    public void setImagecache(CacheConfig imagecache) {
         this.imagecache = imagecache;
     }
 
