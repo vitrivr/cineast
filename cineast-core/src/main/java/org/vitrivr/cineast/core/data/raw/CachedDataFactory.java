@@ -27,10 +27,10 @@ public class CachedDataFactory {
     /** Logger instance used to log errors. */
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /** Reference to {@link CacheConfig} used to setup this {@link MultiImageFactory}. */
+    /** Reference to {@link CacheConfig} used to setup this {@link CachedDataFactory}. */
     private final CacheConfig config;
 
-    /** Location where this instance of {@link MultiImageFactory} will store its cached images. */
+    /** Location where this instance of {@link CachedDataFactory} will store its cached images. */
     private final Path cacheLocation;
 
     /**
@@ -114,13 +114,8 @@ public class CachedDataFactory {
         try {
             return new CachedByteData(data, Files.createTempFile(cacheLocation, prefix, ".tmp"), this);
         } catch (IOException e) {
-            if (cachePolicy == CacheConfig.Policy.FORCE_DISK_CACHE) {
-                LOGGER.error("Failed to instantiate an object of type CachedByteData. No data object is created due to policy restrictions (FORCE_DISK_CACHE).");
-                throw new UncheckedIOException(e);
-            } else {
-                LOGGER.warn("Failed to instantiate an object of type CachedByteDate. Fallback to InMemoryByteData instead.");
-                return new InMemoryByteData(data, this);
-            }
+            LOGGER.warn("Failed to instantiate an object of type CachedByteDate. Fallback to InMemoryByteData instead.");
+            return new InMemoryByteData(data, this);
         }
     }
 
@@ -196,19 +191,13 @@ public class CachedDataFactory {
      * @param image The image from which to create a {@link CachedMultiImage}.
      * @param prefix The cache prefix used to name the files.
      * @return {@link CachedMultiImage} or  {@link InMemoryMultiImage}, if former could not be created.
-     * @throws UncheckedIOException If creation of {@link CachedMultiImage} and cache policy equals {@link CacheConfig.Policy#FORCE_DISK_CACHE}.
      */
     public MultiImage newCachedMultiImage(BufferedImage image, String prefix) {
         try {
             return new CachedMultiImage(image, Files.createTempFile(this.cacheLocation, prefix, ".tmp"), this);
         } catch (IOException e) {
-            if (this.config.getCachingPolicy() == CacheConfig.Policy.FORCE_DISK_CACHE) {
-                LOGGER.error("Failed to instantiate an object of type CachedMultiImage. No data object is created due to policy restrictions (FORCE_DISK_CACHE).");
-                throw new UncheckedIOException(e);
-            } else {
-                LOGGER.warn("Failed to instantiate an object of type CachedMultiImage. Fallback to InMemoryMultiImage instead.");
-                return new InMemoryMultiImage(image, this);
-            }
+            LOGGER.warn("Failed to instantiate an object of type CachedMultiImage. Fallback to InMemoryMultiImage instead.");
+            return new InMemoryMultiImage(image, this);
         }
     }
 
@@ -220,19 +209,13 @@ public class CachedDataFactory {
      * @param thumb Pre-computed thumbnail that should be used.
      * @param prefix The cache prefix used to name the files.
      * @return {@link CachedMultiImage} or  {@link InMemoryMultiImage}, if former could not be created.
-     * @throws UncheckedIOException If creation of {@link CachedMultiImage} and cache policy equals {@link CacheConfig.Policy#FORCE_DISK_CACHE}.
      */
     public MultiImage newCachedMultiImage(BufferedImage image, BufferedImage thumb, String prefix) {
         try {
             return new CachedMultiImage(image, thumb, Files.createTempFile(this.cacheLocation, prefix, ".tmp"), this);
         } catch (IOException e) {
-            if (this.config.getCachingPolicy() == CacheConfig.Policy.FORCE_DISK_CACHE) {
-                LOGGER.error("Failed to instantiate an object of type CachedMultiImage. No data object is created due to policy restrictions (FORCE_DISK_CACHE).");
-                throw new UncheckedIOException(e);
-            } else {
-                LOGGER.warn("Failed to instantiate an object of type CachedMultiImage. Fallback to InMemoryMultiImage instead.");
-                return new InMemoryMultiImage(image, thumb, this);
-            }
+            LOGGER.warn("Failed to instantiate an object of type CachedMultiImage. Fallback to InMemoryMultiImage instead.");
+            return new InMemoryMultiImage(image, thumb, this);
         }
     }
 }
