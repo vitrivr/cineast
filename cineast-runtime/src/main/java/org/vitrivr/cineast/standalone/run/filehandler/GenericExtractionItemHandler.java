@@ -57,9 +57,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * This class is used to extract a continous list of {@link ExtractionItemContainer}s.
+ * This class is used to extract a continuous list of {@link ExtractionItemContainer}s.
  *
- * It replaces the need to extend separate {@link AbstractExtractionFileHandler} per Mediatype. It should also step-by-step phase out the {@link AbstractExtractionFileHandler}.
+ * It replaces the need to extend separate {@link AbstractExtractionFileHandler} per {@link MediaType}. It should also step-by-step phase out the {@link AbstractExtractionFileHandler}.
  *
  * Additionally, has support to extract only specific media types by providing the desired {@link MediaType} in the constructor.
  *
@@ -82,7 +82,6 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
   private final ExtractionContextProvider context;
   private final ExtractionContainerProvider pathProvider;
   private final MediaType mediaType;
-  private final CachedDataFactory dataFactory;
 
   private final ExecutorService executorService = Executors.newFixedThreadPool(2, r -> {
     Thread thread = new Thread(r);
@@ -126,7 +125,6 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
     this.pipeline = new ExtractionPipeline(context,
         new DefaultExtractorInitializer(writerSupplier));
     this.metadataExtractors = context.metadataExtractors();
-    this.dataFactory = context.cacheConfig().sharedCachedDataFactory();
 
     //Reasonable Defaults
     handlers.put(MediaType.IMAGE, new ImmutablePair<>(DefaultImageDecoder::new, () -> new ImageSegmenter(context)));
