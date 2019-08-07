@@ -4,6 +4,17 @@ plugins {
 
 application {
     mainClassName = 'org.vitrivr.cineast.api.Main'
+    applicationDefaultJvmArgs = ["-Xms1G", "-Xmx2G"]
+}
+
+distributions {
+    main {
+        contents {
+            from('../cineast.json') {
+                into 'bin'
+            }
+        }
+    }
 }
 
 dependencies {
