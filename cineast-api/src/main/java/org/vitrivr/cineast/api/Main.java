@@ -26,10 +26,10 @@ public class Main {
         /* Start Cineast API endpoint. */
         APIEndpoint.start();
 
-        /* Either start Cineast in interactive mode. */
+        /* Start Cineast CLI in interactive mode (blocking). */
         CLI.start(CineastCli.class);
 
-        /* Stops the Cineast API endpoint. */
+        /* This part is only reached when user enters exit/quit: Stops the Cineast API endpoint. */
         APIEndpoint.stop();
     }
 }
