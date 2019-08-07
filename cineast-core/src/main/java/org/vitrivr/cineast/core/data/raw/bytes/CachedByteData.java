@@ -152,7 +152,7 @@ public class CachedByteData implements ByteData {
             /* Allocate a new Buffer according to the size of the CachedByteData object. */
             final byte[] data = Files.readAllBytes(this.file);
             final ByteBuffer buffer = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
-            this.data = new SoftReference<>(ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
+            this.data = new SoftReference<>(buffer);
 
             /* Return true.*/
             return buffer;
