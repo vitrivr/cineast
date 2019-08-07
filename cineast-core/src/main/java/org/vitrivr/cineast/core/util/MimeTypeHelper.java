@@ -1,55 +1,78 @@
 package org.vitrivr.cineast.core.util;
 
-import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
+import java.nio.file.Path;
+import java.util.HashMap;
 
 public final class MimeTypeHelper {
 
   private MimeTypeHelper(){}
 
-  private static final MimetypesFileTypeMap filetypes;
+  private static final HashMap<String,String> FILETYPES;
 
   static{
 
-    filetypes = new MimetypesFileTypeMap();
+    FILETYPES = new HashMap<>();
 
     //Video Mime Types
-    filetypes.addMimeTypes("video/avi avi");
-    filetypes.addMimeTypes("video/mp4 m4v");
-    filetypes.addMimeTypes("video/mpeg m1v m2v mp2 mpg mpeg mpe mpa");
-    filetypes.addMimeTypes("video/quicktime mov moov movie");
-    filetypes.addMimeTypes("video/ogg ogv");
-    filetypes.addMimeTypes("video/webm webm");
-    filetypes.addMimeTypes("video/mp4 mp4");
+    FILETYPES.put("avi", "video/avi");
+    FILETYPES.put("m4v", "video/mp4");
+    FILETYPES.put("m1v", "video/mpeg");
+    FILETYPES.put("m2v", "video/mpeg");
+    FILETYPES.put("mp2", "video/mpeg");
+    FILETYPES.put("mpg", "video/mpeg");
+    FILETYPES.put("mpeg", "video/mpeg");
+    FILETYPES.put("mpe", "video/mpeg");
+    FILETYPES.put("mpa", "video/mpeg");
+    FILETYPES.put("mov", "video/quicktime");
+    FILETYPES.put("moov", "video/quicktime");
+    FILETYPES.put("movie", "video/quicktime");
+    FILETYPES.put("ogv", "video/ogg");
+    FILETYPES.put("webm", "video/webm");
+    FILETYPES.put("mp4", "video/mp4");
 
     //Image Mime Types
-    filetypes.addMimeTypes("image/jpeg jpg jpeg jpe");
-    filetypes.addMimeTypes("image/png png");
-    filetypes.addMimeTypes("image/tiff tif tiff");
+    FILETYPES.put("jpg", "image/jpeg");
+    FILETYPES.put("jpeg", "image/jpeg");
+    FILETYPES.put("jpe", "image/jpeg");
+    FILETYPES.put("png", "image/png");
+    FILETYPES.put("tif", "image/tiff");
+    FILETYPES.put("tiff", "image/tiff");
 
     //Audio Mime Types
-    filetypes.addMimeTypes("audio/mp4 m4a");
-    filetypes.addMimeTypes("audio/aac aac");
-    filetypes.addMimeTypes("audio/aiff aif aiff");
-    filetypes.addMimeTypes("audio/mpeg mp1 mp2 mp3 mpg mpeg");
-    filetypes.addMimeTypes("audio/ogg oga ogg");
-    filetypes.addMimeTypes("audio/wav wav");
-    filetypes.addMimeTypes("audio/flac flac");
+    FILETYPES.put("m4a", "audio/mp4");
+    FILETYPES.put("aac", "audio/aac");
+    FILETYPES.put("aif", "audio/aiff");
+    FILETYPES.put("aiff", "audio/aiff");
+    FILETYPES.put("wav", "audio/wav");
+    FILETYPES.put("wave", "audio/wav");
+    FILETYPES.put("mp1", "audio/mpeg");
+    FILETYPES.put("mp3", "audio/mpeg");
+    FILETYPES.put("oga", "audio/ogg");
+    FILETYPES.put("ogg", "audio/ogg");
+    FILETYPES.put("flac", "audio/flac");
 
-    //3D Mime types
-    filetypes.addMimeTypes("application/3d-stl stl STL");
-    filetypes.addMimeTypes("application/3d-obj obj OBJ");
-    filetypes.addMimeTypes("application/3d-off off OFF");
-
-
+    //3D Mime types (self-defimed)
+    FILETYPES.put("stl", "application/3d-stl");
+    FILETYPES.put("obj", "application/3d-obj");
+    FILETYPES.put("off", "application/3d-off");
   }
 
   public static String getContentType(File file){
-    return filetypes.getContentType(file);
+    return getContentType(file.getName());
+
+  }
+
+  public static String getContentType(Path file){
+    return getContentType(file.getFileName().toString());
   }
 
   public static String getContentType(String filename){
-    return filetypes.getContentType(filename);
+    final String[] split = filename.split("\\.");
+    if (split.length > 0) {
+      return FILETYPES.getOrDefault(split[split.length-1], "application/octet-stream");
+    } else {
+      return "application/octet-stream";
+    }
   }
-
 }
