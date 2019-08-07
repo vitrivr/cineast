@@ -23,7 +23,7 @@ protobuf {
             artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
         }
     }
-    generatedFilesBaseDir = "$projectDir/generated/"
+    generatedFilesBaseDir = "$projectDir/build/generated/"
     generateProtoTasks {
         all()*.plugins {
             grpc {}
@@ -34,11 +34,11 @@ protobuf {
 sourceSets {
     main {
         java {
-            srcDirs += "generated/main/java"
-            srcDirs += "generated/main/grpc"
+            srcDirs += "build/generated/main/grpc"
+            srcDirs += "build/generated/main/java"
         }
         proto {
-            //srcDirs += "adampro-grpc/src/main/protobuf"
+            srcDirs += "adampro-grpc/src/main/protobuf"
             srcDirs += "cottontaildb-proto/src/main/protobuf"
         }
     }
