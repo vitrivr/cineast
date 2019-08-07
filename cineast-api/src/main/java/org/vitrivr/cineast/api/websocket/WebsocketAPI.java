@@ -108,6 +108,7 @@ public class WebsocketAPI {
      * @param message String message.
      */
     @OnWebSocketMessage
+    @SuppressWarnings("unchecked")
     public void message(Session session, String message) throws IOException {
         final AnyMessage testMessage = this.reader.toObject(message, AnyMessage.class);
         if (testMessage != null) {
