@@ -5,9 +5,10 @@ package org.vitrivr.cineast.standalone.evaluation;
  *
  * @author rgasser
  * @version 1.0
- * @created 06.05.17
  */
 public class EvaluationException extends Exception {
+
+    static final long serialVersionUID = 1L;
 
     /**
      * Constructor for EvaluationException
