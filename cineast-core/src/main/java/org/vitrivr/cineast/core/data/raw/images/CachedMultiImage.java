@@ -70,6 +70,7 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
         this.height = img.getHeight();
         this.type = img.getType();
         this.factory = factory;
+        this.colors = new SoftReference<>(img.getRGB(0, 0, this.width, this.height, null, 0, this.width));
         if (thumb != null) {
             this.thumb = new SoftReference<>(thumb);
         } else {
