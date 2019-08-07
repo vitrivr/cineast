@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.file.Path;
 
 /**
@@ -213,7 +214,7 @@ public class CachedMultiImage extends CachedByteData implements MultiImage {
      * @return The byte array representing the {@link BufferedImage}
      */
     private static byte[] toBytes(int[] colors, int width, int height) {
-        final ByteBuffer data = ByteBuffer.allocate(width * height * 4);
+        final ByteBuffer data = ByteBuffer.allocate(width * height * 4).order(ByteOrder.LITTLE_ENDIAN);
         for (int c : colors) {
             data.putInt(c);
         }
