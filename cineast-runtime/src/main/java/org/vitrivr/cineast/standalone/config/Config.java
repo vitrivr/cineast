@@ -25,7 +25,7 @@ public class Config {
     private DatabaseConfig database;
     private RetrievalRuntimeConfig retriever;
     private ExtractionPipelineConfig extractor;
-    private CacheConfig imagecache;
+    private CacheConfig cache;
     private QueryConfig query;
     private HashMap<MediaType, DecoderConfig> decoders;
     private BenchmarkConfig benchmark = new BenchmarkConfig();
@@ -94,13 +94,12 @@ public class Config {
     }
 
     @JsonProperty
-    public CacheConfig getImagecache() {
-        return imagecache;
+    public CacheConfig getCache() {
+        return cache;
     }
-    public void setImagecache(CacheConfig imagecache) {
-        this.imagecache = imagecache;
+    public void setCache(CacheConfig cache) {
+        this.cache = cache;
     }
-
 
     @JsonProperty
     public QueryConfig getQuery() {
@@ -130,7 +129,6 @@ public class Config {
     public MonitoringConfig getMonitoring() {
       return monitoring;
     }
-
     public void setMonitoring(MonitoringConfig monitoring) {
       this.monitoring = monitoring;
     }

@@ -139,7 +139,7 @@ public final class IngestConfig implements ExtractionContextProvider {
         this.segmenter = segmenter;
 
         /* Set ImageCacheConfig. */
-        if (cacheConfig == null) cacheConfig = Config.sharedConfig().getImagecache();
+        if (cacheConfig == null) cacheConfig = Config.sharedConfig().getCache();
         this.cacheConfig = cacheConfig;
     }
 

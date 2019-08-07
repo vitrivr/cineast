@@ -114,11 +114,6 @@
     "outputLocation": "out"
   },
 
-  "imagecache": {
-    "softMemoryLimit": 2048,
-    "hardMemoryLimit": 1024
-  },
-
   "api": {
     "enableCLI": true,
     "enableWebsocket": true,

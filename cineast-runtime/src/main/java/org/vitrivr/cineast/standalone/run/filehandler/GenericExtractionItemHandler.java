@@ -205,7 +205,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         Decoder decoder = handlerCache.get(pair.getRight()).getLeft();
         Segmenter segmenter = handlers.get(pair.getRight()).getRight().get();
 
-        if (decoder.init(pair.getLeft().getPathForExtraction(), Config.sharedConfig().getDecoders().get(pair.getRight()), Config.sharedConfig().getImagecache())) {
+        if (decoder.init(pair.getLeft().getPathForExtraction(), Config.sharedConfig().getDecoders().get(pair.getRight()), Config.sharedConfig().getCache())) {
           /* Create / lookup MediaObjectDescriptor for new file. */
           final MediaObjectDescriptor descriptor = this
               .fetchOrCreateMultimediaObjectDescriptor(generator, pair.getLeft(), pair.getRight());
