@@ -47,7 +47,7 @@ public class CachedDataFactory {
                 try {
                     Files.walk(CachedDataFactory.this.cacheLocation).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
                 } catch (IOException e) {
-                    LOGGER.fatal("Could not swipe the cache location under {}", this.cacheLocation.toAbsolutePath().toString());
+                    LOGGER.fatal("Could not sweep the cache location under {}", this.cacheLocation.toAbsolutePath().toString());
                     LOGGER.fatal(e);
                 }
             })) ;
