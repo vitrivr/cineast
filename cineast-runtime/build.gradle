@@ -17,6 +17,14 @@ distributions {
     }
 }
 
+task fatJar(type: Jar) {
+    archiveClassifier = 'full'
+    manifest {
+        attributes 'Main-Class': 'org.vitrivr.cineast.standalone.Main'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
 dependencies {
     /** Jetty Servlet support. */
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.19.v20190610'
