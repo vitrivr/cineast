@@ -93,11 +93,11 @@ public class ContinuousRetrievalLogic {
     return retrieveByRetriever(qc, retriever.get(), config);
   }
 
-  public static void addRetrievalResultListener(RetrievalResultListener listener) {
+  public void addRetrievalResultListener(RetrievalResultListener listener) {
     ContinuousQueryDispatcher.addRetrievalResultListener(listener);
   }
 
-  public static void removeRetrievalResultListener(RetrievalResultListener listener) {
+  public void removeRetrievalResultListener(RetrievalResultListener listener) {
     ContinuousQueryDispatcher.removeRetrievalResultListener(listener);
   }
 
