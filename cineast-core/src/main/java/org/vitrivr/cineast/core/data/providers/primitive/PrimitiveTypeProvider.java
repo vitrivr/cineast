@@ -167,7 +167,7 @@ public interface PrimitiveTypeProvider
         return new IntArrayTypeProvider(arr);
       }
 
-      if (first.getClass() == Float.class || first.getClass() == Integer.class) {
+      if (first.getClass() == Float.class) {
         float[] arr = new float[list.size()];
         int i = 0;
         for (Object x : list) {
@@ -176,7 +176,7 @@ public interface PrimitiveTypeProvider
         return new FloatArrayTypeProvider(arr);
       }
 
-      if (first.getClass() == Double.class || first.getClass() == Integer.class) {
+      if (first.getClass() == Double.class) {
         float[] arr = new float[list.size()];
         int i = 0;
         for (Object x : list) {
