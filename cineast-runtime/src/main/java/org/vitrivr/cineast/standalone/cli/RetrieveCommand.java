@@ -17,8 +17,9 @@ import java.util.List;
  * @author Ralph Gasser
  * @version 1.0
  */
-@Command(name = "retrieve", description = "Retrieves objects from the database using and example object.")
+@Command(name = "retrieve", description = "Retrieves objects from the database using an example object.")
 public class RetrieveCommand implements Runnable {
+
     @Option(name = { "-s", "--segmentid" }, title = "Segment ID", description = "The ID of the segment to use an example for retrieval.")
     private String segmentId;
 
