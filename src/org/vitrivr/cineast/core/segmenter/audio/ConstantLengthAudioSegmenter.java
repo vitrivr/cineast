@@ -151,7 +151,9 @@ public class ConstantLengthAudioSegmenter implements Segmenter<AudioFrame> {
     @Override
     public void close() {
         if (this.complete.get()) {
-            this.decoder.close();
+            if(this.decoder != null){
+                this.decoder.close();
+            }
         }
     }
 
