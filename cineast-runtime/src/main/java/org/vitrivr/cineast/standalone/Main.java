@@ -29,7 +29,7 @@ public class Main {
             CLI.start(CineastCli.class);
         } else {
             com.github.rvesse.airline.Cli<Runnable> cli = new com.github.rvesse.airline.Cli<>(CineastCli.class);
-            final Runnable command = cli.parse(Arrays.copyOfRange(args, 1, args.length-1));
+            final Runnable command = cli.parse(Arrays.copyOfRange(args, 1, args.length));
             command.run();
         }
     }
