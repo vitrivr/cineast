@@ -2,14 +2,11 @@ package org.vitrivr.cineast.standalone.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import org.vitrivr.cineast.core.data.DoublePair;
 import org.vitrivr.cineast.core.features.*;
 import org.vitrivr.cineast.core.features.exporter.QueryImageExporter;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
-import org.vitrivr.cineast.standalone.config.deserializers.FeatureCategoriesDeserializer;
 
 import java.util.*;
 
@@ -119,7 +116,6 @@ public final class RetrievalRuntimeConfig {
 	}
 
 	@JsonProperty("features")
-	@JsonDeserialize(contentUsing = FeatureCategoriesDeserializer.class)
 	public List<String> getRetrieverCategories(){
 		Set<String> keys = this.retrieverCategories.keySet();
 		ArrayList<String> _return = new ArrayList<>(keys.size());
