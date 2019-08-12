@@ -67,6 +67,12 @@ public class DatabaseSetupCommand implements Runnable {
      * @param retrievers The list of {@link Retriever} classes to drop the entities for.
      */
     private void dropAllEntities(EntityCreator ec, Collection<Retriever> retrievers) {
+        ec.dropMultiMediaObjectsEntity();
+        ec.dropMetadataEntity();
+        ec.dropSegmentEntity();
+        ec.dropSegmentMetadataEntity();
+        ec.dropTagEntity();
+
         for (Retriever r : retrievers) {
             System.out.println("Dropping " + r.getClass().getSimpleName());
             r.dropPersistentLayer(() -> ec);
