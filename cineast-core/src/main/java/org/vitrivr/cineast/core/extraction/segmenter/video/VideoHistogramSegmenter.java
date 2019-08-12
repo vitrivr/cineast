@@ -132,7 +132,9 @@ public class VideoHistogramSegmenter implements Segmenter<VideoFrame> {
     @Override
     public synchronized void close() {
         if (!this.isrunning) {
-            this.decoder.close();
+            if(this.decoder != null){
+                this.decoder.close();
+            }
         }
     }
 
