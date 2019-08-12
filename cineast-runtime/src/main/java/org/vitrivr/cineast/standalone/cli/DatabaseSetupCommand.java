@@ -23,8 +23,6 @@ public class DatabaseSetupCommand implements Runnable {
     @Option(name = {"-c", "--clean"}, description = "Performs a cleanup before starting the setup; i.e. explicitly drops all entities.")
     private boolean clean = false;
 
-    private static final Logger LOGGER = LogManager.getLogger();
-
     @Override
     public void run() {
         final EntityCreator ec = Config.sharedConfig().getDatabase().getEntityCreatorSupplier().get();
@@ -35,12 +33,12 @@ public class DatabaseSetupCommand implements Runnable {
                 retrievers.addAll(Config.sharedConfig().getRetriever().getRetrieversByCategory(category).keySet());
             }
 
-            LOGGER.debug(clean);
+            System.out.println(clean);
             if (this.clean) {
                 this.dropAllEntities(ec, retrievers);
             }
 
-            LOGGER.info("Setting up basic entities...");
+            System.out.println("Setting up basic entities...");
 
             ec.createMultiMediaObjectsEntity();
             ec.createMetadataEntity();
@@ -48,17 +46,17 @@ public class DatabaseSetupCommand implements Runnable {
             ec.createSegmentEntity();
             ec.createTagEntity();
 
-            LOGGER.info("...done");
+            System.out.println("...done");
 
-            LOGGER.info("Setting up retriever classes...");
+            System.out.println("Setting up retriever classes...");
 
             for (Retriever r : retrievers) {
-                LOGGER.info("Creating entity for {}", r.getClass().getSimpleName());
+                System.out.println("Creating entity for " + r.getClass().getSimpleName());
                 r.initalizePersistentLayer(() -> ec);
             }
-            LOGGER.info("...done");
+            System.out.println("...done");
 
-            LOGGER.info("Setup complete!");
+            System.out.println("Setup complete!");
 
             /* Closes the EntityCreator. */
             ec.close();
@@ -72,7 +70,7 @@ public class DatabaseSetupCommand implements Runnable {
      * @param retrievers The list of {@link Retriever} classes to drop the entities for.
      */
     private void dropAllEntities(EntityCreator ec, Collection<Retriever> retrievers) {
-        LOGGER.warn("Dropping all entities... ");
+        System.out.println("Dropping all entities... ");
         ec.dropMultiMediaObjectsEntity();
         ec.dropMetadataEntity();
         ec.dropSegmentEntity();
@@ -80,7 +78,7 @@ public class DatabaseSetupCommand implements Runnable {
         ec.dropTagEntity();
 
         for (Retriever r : retrievers) {
-            LOGGER.info("Dropping {}", r.getClass().getSimpleName());
+            System.out.println("Dropping "+ r.getClass().getSimpleName());
             r.dropPersistentLayer(() -> ec);
         }
     }
