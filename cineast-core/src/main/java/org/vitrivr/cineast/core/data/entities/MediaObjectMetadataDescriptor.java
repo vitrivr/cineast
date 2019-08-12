@@ -113,8 +113,12 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
             .defaultCharset()));
       }
       else {
-        LOGGER.warn("Value type {} not supported, value is {} for key {}", value.getClass().getSimpleName()
-            , value.toString(), key);
+        if(value != null){
+          LOGGER.warn("Value type {} not supported, value is {} for key {}", value.getClass().getSimpleName()
+                  , value.toString(), key);
+        }else{
+          LOGGER.warn("Value was null");
+        }
         this.value = new NothingProvider();
       }
     }

@@ -54,6 +54,9 @@ public abstract class AbstractBatchedEntityWriter<T> implements AutoCloseable {
      */
     public void write(T entity) {
         final PersistentTuple tuple = this.generateTuple(entity);
+        if(tuple == null){
+            return; // One of the entity's value provider was a NothingProvider, hence nothing is written.
+        }
         if(this.batch) {
             if (this.buffer.remainingCapacity() == 0) {
                 this.flush();
