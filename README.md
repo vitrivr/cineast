@@ -2,23 +2,22 @@
 
 # Cineast
 Cineast is a multi-feature content-based mulitmedia retrieval engine. It is capable of retrieving images, audio- and video sequences as well as 3d models based on edge or color sketches, sketch-based motion queries and example objects.
-Cineast is written in Java and uses [ADAMpro](https://github.com/vitrivr/ADAMpro) as a storage backend.
+Cineast is written in Java and uses [CottontailDB](https://github.com/https://github.com/ppanopticon/cottontaildb) as a storage backend.
 
 ## Building Cineast
 Cineast can be built using [Gradle](http://gradle.org/). Building and running it is as easy as
 ```
  git clone --recursive https://github.com/vitrivr/cineast.git cineast
  cd cineast
- ./gradlew deploy
- cd build/libs
- java -jar cineast.jar
+ ./gradlew :cineast-core:generateProto
+ ./gradlew cineast-api:fatJar
+ java -jar cineast-api/build/libs/cineast-api-x.x-full.jar cineast.json
  ```
 
 ## Prerequisites
 ### System dependencies
 * git
 * JDK 8 or higher
-* Optionally: You should install [Docker](https://docs.docker.com/engine/installation/linux/ubuntulinux/) which you can use for ADAMpro.
 
 ### 3D rendering
 For 3D rendering (required in order to support 3D models) you either need a video card or Mesa 3D. The JOGL library supports both. Rendering on Headless devices has been successfully tested with Xvfb. The following steps are required to enable
