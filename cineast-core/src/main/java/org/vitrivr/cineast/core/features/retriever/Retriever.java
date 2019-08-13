@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features.retriever;
 
 import java.util.Optional;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
@@ -20,10 +21,8 @@ public interface Retriever extends PersistentOperator {
 	void finish();
 
 	/**
-	 * @return The table which this retriever uses to store its data.
+	 * @return The tables which this retriever uses to store its data.
 	 */
-	default Optional<String> getTableName(){
-		return Optional.empty();
-	}
+	List<String> getTableNames();
 	
 }

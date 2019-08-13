@@ -45,8 +45,8 @@ public class SegmentTags implements Extractor, Retriever {
   }
 
   @Override
-  public Optional<String> getTableName() {
-    return Optional.of(tableName);
+  public List<String> getTableNames() {
+    return List.of(tableName);
   }
 
   @Override

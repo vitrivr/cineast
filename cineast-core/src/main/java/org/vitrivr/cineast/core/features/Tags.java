@@ -56,8 +56,8 @@ public class Tags implements Extractor, Retriever {
   }
 
   @Override
-  public Optional<String> getTableName() {
-    return Optional.of(ENTITY_NAME);
+  public List<String> getTableNames() {
+    return List.of(ENTITY_NAME);
   }
 
   @Override

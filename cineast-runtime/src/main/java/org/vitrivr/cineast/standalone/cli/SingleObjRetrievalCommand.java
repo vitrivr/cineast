@@ -5,7 +5,6 @@ import com.github.rvesse.airline.annotations.Option;
 import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.RetrievalRuntimeConfig;
-import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 
 /**
@@ -21,21 +20,21 @@ public class SingleObjRetrievalCommand implements Runnable {
     public void run() {
         DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
 
-        System.out.println("Retrieving all columns named 'feature' for segment " + segmentId);
-        System.out.println("Errors during DB-Lookup are most probably due to that specific feature not storing its information in the 'feature' column");
-
-        final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
+        System.out.println("Retrieving all columns for segment " + segmentId);
 
         RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
 
         retrievalRuntimeConfig.getRetrieverCategories().forEach(cat -> retrievalRuntimeConfig.getRetrieversByCategory(cat).forEachEntry((retriever, weight) -> {
-            //isEmpty() only since java 11
-            if (!retriever.getTableName().isPresent()) {
-                return true;
-            }
-            System.out.println("Retrieving for feature: " + retriever.getClass().getSimpleName());
-            selector.open(retriever.getTableName().get());
-            selector.getFeatureVectorsGeneric("id", segmentId, "feature").forEach(res -> System.out.println(retriever.getTableName().get() + ": " + res));
+            System.out.println("= Retrieving for feature: " + retriever.getClass().getSimpleName() + " =");
+            retriever.getTableNames().forEach(tableName -> {
+                selector.open(tableName);
+                selector.getRows("id", segmentId).forEach(row -> {
+                    System.out.println("== New Row == ");
+                    row.entrySet().forEach(entry -> {
+                        System.out.println(tableName + "." + entry.getKey() + " - " + entry.getValue());
+                    });
+                });
+            });
             return true;
         }));
 

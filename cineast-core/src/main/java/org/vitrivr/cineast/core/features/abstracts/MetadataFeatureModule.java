@@ -60,8 +60,8 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   public abstract CorrespondenceFunction defaultCorrespondence();
 
   @Override
-  public Optional<String> getTableName() {
-    return Optional.of(featureEntityName());
+  public List<String> getTableNames() {
+    return List.of(featureEntityName());
   }
 
   /**

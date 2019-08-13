@@ -48,8 +48,8 @@ public abstract class BooleanRetriever implements Retriever {
   }
 
   @Override
-  public Optional<String> getTableName() {
-    return Optional.of(entity);
+  public List<String> getTableNames() {
+    return List.of(entity);
   }
 
   protected abstract Collection<RelationalOperator> getSupportedOperators();

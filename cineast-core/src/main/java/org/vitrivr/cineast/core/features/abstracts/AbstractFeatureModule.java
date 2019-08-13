@@ -43,11 +43,11 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
     }
 
     @Override
-    public Optional<String> getTableName() {
+    public List<String> getTableNames() {
         if (this.tableName == null) {
-            return Optional.empty();
+            return new ArrayList<>();
         }
-        return Optional.of(this.tableName);
+        return List.of(this.tableName);
     }
 
     @Override

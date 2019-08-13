@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features.exporter;
 
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -62,6 +63,11 @@ public class QueryImageExporter implements Retriever {
 
 	@Override
 	public void finish() {
+	}
+
+	@Override
+	public List<String> getTableNames() {
+		return new ArrayList<>();
 	}
 
 	@Override

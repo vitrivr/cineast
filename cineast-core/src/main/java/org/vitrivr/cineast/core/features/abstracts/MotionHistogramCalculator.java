@@ -47,8 +47,8 @@ public abstract class MotionHistogramCalculator implements Retriever {
   }
 
   @Override
-  public Optional<String> getTableName() {
-    return Optional.of(tableName);
+  public List<String> getTableNames() {
+    return List.of(tableName);
   }
 
   private static int getidx(int subdiv, float x, float y) {
