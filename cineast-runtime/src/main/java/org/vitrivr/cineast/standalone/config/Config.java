@@ -95,6 +95,9 @@ public class Config {
 
     @JsonProperty
     public CacheConfig getCache() {
+      if(cache == null){
+          cache = new CacheConfig();
+      }
         return cache;
     }
     public void setCache(CacheConfig cache) {
