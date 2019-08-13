@@ -55,10 +55,10 @@ public abstract class DataImportHandler {
       try {
         long start = System.currentTimeMillis();
         final Copier copier = new Copier(this.entityName, this.importer);
-        LOGGER.info("Starting progress on: {}, task {}", this.entityName, taskName);
+        LOGGER.info("Starting progress on entity: {}, task {}", this.entityName, taskName);
         copier.copyBatched(DataImportHandler.this.batchsize);
         copier.close();
-        LOGGER.info("Completed import of: {}, task {}", this.entityName, taskName);
+        LOGGER.info("Completed import of entity: {}, task {}", this.entityName, taskName);
         long stop = System.currentTimeMillis();
         ImportTaskMonitor.reportExecutionTime(taskName, stop - start);
         Thread.sleep(1_000);

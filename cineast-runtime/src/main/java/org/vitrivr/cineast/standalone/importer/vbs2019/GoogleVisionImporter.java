@@ -40,7 +40,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
    */
   public GoogleVisionImporter(Path input, GoogleVisionCategory targetCategory, boolean importTagsFt) throws IOException {
     this.importTagsFt = importTagsFt;
-    LOGGER.info("Starting Importer for path {} and category {}", input, targetCategory);
+    LOGGER.info("Starting Importer for path {}, category {} and importTags {}", input, targetCategory, importTagsFt);
     this.targetCategory = targetCategory;
     mapper = new ObjectMapper();
     parser = mapper.getFactory().createParser(input.toFile());
