@@ -29,7 +29,8 @@ public class SingleObjRetrievalCommand implements Runnable {
         RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
 
         retrievalRuntimeConfig.getRetrieverCategories().forEach(cat -> retrievalRuntimeConfig.getRetrieversByCategory(cat).forEachEntry((retriever, weight) -> {
-            if (retriever.getTableName().isEmpty()) {
+            //isEmpty() only since java 11
+            if (!retriever.getTableName().isPresent()) {
                 return true;
             }
             System.out.println("Retrieving for feature: " + retriever.getClass().getSimpleName());
