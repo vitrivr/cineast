@@ -169,6 +169,26 @@ public class CottontailSelector implements DBSelector {
   }
 
   @Override
+  public List<PrimitiveTypeProvider> getFeatureVectorsGeneric(String fieldName, String value, String vectorName) {
+
+    Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, vectorName);
+    Where where = CottontailMessageBuilder.atomicWhere(fieldName, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
+
+    List<QueryResponseMessage> results = this.cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null), ""));
+
+    List<PrimitiveTypeProvider> _return = new ArrayList<>();
+
+    for (QueryResponseMessage response : results) {
+      for (Tuple t : response.getResultsList()) {
+          _return.add(CottontailMessageBuilder.fromData(t.getDataMap().get(vectorName)));
+      }
+    }
+
+    return _return;
+
+  }
+
+  @Override
   public List<Map<String, PrimitiveTypeProvider>> getRows(
       String fieldName, Iterable<String> values) {
 
