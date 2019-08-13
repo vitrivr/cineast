@@ -45,6 +45,11 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
    */
   protected SimpleFulltextFeatureDescriptorWriter writer;
 
+  @Override
+  public Optional<String> getTableName() {
+    return Optional.of(tableName);
+  }
+
   /**
    * Constructor for {@link SolrTextRetriever}
    *

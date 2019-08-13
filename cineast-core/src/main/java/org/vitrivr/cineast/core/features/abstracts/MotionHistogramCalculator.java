@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
 import georegression.struct.point.Point2D_F32;
+import java.util.Optional;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig.Distance;
@@ -43,6 +44,11 @@ public abstract class MotionHistogramCalculator implements Retriever {
   public void init(DBSelectorSupplier supply) {
     this.selector = supply.get();
     this.selector.open(tableName);
+  }
+
+  @Override
+  public Optional<String> getTableName() {
+    return Optional.of(tableName);
   }
 
   private static int getidx(int subdiv, float x, float y) {

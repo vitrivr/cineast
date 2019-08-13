@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features.retriever;
 
+import java.util.Optional;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -17,5 +18,12 @@ public interface Retriever extends PersistentOperator {
 	List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc);
 
 	void finish();
+
+	/**
+	 * @return The table which this retriever uses to store its data.
+	 */
+	default Optional<String> getTableName(){
+		return Optional.empty();
+	}
 	
 }
