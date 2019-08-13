@@ -109,6 +109,8 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
    * @param mediaType can be null. if provided, will be used for all given items
    */
   public GenericExtractionItemHandler(ExtractionContainerProvider pathProvider, IngestConfig context, MediaType mediaType) {
+    this.context = context;
+
     this.pathProvider = pathProvider;
     this.mediaType = mediaType;
 
@@ -145,7 +147,6 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
     this.handlers.forEach((key, value) -> handlerCache.put(key, ImmutablePair.of(value.getLeft().get(), value.getRight().get())));
 
-    this.context = context;
   }
 
   @Override

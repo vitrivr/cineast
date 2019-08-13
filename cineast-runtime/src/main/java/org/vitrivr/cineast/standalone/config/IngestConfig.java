@@ -71,7 +71,7 @@ public final class IngestConfig implements ExtractionContextProvider {
      *
      */
     @JsonCreator
-    public IngestConfig(@JsonProperty(value = "type", required = true) MediaType type,
+    public IngestConfig(@JsonProperty(value = "type") MediaType type,
                         @JsonProperty(value = "input", required = true) InputConfig input,
                         @JsonProperty(value = "extractors") List<ExtractorConfig> extractors,
                         @JsonProperty(value = "exporters") List<ExtractorConfig> exporters,
@@ -143,7 +143,7 @@ public final class IngestConfig implements ExtractionContextProvider {
         this.cacheConfig = cacheConfig;
     }
 
-    @JsonProperty(required = true)
+    @JsonProperty
     public MediaType getType() {
         return type;
     }
