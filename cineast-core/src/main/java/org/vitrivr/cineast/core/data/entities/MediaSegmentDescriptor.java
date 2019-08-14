@@ -2,6 +2,8 @@ package org.vitrivr.cineast.core.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
 
@@ -113,7 +115,7 @@ public class MediaSegmentDescriptor implements ExistenceCheck {
 
     @Override
     public String toString() {
-        return "MediaSegmentDescriptor(" + segmentId + ")";
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
 
 
