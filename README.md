@@ -45,3 +45,19 @@ For 3D rendering (required in order to support 3D models) you either need a vide
 The -3d option will perform a 3D test. If it succeeds, cineast should generate a PNG image depicting two coloured
 triangles on a black background.
 
+## Contribution
+
+> Contributions are always welcome.
+
+### Versioning
+
+Cineast uses [semantic versioning](https://semver.org). See [the releases page](https://github.com/vitrivr/cineast/releases).
+
+### Code Style
+
+Cineast primarily uses the [Google Java Styleguide](https://google.github.io/styleguide/javaguide.html).
+Please keep the changes you do in compliance with it.
+
+To automatically apply the styleguide in [IntelliJ IDEA](https://www.jetbrains.com/idea/) import the [styleguide](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml) in _File_ -> _Settings_ -> _Editor_ -> _Code Style_ -> _Java_ and import the [scheme](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml) via the gear icon.
+
+You can also use [Eclipse](https://www.eclipse.org/) for development and use Google's [styleguide for eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml).
