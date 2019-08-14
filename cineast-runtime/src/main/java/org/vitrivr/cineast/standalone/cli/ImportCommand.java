@@ -79,11 +79,11 @@ public class ImportCommand implements Runnable {
                 handler.doImport(path);
                 break;
             case VBS2020:
-                AudioTranscriptImportHandler audioHandler = new AudioTranscriptImportHandler(1, this.batchsize);
+                AudioTranscriptImportHandler audioHandler = new AudioTranscriptImportHandler(1, 15_000);
                 audioHandler.doImport(path.resolve("audiomerge.json"));
-                CaptionTextImportHandler captionHandler = new CaptionTextImportHandler(1, this.batchsize);
+                CaptionTextImportHandler captionHandler = new CaptionTextImportHandler(1, 25_000);
                 captionHandler.doImport(path.resolve("captions.json"));
-                doVisionImport(path.resolve("visionmerge.json"));
+                doVisionImport(path.resolve("gvision.json"));
                 ObjectMetadataImportHandler metaHandler = new ObjectMetadataImportHandler(1, this.batchsize);
                 metaHandler.doImport(path.resolve("metamerge.json"));
                 break;
@@ -94,11 +94,11 @@ public class ImportCommand implements Runnable {
     private void doVisionImport(Path path) {
         List<GoogleVisionImportHandler> handlers = new ArrayList<>();
         for (GoogleVisionCategory category : GoogleVisionCategory.values()) {
-            GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, batchsize, category, false);
+            GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, 30_000, category, false);
             _handler.doImport(path);
             handlers.add(_handler);
             if (category == GoogleVisionCategory.LABELS || category == GoogleVisionCategory.WEB) {
-                GoogleVisionImportHandler _handlerTrue = new GoogleVisionImportHandler(1, batchsize, category, true);
+                GoogleVisionImportHandler _handlerTrue = new GoogleVisionImportHandler(1, 30_000, category, true);
                 _handlerTrue.doImport(path);
                 handlers.add(_handlerTrue);
             }
