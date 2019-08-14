@@ -16,35 +16,35 @@ import org.vitrivr.cineast.standalone.config.RetrievalRuntimeConfig;
 @Command(name = "retrieve-single", description = "Retrieves all information from the database for a given segment / object.")
 public class SingleObjRetrievalCommand implements Runnable {
 
-    @Option(name = {"-s", "--segmentid"}, title = "Segment ID", description = "The ID of the segment to use an example for retrieval.")
-    private String segmentId;
+  @Option(name = {"-s", "--segmentid"}, title = "Segment ID", description = "The ID of the segment to use an example for retrieval.")
+  private String segmentId;
 
-    public void run() {
-        DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
+  public void run() {
+    DBSelector selector = Config.sharedConfig().getDatabase().getSelectorSupplier().get();
 
-        System.out.println("= Retrieving segment information =");
-        MediaSegmentReader segmentReader = new MediaSegmentReader(selector);
-        segmentReader.lookUpSegment(segmentId).ifPresent(System.out::println);
+    System.out.println("= Retrieving segment information =");
+    MediaSegmentReader segmentReader = new MediaSegmentReader(selector);
+    segmentReader.lookUpSegment(segmentId).ifPresent(System.out::println);
 
-        System.out.println("= Retrieving metadata =");
-        MediaSegmentMetadataReader reader = new MediaSegmentMetadataReader(selector);
-        reader.lookupMultimediaMetadata(segmentId).forEach(System.out::println);
+    System.out.println("= Retrieving metadata =");
+    MediaSegmentMetadataReader reader = new MediaSegmentMetadataReader(selector);
+    reader.lookupMultimediaMetadata(segmentId).forEach(System.out::println);
 
-        System.out.println("Retrieving all columns for segment " + segmentId);
-        RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
+    System.out.println("Retrieving all columns for segment " + segmentId);
+    RetrievalRuntimeConfig retrievalRuntimeConfig = Config.sharedConfig().getRetriever();
 
-        retrievalRuntimeConfig.getRetrieverCategories().forEach(cat -> retrievalRuntimeConfig.getRetrieversByCategory(cat).forEachEntry((retriever, weight) -> {
-            System.out.println("= Retrieving for feature: " + retriever.getClass().getSimpleName() + " =");
-            retriever.getTableNames().forEach(tableName -> {
-                selector.open(tableName);
-                selector.getRows("id", segmentId).forEach(row -> {
-                    System.out.println("== New row == ");
-                    row.forEach((key, value) -> System.out.println(tableName + "." + key + " - " + value));
-                });
-            });
-            return true;
-        }));
+    retrievalRuntimeConfig.getRetrieverCategories().forEach(cat -> retrievalRuntimeConfig.getRetrieversByCategory(cat).forEachEntry((retriever, weight) -> {
+      System.out.println("= Retrieving for feature: " + retriever.getClass().getSimpleName() + " =");
+      retriever.getTableNames().forEach(tableName -> {
+        selector.open(tableName);
+        selector.getRows("id", segmentId).forEach(row -> {
+          System.out.println("== New row == ");
+          row.forEach((key, value) -> System.out.println(tableName + "." + key + " - " + value));
+        });
+      });
+      return true;
+    }));
 
-        System.out.println("Done");
-    }
+    System.out.println("Done");
+  }
 }
