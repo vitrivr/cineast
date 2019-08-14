@@ -137,7 +137,7 @@
     "uiLocation": "dist",
     "thumbnailLocation": "thumbnails",
     "objectLocation": "objects"
-  }
+  },
 
   "monitoring":{
     "enablePrometheus": true,
