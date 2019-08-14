@@ -86,6 +86,8 @@ public class ImportCommand implements Runnable {
                 doVisionImport(path.resolve("gvision.json"));
                 ObjectMetadataImportHandler metaHandler = new ObjectMetadataImportHandler(1, this.batchsize);
                 metaHandler.doImport(path.resolve("metamerge.json"));
+                TagImportHandler tagHandler = new TagImportHandler(1, 50_000);
+                tagHandler.doImport(path.resolve("tags.json"));
                 break;
         }
         System.out.println(String.format("Completed import of type %s for '%s'.", this.type.toString(), this.input));
@@ -94,14 +96,14 @@ public class ImportCommand implements Runnable {
     private void doVisionImport(Path path) {
         List<GoogleVisionImportHandler> handlers = new ArrayList<>();
         for (GoogleVisionCategory category : GoogleVisionCategory.values()) {
-            GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, 30_000, category, false);
+            GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, 40_000, category, false);
             _handler.doImport(path);
             handlers.add(_handler);
-            /*if (category == GoogleVisionCategory.LABELS || category == GoogleVisionCategory.WEB) {
-                GoogleVisionImportHandler _handlerTrue = new GoogleVisionImportHandler(1, 30_000, category, true);
+            if (category == GoogleVisionCategory.LABELS || category == GoogleVisionCategory.WEB) {
+                GoogleVisionImportHandler _handlerTrue = new GoogleVisionImportHandler(1, 40_000, category, true);
                 _handlerTrue.doImport(path);
                 handlers.add(_handlerTrue);
-            }*/
+            }
         }
         handlers.forEach(GoogleVisionImportHandler::waitForCompletion);
     }

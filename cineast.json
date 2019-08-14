@@ -80,6 +80,9 @@
       "tagsft": [
         {"feature": "TagsFtSearch", "weight": 1.0}
       ],
+      "tags": [
+        {"feature": "SegmentTags", "weight": 1.0}
+      ],
       "ocr": [
         {"feature": "OCRSearch", "weight": 1.0}
       ],
