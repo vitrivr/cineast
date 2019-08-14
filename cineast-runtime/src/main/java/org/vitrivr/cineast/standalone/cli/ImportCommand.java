@@ -86,7 +86,7 @@ public class ImportCommand implements Runnable {
                 doVisionImport(path.resolve("gvision.json"));
                 ObjectMetadataImportHandler metaHandler = new ObjectMetadataImportHandler(1, this.batchsize);
                 metaHandler.doImport(path.resolve("metamerge.json"));
-                TagImportHandler tagHandler = new TagImportHandler(1, 50_000);
+                TagImportHandler tagHandler = new TagImportHandler(1, 35_000);
                 tagHandler.doImport(path.resolve("tags.json"));
                 break;
         }
