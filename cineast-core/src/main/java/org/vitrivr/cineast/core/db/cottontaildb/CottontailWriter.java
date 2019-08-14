@@ -63,8 +63,8 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
     @Override
     public boolean persist(List<PersistentTuple> tuples) {
         InsertMessage im = InsertMessage.newBuilder().setEntity(this.entity).addAllTuple(tuples.stream().map(this::getPersistentRepresentation).collect(Collectors.toList())).build();
-        if (im.getSerializedSize() > 2_000_000) {
-            LOGGER.debug("inserting im with size {}, which is above 2MB. Although max message size is configurable, anything above 10MB is pushing the limits of proto", im.getSerializedSize());
+        if (im.getSerializedSize() > 3_000_000) {
+            LOGGER.debug("inserting im with size {}, which is above 3MB. Although max message size is configurable and set to 4MB, anything above 10MB is pushing the limits of proto", im.getSerializedSize());
         }
         return this.cottontail.insertBlocking(im).getSuccess();
     }

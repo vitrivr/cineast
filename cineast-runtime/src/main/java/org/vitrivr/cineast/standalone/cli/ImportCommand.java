@@ -97,11 +97,11 @@ public class ImportCommand implements Runnable {
             GoogleVisionImportHandler _handler = new GoogleVisionImportHandler(1, 30_000, category, false);
             _handler.doImport(path);
             handlers.add(_handler);
-            if (category == GoogleVisionCategory.LABELS || category == GoogleVisionCategory.WEB) {
+            /*if (category == GoogleVisionCategory.LABELS || category == GoogleVisionCategory.WEB) {
                 GoogleVisionImportHandler _handlerTrue = new GoogleVisionImportHandler(1, 30_000, category, true);
                 _handlerTrue.doImport(path);
                 handlers.add(_handlerTrue);
-            }
+            }*/
         }
         handlers.forEach(GoogleVisionImportHandler::waitForCompletion);
     }
