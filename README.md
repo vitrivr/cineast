@@ -10,8 +10,8 @@ Cineast can be built using [Gradle](http://gradle.org/). Building and running it
  git clone --recursive https://github.com/vitrivr/cineast.git cineast
  cd cineast
  ./gradlew :cineast-core:generateProto
- ./gradlew cineast-api:fatJar
- java -jar cineast-api/build/libs/cineast-api-x.x-full.jar cineast.json
+ ./gradlew cineast-runtime:fatJar
+ java -jar cineast-runtime/build/libs/cineast-runtime-x.x-full.jar cineast.json
  ```
 
 ## Prerequisites
@@ -56,8 +56,8 @@ Cineast uses [semantic versioning](https://semver.org). See [the releases page](
 ### Code Style
 
 Cineast primarily uses the [Google Java Styleguide](https://google.github.io/styleguide/javaguide.html).
-Please keep the changes you do in compliance with it.
+Please use the file supplied in the `docs/` folder
 
-To automatically apply the styleguide in [IntelliJ IDEA](https://www.jetbrains.com/idea/) import the [styleguide](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml) in _File_ -> _Settings_ -> _Editor_ -> _Code Style_ -> _Java_ and import the [scheme](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml) via the gear icon.
+To automatically apply the styleguide in [IntelliJ IDEA](https://www.jetbrains.com/idea/) go to_File_ -> _Settings_ -> _Editor_ -> _Code Style_ -> _Java_ and import the supplied file via the gear icon.
 
 You can also use [Eclipse](https://www.eclipse.org/) for development and use Google's [styleguide for eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml).

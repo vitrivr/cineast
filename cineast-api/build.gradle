@@ -20,7 +20,7 @@ distributions {
 task fatJar(type: Jar) {
     archiveClassifier = 'full'
     manifest {
-        attributes 'Main-Class': 'org.vitrivr.cineast.standalone.Main'
+        attributes 'Main-Class': 'org.vitrivr.cineast.api.Main'
         attributes 'Multi-Release': 'true'
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
