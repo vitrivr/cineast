@@ -1,16 +1,21 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.InsertMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.db.AbstractPersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.RelationalOperator;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
@@ -18,7 +23,7 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
 
     private final CottontailWrapper cottontail;
 
-    public CottontailWriter(CottontailWrapper wrapper){
+    public CottontailWriter(CottontailWrapper wrapper) {
         this.cottontail = wrapper;
     }
 
@@ -44,12 +49,7 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
         Projection projection = CottontailMessageBuilder.projection(Operation.SELECT, key); //TODO replace with exists projection
         Where where = CottontailMessageBuilder.atomicWhere(key, RelationalOperator.EQ, CottontailMessageBuilder.toData(value));
 
-        List<QueryResponseMessage> result = cottontail
-                .query(
-                        CottontailMessageBuilder.queryMessage(
-                                CottontailMessageBuilder.query(entity, projection, where, null), ""
-                        )
-                );
+        List<QueryResponseMessage> result = cottontail.query(CottontailMessageBuilder.queryMessage(CottontailMessageBuilder.query(entity, projection, where, null), ""));
 
         if (result.isEmpty()) {
             return false;
@@ -63,6 +63,9 @@ public class CottontailWriter extends AbstractPersistencyWriter<Tuple> {
     @Override
     public boolean persist(List<PersistentTuple> tuples) {
         InsertMessage im = InsertMessage.newBuilder().setEntity(this.entity).addAllTuple(tuples.stream().map(this::getPersistentRepresentation).collect(Collectors.toList())).build();
+        if (im.getSerializedSize() > 2_000_000) {
+            LOGGER.debug("inserting im with size {}, which is above 2MB. Although max message size is configurable, anything above 10MB is pushing the limits of proto", im.getSerializedSize());
+        }
         return this.cottontail.insertBlocking(im).getSuccess();
     }
 
