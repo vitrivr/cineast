@@ -2,6 +2,3 @@
 	path = cineast-core/cottontaildb-proto
 	url = https://github.com/ppanopticon/cottontaildb-proto.git
 
-[submodule "cineast-core/adampro-grpc"]
-	path = cineast-core/adampro-grpc
-	url = https://github.com/vitrivr/ADAMpro-Protobuf.git

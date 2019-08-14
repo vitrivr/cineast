@@ -185,7 +185,11 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
 
   @JsonProperty
   public String getValue() {
-    return this.value.getString();
+    if(this.value instanceof NothingProvider){
+      return null;
+    }else{
+      return this.value.getString();
+    }
   }
 
   @JsonIgnore

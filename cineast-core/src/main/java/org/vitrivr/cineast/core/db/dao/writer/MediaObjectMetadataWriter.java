@@ -39,6 +39,6 @@ public class MediaObjectMetadataWriter extends AbstractBatchedEntityWriter<Media
             return null;
         }
         return this.writer.generateTuple(entity.getObjectId(), entity.getDomain(), entity.getKey(),
-            entity.getValue());
+                entity.getValue());
     }
 }
