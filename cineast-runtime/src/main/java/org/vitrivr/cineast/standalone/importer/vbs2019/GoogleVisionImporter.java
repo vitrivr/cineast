@@ -5,6 +5,14 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
@@ -15,11 +23,6 @@ import org.vitrivr.cineast.core.features.TagsFtSearch;
 import org.vitrivr.cineast.core.importer.Importer;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionTuple;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
 
@@ -40,7 +43,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
    */
   public GoogleVisionImporter(Path input, GoogleVisionCategory targetCategory, boolean importTagsFt) throws IOException {
     this.importTagsFt = importTagsFt;
-    LOGGER.info("Starting Importer for path {} and category {}", input, targetCategory);
+    LOGGER.info("Starting Importer for path {}, category {} and importTags {}", input, targetCategory, importTagsFt);
     this.targetCategory = targetCategory;
     mapper = new ObjectMapper();
     parser = mapper.getFactory().createParser(input.toFile());
@@ -205,7 +208,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
           map.put("id", id);
           map.put("tagid", PrimitiveTypeProvider.fromObject(data.label.get().labelId));
           map.put("score", PrimitiveTypeProvider.fromObject(Math.min(1, data.label.get().score)));
-          tag = Optional.of(new CompleteTag(data.label.get().labelId, data.label.get().description, data.label.get().description));
+            tag = Optional.of(new CompleteTag(data.label.get().labelId, data.label.get().description, data.label.get().description));
         }
         break;
       case OCR:

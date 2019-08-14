@@ -113,8 +113,12 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
             .defaultCharset()));
       }
       else {
-        LOGGER.warn("Value type {} not supported, value is {} for key {}", value.getClass().getSimpleName()
-            , value.toString(), key);
+        if(value != null){
+          LOGGER.warn("Value type {} not supported, value is {} for key {}", value.getClass().getSimpleName()
+                  , value.toString(), key);
+        }else{
+          LOGGER.warn("Value was null");
+        }
         this.value = new NothingProvider();
       }
     }
@@ -181,7 +185,11 @@ public class MediaObjectMetadataDescriptor implements ExistenceCheck {
 
   @JsonProperty
   public String getValue() {
-    return this.value.getString();
+    if(this.value instanceof NothingProvider){
+      return null;
+    }else{
+      return this.value.getString();
+    }
   }
 
   @JsonIgnore

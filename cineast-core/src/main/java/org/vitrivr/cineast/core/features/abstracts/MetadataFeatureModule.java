@@ -59,6 +59,11 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
   /** Returns the default correspondence function if none is set. */
   public abstract CorrespondenceFunction defaultCorrespondence();
 
+  @Override
+  public List<String> getTableNames() {
+    return List.of(featureEntityName());
+  }
+
   /**
    * Returns an {@link Optional} containing the extracted feature data from the segment container,
    * if available, otherwise an empty {@code Optional}.

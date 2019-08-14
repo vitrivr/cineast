@@ -78,10 +78,19 @@
         {"feature": "HPCP12Shingle", "weight": 1.0}
       ],
       "tagsft": [
+        {"feature": "TagsFtSearch", "weight": 1.0}
+      ],
+      "tags": [
         {"feature": "SegmentTags", "weight": 1.0}
       ],
       "ocr": [
         {"feature": "OCRSearch", "weight": 1.0}
+      ],
+      "asr": [
+        {"feature":  "AudioTranscriptionSearch", "weight":  1.0}
+      ],
+      "scenecaption": [
+        {"feature":  "DescriptionTextSearch", "weight":  1.0}
       ]
     }
   },
@@ -131,11 +140,6 @@
     "uiLocation": "dist",
     "thumbnailLocation": "thumbnails",
     "objectLocation": "objects"
-  },
-
-  "visualization": {
-    "cacheEnabled": false,
-    "cachePath": "cache/art/"
   },
 
   "monitoring":{

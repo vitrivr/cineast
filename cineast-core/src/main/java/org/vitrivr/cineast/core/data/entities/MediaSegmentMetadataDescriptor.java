@@ -3,15 +3,20 @@ package org.vitrivr.cineast.core.data.entities;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.nio.charset.Charset;
+import java.util.Map;
+import javax.annotation.Nullable;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
-import org.vitrivr.cineast.core.data.providers.primitive.*;
+import org.vitrivr.cineast.core.data.providers.primitive.NothingProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.data.providers.primitive.StringProvider;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.db.dao.reader.DatabaseLookupException;
-
-import javax.annotation.Nullable;
-import java.nio.charset.Charset;
-import java.util.Map;
 
 public class MediaSegmentMetadataDescriptor implements ExistenceCheck {
 
@@ -48,11 +53,7 @@ public class MediaSegmentMetadataDescriptor implements ExistenceCheck {
      * analogous to {@link MediaObjectMetadataDescriptor}
      */
     @JsonCreator
-    public MediaSegmentMetadataDescriptor(
-            @JsonProperty(value = "segmentId", defaultValue = "") String segmentId,
-            @JsonProperty("domain") String domain, @JsonProperty("key") String key,
-            @JsonProperty("value") @Nullable Object value,
-            @JsonProperty(value = "exists", defaultValue = "false") boolean exists) {
+    public MediaSegmentMetadataDescriptor(@JsonProperty(value = "segmentId", defaultValue = "") String segmentId, @JsonProperty("domain") String domain, @JsonProperty("key") String key, @JsonProperty("value") @Nullable Object value, @JsonProperty(value = "exists", defaultValue = "false") boolean exists) {
         this.segmentId = segmentId;
         this.key = key;
         this.domain = domain;
@@ -67,11 +68,9 @@ public class MediaSegmentMetadataDescriptor implements ExistenceCheck {
                 break outer;
             }
             if (value instanceof com.drew.metadata.StringValue) {
-                this.value = new StringTypeProvider(((com.drew.metadata.StringValue) value).toString(Charset
-                        .defaultCharset()));
+                this.value = new StringTypeProvider(((com.drew.metadata.StringValue) value).toString(Charset.defaultCharset()));
             } else {
-                LOGGER.warn("Value type {} not supported, value is {} for key {}", value.getClass().getSimpleName()
-                        , value.toString(), key);
+                LOGGER.warn("Value type {} not supported, value is {} for key {}", value.getClass().getSimpleName(), value.toString(), key);
                 this.value = new NothingProvider();
             }
         }
@@ -80,38 +79,30 @@ public class MediaSegmentMetadataDescriptor implements ExistenceCheck {
     /**
      * analogous to {@link MediaObjectMetadataDescriptor}
      */
-    public MediaSegmentMetadataDescriptor(Map<String, PrimitiveTypeProvider> data)
-            throws DatabaseLookupException {
-        if (data.get(FIELDNAMES[0]) != null
-                && data.get(FIELDNAMES[0]).getType() == ProviderDataType.STRING) {
+    public MediaSegmentMetadataDescriptor(Map<String, PrimitiveTypeProvider> data) throws DatabaseLookupException {
+        if (data.get(FIELDNAMES[0]) != null && data.get(FIELDNAMES[0]).getType() == ProviderDataType.STRING) {
             this.segmentId = data.get(FIELDNAMES[0]).getString();
         } else {
-            throw new DatabaseLookupException(
-                    "Could not read column '" + FIELDNAMES[0] + "' for MediaSegmentMetadataDescriptor.");
+            throw new DatabaseLookupException("Could not read column '" + FIELDNAMES[0] + "' for MediaSegmentMetadataDescriptor.");
         }
 
-        if (data.get(FIELDNAMES[1]) != null
-                && data.get(FIELDNAMES[1]).getType() == ProviderDataType.STRING) {
+        if (data.get(FIELDNAMES[1]) != null && data.get(FIELDNAMES[1]).getType() == ProviderDataType.STRING) {
             this.domain = data.get(FIELDNAMES[1]).getString();
         } else {
-            throw new DatabaseLookupException(
-                    "Could not read column '" + FIELDNAMES[1] + "' for MediaSegmentMetadataDescriptor.");
+            throw new DatabaseLookupException("Could not read column '" + FIELDNAMES[1] + "' for MediaSegmentMetadataDescriptor.");
         }
 
-        if (data.get(FIELDNAMES[2]) != null
-                && data.get(FIELDNAMES[2]).getType() == ProviderDataType.STRING) {
+        if (data.get(FIELDNAMES[2]) != null && data.get(FIELDNAMES[2]).getType() == ProviderDataType.STRING) {
             this.key = data.get(FIELDNAMES[2]).getString();
         } else {
-            throw new DatabaseLookupException(
-                    "Could not read column '" + FIELDNAMES[2] + "' for MediaSegmentMetadataDescriptor.");
+            throw new DatabaseLookupException("Could not read column '" + FIELDNAMES[2] + "' for MediaSegmentMetadataDescriptor.");
         }
 
         this.value = data.get(FIELDNAMES[3]);
         this.exists = true;
     }
 
-    public static MediaSegmentMetadataDescriptor of(String segmentId, String domain, String key,
-                                                    @Nullable Object value) {
+    public static MediaSegmentMetadataDescriptor of(String segmentId, String domain, String key, @Nullable Object value) {
         return new MediaSegmentMetadataDescriptor(segmentId, domain, key, value, false);
     }
 
@@ -143,5 +134,10 @@ public class MediaSegmentMetadataDescriptor implements ExistenceCheck {
     @Override
     public boolean exists() {
         return this.exists;
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
 }

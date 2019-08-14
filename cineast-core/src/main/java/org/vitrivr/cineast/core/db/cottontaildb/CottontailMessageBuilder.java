@@ -163,6 +163,10 @@ public class CottontailMessageBuilder {
       return dataBuilder.setDoubleData((double) o).build();
     }
 
+    if(o instanceof Long){
+      return dataBuilder.setLongData((long) o).build();
+    }
+
     if (o instanceof String) {
       return dataBuilder.setStringData((String) o).build();
     }

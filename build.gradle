@@ -65,3 +65,14 @@ project(':cineast-api') {
     }
 }
 
+apply plugin: "idea"
+
+idea {
+    module {
+        downloadJavadoc = true
+
+        excludeDirs += file('data')
+        excludeDirs += file('thumbnails')
+    }
+}
+

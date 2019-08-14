@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import gnu.trove.iterator.TObjectFloatIterator;
 import gnu.trove.map.hash.TObjectFloatHashMap;
+import java.util.Optional;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.entities.TagInstance;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -41,6 +42,11 @@ public class SegmentTags implements Extractor, Retriever {
 
   public SegmentTags() {
     this("features_segmenttags");
+  }
+
+  @Override
+  public List<String> getTableNames() {
+    return List.of(tableName);
   }
 
   @Override
