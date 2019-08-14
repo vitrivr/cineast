@@ -8,6 +8,7 @@ import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
+import com.googlecode.javaewah.datastructure.BitSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -168,6 +169,16 @@ public class CottontailMessageBuilder {
 
     if (o instanceof float[]) {
       return dataBuilder.setVectorData(toVector((float[]) o)).build();
+    }
+
+    if (o instanceof BitSet) {
+      final float[] vector = new float[((BitSet)o).size()];
+      for (int i = 0; i<((BitSet) o).size(); i++) {
+        if (((BitSet) o).get(i)) {
+          vector[i] = 1.0f;
+        }
+      }
+      return dataBuilder.setVectorData(toVector(vector)).build();
     }
 
     if (o instanceof ReadableFloatVector) {
