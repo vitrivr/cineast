@@ -52,11 +52,13 @@ public class QueryComponent {
   public static HashMap<String, ArrayList<QueryContainer>> toCategoryMap(Collection<QueryComponent> components) {
     final HashMap<String, ArrayList<QueryContainer>> categoryMap = new HashMap<>();
     if (components.isEmpty()) {
-      LOGGER.warn("Empty components collection");
+      LOGGER.warn("Empty components collection, returning empty map");
+      return categoryMap;
     }
     for (QueryComponent component : components) {
       if (component.getTerms().isEmpty()) {
         LOGGER.warn("No terms for component {}", component);
+        continue;
       }
       for (QueryTerm term : component.getTerms()) {
         if (term.getCategories().isEmpty()) {

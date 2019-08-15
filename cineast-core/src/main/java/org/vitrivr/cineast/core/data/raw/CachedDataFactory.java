@@ -24,6 +24,8 @@ import java.util.Comparator;
  * This factory class generates {@link ByteData} objects based on a heuristic involving the size of the allocated data chunks.
  */
 public class CachedDataFactory {
+
+    public static final CachedDataFactory DEFAULT_INSTANCE = new CachedDataFactory(new CacheConfig());
     /** Logger instance used to log errors. */
     private static final Logger LOGGER = LogManager.getLogger();
 

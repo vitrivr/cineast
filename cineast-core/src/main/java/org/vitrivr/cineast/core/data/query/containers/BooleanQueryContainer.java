@@ -23,12 +23,7 @@ public class BooleanQueryContainer extends QueryContainer {
   private ArrayList<BooleanExpression> expressions = new ArrayList<>();
 
   public BooleanQueryContainer(String data) {
-    this(
-        DataURLParser.dataURLtoJsonNode(data)
-            .orElseThrow(
-                () ->
-                    new IllegalArgumentException(
-                        "Failed to parse the provided Boolean expression data.")));
+    this(DataURLParser.dataURLtoJsonNode(data).orElseThrow(() -> new IllegalArgumentException("Failed to parse the provided Boolean expression data.")));
   }
 
   public BooleanQueryContainer(JsonNode json) {

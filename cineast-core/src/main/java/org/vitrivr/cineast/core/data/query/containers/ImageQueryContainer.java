@@ -34,6 +34,10 @@ public class ImageQueryContainer extends QueryContainer {
 		this.img = factory.newInMemoryMultiImage(image);
 	}
 
+	public ImageQueryContainer(String data){
+		this(data, CachedDataFactory.DEFAULT_INSTANCE);
+	}
+
 	public ImageQueryContainer(MultiImage img){
 		this.img = img;
 	}

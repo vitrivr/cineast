@@ -47,6 +47,10 @@ public class ModelQueryContainer extends QueryContainer {
         }
     }
 
+    public ModelQueryContainer(String data){
+        this(data, CachedDataFactory.DEFAULT_INSTANCE);
+    }
+
     /**
      * Constructor for {@link ModelQueryContainer} with a Mesh. Used for Query-by-Example.
      *

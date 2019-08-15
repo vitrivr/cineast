@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.api.messages.query;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.query.containers.*;
 
 import java.lang.reflect.Constructor;
@@ -47,6 +49,8 @@ public enum QueryTermType {
 
     BOOLEAN(BooleanQueryContainer.class);
 
+    private static final Logger LOGGER = LogManager.getLogger();
+
     /** Instance of the {@link QueryContainer} class that represents this {@link QueryTermType}. */
     private final Class<? extends QueryContainer> c;
 
@@ -79,6 +83,7 @@ public enum QueryTermType {
             Constructor<? extends QueryContainer> constructor = this.c.getConstructor(String.class);
             return Optional.of(constructor.newInstance(data));
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            LOGGER.error("Error while constructing query container", e);
             return Optional.empty();
         }
     }
