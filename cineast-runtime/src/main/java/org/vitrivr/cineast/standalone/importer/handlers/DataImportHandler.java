@@ -1,18 +1,18 @@
 package org.vitrivr.cineast.standalone.importer.handlers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.util.LogHelper;
-import org.vitrivr.cineast.standalone.importer.Copier;
-import org.vitrivr.cineast.core.importer.Importer;
-import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.importer.Importer;
+import org.vitrivr.cineast.core.util.LogHelper;
+import org.vitrivr.cineast.standalone.importer.Copier;
+import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
 
 /**
  * @author rgasser
@@ -80,7 +80,9 @@ public abstract class DataImportHandler {
    */
   protected final int batchsize;
 
-  /** */
+  /**
+   *
+   */
   protected final ArrayList<Future<?>> futures = new ArrayList<>();
 
   /**
@@ -102,11 +104,25 @@ public abstract class DataImportHandler {
   public void waitForCompletion() {
     this.futures.removeIf(f -> {
       try {
-        return (f.get() == null);
+        Object o = f.get();
+        if (o == null) {
+          return true;
+        }
+        LOGGER.warn("Future returned {}, still returning true", o);
+        return true;
       } catch (InterruptedException | ExecutionException e) {
         LOGGER.error("Execution of one of the tasks could not be completed!");
         return true;
       }
     });
+    try {
+      this.futures.forEach(future -> {
+        LOGGER.warn("A future is still present, this should not be happening.");
+      });
+      this.service.shutdown();
+      this.service.awaitTermination(30, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 }
