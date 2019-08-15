@@ -9,6 +9,7 @@ import java.util.Scanner;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.standalone.config.Config;
 
 /**
@@ -29,9 +30,16 @@ public class MetadataCommand implements Runnable {
       Scanner in = new Scanner(System.in);
       this.objectId = in.nextLine();
     }
+
+    final DatabaseConfig config = Config.sharedConfig().getDatabase();
+
+    System.out.println("Retrieving object information");
+    MediaObjectReader objectReader = new MediaObjectReader(config.getSelectorSupplier().get());
+    System.out.println(objectReader.lookUpObjectById(objectId));
+
+    System.out.println("Retrieving metadata");
     final List<String> objectIds = new ArrayList<>(1);
     objectIds.add(this.objectId);
-    final DatabaseConfig config = Config.sharedConfig().getDatabase();
     final Ordering<MediaObjectMetadataDescriptor> ordering = Ordering.explicit(objectIds).onResultOf(MediaObjectMetadataDescriptor::getObjectId);
     try (final MediaObjectMetadataReader r = new MediaObjectMetadataReader(config.getSelectorSupplier().get())) {
       List<MediaObjectMetadataDescriptor> descriptors = r.lookupMultimediaMetadata(objectIds);
