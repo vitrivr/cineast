@@ -2,7 +2,10 @@ package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
+import java.util.Optional;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -24,7 +27,12 @@ public class SingleObjRetrievalCommand implements Runnable {
 
     System.out.println("= Retrieving segment information =");
     MediaSegmentReader segmentReader = new MediaSegmentReader(selector);
-    segmentReader.lookUpSegment(segmentId).ifPresent(System.out::println);
+    Optional<MediaSegmentDescriptor> segmentDescriptor = segmentReader.lookUpSegment(segmentId);
+    segmentDescriptor.ifPresent(System.out::println);
+
+    System.out.println("= Retrievin corresponding object information if it exists");
+    MediaObjectReader objectReader = new MediaObjectReader(selector);
+    segmentDescriptor.ifPresent(descriptor -> System.out.println(objectReader.lookUpObjectById(descriptor.getObjectId())));
 
     System.out.println("= Retrieving metadata =");
     MediaSegmentMetadataReader reader = new MediaSegmentMetadataReader(selector);

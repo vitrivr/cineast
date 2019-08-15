@@ -3,14 +3,13 @@ package org.vitrivr.cineast.core.data.entities;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.StringUtils;
+import java.nio.file.Path;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.ExistenceCheck;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.extraction.idgenerator.ObjectIdGenerator;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @author rgasser
@@ -35,18 +34,16 @@ public class MediaObjectDescriptor implements ExistenceCheck {
   private final String contentURL;
 
   /**
-   * Convenience method to create a MediaObjectDescriptor marked as new. The method will assign
-   * a new ID to this MediaObjectDescriptor using the provided ObjectIdGenerator.
+   * Convenience method to create a MediaObjectDescriptor marked as new. The method will assign a new ID to this MediaObjectDescriptor using the provided ObjectIdGenerator.
    *
    * @param generator ObjectIdGenerator used for ID generation.
-   * @param path The Path that points to the file for which a new MediaObjectDescriptor should
-   * be created.
+   * @param path The Path that points to the file for which a new MediaObjectDescriptor should be created.
    * @param type MediaType of the new MediaObjectDescriptor
    * @param lookup MediaObjectReader to prevent the assignment of already used ids
    * @return A new MediaObjectDescriptor
    */
   public static MediaObjectDescriptor newMultimediaObjectDescriptor(
-          ObjectIdGenerator generator, Path path, MediaType type, MediaObjectReader lookup) {
+      ObjectIdGenerator generator, Path path, MediaType type, MediaObjectReader lookup) {
     String objectId;
     do {
       objectId = generator.next(path, type);
@@ -77,9 +74,9 @@ public class MediaObjectDescriptor implements ExistenceCheck {
 
   @JsonCreator
   public MediaObjectDescriptor(@JsonProperty("objectId") String objectId,
-                               @JsonProperty("name") String name, @JsonProperty("path") String path,
-                               @JsonProperty(value = "mediatype", defaultValue = "UNKNOWN") MediaType mediatypeId,
-                               @JsonProperty(value = "exists", defaultValue = "false") boolean exists) {
+      @JsonProperty("name") String name, @JsonProperty("path") String path,
+      @JsonProperty(value = "mediatype", defaultValue = "UNKNOWN") MediaType mediatypeId,
+      @JsonProperty(value = "exists", defaultValue = "false") boolean exists) {
     this.objectId = objectId;
     this.name = name;
     if (path == null) {
@@ -135,13 +132,7 @@ public class MediaObjectDescriptor implements ExistenceCheck {
 
   @Override
   public String toString() {
-    return "MediaObjectDescriptor{" +
-        "objectId='" + objectId + '\'' +
-        ", name='" + name + '\'' +
-        ", path='" + path + '\'' +
-        ", exists=" + exists +
-        ", mediatypeId=" + mediatypeId +
-        '}';
+    return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
   }
 
 }
