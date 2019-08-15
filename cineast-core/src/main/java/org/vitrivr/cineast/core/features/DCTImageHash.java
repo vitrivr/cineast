@@ -111,9 +111,9 @@ public class DCTImageHash extends AbstractFeatureModule {
     if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
       return;
     }
-    MultiImage image = shot.getMostRepresentativeFrame().getImage();
-    BitSet feature = extractHash(image);
-    if (shot.getId() == null || feature == null) {
+    final MultiImage image = shot.getMostRepresentativeFrame().getImage();
+    final BitSet feature = extractHash(image);
+    if (shot.getId() == null) {
       throw new RuntimeException(shot.getId() + "" + feature);
     }
     this.writer.write(Pair.of(shot.getId(), feature));
