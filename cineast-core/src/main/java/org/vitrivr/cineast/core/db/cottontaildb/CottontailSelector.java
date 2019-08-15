@@ -1,10 +1,21 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
+import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.CINEAST_SCHEMA;
+
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc;
-import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Entity;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Projection.Operation;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Query;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.QueryResponseMessage;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Tuple;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Where;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -15,17 +26,11 @@ import org.vitrivr.cineast.core.db.DBSelector;
 import org.vitrivr.cineast.core.db.MergeOperation;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import static org.vitrivr.cineast.core.db.cottontaildb.CottontailMessageBuilder.CINEAST_SCHEMA;
-
 public class CottontailSelector implements DBSelector {
 
   private final CottontailWrapper cottontail;
 
-  public CottontailSelector(CottontailWrapper wrapper){
+  public CottontailSelector(CottontailWrapper wrapper) {
     this.cottontail = wrapper;
   }
 
@@ -180,7 +185,7 @@ public class CottontailSelector implements DBSelector {
 
     for (QueryResponseMessage response : results) {
       for (Tuple t : response.getResultsList()) {
-          _return.add(CottontailMessageBuilder.fromData(t.getDataMap().get(vectorName)));
+        _return.add(CottontailMessageBuilder.fromData(t.getDataMap().get(vectorName)));
       }
     }
 
@@ -292,13 +297,11 @@ public class CottontailSelector implements DBSelector {
   }
 
   private static List<Map<String, PrimitiveTypeProvider>> processResults(
-      Iterable<QueryResponseMessage> qureyresponses) {
+      Iterable<QueryResponseMessage> queryResponses) {
     ArrayList<Map<String, PrimitiveTypeProvider>> _return = new ArrayList<>();
 
-    for (QueryResponseMessage response : qureyresponses) {
-      for (Tuple t : response.getResultsList()) {
-        _return.add(CottontailMessageBuilder.tupleToMap(t));
-      }
+    for (QueryResponseMessage response : queryResponses) {
+      response.getResultsList().forEach(tuple -> _return.add(CottontailMessageBuilder.tupleToMap(tuple)));
     }
 
     return _return;
