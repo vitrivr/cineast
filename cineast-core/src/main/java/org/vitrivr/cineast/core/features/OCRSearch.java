@@ -2,12 +2,12 @@ package org.vitrivr.cineast.core.features;
 
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.abstracts.SolrTextRetriever;
+import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
 
 /**
  * Uses standard text support from Solr. OCR is handled by adding fuzziness / levenshtein-distance support to the query. This makes sense here since we expect small errors from OCR sources
  */
-public class OCRSearch extends SolrTextRetriever {
+public class OCRSearch extends AbstractTextRetriever {
 
   public static final String OCR_TABLE_NAME = "features_ocr";
 

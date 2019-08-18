@@ -2,9 +2,9 @@ package org.vitrivr.cineast.core.features;
 
 import org.vitrivr.cineast.core.data.entities.SimpleFulltextFeatureDescriptor;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.features.abstracts.SolrTextRetriever;
+import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
 
-public class SubtitleFulltextSearch extends SolrTextRetriever {
+public class SubtitleFulltextSearch extends AbstractTextRetriever {
 
   /**
    * Default constructor for {@link SubtitleFulltextSearch}.

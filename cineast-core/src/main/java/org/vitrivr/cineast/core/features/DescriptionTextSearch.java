@@ -1,8 +1,8 @@
 package org.vitrivr.cineast.core.features;
 
-import org.vitrivr.cineast.core.features.abstracts.SolrTextRetriever;
+import org.vitrivr.cineast.core.features.abstracts.AbstractTextRetriever;
 
-public class DescriptionTextSearch extends SolrTextRetriever {
+public class DescriptionTextSearch extends AbstractTextRetriever {
 
   public static final String DESCRIPTION_TEXT_TABLE_NAME = "features_captioning";
 

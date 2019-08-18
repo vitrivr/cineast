@@ -26,7 +26,7 @@ import java.util.function.Supplier;
  * retrieval in the future.
  * Expects two fields for a feature: id and feature. this corresponds to {@link SimpleFulltextFeatureDescriptor#FIELDNAMES}
  */
-public abstract class SolrTextRetriever implements Retriever, Extractor {
+public abstract class AbstractTextRetriever implements Retriever, Extractor {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -51,11 +51,11 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
   }
 
   /**
-   * Constructor for {@link SolrTextRetriever}
+   * Constructor for {@link AbstractTextRetriever}
    *
    * @param tableName Name of the table/entity used to store the data
    */
-  public SolrTextRetriever(String tableName) {
+  public AbstractTextRetriever(String tableName) {
     this.tableName = tableName;
   }
 
@@ -108,14 +108,14 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
 
   @Override
   public List<ScoreElement> getSimilar(String shotId, ReadableQueryConfig qc) {
-    LOGGER.error("Similar to shotID is not supported for SolrTextRetriever");
+    LOGGER.error("Similar to shotID is not supported for AbstractTextRetriever");
     return new ArrayList<>(0); // currently not supported
   }
 
   /**
    * Performs a fulltext search using the text specified in {@link SegmentContainer#getText()}. In
    * contrast to convention used in most feature modules, the data used during ingest and retrieval
-   * is usually different for {@link SolrTextRetriever} subclasses.
+   * is usually different for {@link AbstractTextRetriever} subclasses.
    *
    * <strong>Important:</strong> This implementation is tailored to the Apache Solr storage engine
    * used by ADAMpro. It uses Lucene's fuzzy search functionality.
