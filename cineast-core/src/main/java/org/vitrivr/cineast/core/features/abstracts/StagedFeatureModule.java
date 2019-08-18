@@ -38,7 +38,7 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
     private final static String BENCHMARK_SPLITNAME_POSTPROCESSING = "POSTPROCESSING";
 
     /** Instance of the BenchmarkEngine that is used to benchmark queries. */
-    private final BenchmarkEngine benchmark_engine;
+    private final BenchmarkEngine benchmark_engine = BenchmarkManager.getInstance().getDefaultEngine();
 
     /**
      *
@@ -47,7 +47,6 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      */
     protected StagedFeatureModule(String tableName, float maxDist, int vectorLength) {
         super(tableName, maxDist, vectorLength);
-        this.benchmark_engine = BenchmarkManager.getDefaultEngine();
     }
 
     /**
@@ -67,7 +66,6 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
      *
      * @param sc SegmentContainer to base the query on.
      * @param qc QueryConfiguration
-     * @param k Number of results to retrieve.
      * @return List of results
      */
     @Override

@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.standalone.config;
+package org.vitrivr.cineast.core.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
