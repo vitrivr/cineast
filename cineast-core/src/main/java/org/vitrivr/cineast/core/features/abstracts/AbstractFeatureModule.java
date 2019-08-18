@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.features.abstracts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -47,7 +48,7 @@ public abstract class AbstractFeatureModule implements Extractor, Retriever {
         if (this.tableName == null) {
             return new ArrayList<>();
         }
-        return List.of(this.tableName);
+        return Collections.singletonList(this.tableName);
     }
 
     @Override

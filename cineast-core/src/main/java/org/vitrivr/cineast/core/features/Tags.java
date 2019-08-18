@@ -1,7 +1,9 @@
 package org.vitrivr.cineast.core.features;
 
 import gnu.trove.map.hash.TObjectFloatHashMap;
-import java.util.Optional;
+
+import java.util.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -22,9 +24,6 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.features.retriever.Retriever;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class Tags implements Extractor, Retriever {
@@ -57,7 +56,7 @@ public class Tags implements Extractor, Retriever {
 
   @Override
   public List<String> getTableNames() {
-    return List.of(ENTITY_NAME);
+    return Collections.singletonList(ENTITY_NAME);
   }
 
   @Override

@@ -49,7 +49,7 @@ public abstract class BooleanRetriever implements Retriever {
 
   @Override
   public List<String> getTableNames() {
-    return List.of(entity);
+    return Collections.singletonList(entity);
   }
 
   protected abstract Collection<RelationalOperator> getSupportedOperators();

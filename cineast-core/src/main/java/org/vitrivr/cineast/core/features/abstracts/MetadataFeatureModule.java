@@ -61,7 +61,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
 
   @Override
   public List<String> getTableNames() {
-    return List.of(featureEntityName());
+    return Collections.singletonList(featureEntityName());
   }
 
   /**

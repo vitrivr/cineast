@@ -47,7 +47,7 @@ public abstract class SolrTextRetriever implements Retriever, Extractor {
 
   @Override
   public List<String> getTableNames() {
-    return List.of(tableName);
+    return Collections.singletonList(tableName);
   }
 
   /**
