@@ -17,6 +17,12 @@ distributions {
     }
 }
 
+repositories {
+    maven {
+        url "https://packagecloud.io/manusant/beerRepo/maven2"
+    }
+}
+
 task fatJar(type: Jar) {
     archiveClassifier = 'full'
     manifest {
@@ -31,4 +37,5 @@ dependencies {
     compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.1'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.10.0'
     compile group: 'de.svenkubiak', name: 'jBCrypt', version: '0.4.1'
+    compile group: 'com.beerboy.ss', name: 'spark-swagger', version: '1.0.0.48'
 }

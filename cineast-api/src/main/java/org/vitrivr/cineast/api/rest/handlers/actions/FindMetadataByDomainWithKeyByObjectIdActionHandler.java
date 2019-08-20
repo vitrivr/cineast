@@ -38,7 +38,7 @@ public class FindMetadataByDomainWithKeyByObjectIdActionHandler extends
   }
 
   @Override
-  public Object doGet(Map<String, String> parameters) {
+  public MediaObjectMetadataQueryResult doGet(Map<String, String> parameters) {
     final String objectId = parameters.get(OBJECT_ID_NAME);
     final String domain = parameters.get(DOMAIN_NAME);
     final String key = parameters.get(KEY_NAME);

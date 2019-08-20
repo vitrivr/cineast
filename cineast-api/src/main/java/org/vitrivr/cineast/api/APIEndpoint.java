@@ -1,8 +1,21 @@
 package org.vitrivr.cineast.api;
 
+import static com.beerboy.ss.descriptor.EndpointDescriptor.endpointPath;
+import static com.beerboy.ss.descriptor.MethodDescriptor.path;
+
+import com.beerboy.ss.SparkSwagger;
+import com.beerboy.ss.rest.Endpoint;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.api.messages.general.Ping;
+import org.vitrivr.cineast.api.messages.lookup.IdList;
+import org.vitrivr.cineast.api.messages.lookup.OptionallyFilteredIdList;
+import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
+import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
+import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
+import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
+import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
 import org.vitrivr.cineast.api.rest.handlers.actions.*;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.*;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
@@ -11,6 +24,9 @@ import org.vitrivr.cineast.api.rest.resolvers.FileSystemThumbnailResolver;
 import org.vitrivr.cineast.api.rest.routes.ResolvedContentRoute;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 
+import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
+import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.standalone.config.APIConfig;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -38,7 +54,7 @@ import java.io.File;
  * @see ActionHandler
  * @see WebsocketAPI
  */
-public class APIEndpoint {
+public class APIEndpoint implements Endpoint {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Version of the protocol used by the RESTful endpoint. Will be appended to the endpoint URL.*/
@@ -48,7 +64,7 @@ public class APIEndpoint {
     private static final String CONTEXT = "api";
 
     /** References to the HTTP and HTTPS service. */
-    private static Service http, https;
+    private static Service http, https; // TODO why differentiate?
 
     public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase()); //TODO there is certainly a nicer way to do this...
 
@@ -149,6 +165,87 @@ public class APIEndpoint {
         }
     }
 
+    @Override
+    public void bind(final SparkSwagger restApi){
+        // TODO replace parameters with constants and the routes (minus common makePath result) as route names. Might also be worth to document the routes by themselves
+        restApi.endpoint(
+            endpointPath("") // TODO See whether that's a good idea or the prefix of makePath should be used here
+                .withDescription(""), (q,a) -> {})
+        .get(path(makePath("status")).withDescription("Ping the server").withResponseType(Ping.class), new StatusInvokationHandler())
+        .get(path(makePath("find/object/by/:attribute/:value"))
+            .withDescription("Find object by attribute and value")
+            .withResponseType(MediaObjectQueryResult.class)
+            , new FindObjectByActionHandler())
+        .get(path(makePath("/metadata/by/id/:id"))
+            .withDescription("Find meta data by object id")
+            .withResponseType(MediaObjectMetadataQueryResult.class)
+            , new FindMetadataByObjectIdActionHandler())
+        .get(path(makePath("find/metadata/in/:domain/by/id/:id"))
+            .withDescription("Find meta data in specific domain by object id")
+            .withResponseType(MediaObjectMetadataQueryResult.class)
+            , new FindMetadataInDomainByObjectIdActionHandler())
+        .get(path(makePath("find/metadata/of/:id/in/:domain/with/:key"))
+            .withDescription("Find meta data for a specific object id in given domain and key")
+            .withResponseType(MediaObjectMetadataQueryResult.class)
+            , new FindMetadataByDomainWithKeyByObjectIdActionHandler())
+        .get(path(makePath("find/metadata/with/:key"))
+            .withDescription("Find Meta data for a specific key")
+            .withResponseType(MediaObjectMetadataQueryResult.class)
+            , new FindMetadataByKeyByObjectIdActionHandler())
+        .get(path(makePath("find/tags/by/:attribute/:value"))
+            .withDescription("Find tags by attribute")
+            .withResponseAsCollection(Tag.class)// TODO un-collection-ify this
+            , new FindTagsByActionHandler())
+        .get(path(makePath("find/objects/all/:type"))
+            .withDescription("Find all objects by type")
+            .withResponseAsCollection(MediaObjectDescriptor.class) // Todo un-collection-ify this
+            , new FindObjectAllActionHandler())
+        .get(path(makePath("find/segments/all/object/:id"))
+            .withDescription("Find all segments by object id")
+            .withResponseAsCollection(MediaSegmentDescriptor.class) // TODO un-collection-ify this
+            , new FindSegmentsByObjectIdActionHandler())
+        .get(path(makePath("find/tags/all"))
+            .withDescription("Find all tags")
+            .withResponseAsCollection(Tag.class) // TODO un-collection-ify this
+            , new FindTagsActionHandler())
+        .post(path(makePath("find/segments/similar"))
+            .withDescription("Find similar segments. Request contains similarity query")
+            .withRequestType(SimilarityQuery.class)
+            .withResponseType(SimilarityQueryResultBatch.class)
+            , new FindSegmentSimilarActionHandler(retrievalLogic))
+        .post(path(makePath("find/segments/by/id"))
+            .withDescription("Finds segments by segment id.  Request contains list of ids for which request was issued")
+            .withRequestType(IdList.class)
+            .withResponseType(MediaSegmentQueryResult.class)
+            , new FindSegmentsByIdActionHandler())
+        .post(path(makePath("find/objects/by/id"))
+            .withDescription("Find objects by object id.  Request contains list of ids for which request was issued")
+            .withRequestType(IdList.class)
+            .withResponseType(MediaObjectQueryResult.class)
+            , new FindObjectByActionHandler())
+        .post(path(makePath("find/metadata/by/id"))
+            .withDescription("Find meta data by object id.  Request contains list of ids for which request was issued")
+            .withRequestType(OptionallyFilteredIdList.class)
+            .withResponseType(MediaObjectMetadataQueryResult.class)
+            , new FindMetadataByObjectIdActionHandler())
+        .post(path(makePath("find/metadata/in/:domain"))
+            .withDescription("Find meta data in domain.  Request contains list of ids for which request was issued")
+            .withRequestType(IdList.class)
+            .withResponseType(MediaObjectMetadataQueryResult.class)
+            , new FindMetadataInDomainByObjectIdActionHandler())
+        .post(path(makePath("find/metadata/with/:key"))
+            .withDescription("Find meta data for a given key. Request contains list of ids for which request was issued")
+            .withRequestType(IdList.class)
+            .withResponseType(MediaObjectMetadataQueryResult.class)
+            , new FindMetadataByKeyByObjectIdActionHandler())
+        .post(path(makePath("find/tags/by/id"))
+            .withDescription("Find tags by id")
+            .withRequestType(IdList.class)
+            .withResponseAsCollection(Tag.class) // TODO un-collection-ify this
+            , new FindTagsByActionHandler())
+        ;
+    }
+
     /**
      * Registers the routes for the provided service.
      *
@@ -166,6 +263,7 @@ public class APIEndpoint {
             service.get("/objects/all/:type", new FindObjectAllActionHandler());
             service.get("/segments/all/object/:id", new FindSegmentsByObjectIdActionHandler());
             service.get("/tags/all", new FindTagsActionHandler());
+
             service.post("/segments/similar", new FindSegmentSimilarActionHandler(retrievalLogic));
             service.post("/segments/by/id", new FindSegmentsByIdActionHandler());
             service.post("/objects/by/id", new FindObjectByActionHandler());

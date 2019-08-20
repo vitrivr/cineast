@@ -21,8 +21,8 @@ import java.util.Map;
  */
 public class FindObjectByActionHandler extends ParsingActionHandler<IdList> {
 
-    private final static String ATTRIBUTE_NAME = ":attribute";
-    private final static String VALUE_NAME = ":value";
+    public final static String ATTRIBUTE_NAME = ":attribute";
+    public final static String VALUE_NAME = ":value";
 
     private static final Logger LOGGER = LogManager.getLogger();
 
