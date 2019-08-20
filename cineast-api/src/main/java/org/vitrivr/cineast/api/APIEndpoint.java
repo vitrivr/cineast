@@ -5,6 +5,8 @@ import static com.beerboy.ss.descriptor.MethodDescriptor.path;
 
 import com.beerboy.ss.SparkSwagger;
 import com.beerboy.ss.rest.Endpoint;
+import java.io.IOException;
+import java.util.Arrays;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,7 +66,9 @@ public class APIEndpoint implements Endpoint {
     private static final String CONTEXT = "api";
 
     /** References to the HTTP and HTTPS service. */
-    private static Service http, https; // TODO why differentiate?
+    private static Service http, https;
+
+    private static SparkSwagger swagger;
 
     public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase()); //TODO there is certainly a nicer way to do this...
 
@@ -77,6 +81,7 @@ public class APIEndpoint implements Endpoint {
     private static Service dispatchService(boolean secure) {
         final APIConfig config = Config.sharedConfig().getApi();
         final Service service = Service.ignite();
+
 
         /* Registers a exception handler in case the initialization fails. */
         service.initExceptionHandler((exception) -> {
@@ -94,6 +99,8 @@ public class APIEndpoint implements Endpoint {
         }
         service.threadPool(config.getThreadPoolSize(), 2, 30000);
 
+
+
         /* Setup TLS if secure flag was set. */
         if (secure) {
             service.secure(config.getKeystore(), config.getKeystorePassword(), null, null);
@@ -103,6 +110,7 @@ public class APIEndpoint implements Endpoint {
         if (config.getEnableWebsocket()) {
             service.webSocket(String.format("/%s/%s/websocket", CONTEXT, VERSION), WebsocketAPI.class);
         }
+
 
 
         if(config.getServeUI()){
@@ -132,6 +140,10 @@ public class APIEndpoint implements Endpoint {
             response.header("Access-Control-Allow-Headers", "*");
         });
 
+        if(swagger != null){
+            swagger = SparkSwagger.of(service).endpoint(new APIEndpoint());
+        } // TODO Custom SparkSwagger as the .of already generates the doc route
+
         return service;
     }
 
@@ -150,6 +162,13 @@ public class APIEndpoint implements Endpoint {
             https = dispatchService(true);
             https.init();
             https.awaitInitialization();
+        }
+
+
+        try {
+            swagger.generateDoc();
+        } catch (IOException e) {
+            LOGGER.warn("OpenAPI serving failed due to exception during generateDoc", e);
         }
     }
 
