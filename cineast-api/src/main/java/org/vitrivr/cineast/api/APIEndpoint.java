@@ -140,9 +140,7 @@ public class APIEndpoint implements Endpoint {
             response.header("Access-Control-Allow-Headers", "*");
         });
 
-        if(swagger != null){
-            swagger = SparkSwagger.of(service).endpoint(new APIEndpoint());
-        } // TODO Custom SparkSwagger as the .of already generates the doc route
+
 
         return service;
     }
