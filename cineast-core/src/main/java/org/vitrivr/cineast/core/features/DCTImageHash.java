@@ -4,6 +4,7 @@ import boofcv.abst.distort.FDistort;
 import boofcv.alg.filter.blur.BlurImageOps;
 import boofcv.struct.image.GrayF32;
 import com.googlecode.javaewah.datastructure.BitSet;
+import java.util.function.Supplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.stat.descriptive.rank.Median;
 import org.apache.commons.math3.util.FastMath;
@@ -13,13 +14,16 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
+import org.vitrivr.cineast.core.data.providers.primitive.BitSetTypeProvider;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
-import org.vitrivr.cineast.core.data.providers.primitive.BitSetTypeProvider;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.writer.SimpleBitSetWriter;
+import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
+import org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType;
+import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
 import java.util.List;
@@ -138,5 +142,13 @@ public class DCTImageHash extends AbstractFeatureModule {
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     return this.getSimilar(new BitSetTypeProvider(extractHash(sc.getMostRepresentativeFrame().getImage())), qc);
+  }
+
+  @Override
+  public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
+    supply.get().createEntity(this.tableName,
+          new AttributeDefinition("id", AttributeDefinition.AttributeType.STRING),
+          new AttributeDefinition("feature", AttributeType.BITSET, 64)
+    );
   }
 }

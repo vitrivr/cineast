@@ -18,6 +18,7 @@ public final class AttributeDefinition {
         TEXT,
         BOOLEAN,
         VECTOR,
+        BITSET,
         GEOMETRY,
         GEOGRAPHY
     }

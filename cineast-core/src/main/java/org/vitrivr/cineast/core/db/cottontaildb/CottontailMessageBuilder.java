@@ -4,6 +4,7 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.*;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.AtomicLiteralBooleanPredicate.Operator;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Knn.Distance;
+import com.google.common.primitives.Booleans;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
@@ -17,9 +18,6 @@ import org.vitrivr.cineast.core.data.providers.primitive.*;
 import org.vitrivr.cineast.core.db.RelationalOperator;
 
 import java.util.*;
-
-import static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Data.DataCase.*;
-import static ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.Vector.VectorDataCase.*;
 
 public class CottontailMessageBuilder {
 
@@ -176,11 +174,9 @@ public class CottontailMessageBuilder {
     }
 
     if (o instanceof BitSet) {
-      final float[] vector = new float[((BitSet)o).size()];
+      final boolean[] vector = new boolean[((BitSet)o).size()];
       for (int i = 0; i<((BitSet) o).size(); i++) {
-        if (((BitSet) o).get(i)) {
-          vector[i] = 1.0f;
-        }
+          vector[i] = ((BitSet) o).get(i);
       }
       return dataBuilder.setVectorData(toVector(vector)).build();
     }
@@ -263,6 +259,8 @@ public class CottontailMessageBuilder {
             return IntArrayTypeProvider.fromList(v.getIntVector().getVectorList());
           case LONGVECTOR:
             return IntArrayTypeProvider.fromLongList(v.getLongVector().getVectorList());
+          case BOOLVECTOR:
+            return BitSetTypeProvider.fromBooleanList(v.getBoolVector().getVectorList());
           case VECTORDATA_NOT_SET:
             return new NothingProvider();
         }
@@ -275,9 +273,15 @@ public class CottontailMessageBuilder {
     return new NothingProvider();
   }
 
-  public static Vector toVector(float[] vector) {
+  private static Vector toVector(float[] vector) {
     return Vector.newBuilder()
         .setFloatVector(FloatVector.newBuilder().addAllVector(Floats.asList(vector)))
+        .build();
+  }
+
+  private static Vector toVector(boolean[] vector) {
+    return Vector.newBuilder()
+        .setBoolVector(BoolVector.newBuilder().addAllVector(Booleans.asList(vector)))
         .build();
   }
 
