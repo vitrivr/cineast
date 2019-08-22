@@ -212,7 +212,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
         }
         break;
       case OCR:
-        map.put("id", id);
+        map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[0], id);
         map.put(SimpleFulltextFeatureDescriptor.FIELDNAMES[1], PrimitiveTypeProvider.fromObject(data.ocr.get().description));
         // Score is ignored because it's never used in search and 0 anyways
         //map.put("score", PrimitiveTypeProvider.fromObject(data.ocr.get().score));

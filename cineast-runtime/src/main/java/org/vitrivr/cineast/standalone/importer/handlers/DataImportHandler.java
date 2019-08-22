@@ -21,6 +21,7 @@ import org.vitrivr.cineast.standalone.monitoring.ImportTaskMonitor;
  */
 public abstract class DataImportHandler {
 
+
   /**
    * This inner class implements the runnable that actually executes the copy operation.
    */
@@ -80,6 +81,8 @@ public abstract class DataImportHandler {
    */
   protected final int batchsize;
 
+  protected int numberOfThreads;
+
   /**
    *
    */
@@ -94,6 +97,7 @@ public abstract class DataImportHandler {
   public DataImportHandler(int threads, int batchsize) {
     this.service = Executors.newFixedThreadPool(threads);
     this.batchsize = batchsize;
+    this.numberOfThreads = threads;
   }
 
   public abstract void doImport(Path path);
