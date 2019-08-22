@@ -7,7 +7,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: "https://dbis-nexus.dmi.unibas.ch/repository/maven-snapshots/") {
-                authentication(userName: "admin", password: "<Password>")
+                authentication(userName: "$dbisNexusUsername", password: "$dbisNexusPassword")
             }
         }
     }
