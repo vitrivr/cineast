@@ -6,9 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.data.providers.primitive.BitSetProviderImpl;
+import org.vitrivr.cineast.core.data.providers.primitive.BitSetTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
-import org.vitrivr.cineast.core.importer.Importer;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,7 +68,7 @@ public class JsonObjectImporter implements Importer<ObjectNode> {
     for (String key : result.keySet()) {
       if (key.equals("feature") && result.get(key).toString().startsWith("{") && result.get(key)
           .toString().endsWith("}") && result.get(key).getClass().equals(String.class)) {
-        map.put(key, PrimitiveTypeProvider.fromObject(BitSetProviderImpl.fromString(
+        map.put(key, PrimitiveTypeProvider.fromObject(BitSetTypeProvider.fromString(
             (String) result.get(key))));
       } else {
         Object o = result.get(key);
