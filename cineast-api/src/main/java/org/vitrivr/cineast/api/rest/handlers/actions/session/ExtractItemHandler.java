@@ -11,13 +11,20 @@ import org.vitrivr.cineast.api.messages.session.SessionState;
 
 import java.util.Arrays;
 import java.util.Map;
+import spark.route.HttpMethod;
 
 /**
  * @author silvan on 19.01.18.
  */
-public class ExtractItemHandler extends ParsingActionHandler<ExtractionContainerMessage> {
+public class ExtractItemHandler extends ParsingActionHandler<ExtractionContainerMessage, SessionState> {
 
   private static final Logger LOGGER = LogManager.getLogger();
+
+  {
+    // ONLY method POST
+    supportedHttpMethods.clear();
+    supportedHttpMethods.add(HttpMethod.post);
+  }
 
   @Override
   public Object doGet(Map<String, String> parameters) throws ActionHandlerException {
@@ -38,5 +45,20 @@ public class ExtractItemHandler extends ParsingActionHandler<ExtractionContainer
   @Override
   public Class<ExtractionContainerMessage> inClass() {
     return ExtractionContainerMessage.class;
+  }
+
+  @Override
+  public String getRoute() {
+    return "session/extract/new";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Extract new item";
+  }
+
+  @Override
+  public Class<SessionState> outClass() {
+    return SessionState.class;
   }
 }

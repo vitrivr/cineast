@@ -201,7 +201,7 @@ public class APIEndpoint implements Endpoint {
             .withDescription("Find object by attribute and value")
             .withResponseType(MediaObjectQueryResult.class)
             , new FindObjectByActionHandler())
-        .get(path(makePath("/metadata/by/id/:id"))
+        .get(path(makePath("find/metadata/by/id/:id"))
             .withDescription("Find meta data by object id")
             .withResponseType(MediaObjectMetadataQueryResult.class)
             , new FindMetadataByObjectIdActionHandler())

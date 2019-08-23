@@ -7,11 +7,18 @@ import org.vitrivr.cineast.api.messages.general.AnyMessage;
 import org.vitrivr.cineast.api.messages.session.SessionState;
 
 import java.util.Map;
+import spark.route.HttpMethod;
 
 /**
  * @author silvan on 23.01.18.
  */
-public class EndExtractionHandler extends ParsingActionHandler<AnyMessage> {
+public class EndExtractionHandler extends ParsingActionHandler<AnyMessage, SessionState> {
+
+  {
+    // ONLY method POST
+    supportedHttpMethods.clear();
+    supportedHttpMethods.add(HttpMethod.post);
+  }
 
   @Override
   public Object doGet(Map<String, String> parameters) throws ActionHandlerException {
@@ -30,5 +37,20 @@ public class EndExtractionHandler extends ParsingActionHandler<AnyMessage> {
   @Override
   public Class<AnyMessage> inClass() {
     return AnyMessage.class;
+  }
+
+  @Override
+  public String getRoute() {
+    return "session/extract/end";
+  }
+
+  @Override
+  public String getDescription() {
+    return "End the active extraction session";
+  }
+
+  @Override
+  public Class<SessionState> outClass() {
+    return SessionState.class;
   }
 }

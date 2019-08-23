@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import spark.route.HttpMethod;
 
 /**
  * Finds metadata of a given object id list (REST) / object id (Web) and returns only items in a
@@ -35,10 +36,14 @@ import java.util.stream.Collectors;
  *
  * @author loris.sauter
  */
-public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHandler<IdList> {
+public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHandler<IdList,MediaObjectMetadataQueryResult> {
 
   private static final String ATTRIBUTE_ID = ":id";
   private static final String DOMAIN_NAME = ":domain";
+
+  {
+    supportedHttpMethods.add(HttpMethod.post);
+  }
 
   /**
    * Processes a HTTP GET request.
@@ -90,5 +95,20 @@ public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHa
   @Override
   public Class<IdList> inClass() {
     return IdList.class;
+  }
+
+  @Override
+  public String getRoute() {
+    return String.format("find/metadata/in/%s/by/id/%s", DOMAIN_NAME, ATTRIBUTE_ID);
+  }
+
+  @Override
+  public String getDescription() {
+    return "Find meta data in domain by object id";
+  }
+
+  @Override
+  public Class<MediaObjectMetadataQueryResult> outClass() {
+    return MediaObjectMetadataQueryResult.class;
   }
 }

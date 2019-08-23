@@ -13,15 +13,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import spark.route.HttpMethod;
 
 /**
  * Retrieves all the {@link MediaObjectMetadataDescriptor}s for the given ID of a {@link
  * MediaObjectDescriptor}
  */
 public class FindMetadataByObjectIdActionHandler extends
-        ParsingActionHandler<OptionallyFilteredIdList> {
+        ParsingActionHandler<OptionallyFilteredIdList, MediaObjectMetadataQueryResult> {
 
   private static final String ATTRIBUTE_ID = ":id";
+
+  {
+    supportedHttpMethods.add(HttpMethod.post);
+  }
 
   /**
    * Processes a HTTP GET request.
@@ -75,5 +80,20 @@ public class FindMetadataByObjectIdActionHandler extends
   @Override
   public Class<OptionallyFilteredIdList> inClass() {
     return OptionallyFilteredIdList.class;
+  }
+
+  @Override
+  public String getRoute() {
+    return "find/metadata/by/id/"+ATTRIBUTE_ID;
+  }
+
+  @Override
+  public String getDescription() {
+    return "Find metadata by object id";
+  }
+
+  @Override
+  public Class<MediaObjectMetadataQueryResult> outClass() {
+    return MediaObjectMetadataQueryResult.class;
   }
 }

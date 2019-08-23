@@ -12,16 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import spark.route.HttpMethod;
 
 /**
  * TODO: write JavaDoc
  *
  * @author loris.sauter
  */
-public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandler<IdList> {
+public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandler<IdList, MediaObjectMetadataQueryResult> {
   private static final String ATTRIBUTE_ID = ":id";
   private static final String KEY_NAME = ":key";
-  
+
+  {
+    supportedHttpMethods.add(HttpMethod.post);
+  }
+
   /**
    * Processes a HTTP GET request.
    *
@@ -55,8 +60,8 @@ public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandl
     final MediaObjectMetadataReader reader = new MediaObjectMetadataReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
     final List<MediaObjectMetadataDescriptor> descriptors = reader.lookupMultimediaMetadata(context.getIdList());
     reader.close();
-    final MetadataKeyFilter prediate = MetadataKeyFilter.createForKeywords(key);
-    return new MediaObjectMetadataQueryResult("",descriptors.stream().filter(prediate).collect(Collectors.toList()));
+    final MetadataKeyFilter filter = MetadataKeyFilter.createForKeywords(key);
+    return new MediaObjectMetadataQueryResult("",descriptors.stream().filter(filter).collect(Collectors.toList()));
   }
   
   /**
@@ -67,5 +72,20 @@ public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandl
   @Override
   public Class<IdList> inClass() {
     return IdList.class;
+  }
+
+  @Override
+  public String getRoute() {
+    return String.format("find/metadata/with/%s/by/id/%s",KEY_NAME, ATTRIBUTE_ID);
+  }
+
+  @Override
+  public String getDescription() {
+    return "Find meta data for a given object id with specified key";
+  }
+
+  @Override
+  public Class<MediaObjectMetadataQueryResult> outClass() {
+    return MediaObjectMetadataQueryResult.class;
   }
 }

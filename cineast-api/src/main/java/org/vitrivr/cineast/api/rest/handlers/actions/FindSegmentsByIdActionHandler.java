@@ -11,10 +11,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import spark.route.HttpMethod;
 
-public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList> {
+public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList, MediaSegmentQueryResult> {
 
     private final static String ID_NAME = ":id";
+
+    {
+        supportedHttpMethods.add(HttpMethod.post);
+    }
 
     /**
      * Processes a HTTP GET request.
@@ -56,5 +61,20 @@ public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList> 
     @Override
     public Class<IdList> inClass() {
         return IdList.class;
+    }
+
+    @Override
+    public String getRoute() {
+        return "find/segments/by/id";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Finds segments for specified ids";
+    }
+
+    @Override
+    public Class<MediaSegmentQueryResult> outClass() {
+        return MediaSegmentQueryResult.class;
     }
 }

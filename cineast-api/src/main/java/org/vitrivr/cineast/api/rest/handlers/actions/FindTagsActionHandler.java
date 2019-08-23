@@ -9,7 +9,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 
 import java.util.Map;
 
-public class FindTagsActionHandler extends ParsingActionHandler<IdList> {
+public class FindTagsActionHandler extends ParsingActionHandler<IdList,Tag> {
 
     private static TagReader tagReader = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 
@@ -32,5 +32,25 @@ public class FindTagsActionHandler extends ParsingActionHandler<IdList> {
     @Override
     public Class<IdList> inClass() {
         return IdList.class;
+    }
+
+    @Override
+    public String getRoute() {
+        return "find/tags/all";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Find all tags";
+    }
+
+    @Override
+    public Class<Tag> outClass() {
+        return Tag.class;
+    }
+
+    @Override
+    public boolean isResponseCollection() {
+        return true;
     }
 }

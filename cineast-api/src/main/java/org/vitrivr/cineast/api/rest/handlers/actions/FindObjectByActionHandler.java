@@ -13,18 +13,23 @@ import org.vitrivr.cineast.standalone.config.Config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import spark.route.HttpMethod;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 10.01.17
  */
-public class FindObjectByActionHandler extends ParsingActionHandler<IdList> {
+public class FindObjectByActionHandler extends ParsingActionHandler<IdList, MediaObjectQueryResult> {
 
     public final static String ATTRIBUTE_NAME = ":attribute";
     public final static String VALUE_NAME = ":value";
 
     private static final Logger LOGGER = LogManager.getLogger();
+
+    {
+        supportedHttpMethods.add(HttpMethod.post);
+    }
 
     /**
      * Processes a HTTP GET request.
@@ -82,5 +87,20 @@ public class FindObjectByActionHandler extends ParsingActionHandler<IdList> {
     @Override
     public Class<IdList> inClass() {
         return IdList.class;
+    }
+
+    @Override
+    public String getRoute() {
+        return String.format("find/object/by/%s/%s", ATTRIBUTE_NAME, VALUE_NAME);
+    }
+
+    @Override
+    public String getDescription() {
+        return "Find object by attribute and value";
+    }
+
+    @Override
+    public Class<MediaObjectQueryResult> outClass() {
+        return MediaObjectQueryResult.class;
     }
 }

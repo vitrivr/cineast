@@ -13,8 +13,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import spark.route.HttpMethod;
 
-public class FindTagsByActionHandler extends ParsingActionHandler<IdList> {
+public class FindTagsByActionHandler extends ParsingActionHandler<IdList,Tag> {
     /** The {@link TagReader} instance used for lookup of {@link Tag}s. */
     private static final TagReader TAG_READER = new TagReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
 
@@ -31,6 +32,10 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList> {
     private static final String FIELD_ID = "id";
     private static final String FIELD_NAME = "name";
     private static final String FIELD_MATCHING = "matchingname";
+
+    {
+        supportedHttpMethods.add(HttpMethod.post);
+    }
 
     /**
      * Performs the lookup of {@link Tag}s in the system.
@@ -77,5 +82,45 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList> {
     @Override
     public Class<IdList> inClass() {
         return IdList.class;
+    }
+
+    @Override
+    public String getRoute() {
+        return "tags/by/id";
+    }
+
+    @Override
+    public String routeForGet() {
+        return String.format("find/tags/by/%s/%s", GET_PARAMETER_ATTRIBUTE, GET_PARAMETER_VALUE);
+    }
+
+    @Override
+    public String routeForPost() {
+        return "find/tags/by/id";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Find tags by given id or attribute and value";
+    }
+
+    @Override
+    public String descriptionForGet() {
+        return "Find tags by attribute and value";
+    }
+
+    @Override
+    public String descriptionForPost() {
+        return "Find tags for given id list";
+    }
+
+    @Override
+    public Class<Tag> outClass() {
+        return Tag.class;
+    }
+
+    @Override
+    public boolean isResponseCollection() {
+        return true;
     }
 }

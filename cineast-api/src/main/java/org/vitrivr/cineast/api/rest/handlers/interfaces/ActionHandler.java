@@ -1,10 +1,13 @@
 package org.vitrivr.cineast.api.rest.handlers.interfaces;
 
+import java.util.Arrays;
+import java.util.List;
 import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import spark.Route;
 
 import java.util.Map;
+import spark.route.HttpMethod;
 
 /**
  * @author rgasser
@@ -57,6 +60,24 @@ public interface ActionHandler<A> extends Route {
      */
     default Object doPut(A context, Map<String,String> parameters) throws ActionHandlerException {
         throw new MethodNotSupportedException("HTTP PUT method is not supported by '" + this.getClass().getSimpleName() + "'.");
+    }
+
+    /**
+     * Returns the supported {@link HttpMethod}s by this ActionHandler.
+     *
+     * Please be aware that {@link HttpMethod} by spark is a superset of the official HTTP methods.
+     * However, {@link ActionHandler} only supports a subset of them:
+     * <ul>
+     *   <li>{@link HttpMethod#get}</li>
+     *   <li>{@link HttpMethod#post}</li>
+     *   <li>{@link HttpMethod#delete}</li>
+     *   <li>{@link HttpMethod#put}</li>
+     * </ul>
+     *
+     * @return The supported HTTP methods. Can also be used to control which routes are registered
+     */
+    default List<HttpMethod> supportedMethods(){
+        return Arrays.asList(HttpMethod.get);
     }
 
     /**

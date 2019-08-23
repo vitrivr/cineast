@@ -12,7 +12,7 @@ import java.util.Map;
  * @version 1.0
  * @created 09.01.17
  */
-public class StatusInvokationHandler extends ParsingActionHandler<AnyMessage> {
+public class StatusInvokationHandler extends ParsingActionHandler<AnyMessage, Ping> {
     /**
      * Processes a HTTP GET request. Returns a {@link Ping} object
      *
@@ -27,5 +27,20 @@ public class StatusInvokationHandler extends ParsingActionHandler<AnyMessage> {
     @Override
     public Class<AnyMessage> inClass() {
         return AnyMessage.class;
+    }
+
+    @Override
+    public String getRoute() {
+        return "status";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Get the status of the server";
+    }
+
+    @Override
+    public Class<Ping> outClass() {
+        return Ping.class;
     }
 }

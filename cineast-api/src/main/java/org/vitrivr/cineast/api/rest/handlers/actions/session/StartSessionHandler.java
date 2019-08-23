@@ -11,8 +11,16 @@ import org.vitrivr.cineast.api.messages.session.SessionState;
 import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 
 import java.util.Map;
+import spark.route.HttpMethod;
 
-public class StartSessionHandler extends ParsingActionHandler<StartSessionMessage> {
+public class StartSessionHandler extends ParsingActionHandler<StartSessionMessage, SessionState> {
+
+    {
+        // ONLY method POST
+        supportedHttpMethods.clear();
+        supportedHttpMethods.add(HttpMethod.post);
+    }
+
     /**
      * Processes a HTTP GET request. Always throws a {@link MethodNotSupportedException}
      *
@@ -39,4 +47,18 @@ public class StartSessionHandler extends ParsingActionHandler<StartSessionMessag
         return StartSessionMessage.class;
     }
 
+    @Override
+    public String getRoute() {
+        return "session/start";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Start a new session for given credentials";
+    }
+
+    @Override
+    public Class<SessionState> outClass() {
+        return SessionState.class;
+    }
 }

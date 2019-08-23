@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
@@ -10,7 +11,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 import java.util.List;
 import java.util.Map;
 
-public class FindSegmentsByObjectIdActionHandler extends ParsingActionHandler<AnyMessage> {
+public class FindSegmentsByObjectIdActionHandler extends ParsingActionHandler<AnyMessage, MediaSegmentDescriptor> {
 
     private final static String ID_NAME = ":id";
 
@@ -35,4 +36,23 @@ public class FindSegmentsByObjectIdActionHandler extends ParsingActionHandler<An
         return AnyMessage.class;
     }
 
+    @Override
+    public String getRoute() {
+        return "find/segments/all/object/"+ID_NAME;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Find segments for object id";
+    }
+
+    @Override
+    public Class<MediaSegmentDescriptor> outClass() {
+        return MediaSegmentDescriptor.class;
+    }
+
+    @Override
+    public boolean isResponseCollection() {
+        return true;
+    }
 }

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @author loris.sauter
  */
 public class FindMetadataByDomainWithKeyByObjectIdActionHandler extends
-        ParsingActionHandler<AnyMessage> {
+        ParsingActionHandler<AnyMessage, MediaObjectMetadataQueryResult> {
 
   public static final String OBJECT_ID_NAME = ":id";
   public static final String DOMAIN_NAME = ":domain";
@@ -54,5 +54,20 @@ public class FindMetadataByDomainWithKeyByObjectIdActionHandler extends
   @Override
   public Class<AnyMessage> inClass() {
     return AnyMessage.class;
+  }
+
+  @Override
+  public String getRoute() {
+    return String.format("find/metadata/of/%s/in/%s/with/%s", OBJECT_ID_NAME, DOMAIN_NAME, KEY_NAME);
+  }
+
+  @Override
+  public String getDescription() {
+    return "Find meta data for specific object id in given domain with given key";
+  }
+
+  @Override
+  public Class<MediaObjectMetadataQueryResult> outClass() {
+    return MediaObjectMetadataQueryResult.class;
   }
 }

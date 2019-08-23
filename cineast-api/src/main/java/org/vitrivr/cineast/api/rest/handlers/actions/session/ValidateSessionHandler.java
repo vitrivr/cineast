@@ -9,7 +9,7 @@ import org.vitrivr.cineast.api.messages.session.SessionState;
 
 import java.util.Map;
 
-public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage> {
+public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage, SessionState> {
 
   @Override
   public Object doGet(Map<String, String> parameters) {
@@ -38,5 +38,20 @@ public class ValidateSessionHandler extends ParsingActionHandler<AnyMessage> {
   public static SessionState validateSession(Map<String, String> parameters) {
     final String sessionId = parameters.get(":id");
     return validateSession(sessionId);
+  }
+
+  @Override
+  public String getRoute() {
+    return "session/validate/:id";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Validate the session with the given id";
+  }
+
+  @Override
+  public Class<SessionState> outClass() {
+    return SessionState.class;
   }
 }

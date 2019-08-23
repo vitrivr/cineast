@@ -15,17 +15,24 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 import java.util.*;
+import spark.route.HttpMethod;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 11.01.17
  */
-public class FindSegmentSimilarActionHandler extends ParsingActionHandler<SimilarityQuery> {
+public class FindSegmentSimilarActionHandler extends ParsingActionHandler<SimilarityQuery, SimilarityQueryResultBatch> {
 
     private final ContinuousRetrievalLogic continuousRetrievalLogic;
     public FindSegmentSimilarActionHandler(ContinuousRetrievalLogic retrievalLogic){
         this.continuousRetrievalLogic = retrievalLogic;
+    }
+
+    {
+        // ONLY supports POST
+        supportedHttpMethods.clear();
+        supportedHttpMethods.add(HttpMethod.post);
     }
 
     /**
@@ -122,5 +129,20 @@ public class FindSegmentSimilarActionHandler extends ParsingActionHandler<Simila
     @Override
     public Class<SimilarityQuery> inClass() {
         return SimilarityQuery.class;
+    }
+
+    @Override
+    public String getRoute() {
+        return "find/segments/similar";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Finds similar segments based on the given query";
+    }
+
+    @Override
+    public Class<SimilarityQueryResultBatch> outClass() {
+        return SimilarityQueryResultBatch.class;
     }
 }

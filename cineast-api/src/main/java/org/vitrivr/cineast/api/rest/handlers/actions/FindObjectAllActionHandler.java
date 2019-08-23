@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import org.apache.commons.compress.archivers.dump.DumpArchiveEntry.TYPE;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.api.messages.general.AnyMessage;
@@ -15,7 +16,9 @@ import java.util.Map;
  * @version 1.0
  * @created 10.01.17
  */
-public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage> {
+public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage, MediaObjectDescriptor> {
+
+    public static final String TYPE_NAME = ":type";
 
     /**
      * Processes a HTTP GET request.
@@ -25,6 +28,7 @@ public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage>
      */
     @Override
     public List<MediaObjectDescriptor> doGet(Map<String, String> parameters) {
+        // TODO :type is not being used
         final MediaObjectReader ol = new MediaObjectReader(Config.sharedConfig().getDatabase().getSelectorSupplier().get());
         final List<MediaObjectDescriptor> multimediaobjectIds = ol.getAllObjects();
         ol.close();
@@ -34,5 +38,25 @@ public class FindObjectAllActionHandler extends ParsingActionHandler<AnyMessage>
     @Override
     public Class<AnyMessage> inClass() {
         return AnyMessage.class;
+    }
+
+    @Override
+    public String getRoute() {
+        return "find/objects/all/"+ TYPE_NAME;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Find all objects for a certain type";
+    }
+
+    @Override
+    public Class<MediaObjectDescriptor> outClass() {
+        return MediaObjectDescriptor.class;
+    }
+
+    @Override
+    public boolean isResponseCollection() {
+        return true;
     }
 }

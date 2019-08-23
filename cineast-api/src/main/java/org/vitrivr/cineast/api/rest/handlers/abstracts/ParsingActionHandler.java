@@ -2,20 +2,25 @@ package org.vitrivr.cineast.api.rest.handlers.abstracts;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.DocumentedRestOperation;
 import spark.Request;
 import spark.Response;
 
 import java.util.HashMap;
 import java.util.Map;
+import spark.route.HttpMethod;
 
 /**
  * @author rgasser
  * @version 1.0
  * @created 10.01.17
  */
-public abstract class ParsingActionHandler<A> implements ActionHandler<A> {
+public abstract class ParsingActionHandler<A,O> implements DocumentedRestOperation<A,O> {
 
     /**
      * Jackson ObjectMapper used to map to/from objects.
@@ -27,6 +32,13 @@ public abstract class ParsingActionHandler<A> implements ActionHandler<A> {
         MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
+    }
+
+    protected List<HttpMethod> supportedHttpMethods;
+
+    {
+        supportedHttpMethods = new ArrayList<>();
+        supportedHttpMethods.add(HttpMethod.get);
     }
 
     /**
@@ -59,5 +71,10 @@ public abstract class ParsingActionHandler<A> implements ActionHandler<A> {
             default:
                 throw new MethodNotSupportedException(request);
         }
+    }
+
+    @Override
+    public List<HttpMethod> supportedMethods() {
+        return supportedHttpMethods;
     }
 }
