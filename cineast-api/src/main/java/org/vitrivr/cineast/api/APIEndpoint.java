@@ -1,15 +1,17 @@
 package org.vitrivr.cineast.api;
 
-import static com.beerboy.ss.descriptor.EndpointDescriptor.endpointPath;
-import static com.beerboy.ss.descriptor.MethodDescriptor.path;
+import static io.github.manusant.ss.descriptor.EndpointDescriptor.endpointPath;
+import static io.github.manusant.ss.descriptor.MethodDescriptor.path;
 
-import com.beerboy.ss.SparkSwagger;
-import com.beerboy.ss.rest.Endpoint;
+import com.beerboy.spark.typify.spec.IgnoreSpec;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.github.manusant.ss.SparkSwagger;
+import io.github.manusant.ss.rest.Endpoint;
 import java.io.IOException;
-import java.util.Arrays;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.api.messages.general.AnyMessage;
 import org.vitrivr.cineast.api.messages.general.Ping;
 import org.vitrivr.cineast.api.messages.lookup.IdList;
 import org.vitrivr.cineast.api.messages.lookup.OptionallyFilteredIdList;
@@ -18,6 +20,9 @@ import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
 import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
 import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
+import org.vitrivr.cineast.api.messages.session.ExtractionContainerMessage;
+import org.vitrivr.cineast.api.messages.session.SessionState;
+import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 import org.vitrivr.cineast.api.rest.handlers.actions.*;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.*;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
@@ -78,6 +83,7 @@ public class APIEndpoint implements Endpoint {
      * @param secure If true, the new Service will be setup as secure with TLS enabled.
      * @return {@link Service}
      */
+    @SuppressWarnings("unchecked") // SparkSwagger.ignores() results in warning...
     private static Service dispatchService(boolean secure) {
         final APIConfig config = Config.sharedConfig().getApi();
         final Service service = Service.ignite();
@@ -111,8 +117,12 @@ public class APIEndpoint implements Endpoint {
             service.webSocket(String.format("/%s/%s/websocket", CONTEXT, VERSION), WebsocketAPI.class);
         }
 
+        /* Init Swagger */
+        swagger = SparkSwagger.of(service).ignores(IgnoreSpec.newBuilder().withIgnoreAnnotated(
+            JsonIgnore.class)::build).endpoint(new APIEndpoint());
 
-
+/*
+        // TODO re-implement this functionality
         if(config.getServeUI()){
           service.staticFiles.externalLocation(config.getUiLocation());
             service.redirect.any("/gallery", "/");
@@ -121,7 +131,7 @@ public class APIEndpoint implements Endpoint {
             service.redirect.any("/mediaobject", "/");
             service.redirect.any("/mediaobject/:objectId", "/");
 
-        }
+        }*/
 
         /* Setup HTTP/RESTful connection (if configured). */
         if (config.getEnableRest()) {
@@ -139,8 +149,6 @@ public class APIEndpoint implements Endpoint {
             response.header("Access-Control-Allow-Origin", "*");
             response.header("Access-Control-Allow-Headers", "*");
         });
-
-
 
         return service;
     }
@@ -186,7 +194,7 @@ public class APIEndpoint implements Endpoint {
     public void bind(final SparkSwagger restApi){
         // TODO replace parameters with constants and the routes (minus common makePath result) as route names. Might also be worth to document the routes by themselves
         restApi.endpoint(
-            endpointPath("") // TODO See whether that's a good idea or the prefix of makePath should be used here
+            endpointPath(namespace()) // TODO See whether that's a good idea or the prefix of makePath should be used here
                 .withDescription(""), (q,a) -> {})
         .get(path(makePath("status")).withDescription("Ping the server").withResponseType(Ping.class), new StatusInvokationHandler())
         .get(path(makePath("find/object/by/:attribute/:value"))
@@ -260,6 +268,34 @@ public class APIEndpoint implements Endpoint {
             .withRequestType(IdList.class)
             .withResponseAsCollection(Tag.class) // TODO un-collection-ify this
             , new FindTagsByActionHandler())
+        .post(path(makePath("session/start"))
+            .withDescription("Starts a new session")
+            .withRequestType(StartSessionMessage.class)
+            .withResponseType(SessionState.class)
+            , new StartSessionHandler())
+        .get(path(makePath("session/end/:id"))
+            .withDescription("Ends the given session")
+            .withResponseType(SessionState.class)
+            , new EndSessionHandler())
+        .get(path(makePath("session/validate:id"))
+            .withDescription("Validates the specified session")
+            .withResponseType(SessionState.class)
+            , new ValidateSessionHandler())
+        .post(path(makePath("session/extract/new"))
+            .withDescription("Extract new object")
+            .withRequestType(ExtractionContainerMessage.class)
+            .withResponseType(SessionState.class)
+            , new ExtractItemHandler())
+        .post(path(makePath("session/extract/end"))
+            .withDescription("End the current extraction session")
+            .withResponseType(SessionState.class)
+            .withRequestType(AnyMessage.class)
+            , new EndExtractionHandler())
+        .post(path(makePath("session/extract/start"))
+            .withDescription("Start the extraction session")
+            .withRequestType(AnyMessage.class)
+            .withResponseType(SessionState.class)
+            , new StartExtractionHandler())
         ;
     }
 
@@ -269,7 +305,8 @@ public class APIEndpoint implements Endpoint {
      * @param service Service for which routes should be registered.
      */
     private static void registerRoutes(Service service) {
-        service.get(makePath("status"), new StatusInvokationHandler());
+        // TODO is being replaced by singleton-swaggerised version of APIEndpoint, this is the todo-list
+        /*service.get(makePath("status"), new StatusInvokationHandler());
         service.path(makePath("find"), () -> {
             service.get("/object/by/:attribute/:value", new FindObjectByActionHandler());
             service.get("/metadata/by/id/:id", new FindMetadataByObjectIdActionHandler());
@@ -288,15 +325,15 @@ public class APIEndpoint implements Endpoint {
             service.post("/metadata/in/:domain", new FindMetadataInDomainByObjectIdActionHandler());
             service.post("/metadata/with/:key", new FindMetadataByKeyByObjectIdActionHandler());
             service.post("/tags/by/id", new FindTagsByActionHandler());
-        });
-        service.path(makePath("session"), () -> {
+        });*/
+        /*service.path(makePath("session"), () -> {
             service.post("/start", new StartSessionHandler());
             service.get("/end/:id", new EndSessionHandler());
             service.get("/validate/:id", new ValidateSessionHandler());
             service.post("/extract/new", new ExtractItemHandler());
             service.post("/extract/end", new EndExtractionHandler());
             service.post("/extract/start", new StartExtractionHandler());
-        });
+        });*/
         if (Config.sharedConfig().getApi().getServeContent()) {
           service.path(makePath("get"), () -> {
             service.get("/thumbnails/:id", new ResolvedContentRoute(
@@ -311,6 +348,11 @@ public class APIEndpoint implements Endpoint {
 
     }
 
+    public static void writeOpenApiDocPersistently(final String path) throws IOException {
+        swagger.generateAndStoreDoc(path);
+        LOGGER.info("Successfully stored openapi spec at "+path);
+    }
+
     /**
      * Concatenates the provided service name into a full URL path.
      *
@@ -318,6 +360,12 @@ public class APIEndpoint implements Endpoint {
      * @return Full path to the service.
      */
     private static String makePath(String name) {
-        return String.format("/%s/%s/%s", CONTEXT, VERSION, name);
+        return String.format("%s/%s", "", name);
+//        return String.format("%s/%s", namespace(), name);
+//        return String.format("/%s/%s/%s", CONTEXT, VERSION, name);
+    }
+
+    private static String namespace(){
+        return String.format("/%s/%s", CONTEXT, VERSION);
     }
 }

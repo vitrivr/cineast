@@ -208,7 +208,7 @@ public abstract class AbstractExtractionFileHandler<T> implements Runnable,
             }
           }
 
-          List<MediaObjectMetadataDescriptor> metadata = Arrays.stream(item.getMetadata())
+          List<MediaObjectMetadataDescriptor> metadata = item.getMetadata().stream()
               .map(el -> MediaObjectMetadataDescriptor.fromExisting(el, objectId))
               .collect(Collectors.toList());
           this.metadataWriter.write(metadata);

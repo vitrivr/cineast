@@ -252,7 +252,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
             }
           }
 
-          List<MediaObjectMetadataDescriptor> metadata = Arrays.stream(pair.getLeft().getMetadata())
+          List<MediaObjectMetadataDescriptor> metadata = pair.getLeft().getMetadata().stream()
               .map(el -> MediaObjectMetadataDescriptor.fromExisting(el, objectId))
               .collect(Collectors.toList());
           this.metadataWriter.write(metadata);

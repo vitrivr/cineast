@@ -1,7 +1,10 @@
 package org.vitrivr.cineast.api.messages.session;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Arrays;
+import java.util.List;
 import org.vitrivr.cineast.api.messages.interfaces.Message;
 import org.vitrivr.cineast.api.messages.interfaces.MessageType;
 import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
@@ -11,15 +14,24 @@ import org.vitrivr.cineast.standalone.run.ExtractionItemContainer;
  */
 public class ExtractionContainerMessage implements Message {
 
-  private ExtractionItemContainer[] items;
+  private List<ExtractionItemContainer> items;
+
+  public ExtractionContainerMessage(ExtractionItemContainer[] items) {
+    this.items = Arrays.asList(items);
+  }
 
   @JsonCreator
-  public ExtractionContainerMessage(@JsonProperty("items") ExtractionItemContainer[] items) {
+  public ExtractionContainerMessage(@JsonProperty("items") List<ExtractionItemContainer> items) {
     this.items = items;
   }
 
-  public ExtractionItemContainer[] getItems() {
+  public List<ExtractionItemContainer> getItems(){
     return this.items;
+  }
+
+  @JsonIgnore
+  public ExtractionItemContainer[] getItemsAsArray() {
+    return this.items.toArray(new ExtractionItemContainer[0]);
   }
 
   @Override

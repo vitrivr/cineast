@@ -17,9 +17,18 @@ distributions {
     }
 }
 
+configurations.all {
+    // Check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 repositories {
     maven {
         url "https://packagecloud.io/manusant/beerRepo/maven2"
+    }
+    maven {
+        // DBIS Nexus
+        url "https://dbis-nexus.dmi.unibas.ch/repository/maven2/"
     }
 }
 
@@ -37,5 +46,5 @@ dependencies {
     compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.1'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.10.0'
     compile group: 'de.svenkubiak', name: 'jBCrypt', version: '0.4.1'
-    compile group: 'com.beerboy.ss', name: 'spark-swagger', version: '1.0.0.48'
+    compile group: 'io.github.manusant', name: 'spark-swagger', version: '1.0.0.49-SNAPSHOT', changing:true
 }

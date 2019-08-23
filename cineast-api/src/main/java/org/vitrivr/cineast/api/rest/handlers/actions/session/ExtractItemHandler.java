@@ -30,8 +30,8 @@ public class ExtractItemHandler extends ParsingActionHandler<ExtractionContainer
       throws ActionHandlerException {
     SessionState state = ValidateSessionHandler.validateSession(parameters); //TODO Use State
 
-    LOGGER.debug("Received items {}", Arrays.toString(context.getItems()));
-    SessionExtractionContainer.addPaths(context.getItems());
+    LOGGER.debug("Received items {}", Arrays.toString(context.getItemsAsArray()));
+    SessionExtractionContainer.addPaths(context.getItemsAsArray());
     return state;
   }
 
