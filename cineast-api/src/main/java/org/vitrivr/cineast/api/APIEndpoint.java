@@ -5,35 +5,26 @@ import static io.github.manusant.ss.descriptor.MethodDescriptor.path;
 
 import com.beerboy.spark.typify.spec.IgnoreSpec;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.github.manusant.ss.ApiEndpoint;
 import io.github.manusant.ss.SparkSwagger;
+import io.github.manusant.ss.descriptor.MethodDescriptor;
 import io.github.manusant.ss.rest.Endpoint;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.api.messages.general.AnyMessage;
-import org.vitrivr.cineast.api.messages.general.Ping;
-import org.vitrivr.cineast.api.messages.lookup.IdList;
-import org.vitrivr.cineast.api.messages.lookup.OptionallyFilteredIdList;
-import org.vitrivr.cineast.api.messages.query.SimilarityQuery;
-import org.vitrivr.cineast.api.messages.result.MediaObjectMetadataQueryResult;
-import org.vitrivr.cineast.api.messages.result.MediaObjectQueryResult;
-import org.vitrivr.cineast.api.messages.result.MediaSegmentQueryResult;
-import org.vitrivr.cineast.api.messages.result.SimilarityQueryResultBatch;
-import org.vitrivr.cineast.api.messages.session.ExtractionContainerMessage;
-import org.vitrivr.cineast.api.messages.session.SessionState;
-import org.vitrivr.cineast.api.messages.session.StartSessionMessage;
 import org.vitrivr.cineast.api.rest.handlers.actions.*;
 import org.vitrivr.cineast.api.rest.handlers.actions.session.*;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
+import org.vitrivr.cineast.api.rest.handlers.interfaces.DocumentedRestOperation;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemObjectResolver;
 import org.vitrivr.cineast.api.rest.resolvers.FileSystemThumbnailResolver;
 import org.vitrivr.cineast.api.rest.routes.ResolvedContentRoute;
 import org.vitrivr.cineast.api.websocket.WebsocketAPI;
 
-import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
-import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
-import org.vitrivr.cineast.core.data.tag.Tag;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.standalone.config.APIConfig;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -41,6 +32,8 @@ import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 import spark.Service;
 
 import java.io.File;
+import spark.Spark;
+import spark.route.HttpMethod;
 
 /**
  * This class establishes a HTTP API endpoint listening on the specified port(s). The HTTP handling is
@@ -71,11 +64,26 @@ public class APIEndpoint implements Endpoint {
     private static final String CONTEXT = "api";
 
     /** References to the HTTP and HTTPS service. */
-    private static Service http, https;
+    private Service http, https;
 
-    private static SparkSwagger swagger;
+    private SparkSwagger swagger;
 
     public static ContinuousRetrievalLogic retrievalLogic = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase()); //TODO there is certainly a nicer way to do this...
+
+    private static APIEndpoint instance = null;
+
+    public static APIEndpoint getInstance(){
+        if(instance == null){
+            instance = new APIEndpoint();
+        }
+        return instance;
+    }
+
+    private APIEndpoint(){
+        registerOperations();
+    }
+
+    private List<DocumentedRestOperation> registeredOperations = new ArrayList<>();
 
     /**
      * Dispatches a new Jetty {@link Service} (HTTP endpoint). The method takes care of all the necessary setup.
@@ -84,7 +92,7 @@ public class APIEndpoint implements Endpoint {
      * @return {@link Service}
      */
     @SuppressWarnings("unchecked") // SparkSwagger.ignores() results in warning...
-    private static Service dispatchService(boolean secure) {
+    private Service dispatchService(boolean secure) {
         final APIConfig config = Config.sharedConfig().getApi();
         final Service service = Service.ignite();
 
@@ -118,8 +126,10 @@ public class APIEndpoint implements Endpoint {
         }
 
         /* Init Swagger */
-        swagger = SparkSwagger.of(service).ignores(IgnoreSpec.newBuilder().withIgnoreAnnotated(
-            JsonIgnore.class)::build).endpoint(new APIEndpoint());
+        if(config.getEnableLiveDoc() && swagger == null){
+            swagger = SparkSwagger.of(service).ignores(IgnoreSpec.newBuilder().withIgnoreAnnotated(
+                JsonIgnore.class)::build).endpoint(instance);
+        }
 
 /*
         // TODO re-implement this functionality
@@ -156,23 +166,29 @@ public class APIEndpoint implements Endpoint {
     /**
      * Starts the RESTful / WebSocket API.
      */
-    public static void start() {
+    public void start() {
         /* Start insecure HTTP connection. */
         if (Config.sharedConfig().getApi().getEnableRest() || Config.sharedConfig().getApi().getEnableWebsocket()) {
             http = dispatchService(false);
+            if(!Config.sharedConfig().getApi().getEnableLiveDoc()){
+                registerRoutesOnService(http);
+            }
             http.init();
             http.awaitInitialization();
         }
 
         if (Config.sharedConfig().getApi().getEnableRestSecure() || Config.sharedConfig().getApi().getEnableWebsocketSecure()) {
             https = dispatchService(true);
+            registerRoutesOnService(https);
             https.init();
             https.awaitInitialization();
         }
 
 
         try {
-            swagger.generateDoc();
+            if(Config.sharedConfig().getApi().getEnableLiveDoc() && swagger != null){
+                swagger.generateDoc();
+            }
         } catch (IOException e) {
             LOGGER.warn("OpenAPI serving failed due to exception during generateDoc", e);
         }
@@ -182,121 +198,134 @@ public class APIEndpoint implements Endpoint {
      * Stops the RESTful / WebSocket API.
      */
     public static void stop() {
-        if (Config.sharedConfig().getApi().getEnableRest() || Config.sharedConfig().getApi().getEnableWebsocket()) {
+        if(instance != null){
+            instance.shutdown();
+        }
+    }
+
+    public void shutdown() {
+        if (Config.sharedConfig().getApi().getEnableRest() || Config.sharedConfig().getApi()
+            .getEnableWebsocket()) {
             http.stop();
         }
-        if (Config.sharedConfig().getApi().getEnableRestSecure() || Config.sharedConfig().getApi().getEnableWebsocketSecure()) {
+        if (Config.sharedConfig().getApi().getEnableRestSecure() || Config.sharedConfig().getApi()
+            .getEnableWebsocketSecure()) {
             https.stop();
         }
     }
 
+    private ApiEndpoint registerSparkSwaggerEndpoint(final SparkSwagger restApi){
+        return restApi.endpoint(endpointPath(namespace()).withDescription("namespace description or what?"), (q,a) -> {/* no default handler TODO endpoint descriptor? */});
+    }
+
+
+    private void registerRoutesOnEndpoint(final ApiEndpoint apiEndpoint){
+        registeredOperations.forEach(r -> registerRoute(r,apiEndpoint));
+    }
+
+    private void registerRoutesOnService(final Service service){
+        registeredOperations.forEach(r -> registerRoute(r, service));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerRoute(final DocumentedRestOperation route, final ApiEndpoint apiEndpoint){
+        route.supportedMethods().forEach(m -> {
+            HttpMethod method = (HttpMethod)m;
+            MethodDescriptor.Builder builder;
+            switch(method){
+                case get:
+                    apiEndpoint.get(path(makePath(route.routeForGet())).withResponseType(route.outClass()).withDescription(route.descriptionForGet()), route);
+                    break;
+                case post:
+                    builder = path(makePath(route.routeForPost()));
+                    if(route.isResponseCollection()){
+                        builder.withResponseAsCollection(route.outClass());
+                    }else{
+                        builder.withResponseType(route.outClass());
+                    }
+                    builder.withRequestType(route.inClass()).withDescription(route.descriptionForPost());
+                    apiEndpoint.post(builder, route);
+                    break;
+                case put:
+                    builder = path(makePath(route.routeForPost()));
+                    if(route.isResponseCollection()){
+                        builder.withResponseAsCollection(route.outClass());
+                    }else{
+                        builder.withResponseType(route.outClass());
+                    }
+                    builder.withRequestType(route.inClass()).withDescription(route.descriptionForPost());
+                    apiEndpoint.put(builder, route);
+                    break;
+                case delete:
+                    builder = path(makePath(route.routeForPost()));
+                    if(route.isResponseCollection()){
+                        builder.withResponseAsCollection(route.outClass());
+                    }else{
+                        builder.withResponseType(route.outClass());
+                    }
+                    builder.withRequestType(route.inClass()).withDescription(route.descriptionForPost());
+                    apiEndpoint.delete(builder, route);
+                    break;
+                default:
+                    LOGGER.warn("Route {} supports unsupported http method {}",route, method);
+            }
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerRoute(final DocumentedRestOperation route, final Service service){
+        route.supportedMethods().forEach(m -> {
+            HttpMethod method = (HttpMethod)m;
+            MethodDescriptor.Builder builder;
+            switch(method){
+                case get:
+                    service.get(makePath(route.routeForGet()), route);
+                    break;
+                case post:
+                    service.post(makePath(route.routeForPost()), route);
+                    break;
+                case put:
+                    service.put(makePath(route.routeForPut()), route);
+                    break;
+                case delete:
+                    service.delete(makePath(route.routeForDelete()), route);
+                    break;
+                default:
+                    LOGGER.warn("Route {} supports unsupported http method {}",route, method);
+            }
+        });
+    }
+
     @Override
     public void bind(final SparkSwagger restApi){
-        // TODO replace parameters with constants and the routes (minus common makePath result) as route names. Might also be worth to document the routes by themselves
-        restApi.endpoint(
-            endpointPath(namespace()) // TODO See whether that's a good idea or the prefix of makePath should be used here
-                .withDescription(""), (q,a) -> {})
-        .get(path(makePath("status")).withDescription("Ping the server").withResponseType(Ping.class), new StatusInvokationHandler())
-        .get(path(makePath("find/object/by/:attribute/:value"))
-            .withDescription("Find object by attribute and value")
-            .withResponseType(MediaObjectQueryResult.class)
-            , new FindObjectByActionHandler())
-        .get(path(makePath("find/metadata/by/id/:id"))
-            .withDescription("Find meta data by object id")
-            .withResponseType(MediaObjectMetadataQueryResult.class)
-            , new FindMetadataByObjectIdActionHandler())
-        .get(path(makePath("find/metadata/in/:domain/by/id/:id"))
-            .withDescription("Find meta data in specific domain by object id")
-            .withResponseType(MediaObjectMetadataQueryResult.class)
-            , new FindMetadataInDomainByObjectIdActionHandler())
-        .get(path(makePath("find/metadata/of/:id/in/:domain/with/:key"))
-            .withDescription("Find meta data for a specific object id in given domain and key")
-            .withResponseType(MediaObjectMetadataQueryResult.class)
-            , new FindMetadataByDomainWithKeyByObjectIdActionHandler())
-        .get(path(makePath("find/metadata/with/:key"))
-            .withDescription("Find Meta data for a specific key")
-            .withResponseType(MediaObjectMetadataQueryResult.class)
-            , new FindMetadataByKeyByObjectIdActionHandler())
-        .get(path(makePath("find/tags/by/:attribute/:value"))
-            .withDescription("Find tags by attribute")
-            .withResponseAsCollection(Tag.class)// TODO un-collection-ify this
-            , new FindTagsByActionHandler())
-        .get(path(makePath("find/objects/all/:type"))
-            .withDescription("Find all objects by type")
-            .withResponseAsCollection(MediaObjectDescriptor.class) // Todo un-collection-ify this
-            , new FindObjectAllActionHandler())
-        .get(path(makePath("find/segments/all/object/:id"))
-            .withDescription("Find all segments by object id")
-            .withResponseAsCollection(MediaSegmentDescriptor.class) // TODO un-collection-ify this
-            , new FindSegmentsByObjectIdActionHandler())
-        .get(path(makePath("find/tags/all"))
-            .withDescription("Find all tags")
-            .withResponseAsCollection(Tag.class) // TODO un-collection-ify this
-            , new FindTagsActionHandler())
-        .post(path(makePath("find/segments/similar"))
-            .withDescription("Find similar segments. Request contains similarity query")
-            .withRequestType(SimilarityQuery.class)
-            .withResponseType(SimilarityQueryResultBatch.class)
-            , new FindSegmentSimilarActionHandler(retrievalLogic))
-        .post(path(makePath("find/segments/by/id"))
-            .withDescription("Finds segments by segment id.  Request contains list of ids for which request was issued")
-            .withRequestType(IdList.class)
-            .withResponseType(MediaSegmentQueryResult.class)
-            , new FindSegmentsByIdActionHandler())
-        .post(path(makePath("find/objects/by/id"))
-            .withDescription("Find objects by object id.  Request contains list of ids for which request was issued")
-            .withRequestType(IdList.class)
-            .withResponseType(MediaObjectQueryResult.class)
-            , new FindObjectByActionHandler())
-        .post(path(makePath("find/metadata/by/id"))
-            .withDescription("Find meta data by object id.  Request contains list of ids for which request was issued")
-            .withRequestType(OptionallyFilteredIdList.class)
-            .withResponseType(MediaObjectMetadataQueryResult.class)
-            , new FindMetadataByObjectIdActionHandler())
-        .post(path(makePath("find/metadata/in/:domain"))
-            .withDescription("Find meta data in domain.  Request contains list of ids for which request was issued")
-            .withRequestType(IdList.class)
-            .withResponseType(MediaObjectMetadataQueryResult.class)
-            , new FindMetadataInDomainByObjectIdActionHandler())
-        .post(path(makePath("find/metadata/with/:key"))
-            .withDescription("Find meta data for a given key. Request contains list of ids for which request was issued")
-            .withRequestType(IdList.class)
-            .withResponseType(MediaObjectMetadataQueryResult.class)
-            , new FindMetadataByKeyByObjectIdActionHandler())
-        .post(path(makePath("find/tags/by/id"))
-            .withDescription("Find tags by id")
-            .withRequestType(IdList.class)
-            .withResponseAsCollection(Tag.class) // TODO un-collection-ify this
-            , new FindTagsByActionHandler())
-        .post(path(makePath("session/start"))
-            .withDescription("Starts a new session")
-            .withRequestType(StartSessionMessage.class)
-            .withResponseType(SessionState.class)
-            , new StartSessionHandler())
-        .get(path(makePath("session/end/:id"))
-            .withDescription("Ends the given session")
-            .withResponseType(SessionState.class)
-            , new EndSessionHandler())
-        .get(path(makePath("session/validate:id"))
-            .withDescription("Validates the specified session")
-            .withResponseType(SessionState.class)
-            , new ValidateSessionHandler())
-        .post(path(makePath("session/extract/new"))
-            .withDescription("Extract new object")
-            .withRequestType(ExtractionContainerMessage.class)
-            .withResponseType(SessionState.class)
-            , new ExtractItemHandler())
-        .post(path(makePath("session/extract/end"))
-            .withDescription("End the current extraction session")
-            .withResponseType(SessionState.class)
-            .withRequestType(AnyMessage.class)
-            , new EndExtractionHandler())
-        .post(path(makePath("session/extract/start"))
-            .withDescription("Start the extraction session")
-            .withRequestType(AnyMessage.class)
-            .withResponseType(SessionState.class)
-            , new StartExtractionHandler())
-        ;
+        ApiEndpoint apiEndpoint = registerSparkSwaggerEndpoint(restApi);
+        registerRoutesOnEndpoint(apiEndpoint);
+    }
+
+    private void registerOperations(){
+        /* Add your operations here */
+        registeredOperations.addAll(
+            Arrays.asList(
+                new FindMetadataByDomainWithKeyByObjectIdActionHandler(),
+                new FindMetadataByKeyByObjectIdActionHandler(),
+                new FindMetadataByObjectIdActionHandler(),
+                new FindMetadataInDomainByObjectIdActionHandler(),
+                new FindObjectAllActionHandler(),
+                new FindObjectByActionHandler(),
+                new FindSegmentsByIdActionHandler(),
+                new FindSegmentsByObjectIdActionHandler(),
+                new FindSegmentSimilarActionHandler(retrievalLogic),
+                new FindTagsActionHandler(),
+                new FindTagsByActionHandler(),
+                new StatusInvokationHandler(),
+                new EndExtractionHandler(),
+                new EndSessionHandler(),
+                new ExtractItemHandler(),
+                new StartExtractionHandler(),
+                new StartSessionHandler(),
+                new ValidateSessionHandler()
+            )
+        );
     }
 
     /**
@@ -304,36 +333,8 @@ public class APIEndpoint implements Endpoint {
      *
      * @param service Service for which routes should be registered.
      */
-    private static void registerRoutes(Service service) {
-        // TODO is being replaced by singleton-swaggerised version of APIEndpoint, this is the todo-list
-        /*service.get(makePath("status"), new StatusInvokationHandler());
-        service.path(makePath("find"), () -> {
-            service.get("/object/by/:attribute/:value", new FindObjectByActionHandler());
-            service.get("/metadata/by/id/:id", new FindMetadataByObjectIdActionHandler());
-            service.get("/metadata/in/:domain/by/id/:id", new FindMetadataInDomainByObjectIdActionHandler());
-            service.get("/metadata/of/:id/in/:domain/with/:key", new FindMetadataByDomainWithKeyByObjectIdActionHandler());
-            service.get("/metadata/with/:key", new FindMetadataByKeyByObjectIdActionHandler());
-            service.get("/tags/by/:attribute/:value", new FindTagsByActionHandler());
-            service.get("/objects/all/:type", new FindObjectAllActionHandler());
-            service.get("/segments/all/object/:id", new FindSegmentsByObjectIdActionHandler());
-            service.get("/tags/all", new FindTagsActionHandler());
-
-            service.post("/segments/similar", new FindSegmentSimilarActionHandler(retrievalLogic));
-            service.post("/segments/by/id", new FindSegmentsByIdActionHandler());
-            service.post("/objects/by/id", new FindObjectByActionHandler());
-            service.post("/metadata/by/id", new FindMetadataByObjectIdActionHandler());
-            service.post("/metadata/in/:domain", new FindMetadataInDomainByObjectIdActionHandler());
-            service.post("/metadata/with/:key", new FindMetadataByKeyByObjectIdActionHandler());
-            service.post("/tags/by/id", new FindTagsByActionHandler());
-        });*/
-        /*service.path(makePath("session"), () -> {
-            service.post("/start", new StartSessionHandler());
-            service.get("/end/:id", new EndSessionHandler());
-            service.get("/validate/:id", new ValidateSessionHandler());
-            service.post("/extract/new", new ExtractItemHandler());
-            service.post("/extract/end", new EndExtractionHandler());
-            service.post("/extract/start", new StartExtractionHandler());
-        });*/
+    private void registerRoutes(Service service) {
+        // TODO Register these special cases as well with the new model
         if (Config.sharedConfig().getApi().getServeContent()) {
           service.path(makePath("get"), () -> {
             service.get("/thumbnails/:id", new ResolvedContentRoute(
@@ -348,7 +349,7 @@ public class APIEndpoint implements Endpoint {
 
     }
 
-    public static void writeOpenApiDocPersistently(final String path) throws IOException {
+    public void writeOpenApiDocPersistently(final String path) throws IOException {
         swagger.generateAndStoreDoc(path);
         LOGGER.info("Successfully stored openapi spec at "+path);
     }

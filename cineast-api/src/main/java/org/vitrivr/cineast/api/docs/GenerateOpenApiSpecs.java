@@ -31,7 +31,7 @@ public class GenerateOpenApiSpecs {
     }
 
     /* Start Cineast API endpoint. */
-    APIEndpoint.start();
+//    APIEndpoint.start();
 
     /* This part is only reached when user enters exit/quit: Stops the Cineast API endpoint. */
     APIEndpoint.stop();

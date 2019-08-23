@@ -10,6 +10,7 @@ public final class APIConfig {
 	private boolean enableExtractionServer = true;
 	private boolean enableRest = false;
   private boolean enableRestSecure = false;
+  private boolean enableRestLiveDoc = false; // Defaults to same result as enableRest
 	private String keystore;
 	private String keystorePassword;
 
@@ -61,6 +62,10 @@ public final class APIConfig {
   public void setEnableRestSecure(boolean enableRest) {
     this.enableRestSecure = enableRest;
   }
+
+  @JsonProperty
+	public boolean getEnableLiveDoc(){return this.enableRestLiveDoc;}
+	public void setEnableRestLiveDoc(boolean enableRestLiveDoc){this.enableRestLiveDoc = enableRestLiveDoc;}
 
 	@JsonProperty
 	public String getKeystore() {

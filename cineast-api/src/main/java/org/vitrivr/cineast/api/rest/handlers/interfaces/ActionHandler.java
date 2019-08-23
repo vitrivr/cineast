@@ -77,7 +77,7 @@ public interface ActionHandler<A> extends Route {
      * @return The supported HTTP methods. Can also be used to control which routes are registered
      */
     default List<HttpMethod> supportedMethods(){
-        return Arrays.asList(HttpMethod.get);
+        return (List<HttpMethod>)Arrays.asList(HttpMethod.get);
     }
 
     /**

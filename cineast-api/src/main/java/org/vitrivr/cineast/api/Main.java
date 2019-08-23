@@ -25,7 +25,7 @@ public class Main {
     }
 
     /* Start Cineast API endpoint. */
-    APIEndpoint.start();
+    APIEndpoint.getInstance().start();
 
     /* Start Cineast CLI in interactive mode (blocking). */
     CLI.start(CineastCli.class);
