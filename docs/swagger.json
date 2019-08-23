@@ -1,0 +1,882 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Cineast is vitrivr's content-based multimedia retrieval engine. This is it's API.",
+    "version" : "1.0.0",
+    "title" : "Cineast Api",
+    "termsOfService" : "",
+    "contact" : {
+      "name" : "Cineast Team",
+      "url" : "https://vitrivr.org",
+      "email" : "contact@vitrivr.org"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "localhost:4567",
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "api/v1",
+    "description" : "namespace description or what?"
+  } ],
+  "schemes" : [ "http", "https", "ws", "wss" ],
+  "paths" : {
+    "/api/v1/find/metadata/of/{id}/in/{domain}/with/{key}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find meta data for specific object id in given domain with given key",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "domain",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "key",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaObjectMetadataQueryResult"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/metadata/with/{key}/by/id/{id}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find meta data for a given object id with specified key",
+        "parameters" : [ {
+          "name" : "key",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaObjectMetadataQueryResult"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find meta data for a given object id with specified key",
+        "parameters" : [ {
+          "name" : "key",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IdList"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaObjectMetadataQueryResult"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/metadata/by/id/{id}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find metadata by object id",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaObjectMetadataQueryResult"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find metadata by object id",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/OptionallyFilteredIdList"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaObjectMetadataQueryResult"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/metadata/in/{domain}/by/id/{id}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find meta data in domain by object id",
+        "parameters" : [ {
+          "name" : "domain",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaObjectMetadataQueryResult"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find meta data in domain by object id",
+        "parameters" : [ {
+          "name" : "domain",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IdList"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaObjectMetadataQueryResult"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/objects/all/{type}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find all objects for a certain type",
+        "parameters" : [ {
+          "name" : "type",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaObjectDescriptor"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/object/by/{attribute}/{value}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find object by attribute and value",
+        "parameters" : [ {
+          "name" : "attribute",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaObjectQueryResult"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find object by attribute and value",
+        "parameters" : [ {
+          "name" : "attribute",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IdList"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaObjectQueryResult"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/segments/by/id" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Finds segments for specified ids",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaSegmentQueryResult"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Finds segments for specified ids",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IdList"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaSegmentQueryResult"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/segments/all/object/{id}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find segments for object id",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/MediaSegmentDescriptor"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/segments/similar" : {
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Finds similar segments based on the given query",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SimilarityQuery"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SimilarityQueryResultBatch"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/tags/all" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find all tags",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Tag"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/tags/by/{attribute}/{value}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find tags by attribute and value",
+        "parameters" : [ {
+          "name" : "attribute",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Tag"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/find/tags/by/id" : {
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Find tags for given id list",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IdList"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Tag"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/status" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Get the status of the server",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Ping"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/extract/end" : {
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "End the active extraction session",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AnyMessage"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SessionState"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/end/{id}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "End the session for id",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SessionState"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/extract/new" : {
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Extract new item",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ExtractionContainerMessage"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SessionState"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/extract/start" : {
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Start extraction session",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AnyMessage"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SessionState"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/start" : {
+      "post" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Start a new session for given credentials",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "query",
+          "description" : "Body object description",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/StartSessionMessage"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SessionState"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/validate/{id}" : {
+      "get" : {
+        "tags" : [ "api/v1" ],
+        "description" : "Validate the session with the given id",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SessionState"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "MediaObjectMetadataQueryResult" : {
+      "type" : "object"
+    },
+    "IdList" : {
+      "type" : "object",
+      "properties" : {
+        "ids" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "OptionallyFilteredIdList" : {
+      "type" : "object",
+      "properties" : {
+        "filters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AbstractMetadataFilterDescriptor"
+          }
+        },
+        "ids" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "AbstractMetadataFilterDescriptor" : {
+      "type" : "object",
+      "properties" : {
+        "keywords" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "MediaObjectDescriptor" : {
+      "type" : "object",
+      "properties" : {
+        "objectId" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        },
+        "exists" : {
+          "type" : "boolean"
+        },
+        "mediatypeId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "contentURL" : {
+          "type" : "string"
+        }
+      }
+    },
+    "MediaObjectQueryResult" : {
+      "type" : "object"
+    },
+    "MediaSegmentQueryResult" : {
+      "type" : "object"
+    },
+    "MediaSegmentDescriptor" : {
+      "type" : "object",
+      "properties" : {
+        "segmentId" : {
+          "type" : "string"
+        },
+        "objectId" : {
+          "type" : "string"
+        },
+        "start" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "end" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "startabs" : {
+          "type" : "number",
+          "format" : "float"
+        },
+        "endabs" : {
+          "type" : "number",
+          "format" : "float"
+        },
+        "exists" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "QueryComponent" : {
+      "type" : "object",
+      "properties" : {
+        "terms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/QueryTerm"
+          }
+        }
+      }
+    },
+    "SimilarityQuery" : {
+      "type" : "object",
+      "properties" : {
+        "components" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/QueryComponent"
+          }
+        }
+      }
+    },
+    "QueryTerm" : {
+      "type" : "object",
+      "properties" : {
+        "categories" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "IMAGE", "AUDIO", "MOTION", "MODEL3D", "LOCATION", "TIME", "TEXT", "TAG", "SEMANTIC", "ID", "BOOLEAN" ]
+        },
+        "data" : {
+          "type" : "string"
+        },
+        "cachedQueryContainer" : {
+          "$ref" : "#/definitions/QueryContainer"
+        }
+      }
+    },
+    "QueryContainer" : {
+      "type" : "object",
+      "properties" : {
+        "weight" : {
+          "type" : "number",
+          "format" : "float"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "superId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SimilarityQueryResult" : {
+      "type" : "object",
+      "properties" : {
+        "category" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SimilarityQueryResultBatch" : {
+      "type" : "object",
+      "properties" : {
+        "categories" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "results" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SimilarityQueryResult"
+          }
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object"
+    },
+    "Ping" : {
+      "type" : "object",
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "enum" : [ "UNKNOWN", "OK", "ERROR" ]
+        }
+      }
+    },
+    "AnyMessage" : {
+      "type" : "object",
+      "properties" : {
+        "messageType" : {
+          "type" : "string",
+          "enum" : [ "PING", "Q_SIM", "Q_MLT", "Q_NESEG", "Q_SEG", "M_LOOKUP", "SESSION_START", "QR_START", "QR_END", "QR_ERROR", "QR_OBJECT", "QR_METADATA_O", "QR_METADATA_S", "QR_SEGMENT", "QR_SIMILARITY" ]
+        }
+      }
+    },
+    "SessionState" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "validUntil" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "UNAUTHENTICATED", "USER", "ADMIN" ]
+        }
+      }
+    },
+    "ExtractionItemContainer" : {
+      "type" : "object",
+      "properties" : {
+        "object" : {
+          "$ref" : "#/definitions/MediaObjectDescriptor"
+        },
+        "metadata" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MediaObjectMetadataDescriptor"
+          }
+        },
+        "uri" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ExtractionContainerMessage" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ExtractionItemContainer"
+          }
+        }
+      }
+    },
+    "MediaObjectMetadataDescriptor" : {
+      "type" : "object",
+      "properties" : {
+        "objectId" : {
+          "type" : "string"
+        },
+        "domain" : {
+          "type" : "string"
+        },
+        "key" : {
+          "type" : "string"
+        },
+        "value" : {
+          "$ref" : "#/definitions/PrimitiveTypeProvider"
+        },
+        "exists" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "PrimitiveTypeProvider" : {
+      "type" : "object"
+    },
+    "StartSessionMessage" : {
+      "type" : "object",
+      "properties" : {
+        "credentials" : {
+          "$ref" : "#/definitions/Credentials"
+        }
+      }
+    },
+    "Credentials" : {
+      "type" : "object",
+      "properties" : {
+        "username" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "externalDocs" : {
+    "description" : "vitrivr's website",
+    "url" : "http://vitrivr.org"
+  }
+}

@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.docs;
 
+import java.io.IOException;
 import org.vitrivr.cineast.api.APIEndpoint;
 import org.vitrivr.cineast.standalone.cli.CineastCli;
 import org.vitrivr.cineast.standalone.config.Config;
@@ -31,9 +32,13 @@ public class GenerateOpenApiSpecs {
     }
 
     /* Start Cineast API endpoint. */
-//    APIEndpoint.start();
+    try {
+      APIEndpoint.getInstance().writeOpenApiDocPersistently("docs/swagger.json");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     /* This part is only reached when user enters exit/quit: Stops the Cineast API endpoint. */
-    APIEndpoint.stop();
+//    APIEndpoint.stop();
   }
 }

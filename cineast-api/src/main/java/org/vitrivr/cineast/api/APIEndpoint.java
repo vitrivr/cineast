@@ -350,8 +350,15 @@ public class APIEndpoint implements Endpoint {
     }
 
     public void writeOpenApiDocPersistently(final String path) throws IOException {
+        http = dispatchService(false);
+        if(!Config.sharedConfig().getApi().getEnableLiveDoc()){
+            registerRoutesOnService(http);
+        }
+        http.init();
+        http.awaitInitialization();
         swagger.generateAndStoreDoc(path);
         LOGGER.info("Successfully stored openapi spec at "+path);
+        stop();
     }
 
     /**
