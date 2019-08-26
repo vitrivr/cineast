@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.interfaces.ActionHandler;
@@ -32,13 +33,6 @@ public abstract class ParsingActionHandler<A,O> implements DocumentedRestOperati
         MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
-    }
-
-    protected List<HttpMethod> supportedHttpMethods;
-
-    {
-        supportedHttpMethods = new ArrayList<>();
-        supportedHttpMethods.add(HttpMethod.get);
     }
 
     /**
@@ -75,6 +69,6 @@ public abstract class ParsingActionHandler<A,O> implements DocumentedRestOperati
 
     @Override
     public List<HttpMethod> supportedMethods() {
-        return supportedHttpMethods;
+        return Collections.singletonList(HttpMethod.get);
     }
 }

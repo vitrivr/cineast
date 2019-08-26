@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
 import com.google.common.collect.Lists;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
@@ -27,10 +28,10 @@ public class FindObjectByActionHandler extends ParsingActionHandler<IdList, Medi
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    {
-        supportedHttpMethods.add(HttpMethod.post);
+    @Override
+    public List<HttpMethod> supportedMethods() {
+        return Arrays.asList(HttpMethod.get, HttpMethod.post);
     }
-
     /**
      * Processes a HTTP GET request.
      *

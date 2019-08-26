@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
+import java.util.Collections;
+import java.util.List;
 import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.session.CredentialManager;
@@ -15,10 +17,9 @@ import spark.route.HttpMethod;
 
 public class StartSessionHandler extends ParsingActionHandler<StartSessionMessage, SessionState> {
 
-    {
-        // ONLY method POST
-        supportedHttpMethods.clear();
-        supportedHttpMethods.add(HttpMethod.post);
+    @Override
+    public List<HttpMethod> supportedMethods() {
+        return Collections.singletonList(HttpMethod.post);
     }
 
     /**

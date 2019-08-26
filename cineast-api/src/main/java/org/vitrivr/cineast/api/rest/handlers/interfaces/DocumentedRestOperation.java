@@ -92,7 +92,9 @@ public interface DocumentedRestOperation<A,O> extends ActionHandler<A> {
    * A check whether the response is a collection.
    * If so, {@link #outClass()} returns the collection's item type
    * @return {@code true} if and only if this operation returns a collection and hence {@link #outClass()}
+   * @deprecated This will be removed in a future update, as some clients might not be able to properly handle top-level-collections. Hence, wrapper objects will be introduced.
    */
+  @Deprecated
   default boolean isResponseCollection(){
     return false;
   }

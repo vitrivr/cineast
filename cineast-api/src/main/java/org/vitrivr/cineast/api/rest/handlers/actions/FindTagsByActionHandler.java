@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
@@ -33,10 +34,10 @@ public class FindTagsByActionHandler extends ParsingActionHandler<IdList,Tag> {
     private static final String FIELD_NAME = "name";
     private static final String FIELD_MATCHING = "matchingname";
 
-    {
-        supportedHttpMethods.add(HttpMethod.post);
+    @Override
+    public List<HttpMethod> supportedMethods() {
+        return Arrays.asList(HttpMethod.get, HttpMethod.post);
     }
-
     /**
      * Performs the lookup of {@link Tag}s in the system.
      *

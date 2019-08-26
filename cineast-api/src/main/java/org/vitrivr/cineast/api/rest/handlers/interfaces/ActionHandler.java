@@ -64,7 +64,12 @@ public interface ActionHandler<A> extends Route {
 
     /**
      * Returns the supported {@link HttpMethod}s by this ActionHandler.
-     *
+     * <br>
+     * Implementing classes of this interface have to override this, if they do support anything other
+     * than {@link HttpMethod#get}.
+     * <br>
+     * The return value of this method is for information purposes only, i.e. there is no way to change the supported methods during runtime.
+     * <br>
      * Please be aware that {@link HttpMethod} by spark is a superset of the official HTTP methods.
      * However, {@link ActionHandler} only supports a subset of them:
      * <ul>
@@ -74,7 +79,7 @@ public interface ActionHandler<A> extends Route {
      *   <li>{@link HttpMethod#put}</li>
      * </ul>
      *
-     * @return The supported HTTP methods. Can also be used to control which routes are registered
+     * @return The supported HTTP methods. Can also be used to control which routes are registered.
      */
     default List<HttpMethod> supportedMethods(){
         return (List<HttpMethod>)Arrays.asList(HttpMethod.get);

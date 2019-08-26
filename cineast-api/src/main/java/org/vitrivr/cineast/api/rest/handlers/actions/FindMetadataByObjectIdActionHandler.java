@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import java.util.Arrays;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MediaObjectDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
@@ -24,10 +25,10 @@ public class FindMetadataByObjectIdActionHandler extends
 
   private static final String ATTRIBUTE_ID = ":id";
 
-  {
-    supportedHttpMethods.add(HttpMethod.post);
+  @Override
+  public List<HttpMethod> supportedMethods() {
+    return Arrays.asList(HttpMethod.get, HttpMethod.post);
   }
-
   /**
    * Processes a HTTP GET request.
    *

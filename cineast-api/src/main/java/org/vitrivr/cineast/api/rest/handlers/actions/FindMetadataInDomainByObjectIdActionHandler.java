@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import java.util.Arrays;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.api.messages.components.MetadataDomainFilter;
@@ -41,10 +42,10 @@ public class FindMetadataInDomainByObjectIdActionHandler extends ParsingActionHa
   private static final String ATTRIBUTE_ID = ":id";
   private static final String DOMAIN_NAME = ":domain";
 
-  {
-    supportedHttpMethods.add(HttpMethod.post);
+  @Override
+  public List<HttpMethod> supportedMethods() {
+    return Arrays.asList(HttpMethod.get, HttpMethod.post);
   }
-
   /**
    * Processes a HTTP GET request.
    *

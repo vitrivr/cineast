@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.rest.handlers.actions;
 
+import java.util.Arrays;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.api.messages.components.MetadataKeyFilter;
@@ -22,10 +23,6 @@ import spark.route.HttpMethod;
 public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandler<IdList, MediaObjectMetadataQueryResult> {
   private static final String ATTRIBUTE_ID = ":id";
   private static final String KEY_NAME = ":key";
-
-  {
-    supportedHttpMethods.add(HttpMethod.post);
-  }
 
   /**
    * Processes a HTTP GET request.
@@ -87,5 +84,10 @@ public class FindMetadataByKeyByObjectIdActionHandler extends ParsingActionHandl
   @Override
   public Class<MediaObjectMetadataQueryResult> outClass() {
     return MediaObjectMetadataQueryResult.class;
+  }
+
+  @Override
+  public List<HttpMethod> supportedMethods() {
+    return Arrays.asList(HttpMethod.get, HttpMethod.post);
   }
 }

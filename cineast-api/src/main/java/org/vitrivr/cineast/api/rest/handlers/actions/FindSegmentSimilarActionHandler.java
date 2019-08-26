@@ -29,10 +29,9 @@ public class FindSegmentSimilarActionHandler extends ParsingActionHandler<Simila
         this.continuousRetrievalLogic = retrievalLogic;
     }
 
-    {
-        // ONLY supports POST
-        supportedHttpMethods.clear();
-        supportedHttpMethods.add(HttpMethod.post);
+    @Override
+    public List<HttpMethod> supportedMethods() {
+        return Collections.singletonList(HttpMethod.post);
     }
 
     /**

@@ -1,5 +1,7 @@
 package org.vitrivr.cineast.api.rest.handlers.actions.session;
 
+import java.util.Collections;
+import java.util.List;
 import org.vitrivr.cineast.api.SessionExtractionContainer;
 import org.vitrivr.cineast.api.rest.exceptions.ActionHandlerException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
@@ -13,12 +15,6 @@ import spark.route.HttpMethod;
  * @author silvan on 23.01.18.
  */
 public class EndExtractionHandler extends ParsingActionHandler<AnyMessage, SessionState> {
-
-  {
-    // ONLY method POST
-    supportedHttpMethods.clear();
-    supportedHttpMethods.add(HttpMethod.post);
-  }
 
   @Override
   public Object doGet(Map<String, String> parameters) throws ActionHandlerException {
@@ -52,5 +48,10 @@ public class EndExtractionHandler extends ParsingActionHandler<AnyMessage, Sessi
   @Override
   public Class<SessionState> outClass() {
     return SessionState.class;
+  }
+
+  @Override
+  public List<HttpMethod> supportedMethods() {
+    return Collections.singletonList(HttpMethod.post);
   }
 }

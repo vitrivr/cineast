@@ -17,8 +17,9 @@ public class FindSegmentsByIdActionHandler extends ParsingActionHandler<IdList, 
 
     private final static String ID_NAME = ":id";
 
-    {
-        supportedHttpMethods.add(HttpMethod.post);
+    @Override
+    public List<HttpMethod> supportedMethods() {
+        return Arrays.asList(HttpMethod.get, HttpMethod.post);
     }
 
     /**
