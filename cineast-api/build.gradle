@@ -49,11 +49,4 @@ dependencies {
     compile group: 'io.github.manusant', name: 'spark-swagger', version: '1.0.0.49-SNAPSHOT', changing:true
 }
 
-task generateOpenApiSpecs(type: JavaExec){
-    classpath = sourceSets.main.runtimeClasspath
-    main = 'org.vitrivr.cineast.api.docs.GenerateOpenApiSpecs'
 
-    def config = project.hasProperty("cineastConfig") ? project.getProperty("cineastConfig") : "cineast.json"
-
-    args("${config}")
-}

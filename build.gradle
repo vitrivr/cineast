@@ -77,3 +77,12 @@ idea {
     }
 }
 
+task generateOpenApiSpecs(type: JavaExec){
+    classpath = project(":cineast-api").sourceSets.main.runtimeClasspath
+    main = 'org.vitrivr.cineast.api.docs.GenerateOpenApiSpecs'
+
+    def config = project.hasProperty("cineastConfig") ? project.getProperty("cineastConfig") : "cineast.json"
+
+    args("${config}")
+}
+

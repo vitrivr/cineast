@@ -33,12 +33,12 @@ public class GenerateOpenApiSpecs {
 
     /* Start Cineast API endpoint. */
     try {
-      APIEndpoint.getInstance().writeOpenApiDocPersistently("docs/swagger.json");
+      APIEndpoint.getInstance().writeOpenApiDocPersistently("docs/swagger.json"); // TODO use config?
     } catch (IOException e) {
       e.printStackTrace();
     }
 
     /* This part is only reached when user enters exit/quit: Stops the Cineast API endpoint. */
-//    APIEndpoint.stop();
+    APIEndpoint.stop();
   }
 }

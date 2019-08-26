@@ -15,12 +15,12 @@ $> ./gradlew cineast-runtime:fatJar
 $> java -jar cineast-runtime/build/libs/cineast-runtime-x.x-full.jar cineast.json
  ```
 
-## Generate OpenApi Sepcification
+## Generate OpenApi Specification
 
 If you need to rebuild the OpenApi Specification (OAS), there is a gradle task for this purpose:
 
 ```
-$> ./gradlew -PcineastConfig=<path/to/your/config> :cineast-api:generateOpenApiSpecs
+$> ./gradlew -PcineastConfig=<path/to/your/config> generateOpenApiSpecs
 ```
 
 You can omit `-PcineastConfig`, then the default config (`cineast.json`) is used.
@@ -39,19 +39,19 @@ For 3D rendering (required in order to support 3D models) you either need a vide
 2. Install Xvfb:
 
  ```
- sudo apt-get install xvfb
+ $> sudo apt-get install xvfb
  ```
  
 3. Start a new screen:
 
  ```
- sudo Xvfb :1 -ac -screen 0 1024x768x24 &
+ $> sudo Xvfb :1 -ac -screen 0 1024x768x24 &
  ```
  
 4. Using the new screen, start Cineast:
 
  ```
- DISPLAY=:1 java -jar cineast.jar -3d
+ $> DISPLAY=:1 java -jar cineast.jar -3d
  ```
  
 The -3d option will perform a 3D test. If it succeeds, cineast should generate a PNG image depicting two coloured

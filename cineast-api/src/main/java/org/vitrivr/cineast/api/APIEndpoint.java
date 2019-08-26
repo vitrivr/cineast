@@ -357,7 +357,7 @@ public class APIEndpoint implements Endpoint {
         http.init();
         http.awaitInitialization();
         swagger.generateAndStoreDoc(path);
-        LOGGER.info("Successfully stored openapi spec at "+path);
+        LOGGER.info("Successfully stored openapi spec at {}",path);
         stop();
     }
 
