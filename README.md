@@ -1,3 +1,4 @@
+[![swagger-editor](https://img.shields.io/badge/open--API-in--editor-green.svg?style=flat&label=open-api-v2)](https://editor.swagger.io/?url=https://raw.githubusercontent.com/sauterl/cineast/multi-module-openapi-support/docs/swagger.json)
 [![Build Status](https://travis-ci.org/vitrivr/cineast.svg?branch=master)](https://travis-ci.org/vitrivr/cineast)
 
 # Cineast
@@ -7,12 +8,23 @@ Cineast is written in Java and uses [CottontailDB](https://github.com/https://gi
 ## Building Cineast
 Cineast can be built using [Gradle](http://gradle.org/). Building and running it is as easy as
 ```
- git clone --recursive https://github.com/vitrivr/cineast.git cineast
- cd cineast
- ./gradlew :cineast-core:generateProto
- ./gradlew cineast-runtime:fatJar
- java -jar cineast-runtime/build/libs/cineast-runtime-x.x-full.jar cineast.json
+$> git clone --recursive https://github.com/vitrivr/cineast.git cineast
+$> cd cineast
+$> ./gradlew :cineast-core:generateProto
+$> ./gradlew cineast-runtime:fatJar
+$> java -jar cineast-runtime/build/libs/cineast-runtime-x.x-full.jar cineast.json
  ```
+
+## Generate OpenApi Sepcification
+
+If you need to rebuild the OpenApi Specification (OAS), there is a gradle task for this purpose:
+
+```
+$> ./gradlew -PcineastConfig=<path/to/your/config> :cineast-api:generateOpenApiSpecs
+```
+
+You can omit `-PcineastConfig`, then the default config (`cineast.json`) is used.
+As a result, the OAS is stored at `docs/swagger.json`
 
 ## Prerequisites
 ### System dependencies
