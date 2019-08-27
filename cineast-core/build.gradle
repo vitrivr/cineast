@@ -3,6 +3,11 @@ plugins {
     id 'maven'
 }
 
+if (!project.hasProperty("build_version")) {
+    ext.dbisNexusUsername = "no"
+    ext.dbisNexusPassword = "no"
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
