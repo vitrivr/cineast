@@ -3,9 +3,19 @@ language: java
 matrix:
   include:
     - os: linux
-      jdk: oraclejdk8
+      jdk:
+        - openjdk8
+        - openjdk11
     - os: osx
       osx_image: xcode8
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
 
 script: 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./gradlew check          ; fi
