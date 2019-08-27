@@ -2,9 +2,12 @@ package org.vitrivr.cineast.standalone.cli;
 
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
+import java.util.List;
 import java.util.Optional;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
 import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.dao.reader.MediaObjectMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
@@ -30,9 +33,16 @@ public class SingleObjRetrievalCommand implements Runnable {
     Optional<MediaSegmentDescriptor> segmentDescriptor = segmentReader.lookUpSegment(segmentId);
     segmentDescriptor.ifPresent(System.out::println);
 
-    System.out.println("= Retrievin corresponding object information if it exists");
+    System.out.println("= Retrieving corresponding object information if it exists");
     MediaObjectReader objectReader = new MediaObjectReader(selector);
     segmentDescriptor.ifPresent(descriptor -> System.out.println(objectReader.lookUpObjectById(descriptor.getObjectId())));
+
+    segmentDescriptor.ifPresent(descriptor -> {
+      System.out.println("= Retrieving corresponding object metadata");
+      MediaObjectMetadataReader reader = new MediaObjectMetadataReader(selector);
+      List<MediaObjectMetadataDescriptor> metadataDescriptors = reader.lookupMultimediaMetadata(descriptor.getObjectId());
+      metadataDescriptors.forEach(System.out::println);
+    });
 
     System.out.println("= Retrieving metadata =");
     MediaSegmentMetadataReader reader = new MediaSegmentMetadataReader(selector);
