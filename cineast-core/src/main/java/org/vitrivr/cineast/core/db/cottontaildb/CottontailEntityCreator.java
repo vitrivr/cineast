@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.BITSET;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.TEXT;
 import static org.vitrivr.cineast.core.db.setup.AttributeDefinition.AttributeType.VECTOR;
 
@@ -155,7 +156,7 @@ public class CottontailEntityCreator implements EntityCreator {
     ColumnDefinition.Builder builder = ColumnDefinition.newBuilder();
     for (AttributeDefinition attribute : attributes) {
       builder.setName(attribute.getName()).setType(mapAttributeType(attribute.getType()));
-      if (attribute.getType() == VECTOR && attribute.getLength() > 0) {
+      if ((attribute.getType() == VECTOR || attribute.getType() == BITSET) && attribute.getLength() > 0) {
         builder.setLength(attribute.getLength());
       }
       columns.add(builder.build());
