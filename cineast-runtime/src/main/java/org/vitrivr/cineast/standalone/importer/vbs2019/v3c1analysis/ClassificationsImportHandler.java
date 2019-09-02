@@ -23,7 +23,7 @@ public class ClassificationsImportHandler extends DataImportHandler {
     try {
       LOGGER.info("Starting data import for classification files in: {} with {} threads and {} batchsize", root.toString(), this.numberOfThreads, this.batchsize);
       Path synset = root.resolve("synset.txt");
-      Files.walk(root, 2).filter(p -> p.toString().toLowerCase().endsWith(".json")).forEach(p -> {
+      Files.walk(root.resolve("aggregate"), 2).filter(p -> p.toString().toLowerCase().endsWith(".json")).forEach(p -> {
         try {
           // TODO ? this.futures.add(this.service.submit(new DataImportRunner(new ClassificationsImporter(p, true), TagReader.TAG_ENTITY_NAME, "classification import synset tags")));
           //this.futures.add(this.service.submit(new DataImportRunner(new ClassificationsImporter(p, synset, false, false), SegmentTags.SEGMENT_TAGS_TABLE_NAME, "classification import classifications")));

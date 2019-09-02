@@ -18,6 +18,8 @@ import org.vitrivr.cineast.standalone.importer.vbs2019.ObjectMetadataImportHandl
 import org.vitrivr.cineast.standalone.importer.vbs2019.TagImportHandler;
 import org.vitrivr.cineast.standalone.importer.vbs2019.gvision.GoogleVisionCategory;
 import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.ClassificationsImportHandler;
+import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImportHandler;
+import org.vitrivr.cineast.standalone.importer.vbs2019.v3c1analysis.FacesImporter;
 
 /**
  * A CLI command that can be used to start import of pre-extracted data.
@@ -93,10 +95,14 @@ public class ImportCommand implements Runnable {
         tagHandler.doImport(path.resolve("tags.json"));
         ClassificationsImportHandler classificationsImportHandler = new ClassificationsImportHandler(this.threads, 25_000);
         classificationsImportHandler.doImport(path.resolve("V3C1Analysis"));
+        FacesImportHandler facesImportHandler = new FacesImportHandler(this.threads, 25_000);
+        facesImportHandler.doImport(path.resolve("V3C1Analysis/faces"));
         break;
       case V3C1ANALYSIS:
         handler = new ClassificationsImportHandler(this.threads, 25_000);
         handler.doImport(path.resolve("V3C1Analysis"));
+        FacesImportHandler two = new FacesImportHandler(this.threads, 25_000);
+        two.doImport(path.resolve("V3C1Analysis/faces"));
         break;
     }
     System.out.println(String.format("Completed import of type %s for '%s'.", this.type.toString(), this.input));
