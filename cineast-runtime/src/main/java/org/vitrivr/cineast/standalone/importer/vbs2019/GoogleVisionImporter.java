@@ -143,7 +143,7 @@ public class GoogleVisionImporter implements Importer<GoogleVisionTuple> {
             return tuple;
           }
         } else {
-          LOGGER.error("File done");
+          LOGGER.info("File done");
           return Optional.empty();
         }
       } catch (IOException e) {
