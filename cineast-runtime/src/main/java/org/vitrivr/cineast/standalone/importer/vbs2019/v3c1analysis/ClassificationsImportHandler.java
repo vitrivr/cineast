@@ -27,7 +27,7 @@ public class ClassificationsImportHandler extends DataImportHandler {
         try {
           // TODO ? this.futures.add(this.service.submit(new DataImportRunner(new ClassificationsImporter(p, true), TagReader.TAG_ENTITY_NAME, "classification import synset tags")));
           //this.futures.add(this.service.submit(new DataImportRunner(new ClassificationsImporter(p, synset, false, false), SegmentTags.SEGMENT_TAGS_TABLE_NAME, "classification import classifications")));
-          this.futures.add(this.service.submit(new DataImportRunner(new ClassificationsImporter(p, synset, false, true), TagsFtSearch.TAGS_FT_TABLE_NAME, "classification import classifications")));
+          this.futures.add(this.service.submit(new DataImportRunner(new ClassificationsImporter(p, synset, false, true), TagsFtSearch.TAGS_FT_TABLE_NAME, "import classifications "+p.getFileName().toString())));
         } catch (IOException e) {
           LOGGER.fatal("Failed to open path at {} ", p);
           throw new RuntimeException(e);
