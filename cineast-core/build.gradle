@@ -21,8 +21,6 @@ uploadArchives {
 project.ext.jomlVersion = "1.9.6"
 project.ext.joglVersion = "2.3.2"
 project.ext.ffmpegVersion = "4.1-1.4.4"
-project.ext.grpcVersion = "1.22.1"
-project.ext.protobufVersion = "3.9.0"
 
 protobuf {
     protoc {
@@ -44,8 +42,8 @@ protobuf {
 sourceSets {
     main {
         java {
-            srcDirs += "build/generated/main/grpc"
-            srcDirs += "build/generated/main/java"
+            srcDirs += "$projectDir/build/generated/main/grpc"
+            srcDirs += "$projectDir/build/generated/main/java"
         }
         proto {
             srcDirs += "adampro-grpc/src/main/protobuf"
@@ -63,11 +61,6 @@ dependencies {
     /** Tensorflow (Java). */
     compile group: "org.tensorflow", name: "tensorflow", version: "1.9.0"
 
-    /** Protobuf & gRPC. */
-    compile group: "com.google.protobuf", name: "protobuf-java", version: "$protobufVersion"
-    compile group: "io.grpc", name: "grpc-netty", version: "${grpcVersion}"
-    compile group: "io.grpc", name: "grpc-protobuf", version: "${grpcVersion}"
-    compile group: "io.grpc", name: "grpc-stub", version: "${grpcVersion}"
 
     /** Apache Commons Libraries */
     compile group: "org.apache.commons", name: "commons-lang3", version: "3.9"
