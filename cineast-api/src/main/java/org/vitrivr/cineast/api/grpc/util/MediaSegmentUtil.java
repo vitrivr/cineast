@@ -15,7 +15,7 @@ public class MediaSegmentUtil {
         builder.setEnd(descriptor.getEnd());
         builder.setStartAbs(descriptor.getStartabs());
         builder.setEndAbs(descriptor.getEndabs());
-        builder.setNumber(descriptor.getSequenceNumber());
+        builder.setSequenceNumber(descriptor.getSequenceNumber());
 
         return builder.build();
 
