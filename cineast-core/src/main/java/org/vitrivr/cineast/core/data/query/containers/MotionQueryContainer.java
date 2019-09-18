@@ -9,11 +9,15 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+//FIXME integer in pair is never used
 public class MotionQueryContainer extends QueryContainer {
 
     private List<Pair<Integer, LinkedList<Point2D_F32>>> paths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
     private List<Pair<Integer, LinkedList<Point2D_F32>>> bgPaths = new ArrayList<Pair<Integer, LinkedList<Point2D_F32>>>();
 
+    public MotionQueryContainer(){
+        //empty container
+    }
 
     /**
      * Constructs an {@link MotionQueryContainer} from base 64 encoded JSON data.
