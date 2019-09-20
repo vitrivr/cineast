@@ -28,7 +28,8 @@ public class ReadableQueryConfig {
     protected float[] distanceWeights = null;
     protected float norm = Float.NaN;
     protected CorrespondenceFunction correspondence = null;
-    protected int k = 250;
+    protected int resultsPerModule = 250;
+    protected int maxResults = 500;
     protected final Set<Hints> hints;
 
     /**
@@ -80,6 +81,7 @@ public class ReadableQueryConfig {
         this.distance = qc.distance;
         this.distanceWeights = qc.distanceWeights;
         this.norm = qc.norm;
+        this.resultsPerModule = qc.resultsPerModule;
         this.hints.addAll(qc.hints);
     }
 
@@ -87,7 +89,9 @@ public class ReadableQueryConfig {
         return this.queryId;
     }
 
-    public final int getK() { return this.k; }
+    public int getResultsPerModule() { return this.resultsPerModule; }
+
+    public int getMaxResults() { return this.maxResults; }
 
     public Optional<Distance> getDistance() {
         return Optional.ofNullable(this.distance);

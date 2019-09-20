@@ -15,6 +15,7 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 import java.util.*;
@@ -58,10 +59,10 @@ public class FindSegmentSimilarActionHandler extends ParsingActionHandler<Simila
          */
         HashMap<String, ArrayList<QueryContainer>> categoryMap = QueryUtil.groupByCategory(query.getComponents());
 
-        QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
+        QueryConfig qconf = new ConstrainedQueryConfig();
 
         for (String category : categoryMap.keySet()) {
-            List<Pair<QueryContainer, QueryConfig>> containerList = categoryMap.get(category).stream().map(x -> new Pair(x, qconf)).collect(Collectors.toList());
+            List<Pair<QueryContainer, QueryConfig>> containerList = categoryMap.get(category).stream().map(x -> new Pair<>(x, qconf)).collect(Collectors.toList());
             returnMap.put(category, QueryUtil.retrieveCategory(continuousRetrievalLogic, containerList, category));
         }
 

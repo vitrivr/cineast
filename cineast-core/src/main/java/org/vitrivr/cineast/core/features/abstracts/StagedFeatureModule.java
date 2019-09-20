@@ -186,9 +186,9 @@ public abstract class StagedFeatureModule extends AbstractFeatureModule {
     protected List<SegmentDistanceElement> lookup(List<float[]> features, List<ReadableQueryConfig> configs) {
         List<SegmentDistanceElement> partialResults;
         if (features.size() == 1) {
-            partialResults = this.selector.getNearestNeighboursGeneric(configs.get(0).getK(), features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
+            partialResults = this.selector.getNearestNeighboursGeneric(configs.get(0).getResultsPerModule(), features.get(0), "feature", SegmentDistanceElement.class, configs.get(0));
         } else if (features.size() > 1) {
-            partialResults = this.selector.getBatchedNearestNeighbours(configs.get(0).getK(), features, "feature", SegmentDistanceElement.class, configs);
+            partialResults = this.selector.getBatchedNearestNeighbours(configs.get(0).getResultsPerModule(), features, "feature", SegmentDistanceElement.class, configs);
         } else {
             partialResults = new ArrayList<>(0);
         }

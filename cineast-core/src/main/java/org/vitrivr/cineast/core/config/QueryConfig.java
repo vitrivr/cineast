@@ -51,8 +51,13 @@ public class QueryConfig extends ReadableQueryConfig {
         return this;
     }
 
-    public QueryConfig setK(int k) {
-        this.k = k;
+    public QueryConfig setResultsPerModule(int k) {
+        this.resultsPerModule = k;
+        return this;
+    }
+
+    public QueryConfig setMaxResults(int max) {
+        this.maxResults = max;
         return this;
     }
 
@@ -99,19 +104,8 @@ public class QueryConfig extends ReadableQueryConfig {
         return new QueryConfig(this);
     }
 
-    public QueryConfig cloneWithNewQueryId() {
-        return new QueryConfig(this, UUID.randomUUID());
-    }
-
     public static QueryConfig clone(ReadableQueryConfig qc) {
         return new QueryConfig(qc);
-    }
-
-    public static QueryConfig notNull(QueryConfig qc) {
-        if (qc == null) {
-            return new QueryConfig((ReadableQueryConfig) null);
-        }
-        return qc;
     }
 
     /**

@@ -118,7 +118,7 @@ public abstract class MotionHistogramCalculator implements Retriever {
 
   protected List<ScoreElement> getSimilar(float[] vector, ReadableQueryConfig qc) {
     ReadableQueryConfig qcc = setQueryConfig(qc);
-    List<SegmentDistanceElement> distances = this.selector.getNearestNeighboursGeneric(qcc.getK(), vector, this.fieldName, SegmentDistanceElement.class, qcc);
+    List<SegmentDistanceElement> distances = this.selector.getNearestNeighboursGeneric(qcc.getResultsPerModule(), vector, this.fieldName, SegmentDistanceElement.class, qcc);
     return DistanceElement.toScore(distances, qcc.getCorrespondenceFunction().get());
   }
 

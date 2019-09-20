@@ -17,6 +17,7 @@ import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentMetadataReader;
 import org.vitrivr.cineast.core.db.dao.reader.MediaSegmentReader;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public abstract class AbstractQueryMessageHandler<T extends Query> extends State
    */
   public final void handle(Session session, T message) {
     try {
-      final QueryConfig qconf = (message.getQueryConfig() == null) ? QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()) : message.getQueryConfig();
+      final QueryConfig qconf = new ConstrainedQueryConfig(message.getQueryConfig());
       final String uuid = qconf.getQueryId().toString();
 
       try {

@@ -162,7 +162,7 @@ public abstract class MetadataFeatureModule<T extends ReadableFloatVector>
 
   private List<ScoreElement> getSimilar(float[] feature, ReadableQueryConfig rqc) {
     QueryConfig qc = QueryConfig.clone(rqc).setDistanceIfEmpty(this.defaultDistance());
-    List<ObjectDistanceElement> distances = this.dbSelector.getNearestNeighboursGeneric(rqc.getK(), feature, FEATURE_COLUMN_NAME, ObjectDistanceElement.class, qc);
+    List<ObjectDistanceElement> distances = this.dbSelector.getNearestNeighboursGeneric(rqc.getResultsPerModule(), feature, FEATURE_COLUMN_NAME, ObjectDistanceElement.class, qc);
     CorrespondenceFunction correspondence = qc.getCorrespondenceFunction()
         .orElse(this.defaultCorrespondence());
     return DistanceElement.toScore(distances, correspondence);
