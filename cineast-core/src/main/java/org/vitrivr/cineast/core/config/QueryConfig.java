@@ -6,10 +6,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.vitrivr.cineast.core.data.CorrespondenceFunction;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class QueryConfig extends ReadableQueryConfig {
     /**
@@ -57,7 +54,9 @@ public class QueryConfig extends ReadableQueryConfig {
     }
 
     public QueryConfig setMaxResults(int max) {
-        this.maxResults = max;
+        if (max >= 0) {
+            this.maxResults = Optional.of(max);
+        }
         return this;
     }
 

@@ -79,7 +79,7 @@ public class QueryUtil {
 
         Collections.sort(list, StringDoublePair.COMPARATOR);
 
-        final int MAX_RESULTS = Config.sharedConfig().getRetriever().getMaxResults();
+        final int MAX_RESULTS = queryContainers.get(0).second.getMaxResults().orElse(Config.sharedConfig().getRetriever().getMaxResults());
         List<StringDoublePair> resultList = list;
         if (list.size() > MAX_RESULTS) {
             resultList = resultList.subList(0, MAX_RESULTS);

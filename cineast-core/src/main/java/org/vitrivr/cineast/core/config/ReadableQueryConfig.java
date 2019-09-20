@@ -29,7 +29,7 @@ public class ReadableQueryConfig {
     protected float norm = Float.NaN;
     protected CorrespondenceFunction correspondence = null;
     protected int resultsPerModule = 250;
-    protected int maxResults = 500;
+    protected Optional<Integer> maxResults = Optional.empty();
     protected final Set<Hints> hints;
 
     /**
@@ -91,7 +91,7 @@ public class ReadableQueryConfig {
 
     public int getResultsPerModule() { return this.resultsPerModule; }
 
-    public int getMaxResults() { return this.maxResults; }
+    public Optional<Integer> getMaxResults() { return this.maxResults; }
 
     public Optional<Distance> getDistance() {
         return Optional.ofNullable(this.distance);
