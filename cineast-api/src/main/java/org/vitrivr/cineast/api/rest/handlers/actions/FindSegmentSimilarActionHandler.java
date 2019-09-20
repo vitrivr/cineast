@@ -5,6 +5,7 @@ import org.vitrivr.cineast.api.rest.exceptions.MethodNotSupportedException;
 import org.vitrivr.cineast.api.rest.handlers.abstracts.ParsingActionHandler;
 import org.vitrivr.cineast.api.util.QueryUtil;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
@@ -17,6 +18,7 @@ import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author rgasser
@@ -59,7 +61,8 @@ public class FindSegmentSimilarActionHandler extends ParsingActionHandler<Simila
         QueryConfig qconf = QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery());
 
         for (String category : categoryMap.keySet()) {
-            returnMap.put(category, QueryUtil.retrieveCategory(continuousRetrievalLogic, categoryMap.get(category), qconf, category));
+            List<Pair<QueryContainer, QueryConfig>> containerList = categoryMap.get(category).stream().map(x -> new Pair(x, qconf)).collect(Collectors.toList());
+            returnMap.put(category, QueryUtil.retrieveCategory(continuousRetrievalLogic, containerList, category));
         }
 
         return new SimilarityQueryResultBatch(returnMap, qconf.getQueryId().toString());

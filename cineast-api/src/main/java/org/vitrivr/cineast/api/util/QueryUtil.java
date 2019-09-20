@@ -4,6 +4,7 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.vitrivr.cineast.api.messages.query.QueryComponent;
 import org.vitrivr.cineast.api.messages.query.QueryTerm;
 import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.data.Pair;
 import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
@@ -37,13 +38,16 @@ public class QueryUtil {
         return categoryMap;
     }
 
-    public static List<StringDoublePair> retrieveCategory(ContinuousRetrievalLogic continuousRetrievalLogic, ArrayList<QueryContainer> queryContainers, QueryConfig qconf, String category) {
+    public static List<StringDoublePair> retrieveCategory(ContinuousRetrievalLogic continuousRetrievalLogic, List<Pair<QueryContainer, QueryConfig>> queryContainers, String category) {
         TObjectDoubleHashMap<String> scoreBySegmentId = new TObjectDoubleHashMap<>();
-        for (QueryContainer qc : queryContainers) {
+        for (Pair<QueryContainer, QueryConfig> pair : queryContainers) {
 
-            if (qc == null) {
+            if (pair == null) {
                 continue;
             }
+
+            QueryContainer qc = pair.first;
+            QueryConfig qconf = pair.second;
 
             float weight = MathHelper.limit(qc.getWeight(), -1f, 1f);
 
