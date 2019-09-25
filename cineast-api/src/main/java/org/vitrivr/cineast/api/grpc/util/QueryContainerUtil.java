@@ -4,6 +4,9 @@ import georegression.struct.point.Point2D_F32;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.grpc.CineastGrpc;
+import org.vitrivr.cineast.api.grpc.data.QueryTerm;
+import org.vitrivr.cineast.core.config.QueryConfig;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Location;
 import org.vitrivr.cineast.core.data.SemanticMap;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
@@ -17,8 +20,12 @@ import org.vitrivr.cineast.core.util.LogHelper;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.vitrivr.cineast.core.config.ReadableQueryConfig.*;
 
 public class QueryContainerUtil {
 
@@ -151,5 +158,60 @@ public class QueryContainerUtil {
     }
 
 
+    public static QueryContainer queryTermContainer(CineastGrpc.QueryTerm term) {
+        switch(term.getContainerCase()){
+
+            case AUDIOQUERYCONTAINER: return audioQueryContainer(term.getAudioQueryContainer());
+            case BOOLEANQUERYCONTAINER: return booleanQueryContainer(term.getBooleanQueryContainer());
+            case IDQUERYCONTAINER: return idQueryContainer(term.getIdQueryContainer());
+            case IMAGEQUERYCONTAINER: return imageQueryContainer(term.getImageQueryContainer());
+            case INSTANTQUERYCONTAINER: return instantQueryContainer(term.getInstantQueryContainer());
+            case LOCATIONQUERYCONTAINER: return locationQueryContainer(term.getLocationQueryContainer());
+            case MODELQUERYCONTAINER: return modelQueryContainer(term.getModelQueryContainer());
+            case MOTIONQUERYCONTAINER: return motionQueryContainer(term.getMotionQueryContainer());
+            case SEMANTICMAPQUERYCONTAINER: return semanticMapQueryContainer(term.getSemanticMapQueryContainer());
+            case TAGQUERYCONTAINER: return tagQueryContainer(term.getTagQueryContainer());
+            case TEXTQUERYCONTAINER: return textQueryContainer(term.getTextQueryContainer());
+            case CONTAINER_NOT_SET: return null;
+        }
+        return null;
+    }
+
+    public static ReadableQueryConfig queryConfig(CineastGrpc.QueryConfig queryConfig) {
+        List<Hints> hints = new ArrayList<Hints>(queryConfig.getHintsCount());
+        for(String hint : queryConfig.getHintsList()){
+            if(hint == null) {
+                continue;
+            }
+
+            Hints h = null;
+
+            try {
+                h = Hints.valueOf(hint);
+            }catch (IllegalArgumentException e){
+                //ignore
+            }
+            if (h != null){
+                hints.add(h);
+            }
+        }
+
+        QueryConfig config = new QueryConfig(queryConfig.getQueryId().getId(), hints);
+        config.setMaxResults(queryConfig.getMaxResults());
+        return config;
+    }
+
+    public static QueryTerm queryTerm(CineastGrpc.QueryTerm term) {
+        return new QueryTerm(
+                queryTermContainer(term),
+                queryConfig(term.getConfig()),
+                term.getWeight(),
+                term.getCategoryList()
+        );
+    }
+
+    public static List<QueryTerm> query(CineastGrpc.Query query){
+        return query.getTermsList().stream().map(QueryContainerUtil::queryTerm).collect(Collectors.toList());
+    }
 
 }

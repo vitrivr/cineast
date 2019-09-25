@@ -5,6 +5,7 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import org.vitrivr.cineast.api.grpc.CineastExtractionService;
 import org.vitrivr.cineast.api.grpc.CineastQueryService;
+import org.vitrivr.cineast.standalone.config.Config;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -15,8 +16,11 @@ public class GRPCEndpoint {
 
     public static void start() {
 
-        int port = 4569; //TODO config
+        if (!Config.sharedConfig().getApi().getEnableGRPC()) {
+            return;
+        }
 
+        int port = 4569; Config.sharedConfig().getApi().getGrpcPort();
         server = ServerBuilder.forPort(port).addService(new CineastQueryService()).addService(new CineastExtractionService()).build();
 
         try {
