@@ -56,4 +56,10 @@ public class CineastQueryService extends CineastQueryGrpc.CineastQueryImplBase {
         //TODO
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void getNeighboringSegments(CineastGrpc.MediaSegmentIdList request, StreamObserver<CineastGrpc.MediaSegmentQueryResult> responseObserver) {
+        //TODO
+        responseObserver.onCompleted();
+    }
 }

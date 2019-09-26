@@ -4,6 +4,7 @@ package org.vitrivr.cineast.api;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import org.vitrivr.cineast.api.grpc.CineastExtractionService;
+import org.vitrivr.cineast.api.grpc.CineastManagementService;
 import org.vitrivr.cineast.api.grpc.CineastQueryService;
 import org.vitrivr.cineast.standalone.config.Config;
 
@@ -20,8 +21,8 @@ public class GRPCEndpoint {
             return;
         }
 
-        int port = 4569; Config.sharedConfig().getApi().getGrpcPort();
-        server = ServerBuilder.forPort(port).addService(new CineastQueryService()).addService(new CineastExtractionService()).build();
+        int port = Config.sharedConfig().getApi().getGrpcPort();
+        server = ServerBuilder.forPort(port).addService(new CineastQueryService()).addService(new CineastExtractionService()).addService(new CineastManagementService()).build();
 
         try {
             server.start();
