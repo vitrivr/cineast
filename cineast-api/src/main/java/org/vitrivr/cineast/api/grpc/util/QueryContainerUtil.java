@@ -5,10 +5,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.api.grpc.CineastGrpc;
 import org.vitrivr.cineast.api.grpc.data.QueryTerm;
+import org.vitrivr.cineast.api.messages.result.SimilarityQueryResult;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Location;
 import org.vitrivr.cineast.core.data.SemanticMap;
+import org.vitrivr.cineast.core.data.StringDoublePair;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.providers.primitive.*;
@@ -212,6 +214,22 @@ public class QueryContainerUtil {
 
     public static List<QueryTerm> query(CineastGrpc.Query query){
         return query.getTermsList().stream().map(QueryContainerUtil::queryTerm).collect(Collectors.toList());
+    }
+
+    public static CineastGrpc.MediaSegmentId mediaSegmentId(String id) {
+        return CineastGrpc.MediaSegmentId.newBuilder().setId(id).build();
+    }
+
+    public static CineastGrpc.MediaSegmentIdScore mediaSegmentIdScore(StringDoublePair pair) {
+        return CineastGrpc.MediaSegmentIdScore.newBuilder().setId(mediaSegmentId(pair.key)).setScore(pair.value).build();
+    }
+
+    public static CineastGrpc.QueryId queryId(String id) {
+        return CineastGrpc.QueryId.newBuilder().setId(id).build();
+    }
+
+    public static CineastGrpc.SimilarityQueryResult similarityQueryResult(String queryId, String category, List<StringDoublePair> pairs) {
+        return CineastGrpc.SimilarityQueryResult.newBuilder().setQueryId(queryId(queryId)).setCategory(category).addAllResults(pairs.stream().map(QueryContainerUtil::mediaSegmentIdScore).collect(Collectors.toList())).build();
     }
 
 }

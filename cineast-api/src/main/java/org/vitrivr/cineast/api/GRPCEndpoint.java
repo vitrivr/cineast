@@ -22,7 +22,8 @@ public class GRPCEndpoint {
         }
 
         int port = Config.sharedConfig().getApi().getGrpcPort();
-        server = ServerBuilder.forPort(port).addService(new CineastQueryService()).addService(new CineastExtractionService()).addService(new CineastManagementService()).build();
+        server = ServerBuilder.forPort(port).addService(new CineastQueryService(APIEndpoint.retrievalLogic)) //FIXME this should come from a more reasonable location
+                .addService(new CineastExtractionService()).addService(new CineastManagementService()).build();
 
         try {
             server.start();
