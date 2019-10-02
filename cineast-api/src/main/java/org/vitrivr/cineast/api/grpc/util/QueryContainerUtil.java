@@ -11,6 +11,8 @@ import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.Location;
 import org.vitrivr.cineast.core.data.SemanticMap;
 import org.vitrivr.cineast.core.data.StringDoublePair;
+import org.vitrivr.cineast.core.data.entities.MediaObjectMetadataDescriptor;
+import org.vitrivr.cineast.core.data.entities.MediaSegmentMetadataDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioDescriptor;
 import org.vitrivr.cineast.core.data.frames.AudioFrame;
 import org.vitrivr.cineast.core.data.providers.primitive.*;
@@ -230,6 +232,34 @@ public class QueryContainerUtil {
 
     public static CineastGrpc.SimilarityQueryResult similarityQueryResult(String queryId, String category, List<StringDoublePair> pairs) {
         return CineastGrpc.SimilarityQueryResult.newBuilder().setQueryId(queryId(queryId)).setCategory(category).addAllResults(pairs.stream().map(QueryContainerUtil::mediaSegmentIdScore).collect(Collectors.toList())).build();
+    }
+
+    public static CineastGrpc.QueryResult queryResult(CineastGrpc.SimilarityQueryResult result) {
+        return CineastGrpc.QueryResult.newBuilder().setSimilarityQueryResult(result).build();
+    }
+
+    public static CineastGrpc.QueryResult queryResult(CineastGrpc.MediaSegmentQueryResult result) {
+        return CineastGrpc.QueryResult.newBuilder().setMediaSegmentQueryResult(result).build();
+    }
+
+    public static CineastGrpc.QueryResult queryResult(CineastGrpc.MediaObjectQueryResult result) {
+        return CineastGrpc.QueryResult.newBuilder().setMediaObjectQueryResult(result).build();
+    }
+
+    public static CineastGrpc.QueryResult queryResult(CineastGrpc.MediaSegmentMetaDataQueryResult result) {
+        return CineastGrpc.QueryResult.newBuilder().setMediaSegmentMetaDataQueryResult(result).build();
+    }
+
+    public static CineastGrpc.QueryResult queryResult(CineastGrpc.MediaObjectMetaDataQueryResult result) {
+        return CineastGrpc.QueryResult.newBuilder().setMediaObjectMetaDataQueryResult(result).build();
+    }
+
+    public static CineastGrpc.MediaObjectMetaData mediaObjectMetaData(MediaObjectMetadataDescriptor descriptor){
+        return CineastGrpc.MediaObjectMetaData.newBuilder().setDomain(descriptor.getDomain()).setKey(descriptor.getKey()).setValue(descriptor.getValue()).build();
+    }
+
+    public static CineastGrpc.MediaSegmentMetaData mediaSegmentMetaData(MediaSegmentMetadataDescriptor descriptor){
+        return CineastGrpc.MediaSegmentMetaData.newBuilder().setDomain(descriptor.getDomain()).setKey(descriptor.getKey()).setValue(descriptor.getValue()).build();
     }
 
 }
