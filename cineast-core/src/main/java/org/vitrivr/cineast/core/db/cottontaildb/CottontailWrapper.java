@@ -8,6 +8,7 @@ import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLFutureStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDMLGrpc.CottonDMLStub;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottonDQLGrpc.CottonDQLBlockingStub;
+import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.BatchedQueryMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateEntityMessage;
 import ch.unibas.dmi.dbis.cottontail.grpc.CottontailGrpc.CreateIndexMessage;

@@ -7,34 +7,43 @@ public final class APIConfig {
 
   private boolean enableWebsocket = true;
   private boolean enableWebsocketSecure = true;
-	private boolean enableExtractionServer = true;
-	private boolean enableRest = false;
+  private boolean enableExtractionServer = true;
+  private boolean enableRest = false;
   private boolean enableRestSecure = false;
-	private String keystore;
-	private String keystorePassword;
 
-	private int httpPort = 4567;
-	private int httpsPort = 4568;
-	private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
 
-	private boolean enableLegacy = false;
-	private int legacyPort = 12345;
 
-	private boolean allowExtraction = true;
-	private boolean enableCLI = false;
+	private boolean enableGRPC = true;
+  private String keystore;
+  private String keystorePassword;
 
-	private int threadPoolSize = 8;
+  private int httpPort = 4567;
+  private int httpsPort = 4568;
 
-	private boolean serveContent = false;
-	private boolean serveUI = false;
-	private String thumbnailLocation = "";
-	private String objectLocation = "";
-	private String uiLocation = "";
 
-	@JsonCreator
-	public APIConfig() {}
 
-	@JsonProperty
+	private int grpcPort = 4569;
+  private int maxMessageSize = 5120 * 1000; /* Maximum size of a single WebSocket message (binary or text). */
+
+
+  private boolean enableLegacy = false;
+  private int legacyPort = 12345;
+
+  private boolean allowExtraction = true;
+  private boolean enableCLI = false;
+
+  private int threadPoolSize = 8;
+
+  private boolean serveContent = false;
+  private boolean serveUI = false;
+  private String thumbnailLocation = "";
+  private String objectLocation = "";
+  private String uiLocation = "";
+
+  @JsonCreator
+  public APIConfig() {}
+
+  @JsonProperty
   public boolean getEnableWebsocket(){
     return this.enableWebsocket;
   }
@@ -196,4 +205,24 @@ public final class APIConfig {
   public void setEnableExtractionServer(boolean enableExtractionServer) {
 		this.enableExtractionServer = enableExtractionServer;
   }
+
+  	@JsonProperty
+	public boolean getEnableGRPC() {
+		return enableGRPC;
+	}
+
+	@JsonProperty
+	public void setEnableGRPC(boolean enableGRPC) {
+		this.enableGRPC = enableGRPC;
+	}
+
+	@JsonProperty
+	public int getGrpcPort() {
+		return grpcPort;
+	}
+
+	@JsonProperty
+	public void setGrpcPort(int grpcPort) {
+		this.grpcPort = grpcPort;
+	}
 }

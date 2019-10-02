@@ -6,6 +6,7 @@ import java.util.List;
 import org.vitrivr.cineast.core.config.QueryConfig;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.config.ConstrainedQueryConfig;
 import org.vitrivr.cineast.standalone.listener.RetrievalResultCSVExporter;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
@@ -33,7 +34,7 @@ public class RetrieveCommand implements Runnable {
     if (export) {
       retrieval.addRetrievalResultListener(new RetrievalResultCSVExporter(Config.sharedConfig().getDatabase()));
     }
-    final List<SegmentScoreElement> results = retrieval.retrieve(this.segmentId, this.category, QueryConfig.newQueryConfigFromOther(Config.sharedConfig().getQuery()));
+    final List<SegmentScoreElement> results = retrieval.retrieve(this.segmentId, this.category, new ConstrainedQueryConfig());
     System.out.println("results:");
     for (SegmentScoreElement e : results) {
       System.out.print(e.getSegmentId());
