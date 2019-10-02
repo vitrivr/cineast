@@ -23,7 +23,7 @@ public class FFMpegVideoEncoder {
     private avutil.AVFrame outFrame, rgbFrame;
     private avcodec.AVPacket pkt;
     private swscale.SwsContext sws_ctx;
-    private int frameCounter = 0;
+    private int frameCounter = 0, packetCounter = 0;
 
     public FFMpegVideoEncoder(int width, int height, OutputStream out){
         this.out = out;
@@ -53,7 +53,7 @@ public class FFMpegVideoEncoder {
             return;
         }
 
-        c.bit_rate(400000); //TODO
+        c.bit_rate(1_000_000); //TODO
         c.width(width);
         c.height(height);
 
@@ -169,13 +169,11 @@ public class FFMpegVideoEncoder {
 
     public static void main(String[] args) throws IOException {
 
-        OutputStream out = new FileOutputStream(new File("video.raw_h264"));
+        OutputStream out = new FileOutputStream(new File("video.m4v"));
 
         BufferedImage testImg = ImageIO.read(new File("img.jpg"));
 
         MultiImage img = CachedDataFactory.DEFAULT_INSTANCE.newInMemoryMultiImage(testImg);
-
-
 
         FFMpegVideoEncoder encoder = new FFMpegVideoEncoder(img.getWidth(), img.getHeight(), out);
 
@@ -185,13 +183,11 @@ public class FFMpegVideoEncoder {
 
         }
 
-
         encoder.close();
-
 
     }
 
-    private static void encode(avcodec.AVCodecContext enc_ctx, avutil.AVFrame frame, avcodec.AVPacket pkt, OutputStream out) {
+    private void encode(avcodec.AVCodecContext enc_ctx, avutil.AVFrame frame, avcodec.AVPacket pkt, OutputStream out) {
 
 //        if (frame != null) {
 //            System.out.println("Send frame " + frame.pts());
@@ -214,7 +210,7 @@ public class FFMpegVideoEncoder {
             }
             //System.out.println("Write packet " + pkt.pts() + " size: " + pkt.size());
 
-
+            pkt.pts(packetCounter++);
             byte[] arr = new byte[pkt.size()];
             pkt.data().position(0).get(arr);
 
@@ -225,8 +221,5 @@ public class FFMpegVideoEncoder {
             }
             avcodec.av_packet_unref(pkt);
         }
-
-
     }
-
 }
