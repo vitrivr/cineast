@@ -256,7 +256,7 @@ public class AverageColorRaster extends AbstractFeatureModule {
   }
 
   private List<ScoreElement> getSimilar(float[] raster, float[] hist, ReadableQueryConfig rqc) {
-    final int limit = rqc.getK();
+    final int limit = rqc.getResultsPerModule();
     final QueryConfig qc = new QueryConfig(rqc).setDistanceIfEmpty(Distance.chisquared);
 
     List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getNearestNeighbourRows(limit * 5,

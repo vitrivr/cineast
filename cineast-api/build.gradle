@@ -1,6 +1,8 @@
 plugins {
     id 'application'
+    id "com.google.protobuf" version "0.8.2"
 }
+
 
 application {
     mainClassName = 'org.vitrivr.cineast.api.Main'
@@ -16,6 +18,37 @@ distributions {
         }
     }
 }
+
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
+        }
+    }
+    generatedFilesBaseDir = "$projectDir/build/generated/"
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += "$projectDir/build/generated/main/grpc"
+            srcDirs += "$projectDir/build/generated/main/java"
+        }
+        proto {
+            srcDirs += "cineast-proto/src/main/protobuf"
+        }
+    }
+}
+
 
 task fatJar(type: Jar) {
     archiveClassifier = 'full'

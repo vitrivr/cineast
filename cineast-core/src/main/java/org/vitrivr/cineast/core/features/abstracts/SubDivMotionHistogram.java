@@ -34,7 +34,7 @@ public abstract class SubDivMotionHistogram extends MotionHistogramCalculator im
   @Override
   protected List<ScoreElement> getSimilar(float[] vector, ReadableQueryConfig qc) {
     ReadableQueryConfig rqc = setQueryConfig(qc);
-    List<SegmentDistanceElement> distances = this.selector.getNearestNeighboursGeneric(qc.getK(), vector, "hist", SegmentDistanceElement.class, qc);
+    List<SegmentDistanceElement> distances = this.selector.getNearestNeighboursGeneric(qc.getResultsPerModule(), vector, "hist", SegmentDistanceElement.class, qc);
     return DistanceElement.toScore(distances, rqc.getCorrespondenceFunction().get());
   }
 
